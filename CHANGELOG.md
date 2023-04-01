@@ -1,27 +1,27 @@
 # Additions
 
-* Merge new Crowdin translation updates for several languages
-* Cooling blaster attachments now properly cool
-* Added heat-reduction attachment functionality as a counterpart to cooling improvements
-* Add attachment functionality for damage and range modification
-* Added double-bladed Darth Maul lightsaber
-* Added Dooku's lightsaber (untextured, WIP)
-* Added Revan's lightsaber (untextured, WIP)
-* Added Dume's lightsaber
-* Added Kylo Ren's lightsaber
+* Left-handed blasters now render arms correctly
 
 # Changes
 
-* Blasters can no longer aim down sights if dual wielding
-* Blaster workbench "stat bars" now actually reflect the new and old blaster statistic comparisons
-* Blaster workbench stat bars now have numerical tooltips
-* Clarified "incompatible attachment" tooltip
-* Update Jedi Bob hilt model and texture
+* Crash reporting system no longer asks to report a crash if PSWG is not up-to-date
 
 # Fixes
 
+* Left-handed blasters are no longer mirrored
+* Blaster bolts render properly when coming from the left hand
+* Blaster bolts no longer flash in the center of the screen in some rare circumstances
+
 # Internal Changes
 
-* Minimum Fabric Loader version bumped to `0.14.13`
-* Minimum Fabric API version bumped to `0.73.0`
-* Blaster API attachment methods have new signature to allow addons to modify attachments of stock blasters
+* Port to 1.19.4
+* Update JiJ and dependencies:
+	* Yarn to 1.19.4+build.1
+	* Fabric Loader to 0.14.18
+	* Fabric API to 0.76.0+1.19.4
+	* Cardinal Components to 5.1.0
+	* Cloth Config to 10.0.96
+	* ModMenu to 6.1.0-rc.4
+	* REI to 11.0.597
+	* LibZoomer to 0.4.6+1.19.4
+	* Trinkets to 3.6.0

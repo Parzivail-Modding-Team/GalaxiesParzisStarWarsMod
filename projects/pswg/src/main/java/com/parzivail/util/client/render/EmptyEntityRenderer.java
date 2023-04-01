@@ -1,6 +1,7 @@
 package com.parzivail.util.client.render;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
@@ -45,8 +46,8 @@ public class EmptyEntityRenderer extends EntityRenderer<Entity>
 		var textRenderer = this.getTextRenderer();
 		var h = (float)(-textRenderer.getWidth(n) / 2);
 
-		textRenderer.draw(n, h, 0, 0x20ffffff, false, textMatrix, vertexConsumers, true, k, light);
-		textRenderer.draw(n, h, 0, -1, false, textMatrix, vertexConsumers, false, 0, light);
+		textRenderer.draw(n, h, 0, 0x20ffffff, false, textMatrix, vertexConsumers, TextRenderer.TextLayerType.SEE_THROUGH, k, light);
+		textRenderer.draw(n, h, 0, -1, false, textMatrix, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, light);
 
 		matrix.pop();
 

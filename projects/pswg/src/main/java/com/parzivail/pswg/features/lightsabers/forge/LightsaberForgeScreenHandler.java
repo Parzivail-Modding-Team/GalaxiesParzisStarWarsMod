@@ -80,9 +80,9 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 	}
 
 	@Override
-	public void close(PlayerEntity player)
+	public void onClosed(PlayerEntity player)
 	{
-		super.close(player);
+		super.onClosed(player);
 		this.context.run((world, blockPos) -> this.dropInventory(player, this.inventory));
 	}
 

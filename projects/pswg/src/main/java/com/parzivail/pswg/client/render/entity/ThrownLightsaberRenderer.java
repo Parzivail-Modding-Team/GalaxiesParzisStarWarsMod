@@ -9,7 +9,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -57,7 +57,7 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 		lt.active = true;
 		lt.serializeAsSubtag(stack);
 
-		this.itemRenderer.renderItem(stack, ModelTransformation.Mode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider, 0);
+		this.itemRenderer.renderItem(stack, ModelTransformationMode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider, entity.world, 0);
 
 		matrices.pop();
 	}

@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -119,7 +118,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 			if (o > 0.0F)
 			{
 				entity.playSound(entity.getFallSounds().small(), 1.0F, 1.0F);
-				entity.damage(DamageSource.FLY_INTO_WALL, (float)o);
+				entity.damage(entity.getDamageSources().flyIntoWall(), (float)o);
 			}
 		}
 

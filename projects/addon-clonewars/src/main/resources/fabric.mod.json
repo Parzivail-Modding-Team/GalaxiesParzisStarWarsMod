@@ -29,10 +29,10 @@
 	},
 	"depends": {
 		"fabric-api": "*",
-		"fabricloader": ">=0.14.8",
-		"minecraft": ">=1.19.3",
+		"fabricloader": ">=0.14.18",
+		"minecraft": ">=1.19.4",
 		"pswg": [
-			">=0.0.99+1.19.3",
+			">=0.0.100+1.19.4",
 			"${version}"
 		]
 	},

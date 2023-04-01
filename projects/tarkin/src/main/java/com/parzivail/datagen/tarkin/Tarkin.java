@@ -43,12 +43,8 @@ public class Tarkin
 
 		switch (tarkinModid)
 		{
-			case "pswg":
-				PswgTarkin.build(assets);
-				break;
-			case "pswg_addon_clonewars":
-				TcwTarkin.build(assets);
-				break;
+			case "pswg" -> PswgTarkin.build(assets);
+			case "pswg_addon_clonewars" -> TcwTarkin.build(assets);
 		}
 
 		BuiltAsset.nukeRecipeDir();

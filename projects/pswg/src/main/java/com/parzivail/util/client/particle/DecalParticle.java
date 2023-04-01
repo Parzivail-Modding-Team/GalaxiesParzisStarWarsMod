@@ -1,5 +1,6 @@
 package com.parzivail.util.client.particle;
 
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,7 +36,7 @@ public class DecalParticle extends AnimatedParticle
 		var normal = new Vec3d(velocityX, velocityY, velocityZ).normalize();
 		var pos = new Vec3d(this.x, this.y, this.z);
 
-		var hostBlockPos = new BlockPos(pos.subtract(normal.multiply(0.1f)));
+		var hostBlockPos = new BlockPos(MathUtil.floorInt(pos.subtract(normal.multiply(0.1f))));
 		if (world.isAir(hostBlockPos))
 			this.markDead();
 	}

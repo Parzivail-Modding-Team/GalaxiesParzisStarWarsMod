@@ -14,7 +14,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -56,7 +56,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	}
 
 	@Override
-	public void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
+	public void render(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
 	{
 		matrices.push();
 
@@ -91,7 +91,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		matrices.pop();
 	}
 
-	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade, boolean useHandPos)
+	public void renderDirect(ItemStack stack, ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade, boolean useHandPos)
 	{
 		matrices.push();
 		MathUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
@@ -133,7 +133,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		matrices.pop();
 
-		if (renderMode != ModelTransformation.Mode.GUI)
+		if (renderMode != ModelTransformationMode.GUI)
 		{
 			var ld = PswgContent.getLightsaberPreset(lt.hilt);
 			var bladeType = ld == null ? LightsaberBladeType.DEFAULT : ld.bladeType;
@@ -173,7 +173,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		}
 	}
 
-	private static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, LightsaberTag lt, boolean unstable, float lengthCoefficient, LightsaberBladeType bladeType, float length)
+	private static void renderBlade(ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, LightsaberTag lt, boolean unstable, float lengthCoefficient, LightsaberBladeType bladeType, float length)
 	{
 		if (bladeType == LightsaberBladeType.DARKSABER)
 			EnergyRenderer.renderDarksaber(renderMode, matrices, vertexConsumers, light, overlay, 1.2f, lengthCoefficient, lt.bladeColor);

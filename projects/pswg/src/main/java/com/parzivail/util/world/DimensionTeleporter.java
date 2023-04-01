@@ -3,7 +3,7 @@ package com.parzivail.util.world;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
+import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
@@ -22,17 +22,17 @@ public class DimensionTeleporter
 	{
 		var y = world.getChunk(ChunkSectionPos.getSectionCoord(0), ChunkSectionPos.getSectionCoord(0)).sampleHeightmap(Heightmap.Type.MOTION_BLOCKING, 0, 0) + 1;
 
-		Set<PlayerPositionLookS2CPacket.Flag> set = EnumSet.noneOf(PlayerPositionLookS2CPacket.Flag.class);
-		set.add(PlayerPositionLookS2CPacket.Flag.X_ROT);
-		set.add(PlayerPositionLookS2CPacket.Flag.Y_ROT);
+		Set<PositionFlag> set = EnumSet.noneOf(PositionFlag.class);
+		set.add(PositionFlag.X_ROT);
+		set.add(PositionFlag.Y_ROT);
 		teleport(entity, world, 0, y, 0, 0, 0, set);
 	}
 
-	public static void teleport(Entity entity, ServerWorld world, double x, double y, double z, float pitch, float yaw, Set<PlayerPositionLookS2CPacket.Flag> movementFlags)
+	public static void teleport(Entity entity, ServerWorld world, double x, double y, double z, float pitch, float yaw, Set<PositionFlag> movementFlags)
 	{
 		if (entity instanceof ServerPlayerEntity)
 		{
-			var chunkPos = new ChunkPos(new BlockPos(x, y, z));
+			var chunkPos = new ChunkPos(new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z)));
 			world.getChunkManager().addTicket(ChunkTicketType.POST_TELEPORT, chunkPos, 1, entity.getId());
 			entity.stopRiding();
 			if (((ServerPlayerEntity)entity).isSleeping())

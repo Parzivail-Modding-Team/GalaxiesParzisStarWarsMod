@@ -935,7 +935,7 @@ public class CharacterScreen extends Screen
 		entity.headYaw = entity.getYaw();
 		entity.prevHeadYaw = entity.getYaw();
 
-		entity.limbDistance = 0;
+		entity.limbAnimator.setSpeed(0);
 
 		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
 
@@ -993,22 +993,5 @@ public class CharacterScreen extends Screen
 
 		RenderSystem.applyModelViewMatrix();
 		DiffuseLighting.enableGuiDepthLighting();
-	}
-
-	@Override
-	public void renderBackgroundTexture(int vOffset)
-	{
-		var tessellator = Tessellator.getInstance();
-		var bufferBuilder = tessellator.getBuffer();
-		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-		RenderSystem.setShaderTexture(0, OPTIONS_BACKGROUND);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		var f = 32.0F;
-		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-		bufferBuilder.vertex(0.0D, this.height, 0.0D).texture(0.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
-		bufferBuilder.vertex(this.width, this.height, 0.0D).texture((float)this.width / 32.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
-		bufferBuilder.vertex(this.width, 0.0D, 0.0D).texture((float)this.width / 32.0F, (float)vOffset).color(64, 64, 64, 255).next();
-		bufferBuilder.vertex(0.0D, 0.0D, 0.0D).texture(0.0F, (float)vOffset).color(64, 64, 64, 255).next();
-		tessellator.draw();
 	}
 }

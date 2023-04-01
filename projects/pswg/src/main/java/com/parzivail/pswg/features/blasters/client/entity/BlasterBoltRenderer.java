@@ -11,7 +11,7 @@ import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
@@ -34,7 +34,8 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 	@Override
 	public void render(BlasterBoltEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumerProvider, int light)
 	{
-		//		super.render(entity, yaw, tickDelta, matrices, consumerProvider, light);
+		if (entity.age == 0)
+			return;
 
 		var velocity = entity.getVelocity();
 		velocity = velocity.normalize();
@@ -84,7 +85,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 			matrices.translate(0.2f * d, 0, 0.5f * d * side);
 		}
 
-		EnergyRenderer.renderEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, entity.getLength(), entity.getRadius(), false, entity.getColor());
+		EnergyRenderer.renderEnergy(ModelTransformationMode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, entity.getLength(), entity.getRadius(), false, entity.getColor());
 
 		matrices.pop();
 	}

@@ -34,7 +34,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.*;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
@@ -133,9 +132,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		this.descriptor = descriptor;
 	}
 
-	public static TranslatableTextContent getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
+	public static Text getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
 	{
-		return new TranslatableTextContent(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
+
+		return Text.translatable(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
 	}
 
 	public static boolean areBothHandsOccupied(LivingEntity entity)

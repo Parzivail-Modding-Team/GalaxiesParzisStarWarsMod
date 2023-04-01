@@ -20,7 +20,7 @@ public class MoistureVaporatorDisplay extends BasicDisplay implements SimpleGrid
 	private final int duration;
 
 	public MoistureVaporatorDisplay(@NotNull VaporatorRecipe recipe) {
-		this(EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(recipe.getOutput())),
+		this(EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(recipe.getOutput(BasicDisplay.registryAccess()))),
 		     Optional.ofNullable(recipe.getId()), recipe.getDuration());
 	}
 

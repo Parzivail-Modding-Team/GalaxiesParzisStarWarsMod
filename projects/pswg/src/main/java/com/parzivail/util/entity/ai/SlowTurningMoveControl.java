@@ -95,7 +95,7 @@ public class SlowTurningMoveControl extends MoveControl
 			BlockPos blockPos = this.entity.getBlockPos();
 			BlockState blockState = this.entity.world.getBlockState(blockPos);
 			VoxelShape voxelShape = blockState.getCollisionShape(this.entity.world, blockPos);
-			if (j > (double)this.entity.stepHeight && f * f + h * h < (double)Math.max(1.0F, this.entity.getWidth())
+			if (j > (double)this.entity.getStepHeight() && f * f + h * h < (double)Math.max(1.0F, this.entity.getWidth())
 			    || !voxelShape.isEmpty()
 			       && this.entity.getY() < voxelShape.getMax(Direction.Axis.Y) + (double)blockPos.getY()
 			       && !blockState.isIn(BlockTags.DOORS)

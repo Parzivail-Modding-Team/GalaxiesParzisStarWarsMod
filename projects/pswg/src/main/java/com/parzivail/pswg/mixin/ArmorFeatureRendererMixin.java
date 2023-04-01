@@ -28,7 +28,7 @@ public abstract class ArmorFeatureRendererMixin<T extends LivingEntity, M extend
 		ArmorRenderer.renderArmor(getContextModel(), matrices, vertexConsumers, entity, armorSlot, light, model, ci);
 	}
 
-	@Inject(method = "Lnet/minecraft/client/render/entity/feature/ArmorFeatureRenderer;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At("HEAD"), cancellable = true)
 	public void renderExtraArmor(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float f, float g, float h, float j, float k, float l, CallbackInfo ci)
 	{
 		ArmorRenderer.renderExtraArmor(getContextModel(), matrices, vertexConsumers, entity, light, ci);

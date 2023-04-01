@@ -2,9 +2,9 @@ package com.parzivail.pswg.features.blasters.client.workbench;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
 import com.parzivail.pswg.features.blasters.data.BlasterAttachmentDescriptor;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
 import com.parzivail.pswg.features.blasters.data.BlasterTag;
@@ -24,14 +24,17 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
-import net.minecraft.text.*;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -218,7 +221,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		text.add(Text.translatable(I18N_INCOMPAT_ATTACHMENT));
 
 		for (var a : incompat)
-			text.add(MutableText.of(BlasterItem.getAttachmentTranslation(blasterModel, a)).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xA0A0A0))));
+			text.add(BlasterItem.getAttachmentTranslation(blasterModel, a).copy().setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xA0A0A0))));
 
 		return text;
 	}
@@ -352,7 +355,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			MathUtil.scalePos(matrices, 5, 5, 5);
 
-			BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformation.Mode.NONE, false, matrices, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, null);
+			BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformationMode.NONE, false, matrices, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, null);
 			immediate.draw();
 
 			DiffuseLighting.enableGuiDepthLighting();
@@ -455,7 +458,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 				var iconU = attachment.category.getId() / 3;
 				var iconV = attachment.category.getId() % 3;
 
-				drawAttachmentRow(matrices, i, iconU, iconV, rowState, MutableText.of(BlasterItem.getAttachmentTranslation(blasterModel, attachment)));
+				drawAttachmentRow(matrices, i, iconU, iconV, rowState, BlasterItem.getAttachmentTranslation(blasterModel, attachment));
 			}
 		}
 	}
