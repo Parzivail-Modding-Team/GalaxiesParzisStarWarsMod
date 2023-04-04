@@ -1,1 +1,11 @@
-{}
+{
+	"blaster.pswg_addon_clonewars.dc17": "DC-17",
+	"item.pswg_addon_clonewars.phase1_clonetrooper_boots": "Phase 1 Bottes de clones",
+	"item.pswg_addon_clonewars.phase1_clonetrooper_chestplate": "Phase 1 Plastron de clones",
+	"item.pswg_addon_clonewars.phase1_clonetrooper_helmet": "Phase 1 Casque clones",
+	"item.pswg_addon_clonewars.phase1_clonetrooper_leggings": "Phase 1 Jambières de clones",
+	"item.pswg_addon_clonewars.phase2_clonetrooper_boots": "Phase 2 Bottes de clones",
+	"item.pswg_addon_clonewars.phase2_clonetrooper_chestplate": "Phase 2 Plastron de clones",
+	"item.pswg_addon_clonewars.phase2_clonetrooper_helmet": "Phase 2 Casque clones",
+	"item.pswg_addon_clonewars.phase2_clonetrooper_leggings": "Phase 2 Jambières de clones"
+}
