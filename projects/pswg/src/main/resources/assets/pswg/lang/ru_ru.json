@@ -1,5 +1,9 @@
 {
 	"blaster.pswg.a280": "§oБластер§r A-280",
+	"blaster.pswg.archetype.heavy": "Тяжелый бластер",
+	"blaster.pswg.archetype.ion": "Ионная пушка",
+	"blaster.pswg.archetype.pistol": "Бластер",
+	"blaster.pswg.archetype.rifle": "Винтовка бластер",
 	"blaster.pswg.bowcaster": "Энергетический арбалет",
 	"blaster.pswg.bowcaster.attachment.repeater": "Повторитель",
 	"blaster.pswg.cycler": "Пулевая винтовка",
@@ -646,7 +650,6 @@
 	"msg.pswg.tip.customize_character": "§9[PSWG]§r Чтобы настроить своего персонажа, нажмите %s!",
 	"msg.pswg.update": "Новое обновление PSWG, %s, доступно в %s!",
 	"screen.pswg.apply": "Принять",
-	"screen.pswg.blaster.incompatible_attachment": "Несовместимо с:",
 	"species.pswg.aqualish": "Аквалиш",
 	"species.pswg.aqualish.body": "Кожа",
 	"species.pswg.aqualish.body.beige": "Бежевый",
