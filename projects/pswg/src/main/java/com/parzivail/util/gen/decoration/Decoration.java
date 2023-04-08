@@ -6,6 +6,6 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.Random;
 
-public abstract class Decoration {
-	public abstract boolean generate(WorldGenView world, ChunkGenerator generator, Random random, BlockPos pos);
+public interface Decoration {
+	boolean generate(WorldGenView world, ChunkGenerator generator, Random random, BlockPos pos);
 }

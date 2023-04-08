@@ -1,29 +1,38 @@
 package com.parzivail.util.gen.decoration;
 
+import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.gen.noise.OctaveNoise;
 import com.parzivail.util.gen.world.WorldGenView;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.Random;
 
-public class RockDecoration extends Decoration
+public record RockDecoration(BlockState state, Block test) implements Decoration
 {
+
 	@Override
 	public boolean generate(WorldGenView world, ChunkGenerator generator, Random random, BlockPos pos)
 	{
+		if (world.getBlockState(pos.down()).getBlock() != test)
+		{
+			return false;
+		}
 		OctaveNoise noise = new OctaveNoise(1, new Random(world.getSeed()), 6.0, 6.0, 1.0, 2.0, 2.0);
 
-		for (int x = -4; x <= 4; x++)
+		int rad = 2;
+		for (int x = -rad; x <= rad; x++)
 		{
-			for (int z = -4; z <= 4; z++)
+			for (int z = -rad; z <= rad; z++)
 			{
-				for (int y = -4; y <= 4; y++)
+				for (int y = -rad; y <= rad; y++)
 				{
-					double dx = x / 4.0;
-					double dy = y / 4.0;
-					double dz = z / 4.0;
+					double dx = x / (double) rad;
+					double dy = y / (double) rad;
+					double dz = z / (double) rad;
 
 					double dist = Math.sqrt(dx * dx + dy * dy + dz * dz) + (noise.sample(x, y, z) * 0.2);
 
@@ -32,7 +41,7 @@ public class RockDecoration extends Decoration
 						continue;
 					}
 
-					world.setBlockState(pos.add(x, y, z), Blocks.DEEPSLATE.getDefaultState());
+					world.setBlockState(pos.add(x, y, z), state);
 				}
 			}
 		}

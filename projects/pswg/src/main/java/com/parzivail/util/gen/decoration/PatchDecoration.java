@@ -10,7 +10,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.List;
 import java.util.Random;
 
-public class PatchDecoration extends Decoration
+public class PatchDecoration implements Decoration
 {
 
 	private final BlockState state;

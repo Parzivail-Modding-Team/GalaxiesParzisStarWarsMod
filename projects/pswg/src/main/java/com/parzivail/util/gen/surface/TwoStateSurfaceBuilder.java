@@ -4,7 +4,9 @@ import com.parzivail.util.gen.world.ChunkView;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
-public class TwoStateSurfaceBuilder extends SurfaceBuilder
+import java.util.Random;
+
+public class TwoStateSurfaceBuilder implements SurfaceBuilder
 {
 	private final BlockState surface;
 	private final int surfaceDepth;
@@ -20,7 +22,7 @@ public class TwoStateSurfaceBuilder extends SurfaceBuilder
 	}
 
 	@Override
-	public void build(ChunkView chunk, int x, int z, int height, BlockState defaultBlock, BlockState defaultFluid)
+	public void build(ChunkView chunk, int x, int z, int height, Random random, BlockState defaultBlock, BlockState defaultFluid)
 	{
 		int genDepth = 1;
 

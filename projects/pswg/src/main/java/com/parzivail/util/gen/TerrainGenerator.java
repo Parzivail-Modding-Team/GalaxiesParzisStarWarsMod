@@ -18,6 +18,7 @@ import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.Random;
+import java.util.Set;
 
 public final class TerrainGenerator
 {
@@ -53,7 +54,7 @@ public final class TerrainGenerator
 		{
 			for (int nZ = 0; nZ < 4; nZ++)
 			{
-				for (int nY = 0; nY < 48; nY++)
+				for (int nY = 47; nY >= 0; nY--)
 				{
 					ChunkSection section = chunk.chunk().getSectionArray()[nY >> 1];
 
@@ -105,6 +106,8 @@ public final class TerrainGenerator
 				}
 			}
 		}
+
+//		Heightmap.populateHeightmaps(chunk.chunk(), Set.of(Heightmap.Type.OCEAN_FLOOR_WG, Heightmap.Type.WORLD_SURFACE_WG));
 	}
 
 	private void buildGenericChunk(ChunkView chunk, double[][] noises)
@@ -199,14 +202,18 @@ public final class TerrainGenerator
 
 	public void buildSurface(ChunkView chunk)
 	{
+		Random random = new Random();
+		int cx = chunk.getChunkPos().x;
+		int cz = chunk.getChunkPos().z;
 		for (int x = 0; x < 16; x++)
 		{
 			for (int z = 0; z < 16; z++)
 			{
 				// TODO: biome interpolator class
-				TerrainBiome biome = biomes.getBiome(chunk.getChunkPos().x * 4 + (x >> 2), chunk.getChunkPos().z * 4 + (z >> 2));
+				TerrainBiome biome = biomes.getBiome(cx * 4 + (x >> 2), cz * 4 + (z >> 2));
+				random.setSeed((cx * 16L + x) * 341873128712L + (cz * 16L + z) * 132897987541L);
 				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z);
-				biome.surface().build(chunk, x, z, height, geology, Blocks.WATER.getDefaultState());
+				biome.surface().build(chunk, cx * 16 + x, cz * 16 + z, height, random, geology, Blocks.WATER.getDefaultState());
 			}
 		}
 	}

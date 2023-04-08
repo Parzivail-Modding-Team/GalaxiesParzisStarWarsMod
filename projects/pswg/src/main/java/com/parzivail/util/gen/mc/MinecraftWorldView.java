@@ -27,7 +27,7 @@ public class MinecraftWorldView implements WorldGenView
 	@Override
 	public int getTopY(Heightmap.Type type, int x, int z)
 	{
-		return 0;
+		return world.getTopY(type, x, z);
 	}
 
 	@Override

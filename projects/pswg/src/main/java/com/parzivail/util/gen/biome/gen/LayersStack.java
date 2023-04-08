@@ -18,7 +18,7 @@ public final class LayersStack
             factory = ScaleLayer.INSTANCE.create(contextProvider.apply(20 + i), factory);
         }
 
-        // List return for allowing 3d biome layers
+
         return List.of(factory);
     }
 
