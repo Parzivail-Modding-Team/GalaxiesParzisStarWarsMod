@@ -17,10 +17,15 @@ buildscript {
 	}
 }
 
+val pswgVersionName = Regex("^0\\.([0-9]+)\\.([0-9]+)\\+(.+)$").matchEntire(version as String)?.destructured
+	?.let { (minor, patch, mc) -> "PSWG 0.$minor.$patch-${if (minor.toInt() != 0) "beta" else "alpha"}-$mc" }
+
+
 modrinth {
 	token.set(rootProject.findProperty("githubToken") as? String?)
 	changelog.set(rootProject.file("CHANGELOG.md").readText())
 	projectId.set("9rBI0wQz")
+	versionName.set(pswgVersionName)
 	versionType.set("alpha")
 	uploadFile.set(tasks.remapJar as Any)
 	required.project("P7dR8mSH") // Fabric API
@@ -41,6 +46,10 @@ curseforge {
 			optionalDependency("pswg-addon-clonewars")
 			optionalDependency("roughly-enough-items")
 		}
+
+		mainArtifact(tasks.remapJar.get()) {
+			displayName = pswgVersionName
+		}
 	}
 }
 
@@ -48,12 +57,13 @@ tasks.curseforge {
 	group = "publishing"
 }
 
-val github by tasks.register("github") {
+val github by tasks.registering {
 	inputs.files(tasks.remapJar)
 
 	group = "publishing"
 
 	doFirst {
+		check(pswgVersionName != null)
 		val version = version as String
 		val gson = Gson()
 		val token = rootProject.findProperty("githubToken") as String
@@ -63,7 +73,7 @@ val github by tasks.register("github") {
 				.addHeader("Authorization", "Bearer $token")
 				.bodyString(gson.toJson(jsonObject {
 					"tag_name"(version)
-					"name"(version)
+					"name"(pswgVersionName)
 					"body"(rootProject.file("CHANGELOG.md").readText())
 					"draft"(true)
 					"prerelease"(true)
@@ -99,7 +109,15 @@ class JsonObjectDsl {
 
 fun jsonObject(f: JsonObjectDsl.() -> Unit) = JsonObjectDsl().apply(f).jsonObject
 
-tasks.register("modPublish") {
+val modPublish by tasks.registering {
 	dependsOn(tasks.modrinth, tasks.curseforge, github)
 	group = "publishing"
+}
+
+for (task in arrayOf(tasks.modrinth, tasks.curseforge, modPublish)) {
+	task {
+		doFirst {
+			check(pswgVersionName != null)
+		}
+	}
 }
