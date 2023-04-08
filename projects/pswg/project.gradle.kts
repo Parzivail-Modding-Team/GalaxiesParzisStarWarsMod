@@ -32,7 +32,7 @@ dependencies {
 	"modImplementation"("com.terraformersmc:modmenu:${modmenu_version}")
 
 	// LambDynamicLights
-	/*"modImplementation"*/"modCompileOnly"("dev.lambdaurora:lambdynamiclights:${lambdynamiclights_version}")
+	"modImplementation"("dev.lambdaurora:lambdynamiclights:${lambdynamiclights_version}")
 
 	// Roughly Enough Items
 	"modCompileOnly"("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
