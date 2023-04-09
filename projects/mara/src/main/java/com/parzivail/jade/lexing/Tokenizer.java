@@ -3,18 +3,12 @@ package com.parzivail.jade.lexing;
 import com.parzivail.jade.lexing.state.StateArrivalHandler;
 import com.parzivail.jade.lexing.state.StateMachine;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.function.Predicate;
 
 public class Tokenizer extends StateMachine
 {
-	private static boolean isValidIdentifierCharacter(char c)
-	{
-		return (c >= 'A' && c <= 'Z') ||
-		       (c >= 'a' && c <= 'z') ||
-		       c == '_';
-	}
-
 	private static boolean isHexDigit(char c)
 	{
 		return c >= '0' && c <= '9' ||
@@ -35,6 +29,45 @@ public class Tokenizer extends StateMachine
 	private static boolean isBinaryDigit(char c)
 	{
 		return c == '0' || c == '1';
+	}
+
+	private static final HashMap<Character, TokenType> singleCharTokens = new HashMap<>();
+	private static final HashMap<Character, TokenizeState> multiCharTokens = new HashMap<>();
+
+	static
+	{
+		singleCharTokens.put('+', TokenType.Plus);
+		singleCharTokens.put('-', TokenType.Minus);
+		singleCharTokens.put('*', TokenType.Asterisk);
+		singleCharTokens.put('/', TokenType.Slash);
+		singleCharTokens.put('\\', TokenType.Backslash);
+		singleCharTokens.put('~', TokenType.Tilde);
+		singleCharTokens.put('`', TokenType.Grave);
+		singleCharTokens.put('!', TokenType.Bang);
+		singleCharTokens.put('.', TokenType.Dot);
+		singleCharTokens.put(',', TokenType.Comma);
+		singleCharTokens.put('?', TokenType.Question);
+		singleCharTokens.put('(', TokenType.OpenParen);
+		singleCharTokens.put(')', TokenType.CloseParen);
+		singleCharTokens.put('[', TokenType.OpenSquare);
+		singleCharTokens.put(']', TokenType.CloseSquare);
+		singleCharTokens.put('{', TokenType.OpenCurly);
+		singleCharTokens.put('}', TokenType.CloseCurly);
+		singleCharTokens.put('|', TokenType.Pipe);
+		singleCharTokens.put('&', TokenType.Amp);
+		singleCharTokens.put('@', TokenType.At);
+		singleCharTokens.put('#', TokenType.Pound);
+		singleCharTokens.put(';', TokenType.Semicolon);
+		singleCharTokens.put(':', TokenType.Colon);
+		singleCharTokens.put('\'', TokenType.SingleQuote);
+		singleCharTokens.put('"', TokenType.DoubleQuote);
+		singleCharTokens.put('$', TokenType.Dollar);
+		singleCharTokens.put('^', TokenType.Caret);
+
+		multiCharTokens.put('%', TokenizeState.PercentOrRightRot);
+		multiCharTokens.put('>', TokenizeState.GreaterOrRightShift);
+		multiCharTokens.put('<', TokenizeState.LessOrLeftShiftRot);
+		multiCharTokens.put('=', TokenizeState.AssignOrEquals);
 	}
 
 	private final StringBuilder tokenAccumulator = new StringBuilder();
@@ -111,7 +144,7 @@ public class Tokenizer extends StateMachine
 		var nextChar = text.charAt(0);
 
 		// TODO: relax requirements if already within an Identifier?
-		if (isValidIdentifierCharacter(nextChar))
+		if (Character.isUnicodeIdentifierPart(nextChar))
 		{
 			moveCharacterToState(TokenizeState.Identifier);
 			return;
@@ -252,7 +285,7 @@ public class Tokenizer extends StateMachine
 			popOneTextChar();
 			emitToken(new Token(TokenType.LeftShift, getTokenStart()), TokenizeState.End);
 		}
-		else if(nextChar == '%')
+		else if (nextChar == '%')
 		{
 			popOneTextChar();
 			emitToken(new Token(TokenType.LeftRotate, getTokenStart()), TokenizeState.End);
@@ -296,120 +329,39 @@ public class Tokenizer extends StateMachine
 
 			var nextChar = text.charAt(0);
 
-			// TODO: this would be a great HashMap
-			switch (nextChar)
+			var singleCharTokenType = singleCharTokens.get(nextChar);
+			if (singleCharTokenType != null)
 			{
-				case '+':
-					emitOneCharToken(TokenType.Plus);
-					return;
-				case '-':
-					emitOneCharToken(TokenType.Minus);
-					return;
-				case '*':
-					emitOneCharToken(TokenType.Asterisk);
-					return;
-				case '/':
-					emitOneCharToken(TokenType.Slash);
-					return;
-				case '\\':
-					emitOneCharToken(TokenType.Backslash);
-					return;
-				case '~':
-					emitOneCharToken(TokenType.Tilde);
-					return;
-				case '`':
-					emitOneCharToken(TokenType.Grave);
-					return;
-				case '!':
-					emitOneCharToken(TokenType.Bang);
-					return;
-				case '.':
-					emitOneCharToken(TokenType.Dot);
-					return;
-				case ',':
-					emitOneCharToken(TokenType.Comma);
-					return;
-				case '?':
-					emitOneCharToken(TokenType.Question);
-					return;
-				case '(':
-					emitOneCharToken(TokenType.OpenParen);
-					return;
-				case ')':
-					emitOneCharToken(TokenType.CloseParen);
-					return;
-				case '[':
-					emitOneCharToken(TokenType.OpenSquare);
-					return;
-				case ']':
-					emitOneCharToken(TokenType.CloseSquare);
-					return;
-				case '{':
-					emitOneCharToken(TokenType.OpenCurly);
-					return;
-				case '}':
-					emitOneCharToken(TokenType.CloseCurly);
-					return;
-				case '|':
-					emitOneCharToken(TokenType.Pipe);
-					return;
-				case '&':
-					emitOneCharToken(TokenType.Amp);
-					return;
-				case '@':
-					emitOneCharToken(TokenType.At);
-					return;
-				case '#':
-					emitOneCharToken(TokenType.Pound);
-					return;
-				case ';':
-					emitOneCharToken(TokenType.Semicolon);
-					return;
-				case ':':
-					emitOneCharToken(TokenType.Colon);
-					return;
-				case '\'':
-					emitOneCharToken(TokenType.SingleQuote);
-					return;
-				case '"':
-					emitOneCharToken(TokenType.DoubleQuote);
-					return;
-				case '$':
-					emitOneCharToken(TokenType.Dollar);
-					return;
-				case '^':
-					emitOneCharToken(TokenType.Caret);
-					return;
-				case '%':
-					moveCharacterToState(TokenizeState.PercentOrRightRot);
-					return;
-				case '>':
-					moveCharacterToState(TokenizeState.GreaterOrRightShift);
-					return;
-				case '<':
-					moveCharacterToState(TokenizeState.LessOrLeftShiftRot);
-					return;
-				case '=':
-					moveCharacterToState(TokenizeState.AssignOrEquals);
-					return;
-				case '0':
-					if (!requireTerminatingToken)
-					{
-						moveCharacterToState(TokenizeState.NumericLiteral);
-						return;
-					}
-			}
-
-			if (isDecimalDigit(nextChar) && !requireTerminatingToken)
-			{
-				moveCharacterToState(TokenizeState.IntegerLiteral);
+				emitOneCharToken(singleCharTokenType);
 				return;
 			}
 
-			if (isValidIdentifierCharacter(nextChar) && !requireTerminatingToken)
+			var multiCharTokenState = multiCharTokens.get(nextChar);
+			if (multiCharTokenState != null)
 			{
-				moveCharacterToState(TokenizeState.Identifier);
+				moveCharacterToState(multiCharTokenState);
 				return;
+			}
+
+			if (!requireTerminatingToken)
+			{
+				if (nextChar == '0')
+				{
+					moveCharacterToState(TokenizeState.NumericLiteral);
+					return;
+				}
+
+				if (isDecimalDigit(nextChar))
+				{
+					moveCharacterToState(TokenizeState.IntegerLiteral);
+					return;
+				}
+
+				if (Character.isUnicodeIdentifierStart(nextChar))
+				{
+					moveCharacterToState(TokenizeState.Identifier);
+					return;
+				}
 			}
 
 			if (Character.isWhitespace(nextChar))
