@@ -1,6 +1,6 @@
 package com.parzivail.jade.lexing;
 
-public class TokenizeException extends Exception
+public class TokenizeException extends RuntimeException
 {
 	public final int location;
 	public final String message;
