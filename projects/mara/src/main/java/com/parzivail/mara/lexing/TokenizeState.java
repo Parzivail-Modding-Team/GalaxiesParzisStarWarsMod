@@ -1,4 +1,4 @@
-package com.parzivail.jade.lexing;
+package com.parzivail.mara.lexing;
 
 public enum TokenizeState
 {
@@ -9,11 +9,12 @@ public enum TokenizeState
 	OctalLiteral,
 	HexLiteral,
 	PercentOrRightRot,
-	GreaterOrRightShift,
-	LessOrLeftShiftOrLeftRot,
+	GreaterOrRightShiftOrGreaterEquals,
+	LessOrLeftShiftOrLeftRotOrLessEquals,
+	BangOrNotEquals,
 	AssignOrEquals,
-	BitwiseOrBooleanAnd,
-	BitwiseOrBooleanOr,
+	AmpOrBooleanAnd,
+	PipeOrBooleanOr,
 	Identifier,
 	End,
 	EndIfTerminated,

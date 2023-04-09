@@ -1,4 +1,4 @@
-package com.parzivail.jade.lexing;
+package com.parzivail.mara.lexing;
 
 public class IdentifierToken extends Token
 {

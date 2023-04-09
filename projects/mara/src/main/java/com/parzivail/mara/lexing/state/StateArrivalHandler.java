@@ -1,6 +1,6 @@
-package com.parzivail.jade.lexing.state;
+package com.parzivail.mara.lexing.state;
 
-import com.parzivail.jade.lexing.TokenizeState;
+import com.parzivail.mara.lexing.TokenizeState;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

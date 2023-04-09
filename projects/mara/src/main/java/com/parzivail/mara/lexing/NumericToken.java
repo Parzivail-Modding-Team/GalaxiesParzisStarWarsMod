@@ -1,4 +1,4 @@
-package com.parzivail.jade.lexing;
+package com.parzivail.mara.lexing;
 
 public class NumericToken extends Token
 {
@@ -8,5 +8,10 @@ public class NumericToken extends Token
 	{
 		super(type, location);
 		this.value = value;
+	}
+
+	public int uintValue()
+	{
+		return Integer.parseUnsignedInt(value);
 	}
 }

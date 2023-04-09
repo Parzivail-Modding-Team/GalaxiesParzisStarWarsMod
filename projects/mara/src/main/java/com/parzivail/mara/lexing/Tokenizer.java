@@ -1,7 +1,7 @@
-package com.parzivail.jade.lexing;
+package com.parzivail.mara.lexing;
 
-import com.parzivail.jade.lexing.state.StateArrivalHandler;
-import com.parzivail.jade.lexing.state.StateMachine;
+import com.parzivail.mara.lexing.state.StateArrivalHandler;
+import com.parzivail.mara.lexing.state.StateMachine;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -9,6 +9,11 @@ import java.util.function.Predicate;
 
 public class Tokenizer extends StateMachine
 {
+	private boolean isIdentifierStartChar(char c)
+	{
+		return c == '_' || Character.isUnicodeIdentifierStart(c);
+	}
+
 	private static boolean isHexDigit(char c)
 	{
 		return c >= '0' && c <= '9' ||
@@ -43,7 +48,6 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put('\\', TokenType.Backslash);
 		singleCharTokens.put('~', TokenType.Tilde);
 		singleCharTokens.put('`', TokenType.Grave);
-		singleCharTokens.put('!', TokenType.Bang);
 		singleCharTokens.put('.', TokenType.Dot);
 		singleCharTokens.put(',', TokenType.Comma);
 		singleCharTokens.put('?', TokenType.Question);
@@ -63,11 +67,12 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put('^', TokenType.Caret);
 
 		multiCharTokens.put('%', TokenizeState.PercentOrRightRot);
-		multiCharTokens.put('>', TokenizeState.GreaterOrRightShift);
-		multiCharTokens.put('<', TokenizeState.LessOrLeftShiftOrLeftRot);
+		multiCharTokens.put('>', TokenizeState.GreaterOrRightShiftOrGreaterEquals);
+		multiCharTokens.put('<', TokenizeState.LessOrLeftShiftOrLeftRotOrLessEquals);
 		multiCharTokens.put('=', TokenizeState.AssignOrEquals);
-		multiCharTokens.put('|', TokenizeState.BitwiseOrBooleanOr);
-		multiCharTokens.put('&', TokenizeState.BitwiseOrBooleanAnd);
+		multiCharTokens.put('|', TokenizeState.PipeOrBooleanOr);
+		multiCharTokens.put('&', TokenizeState.AmpOrBooleanAnd);
+		multiCharTokens.put('!', TokenizeState.BangOrNotEquals);
 	}
 
 	private final StringBuilder tokenAccumulator = new StringBuilder();
@@ -82,6 +87,11 @@ public class Tokenizer extends StateMachine
 	{
 		super(TokenizeState.Begin);
 		this.text = text;
+	}
+
+	public LinkedList<Token> getTokens()
+	{
+		return tokens;
 	}
 
 	private int getTokenStart()
@@ -127,32 +137,6 @@ public class Tokenizer extends StateMachine
 		return text.isEmpty();
 	}
 
-	private void throwUnexpectedEof()
-	{
-		throw new TokenizeException("Unexpected EOF", text.length());
-	}
-
-	@StateArrivalHandler(TokenizeState.Identifier)
-	private void onIdentifier()
-	{
-		if (isEof())
-		{
-			emitToken(new IdentifierToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EmitEof);
-			return;
-		}
-
-		var nextChar = text.charAt(0);
-
-		// TODO: relax requirements if already within an Identifier?
-		if (Character.isUnicodeIdentifierPart(nextChar))
-		{
-			moveCharacterToState(TokenizeState.Identifier);
-			return;
-		}
-
-		emitToken(new IdentifierToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
-	}
-
 	private void onDigit(TokenType tokenType, TokenizeState possibleNextState, Predicate<Character> predicate)
 	{
 		if (isEof())
@@ -172,7 +156,7 @@ public class Tokenizer extends StateMachine
 		emitToken(new NumericToken(tokenType, tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
 	}
 
-	private void onTwoCharacterToken(TokenType oneCharType, char extension, TokenType extendededCharType)
+	private void onTwoCharacterToken(TokenType oneCharType, TokenPair... pairs)
 	{
 		if (isEof())
 		{
@@ -182,13 +166,37 @@ public class Tokenizer extends StateMachine
 
 		var nextChar = text.charAt(0);
 
-		if (nextChar == extension)
+		for (var pair : pairs)
 		{
-			popOneTextChar();
-			emitToken(new Token(extendededCharType, getTokenStart()), TokenizeState.End);
+			if (nextChar == pair.character())
+			{
+				popOneTextChar();
+				emitToken(new Token(pair.result(), getTokenStart()), TokenizeState.End);
+				return;
+			}
 		}
-		else
-			emitToken(new Token(oneCharType, getTokenStart()), TokenizeState.End);
+
+		emitToken(new Token(oneCharType, getTokenStart()), TokenizeState.End);
+	}
+
+	@StateArrivalHandler(TokenizeState.Identifier)
+	private void onIdentifier()
+	{
+		if (isEof())
+		{
+			emitToken(new IdentifierToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EmitEof);
+			return;
+		}
+
+		var nextChar = text.charAt(0);
+
+		if (Character.isUnicodeIdentifierPart(nextChar))
+		{
+			moveCharacterToState(TokenizeState.Identifier);
+			return;
+		}
+
+		emitToken(new IdentifierToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
 	}
 
 	@StateArrivalHandler(TokenizeState.HexLiteral)
@@ -242,60 +250,76 @@ public class Tokenizer extends StateMachine
 		throw new TokenizeException("Invalid character in numeric literal", nextChar, cursor);
 	}
 
-	@StateArrivalHandler(TokenizeState.EmitEof)
-	private void onEmitEof()
+	@StateArrivalHandler(TokenizeState.GreaterOrRightShiftOrGreaterEquals)
+	private void onGreaterOrRightShiftOrGreaterEquals()
 	{
-		emitToken(new Token(TokenType.Eof, getTokenStart()), TokenizeState.Eof);
-	}
-
-	@StateArrivalHandler(TokenizeState.GreaterOrRightShift)
-	private void onGreaterOrRightShift()
-	{
-		onTwoCharacterToken(TokenType.Greater, '>', TokenType.RightShift);
+		onTwoCharacterToken(
+				TokenType.Greater,
+				new TokenPair('>', TokenType.RightShift),
+				new TokenPair('=', TokenType.GreaterEquals)
+		);
 	}
 
 	@StateArrivalHandler(TokenizeState.PercentOrRightRot)
 	private void onPercentOrRightRot()
 	{
-		onTwoCharacterToken(TokenType.Percent, '>', TokenType.RightRotate);
+		onTwoCharacterToken(
+				TokenType.Percent,
+				new TokenPair('>', TokenType.RightRotate)
+		);
 	}
 
-	@StateArrivalHandler(TokenizeState.LessOrLeftShiftOrLeftRot)
-	private void onLessOrLeftShiftOrLeftRot()
+	@StateArrivalHandler(TokenizeState.LessOrLeftShiftOrLeftRotOrLessEquals)
+	private void onLessOrLeftShiftOrLeftRotOrLessEquals()
 	{
-		if (isEof())
-		{
-			emitToken(new Token(TokenType.Less, getTokenStart()), TokenizeState.EmitEof);
-			return;
-		}
-
-		var nextChar = text.charAt(0);
-
-		if (nextChar == '<')
-		{
-			popOneTextChar();
-			emitToken(new Token(TokenType.LeftShift, getTokenStart()), TokenizeState.End);
-		}
-		else if (nextChar == '%')
-		{
-			popOneTextChar();
-			emitToken(new Token(TokenType.LeftRotate, getTokenStart()), TokenizeState.End);
-		}
-		else
-			emitToken(new Token(TokenType.Less, getTokenStart()), TokenizeState.End);
+		onTwoCharacterToken(
+				TokenType.Less,
+				new TokenPair('<', TokenType.LeftShift),
+				new TokenPair('%', TokenType.LeftRotate),
+				new TokenPair('=', TokenType.LessEquals)
+		);
 	}
 
 	@StateArrivalHandler(TokenizeState.AssignOrEquals)
 	private void onAssignOrEquals()
 	{
-		onTwoCharacterToken(TokenType.Assign, '=', TokenType.Equals);
+		onTwoCharacterToken(
+				TokenType.Assign,
+				new TokenPair('=', TokenType.Equals)
+		);
+	}
+
+	@StateArrivalHandler(TokenizeState.PipeOrBooleanOr)
+	private void onPipeOrBooleanOr()
+	{
+		onTwoCharacterToken(
+				TokenType.Pipe,
+				new TokenPair('|', TokenType.Or)
+		);
+	}
+
+	@StateArrivalHandler(TokenizeState.AmpOrBooleanAnd)
+	private void onAmpOrBooleanAnd()
+	{
+		onTwoCharacterToken(
+				TokenType.Amp,
+				new TokenPair('&', TokenType.And)
+		);
+	}
+
+	@StateArrivalHandler(TokenizeState.BangOrNotEquals)
+	private void onBangOrNotEquals()
+	{
+		onTwoCharacterToken(
+				TokenType.Bang,
+				new TokenPair('=', TokenType.NotEquals)
+		);
 	}
 
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: greater-equals, less-equals, not-equals
-
+		// TODO: comments, string literals, postfix expressions (`a[1]`, etc.)
 		do
 		{
 			if (isEof())
@@ -334,7 +358,7 @@ public class Tokenizer extends StateMachine
 					return;
 				}
 
-				if (Character.isUnicodeIdentifierStart(nextChar))
+				if (isIdentifierStartChar(nextChar))
 				{
 					moveCharacterToState(TokenizeState.Identifier);
 					return;
@@ -352,17 +376,37 @@ public class Tokenizer extends StateMachine
 		while (getState() == TokenizeState.Begin);
 	}
 
+	private Token getLastToken()
+	{
+		return tokens.isEmpty() ? null : tokens.getLast();
+	}
+
 	public boolean consume()
 	{
 		var oldCursor = cursor;
+		var oldState = getState();
+		var oldLastToken = getLastToken();
 
-		requireTerminatingToken = getState() == TokenizeState.EndIfTerminated;
+		if (oldState == TokenizeState.EmitEof)
+		{
+			emitToken(new Token(TokenType.Eof, getTokenStart()), TokenizeState.Eof);
+			return false;
+		}
+
+		requireTerminatingToken = oldState == TokenizeState.EndIfTerminated;
 		setState(TokenizeState.Begin);
 
 		var newState = getState();
-		if (newState != TokenizeState.End && newState != TokenizeState.EndIfTerminated && newState != TokenizeState.Eof)
+
+		if (getLastToken() == oldLastToken && newState == TokenizeState.EmitEof)
+		{
+			emitToken(new Token(TokenType.Eof, getTokenStart()), TokenizeState.Eof);
+			return false;
+		}
+
+		if (newState != TokenizeState.End && newState != TokenizeState.EndIfTerminated && newState != TokenizeState.EmitEof)
 			throw new TokenizeException("Failed to consume token", oldCursor);
 
-		return newState != TokenizeState.Eof;
+		return true;
 	}
 }

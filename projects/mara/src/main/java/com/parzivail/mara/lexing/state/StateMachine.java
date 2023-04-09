@@ -1,6 +1,6 @@
-package com.parzivail.jade.lexing.state;
+package com.parzivail.mara.lexing.state;
 
-import com.parzivail.jade.lexing.TokenizeState;
+import com.parzivail.mara.lexing.TokenizeState;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,8 +20,11 @@ public class StateMachine
 		{
 			var sah = method.getAnnotation(StateArrivalHandler.class);
 			if (sah != null)
+			{
 				if (_states.put(sah.value(), method) != null)
 					throw new RuntimeException(String.format("Multiple handlers registered for state arrival %s", sah.value()));
+				method.setAccessible(true);
+			}
 		}
 	}
 
@@ -39,11 +42,11 @@ public class StateMachine
 			if (handler != null)
 				handler.invoke(this);
 		}
-		catch (IllegalAccessException |
-		       InvocationTargetException e)
-
+		catch (IllegalAccessException | InvocationTargetException e)
 		{
-			throw new RuntimeException(e);
+			var cause = e.getCause();
+			if (cause instanceof RuntimeException re)
+				throw re;
 		}
 	}
 
