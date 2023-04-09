@@ -38,6 +38,7 @@ public class Tokenizer extends StateMachine
 
 	private static final HashMap<Character, TokenType> singleCharTokens = new HashMap<>();
 	private static final HashMap<Character, TokenizeState> multiCharTokens = new HashMap<>();
+	private static final HashMap<Character, TokenizeState> transparentStateTokens = new HashMap<>();
 
 	static
 	{
@@ -62,7 +63,6 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put(';', TokenType.Semicolon);
 		singleCharTokens.put(':', TokenType.Colon);
 		singleCharTokens.put('\'', TokenType.SingleQuote);
-		singleCharTokens.put('"', TokenType.DoubleQuote);
 		singleCharTokens.put('$', TokenType.Dollar);
 		singleCharTokens.put('^', TokenType.Caret);
 
@@ -73,6 +73,8 @@ public class Tokenizer extends StateMachine
 		multiCharTokens.put('|', TokenizeState.PipeOrBooleanOr);
 		multiCharTokens.put('&', TokenizeState.AmpOrBooleanAnd);
 		multiCharTokens.put('!', TokenizeState.BangOrNotEquals);
+
+		transparentStateTokens.put('"', TokenizeState.StringLiteral);
 	}
 
 	private final StringBuilder tokenAccumulator = new StringBuilder();
@@ -177,6 +179,51 @@ public class Tokenizer extends StateMachine
 		}
 
 		emitToken(new Token(oneCharType, getTokenStart()), TokenizeState.End);
+	}
+
+	@StateArrivalHandler(TokenizeState.StringEscape)
+	private void onStringEscape()
+	{
+		if (isEof())
+			throw new TokenizeException("Unexpected EOF in string escape", cursor);
+
+		var nextChar = text.charAt(0);
+		popOneTextChar();
+
+		switch (nextChar)
+		{
+			case 'b' -> tokenAccumulator.append('\b');
+			case 't' -> tokenAccumulator.append('\t');
+			case 'n' -> tokenAccumulator.append('\n');
+			case 'r' -> tokenAccumulator.append('\r');
+			case 'f' -> tokenAccumulator.append('\f');
+			case '\\' -> tokenAccumulator.append('\\');
+			case '\"' -> tokenAccumulator.append('"');
+			case '\'' -> tokenAccumulator.append('\'');
+			case 'u' -> setState(TokenizeState.StringUnicodeEscape);
+		}
+	}
+
+	@StateArrivalHandler(TokenizeState.StringLiteral)
+	private void onStringLiteral()
+	{
+		if (isEof())
+			throw new TokenizeException("Unexpected EOF in string", cursor);
+
+		char nextChar;
+		do
+		{
+			nextChar = text.charAt(0);
+			popOneTextChar();
+
+			if (nextChar == '\\')
+				setState(TokenizeState.StringEscape);
+			else if (nextChar != '"')
+				tokenAccumulator.append(nextChar);
+		}
+		while (nextChar != '"');
+
+		emitToken(new StringToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.End);
 	}
 
 	@StateArrivalHandler(TokenizeState.Identifier)
@@ -319,7 +366,7 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: comments, string literals, postfix expressions (`a[1]`, etc.)
+		// TODO: comments, unicode string escapes, postfix expressions (`a[1]`, etc.)
 		do
 		{
 			if (isEof())
@@ -341,6 +388,14 @@ public class Tokenizer extends StateMachine
 			if (multiCharTokenState != null)
 			{
 				moveCharacterToState(multiCharTokenState);
+				return;
+			}
+
+			var transparentStateTokensState = transparentStateTokens.get(nextChar);
+			if (transparentStateTokensState != null)
+			{
+				popOneTextChar();
+				setState(transparentStateTokensState);
 				return;
 			}
 

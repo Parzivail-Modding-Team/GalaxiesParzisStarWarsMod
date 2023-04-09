@@ -14,7 +14,7 @@ public class LexerTests
 		var token = tokenizer.getTokens().getLast();
 
 		Assertions.assertNotNull(token);
-		Assertions.assertEquals(token.type, type);
+		Assertions.assertEquals(type, token.type);
 
 		return token;
 	}
@@ -26,21 +26,28 @@ public class LexerTests
 		var token = tokenizer.getTokens().getLast();
 
 		Assertions.assertNotNull(token);
-		Assertions.assertEquals(token.type, TokenType.Eof);
+		Assertions.assertEquals(TokenType.Eof, token.type);
 	}
 
 	private void assertIdentifier(Tokenizer tokenizer, String value)
 	{
 		var token = assertToken(tokenizer, TokenType.Identifier);
 		Assertions.assertInstanceOf(IdentifierToken.class, token);
-		Assertions.assertEquals(((IdentifierToken)token).value, value);
+		Assertions.assertEquals(value, ((IdentifierToken)token).value);
+	}
+
+	private void assertString(Tokenizer tokenizer, String value)
+	{
+		var token = assertToken(tokenizer, TokenType.StringLiteral);
+		Assertions.assertInstanceOf(StringToken.class, token);
+		Assertions.assertEquals(value, ((StringToken)token).value);
 	}
 
 	private void assertInt(Tokenizer tokenizer, int value)
 	{
 		var token = assertToken(tokenizer, TokenType.IntegerLiteral);
 		Assertions.assertInstanceOf(NumericToken.class, token);
-		Assertions.assertEquals(((NumericToken)token).uintValue(), value);
+		Assertions.assertEquals(value, ((NumericToken)token).uintValue());
 	}
 
 	private void assertInvalid(Tokenizer tokenizer)
@@ -122,6 +129,30 @@ public class LexerTests
 		assertIdentifier(tokenizer, "a123");
 		assertInt(tokenizer, 456);
 		assertIdentifier(tokenizer, "b");
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void stringLiteral(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("\"hello, world!\"");
+		assertString(tokenizer, "hello, world!");
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void stringLiteralEscape0(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("\"hello,\nworld!\"");
+		assertString(tokenizer, "hello,\nworld!");
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void stringLiteralEscape1(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("\"hello, world!\n\"");
+		assertString(tokenizer, "hello, world!\n");
 		assertEof(tokenizer);
 	}
 }

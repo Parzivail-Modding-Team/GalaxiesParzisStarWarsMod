@@ -48,5 +48,6 @@ public enum TokenType
 	OctalLiteral, // 0c77665
 	HexLiteral, // 0xBEEF2
 	Identifier, // var1
+	StringLiteral,
 	Eof, // <End of file>
 }
