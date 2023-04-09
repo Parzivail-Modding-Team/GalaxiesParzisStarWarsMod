@@ -53,8 +53,6 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put(']', TokenType.CloseSquare);
 		singleCharTokens.put('{', TokenType.OpenCurly);
 		singleCharTokens.put('}', TokenType.CloseCurly);
-		singleCharTokens.put('|', TokenType.Pipe);
-		singleCharTokens.put('&', TokenType.Amp);
 		singleCharTokens.put('@', TokenType.At);
 		singleCharTokens.put('#', TokenType.Pound);
 		singleCharTokens.put(';', TokenType.Semicolon);
@@ -66,8 +64,10 @@ public class Tokenizer extends StateMachine
 
 		multiCharTokens.put('%', TokenizeState.PercentOrRightRot);
 		multiCharTokens.put('>', TokenizeState.GreaterOrRightShift);
-		multiCharTokens.put('<', TokenizeState.LessOrLeftShiftRot);
+		multiCharTokens.put('<', TokenizeState.LessOrLeftShiftOrLeftRot);
 		multiCharTokens.put('=', TokenizeState.AssignOrEquals);
+		multiCharTokens.put('|', TokenizeState.BitwiseOrBooleanOr);
+		multiCharTokens.put('&', TokenizeState.BitwiseOrBooleanAnd);
 	}
 
 	private final StringBuilder tokenAccumulator = new StringBuilder();
@@ -172,6 +172,25 @@ public class Tokenizer extends StateMachine
 		emitToken(new NumericToken(tokenType, tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
 	}
 
+	private void onTwoCharacterToken(TokenType oneCharType, char extension, TokenType extendededCharType)
+	{
+		if (isEof())
+		{
+			emitToken(new Token(oneCharType, getTokenStart()), TokenizeState.EmitEof);
+			return;
+		}
+
+		var nextChar = text.charAt(0);
+
+		if (nextChar == extension)
+		{
+			popOneTextChar();
+			emitToken(new Token(extendededCharType, getTokenStart()), TokenizeState.End);
+		}
+		else
+			emitToken(new Token(oneCharType, getTokenStart()), TokenizeState.End);
+	}
+
 	@StateArrivalHandler(TokenizeState.HexLiteral)
 	private void onHexLiteral()
 	{
@@ -232,45 +251,17 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.GreaterOrRightShift)
 	private void onGreaterOrRightShift()
 	{
-		if (isEof())
-		{
-			emitToken(new Token(TokenType.Greater, getTokenStart()), TokenizeState.EmitEof);
-			return;
-		}
-
-		var nextChar = text.charAt(0);
-
-		if (nextChar == '>')
-		{
-			popOneTextChar();
-			emitToken(new Token(TokenType.RightShift, getTokenStart()), TokenizeState.End);
-		}
-		else
-			emitToken(new Token(TokenType.Greater, getTokenStart()), TokenizeState.End);
+		onTwoCharacterToken(TokenType.Greater, '>', TokenType.RightShift);
 	}
 
 	@StateArrivalHandler(TokenizeState.PercentOrRightRot)
 	private void onPercentOrRightRot()
 	{
-		if (isEof())
-		{
-			emitToken(new Token(TokenType.Percent, getTokenStart()), TokenizeState.EmitEof);
-			return;
-		}
-
-		var nextChar = text.charAt(0);
-
-		if (nextChar == '>')
-		{
-			popOneTextChar();
-			emitToken(new Token(TokenType.RightRotate, getTokenStart()), TokenizeState.End);
-		}
-		else
-			emitToken(new Token(TokenType.Percent, getTokenStart()), TokenizeState.End);
+		onTwoCharacterToken(TokenType.Percent, '>', TokenType.RightRotate);
 	}
 
-	@StateArrivalHandler(TokenizeState.LessOrLeftShiftRot)
-	private void onLessOrLeftShiftRot()
+	@StateArrivalHandler(TokenizeState.LessOrLeftShiftOrLeftRot)
+	private void onLessOrLeftShiftOrLeftRot()
 	{
 		if (isEof())
 		{
@@ -297,27 +288,13 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.AssignOrEquals)
 	private void onAssignOrEquals()
 	{
-		if (isEof())
-		{
-			emitToken(new Token(TokenType.Assign, getTokenStart()), TokenizeState.EmitEof);
-			return;
-		}
-
-		var nextChar = text.charAt(0);
-
-		if (nextChar == '=')
-		{
-			popOneTextChar();
-			emitToken(new Token(TokenType.Equals, getTokenStart()), TokenizeState.End);
-		}
-		else
-			emitToken(new Token(TokenType.Assign, getTokenStart()), TokenizeState.End);
+		onTwoCharacterToken(TokenType.Assign, '=', TokenType.Equals);
 	}
 
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: greater-equals, less-equals, not-equals, ||, &&
+		// TODO: greater-equals, less-equals, not-equals
 
 		do
 		{
