@@ -43,10 +43,11 @@ public enum TokenType
 	RightRotate, // %>
 	LeftShift, // <<
 	LeftRotate, // <%
-	IntegerLiteral, // 12345
+	DecimalLiteral, // 12345
 	BinaryLiteral, // 0b10101
 	OctalLiteral, // 0c77665
 	HexLiteral, // 0xBEEF2
+	FloatingPointLiteral, // 12.3456789
 	Identifier, // var1
 	StringLiteral,
 	Eof, // <End of file>

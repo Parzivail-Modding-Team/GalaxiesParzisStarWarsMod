@@ -43,11 +43,19 @@ public class LexerTests
 		Assertions.assertEquals(value, ((StringToken)token).value);
 	}
 
-	private void assertInt(Tokenizer tokenizer, int value)
+	private void assertInt(Tokenizer tokenizer, String value, TokenType type)
 	{
-		var token = assertToken(tokenizer, TokenType.IntegerLiteral);
+		var token = assertToken(tokenizer, type);
 		Assertions.assertInstanceOf(NumericToken.class, token);
-		Assertions.assertEquals(value, ((NumericToken)token).uintValue());
+		Assertions.assertEquals(value, ((NumericToken)token).value);
+		Assertions.assertEquals(NumericToken.BASES.get(type), ((NumericToken)token).base);
+	}
+
+	private void assertFloat(Tokenizer tokenizer, String value)
+	{
+		var token = assertToken(tokenizer, TokenType.FloatingPointLiteral);
+		Assertions.assertInstanceOf(FloatingPointToken.class, token);
+		Assertions.assertEquals(value, ((FloatingPointToken)token).value);
 	}
 
 	private void assertInvalid(Tokenizer tokenizer)
@@ -62,10 +70,21 @@ public class LexerTests
 	}
 
 	@Test
-	public void invalidId0(TestInfo testInfo) throws Exception
+	public void integerBases(TestInfo testInfo) throws Exception
+	{
+		Assertions.assertEquals(16, NumericToken.BASES.get(TokenType.HexLiteral));
+		Assertions.assertEquals(10, NumericToken.BASES.get(TokenType.DecimalLiteral));
+		Assertions.assertEquals(8, NumericToken.BASES.get(TokenType.OctalLiteral));
+		Assertions.assertEquals(2, NumericToken.BASES.get(TokenType.BinaryLiteral));
+	}
+
+	@Test
+	public void intIdentifier(TestInfo testInfo) throws Exception
 	{
 		var tokenizer = new Tokenizer("0test");
-		assertInvalid(tokenizer);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertIdentifier(tokenizer, "test");
+		assertEof(tokenizer);
 	}
 
 	@Test
@@ -118,7 +137,7 @@ public class LexerTests
 	{
 		var tokenizer = new Tokenizer("a123 456b");
 		assertIdentifier(tokenizer, "a123");
-		assertInt(tokenizer, 456);
+		assertInt(tokenizer, "456", TokenType.DecimalLiteral);
 		assertIdentifier(tokenizer, "b");
 		assertEof(tokenizer);
 	}
@@ -128,7 +147,7 @@ public class LexerTests
 	{
 		var tokenizer = new Tokenizer("a123 456 b");
 		assertIdentifier(tokenizer, "a123");
-		assertInt(tokenizer, 456);
+		assertInt(tokenizer, "456", TokenType.DecimalLiteral);
 		assertIdentifier(tokenizer, "b");
 		assertEof(tokenizer);
 	}
@@ -187,7 +206,7 @@ public class LexerTests
 		assertToken(tokenizer, TokenType.Comma);
 		assertIdentifier(tokenizer, "Count");
 		assertToken(tokenizer, TokenType.Colon);
-		assertInt(tokenizer, 1);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
 		assertIdentifier(tokenizer, "b");
 		assertToken(tokenizer, TokenType.Comma);
 		assertIdentifier(tokenizer, "tag");
@@ -195,7 +214,7 @@ public class LexerTests
 		assertToken(tokenizer, TokenType.OpenCurly);
 		assertIdentifier(tokenizer, "Damage");
 		assertToken(tokenizer, TokenType.Colon);
-		assertInt(tokenizer, 10);
+		assertInt(tokenizer, "10", TokenType.DecimalLiteral);
 		assertToken(tokenizer, TokenType.CloseCurly);
 		assertToken(tokenizer, TokenType.CloseCurly);
 		assertToken(tokenizer, TokenType.CloseCurly);
@@ -220,7 +239,77 @@ public class LexerTests
 		assertToken(tokenizer, TokenType.Comma);
 		assertIdentifier(tokenizer, "light");
 		assertToken(tokenizer, TokenType.Assign);
-		assertInt(tokenizer, 4);
+		assertInt(tokenizer, "4", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseSquare);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void integers0(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("0 01 0123 123456 9999999999999999999999999999 0x0 0x00 0x000 0x123 0x012 0b101101 0b00000 0c0 0c1234567 000000");
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertInt(tokenizer, "01", TokenType.DecimalLiteral);
+		assertInt(tokenizer, "0123", TokenType.DecimalLiteral);
+		assertInt(tokenizer, "123456", TokenType.DecimalLiteral);
+		assertInt(tokenizer, "9999999999999999999999999999", TokenType.DecimalLiteral);
+		assertInt(tokenizer, "0", TokenType.HexLiteral);
+		assertInt(tokenizer, "00", TokenType.HexLiteral);
+		assertInt(tokenizer, "000", TokenType.HexLiteral);
+		assertInt(tokenizer, "123", TokenType.HexLiteral);
+		assertInt(tokenizer, "012", TokenType.HexLiteral);
+		assertInt(tokenizer, "101101", TokenType.BinaryLiteral);
+		assertInt(tokenizer, "00000", TokenType.BinaryLiteral);
+		assertInt(tokenizer, "0", TokenType.OctalLiteral);
+		assertInt(tokenizer, "1234567", TokenType.OctalLiteral);
+		assertInt(tokenizer, "000000", TokenType.DecimalLiteral);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void floatingPoint0(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("0 123 123.456 1.234 1.234f 1.234d 0.123 -0.123 .234 -.234 123. 0.0 123");
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertInt(tokenizer, "123", TokenType.DecimalLiteral);
+		assertFloat(tokenizer, "123.456");
+		assertFloat(tokenizer, "1.234");
+		assertFloat(tokenizer, "1.234");
+		assertIdentifier(tokenizer, "f");
+		assertFloat(tokenizer, "1.234");
+		assertIdentifier(tokenizer, "d");
+		assertFloat(tokenizer, "0.123");
+		assertToken(tokenizer, TokenType.Minus);
+		assertFloat(tokenizer, "0.123");
+		assertFloat(tokenizer, ".234");
+		assertToken(tokenizer, TokenType.Minus);
+		assertFloat(tokenizer, ".234");
+		assertFloat(tokenizer, "123.");
+		assertFloat(tokenizer, "0.0");
+		assertInt(tokenizer, "123", TokenType.DecimalLiteral);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void postfixArrayIndexInt(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("array[0x10]");
+		assertIdentifier(tokenizer, "array");
+		assertToken(tokenizer, TokenType.OpenSquare);
+		assertInt(tokenizer, "10", TokenType.HexLiteral);
+		assertToken(tokenizer, TokenType.CloseSquare);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void postfixArrayIndexAddition(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("array[offset + 0b11010110]");
+		assertIdentifier(tokenizer, "array");
+		assertToken(tokenizer, TokenType.OpenSquare);
+		assertIdentifier(tokenizer, "offset");
+		assertToken(tokenizer, TokenType.Plus);
+		assertInt(tokenizer, "11010110", TokenType.BinaryLiteral);
 		assertToken(tokenizer, TokenType.CloseSquare);
 		assertEof(tokenizer);
 	}

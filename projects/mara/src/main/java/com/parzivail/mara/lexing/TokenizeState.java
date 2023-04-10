@@ -4,7 +4,9 @@ public enum TokenizeState
 {
 	Begin,
 	NumericLiteral,
-	IntegerLiteral,
+	DecimalLiteral,
+	DotOrFloatingPointLiteral,
+	FloatingPointLiteral,
 	BinaryLiteral,
 	OctalLiteral,
 	HexLiteral,

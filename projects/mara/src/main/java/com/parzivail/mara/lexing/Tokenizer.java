@@ -49,7 +49,6 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put('\\', TokenType.Backslash);
 		singleCharTokens.put('~', TokenType.Tilde);
 		singleCharTokens.put('`', TokenType.Grave);
-		singleCharTokens.put('.', TokenType.Dot);
 		singleCharTokens.put(',', TokenType.Comma);
 		singleCharTokens.put('?', TokenType.Question);
 		singleCharTokens.put('(', TokenType.OpenParen);
@@ -73,6 +72,7 @@ public class Tokenizer extends StateMachine
 		multiCharTokens.put('|', TokenizeState.PipeOrBooleanOr);
 		multiCharTokens.put('&', TokenizeState.AmpOrBooleanAnd);
 		multiCharTokens.put('!', TokenizeState.BangOrNotEquals);
+		multiCharTokens.put('.', TokenizeState.DotOrFloatingPointLiteral);
 
 		transparentStateTokens.put('"', TokenizeState.StringLiteral);
 	}
@@ -143,7 +143,7 @@ public class Tokenizer extends StateMachine
 	{
 		if (isEof())
 		{
-			emitToken(new NumericToken(tokenType, tokenAccumulator.toString(), getTokenStart()), TokenizeState.EmitEof);
+			emitToken(new NumericToken(tokenType, tokenAccumulator.toString(), NumericToken.BASES.get(tokenType), getTokenStart()), TokenizeState.EmitEof);
 			return;
 		}
 
@@ -155,7 +155,7 @@ public class Tokenizer extends StateMachine
 			return;
 		}
 
-		emitToken(new NumericToken(tokenType, tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
+		emitToken(new NumericToken(tokenType, tokenAccumulator.toString(), NumericToken.BASES.get(tokenType), getTokenStart()), TokenizeState.EndIfTerminated);
 	}
 
 	private void onTwoCharacterToken(TokenType oneCharType, TokenPair... pairs)
@@ -252,10 +252,49 @@ public class Tokenizer extends StateMachine
 		onDigit(TokenType.HexLiteral, TokenizeState.HexLiteral, Tokenizer::isHexDigit);
 	}
 
-	@StateArrivalHandler(TokenizeState.IntegerLiteral)
+	@StateArrivalHandler(TokenizeState.FloatingPointLiteral)
+	private void onFloatingPointLiteral()
+	{
+		if (isEof())
+		{
+			emitToken(new FloatingPointToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EmitEof);
+			return;
+		}
+
+		var nextChar = text.charAt(0);
+
+		if (isDecimalDigit(nextChar))
+		{
+			moveCharacterToState(TokenizeState.FloatingPointLiteral);
+			return;
+		}
+
+		emitToken(new FloatingPointToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
+	}
+
+	@StateArrivalHandler(TokenizeState.DecimalLiteral)
 	private void onIntegerLiteral()
 	{
-		onDigit(TokenType.IntegerLiteral, TokenizeState.IntegerLiteral, Tokenizer::isDecimalDigit);
+		if (isEof())
+		{
+			emitToken(new NumericToken(TokenType.DecimalLiteral, tokenAccumulator.toString(), 10, getTokenStart()), TokenizeState.EmitEof);
+			return;
+		}
+
+		var nextChar = text.charAt(0);
+
+		if (isDecimalDigit(nextChar))
+		{
+			moveCharacterToState(TokenizeState.DecimalLiteral);
+			return;
+		}
+		else if (nextChar == '.')
+		{
+			moveCharacterToState(TokenizeState.FloatingPointLiteral);
+			return;
+		}
+
+		emitToken(new NumericToken(TokenType.DecimalLiteral, tokenAccumulator.toString(), 10, getTokenStart()), TokenizeState.EndIfTerminated);
 	}
 
 	@StateArrivalHandler(TokenizeState.OctalLiteral)
@@ -275,7 +314,7 @@ public class Tokenizer extends StateMachine
 	{
 		if (isEof())
 		{
-			emitToken(new NumericToken(TokenType.IntegerLiteral, tokenAccumulator.toString(), getTokenStart()), TokenizeState.EmitEof);
+			emitToken(new NumericToken(TokenType.DecimalLiteral, tokenAccumulator.toString(), 10, getTokenStart()), TokenizeState.EmitEof);
 			return;
 		}
 
@@ -283,18 +322,47 @@ public class Tokenizer extends StateMachine
 
 		switch (nextChar)
 		{
-			case 'b' -> resetCharacterToState(TokenizeState.BinaryLiteral);
-			case 'c' -> resetCharacterToState(TokenizeState.OctalLiteral);
-			case 'x' -> resetCharacterToState(TokenizeState.HexLiteral);
+			case 'b':
+				resetCharacterToState(TokenizeState.BinaryLiteral);
+				return;
+			case 'c':
+				resetCharacterToState(TokenizeState.OctalLiteral);
+				return;
+			case 'x':
+				resetCharacterToState(TokenizeState.HexLiteral);
+				return;
+			case '.':
+				moveCharacterToState(TokenizeState.FloatingPointLiteral);
+				return;
 		}
 
 		if (isDecimalDigit(nextChar))
 		{
-			moveCharacterToState(TokenizeState.IntegerLiteral);
+			moveCharacterToState(TokenizeState.DecimalLiteral);
 			return;
 		}
 
-		throw new TokenizeException("Invalid character in numeric literal", nextChar, cursor);
+		emitToken(new NumericToken(TokenType.DecimalLiteral, tokenAccumulator.toString(), 10, getTokenStart()), TokenizeState.EndIfTerminated);
+	}
+
+	@StateArrivalHandler(TokenizeState.DotOrFloatingPointLiteral)
+	private void onDotOrFloatingPointLiteral()
+	{
+		if (isEof())
+		{
+			emitToken(new Token(TokenType.Dot, getTokenStart()), TokenizeState.EmitEof);
+			return;
+		}
+
+		var nextChar = text.charAt(0);
+
+		if (isDecimalDigit(nextChar))
+		{
+			moveCharacterToState(TokenizeState.FloatingPointLiteral);
+			return;
+		}
+
+		emitToken(new Token(TokenType.Dot, getTokenStart()), TokenizeState.End);
 	}
 
 	@StateArrivalHandler(TokenizeState.GreaterOrRightShiftOrGreaterEquals)
@@ -366,7 +434,7 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: comments, unicode string escapes, postfix expressions (`a[1]`, etc.), floating point literals, end-of-numeric-literal type specification (L, f, d, etc.)
+		// TODO: comments, unicode string escapes
 
 		do
 		{
@@ -410,7 +478,7 @@ public class Tokenizer extends StateMachine
 
 				if (isDecimalDigit(nextChar))
 				{
-					moveCharacterToState(TokenizeState.IntegerLiteral);
+					moveCharacterToState(TokenizeState.DecimalLiteral);
 					return;
 				}
 			}
