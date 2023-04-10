@@ -119,7 +119,8 @@ public class LexerTests
 		var tokenizer = new Tokenizer("a123 456b");
 		assertIdentifier(tokenizer, "a123");
 		assertInt(tokenizer, 456);
-		assertInvalid(tokenizer);
+		assertIdentifier(tokenizer, "b");
+		assertEof(tokenizer);
 	}
 
 	@Test
@@ -129,6 +130,14 @@ public class LexerTests
 		assertIdentifier(tokenizer, "a123");
 		assertInt(tokenizer, 456);
 		assertIdentifier(tokenizer, "b");
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void identIntIdent3(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("a123b456c");
+		assertIdentifier(tokenizer, "a123b456c");
 		assertEof(tokenizer);
 	}
 
@@ -153,6 +162,66 @@ public class LexerTests
 	{
 		var tokenizer = new Tokenizer("\"hello, world!\n\"");
 		assertString(tokenizer, "hello, world!\n");
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void stringLiteralEscape2(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("\"\\\"hello\\\", world!\n\"");
+		assertString(tokenizer, "\"hello\", world!\n");
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void nbt0(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("{Item:{id:\"minecraft:diamond_sword\",Count:1b,tag:{Damage:10}}}");
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertIdentifier(tokenizer, "Item");
+		assertToken(tokenizer, TokenType.Colon);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertIdentifier(tokenizer, "id");
+		assertToken(tokenizer, TokenType.Colon);
+		assertString(tokenizer, "minecraft:diamond_sword");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "Count");
+		assertToken(tokenizer, TokenType.Colon);
+		assertInt(tokenizer, 1);
+		assertIdentifier(tokenizer, "b");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "tag");
+		assertToken(tokenizer, TokenType.Colon);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertIdentifier(tokenizer, "Damage");
+		assertToken(tokenizer, TokenType.Colon);
+		assertInt(tokenizer, 10);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void blockstate0(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("pswg:block[facing=east,half=top,light=4]");
+		assertIdentifier(tokenizer, "pswg");
+		assertToken(tokenizer, TokenType.Colon);
+		assertIdentifier(tokenizer, "block");
+		assertToken(tokenizer, TokenType.OpenSquare);
+		assertIdentifier(tokenizer, "facing");
+		assertToken(tokenizer, TokenType.Assign);
+		assertIdentifier(tokenizer, "east");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "half");
+		assertToken(tokenizer, TokenType.Assign);
+		assertIdentifier(tokenizer, "top");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "light");
+		assertToken(tokenizer, TokenType.Assign);
+		assertInt(tokenizer, 4);
+		assertToken(tokenizer, TokenType.CloseSquare);
 		assertEof(tokenizer);
 	}
 }

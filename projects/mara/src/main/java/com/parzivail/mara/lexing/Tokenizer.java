@@ -366,7 +366,8 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: comments, unicode string escapes, postfix expressions (`a[1]`, etc.)
+		// TODO: comments, unicode string escapes, postfix expressions (`a[1]`, etc.), floating point literals, end-of-numeric-literal type specification (L, f, d, etc.)
+
 		do
 		{
 			if (isEof())
@@ -412,21 +413,22 @@ public class Tokenizer extends StateMachine
 					moveCharacterToState(TokenizeState.IntegerLiteral);
 					return;
 				}
+			}
 
-				if (isIdentifierStartChar(nextChar))
-				{
-					moveCharacterToState(TokenizeState.Identifier);
-					return;
-				}
+			if (isIdentifierStartChar(nextChar))
+			{
+				moveCharacterToState(TokenizeState.Identifier);
+				return;
 			}
 
 			if (Character.isWhitespace(nextChar))
 			{
 				requireTerminatingToken = false;
 				popOneTextChar();
+				continue;
 			}
-			else
-				throw new TokenizeException(String.format("Unexpected %stoken", requireTerminatingToken ? "non-terminating " : ""), nextChar, cursor);
+
+			throw new TokenizeException(String.format("Unexpected %stoken", requireTerminatingToken ? "non-terminating " : ""), nextChar, cursor);
 		}
 		while (getState() == TokenizeState.Begin);
 	}
