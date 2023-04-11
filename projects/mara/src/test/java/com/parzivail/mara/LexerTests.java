@@ -391,26 +391,45 @@ public class LexerTests
 	@Test
 	public void characters0(TestInfo testInfo) throws Exception
 	{
-		var tokenizer = new Tokenizer("'a' 'b' '\t' '\n' '\\'' '\\\\'");
+		var tokenizer = new Tokenizer("'a' 'b' '\t' '\n' '\\'' '\\\\' '\\u0000' '\\u0020' '\\uDEAD' '\\uBEEF'");
 		assertCharacter(tokenizer, 'a');
 		assertCharacter(tokenizer, 'b');
 		assertCharacter(tokenizer, '\t');
 		assertCharacter(tokenizer, '\n');
 		assertCharacter(tokenizer, '\'');
 		assertCharacter(tokenizer, '\\');
+		assertCharacter(tokenizer, '\u0000');
+		assertCharacter(tokenizer, '\u0020');
+		assertCharacter(tokenizer, '\uDEAD');
+		assertCharacter(tokenizer, '\uBEEF');
 		assertEof(tokenizer);
 	}
 
 	@Test
-	public void characters1(TestInfo testInfo) throws Exception
+	public void invalidCharacter0(TestInfo testInfo) throws Exception
 	{
-		var tokenizer = new Tokenizer("'a' 'b' '\t' '\n' '\\'' '\\\\' 'ab'");
-		assertCharacter(tokenizer, 'a');
-		assertCharacter(tokenizer, 'b');
-		assertCharacter(tokenizer, '\t');
-		assertCharacter(tokenizer, '\n');
-		assertCharacter(tokenizer, '\'');
-		assertCharacter(tokenizer, '\\');
+		var tokenizer = new Tokenizer("'ab'");
+		assertInvalid(tokenizer);
+	}
+
+	@Test
+	public void invalidCharacter1(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("'\\u000'");
+		assertInvalid(tokenizer);
+	}
+
+	@Test
+	public void invalidCharacter2(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("'\\uBEET'");
+		assertInvalid(tokenizer);
+	}
+
+	@Test
+	public void invalidCharacter3(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("'\\uCAFE5'");
 		assertInvalid(tokenizer);
 	}
 

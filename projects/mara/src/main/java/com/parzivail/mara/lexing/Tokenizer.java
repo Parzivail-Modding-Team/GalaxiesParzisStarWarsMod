@@ -184,6 +184,27 @@ public class Tokenizer extends StateMachine
 		emitToken(new Token(oneCharType, getTokenStart()), TokenizeState.End);
 	}
 
+	@StateArrivalHandler(TokenizeState.StringUnicodeEscape)
+	private void onStringUnicodeEscape()
+	{
+		if (isEof())
+			throw new TokenizeException("Unexpected EOF in unicode string escape", cursor);
+
+		var sb = new StringBuilder(4);
+		for (var i = 0; i < 4; i++)
+		{
+			var nextChar = text.charAt(0);
+
+			if (!isHexDigit(nextChar))
+				throw new TokenizeException("Unexpected character in unicode string escape", cursor);
+
+			popOneTextChar();
+			sb.append(nextChar);
+		}
+
+		tokenAccumulator.append(new String(new int[] { Integer.parseInt(sb.toString(), 16) }, 0, 1));
+	}
+
 	@StateArrivalHandler(TokenizeState.StringEscape)
 	private void onStringEscape()
 	{
@@ -461,7 +482,7 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: comments, unicode string escapes, single-quote char literals
+		// TODO: comments, floating point scientific notation
 
 		do
 		{
