@@ -31,8 +31,6 @@ public enum TokenType
 	Pound, // #
 	Semicolon, // ;
 	Colon, // :
-	SingleQuote, // '
-	DoubleQuote, // "
 	Dollar, // $
 	Caret, // ^
 	Greater, // >

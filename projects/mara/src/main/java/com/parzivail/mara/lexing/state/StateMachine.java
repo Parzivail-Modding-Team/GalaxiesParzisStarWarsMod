@@ -34,6 +34,11 @@ public class StateMachine
 		run();
 	}
 
+	public void restart()
+	{
+		state = TokenizeState.Begin;
+	}
+
 	public void run()
 	{
 		try

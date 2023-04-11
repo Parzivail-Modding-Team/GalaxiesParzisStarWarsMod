@@ -45,7 +45,6 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put('+', TokenType.Plus);
 		singleCharTokens.put('-', TokenType.Minus);
 		singleCharTokens.put('*', TokenType.Asterisk);
-		singleCharTokens.put('/', TokenType.Slash);
 		singleCharTokens.put('\\', TokenType.Backslash);
 		singleCharTokens.put('~', TokenType.Tilde);
 		singleCharTokens.put('`', TokenType.Grave);
@@ -72,6 +71,7 @@ public class Tokenizer extends StateMachine
 		multiCharTokens.put('&', TokenizeState.AmpOrBooleanAnd);
 		multiCharTokens.put('!', TokenizeState.BangOrNotEquals);
 		multiCharTokens.put('.', TokenizeState.DotOrFloatingPointLiteral);
+		multiCharTokens.put('/', TokenizeState.SlashOrComment);
 
 		transparentStateTokens.put('\'', TokenizeState.CharacterLiteral);
 		transparentStateTokens.put('"', TokenizeState.StringLiteral);
@@ -479,6 +479,43 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
+	@StateArrivalHandler(TokenizeState.SlashOrComment)
+	private void onSlashOrComment()
+	{
+		if (isEof())
+		{
+			emitToken(new Token(TokenType.Slash, getTokenStart()), TokenizeState.EmitEof);
+			return;
+		}
+
+		var nextChar = text.charAt(0);
+
+		if (nextChar == '/')
+		{
+			resetCharacterToState(TokenizeState.LineComment);
+			return;
+		}
+
+		emitToken(new Token(TokenType.Slash, getTokenStart()), TokenizeState.End);
+	}
+
+	@StateArrivalHandler(TokenizeState.LineComment)
+	private void onLineComment()
+	{
+		char c;
+
+		// Consume all characters until a line break
+		do
+		{
+			c = text.charAt(0);
+			popOneTextChar();
+		}
+		while (c != '\n');
+
+		// Ignore this token and begin to consume another
+		restart();
+	}
+
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
@@ -498,14 +535,14 @@ public class Tokenizer extends StateMachine
 			if (singleCharTokenType != null)
 			{
 				emitOneCharToken(singleCharTokenType);
-				return;
+				continue;
 			}
 
 			var multiCharTokenState = multiCharTokens.get(nextChar);
 			if (multiCharTokenState != null)
 			{
 				moveCharacterToState(multiCharTokenState);
-				return;
+				continue;
 			}
 
 			var transparentStateTokensState = transparentStateTokens.get(nextChar);
@@ -513,7 +550,7 @@ public class Tokenizer extends StateMachine
 			{
 				popOneTextChar();
 				setState(transparentStateTokensState);
-				return;
+				continue;
 			}
 
 			if (!requireTerminatingToken)
@@ -521,20 +558,20 @@ public class Tokenizer extends StateMachine
 				if (nextChar == '0')
 				{
 					moveCharacterToState(TokenizeState.NumericLiteral);
-					return;
+					continue;
 				}
 
 				if (isDecimalDigit(nextChar))
 				{
 					moveCharacterToState(TokenizeState.DecimalLiteral);
-					return;
+					continue;
 				}
 			}
 
 			if (isIdentifierStartChar(nextChar))
 			{
 				moveCharacterToState(TokenizeState.Identifier);
-				return;
+				continue;
 			}
 
 			if (Character.isWhitespace(nextChar))
@@ -544,7 +581,7 @@ public class Tokenizer extends StateMachine
 				continue;
 			}
 
-			throw new TokenizeException(String.format("Unexpected %stoken", requireTerminatingToken ? "non-terminating " : ""), nextChar, cursor);
+			throw new TokenizeException(String.format("Unexpected %stoken", requireTerminatingToken ? "non-terminating " : ""), text.charAt(0), cursor);
 		}
 		while (getState() == TokenizeState.Begin);
 	}

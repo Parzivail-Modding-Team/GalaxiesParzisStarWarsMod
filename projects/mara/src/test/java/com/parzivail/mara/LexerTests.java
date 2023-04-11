@@ -200,6 +200,14 @@ public class LexerTests
 	}
 
 	@Test
+	public void stringLiteralEscape3(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("\"hello,\\u0020DEADBEEF\\u0020world!\"");
+		assertString(tokenizer, "hello, DEADBEEF world!");
+		assertEof(tokenizer);
+	}
+
+	@Test
 	public void nbt0(TestInfo testInfo) throws Exception
 	{
 		var tokenizer = new Tokenizer("{Item:{id:\"minecraft:diamond_sword\",Count:1b,tag:{Damage:10}}}");
@@ -431,6 +439,36 @@ public class LexerTests
 	{
 		var tokenizer = new Tokenizer("'\\uCAFE5'");
 		assertInvalid(tokenizer);
+	}
+
+	@Test
+	public void comments0(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						int i = 0;
+						// This is a comment
+						str s = "hello, world!";
+						// Example: s.Length
+						print(s);
+						"""
+		);
+		assertIdentifier(tokenizer, "int");
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Assign);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "str");
+		assertIdentifier(tokenizer, "s");
+		assertToken(tokenizer, TokenType.Assign);
+		assertString(tokenizer, "hello, world!");
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "print");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "s");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertEof(tokenizer);
 	}
 
 	@Test
@@ -724,6 +762,62 @@ public class LexerTests
 							return c >= '0' && c <= '9' ||
 									(c >= 'A' && c <= 'F') ||
 									(c >= 'a' && c <= 'f');
+						}
+						""");
+		assertIdentifier(tokenizer, "private");
+		assertIdentifier(tokenizer, "static");
+		assertIdentifier(tokenizer, "boolean");
+		assertIdentifier(tokenizer, "isHexDigit");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "char");
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertIdentifier(tokenizer, "return");
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.GreaterEquals);
+		assertCharacter(tokenizer, '0');
+		assertToken(tokenizer, TokenType.And);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.LessEquals);
+		assertCharacter(tokenizer, '9');
+		assertToken(tokenizer, TokenType.Or);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.GreaterEquals);
+		assertCharacter(tokenizer, 'A');
+		assertToken(tokenizer, TokenType.And);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.LessEquals);
+		assertCharacter(tokenizer, 'F');
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Or);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.GreaterEquals);
+		assertCharacter(tokenizer, 'a');
+		assertToken(tokenizer, TokenType.And);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.LessEquals);
+		assertCharacter(tokenizer, 'f');
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void javaMethodWithComments(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						// Determine if a given character is a
+						// valid hexadecimal digit or not
+						private static boolean isHexDigit(char c)
+						{
+							return c >= '0' && c <= '9' || // Capture digits
+									(c >= 'A' && c <= 'F') || // Capture uppercase hex-specific digits
+									(c >= 'a' && c <= 'f'); // Capture lowercase hex-specific digits
 						}
 						""");
 		assertIdentifier(tokenizer, "private");

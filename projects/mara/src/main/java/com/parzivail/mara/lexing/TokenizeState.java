@@ -3,6 +3,7 @@ package com.parzivail.mara.lexing;
 public enum TokenizeState
 {
 	Begin,
+	Restart,
 	NumericLiteral,
 	DecimalLiteral,
 	DotOrFloatingPointLiteral,
@@ -17,6 +18,8 @@ public enum TokenizeState
 	AssignOrEqualsOrArrow,
 	AmpOrBooleanAnd,
 	PipeOrBooleanOr,
+	SlashOrComment,
+	LineComment,
 	CharacterLiteral,
 	StringLiteral,
 	StringEscape,
