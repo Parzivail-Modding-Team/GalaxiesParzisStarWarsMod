@@ -373,6 +373,26 @@ public class LexerTests
 	}
 
 	@Test
+	public void floatingPoint1(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("0 0.0 .0 0. 1 1.01 .1 1. 1e0 1e-1 1e+2 1.0e-30 .345e+345");
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertFloat(tokenizer, "0.0");
+		assertFloat(tokenizer, ".0");
+		assertFloat(tokenizer, "0.");
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertFloat(tokenizer, "1.01");
+		assertFloat(tokenizer, ".1");
+		assertFloat(tokenizer, "1.");
+		assertFloat(tokenizer, "1e0");
+		assertFloat(tokenizer, "1e-1");
+		assertFloat(tokenizer, "1e+2");
+		assertFloat(tokenizer, "1.0e-30");
+		assertFloat(tokenizer, ".345e+345");
+		assertEof(tokenizer);
+	}
+
+	@Test
 	public void postfixArrayIndexInt(TestInfo testInfo) throws Exception
 	{
 		var tokenizer = new Tokenizer("array[0x10]");

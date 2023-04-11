@@ -8,6 +8,8 @@ public enum TokenizeState
 	DecimalLiteral,
 	DotOrFloatingPointLiteral,
 	FloatingPointLiteral,
+	FloatingPointExponentStart,
+	FloatingPointExponentLiteral,
 	BinaryLiteral,
 	OctalLiteral,
 	HexLiteral,

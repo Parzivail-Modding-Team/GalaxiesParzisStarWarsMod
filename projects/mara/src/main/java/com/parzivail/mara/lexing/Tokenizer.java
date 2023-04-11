@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 public class Tokenizer extends StateMachine
 {
-	private boolean isIdentifierStartChar(char c)
+	private boolean isIdentifierStart(char c)
 	{
 		return c == '_' || Character.isUnicodeIdentifierStart(c);
 	}
@@ -34,6 +34,11 @@ public class Tokenizer extends StateMachine
 	private static boolean isBinaryDigit(char c)
 	{
 		return c == '0' || c == '1';
+	}
+
+	private static boolean isFloatingPointExponentStart(char c)
+	{
+		return c == 'e' || c == 'E';
 	}
 
 	private static final HashMap<Character, TokenType> singleCharTokens = new HashMap<>();
@@ -316,7 +321,50 @@ public class Tokenizer extends StateMachine
 			return;
 		}
 
+		if (isFloatingPointExponentStart(nextChar))
+		{
+			moveCharacterToState(TokenizeState.FloatingPointExponentStart);
+			return;
+		}
+
 		emitToken(new FloatingPointToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
+	}
+
+	@StateArrivalHandler(TokenizeState.FloatingPointExponentLiteral)
+	private void onFloatingPointExponentLiteral()
+	{
+		if (isEof())
+		{
+			emitToken(new FloatingPointToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EmitEof);
+			return;
+		}
+
+		var nextChar = text.charAt(0);
+
+		if (isDecimalDigit(nextChar))
+		{
+			moveCharacterToState(TokenizeState.FloatingPointExponentLiteral);
+			return;
+		}
+
+		emitToken(new FloatingPointToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
+	}
+
+	@StateArrivalHandler(TokenizeState.FloatingPointExponentStart)
+	private void onFloatingPointExponentStart()
+	{
+		if (isEof())
+			throw new TokenizeException("Unexpected EOF in floating point exponential", cursor);
+
+		var nextChar = text.charAt(0);
+
+		if (nextChar == '+' || nextChar == '-' || isDecimalDigit(nextChar))
+		{
+			moveCharacterToState(TokenizeState.FloatingPointExponentLiteral);
+			return;
+		}
+
+		throw new TokenizeException("Unexpected character in floating point exponential", cursor);
 	}
 
 	@StateArrivalHandler(TokenizeState.DecimalLiteral)
@@ -338,6 +386,11 @@ public class Tokenizer extends StateMachine
 		else if (nextChar == '.')
 		{
 			moveCharacterToState(TokenizeState.FloatingPointLiteral);
+			return;
+		}
+		else if (isFloatingPointExponentStart(nextChar))
+		{
+			moveCharacterToState(TokenizeState.FloatingPointExponentStart);
 			return;
 		}
 
@@ -519,7 +572,7 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: comments, floating point scientific notation
+		// TODO: floating point scientific notation
 
 		do
 		{
@@ -568,7 +621,7 @@ public class Tokenizer extends StateMachine
 				}
 			}
 
-			if (isIdentifierStartChar(nextChar))
+			if (isIdentifierStart(nextChar))
 			{
 				moveCharacterToState(TokenizeState.Identifier);
 				continue;
