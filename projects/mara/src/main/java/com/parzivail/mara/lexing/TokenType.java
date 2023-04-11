@@ -51,5 +51,6 @@ public enum TokenType
 	FloatingPointLiteral, // 12.3456789
 	Identifier, // var1
 	StringLiteral,
+	CharacterLiteral,
 	Eof, // <End of file>
 }

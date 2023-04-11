@@ -17,6 +17,7 @@ public enum TokenizeState
 	AssignOrEqualsOrArrow,
 	AmpOrBooleanAnd,
 	PipeOrBooleanOr,
+	CharacterLiteral,
 	StringLiteral,
 	StringEscape,
 	StringUnicodeEscape,

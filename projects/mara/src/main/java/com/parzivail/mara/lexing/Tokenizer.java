@@ -61,7 +61,6 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put('#', TokenType.Pound);
 		singleCharTokens.put(';', TokenType.Semicolon);
 		singleCharTokens.put(':', TokenType.Colon);
-		singleCharTokens.put('\'', TokenType.SingleQuote);
 		singleCharTokens.put('$', TokenType.Dollar);
 		singleCharTokens.put('^', TokenType.Caret);
 
@@ -74,6 +73,7 @@ public class Tokenizer extends StateMachine
 		multiCharTokens.put('!', TokenizeState.BangOrNotEquals);
 		multiCharTokens.put('.', TokenizeState.DotOrFloatingPointLiteral);
 
+		transparentStateTokens.put('\'', TokenizeState.CharacterLiteral);
 		transparentStateTokens.put('"', TokenizeState.StringLiteral);
 	}
 
@@ -227,6 +227,29 @@ public class Tokenizer extends StateMachine
 		while (nextChar != '"');
 
 		emitToken(new StringToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.End);
+	}
+
+	@StateArrivalHandler(TokenizeState.CharacterLiteral)
+	private void onCharacterLiteral()
+	{
+		if (isEof())
+			throw new TokenizeException("Unexpected EOF in character literal", cursor);
+
+		var nextChar = text.charAt(0);
+		popOneTextChar();
+
+		if (nextChar == '\\')
+			setState(TokenizeState.StringEscape);
+		else
+			tokenAccumulator.append(nextChar);
+
+		nextChar = text.charAt(0);
+		if (nextChar != '\'')
+			throw new TokenizeException("Multiple characters in character literal", cursor);
+
+		popOneTextChar();
+
+		emitToken(new CharacterToken(tokenAccumulator.charAt(0), getTokenStart()), TokenizeState.End);
 	}
 
 	@StateArrivalHandler(TokenizeState.Identifier)

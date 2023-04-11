@@ -1,5 +1,7 @@
 package com.parzivail.mara.lexing;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,7 +25,9 @@ public class LexerTestGenerator
 			else if (token instanceof IdentifierToken it)
 				System.out.printf("assertIdentifier(tokenizer, \"%s\");%n", it.value);
 			else if (token instanceof StringToken st)
-				System.out.printf("assertString(tokenizer, \"%s\");%n", st.value);
+				System.out.printf("assertString(tokenizer, \"%s\");%n", StringEscapeUtils.escapeJava(st.value));
+			else if (token instanceof CharacterToken ct)
+				System.out.printf("assertCharacter(tokenizer, '%s');%n", StringEscapeUtils.escapeJava(String.valueOf(ct.value)).replace("'", "\\'"));
 			else
 				System.out.printf("assertToken(tokenizer, TokenType.%s);%n", token.type);
 		}

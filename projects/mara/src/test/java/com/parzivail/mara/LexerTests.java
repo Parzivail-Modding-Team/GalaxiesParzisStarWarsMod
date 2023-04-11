@@ -43,6 +43,13 @@ public class LexerTests
 		Assertions.assertEquals(value, ((StringToken)token).value);
 	}
 
+	private void assertCharacter(Tokenizer tokenizer, char value)
+	{
+		var token = assertToken(tokenizer, TokenType.CharacterLiteral);
+		Assertions.assertInstanceOf(CharacterToken.class, token);
+		Assertions.assertEquals(value, ((CharacterToken)token).value);
+	}
+
 	private void assertInt(Tokenizer tokenizer, String value, TokenType type)
 	{
 		var token = assertToken(tokenizer, type);
@@ -224,7 +231,7 @@ public class LexerTests
 	@Test
 	public void nbt1(TestInfo testInfo) throws Exception
 	{
-		var tokenizer = new Tokenizer("diamond_pickaxe{display:{Name:'{\"text\":\"Aw, Man\",\"color\":\"gold\"}',Lore:['{\"text\":\"So we back in the mines...\",\"color\":\"gray\",\"italic\":true}']},Damage:1,Enchantments:[{id:\"minecraft:efficiency\",lvl:5s},{id:\"minecraft:unbreaking\",lvl:3s}]}");
+		var tokenizer = new Tokenizer("diamond_pickaxe{display:{Name:\"{\\\"text\\\":\\\"Aw, Man\\\",\\\"color\\\":\\\"gold\\\"}\",Lore:[\"{\\\"text\\\":\\\"So we back in the mines...\\\",\\\"color\\\":\\\"gray\\\",\\\"italic\\\":true}\"]},Damage:1,Enchantments:[{id:\"minecraft:efficiency\",lvl:5s},{id:\"minecraft:unbreaking\",lvl:3s}]}");
 		assertIdentifier(tokenizer, "diamond_pickaxe");
 		assertToken(tokenizer, TokenType.OpenCurly);
 		assertIdentifier(tokenizer, "display");
@@ -232,36 +239,12 @@ public class LexerTests
 		assertToken(tokenizer, TokenType.OpenCurly);
 		assertIdentifier(tokenizer, "Name");
 		assertToken(tokenizer, TokenType.Colon);
-		assertToken(tokenizer, TokenType.SingleQuote);
-		assertToken(tokenizer, TokenType.OpenCurly);
-		assertString(tokenizer, "text");
-		assertToken(tokenizer, TokenType.Colon);
-		assertString(tokenizer, "Aw, Man");
-		assertToken(tokenizer, TokenType.Comma);
-		assertString(tokenizer, "color");
-		assertToken(tokenizer, TokenType.Colon);
-		assertString(tokenizer, "gold");
-		assertToken(tokenizer, TokenType.CloseCurly);
-		assertToken(tokenizer, TokenType.SingleQuote);
+		assertString(tokenizer, "{\"text\":\"Aw, Man\",\"color\":\"gold\"}");
 		assertToken(tokenizer, TokenType.Comma);
 		assertIdentifier(tokenizer, "Lore");
 		assertToken(tokenizer, TokenType.Colon);
 		assertToken(tokenizer, TokenType.OpenSquare);
-		assertToken(tokenizer, TokenType.SingleQuote);
-		assertToken(tokenizer, TokenType.OpenCurly);
-		assertString(tokenizer, "text");
-		assertToken(tokenizer, TokenType.Colon);
-		assertString(tokenizer, "So we back in the mines...");
-		assertToken(tokenizer, TokenType.Comma);
-		assertString(tokenizer, "color");
-		assertToken(tokenizer, TokenType.Colon);
-		assertString(tokenizer, "gray");
-		assertToken(tokenizer, TokenType.Comma);
-		assertString(tokenizer, "italic");
-		assertToken(tokenizer, TokenType.Colon);
-		assertIdentifier(tokenizer, "true");
-		assertToken(tokenizer, TokenType.CloseCurly);
-		assertToken(tokenizer, TokenType.SingleQuote);
+		assertString(tokenizer, "{\"text\":\"So we back in the mines...\",\"color\":\"gray\",\"italic\":true}");
 		assertToken(tokenizer, TokenType.CloseSquare);
 		assertToken(tokenizer, TokenType.CloseCurly);
 		assertToken(tokenizer, TokenType.Comma);
@@ -403,6 +386,32 @@ public class LexerTests
 		assertInt(tokenizer, "11010110", TokenType.BinaryLiteral);
 		assertToken(tokenizer, TokenType.CloseSquare);
 		assertEof(tokenizer);
+	}
+
+	@Test
+	public void characters0(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("'a' 'b' '\t' '\n' '\\'' '\\\\'");
+		assertCharacter(tokenizer, 'a');
+		assertCharacter(tokenizer, 'b');
+		assertCharacter(tokenizer, '\t');
+		assertCharacter(tokenizer, '\n');
+		assertCharacter(tokenizer, '\'');
+		assertCharacter(tokenizer, '\\');
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void characters1(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("'a' 'b' '\t' '\n' '\\'' '\\\\' 'ab'");
+		assertCharacter(tokenizer, 'a');
+		assertCharacter(tokenizer, 'b');
+		assertCharacter(tokenizer, '\t');
+		assertCharacter(tokenizer, '\n');
+		assertCharacter(tokenizer, '\'');
+		assertCharacter(tokenizer, '\\');
+		assertInvalid(tokenizer);
 	}
 
 	@Test
@@ -682,6 +691,60 @@ public class LexerTests
 		assertToken(tokenizer, TokenType.CloseParen);
 		assertToken(tokenizer, TokenType.Semicolon);
 		assertToken(tokenizer, TokenType.CloseCurly);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void javaMethod(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						private static boolean isHexDigit(char c)
+						{
+							return c >= '0' && c <= '9' ||
+									(c >= 'A' && c <= 'F') ||
+									(c >= 'a' && c <= 'f');
+						}
+						""");
+		assertIdentifier(tokenizer, "private");
+		assertIdentifier(tokenizer, "static");
+		assertIdentifier(tokenizer, "boolean");
+		assertIdentifier(tokenizer, "isHexDigit");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "char");
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertIdentifier(tokenizer, "return");
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.GreaterEquals);
+		assertCharacter(tokenizer, '0');
+		assertToken(tokenizer, TokenType.And);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.LessEquals);
+		assertCharacter(tokenizer, '9');
+		assertToken(tokenizer, TokenType.Or);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.GreaterEquals);
+		assertCharacter(tokenizer, 'A');
+		assertToken(tokenizer, TokenType.And);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.LessEquals);
+		assertCharacter(tokenizer, 'F');
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Or);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.GreaterEquals);
+		assertCharacter(tokenizer, 'a');
+		assertToken(tokenizer, TokenType.And);
+		assertIdentifier(tokenizer, "c");
+		assertToken(tokenizer, TokenType.LessEquals);
+		assertCharacter(tokenizer, 'f');
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
 		assertToken(tokenizer, TokenType.CloseCurly);
 		assertEof(tokenizer);
 	}
