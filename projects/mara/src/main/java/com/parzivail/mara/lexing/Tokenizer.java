@@ -572,8 +572,6 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: floating point scientific notation
-
 		do
 		{
 			if (isEof())
