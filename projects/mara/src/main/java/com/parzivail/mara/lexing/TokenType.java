@@ -39,6 +39,7 @@ public enum TokenType
 	GreaterEquals, // >=
 	Less, // <
 	LessEquals, // <=
+	RightArrow, // =>
 	RightShift, // >>
 	RightRotate, // %>
 	LeftShift, // <<

@@ -267,6 +267,20 @@ public class LexerTests
 	}
 
 	@Test
+	public void invalidOctal(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("0c12348");
+		assertInvalid(tokenizer);
+	}
+
+	@Test
+	public void invalidBinary(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("0b103");
+		assertInvalid(tokenizer);
+	}
+
+	@Test
 	public void floatingPoint0(TestInfo testInfo) throws Exception
 	{
 		var tokenizer = new Tokenizer("0 123 123.456 1.234 1.234f 1.234d 0.123 -0.123 .234 -.234 123. 0.0 123");
@@ -311,6 +325,388 @@ public class LexerTests
 		assertToken(tokenizer, TokenType.Plus);
 		assertInt(tokenizer, "11010110", TokenType.BinaryLiteral);
 		assertToken(tokenizer, TokenType.CloseSquare);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void blasterConfig(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						new BlasterDescriptor(Resources.id("bowcaster"), BlasterArchetype.HEAVY)
+							.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC), BlasterWaterBehavior.BOLTS_PASS_THROUGH_WATER)
+							.mechanicalProperties(6.7f, -0.5f, 10, 300)
+							.damage(20, 188f, Falloff.cliff(2))
+							.bolt(ColorUtil.packHsv(0.98f, 1, 1), 1.25f, 1)
+							.recoil(new BlasterAxialInfo(1.5f, 3))
+							.spread(new BlasterAxialInfo(0, 0))
+							.heat(new BlasterHeatInfo(1008, 100, 12, 20, 14, 100, 80))
+							.cooling(new BlasterCoolingBypassProfile(0.5f, 0.05f, 0.3f, 0.06f))
+							.attachments(b => b.attachment(1, "repeater", BlasterAttachmentFunction.ALLOW_BURST, BlasterAttachmentCategory.INTERNAL_ORDNANCE_CONFIG))
+						""");
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "BlasterDescriptor");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "Resources");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "id");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertString(tokenizer, "bowcaster");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "BlasterArchetype");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "HEAVY");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "firingBehavior");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "List");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "of");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "BlasterFiringMode");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "SEMI_AUTOMATIC");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "BlasterWaterBehavior");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "BOLTS_PASS_THROUGH_WATER");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "mechanicalProperties");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertFloat(tokenizer, "6.7");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertToken(tokenizer, TokenType.Minus);
+		assertFloat(tokenizer, "0.5");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "10", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "300", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "damage");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "20", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "188", TokenType.DecimalLiteral);
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "Falloff");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "cliff");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "2", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "bolt");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "ColorUtil");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "packHsv");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertFloat(tokenizer, "0.98");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Comma);
+		assertFloat(tokenizer, "1.25");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "recoil");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "BlasterAxialInfo");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertFloat(tokenizer, "1.5");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "3", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "spread");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "BlasterAxialInfo");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "heat");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "BlasterHeatInfo");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "1008", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "100", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "12", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "20", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "14", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "100", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "80", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "cooling");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "BlasterCoolingBypassProfile");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertFloat(tokenizer, "0.5");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertFloat(tokenizer, "0.05");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertFloat(tokenizer, "0.3");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.Comma);
+		assertFloat(tokenizer, "0.06");
+		assertIdentifier(tokenizer, "f");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "attachments");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "b");
+		assertToken(tokenizer, TokenType.RightArrow);
+		assertIdentifier(tokenizer, "b");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "attachment");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertString(tokenizer, "repeater");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "BlasterAttachmentFunction");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "ALLOW_BURST");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "BlasterAttachmentCategory");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "INTERNAL_ORDNANCE_CONFIG");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void itemClass(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						public class TcwItems
+						{
+							@RegistryOrder(0)
+							public static class Armor
+							{
+								@RegistryName("phase1_clonetrooper")
+								public static final ArmorItems Phase1Clone = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
+								@RegistryName("phase2_clonetrooper")
+								public static final ArmorItems Phase2Clone = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
+							}
+						}
+						""");
+		assertIdentifier(tokenizer, "public");
+		assertIdentifier(tokenizer, "class");
+		assertIdentifier(tokenizer, "TcwItems");
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertToken(tokenizer, TokenType.At);
+		assertIdentifier(tokenizer, "RegistryOrder");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "public");
+		assertIdentifier(tokenizer, "static");
+		assertIdentifier(tokenizer, "class");
+		assertIdentifier(tokenizer, "Armor");
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertToken(tokenizer, TokenType.At);
+		assertIdentifier(tokenizer, "RegistryName");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertString(tokenizer, "phase1_clonetrooper");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "public");
+		assertIdentifier(tokenizer, "static");
+		assertIdentifier(tokenizer, "final");
+		assertIdentifier(tokenizer, "ArmorItems");
+		assertIdentifier(tokenizer, "Phase1Clone");
+		assertToken(tokenizer, TokenType.Assign);
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "ArmorItems");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "ArmorMaterials");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "DIAMOND");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "Item");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "Settings");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "maxCount");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertToken(tokenizer, TokenType.At);
+		assertIdentifier(tokenizer, "RegistryName");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertString(tokenizer, "phase2_clonetrooper");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "public");
+		assertIdentifier(tokenizer, "static");
+		assertIdentifier(tokenizer, "final");
+		assertIdentifier(tokenizer, "ArmorItems");
+		assertIdentifier(tokenizer, "Phase2Clone");
+		assertToken(tokenizer, TokenType.Assign);
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "ArmorItems");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "ArmorMaterials");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "DIAMOND");
+		assertToken(tokenizer, TokenType.Comma);
+		assertIdentifier(tokenizer, "new");
+		assertIdentifier(tokenizer, "Item");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "Settings");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "maxCount");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void jsonObject(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						{
+							"blaster.fire.dc17": {
+								"sounds": [
+									"pswg_addon_clonewars:blaster/fire/dc17"
+								]
+							}
+						}
+						""");
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertString(tokenizer, "blaster.fire.dc17");
+		assertToken(tokenizer, TokenType.Colon);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertString(tokenizer, "sounds");
+		assertToken(tokenizer, TokenType.Colon);
+		assertToken(tokenizer, TokenType.OpenSquare);
+		assertString(tokenizer, "pswg_addon_clonewars:blaster/fire/dc17");
+		assertToken(tokenizer, TokenType.CloseSquare);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void pythonScript(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						from picamera2 import Picamera2
+						from picamera2.encoders import Encoder
+												
+						size = (2592, 1944)
+						picam2 = Picamera2()
+						video_config = picam2.create_video_configuration(raw={"format": "SGBRG10", "size": size})
+						picam2.configure(video_config)
+						picam2.encode_stream_name = "raw"
+						encoder = Encoder()
+						""");
+		assertIdentifier(tokenizer, "from");
+		assertIdentifier(tokenizer, "picamera2");
+		assertIdentifier(tokenizer, "import");
+		assertIdentifier(tokenizer, "Picamera2");
+		assertIdentifier(tokenizer, "from");
+		assertIdentifier(tokenizer, "picamera2");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "encoders");
+		assertIdentifier(tokenizer, "import");
+		assertIdentifier(tokenizer, "Encoder");
+		assertIdentifier(tokenizer, "size");
+		assertToken(tokenizer, TokenType.Assign);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertInt(tokenizer, "2592", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Comma);
+		assertInt(tokenizer, "1944", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "picam2");
+		assertToken(tokenizer, TokenType.Assign);
+		assertIdentifier(tokenizer, "Picamera2");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "video_config");
+		assertToken(tokenizer, TokenType.Assign);
+		assertIdentifier(tokenizer, "picam2");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "create_video_configuration");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "raw");
+		assertToken(tokenizer, TokenType.Assign);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertString(tokenizer, "format");
+		assertToken(tokenizer, TokenType.Colon);
+		assertString(tokenizer, "SGBRG10");
+		assertToken(tokenizer, TokenType.Comma);
+		assertString(tokenizer, "size");
+		assertToken(tokenizer, TokenType.Colon);
+		assertIdentifier(tokenizer, "size");
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "picam2");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "configure");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "video_config");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "picam2");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "encode_stream_name");
+		assertToken(tokenizer, TokenType.Assign);
+		assertString(tokenizer, "raw");
+		assertIdentifier(tokenizer, "encoder");
+		assertToken(tokenizer, TokenType.Assign);
+		assertIdentifier(tokenizer, "Encoder");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertToken(tokenizer, TokenType.CloseParen);
 		assertEof(tokenizer);
 	}
 }

@@ -68,7 +68,7 @@ public class Tokenizer extends StateMachine
 		multiCharTokens.put('%', TokenizeState.PercentOrRightRot);
 		multiCharTokens.put('>', TokenizeState.GreaterOrRightShiftOrGreaterEquals);
 		multiCharTokens.put('<', TokenizeState.LessOrLeftShiftOrLeftRotOrLessEquals);
-		multiCharTokens.put('=', TokenizeState.AssignOrEquals);
+		multiCharTokens.put('=', TokenizeState.AssignOrEqualsOrArrow);
 		multiCharTokens.put('|', TokenizeState.PipeOrBooleanOr);
 		multiCharTokens.put('&', TokenizeState.AmpOrBooleanAnd);
 		multiCharTokens.put('!', TokenizeState.BangOrNotEquals);
@@ -154,6 +154,9 @@ public class Tokenizer extends StateMachine
 			moveCharacterToState(possibleNextState);
 			return;
 		}
+
+		if (isDecimalDigit(nextChar))
+			throw new TokenizeException("Invalid digit in literal", cursor);
 
 		emitToken(new NumericToken(tokenType, tokenAccumulator.toString(), NumericToken.BASES.get(tokenType), getTokenStart()), TokenizeState.EndIfTerminated);
 	}
@@ -395,12 +398,13 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
-	@StateArrivalHandler(TokenizeState.AssignOrEquals)
-	private void onAssignOrEquals()
+	@StateArrivalHandler(TokenizeState.AssignOrEqualsOrArrow)
+	private void onAssignOrEqualsOrArrow()
 	{
 		onTwoCharacterToken(
 				TokenType.Assign,
-				new TokenPair('=', TokenType.Equals)
+				new TokenPair('=', TokenType.Equals),
+				new TokenPair('>', TokenType.RightArrow)
 		);
 	}
 
@@ -434,7 +438,7 @@ public class Tokenizer extends StateMachine
 	@StateArrivalHandler(TokenizeState.Begin)
 	private void onBegin()
 	{
-		// TODO: comments, unicode string escapes
+		// TODO: comments, unicode string escapes, single-quote char literals
 
 		do
 		{

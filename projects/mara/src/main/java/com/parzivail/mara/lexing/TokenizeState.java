@@ -14,7 +14,7 @@ public enum TokenizeState
 	GreaterOrRightShiftOrGreaterEquals,
 	LessOrLeftShiftOrLeftRotOrLessEquals,
 	BangOrNotEquals,
-	AssignOrEquals,
+	AssignOrEqualsOrArrow,
 	AmpOrBooleanAnd,
 	PipeOrBooleanOr,
 	StringLiteral,
