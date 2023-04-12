@@ -140,6 +140,61 @@ public class LexerTests
 	}
 
 	@Test
+	public void questionCoalesce(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("? ?? ???");
+		assertToken(tokenizer, TokenType.Question);
+		assertToken(tokenizer, TokenType.Coalesce);
+		assertToken(tokenizer, TokenType.Coalesce);
+		assertToken(tokenizer, TokenType.Question);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void ampAnd(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("& && &&&");
+		assertToken(tokenizer, TokenType.Amp);
+		assertToken(tokenizer, TokenType.And);
+		assertToken(tokenizer, TokenType.And);
+		assertToken(tokenizer, TokenType.Amp);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void pipeOr(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("| || |||");
+		assertToken(tokenizer, TokenType.Pipe);
+		assertToken(tokenizer, TokenType.Or);
+		assertToken(tokenizer, TokenType.Or);
+		assertToken(tokenizer, TokenType.Pipe);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void lessLeftShift(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("< << <<<");
+		assertToken(tokenizer, TokenType.Less);
+		assertToken(tokenizer, TokenType.LeftShift);
+		assertToken(tokenizer, TokenType.LeftShift);
+		assertToken(tokenizer, TokenType.Less);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void greaterRightShift(TestInfo testInfo) throws Exception
+	{
+		var tokenizer = new Tokenizer("> >> >>>");
+		assertToken(tokenizer, TokenType.Greater);
+		assertToken(tokenizer, TokenType.RightShift);
+		assertToken(tokenizer, TokenType.RightShift);
+		assertToken(tokenizer, TokenType.Greater);
+		assertEof(tokenizer);
+	}
+
+	@Test
 	public void identIntIdent(TestInfo testInfo) throws Exception
 	{
 		var tokenizer = new Tokenizer("a123 456b");

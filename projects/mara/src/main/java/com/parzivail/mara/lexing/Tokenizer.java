@@ -54,7 +54,6 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put('~', TokenType.Tilde);
 		singleCharTokens.put('`', TokenType.Grave);
 		singleCharTokens.put(',', TokenType.Comma);
-		singleCharTokens.put('?', TokenType.Question);
 		singleCharTokens.put('(', TokenType.OpenParen);
 		singleCharTokens.put(')', TokenType.CloseParen);
 		singleCharTokens.put('[', TokenType.OpenSquare);
@@ -68,15 +67,16 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put('$', TokenType.Dollar);
 		singleCharTokens.put('^', TokenType.Caret);
 
-		multiCharTokens.put('%', TokenizeState.PercentOrRightRot);
-		multiCharTokens.put('>', TokenizeState.GreaterOrRightShiftOrGreaterEquals);
-		multiCharTokens.put('<', TokenizeState.LessOrLeftShiftOrLeftRotOrLessEquals);
-		multiCharTokens.put('=', TokenizeState.AssignOrEqualsOrArrow);
-		multiCharTokens.put('|', TokenizeState.PipeOrBooleanOr);
-		multiCharTokens.put('&', TokenizeState.AmpOrBooleanAnd);
-		multiCharTokens.put('!', TokenizeState.BangOrNotEquals);
+		multiCharTokens.put('%', TokenizeState.Percent);
+		multiCharTokens.put('>', TokenizeState.Greater);
+		multiCharTokens.put('<', TokenizeState.Less);
+		multiCharTokens.put('=', TokenizeState.Assign);
+		multiCharTokens.put('|', TokenizeState.Pipe);
+		multiCharTokens.put('?', TokenizeState.Question);
+		multiCharTokens.put('&', TokenizeState.Amp);
+		multiCharTokens.put('!', TokenizeState.Bang);
 		multiCharTokens.put('.', TokenizeState.DotOrFloatingPointLiteral);
-		multiCharTokens.put('/', TokenizeState.SlashOrComment);
+		multiCharTokens.put('/', TokenizeState.Slash);
 
 		transparentStateTokens.put('\'', TokenizeState.CharacterLiteral);
 		transparentStateTokens.put('"', TokenizeState.StringLiteral);
@@ -88,7 +88,7 @@ public class Tokenizer extends StateMachine
 	private int cursor = 0;
 	private boolean requireTerminatingToken;
 
-	private LinkedList<Token> tokens = new LinkedList<>();
+	private final LinkedList<Token> tokens = new LinkedList<>();
 
 	public Tokenizer(String text)
 	{
@@ -465,8 +465,8 @@ public class Tokenizer extends StateMachine
 		emitToken(new Token(TokenType.Dot, getTokenStart()), TokenizeState.End);
 	}
 
-	@StateArrivalHandler(TokenizeState.GreaterOrRightShiftOrGreaterEquals)
-	private void onGreaterOrRightShiftOrGreaterEquals()
+	@StateArrivalHandler(TokenizeState.Greater)
+	private void onGreater()
 	{
 		onTwoCharacterToken(
 				TokenType.Greater,
@@ -475,8 +475,8 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
-	@StateArrivalHandler(TokenizeState.PercentOrRightRot)
-	private void onPercentOrRightRot()
+	@StateArrivalHandler(TokenizeState.Percent)
+	private void onPercent()
 	{
 		onTwoCharacterToken(
 				TokenType.Percent,
@@ -484,8 +484,8 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
-	@StateArrivalHandler(TokenizeState.LessOrLeftShiftOrLeftRotOrLessEquals)
-	private void onLessOrLeftShiftOrLeftRotOrLessEquals()
+	@StateArrivalHandler(TokenizeState.Less)
+	private void onLess()
 	{
 		onTwoCharacterToken(
 				TokenType.Less,
@@ -495,8 +495,8 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
-	@StateArrivalHandler(TokenizeState.AssignOrEqualsOrArrow)
-	private void onAssignOrEqualsOrArrow()
+	@StateArrivalHandler(TokenizeState.Assign)
+	private void onAssign()
 	{
 		onTwoCharacterToken(
 				TokenType.Assign,
@@ -505,8 +505,8 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
-	@StateArrivalHandler(TokenizeState.PipeOrBooleanOr)
-	private void onPipeOrBooleanOr()
+	@StateArrivalHandler(TokenizeState.Pipe)
+	private void onPipe()
 	{
 		onTwoCharacterToken(
 				TokenType.Pipe,
@@ -514,8 +514,17 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
-	@StateArrivalHandler(TokenizeState.AmpOrBooleanAnd)
-	private void onAmpOrBooleanAnd()
+	@StateArrivalHandler(TokenizeState.Question)
+	private void onQuestion()
+	{
+		onTwoCharacterToken(
+				TokenType.Question,
+				new TokenPair('?', TokenType.Coalesce)
+		);
+	}
+
+	@StateArrivalHandler(TokenizeState.Amp)
+	private void onAmp()
 	{
 		onTwoCharacterToken(
 				TokenType.Amp,
@@ -523,8 +532,8 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
-	@StateArrivalHandler(TokenizeState.BangOrNotEquals)
-	private void onBangOrNotEquals()
+	@StateArrivalHandler(TokenizeState.Bang)
+	private void onBang()
 	{
 		onTwoCharacterToken(
 				TokenType.Bang,
@@ -532,8 +541,8 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
-	@StateArrivalHandler(TokenizeState.SlashOrComment)
-	private void onSlashOrComment()
+	@StateArrivalHandler(TokenizeState.Slash)
+	private void onSlash()
 	{
 		if (isEof())
 		{

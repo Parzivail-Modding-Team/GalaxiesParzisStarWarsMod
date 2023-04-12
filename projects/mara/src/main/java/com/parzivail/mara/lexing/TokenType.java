@@ -16,6 +16,7 @@ public enum TokenType
 	Dot, // .
 	Comma, // ,
 	Question, // ?
+	Coalesce, // ??
 	OpenParen, // (
 	CloseParen, // )
 	OpenSquare, // [
