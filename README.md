@@ -15,7 +15,7 @@ You can join the community in [the Discord server!](https://discord.gg/54MVQZZ) 
 
 If you'd like to help support and sustain the mod, please consider becoming a donor!
 
-[![Become a donor!](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=8079542)
+[![Become a donor!](https://storage.ko-fi.com/cdn/brandasset/kofi_bg_tag_white.png)](https://ko-fi.com/parzivail/tiers)
 
 Perks include:
 * Early mod releases and developer builds
