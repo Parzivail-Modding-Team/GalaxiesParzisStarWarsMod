@@ -31,6 +31,27 @@ public class ParserTests
 		return number(TokenType.HexLiteral, value);
 	}
 
+	private static Consumer<Expression> assignment(Consumer<Expression> left, Consumer<Expression> right)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(AssignmentExpression.class, e);
+			var ae = (AssignmentExpression)e;
+			left.accept(ae.left);
+			right.accept(ae.right);
+		};
+	}
+
+	private static Consumer<Expression> ternary(Consumer<Expression> condition, Consumer<Expression> truthy, Consumer<Expression> falsy)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(ConditionalExpression.class, e);
+			var ce = (ConditionalExpression)e;
+			condition.accept(ce.conditional);
+			truthy.accept(ce.truthy);
+			falsy.accept(ce.falsy);
+		};
+	}
+
 	private static Consumer<Expression> indexer(Consumer<Expression> expression, Consumer<Expression> indexer)
 	{
 		return e -> {
@@ -148,6 +169,46 @@ public class ParserTests
 		indexer(
 				id("a"),
 				binary(hex("F0"), TokenType.Plus, id("b"))
+		).accept(e);
+	}
+
+	@Test
+	public void assignment0(TestInfo testInfo)
+	{
+		var t = new Tokenizer("a = b");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens());
+		assignment(
+				id("a"),
+				id("b")
+		).accept(e);
+	}
+
+	@Test
+	public void assignment1(TestInfo testInfo)
+	{
+		var t = new Tokenizer("a = b + 1");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens());
+		assignment(
+				id("a"),
+				binary(id("b"), TokenType.Plus, decimal("1"))
+		).accept(e);
+	}
+
+	@Test
+	public void assignment2(TestInfo testInfo)
+	{
+		var t = new Tokenizer("a = c ? t + 1 : !f");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens());
+		assignment(
+				id("a"),
+				ternary(
+						id("c"),
+						binary(id("t"), TokenType.Plus, decimal("1")),
+						unary(TokenType.Bang, id("f"))
+				)
 		).accept(e);
 	}
 }

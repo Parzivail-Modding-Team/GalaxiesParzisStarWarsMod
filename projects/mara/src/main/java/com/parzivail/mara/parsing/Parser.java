@@ -38,13 +38,98 @@ public class Parser
 		return token;
 	}
 
+	private static boolean optionallyConsumeToken(LinkedList<Token> tokens, Predicate<TokenType> kind)
+	{
+		if (!tokens.isEmpty() && kind.test(tokens.peek().type))
+		{
+			consumeToken(tokens, kind);
+			return true;
+		}
+
+		return false;
+	}
+
 	private static Expression parseNestedLeftAssoc(LinkedList<Token> tokens, ParseFunc parser, Predicate<TokenType> combiningToken)
 	{
-		var firstToken = tokens.getFirst();
-
 		var ex = parser.parse(tokens);
-		while (combiningToken.test(tokens.getFirst().type))
-			ex = new BinaryExpression(firstToken, ex, consumeToken(tokens, combiningToken), parser.parse(tokens));
+		while (!tokens.isEmpty() && combiningToken.test(tokens.peek().type))
+			ex = new BinaryExpression(ex, consumeToken(tokens, combiningToken), parser.parse(tokens));
+
+		return ex;
+	}
+
+	private static Expression parseCoalesce(LinkedList<Token> tokens, ParseFunc parser)
+	{
+		// Right-associative
+		var ex = parser.parse(tokens);
+
+		if (optionallyConsumeToken(tokens, requireType(TokenType.Coalesce)))
+		{
+			var right = parser.parse(tokens);
+			return new CoalesceExpression(ex, right);
+		}
+
+		return ex;
+	}
+
+	private static Expression parseTernary(LinkedList<Token> tokens, ParseFunc parser)
+	{
+		// Right-associative
+		var ex = parser.parse(tokens);
+
+		if (optionallyConsumeToken(tokens, requireType(TokenType.Question)))
+		{
+			var truthy = parser.parse(tokens);
+			consumeToken(tokens, requireType(TokenType.Colon));
+			var falsy = parser.parse(tokens);
+			return new ConditionalExpression(ex, truthy, falsy);
+		}
+
+		return ex;
+	}
+
+	private static Expression parseAssignment(LinkedList<Token> tokens, ParseFunc parser)
+	{
+		// Right-associative
+		var ex = parser.parse(tokens);
+
+		var compoundOps = requireType(
+				// Arithmetic
+				TokenType.Plus,
+				TokenType.Minus,
+				TokenType.Slash,
+				TokenType.Asterisk,
+				TokenType.Percent,
+				// Boolean logical
+				TokenType.And,
+				TokenType.Or,
+				// Bitwise logical
+				TokenType.Amp,
+				TokenType.Pipe,
+				TokenType.Caret,
+				// Bitwise shift
+				TokenType.LeftShift,
+				TokenType.RightShift,
+				TokenType.LeftRotate,
+				TokenType.RightRotate,
+				// Coalesce
+				TokenType.Coalesce
+		);
+
+		// TODO: lambda operator
+
+		if (tokens.size() >= 2 && compoundOps.test(tokens.get(0).type) && tokens.get(1).type == TokenType.Assign)
+		{
+			var op = consumeToken(tokens, compoundOps);
+			var value = parser.parse(tokens);
+			return new CompoundAssignmentExpression(ex, op, value);
+		}
+
+		if (optionallyConsumeToken(tokens, requireType(TokenType.Assign)))
+		{
+			var value = parser.parse(tokens);
+			return new AssignmentExpression(ex, value);
+		}
 
 		return ex;
 	}
@@ -148,6 +233,11 @@ public class Parser
 
 	public static Expression parseHierarchicalOperators(LinkedList<Token> tokens)
 	{
+		// This group of expressions are listed highest-to-lowest precedence
+		// and use lambdas to build a nested parser that respects the order
+		// of precedence by encapsulating all higher-precedence operators into
+		// the lambda passed to each lower-precedence operator
+
 		// x * y, x / y, x % y
 		ParseFunc multiply = t -> parseNestedLeftAssoc(t, Parser::parseUnaryExpression, requireType(TokenType.Asterisk, TokenType.Slash, TokenType.Percent));
 
@@ -155,11 +245,11 @@ public class Parser
 		ParseFunc add = t -> parseNestedLeftAssoc(t, multiply, requireType(TokenType.Plus, TokenType.Minus));
 
 		// x << y, x >> y, x <% y, x %> y
-		// TODO: C#: x >>> y
+		// TODO? C#: x >>> y
 		ParseFunc shift = t -> parseNestedLeftAssoc(t, add, requireType(TokenType.LeftShift, TokenType.RightShift, TokenType.LeftRotate, TokenType.RightRotate));
 
 		// x < y, x > y, x <= y, x >= y
-		// TODO: C#: is, as
+		// TODO? C#: is, as
 		ParseFunc compare = t -> parseNestedLeftAssoc(t, shift, requireType(TokenType.Less, TokenType.Greater, TokenType.LessEquals, TokenType.GreaterEquals));
 
 		// x == y, x != y
@@ -180,9 +270,12 @@ public class Parser
 		// x || y
 		ParseFunc conditionalOr = t -> parseNestedLeftAssoc(t, conditionalAnd, requireType(TokenType.Or));
 
-		// TODO: can ternaries be implemented here?
-
 		// x ?? y
-		return parseNestedLeftAssoc(tokens, conditionalOr, requireType(TokenType.Coalesce));
+		ParseFunc coalesce = t -> parseCoalesce(tokens, conditionalOr);
+
+		// c ? t : f
+		ParseFunc ternary = t -> parseTernary(t, coalesce);
+
+		return parseAssignment(tokens, ternary);
 	}
 }

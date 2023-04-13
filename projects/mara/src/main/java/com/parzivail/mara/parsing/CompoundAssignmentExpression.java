@@ -2,13 +2,13 @@ package com.parzivail.mara.parsing;
 
 import com.parzivail.mara.lexing.Token;
 
-public class BinaryExpression extends Expression
+public class CompoundAssignmentExpression extends Expression
 {
 	public final Expression left;
 	public final Token operator;
 	public final Expression right;
 
-	public BinaryExpression(Expression left, Token operator, Expression right)
+	public CompoundAssignmentExpression(Expression left, Token operator, Expression right)
 	{
 		super(left.firstToken);
 		this.left = left;
@@ -19,6 +19,6 @@ public class BinaryExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("(%s [%s] %s)", left, operator.type, right);
+		return String.format("(%s [%s]= %s)", left, operator.type, right);
 	}
 }
