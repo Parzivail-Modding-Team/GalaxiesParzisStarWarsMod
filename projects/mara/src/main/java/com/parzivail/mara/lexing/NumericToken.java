@@ -23,9 +23,4 @@ public class NumericToken extends Token
 		this.value = value;
 		this.base = base;
 	}
-
-	public int uintValue()
-	{
-		return Integer.parseUnsignedInt(value);
-	}
 }

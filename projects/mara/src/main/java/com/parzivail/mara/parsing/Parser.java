@@ -1,6 +1,7 @@
 package com.parzivail.mara.parsing;
 
 import com.parzivail.mara.lexing.*;
+import com.parzivail.mara.parsing.expression.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,7 +137,6 @@ public class Parser
 
 	public static Expression parseExpression(LinkedList<Token> tokens)
 	{
-		// TODO: ternary, etc
 		return parseHierarchicalOperators(tokens);
 	}
 
@@ -168,22 +168,42 @@ public class Parser
 
 		return switch (token.type)
 		{
-			case KwTrue, KwFalse -> new BooleanLiteralExpression((IdentifierToken)token);
+			case KwTrue, KwFalse -> new BooleanLiteralExpression((KeywordToken)token);
 			case StringLiteral -> new StringLiteralExpression((StringToken)token);
 			case CharacterLiteral -> new CharacterLiteralExpression((CharacterToken)token);
 			case DecimalLiteral, BinaryLiteral, HexLiteral, OctalLiteral, FloatingPointLiteral -> new NumericExpression((NumericToken)token);
-			case Identifier -> parseIdentifierOrMethodCall(tokens, (IdentifierToken)token);
+			case Identifier -> parseIdentifierExpressions(tokens, (IdentifierToken)token);
 			case OpenParen -> parseExpression(tokens, TokenType.CloseParen);
 			default -> throw new ParseException("Unexpected token in primary expression", token);
 		};
 	}
 
-	public static Expression parseIdentifierOrMethodCall(LinkedList<Token> tokens, IdentifierToken identifier)
+	public static Expression parseIdentifierExpressions(LinkedList<Token> tokens, IdentifierToken identifier)
 	{
-		if (tokens.getFirst().type != TokenType.OpenParen)
-			return new IdentifierExpression(identifier);
+		// Identifier-specific postfix expressions
+		switch (tokens.getFirst().type)
+		{
+			case OpenParen:
+				return parseMethodCall(tokens, identifier);
+			case Increment, Decrement:
+				return new PostArithmeticExpression(new IdentifierExpression(identifier), tokens.pop());
+		}
 
-		return parseMethodCall(tokens, identifier);
+		// Postfix expressions that can apply to any expression
+		return parsePostfixExpressions(tokens, new IdentifierExpression(identifier));
+	}
+
+	private static Expression parseMemberAccess(LinkedList<Token> tokens, Expression root)
+	{
+		var ex = root;
+		while (!tokens.isEmpty() && tokens.peek().type == TokenType.Dot)
+		{
+			consumeToken(tokens, requireType(TokenType.Dot));
+			var id = consumeToken(tokens, requireType(TokenType.Identifier));
+			ex = new MemberAccessExpression(ex, new IdentifierExpression((IdentifierToken)id));
+		}
+
+		return ex;
 	}
 
 	public static MethodCallExpression parseMethodCall(LinkedList<Token> tokens, IdentifierToken identifier)
@@ -218,10 +238,27 @@ public class Parser
 
 		var unaryOps = requireType(TokenType.Bang, TokenType.Minus, TokenType.Tilde);
 		if (unaryOps.test(firstToken.type))
-			return new UnaryExpression(firstToken, consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
+			return new UnaryExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
+
+		unaryOps = requireType(TokenType.Increment, TokenType.Decrement);
+		if (unaryOps.test(firstToken.type))
+			return new PreArithmeticExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
 
 		var pe = parsePrimaryExpression(tokens);
-		return tokens.getFirst().type != TokenType.OpenSquare ? pe : parseIndexerExpression(tokens, pe);
+		return parsePostfixExpressions(tokens, pe);
+	}
+
+	private static Expression parsePostfixExpressions(LinkedList<Token> tokens, Expression root)
+	{
+		switch (tokens.getFirst().type)
+		{
+			case OpenSquare:
+				return parseIndexerExpression(tokens, root);
+			case Dot:
+				return parseMemberAccess(tokens, root);
+			default:
+				return root;
+		}
 	}
 
 	private static IndexerExpression parseIndexerExpression(LinkedList<Token> tokens, Expression primaryExpression)

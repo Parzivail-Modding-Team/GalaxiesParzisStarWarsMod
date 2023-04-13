@@ -2,7 +2,8 @@ package com.parzivail.mara;
 
 import com.parzivail.mara.lexing.TokenType;
 import com.parzivail.mara.lexing.Tokenizer;
-import com.parzivail.mara.parsing.*;
+import com.parzivail.mara.parsing.Parser;
+import com.parzivail.mara.parsing.expression.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -72,6 +73,26 @@ public class ParserTests
 		};
 	}
 
+	private static Consumer<Expression> pre(TokenType op, Consumer<Expression> r)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(PreArithmeticExpression.class, e);
+			var pae = (PreArithmeticExpression)e;
+			Assertions.assertEquals(op, pae.operator.type);
+			r.accept(pae.root);
+		};
+	}
+
+	private static Consumer<Expression> post(TokenType op, Consumer<Expression> r)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(PostArithmeticExpression.class, e);
+			var pae = (PostArithmeticExpression)e;
+			Assertions.assertEquals(op, pae.operator.type);
+			r.accept(pae.root);
+		};
+	}
+
 	private static Consumer<Expression> binary(Consumer<Expression> l, TokenType op, Consumer<Expression> r)
 	{
 		return e -> {
@@ -80,6 +101,16 @@ public class ParserTests
 			l.accept(be.left);
 			Assertions.assertEquals(op, be.operator.type);
 			r.accept(be.right);
+		};
+	}
+
+	private static Consumer<Expression> member(Consumer<Expression> root, Consumer<Expression> member)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(MemberAccessExpression.class, e);
+			var mae = (MemberAccessExpression)e;
+			root.accept(mae.root);
+			member.accept(mae.member);
 		};
 	}
 
@@ -92,12 +123,21 @@ public class ParserTests
 		};
 	}
 
+	private static Consumer<Expression> bool(TokenType tokenType)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(BooleanLiteralExpression.class, e);
+			var ble = (BooleanLiteralExpression)e;
+			Assertions.assertEquals(tokenType, ble.value.type);
+		};
+	}
+
 	@Test
 	public void precedence0(TestInfo testInfo)
 	{
 		var t = new Tokenizer("a + b / c - d");
 		t.consumeAll();
-		var e = Parser.parseExpression(t.getTokens());
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		binary(
 				binary(
 						id("a"),
@@ -114,7 +154,7 @@ public class ParserTests
 	{
 		var t = new Tokenizer("(a + b) / c - d");
 		t.consumeAll();
-		var e = Parser.parseExpression(t.getTokens());
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		binary(
 				binary(
 						binary(id("a"), TokenType.Plus, id("b")),
@@ -131,7 +171,7 @@ public class ParserTests
 	{
 		var t = new Tokenizer("!a || b || c");
 		t.consumeAll();
-		var e = Parser.parseExpression(t.getTokens());
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		binary(
 				binary(
 						unary(TokenType.Bang, id("a")),
@@ -148,7 +188,7 @@ public class ParserTests
 	{
 		var t = new Tokenizer("~a || b | c");
 		t.consumeAll();
-		var e = Parser.parseExpression(t.getTokens());
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		binary(
 				unary(TokenType.Tilde, id("a")),
 				TokenType.Or,
@@ -165,7 +205,7 @@ public class ParserTests
 	{
 		var t = new Tokenizer("a[0xF0 + b]");
 		t.consumeAll();
-		var e = Parser.parseExpression(t.getTokens());
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		indexer(
 				id("a"),
 				binary(hex("F0"), TokenType.Plus, id("b"))
@@ -177,7 +217,7 @@ public class ParserTests
 	{
 		var t = new Tokenizer("a = b");
 		t.consumeAll();
-		var e = Parser.parseExpression(t.getTokens());
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		assignment(
 				id("a"),
 				id("b")
@@ -189,7 +229,7 @@ public class ParserTests
 	{
 		var t = new Tokenizer("a = b + 1");
 		t.consumeAll();
-		var e = Parser.parseExpression(t.getTokens());
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		assignment(
 				id("a"),
 				binary(id("b"), TokenType.Plus, decimal("1"))
@@ -201,13 +241,141 @@ public class ParserTests
 	{
 		var t = new Tokenizer("a = c ? t + 1 : !f");
 		t.consumeAll();
-		var e = Parser.parseExpression(t.getTokens());
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		assignment(
 				id("a"),
 				ternary(
 						id("c"),
 						binary(id("t"), TokenType.Plus, decimal("1")),
 						unary(TokenType.Bang, id("f"))
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void memberAccess0(TestInfo testInfo)
+	{
+		var t = new Tokenizer("mara.object.thing[other.index + 1] * (vecA + vecB).x");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		binary(
+				indexer(
+						member(
+								member(
+										id("mara"),
+										id("object")
+								),
+								id("thing")
+						),
+						binary(
+								member(
+										id("other"),
+										id("index")
+								),
+								TokenType.Plus,
+								decimal("1")
+						)
+				),
+				TokenType.Asterisk,
+				member(
+						binary(
+								id("vecA"),
+								TokenType.Plus,
+								id("vecB")
+						),
+						id("x")
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void memberAccess1(TestInfo testInfo)
+	{
+		var t = new Tokenizer("(object.array1 + object.array2)[++objects.length % 5]");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		indexer(
+				binary(
+						member(
+								id("object"),
+								id("array1")
+						),
+						TokenType.Plus,
+						member(
+								id("object"),
+								id("array2")
+						)
+				),
+				binary(
+						pre(
+								TokenType.Increment,
+								member(
+										id("objects"),
+										id("length")
+								)
+						),
+						TokenType.Percent,
+						decimal("5")
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void precedence4(TestInfo testInfo)
+	{
+		var t = new Tokenizer("x = (!false || (thing.value | booleanArray[~flipped >> 3])) != (condition ? otherArray[cfg.index %> 2] : (y = z++))");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		assignment(
+				id("x"),
+				binary(
+						binary(
+								unary(
+										TokenType.Bang,
+										bool(TokenType.KwFalse)
+								),
+								TokenType.Or,
+								binary(
+										member(
+												id("thing"),
+												id("value")
+										),
+										TokenType.Pipe,
+										indexer(
+												id("booleanArray"),
+												binary(
+														unary(
+																TokenType.Tilde,
+																id("flipped")
+														),
+														TokenType.RightShift,
+														decimal("3")
+												)
+										)
+								)
+						),
+						TokenType.NotEquals,
+						ternary(
+								id("condition"),
+								indexer(
+										id("otherArray"),
+										binary(
+												member(
+														id("cfg"),
+														id("index")
+												),
+												TokenType.RightRotate,
+												decimal("2")
+										)
+								),
+								assignment(
+										id("y"),
+										post(
+												TokenType.Increment,
+												id("z")
+										)
+								)
+						)
 				)
 		).accept(e);
 	}

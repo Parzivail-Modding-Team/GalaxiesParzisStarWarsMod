@@ -201,6 +201,24 @@ public class LexerTests
 	}
 
 	@Test
+	public void rightRotate(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer(">> %>");
+		assertToken(tokenizer, TokenType.RightShift);
+		assertToken(tokenizer, TokenType.RightRotate);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void leftRotate(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer("<< <%");
+		assertToken(tokenizer, TokenType.LeftShift);
+		assertToken(tokenizer, TokenType.LeftRotate);
+		assertEof(tokenizer);
+	}
+
+	@Test
 	public void plusIncrement(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("+ ++ +++");

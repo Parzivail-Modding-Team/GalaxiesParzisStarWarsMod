@@ -1,4 +1,4 @@
-package com.parzivail.mara.parsing;
+package com.parzivail.mara.parsing.expression;
 
 import com.parzivail.mara.lexing.CharacterToken;
 

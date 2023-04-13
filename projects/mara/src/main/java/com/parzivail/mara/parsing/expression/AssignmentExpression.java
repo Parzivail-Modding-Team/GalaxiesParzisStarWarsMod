@@ -1,4 +1,4 @@
-package com.parzivail.mara.parsing;
+package com.parzivail.mara.parsing.expression;
 
 public class AssignmentExpression extends Expression
 {
