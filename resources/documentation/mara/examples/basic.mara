@@ -1,0 +1,23 @@
+using mara;
+
+// Main entrance point
+int main(str[] args)
+{
+	// Print a string using class mara.console
+	console.println("hello, world!");
+
+	// Tight loop to print the numbers 0-9
+	for (var i = 0; i < 10; i++)
+		console.println("number: %s".format(i)); // String formatting method utilized
+
+	// Calculate some return value
+	int j = 2;
+	j *= 2;
+	j++;
+
+	// Sanity check
+	console.println(j);
+
+	// Return to the OS
+	return j;
+}

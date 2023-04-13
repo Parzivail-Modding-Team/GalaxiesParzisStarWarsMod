@@ -1,0 +1,19 @@
+using mara;
+
+fizzbuzz(int n)
+{
+	if (i % 3 == 0 && i % 5 == 0)
+		console.println("FizzBuzz");
+	else if (i % 3 == 0)
+		console.println("Fizz");
+	else if (i % 5 == 0)
+		console.println("Buzz");
+	else
+		console.println(i);
+}
+
+main()
+{
+	for (var i = 0; i < 100; i++)
+		fizzbuzz(i);
+}

@@ -6,7 +6,9 @@ public enum TokenType
 	Equals, // ==
 	NotEquals, // !=
 	Plus, // +
+	Increment, // ++
 	Minus, // -
+	Decrement, // --
 	Asterisk, // *
 	Slash, // /
 	Backslash, // \
@@ -52,4 +54,13 @@ public enum TokenType
 	StringLiteral,
 	CharacterLiteral,
 	Eof, // <End of file>
+	// Keywords
+	KwTrue, // true
+	KwFalse, // false
+	KwVar, // var
+	KwIf, // if
+	KwElse, // else
+	KwFor, // for
+	KwUsing, // using
+	KwReturn // return
 }

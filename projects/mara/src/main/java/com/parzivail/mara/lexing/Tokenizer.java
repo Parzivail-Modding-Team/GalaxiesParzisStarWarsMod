@@ -41,14 +41,22 @@ public class Tokenizer extends StateMachine
 		return c == 'e' || c == 'E';
 	}
 
+	private static final HashMap<String, TokenType> keywords = new HashMap<>();
 	private static final HashMap<Character, TokenType> singleCharTokens = new HashMap<>();
 	private static final HashMap<Character, TokenizeState> multiCharTokens = new HashMap<>();
 	private static final HashMap<Character, TokenizeState> transparentStateTokens = new HashMap<>();
 
 	static
 	{
-		singleCharTokens.put('+', TokenType.Plus);
-		singleCharTokens.put('-', TokenType.Minus);
+		keywords.put("true", TokenType.KwTrue);
+		keywords.put("false", TokenType.KwFalse);
+		keywords.put("var", TokenType.KwVar);
+		keywords.put("if", TokenType.KwIf);
+		keywords.put("else", TokenType.KwElse);
+		keywords.put("for", TokenType.KwFor);
+		keywords.put("using", TokenType.KwUsing);
+		keywords.put("return", TokenType.KwReturn);
+
 		singleCharTokens.put('*', TokenType.Asterisk);
 		singleCharTokens.put('\\', TokenType.Backslash);
 		singleCharTokens.put('~', TokenType.Tilde);
@@ -67,6 +75,8 @@ public class Tokenizer extends StateMachine
 		singleCharTokens.put('$', TokenType.Dollar);
 		singleCharTokens.put('^', TokenType.Caret);
 
+		multiCharTokens.put('+', TokenizeState.Plus);
+		multiCharTokens.put('-', TokenizeState.Minus);
 		multiCharTokens.put('%', TokenizeState.Percent);
 		multiCharTokens.put('>', TokenizeState.Greater);
 		multiCharTokens.put('<', TokenizeState.Less);
@@ -189,6 +199,12 @@ public class Tokenizer extends StateMachine
 		emitToken(new Token(oneCharType, getTokenStart()), TokenizeState.End);
 	}
 
+	private void emitIdentifier(String value, int location, TokenizeState state)
+	{
+		var keyword = keywords.get(value);
+		emitToken(keyword != null ? new KeywordToken(keyword, location) : new IdentifierToken(value, location), state);
+	}
+
 	@StateArrivalHandler(TokenizeState.StringUnicodeEscape)
 	private void onStringUnicodeEscape()
 	{
@@ -283,7 +299,7 @@ public class Tokenizer extends StateMachine
 	{
 		if (isEof())
 		{
-			emitToken(new IdentifierToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EmitEof);
+			emitIdentifier(tokenAccumulator.toString(), getTokenStart(), TokenizeState.EmitEof);
 			return;
 		}
 
@@ -295,7 +311,7 @@ public class Tokenizer extends StateMachine
 			return;
 		}
 
-		emitToken(new IdentifierToken(tokenAccumulator.toString(), getTokenStart()), TokenizeState.EndIfTerminated);
+		emitIdentifier(tokenAccumulator.toString(), getTokenStart(), TokenizeState.EndIfTerminated);
 	}
 
 	@StateArrivalHandler(TokenizeState.HexLiteral)
@@ -541,6 +557,24 @@ public class Tokenizer extends StateMachine
 		);
 	}
 
+	@StateArrivalHandler(TokenizeState.Plus)
+	private void onPlus()
+	{
+		onTwoCharacterToken(
+				TokenType.Plus,
+				new TokenPair('+', TokenType.Increment)
+		);
+	}
+
+	@StateArrivalHandler(TokenizeState.Minus)
+	private void onMinus()
+	{
+		onTwoCharacterToken(
+				TokenType.Minus,
+				new TokenPair('-', TokenType.Decrement)
+		);
+	}
+
 	@StateArrivalHandler(TokenizeState.Slash)
 	private void onSlash()
 	{
@@ -646,16 +680,11 @@ public class Tokenizer extends StateMachine
 		while (getState() == TokenizeState.Begin);
 	}
 
-	private Token getLastToken()
-	{
-		return tokens.isEmpty() ? null : tokens.getLast();
-	}
-
 	public boolean consume()
 	{
 		var oldCursor = cursor;
 		var oldState = getState();
-		var oldLastToken = getLastToken();
+		var oldLastToken = tokens.peekLast();
 
 		if (oldState == TokenizeState.EmitEof)
 		{
@@ -668,7 +697,7 @@ public class Tokenizer extends StateMachine
 
 		var newState = getState();
 
-		if (getLastToken() == oldLastToken && newState == TokenizeState.EmitEof)
+		if (tokens.peekLast() == oldLastToken && newState == TokenizeState.EmitEof)
 		{
 			emitToken(new Token(TokenType.Eof, getTokenStart()), TokenizeState.Eof);
 			return false;
@@ -678,5 +707,11 @@ public class Tokenizer extends StateMachine
 			throw new TokenizeException("Failed to consume token", oldCursor);
 
 		return true;
+	}
+
+	public void consumeAll()
+	{
+		while (consume())
+			;
 	}
 }

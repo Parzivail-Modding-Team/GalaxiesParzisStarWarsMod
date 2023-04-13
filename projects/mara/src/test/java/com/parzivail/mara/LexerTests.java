@@ -7,7 +7,7 @@ import org.junit.jupiter.api.TestInfo;
 
 public class LexerTests
 {
-	private Token assertToken(Tokenizer tokenizer, TokenType type)
+	private static Token assertToken(Tokenizer tokenizer, TokenType type)
 	{
 		Assertions.assertTrue(tokenizer.consume());
 
@@ -19,7 +19,7 @@ public class LexerTests
 		return token;
 	}
 
-	private void assertEof(Tokenizer tokenizer)
+	private static void assertEof(Tokenizer tokenizer)
 	{
 		Assertions.assertFalse(tokenizer.consume());
 
@@ -29,28 +29,34 @@ public class LexerTests
 		Assertions.assertEquals(TokenType.Eof, token.type);
 	}
 
-	private void assertIdentifier(Tokenizer tokenizer, String value)
+	private static void assertKeyword(Tokenizer tokenizer, TokenType value)
+	{
+		var token = assertToken(tokenizer, value);
+		Assertions.assertInstanceOf(KeywordToken.class, token);
+	}
+
+	private static void assertIdentifier(Tokenizer tokenizer, String value)
 	{
 		var token = assertToken(tokenizer, TokenType.Identifier);
 		Assertions.assertInstanceOf(IdentifierToken.class, token);
 		Assertions.assertEquals(value, ((IdentifierToken)token).value);
 	}
 
-	private void assertString(Tokenizer tokenizer, String value)
+	private static void assertString(Tokenizer tokenizer, String value)
 	{
 		var token = assertToken(tokenizer, TokenType.StringLiteral);
 		Assertions.assertInstanceOf(StringToken.class, token);
 		Assertions.assertEquals(value, ((StringToken)token).value);
 	}
 
-	private void assertCharacter(Tokenizer tokenizer, char value)
+	private static void assertCharacter(Tokenizer tokenizer, char value)
 	{
 		var token = assertToken(tokenizer, TokenType.CharacterLiteral);
 		Assertions.assertInstanceOf(CharacterToken.class, token);
 		Assertions.assertEquals(value, ((CharacterToken)token).value);
 	}
 
-	private void assertInt(Tokenizer tokenizer, String value, TokenType type)
+	private static void assertInt(Tokenizer tokenizer, String value, TokenType type)
 	{
 		var token = assertToken(tokenizer, type);
 		Assertions.assertInstanceOf(NumericToken.class, token);
@@ -58,26 +64,26 @@ public class LexerTests
 		Assertions.assertEquals(NumericToken.BASES.get(type), ((NumericToken)token).base);
 	}
 
-	private void assertFloat(Tokenizer tokenizer, String value)
+	private static void assertFloat(Tokenizer tokenizer, String value)
 	{
 		var token = assertToken(tokenizer, TokenType.FloatingPointLiteral);
 		Assertions.assertInstanceOf(FloatingPointToken.class, token);
 		Assertions.assertEquals(value, ((FloatingPointToken)token).value);
 	}
 
-	private void assertInvalid(Tokenizer tokenizer)
+	private static void assertInvalid(Tokenizer tokenizer)
 	{
 		Assertions.assertThrows(TokenizeException.class, tokenizer::consume);
 	}
 
 	@Test
-	public void emptyEof(TestInfo testInfo) throws Exception
+	public void emptyEof(TestInfo testInfo)
 	{
 		assertEof(new Tokenizer(""));
 	}
 
 	@Test
-	public void integerBases(TestInfo testInfo) throws Exception
+	public void integerBases(TestInfo testInfo)
 	{
 		Assertions.assertEquals(16, NumericToken.BASES.get(TokenType.HexLiteral));
 		Assertions.assertEquals(10, NumericToken.BASES.get(TokenType.DecimalLiteral));
@@ -86,7 +92,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void intIdentifier(TestInfo testInfo) throws Exception
+	public void intIdentifier(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("0test");
 		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
@@ -95,7 +101,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void validId0(TestInfo testInfo) throws Exception
+	public void validId0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("_test");
 		assertIdentifier(tokenizer, "_test");
@@ -103,7 +109,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void validId1(TestInfo testInfo) throws Exception
+	public void validId1(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("test0");
 		assertIdentifier(tokenizer, "test0");
@@ -111,7 +117,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void identifierPlus(TestInfo testInfo) throws Exception
+	public void identifierPlus(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("test0 +");
 		assertIdentifier(tokenizer, "test0");
@@ -120,7 +126,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void identifierPlusTrailingWhitespace(TestInfo testInfo) throws Exception
+	public void identifierPlusTrailingWhitespace(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("test0 + ");
 		assertIdentifier(tokenizer, "test0");
@@ -129,7 +135,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void equalsAssign(TestInfo testInfo) throws Exception
+	public void equalsAssign(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("= == ===");
 		assertToken(tokenizer, TokenType.Assign);
@@ -140,7 +146,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void questionCoalesce(TestInfo testInfo) throws Exception
+	public void questionCoalesce(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("? ?? ???");
 		assertToken(tokenizer, TokenType.Question);
@@ -151,7 +157,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void ampAnd(TestInfo testInfo) throws Exception
+	public void ampAnd(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("& && &&&");
 		assertToken(tokenizer, TokenType.Amp);
@@ -162,7 +168,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void pipeOr(TestInfo testInfo) throws Exception
+	public void pipeOr(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("| || |||");
 		assertToken(tokenizer, TokenType.Pipe);
@@ -173,7 +179,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void lessLeftShift(TestInfo testInfo) throws Exception
+	public void lessLeftShift(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("< << <<<");
 		assertToken(tokenizer, TokenType.Less);
@@ -184,7 +190,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void greaterRightShift(TestInfo testInfo) throws Exception
+	public void greaterRightShift(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("> >> >>>");
 		assertToken(tokenizer, TokenType.Greater);
@@ -195,7 +201,29 @@ public class LexerTests
 	}
 
 	@Test
-	public void identIntIdent(TestInfo testInfo) throws Exception
+	public void plusIncrement(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer("+ ++ +++");
+		assertToken(tokenizer, TokenType.Plus);
+		assertToken(tokenizer, TokenType.Increment);
+		assertToken(tokenizer, TokenType.Increment);
+		assertToken(tokenizer, TokenType.Plus);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void minusDecrement(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer("- -- ---");
+		assertToken(tokenizer, TokenType.Minus);
+		assertToken(tokenizer, TokenType.Decrement);
+		assertToken(tokenizer, TokenType.Decrement);
+		assertToken(tokenizer, TokenType.Minus);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void identIntIdent(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("a123 456b");
 		assertIdentifier(tokenizer, "a123");
@@ -205,7 +233,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void identIntIdent2(TestInfo testInfo) throws Exception
+	public void identIntIdent2(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("a123 456 b");
 		assertIdentifier(tokenizer, "a123");
@@ -215,7 +243,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void identIntIdent3(TestInfo testInfo) throws Exception
+	public void identIntIdent3(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("a123b456c");
 		assertIdentifier(tokenizer, "a123b456c");
@@ -223,7 +251,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void stringLiteral(TestInfo testInfo) throws Exception
+	public void stringLiteral(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("\"hello, world!\"");
 		assertString(tokenizer, "hello, world!");
@@ -231,7 +259,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void stringLiteralEscape0(TestInfo testInfo) throws Exception
+	public void stringLiteralEscape0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("\"hello,\nworld!\"");
 		assertString(tokenizer, "hello,\nworld!");
@@ -239,7 +267,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void stringLiteralEscape1(TestInfo testInfo) throws Exception
+	public void stringLiteralEscape1(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("\"hello, world!\n\"");
 		assertString(tokenizer, "hello, world!\n");
@@ -247,7 +275,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void stringLiteralEscape2(TestInfo testInfo) throws Exception
+	public void stringLiteralEscape2(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("\"\\\"hello\\\", world!\n\"");
 		assertString(tokenizer, "\"hello\", world!\n");
@@ -255,7 +283,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void stringLiteralEscape3(TestInfo testInfo) throws Exception
+	public void stringLiteralEscape3(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("\"hello,\\u0020DEADBEEF\\u0020world!\"");
 		assertString(tokenizer, "hello, DEADBEEF world!");
@@ -263,7 +291,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void nbt0(TestInfo testInfo) throws Exception
+	public void nbt0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("{Item:{id:\"minecraft:diamond_sword\",Count:1b,tag:{Damage:10}}}");
 		assertToken(tokenizer, TokenType.OpenCurly);
@@ -292,7 +320,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void nbt1(TestInfo testInfo) throws Exception
+	public void nbt1(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("diamond_pickaxe{display:{Name:\"{\\\"text\\\":\\\"Aw, Man\\\",\\\"color\\\":\\\"gold\\\"}\",Lore:[\"{\\\"text\\\":\\\"So we back in the mines...\\\",\\\"color\\\":\\\"gray\\\",\\\"italic\\\":true}\"]},Damage:1,Enchantments:[{id:\"minecraft:efficiency\",lvl:5s},{id:\"minecraft:unbreaking\",lvl:3s}]}");
 		assertIdentifier(tokenizer, "diamond_pickaxe");
@@ -345,7 +373,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void blockstate0(TestInfo testInfo) throws Exception
+	public void blockstate0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("pswg:block[facing=east,half=top,light=4]");
 		assertIdentifier(tokenizer, "pswg");
@@ -368,7 +396,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void integers0(TestInfo testInfo) throws Exception
+	public void integers0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("0 01 0123 123456 9999999999999999999999999999 0x0 0x00 0x000 0x123 0x012 0b101101 0b00000 0c0 0c1234567 000000");
 		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
@@ -390,21 +418,21 @@ public class LexerTests
 	}
 
 	@Test
-	public void invalidOctal(TestInfo testInfo) throws Exception
+	public void invalidOctal(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("0c12348");
 		assertInvalid(tokenizer);
 	}
 
 	@Test
-	public void invalidBinary(TestInfo testInfo) throws Exception
+	public void invalidBinary(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("0b103");
 		assertInvalid(tokenizer);
 	}
 
 	@Test
-	public void floatingPoint0(TestInfo testInfo) throws Exception
+	public void floatingPoint0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("0 123 123.456 1.234 1.234f 1.234d 0.123 -0.123 .234 -.234 123. 0.0 123");
 		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
@@ -428,7 +456,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void floatingPoint1(TestInfo testInfo) throws Exception
+	public void floatingPoint1(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("0 0.0 .0 0. 1 1.01 .1 1. 1e0 1e-1 1e+2 1.0e-30 .345e+345");
 		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
@@ -448,7 +476,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void postfixArrayIndexInt(TestInfo testInfo) throws Exception
+	public void postfixArrayIndexInt(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("array[0x10]");
 		assertIdentifier(tokenizer, "array");
@@ -459,7 +487,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void postfixArrayIndexAddition(TestInfo testInfo) throws Exception
+	public void postfixArrayIndexAddition(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("array[offset + 0b11010110]");
 		assertIdentifier(tokenizer, "array");
@@ -472,7 +500,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void characters0(TestInfo testInfo) throws Exception
+	public void characters0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("'a' 'b' '\t' '\n' '\\'' '\\\\' '\\u0000' '\\u0020' '\\uDEAD' '\\uBEEF'");
 		assertCharacter(tokenizer, 'a');
@@ -489,35 +517,35 @@ public class LexerTests
 	}
 
 	@Test
-	public void invalidCharacter0(TestInfo testInfo) throws Exception
+	public void invalidCharacter0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("'ab'");
 		assertInvalid(tokenizer);
 	}
 
 	@Test
-	public void invalidCharacter1(TestInfo testInfo) throws Exception
+	public void invalidCharacter1(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("'\\u000'");
 		assertInvalid(tokenizer);
 	}
 
 	@Test
-	public void invalidCharacter2(TestInfo testInfo) throws Exception
+	public void invalidCharacter2(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("'\\uBEET'");
 		assertInvalid(tokenizer);
 	}
 
 	@Test
-	public void invalidCharacter3(TestInfo testInfo) throws Exception
+	public void invalidCharacter3(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("'\\uCAFE5'");
 		assertInvalid(tokenizer);
 	}
 
 	@Test
-	public void comments0(TestInfo testInfo) throws Exception
+	public void comments0(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer(
 				"""
@@ -547,7 +575,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void blasterConfig(TestInfo testInfo) throws Exception
+	public void blasterConfig(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer(
 				"""
@@ -730,7 +758,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void itemClass(TestInfo testInfo) throws Exception
+	public void itemClass(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer(
 				"""
@@ -828,7 +856,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void javaMethod(TestInfo testInfo) throws Exception
+	public void javaMethod(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer(
 				"""
@@ -848,7 +876,7 @@ public class LexerTests
 		assertIdentifier(tokenizer, "c");
 		assertToken(tokenizer, TokenType.CloseParen);
 		assertToken(tokenizer, TokenType.OpenCurly);
-		assertIdentifier(tokenizer, "return");
+		assertKeyword(tokenizer, TokenType.KwReturn);
 		assertIdentifier(tokenizer, "c");
 		assertToken(tokenizer, TokenType.GreaterEquals);
 		assertCharacter(tokenizer, '0');
@@ -882,7 +910,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void javaMethodWithComments(TestInfo testInfo) throws Exception
+	public void javaMethodWithComments(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer(
 				"""
@@ -904,7 +932,7 @@ public class LexerTests
 		assertIdentifier(tokenizer, "c");
 		assertToken(tokenizer, TokenType.CloseParen);
 		assertToken(tokenizer, TokenType.OpenCurly);
-		assertIdentifier(tokenizer, "return");
+		assertKeyword(tokenizer, TokenType.KwReturn);
 		assertIdentifier(tokenizer, "c");
 		assertToken(tokenizer, TokenType.GreaterEquals);
 		assertCharacter(tokenizer, '0');
@@ -938,7 +966,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void jsonObject(TestInfo testInfo) throws Exception
+	public void jsonObject(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer(
 				"""
@@ -965,7 +993,7 @@ public class LexerTests
 	}
 
 	@Test
-	public void pythonScript(TestInfo testInfo) throws Exception
+	public void pythonScript(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer(
 				"""
@@ -1035,6 +1063,317 @@ public class LexerTests
 		assertIdentifier(tokenizer, "Encoder");
 		assertToken(tokenizer, TokenType.OpenParen);
 		assertToken(tokenizer, TokenType.CloseParen);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void maraBasic(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						using mara;
+
+						// Main entrance point
+						int main(str[] args)
+						{
+							// Print a string using class mara.console
+							console.println("hello, world!");
+
+							// Tight loop to print the numbers 0-9
+							for (var i = 0; i < 10; i++)
+								console.println("number: %s".format(i)); // String formatting method utilized
+
+							// Calculate some return value
+							int j = 2;
+							j *= 2;
+							j++;
+
+							// Sanity check
+							console.println(j);
+
+							// Return to the OS
+							return j;
+						}
+						""");
+		assertKeyword(tokenizer, TokenType.KwUsing);
+		assertIdentifier(tokenizer, "mara");
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "int");
+		assertIdentifier(tokenizer, "main");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "str");
+		assertToken(tokenizer, TokenType.OpenSquare);
+		assertToken(tokenizer, TokenType.CloseSquare);
+		assertIdentifier(tokenizer, "args");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertIdentifier(tokenizer, "console");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "println");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertString(tokenizer, "hello, world!");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertKeyword(tokenizer, TokenType.KwFor);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertKeyword(tokenizer, TokenType.KwVar);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Assign);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Less);
+		assertInt(tokenizer, "10", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Increment);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "console");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "println");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertString(tokenizer, "number: %s");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "format");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "int");
+		assertIdentifier(tokenizer, "j");
+		assertToken(tokenizer, TokenType.Assign);
+		assertInt(tokenizer, "2", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "j");
+		assertToken(tokenizer, TokenType.Asterisk);
+		assertToken(tokenizer, TokenType.Assign);
+		assertInt(tokenizer, "2", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "j");
+		assertToken(tokenizer, TokenType.Increment);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "console");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "println");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "j");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertKeyword(tokenizer, TokenType.KwReturn);
+		assertIdentifier(tokenizer, "j");
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void maraFib(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						int fib(int n)
+						{
+							if (n < 2)
+								return n;
+
+							return fib(n - 1) + fib(n - 2);
+						}
+						""");
+		assertIdentifier(tokenizer, "int");
+		assertIdentifier(tokenizer, "fib");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "int");
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertKeyword(tokenizer, TokenType.KwIf);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.Less);
+		assertInt(tokenizer, "2", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertKeyword(tokenizer, TokenType.KwReturn);
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertKeyword(tokenizer, TokenType.KwReturn);
+		assertIdentifier(tokenizer, "fib");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.Minus);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Plus);
+		assertIdentifier(tokenizer, "fib");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.Minus);
+		assertInt(tokenizer, "2", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void maraFibExpression(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						int fib(int n) => n < 2 ? n : (fib(n - 1) + fib(n - 2));
+						""");
+		assertIdentifier(tokenizer, "int");
+		assertIdentifier(tokenizer, "fib");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "int");
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.RightArrow);
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.Less);
+		assertInt(tokenizer, "2", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Question);
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.Colon);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "fib");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.Minus);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Plus);
+		assertIdentifier(tokenizer, "fib");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.Minus);
+		assertInt(tokenizer, "2", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void maraFizzBuzz(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer(
+				"""
+						using mara;
+
+						fizzbuzz(int n)
+						{
+							if (i % 3 == 0 && i % 5 == 0)
+								console.println("FizzBuzz");
+							else if (i % 3 == 0)
+								console.println("Fizz");
+							else if (i % 5 == 0)
+								console.println("Buzz");
+							else
+								console.println(i);
+						}
+
+						main()
+						{
+							for (var i = 0; i < 100; i++)
+								fizzbuzz(i);
+						}
+						""");
+		assertKeyword(tokenizer, TokenType.KwUsing);
+		assertIdentifier(tokenizer, "mara");
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "fizzbuzz");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "int");
+		assertIdentifier(tokenizer, "n");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertKeyword(tokenizer, TokenType.KwIf);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Percent);
+		assertInt(tokenizer, "3", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Equals);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.And);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Percent);
+		assertInt(tokenizer, "5", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Equals);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "console");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "println");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertString(tokenizer, "FizzBuzz");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertKeyword(tokenizer, TokenType.KwElse);
+		assertKeyword(tokenizer, TokenType.KwIf);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Percent);
+		assertInt(tokenizer, "3", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Equals);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "console");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "println");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertString(tokenizer, "Fizz");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertKeyword(tokenizer, TokenType.KwElse);
+		assertKeyword(tokenizer, TokenType.KwIf);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Percent);
+		assertInt(tokenizer, "5", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Equals);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "console");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "println");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertString(tokenizer, "Buzz");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertKeyword(tokenizer, TokenType.KwElse);
+		assertIdentifier(tokenizer, "console");
+		assertToken(tokenizer, TokenType.Dot);
+		assertIdentifier(tokenizer, "println");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertToken(tokenizer, TokenType.CloseCurly);
+		assertIdentifier(tokenizer, "main");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.OpenCurly);
+		assertKeyword(tokenizer, TokenType.KwFor);
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertKeyword(tokenizer, TokenType.KwVar);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Assign);
+		assertInt(tokenizer, "0", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Less);
+		assertInt(tokenizer, "100", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.Increment);
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertIdentifier(tokenizer, "fizzbuzz");
+		assertToken(tokenizer, TokenType.OpenParen);
+		assertIdentifier(tokenizer, "i");
+		assertToken(tokenizer, TokenType.CloseParen);
+		assertToken(tokenizer, TokenType.Semicolon);
+		assertToken(tokenizer, TokenType.CloseCurly);
 		assertEof(tokenizer);
 	}
 }

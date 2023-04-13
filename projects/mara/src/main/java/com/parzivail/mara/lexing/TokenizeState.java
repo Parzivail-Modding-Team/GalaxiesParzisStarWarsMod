@@ -21,6 +21,8 @@ public enum TokenizeState
 	Pipe,
 	Question,
 	Slash,
+	Plus,
+	Minus,
 	LineComment,
 	CharacterLiteral,
 	StringLiteral,
