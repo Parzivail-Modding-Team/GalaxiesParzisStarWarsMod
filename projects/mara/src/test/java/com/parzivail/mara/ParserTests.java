@@ -379,4 +379,61 @@ public class ParserTests
 				)
 		).accept(e);
 	}
+
+	@Test
+	public void precedence5(TestInfo testInfo)
+	{
+		var t = new Tokenizer("arr[1..^2]");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		indexer(
+				id("arr"),
+				binary(
+						decimal("1"),
+						TokenType.Range,
+						unary(
+								TokenType.Caret,
+								decimal("2")
+						)
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void precedence6(TestInfo testInfo)
+	{
+		var t = new Tokenizer("numbers[start..(start + amountToTake)]");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		indexer(
+				id("numbers"),
+				binary(
+						id("start"),
+						TokenType.Range,
+						binary(
+								id("start"),
+								TokenType.Plus,
+								id("amountToTake")
+						)
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void precedence7(TestInfo testInfo)
+	{
+		var t = new Tokenizer("numbers[..^amountToDrop]");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		indexer(
+				id("numbers"),
+				unary(
+						TokenType.Range,
+						unary(
+								TokenType.Caret,
+								id("amountToDrop")
+						)
+				)
+		).accept(e);
+	}
 }

@@ -237,7 +237,7 @@ public class Parser
 	{
 		var firstToken = tokens.getFirst();
 
-		var unaryOps = requireType(TokenType.Bang, TokenType.Plus, TokenType.Minus, TokenType.Tilde, TokenType.Caret);
+		var unaryOps = requireType(TokenType.Bang, TokenType.Plus, TokenType.Minus, TokenType.Tilde, TokenType.Caret, TokenType.Range);
 		if (unaryOps.test(firstToken.type))
 			return new UnaryExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
 
@@ -276,8 +276,11 @@ public class Parser
 		// of precedence by encapsulating all higher-precedence operators into
 		// the lambda passed to each lower-precedence operator
 
+		// x..y
+		ParseFunc range = t -> parseNestedLeftAssoc(t, Parser::parseUnaryExpression, requireType(TokenType.Range));
+
 		// x * y, x / y, x % y
-		ParseFunc multiply = t -> parseNestedLeftAssoc(t, Parser::parseUnaryExpression, requireType(TokenType.Asterisk, TokenType.Slash, TokenType.Percent));
+		ParseFunc multiply = t -> parseNestedLeftAssoc(t, range, requireType(TokenType.Asterisk, TokenType.Slash, TokenType.Percent));
 
 		// x + y, x – y
 		ParseFunc add = t -> parseNestedLeftAssoc(t, multiply, requireType(TokenType.Plus, TokenType.Minus));
