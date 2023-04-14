@@ -237,7 +237,7 @@ public class Parser
 	{
 		var firstToken = tokens.getFirst();
 
-		var unaryOps = requireType(TokenType.Bang, TokenType.Plus, TokenType.Minus, TokenType.Tilde);
+		var unaryOps = requireType(TokenType.Bang, TokenType.Plus, TokenType.Minus, TokenType.Tilde, TokenType.Caret);
 		if (unaryOps.test(firstToken.type))
 			return new UnaryExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
 
