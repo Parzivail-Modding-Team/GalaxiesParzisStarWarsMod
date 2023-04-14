@@ -1,6 +1,6 @@
 package com.parzivail.mara.parsing.expression;
 
-import com.parzivail.mara.lexing.IdentifierToken;
+import com.parzivail.mara.lexing.token.IdentifierToken;
 
 import java.util.ArrayList;
 

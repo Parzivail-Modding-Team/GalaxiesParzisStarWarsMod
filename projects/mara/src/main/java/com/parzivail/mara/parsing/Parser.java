@@ -1,6 +1,7 @@
 package com.parzivail.mara.parsing;
 
-import com.parzivail.mara.lexing.*;
+import com.parzivail.mara.lexing.TokenType;
+import com.parzivail.mara.lexing.token.*;
 import com.parzivail.mara.parsing.expression.*;
 
 import java.util.ArrayList;
@@ -236,7 +237,7 @@ public class Parser
 	{
 		var firstToken = tokens.getFirst();
 
-		var unaryOps = requireType(TokenType.Bang, TokenType.Minus, TokenType.Tilde);
+		var unaryOps = requireType(TokenType.Bang, TokenType.Plus, TokenType.Minus, TokenType.Tilde);
 		if (unaryOps.test(firstToken.type))
 			return new UnaryExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
 

@@ -1,6 +1,6 @@
 package com.parzivail.mara.parsing.expression;
 
-import com.parzivail.mara.lexing.IdentifierToken;
+import com.parzivail.mara.lexing.token.IdentifierToken;
 
 public class IdentifierExpression extends Expression
 {

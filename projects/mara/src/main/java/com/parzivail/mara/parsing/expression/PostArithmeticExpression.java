@@ -1,6 +1,6 @@
 package com.parzivail.mara.parsing.expression;
 
-import com.parzivail.mara.lexing.Token;
+import com.parzivail.mara.lexing.token.Token;
 
 public class PostArithmeticExpression extends Expression
 {

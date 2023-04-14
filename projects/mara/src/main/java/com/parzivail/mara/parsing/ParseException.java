@@ -1,6 +1,6 @@
 package com.parzivail.mara.parsing;
 
-import com.parzivail.mara.lexing.Token;
+import com.parzivail.mara.lexing.token.Token;
 
 public class ParseException extends RuntimeException
 {

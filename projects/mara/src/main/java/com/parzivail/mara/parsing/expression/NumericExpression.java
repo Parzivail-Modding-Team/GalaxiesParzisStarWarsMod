@@ -1,6 +1,6 @@
 package com.parzivail.mara.parsing.expression;
 
-import com.parzivail.mara.lexing.NumericToken;
+import com.parzivail.mara.lexing.token.NumericToken;
 
 public class NumericExpression extends Expression
 {

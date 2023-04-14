@@ -1,6 +1,6 @@
 package com.parzivail.mara.parsing.expression;
 
-import com.parzivail.mara.lexing.KeywordToken;
+import com.parzivail.mara.lexing.token.KeywordToken;
 
 public class BooleanLiteralExpression extends Expression
 {

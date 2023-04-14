@@ -1,6 +1,6 @@
 package com.parzivail.mara.parsing.expression;
 
-import com.parzivail.mara.lexing.CharacterToken;
+import com.parzivail.mara.lexing.token.CharacterToken;
 
 public class CharacterLiteralExpression extends Expression
 {

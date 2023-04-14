@@ -2,6 +2,7 @@ package com.parzivail.mara.lexing;
 
 import com.parzivail.mara.lexing.state.StateArrivalHandler;
 import com.parzivail.mara.lexing.state.StateMachine;
+import com.parzivail.mara.lexing.token.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -1,6 +1,9 @@
 package com.parzivail.mara;
 
-import com.parzivail.mara.lexing.*;
+import com.parzivail.mara.lexing.TokenType;
+import com.parzivail.mara.lexing.TokenizeException;
+import com.parzivail.mara.lexing.Tokenizer;
+import com.parzivail.mara.lexing.token.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
