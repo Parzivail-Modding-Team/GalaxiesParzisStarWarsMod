@@ -207,7 +207,7 @@ public class Parser
 		return ex;
 	}
 
-	public static MethodCallExpression parseMethodCall(LinkedList<Token> tokens, IdentifierToken identifier)
+	public static InvocationExpression parseMethodCall(LinkedList<Token> tokens, IdentifierToken identifier)
 	{
 		// TODO: allow default parameter identifying (example: convert(a, value2: b))
 
@@ -230,7 +230,7 @@ public class Parser
 			paramList.add(param);
 		}
 
-		return new MethodCallExpression(identifier, paramList);
+		return new InvocationExpression(identifier, paramList);
 	}
 
 	public static Expression parseUnaryExpression(LinkedList<Token> tokens)
