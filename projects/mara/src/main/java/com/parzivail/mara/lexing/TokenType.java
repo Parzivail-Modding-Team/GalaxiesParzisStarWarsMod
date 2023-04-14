@@ -16,6 +16,7 @@ public enum TokenType
 	Grave, // `
 	Bang, // !
 	Dot, // .
+	Range, // ..
 	Comma, // ,
 	Question, // ?
 	Coalesce, // ??

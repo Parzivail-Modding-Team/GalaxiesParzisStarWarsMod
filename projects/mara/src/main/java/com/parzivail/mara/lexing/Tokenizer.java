@@ -86,7 +86,7 @@ public class Tokenizer extends StateMachine
 		multiCharTokens.put('?', TokenizeState.Question);
 		multiCharTokens.put('&', TokenizeState.Amp);
 		multiCharTokens.put('!', TokenizeState.Bang);
-		multiCharTokens.put('.', TokenizeState.DotOrFloatingPointLiteral);
+		multiCharTokens.put('.', TokenizeState.Dot);
 		multiCharTokens.put('/', TokenizeState.Slash);
 
 		transparentStateTokens.put('\'', TokenizeState.CharacterLiteral);
@@ -402,8 +402,12 @@ public class Tokenizer extends StateMachine
 		}
 		else if (nextChar == '.')
 		{
-			moveCharacterToState(TokenizeState.FloatingPointLiteral);
-			return;
+			// Special case to allow integers followed by the range operator, ..
+			if (text.length() > 1 && text.charAt(1) != '.')
+			{
+				moveCharacterToState(TokenizeState.FloatingPointLiteral);
+				return;
+			}
 		}
 		else if (isFloatingPointExponentStart(nextChar))
 		{
@@ -449,6 +453,9 @@ public class Tokenizer extends StateMachine
 				resetCharacterToState(TokenizeState.HexLiteral);
 				return;
 			case '.':
+				if (text.length() > 1 && text.charAt(1) == '.')
+					// Special case to allow integers followed by the range operator, ..
+					break;
 				moveCharacterToState(TokenizeState.FloatingPointLiteral);
 				return;
 		}
@@ -462,8 +469,8 @@ public class Tokenizer extends StateMachine
 		emitToken(new NumericToken(TokenType.DecimalLiteral, tokenAccumulator.toString(), 10, getTokenStart()), TokenizeState.EndIfTerminated);
 	}
 
-	@StateArrivalHandler(TokenizeState.DotOrFloatingPointLiteral)
-	private void onDotOrFloatingPointLiteral()
+	@StateArrivalHandler(TokenizeState.Dot)
+	private void onDot()
 	{
 		if (isEof())
 		{
@@ -476,6 +483,12 @@ public class Tokenizer extends StateMachine
 		if (isDecimalDigit(nextChar))
 		{
 			moveCharacterToState(TokenizeState.FloatingPointLiteral);
+			return;
+		}
+		else if (nextChar == '.')
+		{
+			popOneTextChar();
+			emitToken(new Token(TokenType.Range, getTokenStart()), TokenizeState.End);
 			return;
 		}
 

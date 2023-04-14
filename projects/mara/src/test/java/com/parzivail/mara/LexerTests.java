@@ -508,6 +508,43 @@ public class LexerTests
 	}
 
 	@Test
+	public void postfixArrayRangeStart(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer("array[1..]");
+		assertIdentifier(tokenizer, "array");
+		assertToken(tokenizer, TokenType.OpenSquare);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.Range);
+		assertToken(tokenizer, TokenType.CloseSquare);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void postfixArrayRangeEnd(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer("array[..10]");
+		assertIdentifier(tokenizer, "array");
+		assertToken(tokenizer, TokenType.OpenSquare);
+		assertToken(tokenizer, TokenType.Range);
+		assertInt(tokenizer, "10", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseSquare);
+		assertEof(tokenizer);
+	}
+
+	@Test
+	public void postfixArrayRangeFromEnd(TestInfo testInfo)
+	{
+		var tokenizer = new Tokenizer("array[..^1]");
+		assertIdentifier(tokenizer, "array");
+		assertToken(tokenizer, TokenType.OpenSquare);
+		assertToken(tokenizer, TokenType.Range);
+		assertToken(tokenizer, TokenType.Caret);
+		assertInt(tokenizer, "1", TokenType.DecimalLiteral);
+		assertToken(tokenizer, TokenType.CloseSquare);
+		assertEof(tokenizer);
+	}
+
+	@Test
 	public void postfixArrayIndexAddition(TestInfo testInfo)
 	{
 		var tokenizer = new Tokenizer("array[offset + 0b11010110]");
