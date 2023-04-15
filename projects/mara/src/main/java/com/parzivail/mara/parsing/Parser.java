@@ -18,6 +18,26 @@ public class Parser
 		Expression parse(LinkedList<Token> tokens);
 	}
 
+	private static LinkedList<Token> captureState(LinkedList<Token> tokens)
+	{
+		return new LinkedList<>(tokens);
+	}
+
+	private static void restoreState(LinkedList<Token> tokens, LinkedList<Token> capturedState)
+	{
+		var requiredTokens = capturedState.size() - tokens.size();
+
+		var stack = new LinkedList<Token>();
+
+		// Move the first n tokens from the captured state to the stack
+		for (int i = 0; i < requiredTokens; i++)
+			stack.addLast(capturedState.pop());
+
+		// Rewind the stack back onto the token state
+		for (int i = 0; i < requiredTokens; i++)
+			tokens.addFirst(stack.removeLast());
+	}
+
 	private static String getMatchingTokens(Predicate<TokenType> kind)
 	{
 		return Arrays
@@ -250,7 +270,11 @@ public class Parser
 
 		unaryOps = requireType(TokenType.OpenParen);
 		if (unaryOps.test(firstToken.type))
-			return parseCastExpression(tokens);
+		{
+			var cast = parseCastExpression(tokens);
+			if (cast != null)
+				return cast;
+		}
 
 		var pe = parsePrimaryExpression(tokens);
 		return parsePostfixExpressions(tokens, pe);
@@ -258,12 +282,22 @@ public class Parser
 
 	private static Expression parseCastExpression(LinkedList<Token> tokens)
 	{
-		var firstToken = consumeToken(tokens, requireType(TokenType.OpenParen));
-		var type = parseType(tokens);
-		consumeToken(tokens, requireType(TokenType.CloseParen));
-		var expression = parseUnaryExpression(tokens);
+		var state = captureState(tokens);
+		try
+		{
+			var firstToken = consumeToken(tokens, requireType(TokenType.OpenParen));
+			var type = parseType(tokens);
+			consumeToken(tokens, requireType(TokenType.CloseParen));
+			var expression = parseUnaryExpression(tokens);
 
-		return new CastExpression(firstToken, type, expression);
+			return new CastExpression(firstToken, type, expression);
+		}
+		catch (ParseException ignored)
+		{
+			// Backtrack
+			restoreState(tokens, state);
+			return null;
+		}
 	}
 
 	private static TypeExpression parseType(LinkedList<Token> tokens)
