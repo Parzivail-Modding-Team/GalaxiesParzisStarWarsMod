@@ -103,6 +103,17 @@ public class ParserTestGenerator
 			printExpression(s, mae.member, tabLevel + 1);
 			s.append("\n").append("\t".repeat(tabLevel)).append(")");
 		}
+		else if (e instanceof InvocationExpression ie)
+		{
+			s.append("invoke(\n");
+			printExpression(s, ie.identifier, tabLevel + 1);
+			for (var param : ie.parameters)
+			{
+				s.append(",\n");
+				printExpression(s, param, tabLevel + 1);
+			}
+			s.append("\n").append("\t".repeat(tabLevel)).append(")");
+		}
 		else
 			throw new RuntimeException();
 	}

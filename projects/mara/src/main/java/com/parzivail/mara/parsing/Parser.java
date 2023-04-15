@@ -181,17 +181,19 @@ public class Parser
 
 	public static Expression parseIdentifierExpressions(LinkedList<Token> tokens, IdentifierToken identifier)
 	{
+		var ie = new IdentifierExpression(identifier);
+
 		// Identifier-specific postfix expressions
 		switch (tokens.getFirst().type)
 		{
 			case OpenParen:
-				return parseMethodCall(tokens, identifier);
+				return parseInvocation(tokens, ie);
 			case Increment, Decrement:
-				return new PostArithmeticExpression(new IdentifierExpression(identifier), tokens.pop());
+				return new PostArithmeticExpression(ie, tokens.pop());
 		}
 
 		// Postfix expressions that can apply to any expression
-		return parsePostfixExpressions(tokens, new IdentifierExpression(identifier));
+		return parsePostfixExpressions(tokens, ie);
 	}
 
 	private static Expression parseMemberAccess(LinkedList<Token> tokens, Expression root)
@@ -200,14 +202,14 @@ public class Parser
 		while (!tokens.isEmpty() && tokens.peek().type == TokenType.Dot)
 		{
 			consumeToken(tokens, requireType(TokenType.Dot));
-			var id = consumeToken(tokens, requireType(TokenType.Identifier));
-			ex = new MemberAccessExpression(ex, new IdentifierExpression((IdentifierToken)id));
+			var id = (IdentifierToken)consumeToken(tokens, requireType(TokenType.Identifier));
+			ex = new MemberAccessExpression(ex, new IdentifierExpression(id));
 		}
 
 		return ex;
 	}
 
-	public static InvocationExpression parseMethodCall(LinkedList<Token> tokens, IdentifierToken identifier)
+	public static InvocationExpression parseInvocation(LinkedList<Token> tokens, Expression source)
 	{
 		// TODO: allow default parameter identifying (example: convert(a, value2: b))
 
@@ -230,7 +232,7 @@ public class Parser
 			paramList.add(param);
 		}
 
-		return new InvocationExpression(identifier, paramList);
+		return new InvocationExpression(source, paramList);
 	}
 
 	public static Expression parseUnaryExpression(LinkedList<Token> tokens)
@@ -257,6 +259,8 @@ public class Parser
 				return parseIndexerExpression(tokens, root);
 			case Dot:
 				return parseMemberAccess(tokens, root);
+			case OpenParen:
+				return parseInvocation(tokens, root);
 			default:
 				return root;
 		}

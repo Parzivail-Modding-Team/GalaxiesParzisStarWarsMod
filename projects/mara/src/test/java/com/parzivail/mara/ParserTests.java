@@ -63,6 +63,20 @@ public class ParserTests
 		};
 	}
 
+	@SafeVarargs
+	private static Consumer<Expression> invoke(Consumer<Expression> identifier, Consumer<Expression>... params)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(InvocationExpression.class, e);
+			var ie = (InvocationExpression)e;
+			identifier.accept(ie.identifier);
+			Assertions.assertEquals(params.length, ie.parameters.size());
+
+			for (var i = 0; i < params.length; i++)
+				params[i].accept(ie.parameters.get(i));
+		};
+	}
+
 	private static Consumer<Expression> unary(TokenType op, Consumer<Expression> r)
 	{
 		return e -> {
@@ -434,6 +448,138 @@ public class ParserTests
 								id("amountToDrop")
 						)
 				)
+		).accept(e);
+	}
+
+	@Test
+	public void memberMethodCall(TestInfo testInfo)
+	{
+		var t = new Tokenizer("someClass.aMethod(1+1, other.thing[1..^(a/b+c)], !true ^ !!false)");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		invoke(
+				member(
+						id("someClass"),
+						id("aMethod")
+				),
+				binary(
+						decimal("1"),
+						TokenType.Plus,
+						decimal("1")
+				),
+				indexer(
+						member(
+								id("other"),
+								id("thing")
+						),
+						binary(
+								decimal("1"),
+								TokenType.Range,
+								unary(
+										TokenType.Caret,
+										binary(
+												binary(
+														id("a"),
+														TokenType.Slash,
+														id("b")
+												),
+												TokenType.Plus,
+												id("c")
+										)
+								)
+						)
+				),
+				binary(
+						unary(
+								TokenType.Bang,
+								bool(TokenType.KwTrue)
+						),
+						TokenType.Caret,
+						unary(
+								TokenType.Bang,
+								unary(
+										TokenType.Bang,
+										bool(TokenType.KwFalse)
+								)
+						)
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void localMethodCall(TestInfo testInfo)
+	{
+		var t = new Tokenizer("aMethod(1+1, other.thing[1..^(a/b+c)], !true ^ !!false)");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		invoke(
+				id("aMethod"),
+				binary(
+						decimal("1"),
+						TokenType.Plus,
+						decimal("1")
+				),
+				indexer(
+						member(
+								id("other"),
+								id("thing")
+						),
+						binary(
+								decimal("1"),
+								TokenType.Range,
+								unary(
+										TokenType.Caret,
+										binary(
+												binary(
+														id("a"),
+														TokenType.Slash,
+														id("b")
+												),
+												TokenType.Plus,
+												id("c")
+										)
+								)
+						)
+				),
+				binary(
+						unary(
+								TokenType.Bang,
+								bool(TokenType.KwTrue)
+						),
+						TokenType.Caret,
+						unary(
+								TokenType.Bang,
+								unary(
+										TokenType.Bang,
+										bool(TokenType.KwFalse)
+								)
+						)
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void memberMethodCallWithoutParams(TestInfo testInfo)
+	{
+		var t = new Tokenizer("someClass.someMethod()");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		invoke(
+				member(
+						id("someClass"),
+						id("someMethod")
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void localMethodCallWithoutParams(TestInfo testInfo)
+	{
+		var t = new Tokenizer("someMethod()");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		invoke(
+				id("someMethod")
 		).accept(e);
 	}
 }
