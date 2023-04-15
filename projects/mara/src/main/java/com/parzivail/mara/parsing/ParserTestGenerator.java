@@ -114,6 +114,25 @@ public class ParserTestGenerator
 			}
 			s.append("\n").append("\t".repeat(tabLevel)).append(")");
 		}
+		else if (e instanceof TypeExpression te)
+		{
+			s.append("type(\n");
+			printExpression(s, te.typeName, tabLevel + 1);
+			for (var param : te.typeArgs)
+			{
+				s.append(",\n");
+				printExpression(s, param, tabLevel + 1);
+			}
+			s.append("\n").append("\t".repeat(tabLevel)).append(")");
+		}
+		else if (e instanceof CastExpression ce)
+		{
+			s.append("cast(\n");
+			printExpression(s, ce.type, tabLevel + 1);
+			s.append(",\n");
+			printExpression(s, ce.value, tabLevel + 1);
+			s.append("\n").append("\t".repeat(tabLevel)).append(")");
+		}
 		else
 			throw new RuntimeException();
 	}

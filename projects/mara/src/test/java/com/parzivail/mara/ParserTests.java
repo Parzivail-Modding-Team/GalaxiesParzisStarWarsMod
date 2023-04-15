@@ -77,6 +77,34 @@ public class ParserTests
 		};
 	}
 
+	private static Consumer<Expression> cast(Consumer<Expression> type, Consumer<Expression> value)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(CastExpression.class, e);
+			var ce = (CastExpression)e;
+			type.accept(ce.type);
+			value.accept(ce.value);
+		};
+	}
+
+	@SafeVarargs
+	private static Consumer<Expression> type(Consumer<Expression> name, Consumer<Expression>... args)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(TypeExpression.class, e);
+			var te = (TypeExpression)e;
+			name.accept(te.typeName);
+			Assertions.assertEquals(args.length, te.typeArgs.size());
+
+			for (var i = 0; i < args.length; i++)
+			{
+				var arg = te.typeArgs.get(i);
+				Assertions.assertInstanceOf(TypeExpression.class, arg);
+				args[i].accept(arg);
+			}
+		};
+	}
+
 	private static Consumer<Expression> unary(TokenType op, Consumer<Expression> r)
 	{
 		return e -> {
@@ -580,6 +608,79 @@ public class ParserTests
 		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
 		invoke(
 				id("someMethod")
+		).accept(e);
+	}
+
+	@Test
+	public void cast0(TestInfo testInfo)
+	{
+		var t = new Tokenizer("(otherClass)thing");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		cast(
+				type(
+						id("otherClass")
+				),
+				id("thing")
+		).accept(e);
+	}
+
+	@Test
+	public void cast1(TestInfo testInfo)
+	{
+		var t = new Tokenizer("(otherClass)someMethod((str)obj, (double)1 + 2)");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		cast(
+				type(
+						id("otherClass")
+				),
+				invoke(
+						id("someMethod"),
+						cast(
+								type(
+										id("str")
+								),
+								id("obj")
+						),
+						binary(
+								cast(
+										type(
+												id("double")
+										),
+										decimal("1")
+								),
+								TokenType.Plus,
+								decimal("2")
+						)
+				)
+		).accept(e);
+	}
+
+	@Test
+	public void cast2(TestInfo testInfo)
+	{
+		var t = new Tokenizer("(otherClass<arg1, arg2>)place[0x100 + 1]");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		cast(
+				type(
+						id("otherClass"),
+						type(
+								id("arg1")
+						),
+						type(
+								id("arg2")
+						)
+				),
+				indexer(
+						id("place"),
+						binary(
+								hex("100"),
+								TokenType.Plus,
+								decimal("1")
+						)
+				)
 		).accept(e);
 	}
 }

@@ -211,7 +211,8 @@ public class Parser
 
 	public static InvocationExpression parseInvocation(LinkedList<Token> tokens, Expression source)
 	{
-		// TODO: allow default parameter identifying (example: convert(a, value2: b))
+		// TODO: allow default parameter identifying: convert(a, value2: b)
+		// TODO: allow generic type specification: method<T1, T2>(p1, p2)
 
 		var paramList = new ArrayList<Expression>();
 
@@ -247,8 +248,50 @@ public class Parser
 		if (unaryOps.test(firstToken.type))
 			return new PreArithmeticExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
 
+		unaryOps = requireType(TokenType.OpenParen);
+		if (unaryOps.test(firstToken.type))
+			return parseCastExpression(tokens);
+
 		var pe = parsePrimaryExpression(tokens);
 		return parsePostfixExpressions(tokens, pe);
+	}
+
+	private static Expression parseCastExpression(LinkedList<Token> tokens)
+	{
+		var firstToken = consumeToken(tokens, requireType(TokenType.OpenParen));
+		var type = parseType(tokens);
+		consumeToken(tokens, requireType(TokenType.CloseParen));
+		var expression = parseUnaryExpression(tokens);
+
+		return new CastExpression(firstToken, type, expression);
+	}
+
+	private static TypeExpression parseType(LinkedList<Token> tokens)
+	{
+		var id = consumeToken(tokens, requireType(TokenType.Identifier));
+		var typeArgs = new ArrayList<TypeExpression>();
+
+		if (!tokens.isEmpty() && tokens.peek().type == TokenType.Less)
+		{
+			consumeToken(tokens, requireType(TokenType.Less));
+			while (true)
+			{
+				var nextTokenType = tokens.getFirst().type;
+				if (nextTokenType == TokenType.Greater)
+				{
+					consumeToken(tokens, requireType(TokenType.Greater));
+					break;
+				}
+
+				if (typeArgs.size() > 0)
+					consumeToken(tokens, requireType(TokenType.Comma));
+
+				var param = parseType(tokens);
+				typeArgs.add(param);
+			}
+		}
+
+		return new TypeExpression(new IdentifierExpression((IdentifierToken)id), typeArgs);
 	}
 
 	private static Expression parsePostfixExpressions(LinkedList<Token> tokens, Expression root)
