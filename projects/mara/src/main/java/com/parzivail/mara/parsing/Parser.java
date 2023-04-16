@@ -187,191 +187,6 @@ public class Parser
 
 	public static Expression parseExpression(LinkedList<Token> tokens)
 	{
-		return parseHierarchicalOperators(tokens);
-	}
-
-	public static Expression parseExpression(LinkedList<Token> tokens, TokenType closingToken)
-	{
-		var expr = parseExpression(tokens);
-		consumeToken(tokens, type -> type == closingToken);
-		return expr;
-	}
-
-	public static Expression parsePrimaryExpression(LinkedList<Token> tokens)
-	{
-		var token = consumeToken(
-				tokens,
-				requireType(
-						TokenType.DecimalLiteral,
-						TokenType.BinaryLiteral,
-						TokenType.HexLiteral,
-						TokenType.OctalLiteral,
-						TokenType.FloatingPointLiteral,
-						TokenType.Identifier,
-						TokenType.StringLiteral,
-						TokenType.CharacterLiteral,
-						TokenType.OpenParen,
-						TokenType.KwTrue,
-						TokenType.KwFalse
-				)
-		);
-
-		return switch (token.type)
-		{
-			case KwTrue, KwFalse -> new BooleanLiteralExpression((KeywordToken)token);
-			case StringLiteral -> new StringLiteralExpression((StringToken)token);
-			case CharacterLiteral -> new CharacterLiteralExpression((CharacterToken)token);
-			case DecimalLiteral, BinaryLiteral, HexLiteral, OctalLiteral, FloatingPointLiteral -> new NumericExpression((NumericToken)token);
-			case Identifier -> parseIdentifierExpressions(tokens, (IdentifierToken)token);
-			case OpenParen -> parseExpression(tokens, TokenType.CloseParen);
-			default -> throw new ParseException("Unexpected token in primary expression", token);
-		};
-	}
-
-	public static Expression parseIdentifierExpressions(LinkedList<Token> tokens, IdentifierToken identifier)
-	{
-		var ie = new IdentifierExpression(identifier);
-
-		// Identifier-specific postfix expressions
-		return switch (tokens.getFirst().type)
-		{
-			case OpenParen -> parseInvocation(tokens, ie);
-			case Increment, Decrement -> new PostArithmeticExpression(ie, tokens.pop());
-
-			// Postfix expressions that can apply to any expression
-			default -> parsePostfixExpressions(tokens, true, ie);
-		};
-	}
-
-	private static Expression parseMemberAccess(LinkedList<Token> tokens, Expression root)
-	{
-		var ex = root;
-		while (optionallyConsumeToken(tokens, requireType(TokenType.Dot)))
-		{
-			var id = (IdentifierToken)consumeToken(tokens, requireType(TokenType.Identifier));
-			ex = new MemberAccessExpression(ex, new IdentifierExpression(id));
-		}
-
-		return parsePostfixExpressions(tokens, true, ex);
-	}
-
-	public static Expression parseInvocation(LinkedList<Token> tokens, Expression source)
-	{
-		// TODO: allow default parameter identifying: convert(a, value2: b)
-		// TODO: allow generic type specification: method<T1, T2>(p1, p2)
-
-		var paramList = new ArrayList<Expression>();
-
-		consumeToken(tokens, requireType(TokenType.OpenParen));
-		while (!optionallyConsumeToken(tokens, requireType(TokenType.CloseParen)))
-		{
-			if (paramList.size() > 0)
-				consumeToken(tokens, requireType(TokenType.Comma));
-
-			var param = parseExpression(tokens);
-			paramList.add(param);
-		}
-
-		var root = new InvocationExpression(source, paramList);
-		return parsePostfixExpressions(tokens, true, root);
-	}
-
-	public static Expression parseUnaryExpression(LinkedList<Token> tokens)
-	{
-		var firstToken = tokens.getFirst();
-
-		var unaryOps = requireType(TokenType.Bang, TokenType.Plus, TokenType.Minus, TokenType.Tilde, TokenType.Caret, TokenType.Range);
-		if (unaryOps.test(firstToken.type))
-			return new UnaryExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
-
-		unaryOps = requireType(TokenType.Increment, TokenType.Decrement);
-		if (unaryOps.test(firstToken.type))
-			return new PreArithmeticExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
-
-		if (isNextToken(tokens, requireType(TokenType.OpenParen)))
-		{
-			var cast = parseOrBacktrack(tokens, Parser::parseCastExpression);
-			if (cast != null)
-				return cast;
-		}
-
-		var pe = parsePrimaryExpression(tokens);
-		return parsePostfixExpressions(tokens, true, pe);
-	}
-
-	private static Expression parseCastExpression(LinkedList<Token> tokens)
-	{
-		var firstToken = consumeToken(tokens, requireType(TokenType.OpenParen));
-		var type = parseType(tokens);
-		consumeToken(tokens, requireType(TokenType.CloseParen));
-		var expression = parseUnaryExpression(tokens);
-
-		return new CastExpression(firstToken, type, expression);
-	}
-
-	private static TypeExpression parseType(LinkedList<Token> tokens)
-	{
-		// TODO: parse array types
-
-		var id = consumeToken(tokens, requireType(TokenType.Identifier));
-		var typeArgs = new ArrayList<TypeExpression>();
-
-		if (optionallyConsumeToken(tokens, requireType(TokenType.Less)))
-		{
-			while (!optionallyConsumeToken(tokens, requireType(TokenType.Greater)))
-			{
-				if (typeArgs.size() > 0)
-					consumeToken(tokens, requireType(TokenType.Comma));
-
-				var param = parseType(tokens);
-				typeArgs.add(param);
-			}
-		}
-
-		var nullable = optionallyConsumeToken(tokens, requireType(TokenType.Question));
-
-		return new TypeExpression(new IdentifierExpression((IdentifierToken)id), nullable, typeArgs);
-	}
-
-	private static Expression parsePostfixExpressions(LinkedList<Token> tokens, boolean optional, Expression root)
-	{
-		switch (tokens.getFirst().type)
-		{
-			case OpenSquare:
-				return parseIndexerExpression(tokens, root);
-			case Dot:
-				return parseMemberAccess(tokens, root);
-			case OpenParen:
-				return parseInvocation(tokens, root);
-			case Question:
-			{
-				var nullable = parseOrBacktrack(tokens, (t) -> parseNullCondtitional(t, root));
-				if (nullable != null)
-					return nullable;
-			}
-			default:
-				if (!optional)
-					throw new ParseException("Expected postfix expression", tokens.getFirst());
-				return root;
-		}
-	}
-
-	private static Expression parseNullCondtitional(LinkedList<Token> tokens, Expression root)
-	{
-		consumeToken(tokens, requireType(TokenType.Question));
-		return parsePostfixExpressions(tokens, false, new NullConditionalExpression(root));
-	}
-
-	private static Expression parseIndexerExpression(LinkedList<Token> tokens, Expression primaryExpression)
-	{
-		consumeToken(tokens, requireType(TokenType.OpenSquare));
-		var indexingExpression = parseExpression(tokens, TokenType.CloseSquare);
-		var root = new IndexerExpression(primaryExpression, indexingExpression);
-		return parsePostfixExpressions(tokens, true, root);
-	}
-
-	public static Expression parseHierarchicalOperators(LinkedList<Token> tokens)
-	{
 		// This group of expressions are listed highest-to-lowest precedence
 		// and use lambdas to build a nested parser that respects the order
 		// of precedence by encapsulating all higher-precedence operators into
@@ -419,5 +234,167 @@ public class Parser
 		ParseFunc ternary = t -> parseTernary(t, coalesce);
 
 		return parseAssignment(tokens, ternary);
+	}
+
+	public static Expression parseExpression(LinkedList<Token> tokens, TokenType closingToken)
+	{
+		var expr = parseExpression(tokens);
+		consumeToken(tokens, type -> type == closingToken);
+		return expr;
+	}
+
+	public static Expression parsePrimaryExpression(LinkedList<Token> tokens)
+	{
+		var token = consumeToken(
+				tokens,
+				requireType(
+						TokenType.DecimalLiteral,
+						TokenType.BinaryLiteral,
+						TokenType.HexLiteral,
+						TokenType.OctalLiteral,
+						TokenType.FloatingPointLiteral,
+						TokenType.Identifier,
+						TokenType.StringLiteral,
+						TokenType.CharacterLiteral,
+						TokenType.OpenParen,
+						TokenType.KwTrue,
+						TokenType.KwFalse
+				)
+		);
+
+		var expression = switch (token.type)
+		{
+			case KwTrue, KwFalse -> new BooleanLiteralExpression((KeywordToken)token);
+			case StringLiteral -> new StringLiteralExpression((StringToken)token);
+			case CharacterLiteral -> new CharacterLiteralExpression((CharacterToken)token);
+			case DecimalLiteral, BinaryLiteral, HexLiteral, OctalLiteral, FloatingPointLiteral -> new NumericExpression((NumericToken)token);
+			case Identifier -> new IdentifierExpression((IdentifierToken)token);
+			case OpenParen -> parseExpression(tokens, TokenType.CloseParen);
+			default -> throw new ParseException("Unexpected token in primary expression", token);
+		};
+
+		return parsePostfixExpressions(tokens, true, expression);
+	}
+
+	private static Expression parsePostfixExpressions(LinkedList<Token> tokens, boolean optional, Expression root)
+	{
+		var ex = switch (tokens.getFirst().type)
+		{
+			case OpenSquare -> parseIndexerExpression(tokens, root);
+			case Dot -> parseMemberAccess(tokens, root);
+			case OpenParen -> parseInvocation(tokens, root);
+			case Question -> parseOrBacktrack(tokens, (t) -> parseNullCondtitional(t, root));
+			case Increment, Decrement -> new PostArithmeticExpression(root, tokens.pop());
+			default -> null;
+		};
+
+		if (ex != null)
+			return parsePostfixExpressions(tokens, true, ex);
+
+		if (!optional)
+			throw new ParseException("Expected postfix expression", tokens.getFirst());
+
+		return root;
+	}
+
+	private static Expression parseMemberAccess(LinkedList<Token> tokens, Expression root)
+	{
+		var ex = root;
+		while (optionallyConsumeToken(tokens, requireType(TokenType.Dot)))
+		{
+			var id = (IdentifierToken)consumeToken(tokens, requireType(TokenType.Identifier));
+			ex = new MemberAccessExpression(ex, new IdentifierExpression(id));
+		}
+
+		return ex;
+	}
+
+	public static Expression parseInvocation(LinkedList<Token> tokens, Expression source)
+	{
+		// TODO: allow default parameter identifying: convert(a, value2: b)
+		// TODO: allow generic type specification: method<T1, T2>(p1, p2)
+
+		var paramList = new ArrayList<Expression>();
+
+		consumeToken(tokens, requireType(TokenType.OpenParen));
+		while (!optionallyConsumeToken(tokens, requireType(TokenType.CloseParen)))
+		{
+			if (paramList.size() > 0)
+				consumeToken(tokens, requireType(TokenType.Comma));
+
+			var param = parseExpression(tokens);
+			paramList.add(param);
+		}
+
+		return new InvocationExpression(source, paramList);
+	}
+
+	public static Expression parseUnaryExpression(LinkedList<Token> tokens)
+	{
+		var firstToken = tokens.getFirst();
+
+		var unaryOps = requireType(TokenType.Bang, TokenType.Plus, TokenType.Minus, TokenType.Tilde, TokenType.Caret, TokenType.Range);
+		if (unaryOps.test(firstToken.type))
+			return new UnaryExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
+
+		unaryOps = requireType(TokenType.Increment, TokenType.Decrement);
+		if (unaryOps.test(firstToken.type))
+			return new PreArithmeticExpression(consumeToken(tokens, unaryOps), parseUnaryExpression(tokens));
+
+		if (isNextToken(tokens, requireType(TokenType.OpenParen)))
+		{
+			var cast = parseOrBacktrack(tokens, Parser::parseCastExpression);
+			if (cast != null)
+				return cast;
+		}
+
+		return parsePrimaryExpression(tokens);
+	}
+
+	private static Expression parseCastExpression(LinkedList<Token> tokens)
+	{
+		var firstToken = consumeToken(tokens, requireType(TokenType.OpenParen));
+		var type = parseType(tokens);
+		consumeToken(tokens, requireType(TokenType.CloseParen));
+		var expression = parseUnaryExpression(tokens);
+
+		return new CastExpression(firstToken, type, expression);
+	}
+
+	private static TypeExpression parseType(LinkedList<Token> tokens)
+	{
+		// TODO: parse array types
+
+		var id = consumeToken(tokens, requireType(TokenType.Identifier));
+		var typeArgs = new ArrayList<TypeExpression>();
+
+		if (optionallyConsumeToken(tokens, requireType(TokenType.Less)))
+		{
+			while (!optionallyConsumeToken(tokens, requireType(TokenType.Greater)))
+			{
+				if (typeArgs.size() > 0)
+					consumeToken(tokens, requireType(TokenType.Comma));
+
+				var param = parseType(tokens);
+				typeArgs.add(param);
+			}
+		}
+
+		var nullable = optionallyConsumeToken(tokens, requireType(TokenType.Question));
+
+		return new TypeExpression(new IdentifierExpression((IdentifierToken)id), nullable, typeArgs);
+	}
+
+	private static Expression parseNullCondtitional(LinkedList<Token> tokens, Expression root)
+	{
+		consumeToken(tokens, requireType(TokenType.Question));
+		return parsePostfixExpressions(tokens, false, new NullConditionalExpression(root));
+	}
+
+	private static Expression parseIndexerExpression(LinkedList<Token> tokens, Expression primaryExpression)
+	{
+		consumeToken(tokens, requireType(TokenType.OpenSquare));
+		var indexingExpression = parseExpression(tokens, TokenType.CloseSquare);
+		return new IndexerExpression(primaryExpression, indexingExpression);
 	}
 }

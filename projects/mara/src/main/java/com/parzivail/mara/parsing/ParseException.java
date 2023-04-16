@@ -8,7 +8,7 @@ public class ParseException extends RuntimeException
 
 	public ParseException(String message, Token token)
 	{
-		super(String.format("['%s' @ %s] %s", token, token.location, message));
+		super(String.format("['%s'] %s", token, message));
 		this.message = message;
 	}
 }
