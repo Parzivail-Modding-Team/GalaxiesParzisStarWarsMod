@@ -489,6 +489,21 @@ public class ParserTests
 	}
 
 	@Test
+	public void precedence8(TestInfo testInfo)
+	{
+		var t = new Tokenizer("++i++");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		pre(
+				TokenType.Increment,
+				post(
+						TokenType.Increment,
+						id("i")
+				)
+		).accept(e);
+	}
+
+	@Test
 	public void memberMethodCall(TestInfo testInfo)
 	{
 		var t = new Tokenizer("someClass.aMethod(1+1, other.thing[1..^(a/b+c)], !true ^ !!false)");
