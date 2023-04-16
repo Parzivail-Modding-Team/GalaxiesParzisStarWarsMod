@@ -9,12 +9,12 @@ import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.character.SpeciesVariable;
-import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
 import com.parzivail.pswg.features.blasters.data.BlasterArchetype;
 import com.parzivail.pswg.features.blasters.data.BlasterFiringMode;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
@@ -23,10 +23,8 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
@@ -698,8 +696,6 @@ public class PswgTarkin
 	{
 		Tarkin.registerItemFields(SwgItems.class, assets);
 
-		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
-
 		PswgContent.getBlasterPresets().keySet().stream()
 		           .filter(id -> id.getNamespace().equals(Resources.MODID))
 		           .forEach(id -> ItemGenerator
@@ -712,6 +708,7 @@ public class PswgTarkin
 			ItemGenerator.basic(entry.getValue()).build(assets);
 
 		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);
+		ItemGenerator.armor(SwgItems.Armor.Shocktrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Purgetrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Sandtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Deathtrooper, assets);

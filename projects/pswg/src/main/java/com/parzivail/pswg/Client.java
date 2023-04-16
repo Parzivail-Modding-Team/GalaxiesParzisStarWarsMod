@@ -304,7 +304,19 @@ public class Client implements ClientModInitializer
 			model.body.getChild("pauldron").visible = false;
 		});
 
-		// TODO: update these models
+		var shocktrooperId = Resources.id("shocktrooper");
+		ArmorRenderer.register(
+				SwgItems.Armor.Shocktrooper,
+				shocktrooperId,
+				new ArmorRenderer.Assets(Resources.id("armor/stormtrooper"),
+				                         Resources.id("textures/armor/shocktrooper.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.registerTransformer(shocktrooperId, (entity, slim, model, opt) -> {
+			model.leftArm.getChild("shoulder_pouch").visible = false;
+			model.body.getChild("pauldron").visible = false;
+		});
+
 		ArmorRenderer.register(
 				SwgItems.Armor.Purgetrooper,
 				Resources.id("purgetrooper"),
@@ -312,6 +324,8 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/purgetrooper.png")),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
+
+		// TODO: update these models
 		ArmorRenderer.register(
 				SwgItems.Armor.ImperialPilotHelmet,
 				SwgItems.Armor.ImperialPilotKit,

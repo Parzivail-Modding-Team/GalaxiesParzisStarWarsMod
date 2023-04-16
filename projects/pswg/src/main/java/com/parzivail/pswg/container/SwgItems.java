@@ -3,13 +3,13 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgContent;
+import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.BlasterPowerPackItem;
+import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.DoorInsertItem;
-import com.parzivail.pswg.features.blasters.BlasterItem;
-import com.parzivail.pswg.features.blasters.BlasterPowerPackItem;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
-import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
 import com.parzivail.pswg.item.material.TitaniumToolMaterial;
@@ -49,6 +49,8 @@ public class SwgItems
 	{
 		@RegistryName("stormtrooper")
 		public static final ArmorItems Stormtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
+		@RegistryName("shocktrooper")
+		public static final ArmorItems Shocktrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("purgetrooper")
 		public static final ArmorItems Purgetrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("sandtrooper")
