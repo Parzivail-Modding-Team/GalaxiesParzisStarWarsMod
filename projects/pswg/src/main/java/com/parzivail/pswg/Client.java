@@ -4,19 +4,12 @@ import com.parzivail.nem.NemManager;
 import com.parzivail.p3d.P3dBlockRendererRegistry;
 import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.api.PswgClientAddon;
-import com.parzivail.pswg.features.blasters.client.BlasterHudRenderer;
-import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
-import com.parzivail.pswg.features.blasters.client.BlasterZoomHandler;
-import com.parzivail.pswg.features.blasters.client.BlasterRecoilManager;
-import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.client.render.block.*;
-import com.parzivail.pswg.features.blasters.client.entity.BlasterBoltRenderer;
-import com.parzivail.pswg.features.blasters.client.entity.BlasterStunBoltRenderer;
 import com.parzivail.pswg.client.render.entity.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.entity.amphibian.WorrtEntityRenderer;
 import com.parzivail.pswg.client.render.entity.droid.AstromechRenderer;
@@ -27,21 +20,30 @@ import com.parzivail.pswg.client.render.entity.rodent.SandSkitterEntityRenderer;
 import com.parzivail.pswg.client.render.entity.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.entity.ship.ZephyrJRenderer;
-import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.sky.SpaceSkyRenderer;
-import com.parzivail.pswg.client.screen.*;
+import com.parzivail.pswg.client.screen.CrateGenericSmallScreen;
+import com.parzivail.pswg.client.screen.CrateOctagonScreen;
+import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.BlasterUtil;
+import com.parzivail.pswg.features.blasters.client.BlasterHudRenderer;
+import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
+import com.parzivail.pswg.features.blasters.client.BlasterRecoilManager;
+import com.parzivail.pswg.features.blasters.client.BlasterZoomHandler;
+import com.parzivail.pswg.features.blasters.client.entity.BlasterBoltRenderer;
+import com.parzivail.pswg.features.blasters.client.entity.BlasterStunBoltRenderer;
+import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
+import com.parzivail.pswg.features.lightsabers.LightsaberItem;
+import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.client.forge.LightsaberForgeScreen;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
-import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
-import com.parzivail.pswg.features.blasters.BlasterUtil;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -289,14 +291,20 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Y10, AstromechRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroQTKT, AstromechRenderer::new);
 
+		var stormtrooperId = Resources.id("stormtrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Stormtrooper,
-				Resources.id("stormtrooper"),
-				new ArmorRenderer.Assets(Resources.id("armor/stormtrooper_slim"),
-				                         Resources.id("armor/stormtrooper_default"),
+				stormtrooperId,
+				new ArmorRenderer.Assets(Resources.id("armor/stormtrooper"),
 				                         Resources.id("textures/armor/stormtrooper.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
+		ArmorRenderer.registerTransformer(stormtrooperId, (entity, slim, model, opt) -> {
+			model.leftArm.getChild("shoulder_pouch").visible = false;
+			model.body.getChild("pauldron").visible = false;
+		});
+
+		// TODO: update these models
 		ArmorRenderer.register(
 				SwgItems.Armor.Purgetrooper,
 				Resources.id("purgetrooper"),
@@ -322,23 +330,24 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/sandtrooper_default.png")),
 				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
+		var sandtrooperBackpackId = Resources.id("sandtrooper_backpack");
 		ArmorRenderer.registerExtra(
 				SwgItems.Armor.SandtrooperBackpack,
 				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.SandtrooperBackpack),
+				sandtrooperBackpackId,
 				sandtrooperId,
 				EquipmentSlot.CHEST
 		);
-		ArmorRenderer.registerTransformer(sandtrooperId, (entity, slim, model) -> {
+		ArmorRenderer.registerTransformer(sandtrooperId, (entity, slim, model, opt) -> {
 			var modArmor = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST);
-			var hasChestplate = modArmor != null && modArmor.getLeft().equals(sandtrooperId);
-			var hasPack = !TrinketUtil.getEquipped(entity, SwgItems.Armor.SandtrooperBackpack).isEmpty();
+			var renderChestplate = opt == null && modArmor != null && modArmor.getLeft().equals(sandtrooperId);
 
-			model.leftArm.visible = model.leftArm.visible && hasChestplate;
-			model.rightArm.visible = model.rightArm.visible && hasChestplate;
-			model.body.getChild("chest").visible = hasChestplate;
-			model.body.getChild("pauldron").visible = hasChestplate;
+			model.leftArm.visible = model.leftArm.visible && renderChestplate;
+			model.rightArm.visible = model.rightArm.visible && renderChestplate;
+			model.body.getChild("chest").visible = renderChestplate;
+			model.body.getChild("pauldron").visible = renderChestplate;
 
-			model.body.getChild("backpack").visible = hasPack;
+			model.body.getChild("backpack").visible = sandtrooperBackpackId.equals(opt);
 		});
 
 		ArmorRenderer.register(
@@ -366,28 +375,30 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/jumptrooper.png")),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
+		var jumptrooperJetpackId = Resources.id("jumptrooper_jetpack");
 		ArmorRenderer.registerExtra(
 				SwgItems.Armor.JumptrooperJetpack,
 				JetpackItem::getEquippedJetpack,
+				jumptrooperJetpackId,
 				jumptrooperId,
 				EquipmentSlot.CHEST
 		);
-		ArmorRenderer.registerTransformer(jumptrooperId, (entity, slim, model) -> {
+		ArmorRenderer.registerTransformer(jumptrooperId, (entity, slim, model, opt) -> {
 			var modArmor = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST);
-			var hasChestplate = modArmor != null && modArmor.getLeft().equals(jumptrooperId);
-			var hasPack = !TrinketUtil.getEquipped(entity, SwgItems.Armor.JumptrooperJetpack).isEmpty();
+			var renderChestplate = opt == null && modArmor != null && modArmor.getLeft().equals(jumptrooperId);
+			var renderPack = jumptrooperJetpackId.equals(opt);
 
-			model.leftArm.visible = model.leftArm.visible && hasChestplate;
-			model.rightArm.visible = model.rightArm.visible && hasChestplate;
-			model.body.getChild("chest").visible = hasChestplate;
+			model.leftArm.visible = model.leftArm.visible && renderChestplate;
+			model.rightArm.visible = model.rightArm.visible && renderChestplate;
+			model.body.getChild("chest").visible = renderChestplate;
 
-			model.body.getChild("jetpack").visible = hasPack;
-			model.head.getChild("helmet5").visible = hasPack;
-			model.head.getChild("helmet6").visible = hasPack;
-			model.head.getChild("helmet7").visible = hasPack;
-			model.head.getChild("helmet8").visible = hasPack;
-			model.head.getChild("helmet9").visible = hasPack;
-			model.head.getChild("helmet10").visible = hasPack;
+			model.body.getChild("jetpack").visible = renderPack;
+			model.head.getChild("helmet5").visible = renderPack;
+			model.head.getChild("helmet6").visible = renderPack;
+			model.head.getChild("helmet7").visible = renderPack;
+			model.head.getChild("helmet8").visible = renderPack;
+			model.head.getChild("helmet9").visible = renderPack;
+			model.head.getChild("helmet10").visible = renderPack;
 		});
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelPilot,

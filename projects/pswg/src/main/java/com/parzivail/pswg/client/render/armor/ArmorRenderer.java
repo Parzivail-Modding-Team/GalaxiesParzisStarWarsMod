@@ -64,11 +64,15 @@ public class ArmorRenderer
 	@FunctionalInterface
 	public interface ArmorRenderTransformer
 	{
-		void transform(LivingEntity entity, boolean slim, BipedEntityArmorModel<LivingEntity> armorModel);
+		void transform(LivingEntity entity, boolean slim, BipedEntityArmorModel<LivingEntity> armorModel, Identifier option);
 	}
 
 	private record Entry(Supplier<BipedEntityArmorModel<LivingEntity>> defaultModelSupplier, Supplier<BipedEntityArmorModel<LivingEntity>> slimModelSupplier,
 	                     Identifier defaultTetxure, Identifier slimTexture)
+	{
+	}
+
+	private record ArmorExtra(Identifier optionId, Function<LivingEntity, ItemStack> getter, EquipmentSlot modelParentSlot)
 	{
 	}
 
@@ -81,7 +85,7 @@ public class ArmorRenderer
 	private static final HashMap<Identifier, Entry> MODELKEY_MODEL_MAP = new HashMap<>();
 	private static final HashMap<Identifier, ArmorRenderTransformer> MODELKEY_TRANSFORMER_MAP = new HashMap<>();
 	private static final HashMap<Identifier, Metadata> MODELKEY_METADATA_MAP = new HashMap<>();
-	private static final ArrayList<Pair<Function<LivingEntity, ItemStack>, EquipmentSlot>> EXTRA_SLOT_GETTERS = new ArrayList<>();
+	private static final ArrayList<ArmorExtra> EXTRA_SLOT_GETTERS = new ArrayList<>();
 
 	public static void register(ArmorItems itemSet, Identifier id, Assets assets, Metadata metadata)
 	{
@@ -106,10 +110,10 @@ public class ArmorRenderer
 		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 
-	public static void registerExtra(Item item, Function<LivingEntity, ItemStack> getter, Identifier id, EquipmentSlot equivalentSlot)
+	public static void registerExtra(Item item, Function<LivingEntity, ItemStack> getter, Identifier optionId, Identifier targetModelKey, EquipmentSlot modelDependentSlot)
 	{
-		ITEM_MODELKEY_MAP.put(item, id);
-		EXTRA_SLOT_GETTERS.add(new Pair<>(getter, equivalentSlot));
+		ITEM_MODELKEY_MAP.put(item, targetModelKey);
+		EXTRA_SLOT_GETTERS.add(new ArmorExtra(optionId, getter, modelDependentSlot));
 	}
 
 	public static void register(Item item, Identifier id, Assets assets)
@@ -172,7 +176,7 @@ public class ArmorRenderer
 
 	public static void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci, PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel)
 	{
-		renderWithTransformation(player, getModArmor(player, EquipmentSlot.CHEST), matrices, vertexConsumers, light, (entity1, slim, armorModel) -> {
+		renderWithTransformation(player, getModArmor(player, EquipmentSlot.CHEST), matrices, vertexConsumers, light, (entity1, slim, armorModel, options) -> {
 			setupArmorTransform(entity1, slim, armorModel, playerEntityModel);
 
 			armorModel.child = false;
@@ -187,33 +191,30 @@ public class ArmorRenderer
 
 			armorModel.rightArm.visible = arm == playerEntityModel.rightArm;
 			armorModel.leftArm.visible = arm == playerEntityModel.leftArm;
-		});
+		}, null);
 	}
 
 	public static <T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> void renderArmor(M contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci)
 	{
-		renderWithTransformation(entity, getModArmor(entity, armorSlot), matrices, vertexConsumers, light, (entity1, slim, armorModel) -> {
+		renderWithTransformation(entity, getModArmor(entity, armorSlot), matrices, vertexConsumers, light, (entity1, slim, armorModel, options) -> {
 			setupArmorTransformAndVisibility(contextModel, armorSlot, entity1, slim, armorModel);
 			ci.cancel();
-		});
+		}, null);
 	}
 
 	public static <M extends BipedEntityModel<T>, T extends LivingEntity> void renderExtraArmor(M contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, int light, CallbackInfo ci)
 	{
 		for (var pair : EXTRA_SLOT_GETTERS)
 		{
-			var getter = pair.getLeft();
-			var armorItem = getter.apply(entity);
+			var armorItem = pair.getter.apply(entity);
 			if (armorItem.isEmpty())
 				continue;
 
 			var armorModelEntry = ITEM_MODELKEY_MAP.get(armorItem.getItem());
 
-			var armorSlot = pair.getRight();
-
-			renderWithTransformation(entity, new Pair<>(armorModelEntry, armorItem), matrices, vertexConsumers, light, (entity1, slim, armorModel) -> {
-				setupArmorTransformAndVisibility(contextModel, armorSlot, entity1, slim, armorModel);
-			});
+			renderWithTransformation(entity, new Pair<>(armorModelEntry, armorItem), matrices, vertexConsumers, light, (entity1, slim, armorModel, options) -> {
+				setupArmorTransformAndVisibility(contextModel, pair.modelParentSlot, entity1, slim, armorModel);
+			}, pair.optionId);
 		}
 	}
 
@@ -232,7 +233,7 @@ public class ArmorRenderer
 		armorModel.getRightBoot().ifPresent(p -> p.visible = armorSlot == EquipmentSlot.FEET);
 	}
 
-	private static void renderWithTransformation(LivingEntity entity, Pair<Identifier, ItemStack> armorPair, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, ArmorRenderTransformer transformer)
+	private static void renderWithTransformation(LivingEntity entity, Pair<Identifier, ItemStack> armorPair, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, ArmorRenderTransformer transformer, Identifier option)
 	{
 		if (armorPair != null)
 		{
@@ -251,7 +252,7 @@ public class ArmorRenderer
 
 			var armorModel = armorModelSupplier.get();
 
-			transformer.transform(entity, shouldUseSlimModel, armorModel);
+			transformer.transform(entity, shouldUseSlimModel, armorModel, option);
 
 			var meta = MODELKEY_METADATA_MAP.get(armorPair.getLeft());
 			if (meta.armThicknessAction == ArmThicknessAction.AUTO_THICKNESS)
@@ -267,7 +268,7 @@ public class ArmorRenderer
 
 			var registeredTransformer = MODELKEY_TRANSFORMER_MAP.get(armorPair.getLeft());
 			if (registeredTransformer != null)
-				registeredTransformer.transform(entity, shouldUseSlimModel, armorModel);
+				registeredTransformer.transform(entity, shouldUseSlimModel, armorModel, option);
 
 			var vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(texture), false, false);
 			armorModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);

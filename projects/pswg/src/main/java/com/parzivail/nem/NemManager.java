@@ -148,7 +148,8 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 			var modelId = modelInfo.getLeft();
 			var model = modelInfo.getRight();
 
-			model.accept(modelData.get(modelId).createModel());
+			if (modelData.containsKey(modelId))
+				model.accept(modelData.get(modelId).createModel());
 		}
 	}
 
