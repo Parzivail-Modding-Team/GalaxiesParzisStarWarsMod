@@ -1,5 +1,6 @@
 package com.parzivail.mara.parsing;
 
+import com.parzivail.mara.lexing.TokenType;
 import com.parzivail.mara.lexing.Tokenizer;
 import com.parzivail.mara.parsing.expression.*;
 
@@ -16,6 +17,8 @@ public class ParserTestGenerator
 		t.consumeAll();
 
 		var e = Parser.parseExpression(t.getTokens());
+		if (t.getTokens().getFirst().type != TokenType.Eof)
+			throw new ParseException("Dangling tokens", t.getTokens().getFirst());
 
 		var s = new StringBuilder();
 		printExpression(s, e, 0);
@@ -130,6 +133,12 @@ public class ParserTestGenerator
 			s.append("cast(\n");
 			printExpression(s, ce.type, tabLevel + 1);
 			s.append(",\n");
+			printExpression(s, ce.value, tabLevel + 1);
+			s.append("\n").append("\t".repeat(tabLevel)).append(")");
+		}
+		else if (e instanceof NullConditionalExpression ce)
+		{
+			s.append("nullCond(\n");
 			printExpression(s, ce.value, tabLevel + 1);
 			s.append("\n").append("\t".repeat(tabLevel)).append(")");
 		}

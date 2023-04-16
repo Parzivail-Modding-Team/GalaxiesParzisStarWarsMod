@@ -63,6 +63,15 @@ public class ParserTests
 		};
 	}
 
+	private static Consumer<Expression> nullCond(Consumer<Expression> value)
+	{
+		return e -> {
+			Assertions.assertInstanceOf(NullConditionalExpression.class, e);
+			var nce = (NullConditionalExpression)e;
+			value.accept(nce.value);
+		};
+	}
+
 	@SafeVarargs
 	private static Consumer<Expression> invoke(Consumer<Expression> identifier, Consumer<Expression>... params)
 	{
@@ -681,6 +690,39 @@ public class ParserTests
 								decimal("1")
 						)
 				)
+		).accept(e);
+	}
+
+	@Test
+	public void nullConditionals(TestInfo testInfo)
+	{
+		var t = new Tokenizer("thing1?.thing2?[3 + 2]?.callMethod(a, b, c)");
+		t.consumeAll();
+		var e = Parser.parseExpression(t.getTokens(), TokenType.Eof);
+		invoke(
+				member(
+						nullCond(
+								indexer(
+										nullCond(
+												member(
+														nullCond(
+																id("thing1")
+														),
+														id("thing2")
+												)
+										),
+										binary(
+												decimal("3"),
+												TokenType.Plus,
+												decimal("2")
+										)
+								)
+						),
+						id("callMethod")
+				),
+				id("a"),
+				id("b"),
+				id("c")
 		).accept(e);
 	}
 }

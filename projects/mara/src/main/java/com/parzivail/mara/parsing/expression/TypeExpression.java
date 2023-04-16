@@ -6,12 +6,14 @@ import java.util.stream.Collectors;
 public class TypeExpression extends Expression
 {
 	public final IdentifierExpression typeName;
+	public final boolean nullable;
 	public final ArrayList<TypeExpression> typeArgs;
 
-	public TypeExpression(IdentifierExpression typeName, ArrayList<TypeExpression> typeArgs)
+	public TypeExpression(IdentifierExpression typeName, boolean nullable, ArrayList<TypeExpression> typeArgs)
 	{
 		super(typeName.firstToken);
 		this.typeName = typeName;
+		this.nullable = nullable;
 		this.typeArgs = typeArgs;
 	}
 
@@ -19,8 +21,8 @@ public class TypeExpression extends Expression
 	public String toString()
 	{
 		if (typeArgs.isEmpty())
-			return String.format("(%s)", typeName.value);
+			return String.format("(%s%s)", typeName.value, nullable ? "?" : "");
 
-		return String.format("(%s<%s>)", typeName.value, typeArgs.stream().map(TypeExpression::toString).collect(Collectors.joining(", ")));
+		return String.format("(%s<%s>%s)", typeName.value, typeArgs.stream().map(TypeExpression::toString).collect(Collectors.joining(", ")), nullable ? "?" : "");
 	}
 }
