@@ -18,6 +18,8 @@ import java.util.function.Supplier;
 
 public class SwgSpeciesRenderer
 {
+	private static final Identifier HUMANOID_BASE_MODEL_ID = Resources.id("species/humanoid_base");
+
 	public static final HashMap<Identifier, SwgSpeciesModel> MODELS = new HashMap<>();
 
 	static
@@ -26,22 +28,27 @@ public class SwgSpeciesRenderer
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
 		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
-		register(SwgSpeciesRegistry.SPECIES_AQUALISH, nemSource(Resources.id("species/aqualish")), null);
-		register(SwgSpeciesRegistry.SPECIES_BITH, nemSource(Resources.id("species/bith")), null);
-		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, nemSource(Resources.id("species/chagrian")), null);
-		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, nemSource(Resources.id("species/kaminoan")), null);
-		register(SwgSpeciesRegistry.SPECIES_JAWA, nemSource(Resources.id("species/jawa")), null);
-		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, nemSource(Resources.id("species/togruta_m")), nemSource(Resources.id("species/togruta_f")), null);
-		register(SwgSpeciesRegistry.SPECIES_TWILEK, nemSource(Resources.id("species/twilek")), SwgSpeciesRenderer::animateTwilek);
-		register(SwgSpeciesRegistry.SPECIES_HUMAN, nemSource(Resources.id("species/human")), null);
-		register(SwgSpeciesRegistry.SPECIES_CHISS, nemSource(Resources.id("species/human")), null);
-		register(SwgSpeciesRegistry.SPECIES_PANTORAN, nemSource(Resources.id("species/human")), null);
-		register(SwgSpeciesRegistry.SPECIES_WOOKIEE, nemSource(Resources.id("species/wookiee")), null);
+		register(SwgSpeciesRegistry.SPECIES_AQUALISH, fullModel(Resources.id("species/aqualish")), null);
+		register(SwgSpeciesRegistry.SPECIES_BITH, fullModel(Resources.id("species/bith")), null);
+		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, fullModel(Resources.id("species/chagrian")), null);
+		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, fullModel(Resources.id("species/kaminoan")), null);
+		register(SwgSpeciesRegistry.SPECIES_JAWA, fullModel(Resources.id("species/jawa")), null);
+		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, fullModel(Resources.id("species/togruta_m")), fullModel(Resources.id("species/togruta_f")), null);
+		register(SwgSpeciesRegistry.SPECIES_TWILEK, fullModel(Resources.id("species/twilek")), SwgSpeciesRenderer::animateTwilek);
+		register(SwgSpeciesRegistry.SPECIES_HUMAN, fullModel(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_CHISS, fullModel(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_PANTORAN, fullModel(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_WOOKIEE, fullModel(Resources.id("species/wookiee")), null);
 	}
 
-	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> nemSource(Identifier id)
+	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> fullModel(Identifier id)
 	{
 		return Client.NEM_MANAGER.getPlayerModel(id, true);
+	}
+
+	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> humanoidBase(Identifier id)
+	{
+		return Client.NEM_MANAGER.getSplitHeadPlayerModel(id, HUMANOID_BASE_MODEL_ID, true);
 	}
 
 	private static void register(SwgSpeciesModel model)

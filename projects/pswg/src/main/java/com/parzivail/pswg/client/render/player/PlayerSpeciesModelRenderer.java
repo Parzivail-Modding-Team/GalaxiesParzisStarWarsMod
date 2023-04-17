@@ -26,7 +26,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		void animateModel(AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta);
 	}
 
-	private final Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> modelSupplier;
+	private Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> modelSupplier;
 	private final Animator animator;
 
 	private SwgSpecies overrideSpecies;
@@ -46,7 +46,10 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		// when the pose is set, before this.model is
 		// used directly
 		if (modelSupplier != null)
+		{
 			this.model = modelSupplier.get();
+			this.modelSupplier = null;
+		}
 		return super.getModel();
 	}
 

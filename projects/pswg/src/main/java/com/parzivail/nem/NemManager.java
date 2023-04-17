@@ -166,6 +166,18 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 		return () -> playerModels.get(modelId);
 	}
 
+	public Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> getSplitHeadPlayerModel(Identifier modelId, Identifier baseModelId, boolean thinArms)
+	{
+		models.add(new Pair<>(modelId, modelPart -> playerModels.put(modelId, combineHeadPlayerModels(baseModelId, modelPart, thinArms))));
+		return () -> playerModels.get(modelId);
+	}
+
+	private PlayerEntityModel<AbstractClientPlayerEntity> combineHeadPlayerModels(Identifier baseModelId, ModelPart overrideModel, boolean thinArms)
+	{
+		// TODO: combine override with base model
+		return new PlayerEntityModel<>(overrideModel, thinArms);
+	}
+
 	public Supplier<BipedEntityModel<LivingEntity>> getBipedModel(Identifier modelId)
 	{
 		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(ensureBipedParts(modelPart)))));
