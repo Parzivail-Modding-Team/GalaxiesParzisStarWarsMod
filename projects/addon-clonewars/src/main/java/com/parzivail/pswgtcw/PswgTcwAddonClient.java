@@ -19,7 +19,7 @@ public class PswgTcwAddonClient implements PswgClientAddon
 				TcwItems.Armor.Phase1Clone,
 				clonePhase1ArmorModelKey,
 				cloneArmorAssets,
-				new ArmorRenderer.Metadata(ArmorRenderer.ArmThicknessAction.AUTO_THICKNESS, ArmorRenderer.FemaleChestplateAction.HIDE_CUBE)
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.registerTransformer(clonePhase1ArmorModelKey, new CloneArmorTransformer(false));
 
@@ -28,7 +28,7 @@ public class PswgTcwAddonClient implements PswgClientAddon
 				TcwItems.Armor.Phase2Clone,
 				clonePhase2ArmorModelKey,
 				cloneArmorAssets,
-				new ArmorRenderer.Metadata(ArmorRenderer.ArmThicknessAction.AUTO_THICKNESS, ArmorRenderer.FemaleChestplateAction.HIDE_CUBE)
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.registerTransformer(clonePhase2ArmorModelKey, new CloneArmorTransformer(true));
 	}
