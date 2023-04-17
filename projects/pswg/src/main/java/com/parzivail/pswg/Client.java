@@ -454,13 +454,19 @@ public class Client implements ClientModInitializer
 			model.body.getChild("jetpack").visible = renderPack;
 		});
 
+		var rebelPilotId = Resources.id("rebel_pilot");
 		ArmorRenderer.register(
-				SwgItems.Armor.RebelPilot,
-				Resources.id("rebel_pilot"),
+				SwgItems.Armor.RebelPilotHelmet,
+				SwgItems.Armor.RebelPilotKit,
+				rebelPilotId,
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_pilot"),
-				                         Resources.id("textures/armor/rebel_pilot_visor_up.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				                         Resources.id("textures/armor/rebel_pilot.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
+		ArmorRenderer.registerTransformer(rebelPilotId, (entity, slim, model, opt) -> {
+			model.leftLeg.visible = model.body.visible;
+			model.rightLeg.visible = model.body.visible;
+		});
 
 		ICustomItemRenderer.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);

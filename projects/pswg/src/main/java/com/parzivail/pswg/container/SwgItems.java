@@ -75,7 +75,10 @@ public class SwgItems
 		public static final ArmorItem ImperialPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_pilot_helmet")
 		@TarkinItem
-		public static final ArmorItem RebelPilot = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		public static final ArmorItem RebelPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("rebel_pilot_kit")
+		@TarkinItem
+		public static final ArmorItem RebelPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_forest_helmet")
 		@TarkinItem
 		public static final ArmorItem RebelForest = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));

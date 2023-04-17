@@ -270,6 +270,7 @@ public class ArmorRenderer
 			if (registeredTransformer != null)
 				registeredTransformer.transform(entity, shouldUseSlimModel, armorModel, option);
 
+			// TODO: support translucency
 			var vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(texture), false, false);
 			armorModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 		}
