@@ -1,13 +1,22 @@
 package com.parzivail.util.client.model;
 
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class ModelUtil
 {
+	public static Optional<ModelPart> getChild(ModelPart root, String name)
+	{
+		if (root.hasChild(name))
+			return Optional.of(root.getChild(name));
+		return Optional.empty();
+	}
+
 	public static Box getBounds(Collection<Vector3f> verts)
 	{
 		var min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);

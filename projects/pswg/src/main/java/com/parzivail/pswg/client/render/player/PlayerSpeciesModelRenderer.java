@@ -65,12 +65,49 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		if (animator != null)
 			animator.animateModel(player, model, this, tickDelta);
 
-		setGenderSpecificCubes(player);
+		transformChestCube(player);
+		transformHairCube(player);
 
 		super.render(player, yaw, tickDelta, matrices, vertexConsumerProvider, light);
 	}
 
-	private void setGenderSpecificCubes(AbstractClientPlayerEntity player)
+	private void transformHairCube(AbstractClientPlayerEntity player)
+	{
+		var model = getModel();
+
+		var species = overrideSpecies;
+		if (species == null)
+		{
+			var components = SwgEntityComponents.getPersistent(player);
+			species = components.getSpecies();
+			if (species == null)
+				return;
+		}
+
+		var cubeVisible = true;
+
+		var armorPair = ArmorRenderer.getModArmor(player, EquipmentSlot.HEAD);
+		if (armorPair != null)
+		{
+			var metadata = ArmorRenderer.getMetadata(armorPair.getLeft());
+			cubeVisible = metadata.hairAction() == ArmorRenderer.CubeAction.KEEP;
+		}
+		else
+		{
+			var vanillaArmor = ArmorRenderer.getVanillaArmor(player, EquipmentSlot.HEAD);
+			if (vanillaArmor != null)
+			{
+				// TODO: How should vanilla armor be handles?
+			}
+		}
+
+		model.hat.visible = cubeVisible;
+
+		if (model.head.hasChild("hair"))
+			model.head.getChild("hair").visible = cubeVisible;
+	}
+
+	private void transformChestCube(AbstractClientPlayerEntity player)
 	{
 		var model = getModel();
 
@@ -85,7 +122,6 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 			if (species == null)
 				return;
 		}
-
 
 		var chest = model.body.getChild("chest");
 		if (chest == null)

@@ -296,7 +296,7 @@ public class Client implements ClientModInitializer
 				Resources.id("rebel_forest"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_forest.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
 		);
 
 		ArmorRenderer.register(
@@ -304,7 +304,7 @@ public class Client implements ClientModInitializer
 				Resources.id("rebel_tropical"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_tropical.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
 		);
 
 		ArmorRenderer.register(
@@ -312,28 +312,28 @@ public class Client implements ClientModInitializer
 				Resources.id("black_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_black.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.GrayImperialOfficer,
 				Resources.id("gray_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_gray.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.LightGrayImperialOfficer,
 				Resources.id("light_gray_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_light_gray.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.KhakiImperialOfficer,
 				Resources.id("khaki_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_khaki.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
 		);
 
 		var stormtrooperId = Resources.id("stormtrooper");
@@ -342,7 +342,7 @@ public class Client implements ClientModInitializer
 				stormtrooperId,
 				new ArmorRenderer.Assets(Resources.id("armor/stormtrooper"),
 				                         Resources.id("textures/armor/stormtrooper.png")),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.registerTransformer(stormtrooperId, (entity, slim, model, opt) -> {
 			model.leftArm.getChild("shoulder_pouch").visible = false;
@@ -355,7 +355,7 @@ public class Client implements ClientModInitializer
 				shocktrooperId,
 				new ArmorRenderer.Assets(Resources.id("armor/stormtrooper"),
 				                         Resources.id("textures/armor/shocktrooper.png")),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.registerTransformer(shocktrooperId, (entity, slim, model, opt) -> {
 			model.leftArm.getChild("shoulder_pouch").visible = false;
@@ -367,7 +367,7 @@ public class Client implements ClientModInitializer
 				Resources.id("purgetrooper"),
 				new ArmorRenderer.Assets(Resources.id("armor/purgetrooper"),
 				                         Resources.id("textures/armor/purgetrooper.png")),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 
 		var sandtrooperId = Resources.id("sandtrooper");
@@ -376,7 +376,7 @@ public class Client implements ClientModInitializer
 				sandtrooperId,
 				new ArmorRenderer.Assets(Resources.id("armor/sandtrooper"),
 				                         Resources.id("textures/armor/sandtrooper.png")),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		var sandtrooperBackpackId = Resources.id("sandtrooper_backpack");
 		ArmorRenderer.registerExtra(
@@ -407,7 +407,7 @@ public class Client implements ClientModInitializer
 						Resources.id("armor/deathtrooper"),
 						Resources.id("textures/armor/deathtrooper.png")
 				),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 
 		ArmorRenderer.register(
@@ -417,7 +417,7 @@ public class Client implements ClientModInitializer
 						Resources.id("armor/scouttrooper"),
 						Resources.id("textures/armor/scouttrooper.png")
 				),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 
 		var jumptrooperId = Resources.id("jumptrooper");
@@ -428,7 +428,7 @@ public class Client implements ClientModInitializer
 						Resources.id("armor/jumptrooper"),
 						Resources.id("textures/armor/jumptrooper.png")
 				),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		var jumptrooperJetpackId = Resources.id("jumptrooper_jetpack");
 		ArmorRenderer.registerExtra(
@@ -459,7 +459,7 @@ public class Client implements ClientModInitializer
 						Resources.id("armor/rebel_pilot"),
 						Resources.id("textures/armor/rebel_pilot.png")
 				),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.registerTransformer(rebelPilotId, (entity, slim, model, opt) -> {
 			model.leftLeg.visible = model.body.visible;
@@ -474,7 +474,7 @@ public class Client implements ClientModInitializer
 						Resources.id("armor/imperial_pilot"),
 						Resources.id("textures/armor/imperial_pilot.png")
 				),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 
 		var shoretrooperId = Resources.id("shoretrooper");
@@ -485,7 +485,7 @@ public class Client implements ClientModInitializer
 						Resources.id("armor/shoretrooper"),
 						Resources.id("textures/armor/shoretrooper.png")
 				),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.registerTransformer(shoretrooperId, (entity, slim, model, opt) -> {
 			model.body.getChild("kama").visible = false;

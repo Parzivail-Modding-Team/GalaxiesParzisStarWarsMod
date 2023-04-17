@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.armor;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.armor.BipedEntityArmorModel;
 import com.parzivail.util.registry.ArmorItems;
 import net.minecraft.client.model.ModelPart;
@@ -29,12 +30,6 @@ import java.util.function.Supplier;
 
 public class ArmorRenderer
 {
-	public enum ArmThicknessAction
-	{
-		NONE,
-		AUTO_THICKNESS
-	}
-
 	public enum FemaleChestplateAction
 	{
 		KEEP_CUBE,
@@ -43,24 +38,21 @@ public class ArmorRenderer
 		CUBE_COPY_ARMOR_TEXTURE
 	}
 
-	public record Assets(Identifier slimModelId, Identifier slimTextureId, Identifier defaultModelId, Identifier defaultTextureId)
+	public enum CubeAction
 	{
-		public Assets(Identifier commonModelId, Identifier commonTextureId)
-		{
-			this(commonModelId, commonTextureId, commonModelId, commonTextureId);
-		}
-
-		public Assets(Identifier slimModelId, Identifier defaultModelId, Identifier commonTextureId)
-		{
-			this(slimModelId, commonTextureId, defaultModelId, commonTextureId);
-		}
+		KEEP,
+		HIDE
 	}
 
-	public record Metadata(ArmThicknessAction armThicknessAction, FemaleChestplateAction femaleModelAction)
+	public record Assets(Identifier commonModelId, Identifier commonTextureId)
 	{
-		public static final Metadata NO_CHANGE = new Metadata(ArmThicknessAction.NONE, FemaleChestplateAction.KEEP_CUBE);
-		public static final Metadata MANUAL_ARMS_HIDE_CHEST = new Metadata(ArmThicknessAction.NONE, FemaleChestplateAction.HIDE_CUBE);
-		public static final Metadata AUTO_ARMS_HIDE_CHEST = new Metadata(ArmThicknessAction.AUTO_THICKNESS, FemaleChestplateAction.HIDE_CUBE);
+	}
+
+	public record Metadata(FemaleChestplateAction femaleModelAction, CubeAction hairAction)
+	{
+		public static final Metadata NO_CHANGE = new Metadata(FemaleChestplateAction.KEEP_CUBE, CubeAction.KEEP);
+		public static final Metadata HIDE_CHEST_KEEP_HAIR = new Metadata(FemaleChestplateAction.HIDE_CUBE, CubeAction.KEEP);
+		public static final Metadata HIDE_CHEST_HIDE_HAIR = new Metadata(FemaleChestplateAction.HIDE_CUBE, CubeAction.HIDE);
 	}
 
 	@FunctionalInterface
@@ -69,8 +61,7 @@ public class ArmorRenderer
 		void transform(LivingEntity entity, boolean slim, BipedEntityArmorModel<LivingEntity> armorModel, Identifier option);
 	}
 
-	private record Entry(Supplier<BipedEntityArmorModel<LivingEntity>> defaultModelSupplier, Supplier<BipedEntityArmorModel<LivingEntity>> slimModelSupplier,
-	                     Identifier defaultTetxure, Identifier slimTexture)
+	private record Entry(Supplier<BipedEntityArmorModel<LivingEntity>> modelSupplier, Identifier texture)
 	{
 	}
 
@@ -130,7 +121,7 @@ public class ArmorRenderer
 	private static void registerAssets(Item item, Identifier id, Assets assets)
 	{
 		if (!MODELKEY_MODEL_MAP.containsKey(id))
-			MODELKEY_MODEL_MAP.put(id, new Entry(Client.NEM_MANAGER.getBipedArmorModel(assets.defaultModelId), Client.NEM_MANAGER.getBipedArmorModel(assets.slimModelId), assets.defaultTextureId, assets.slimTextureId));
+			MODELKEY_MODEL_MAP.put(id, new Entry(Client.NEM_MANAGER.getBipedArmorModel(assets.commonModelId), assets.commonTextureId));
 		ITEM_MODELKEY_MAP.put(item, id);
 	}
 
@@ -250,39 +241,22 @@ public class ArmorRenderer
 		{
 			var armorModelEntry = MODELKEY_MODEL_MAP.get(armorPair.getLeft());
 
-			var texture = armorModelEntry.defaultTetxure;
-			var armorModelSupplier = armorModelEntry.defaultModelSupplier;
-
 			var shouldUseSlimModel = entityRequiresSlimModel(entity);
-
-			if (shouldUseSlimModel)
-			{
-				armorModelSupplier = armorModelEntry.slimModelSupplier;
-				texture = armorModelEntry.slimTexture;
-			}
-
-			var armorModel = armorModelSupplier.get();
+			var armorModel = armorModelEntry.modelSupplier.get();
 
 			transformer.transform(entity, shouldUseSlimModel, armorModel, option);
 
-			var meta = MODELKEY_METADATA_MAP.get(armorPair.getLeft());
-			if (meta.armThicknessAction == ArmThicknessAction.AUTO_THICKNESS)
-			{
-				var armLD = armorModel.leftArm.getChild(PART_LEFT_ARM_DEFAULT);
-				var armLS = armorModel.leftArm.getChild(PART_LEFT_ARM_SLIM);
-				var armRD = armorModel.rightArm.getChild(PART_RIGHT_ARM_DEFAULT);
-				var armRS = armorModel.rightArm.getChild(PART_RIGHT_ARM_SLIM);
-
-				armLD.visible = armRD.visible = !shouldUseSlimModel;
-				armLS.visible = armRS.visible = shouldUseSlimModel;
-			}
+			ModelUtil.getChild(armorModel.leftArm, PART_LEFT_ARM_DEFAULT).ifPresent(p -> p.visible = !shouldUseSlimModel);
+			ModelUtil.getChild(armorModel.leftArm, PART_LEFT_ARM_SLIM).ifPresent(p -> p.visible = shouldUseSlimModel);
+			ModelUtil.getChild(armorModel.rightArm, PART_RIGHT_ARM_DEFAULT).ifPresent(p -> p.visible = !shouldUseSlimModel);
+			ModelUtil.getChild(armorModel.rightArm, PART_RIGHT_ARM_SLIM).ifPresent(p -> p.visible = shouldUseSlimModel);
 
 			var registeredTransformer = MODELKEY_TRANSFORMER_MAP.get(armorPair.getLeft());
 			if (registeredTransformer != null)
 				registeredTransformer.transform(entity, shouldUseSlimModel, armorModel, option);
 
 			// TODO: support translucency
-			var vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(texture), false, false);
+			var vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(armorModelEntry.texture), false, false);
 			armorModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 		}
 	}
