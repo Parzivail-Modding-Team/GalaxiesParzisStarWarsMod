@@ -517,6 +517,45 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.NO_CHANGE
 		);
 
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.WhiteLightBackpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.WhiteLightBackpack),
+				Resources.id("white_light_backpack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("backpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/light_backpack"),
+						Resources.id("textures/armor/white_light_backpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.GreenLightBackpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.GreenLightBackpack),
+				Resources.id("green_light_backpack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("backpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/light_backpack"),
+						Resources.id("textures/armor/green_light_backpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.TanLightBackpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.TanLightBackpack),
+				Resources.id("tan_light_backpack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("backpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/light_backpack"),
+						Resources.id("textures/armor/tan_light_backpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+
 		ICustomItemRenderer.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
 

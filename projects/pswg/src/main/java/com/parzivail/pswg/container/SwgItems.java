@@ -105,6 +105,15 @@ public class SwgItems
 		@RegistryName("green_specialist_backpack")
 		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
 		public static final TrinketItem GreenSpecialistBackpack = new TrinketItem(new Item.Settings().maxCount(1));
+		@RegistryName("white_light_backpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem WhiteLightBackpack = new TrinketItem(new Item.Settings().maxCount(1));
+		@RegistryName("green_light_backpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem GreenLightBackpack = new TrinketItem(new Item.Settings().maxCount(1));
+		@RegistryName("tan_light_backpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem TanLightBackpack = new TrinketItem(new Item.Settings().maxCount(1));
 	}
 
 	@RegistryOrder(2)
