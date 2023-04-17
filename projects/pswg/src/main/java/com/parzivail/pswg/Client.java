@@ -325,24 +325,13 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
-		// TODO: update these models
-		ArmorRenderer.register(
-				SwgItems.Armor.ImperialPilotHelmet,
-				SwgItems.Armor.ImperialPilotKit,
-				Resources.id("imperial_pilot"),
-				new ArmorRenderer.Assets(Resources.id("armor/imperial_pilot"),
-				                         Resources.id("textures/armor/imperial_pilot.png")),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
-		);
 		var sandtrooperId = Resources.id("sandtrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Sandtrooper,
 				sandtrooperId,
-				new ArmorRenderer.Assets(Resources.id("armor/sandtrooper_slim"),
-				                         Resources.id("textures/armor/sandtrooper_slim.png"),
-				                         Resources.id("armor/sandtrooper_default"),
-				                         Resources.id("textures/armor/sandtrooper_default.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+				new ArmorRenderer.Assets(Resources.id("armor/sandtrooper"),
+				                         Resources.id("textures/armor/sandtrooper.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 		var sandtrooperBackpackId = Resources.id("sandtrooper_backpack");
 		ArmorRenderer.registerExtra(
@@ -359,10 +348,22 @@ public class Client implements ClientModInitializer
 			model.leftArm.visible = model.leftArm.visible && renderChestplate;
 			model.rightArm.visible = model.rightArm.visible && renderChestplate;
 			model.body.getChild("chest").visible = renderChestplate;
+
+			model.leftArm.getChild("shoulder_pouch").visible = renderChestplate;
 			model.body.getChild("pauldron").visible = renderChestplate;
 
 			model.body.getChild("backpack").visible = sandtrooperBackpackId.equals(opt);
 		});
+
+		// TODO: update these models
+		ArmorRenderer.register(
+				SwgItems.Armor.ImperialPilotHelmet,
+				SwgItems.Armor.ImperialPilotKit,
+				Resources.id("imperial_pilot"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_pilot"),
+				                         Resources.id("textures/armor/imperial_pilot.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
 
 		ArmorRenderer.register(
 				SwgItems.Armor.Deathtrooper,
