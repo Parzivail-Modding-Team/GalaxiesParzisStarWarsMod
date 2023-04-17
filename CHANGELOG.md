@@ -1,27 +1,40 @@
 # Additions
 
-* Left-handed blasters now render arms correctly
+* Add shoretrooper armor
+* Add shocktrooper armor
 
 # Changes
 
-* Crash reporting system no longer asks to report a crash if PSWG is not up-to-date
+* Incremental updates to Tatooine world generation, testing new wordgen features and framework
+* Large increase to blaster damage to account for damage falloff added in previous alphas
+* Fixed armor incorrectly rendering arms
+* New armor models and textures for:
+	* Stormtrooper
+	* Sandtrooper
+	* Deathtrooper
+	* Jumptrooper
+	* Scout Trooper
+	* Rebel X-Wing Pilot
+	* Imperial Pilot
+* New model for Sandtrooper backpack
+* New model for jumptrooper jetpack
+* New sprite textures for all armor
 
 # Fixes
 
-* Left-handed blasters are no longer mirrored
-* Blaster bolts render properly when coming from the left hand
-* Blaster bolts no longer flash in the center of the screen in some rare circumstances
+* Fix blaster_slug damage source name
+* Fix red and blue colors swapped on character textures and blaster muzzle flashes
+
+# Localization
+
+* Updated Canadian French translation
+* Updated French translation
+* Updated Brazilian Portuguese translation
+* Updated Russian translation
 
 # Internal Changes
 
-* Port to 1.19.4
-* Update JiJ and dependencies:
-	* Yarn to 1.19.4+build.1
-	* Fabric Loader to 0.14.18
-	* Fabric API to 0.76.0+1.19.4
-	* Cardinal Components to 5.1.0
-	* Cloth Config to 10.0.96
-	* ModMenu to 6.1.0-rc.4
-	* REI to 11.0.597
-	* LibZoomer to 0.4.6+1.19.4
-	* Trinkets to 3.6.0
+* Update to Gradle 8.0.2
+* Update to Fabric Loader 0.14.19
+* Update to Fabric API 0.77.0+1.19.4
+* Update LambDynamicLights dependency to 2.3.0+1.19.4
