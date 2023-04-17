@@ -355,6 +355,14 @@ public class Client implements ClientModInitializer
 			model.body.getChild("backpack").visible = sandtrooperBackpackId.equals(opt);
 		});
 
+		ArmorRenderer.register(
+				SwgItems.Armor.Deathtrooper,
+				Resources.id("deathtrooper"),
+				new ArmorRenderer.Assets(Resources.id("armor/deathtrooper"),
+				                         Resources.id("textures/armor/deathtrooper.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
+
 		// TODO: update these models
 		ArmorRenderer.register(
 				SwgItems.Armor.ImperialPilotHelmet,
@@ -365,15 +373,6 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
-		ArmorRenderer.register(
-				SwgItems.Armor.Deathtrooper,
-				Resources.id("deathtrooper"),
-				new ArmorRenderer.Assets(Resources.id("armor/deathtrooper_slim"),
-				                         Resources.id("textures/armor/deathtrooper_slim.png"),
-				                         Resources.id("armor/deathtrooper_default"),
-				                         Resources.id("textures/armor/deathtrooper_default.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
-		);
 		ArmorRenderer.register(
 				SwgItems.Armor.Scouttrooper,
 				Resources.id("scouttrooper"),
