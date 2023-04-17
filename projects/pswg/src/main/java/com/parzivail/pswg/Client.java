@@ -467,6 +467,18 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
+		var shoretrooperId = Resources.id("shoretrooper");
+		ArmorRenderer.register(
+				SwgItems.Armor.Shoretrooper,
+				shoretrooperId,
+				new ArmorRenderer.Assets(Resources.id("armor/shoretrooper"),
+				                         Resources.id("textures/armor/shoretrooper.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.registerTransformer(shoretrooperId, (entity, slim, model, opt) -> {
+			model.body.getChild("kama").visible = false;
+		});
+
 		ICustomItemRenderer.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
 

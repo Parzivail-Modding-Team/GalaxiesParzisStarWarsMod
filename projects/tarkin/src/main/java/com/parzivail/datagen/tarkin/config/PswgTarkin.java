@@ -713,6 +713,7 @@ public class PswgTarkin
 		ItemGenerator.armor(SwgItems.Armor.Sandtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Deathtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Scouttrooper, assets);
+		ItemGenerator.armor(SwgItems.Armor.Shoretrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Jumptrooper, assets);
 
 		for (var entry : SwgItems.FoodPrep.Cups.entrySet())
