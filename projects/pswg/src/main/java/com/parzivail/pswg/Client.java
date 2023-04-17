@@ -291,6 +291,51 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Y10, AstromechRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroQTKT, AstromechRenderer::new);
 
+		ArmorRenderer.register(
+				SwgItems.Armor.RebelForest,
+				Resources.id("rebel_forest"),
+				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
+				                         Resources.id("textures/armor/rebel_forest.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+
+		ArmorRenderer.register(
+				SwgItems.Armor.RebelTropical,
+				Resources.id("rebel_tropical"),
+				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
+				                         Resources.id("textures/armor/rebel_tropical.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+
+		ArmorRenderer.register(
+				SwgItems.Armor.BlackImperialOfficer,
+				Resources.id("black_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_black.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.GrayImperialOfficer,
+				Resources.id("gray_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_gray.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.LightGrayImperialOfficer,
+				Resources.id("light_gray_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_light_gray.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.KhakiImperialOfficer,
+				Resources.id("khaki_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_khaki.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+
 		var stormtrooperId = Resources.id("stormtrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Stormtrooper,
@@ -363,6 +408,14 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
+		ArmorRenderer.register(
+				SwgItems.Armor.Scouttrooper,
+				Resources.id("scouttrooper"),
+				new ArmorRenderer.Assets(Resources.id("armor/scouttrooper"),
+				                         Resources.id("textures/armor/scouttrooper.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
+
 		// TODO: update these models
 		ArmorRenderer.register(
 				SwgItems.Armor.ImperialPilotHelmet,
@@ -370,14 +423,6 @@ public class Client implements ClientModInitializer
 				Resources.id("imperial_pilot"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_pilot"),
 				                         Resources.id("textures/armor/imperial_pilot.png")),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
-		);
-
-		ArmorRenderer.register(
-				SwgItems.Armor.Scouttrooper,
-				Resources.id("scouttrooper"),
-				new ArmorRenderer.Assets(Resources.id("armor/scouttrooper"),
-				                         Resources.id("textures/armor/scouttrooper.png")),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
@@ -407,60 +452,13 @@ public class Client implements ClientModInitializer
 			model.body.getChild("chest").visible = renderChestplate;
 
 			model.body.getChild("jetpack").visible = renderPack;
-			model.head.getChild("helmet5").visible = renderPack;
-			model.head.getChild("helmet6").visible = renderPack;
-			model.head.getChild("helmet7").visible = renderPack;
-			model.head.getChild("helmet8").visible = renderPack;
-			model.head.getChild("helmet9").visible = renderPack;
-			model.head.getChild("helmet10").visible = renderPack;
 		});
+
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelPilot,
 				Resources.id("rebel_pilot"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_pilot"),
 				                         Resources.id("textures/armor/rebel_pilot_visor_up.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
-		);
-		ArmorRenderer.register(
-				SwgItems.Armor.RebelForest,
-				Resources.id("rebel_forest"),
-				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
-				                         Resources.id("textures/armor/rebel_forest.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
-		);
-		ArmorRenderer.register(
-				SwgItems.Armor.RebelTropical,
-				Resources.id("rebel_tropical"),
-				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
-				                         Resources.id("textures/armor/rebel_tropical.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
-		);
-		ArmorRenderer.register(
-				SwgItems.Armor.BlackImperialOfficer,
-				Resources.id("black_imperial_officer_hat"),
-				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
-				                         Resources.id("textures/armor/imperial_officer_hat_black.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
-		);
-		ArmorRenderer.register(
-				SwgItems.Armor.GrayImperialOfficer,
-				Resources.id("gray_imperial_officer_hat"),
-				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
-				                         Resources.id("textures/armor/imperial_officer_hat_gray.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
-		);
-		ArmorRenderer.register(
-				SwgItems.Armor.LightGrayImperialOfficer,
-				Resources.id("light_gray_imperial_officer_hat"),
-				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
-				                         Resources.id("textures/armor/imperial_officer_hat_light_gray.png")),
-				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
-		);
-		ArmorRenderer.register(
-				SwgItems.Armor.KhakiImperialOfficer,
-				Resources.id("khaki_imperial_officer_hat"),
-				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
-				                         Resources.id("textures/armor/imperial_officer_hat_khaki.png")),
 				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 
