@@ -71,8 +71,6 @@ public final class NemiModel
 
 	private void collectParts(HashMap<NemiPart, String> uniqueNames, NbtCompound parent, HashMap<String, NemiPart> parts, String id, NemiPart part)
 	{
-		var partName = getUniqueName(uniqueNames, id, part);
-
 		var partTag = NbtUtil.tag(root -> {
 			root.put("tex", NbtUtil.tag(tex -> {
 				tex.putBoolean("mirrored", part.mirrored());
@@ -128,21 +126,7 @@ public final class NemiModel
 		}
 
 		partTag.put("cuboids", cuboids);
-		parent.put(partName, partTag);
-	}
-
-	public static <T> String getUniqueName(HashMap<T, String> existingNames, String partName, T part)
-	{
-		if (existingNames.containsKey(part))
-			return existingNames.get(part);
-
-		var index = 0;
-		while (existingNames.containsValue(nameAtIndex(partName, index)))
-			index++;
-
-		var name = nameAtIndex(partName, index);
-		existingNames.put(part, name);
-		return name;
+		parent.put(id, partTag);
 	}
 
 	private static String nameAtIndex(String name, int index)

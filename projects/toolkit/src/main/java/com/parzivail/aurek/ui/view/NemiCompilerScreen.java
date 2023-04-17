@@ -85,10 +85,12 @@ public class NemiCompilerScreen extends ImguiScreen
 			var file = new File(path);
 			file.delete();
 			NbtIo.write(nem, file);
+			ToolkitClient.NOTIFIER.success("NEM Compiler", String.format("Exported model as \"%s\"", path));
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			ToolkitClient.NOTIFIER.error("NEM Compiler", "Failed to export model", e);
 		}
 	}
 

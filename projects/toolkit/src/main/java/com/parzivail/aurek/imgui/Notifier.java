@@ -40,6 +40,7 @@ public class Notifier
 
 	public void error(String title, String message, Exception cause)
 	{
+		message = String.format("%s\n\n%s", message, cause.getMessage());
 		LOGGER.error(message);
 		ImguiNotify.insertNotification(new ImguiToast(ToastType.Error, title, message, ImguiToast.NOTIFY_DEFAULT_DISMISS));
 	}

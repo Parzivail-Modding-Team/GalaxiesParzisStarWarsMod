@@ -68,9 +68,8 @@ public class NemiModelProject implements TabModel
 		for (var childName : children.getKeys())
 		{
 			var child = children.getCompound(childName);
-			var uniqueName = NemiModel.getUniqueName(uniqueNames, childName, new PartHash<>(childName, child));
 
-			var node = new NodeTreeModel.Node<>(AurekIconFont.empty_axis, childName.equals(uniqueName) ? childName : childName + " → " + uniqueName, NodeType.Part);
+			var node = new NodeTreeModel.Node<>(AurekIconFont.empty_axis, childName, NodeType.Part);
 			buildNode(uniqueNames, child, "children", node);
 
 			for (var boxElement : child.getList("cuboids", NbtElement.COMPOUND_TYPE))

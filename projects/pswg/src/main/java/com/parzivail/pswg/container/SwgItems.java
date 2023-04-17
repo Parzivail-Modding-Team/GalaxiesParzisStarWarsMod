@@ -99,6 +99,12 @@ public class SwgItems
 		@RegistryName("khaki_imperial_officer_hat")
 		@TarkinItem
 		public static final ArmorItem KhakiImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("brown_specialist_backpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem BrownSpecialistBackpack = new TrinketItem(new Item.Settings().maxCount(1));
+		@RegistryName("green_specialist_backpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem GreenSpecialistBackpack = new TrinketItem(new Item.Settings().maxCount(1));
 	}
 
 	@RegistryOrder(2)

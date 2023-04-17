@@ -403,16 +403,20 @@ public class Client implements ClientModInitializer
 		ArmorRenderer.register(
 				SwgItems.Armor.Deathtrooper,
 				Resources.id("deathtrooper"),
-				new ArmorRenderer.Assets(Resources.id("armor/deathtrooper"),
-				                         Resources.id("textures/armor/deathtrooper.png")),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/deathtrooper"),
+						Resources.id("textures/armor/deathtrooper.png")
+				),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
 		ArmorRenderer.register(
 				SwgItems.Armor.Scouttrooper,
 				Resources.id("scouttrooper"),
-				new ArmorRenderer.Assets(Resources.id("armor/scouttrooper"),
-				                         Resources.id("textures/armor/scouttrooper.png")),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/scouttrooper"),
+						Resources.id("textures/armor/scouttrooper.png")
+				),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
@@ -420,8 +424,10 @@ public class Client implements ClientModInitializer
 		ArmorRenderer.register(
 				SwgItems.Armor.Jumptrooper,
 				jumptrooperId,
-				new ArmorRenderer.Assets(Resources.id("armor/jumptrooper"),
-				                         Resources.id("textures/armor/jumptrooper.png")),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/jumptrooper"),
+						Resources.id("textures/armor/jumptrooper.png")
+				),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 		var jumptrooperJetpackId = Resources.id("jumptrooper_jetpack");
@@ -449,8 +455,10 @@ public class Client implements ClientModInitializer
 				SwgItems.Armor.RebelPilotHelmet,
 				SwgItems.Armor.RebelPilotKit,
 				rebelPilotId,
-				new ArmorRenderer.Assets(Resources.id("armor/rebel_pilot"),
-				                         Resources.id("textures/armor/rebel_pilot.png")),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/rebel_pilot"),
+						Resources.id("textures/armor/rebel_pilot.png")
+				),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.registerTransformer(rebelPilotId, (entity, slim, model, opt) -> {
@@ -462,8 +470,10 @@ public class Client implements ClientModInitializer
 				SwgItems.Armor.ImperialPilotHelmet,
 				SwgItems.Armor.ImperialPilotKit,
 				Resources.id("imperial_pilot"),
-				new ArmorRenderer.Assets(Resources.id("armor/imperial_pilot"),
-				                         Resources.id("textures/armor/imperial_pilot.png")),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/imperial_pilot"),
+						Resources.id("textures/armor/imperial_pilot.png")
+				),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
@@ -471,13 +481,41 @@ public class Client implements ClientModInitializer
 		ArmorRenderer.register(
 				SwgItems.Armor.Shoretrooper,
 				shoretrooperId,
-				new ArmorRenderer.Assets(Resources.id("armor/shoretrooper"),
-				                         Resources.id("textures/armor/shoretrooper.png")),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/shoretrooper"),
+						Resources.id("textures/armor/shoretrooper.png")
+				),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.registerTransformer(shoretrooperId, (entity, slim, model, opt) -> {
 			model.body.getChild("kama").visible = false;
 		});
+
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.GreenSpecialistBackpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.GreenSpecialistBackpack),
+				Resources.id("green_specialist_backpack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("backpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/specialist_backpack"),
+						Resources.id("textures/armor/green_specialist_backpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.BrownSpecialistBackpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.BrownSpecialistBackpack),
+				Resources.id("brown_specialist_backpack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("backpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/specialist_backpack"),
+						Resources.id("textures/armor/brown_specialist_backpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
 
 		ICustomItemRenderer.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);

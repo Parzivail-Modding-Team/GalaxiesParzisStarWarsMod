@@ -39,6 +39,7 @@ public class ArmorRenderer
 	{
 		KEEP_CUBE,
 		HIDE_CUBE,
+		// TODO
 		CUBE_COPY_ARMOR_TEXTURE
 	}
 
@@ -57,6 +58,7 @@ public class ArmorRenderer
 
 	public record Metadata(ArmThicknessAction armThicknessAction, FemaleChestplateAction femaleModelAction)
 	{
+		public static final Metadata NO_CHANGE = new Metadata(ArmThicknessAction.NONE, FemaleChestplateAction.KEEP_CUBE);
 		public static final Metadata MANUAL_ARMS_HIDE_CHEST = new Metadata(ArmThicknessAction.NONE, FemaleChestplateAction.HIDE_CUBE);
 		public static final Metadata AUTO_ARMS_HIDE_CHEST = new Metadata(ArmThicknessAction.AUTO_THICKNESS, FemaleChestplateAction.HIDE_CUBE);
 	}
@@ -89,24 +91,24 @@ public class ArmorRenderer
 
 	public static void register(ArmorItems itemSet, Identifier id, Assets assets, Metadata metadata)
 	{
-		register(itemSet.helmet, id, assets);
-		register(itemSet.chestplate, id, assets);
-		register(itemSet.leggings, id, assets);
-		register(itemSet.boots, id, assets);
+		registerAssets(itemSet.helmet, id, assets);
+		registerAssets(itemSet.chestplate, id, assets);
+		registerAssets(itemSet.leggings, id, assets);
+		registerAssets(itemSet.boots, id, assets);
 
 		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 
-	public static void register(ArmorItem item, Identifier id, Assets assets, Metadata metadata)
+	public static void register(Item item, Identifier id, Assets assets, Metadata metadata)
 	{
-		register(item, id, assets);
+		registerAssets(item, id, assets);
 		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 
-	public static void register(ArmorItem a, ArmorItem b, Identifier id, Assets assets, Metadata metadata)
+	public static void register(Item a, ArmorItem b, Identifier id, Assets assets, Metadata metadata)
 	{
-		register(a, id, assets);
-		register(b, id, assets);
+		registerAssets(a, id, assets);
+		registerAssets(b, id, assets);
 		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 
@@ -116,7 +118,16 @@ public class ArmorRenderer
 		EXTRA_SLOT_GETTERS.add(new ArmorExtra(optionId, getter, modelDependentSlot));
 	}
 
-	public static void register(Item item, Identifier id, Assets assets)
+	public static void registerAccessory(Item item, Function<LivingEntity, ItemStack> getter, Identifier id, EquipmentSlot modelDependentSlot, Function<BipedEntityArmorModel<LivingEntity>, ModelPart> partGetter, Assets assets, Metadata metadata)
+	{
+		ArmorRenderer.register(item, id, assets, metadata);
+		ArmorRenderer.registerExtra(item, getter, id, id, modelDependentSlot);
+		ArmorRenderer.registerTransformer(id, (entity, slim, armorModel, option) -> {
+			partGetter.apply(armorModel).visible = id.equals(option);
+		});
+	}
+
+	private static void registerAssets(Item item, Identifier id, Assets assets)
 	{
 		if (!MODELKEY_MODEL_MAP.containsKey(id))
 			MODELKEY_MODEL_MAP.put(id, new Entry(Client.NEM_MANAGER.getBipedArmorModel(assets.defaultModelId), Client.NEM_MANAGER.getBipedArmorModel(assets.slimModelId), assets.defaultTextureId, assets.slimTextureId));
