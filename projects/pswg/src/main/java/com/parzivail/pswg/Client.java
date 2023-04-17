@@ -416,16 +416,6 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 
-		// TODO: update these models
-		ArmorRenderer.register(
-				SwgItems.Armor.ImperialPilotHelmet,
-				SwgItems.Armor.ImperialPilotKit,
-				Resources.id("imperial_pilot"),
-				new ArmorRenderer.Assets(Resources.id("armor/imperial_pilot"),
-				                         Resources.id("textures/armor/imperial_pilot.png")),
-				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
-		);
-
 		var jumptrooperId = Resources.id("jumptrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Jumptrooper,
@@ -467,6 +457,15 @@ public class Client implements ClientModInitializer
 			model.leftLeg.visible = model.body.visible;
 			model.rightLeg.visible = model.body.visible;
 		});
+
+		ArmorRenderer.register(
+				SwgItems.Armor.ImperialPilotHelmet,
+				SwgItems.Armor.ImperialPilotKit,
+				Resources.id("imperial_pilot"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_pilot"),
+				                         Resources.id("textures/armor/imperial_pilot.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
 
 		ICustomItemRenderer.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
