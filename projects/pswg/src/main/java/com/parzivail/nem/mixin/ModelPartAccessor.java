@@ -13,11 +13,6 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public interface ModelPartAccessor
 {
-	static ModelPartAccessor of(Object o)
-	{
-		return (ModelPartAccessor)o;
-	}
-
 	@Final
 	@Accessor
 	Map<String, ModelPart> getChildren();

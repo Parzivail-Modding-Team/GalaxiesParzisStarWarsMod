@@ -172,15 +172,19 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 		return () -> playerModels.get(overrideModelId);
 	}
 
+	private static ModelPartAccessor mpa(Object o)
+	{
+		return (ModelPartAccessor)o;
+	}
+
 	private PlayerEntityModel<AbstractClientPlayerEntity> combinePlayerModels(Identifier baseModelId, ModelPart overrideModel, boolean thinArms)
 	{
 		var baseModelData = modelData.get(baseModelId);
 		var baseModel = baseModelData.createModel();
 
-		ModelPartAccessor
-				.of(baseModel)
+		mpa(baseModel)
 				.getChildren()
-				.putAll(ModelPartAccessor.of(overrideModel).getChildren());
+				.putAll(mpa(overrideModel).getChildren());
 
 		return new PlayerEntityModel<>(baseModel, thinArms);
 	}
