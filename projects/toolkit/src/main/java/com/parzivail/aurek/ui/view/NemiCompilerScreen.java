@@ -171,6 +171,8 @@ public class NemiCompilerScreen extends ImguiScreen
 				rot.getFloat("roll")
 		));
 
+		var groupTex = part.getCompound("tex");
+
 		for (var boxEl : part.getList("cuboids", NbtElement.COMPOUND_TYPE))
 		{
 			var box = (NbtCompound)boxEl;
@@ -183,11 +185,11 @@ public class NemiCompilerScreen extends ImguiScreen
 			pw.println(String.format(
 					"%s.texOffs(%s, %s).addBox(%sF, %sF, %sF, %sF, %sF, %sF, %sF, %s);",
 					name,
-					tex.getInt("u"), tex.getInt("v"),
+					groupTex.getInt("u") + tex.getInt("u"), groupTex.getInt("v") + tex.getInt("v"),
 					boxPos.getFloat("x"), boxPos.getFloat("y"), boxPos.getFloat("z"),
 					size.getInt("x"), size.getInt("y"), size.getInt("z"),
 					expand.getFloat("x"),
-					tex.getBoolean("mirrored")
+					groupTex.getBoolean("mirrored") ^ tex.getBoolean("mirrored")
 			));
 		}
 
