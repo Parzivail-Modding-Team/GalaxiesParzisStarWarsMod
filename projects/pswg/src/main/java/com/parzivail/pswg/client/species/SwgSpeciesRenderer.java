@@ -48,7 +48,7 @@ public class SwgSpeciesRenderer
 
 	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> humanoidBase(Identifier id)
 	{
-		return Client.NEM_MANAGER.getSplitHeadPlayerModel(id, HUMANOID_BASE_MODEL_ID, true);
+		return Client.NEM_MANAGER.getOverridingPlayerModel(id, HUMANOID_BASE_MODEL_ID, true);
 	}
 
 	private static void register(SwgSpeciesModel model)

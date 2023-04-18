@@ -166,16 +166,27 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 		return () -> playerModels.get(modelId);
 	}
 
-	public Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> getSplitHeadPlayerModel(Identifier modelId, Identifier baseModelId, boolean thinArms)
+	public Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> getOverridingPlayerModel(Identifier overrideModelId, Identifier baseModelId, boolean thinArms)
 	{
-		models.add(new Pair<>(modelId, modelPart -> playerModels.put(modelId, combineHeadPlayerModels(baseModelId, modelPart, thinArms))));
-		return () -> playerModels.get(modelId);
+		models.add(new Pair<>(overrideModelId, modelPart -> playerModels.put(overrideModelId, combinePlayerModels(baseModelId, modelPart, thinArms))));
+		return () -> playerModels.get(overrideModelId);
 	}
 
-	private PlayerEntityModel<AbstractClientPlayerEntity> combineHeadPlayerModels(Identifier baseModelId, ModelPart overrideModel, boolean thinArms)
+	private PlayerEntityModel<AbstractClientPlayerEntity> combinePlayerModels(Identifier baseModelId, ModelPart overrideModel, boolean thinArms)
 	{
-		// TODO: combine override with base model
-		return new PlayerEntityModel<>(overrideModel, thinArms);
+		var baseModelData = modelData.get(baseModelId);
+		var baseModel = baseModelData.createModel();
+
+		var baseMpa = (ModelPartAccessor)(Object)baseModel;
+		var baseMpaChildren = baseMpa.getChildren();
+
+		var overrideMpa = (ModelPartAccessor)(Object)overrideModel;
+		var overrideMpaChildren = overrideMpa.getChildren();
+
+		for (var childPair : overrideMpaChildren.entrySet())
+			baseMpaChildren.put(childPair.getKey(), childPair.getValue());
+
+		return new PlayerEntityModel<>(baseModel, thinArms);
 	}
 
 	public Supplier<BipedEntityModel<LivingEntity>> getBipedModel(Identifier modelId)
