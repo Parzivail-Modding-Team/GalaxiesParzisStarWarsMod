@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public class NemiModelProject implements TabModel
 {
+
 	private record PartHash<T>(String name, T value)
 	{
 	}

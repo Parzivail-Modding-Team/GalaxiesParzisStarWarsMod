@@ -119,7 +119,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 			var cV = cTex.getInt("v");
 			var cMirrored = cTex.getBoolean("mirrored");
 
-			partBuilder = partBuilder.mirrored(cMirrored || mirrored).cuboid(
+			partBuilder = partBuilder.mirrored(cMirrored ^ mirrored).cuboid(
 					"",
 					cX, cY, cZ,
 					cSX, cSY, cSZ,
