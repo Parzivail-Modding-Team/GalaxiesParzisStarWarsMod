@@ -30,7 +30,7 @@ public class SwgSpeciesRenderer
 		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
 		register(SwgSpeciesRegistry.SPECIES_AQUALISH, fullModel(Resources.id("species/aqualish")), null);
 		register(SwgSpeciesRegistry.SPECIES_BITH, fullModel(Resources.id("species/bith")), null);
-		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, fullModel(Resources.id("species/chagrian")), null);
+		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, humanoidBase(Resources.id("species/chagrian")), null);
 		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, fullModel(Resources.id("species/kaminoan")), null);
 		register(SwgSpeciesRegistry.SPECIES_JAWA, fullModel(Resources.id("species/jawa")), null);
 		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, fullModel(Resources.id("species/togruta_m")), fullModel(Resources.id("species/togruta_f")), null);

@@ -182,9 +182,16 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 		var baseModelData = modelData.get(baseModelId);
 		var baseModel = baseModelData.createModel();
 
-		mpa(baseModel)
-				.getChildren()
-				.putAll(mpa(overrideModel).getChildren());
+		var baseChildren = mpa(baseModel).getChildren();
+		var overrideChildren = mpa(overrideModel).getChildren();
+
+		for (var entry : overrideChildren.entrySet())
+		{
+			if (entry.getValue().isEmpty() && mpa(entry.getValue()).getChildren().isEmpty())
+				continue;
+
+			baseChildren.put(entry.getKey(), entry.getValue());
+		}
 
 		return new PlayerEntityModel<>(baseModel, thinArms);
 	}
