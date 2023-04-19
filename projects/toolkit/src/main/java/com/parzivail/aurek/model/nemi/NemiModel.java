@@ -120,7 +120,7 @@ public final class NemiModel
 				nbt.put("tex", NbtUtil.tag(expand -> {
 					expand.putInt("u", (int)cube.tex().u());
 					expand.putInt("v", (int)cube.tex().v());
-					expand.putBoolean("mirrored", cube.tex().mirrored());
+					expand.putBoolean("mirrored", cube.mirrored());
 				}));
 			}));
 		}

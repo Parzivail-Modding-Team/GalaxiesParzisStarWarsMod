@@ -6,13 +6,11 @@ public final class NemiTexPos
 {
 	private final double u;
 	private final double v;
-	private final boolean mirrored;
 
-	public NemiTexPos(double u, double v, boolean mirrored)
+	public NemiTexPos(double u, double v)
 	{
 		this.u = u;
 		this.v = v;
-		this.mirrored = mirrored;
 	}
 
 	public double u()
@@ -23,11 +21,6 @@ public final class NemiTexPos
 	public double v()
 	{
 		return v;
-	}
-
-	public boolean mirrored()
-	{
-		return mirrored;
 	}
 
 	@Override
