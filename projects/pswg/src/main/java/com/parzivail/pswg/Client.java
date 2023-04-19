@@ -392,7 +392,7 @@ public class Client implements ClientModInitializer
 
 			model.leftArm.visible = model.leftArm.visible && renderChestplate;
 			model.rightArm.visible = model.rightArm.visible && renderChestplate;
-			model.body.getChild("chest").visible = renderChestplate;
+			model.body.getChild("chestplate").visible = renderChestplate;
 
 			model.leftArm.getChild("shoulder_pouch").visible = renderChestplate;
 			model.body.getChild("pauldron").visible = renderChestplate;
