@@ -28,16 +28,16 @@ public class SwgSpeciesRenderer
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
 		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
-		register(SwgSpeciesRegistry.SPECIES_AQUALISH, fullModel(Resources.id("species/aqualish")), null);
-		register(SwgSpeciesRegistry.SPECIES_BITH, fullModel(Resources.id("species/bith")), null);
+		register(SwgSpeciesRegistry.SPECIES_AQUALISH, humanoidBase(Resources.id("species/aqualish")), null);
+		register(SwgSpeciesRegistry.SPECIES_BITH, humanoidBase(Resources.id("species/bith")), null);
 		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, humanoidBase(Resources.id("species/chagrian")), null);
 		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, fullModel(Resources.id("species/kaminoan")), null);
-		register(SwgSpeciesRegistry.SPECIES_JAWA, fullModel(Resources.id("species/jawa")), null);
-		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, fullModel(Resources.id("species/togruta_m")), fullModel(Resources.id("species/togruta_f")), null);
-		register(SwgSpeciesRegistry.SPECIES_TWILEK, fullModel(Resources.id("species/twilek")), SwgSpeciesRenderer::animateTwilek);
-		register(SwgSpeciesRegistry.SPECIES_HUMAN, fullModel(Resources.id("species/human")), null);
-		register(SwgSpeciesRegistry.SPECIES_CHISS, fullModel(Resources.id("species/human")), null);
-		register(SwgSpeciesRegistry.SPECIES_PANTORAN, fullModel(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_JAWA, humanoidBase(Resources.id("species/jawa")), null);
+		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, humanoidBase(Resources.id("species/togruta_m")), humanoidBase(Resources.id("species/togruta_f")), null);
+		register(SwgSpeciesRegistry.SPECIES_TWILEK, humanoidBase(Resources.id("species/twilek")), SwgSpeciesRenderer::animateTwilek);
+		register(SwgSpeciesRegistry.SPECIES_HUMAN, humanoidBase(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_CHISS, humanoidBase(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_PANTORAN, humanoidBase(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_WOOKIEE, fullModel(Resources.id("species/wookiee")), null);
 	}
 
