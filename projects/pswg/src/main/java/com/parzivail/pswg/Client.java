@@ -427,6 +427,34 @@ public class Client implements ClientModInitializer
 			model.body.getChild("backpack").visible = artillerytrooperBackpackId.equals(opt);
 		});
 
+		var incineratortrooperId = Resources.id("incineratortrooper");
+		ArmorRenderer.register(
+				SwgItems.Armor.Incineratortrooper,
+				incineratortrooperId,
+				new ArmorRenderer.Assets(Resources.id("armor/incineratortrooper"),
+				                         Resources.id("textures/armor/incineratortrooper.png")),
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
+		);
+		var incineratortrooperTankId = Resources.id("incineratortrooper_tank");
+		ArmorRenderer.registerExtra(
+				SwgItems.Armor.IncineratortrooperTank,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.IncineratortrooperTank),
+				incineratortrooperTankId,
+				incineratortrooperId,
+				EquipmentSlot.CHEST
+		);
+		ArmorRenderer.registerTransformer(incineratortrooperId, (entity, slim, model, opt) -> {
+			var modArmor = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST);
+			var renderChestplate = opt == null && modArmor != null && modArmor.getLeft().equals(incineratortrooperId);
+
+			model.leftArm.visible = model.leftArm.visible && renderChestplate;
+			model.rightArm.visible = model.rightArm.visible && renderChestplate;
+			model.body.getChild("chestplate").visible = renderChestplate;
+			model.body.getChild("pauldron").visible = renderChestplate;
+
+			model.body.getChild("backpack").visible = incineratortrooperTankId.equals(opt);
+		});
+
 		ArmorRenderer.register(
 				SwgItems.Armor.Deathtrooper,
 				Resources.id("deathtrooper"),

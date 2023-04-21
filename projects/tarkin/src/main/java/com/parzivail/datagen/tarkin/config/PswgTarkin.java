@@ -715,6 +715,7 @@ public class PswgTarkin
 		ItemGenerator.armor(SwgItems.Armor.Deathtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Scouttrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.HovertankPilot, assets);
+		ItemGenerator.armor(SwgItems.Armor.Incineratortrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Shoretrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Jumptrooper, assets);
 
