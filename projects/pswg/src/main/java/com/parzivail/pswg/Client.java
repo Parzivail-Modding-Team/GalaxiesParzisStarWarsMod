@@ -447,6 +447,16 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 
+		ArmorRenderer.register(
+				SwgItems.Armor.HovertankPilot,
+				Resources.id("hovertankpilot"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/hovertankpilot"),
+						Resources.id("textures/armor/hovertankpilot.png")
+				),
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
+		);
+
 		var jumptrooperId = Resources.id("jumptrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Jumptrooper,

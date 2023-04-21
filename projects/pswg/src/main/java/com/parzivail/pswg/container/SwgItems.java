@@ -67,6 +67,8 @@ public class SwgItems
 		public static final ArmorItems Deathtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("scouttrooper")
 		public static final ArmorItems Scouttrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
+		@RegistryName("hovertankpilot")
+		public static final ArmorItems HovertankPilot = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("shoretrooper")
 		public static final ArmorItems Shoretrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("jumptrooper")
