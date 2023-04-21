@@ -33,9 +33,9 @@ import net.minecraft.item.ToolMaterials;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -103,6 +103,30 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 				playSound(world, player, lightsaberTag);
 			}
 		});
+	}
+
+	@Override
+	public int getMaxUseTime(ItemStack stack)
+	{
+		return 72000;
+	}
+
+	@Override
+	public UseAction getUseAction(ItemStack stack)
+	{
+		return UseAction.NONE;
+	}
+
+	@Override
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+	{
+		final var stack = player.getStackInHand(hand);
+
+		if (hand != Hand.MAIN_HAND)
+			return TypedActionResult.pass(stack);
+
+		player.setCurrentHand(hand);
+		return TypedActionResult.consume(stack);
 	}
 
 	public static void playSound(World world, PlayerEntity player, LightsaberTag lightsaberTag)
@@ -226,13 +250,6 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 					case MAINHAND, OFFHAND -> attribModsOff;
 					default -> ImmutableMultimap.of();
 				};
-	}
-
-	@Override
-	public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand)
-	{
-		final var stack = player.getStackInHand(hand);
-		return new TypedActionResult<>(ActionResult.PASS, stack);
 	}
 
 	@Override

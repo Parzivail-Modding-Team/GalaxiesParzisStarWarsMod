@@ -186,28 +186,17 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	@Override
 	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		var handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
-
-		//		KeyframeInfo keyframe = idlePose.getKeyframes().get(0);
-
-		rightArm.pitch = -0.8727F + (MathHelper.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F / 15);
-		rightArm.yaw = -0.5672F;
-		rightArm.roll = 0.0F;
-		leftArm.pitch = -1.0472F + (MathHelper.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F / 15);
-		leftArm.yaw = 0.829F;
-		leftArm.roll = -0.0436F;
-		if (handSwingProgress > 0)
+		if (entity.isUsingItem())
 		{
-			var gx = 1.0F - handSwingProgress;
-			var hx = MathHelper.sin(gx * 3.1415927F);
-			var kx = head.pitch;
-			if (kx < 0)
-			{
-				kx = 0.25F;
-			}
-			var ix = MathHelper.sin(handSwingProgress * 3.1415927F) * -((kx) - 0.7F) * 0.75F;
-			rightArm.pitch = (float)((double)rightArm.pitch - ((double)hx * 1.2D + (double)ix));
-			leftArm.pitch = (float)((double)leftArm.pitch - ((double)hx * 1.2D + (double)ix) * 1.2D) * 0.75F;
+			var useTime = MathHelper.clamp(entity.getItemUseTime() + tickDelta, 0, 2) / 2f;
+
+			rightArm.pitch = MathHelper.lerp(useTime, rightArm.pitch, -1.672f);
+			rightArm.yaw = MathHelper.lerp(useTime, rightArm.yaw, -0.266f);
+			rightArm.roll = MathHelper.lerp(useTime, rightArm.roll, 0.882f);
+
+			leftArm.pitch = MathHelper.lerp(useTime, leftArm.pitch, -1.164f);
+			leftArm.yaw = MathHelper.lerp(useTime, leftArm.yaw, 0.602f);
+			leftArm.roll = MathHelper.lerp(useTime, leftArm.roll, 0.426f);
 		}
 	}
 
