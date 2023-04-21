@@ -26,6 +26,7 @@
 * Fixed mirrored cube textures on trooper armors
 * Fixed mirrored textures on species bodies in some circumstances
 * Fixed blaster bolts disappearing with high ping
+* Fixed hands showing up when aiming down sights in blasters
 
 # Internal Changes
 
