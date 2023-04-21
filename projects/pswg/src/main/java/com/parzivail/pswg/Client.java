@@ -393,11 +393,38 @@ public class Client implements ClientModInitializer
 			model.leftArm.visible = model.leftArm.visible && renderChestplate;
 			model.rightArm.visible = model.rightArm.visible && renderChestplate;
 			model.body.getChild("chestplate").visible = renderChestplate;
-
 			model.leftArm.getChild("shoulder_pouch").visible = renderChestplate;
 			model.body.getChild("pauldron").visible = renderChestplate;
 
 			model.body.getChild("backpack").visible = sandtrooperBackpackId.equals(opt);
+		});
+
+		var artillerytrooperId = Resources.id("artillerytrooper");
+		ArmorRenderer.register(
+				SwgItems.Armor.Artillerytrooper,
+				artillerytrooperId,
+				new ArmorRenderer.Assets(Resources.id("armor/artillerytrooper"),
+				                         Resources.id("textures/armor/artillerytrooper.png")),
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
+		);
+		var artillerytrooperBackpackId = Resources.id("artillerytrooper_backpack");
+		ArmorRenderer.registerExtra(
+				SwgItems.Armor.ArtillerytrooperBackpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.ArtillerytrooperBackpack),
+				artillerytrooperBackpackId,
+				artillerytrooperId,
+				EquipmentSlot.CHEST
+		);
+		ArmorRenderer.registerTransformer(artillerytrooperId, (entity, slim, model, opt) -> {
+			var modArmor = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST);
+			var renderChestplate = opt == null && modArmor != null && modArmor.getLeft().equals(artillerytrooperId);
+
+			model.leftArm.visible = model.leftArm.visible && renderChestplate;
+			model.rightArm.visible = model.rightArm.visible && renderChestplate;
+			model.body.getChild("chestplate").visible = renderChestplate;
+			model.body.getChild("pauldron").visible = renderChestplate;
+
+			model.body.getChild("backpack").visible = artillerytrooperBackpackId.equals(opt);
 		});
 
 		ArmorRenderer.register(

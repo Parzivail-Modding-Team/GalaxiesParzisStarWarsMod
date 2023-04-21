@@ -53,6 +53,11 @@ public class SwgItems
 		public static final ArmorItems Shocktrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("purgetrooper")
 		public static final ArmorItems Purgetrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
+		@RegistryName("artillerytrooper")
+		public static final ArmorItems Artillerytrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
+		@RegistryName("artillerytrooper_backpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem ArtillerytrooperBackpack = new TrinketItem(new Item.Settings().maxCount(1));
 		@RegistryName("sandtrooper")
 		public static final ArmorItems Sandtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("sandtrooper_backpack")
