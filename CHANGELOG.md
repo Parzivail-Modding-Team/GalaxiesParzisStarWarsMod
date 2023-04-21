@@ -1,40 +1,32 @@
 # Additions
 
-* Add shoretrooper armor
-* Add shocktrooper armor
+* Added green and brown specialist backpacks
+* Added green, white, and tan light backpacks
+* Added green, white, and tan heavy backpacks
+* Lightsabers now have a blocking animation
+* Lightsabers can now deflect blaster bolts when blocking
+* Added artillery trooper armor
+* Added hovertank pilot armor
+* Added incinerator trooper armor
+* Added tan, gray, and brown goggles caps
+* Added beach insurgence hat
+* Added desert insurgence hat
 
 # Changes
 
-* Incremental updates to Tatooine world generation, testing new wordgen features and framework
-* Large increase to blaster damage to account for damage falloff added in previous alphas
-* Fixed armor incorrectly rendering arms
-* New armor models and textures for:
-	* Stormtrooper
-	* Sandtrooper
-	* Deathtrooper
-	* Jumptrooper
-	* Scout Trooper
-	* Rebel X-Wing Pilot
-	* Imperial Pilot
-* New model for Sandtrooper backpack
-* New model for jumptrooper jetpack
-* New sprite textures for all armor
+* Full-head helmets no longer allow hair to flow out of them
+* Lightsaber damage boosted to 22 from 15
+* When not blocking, lightsabers now use the vanilla hold and swing animation
 
 # Fixes
 
-* Fix blaster_slug damage source name
-* Fix red and blue colors swapped on character textures and blaster muzzle flashes
-
-# Localization
-
-* Updated Canadian French translation
-* Updated French translation
-* Updated Brazilian Portuguese translation
-* Updated Russian translation
+* Fixed pauldron clipping on stormtrooper and sandtrooper armor
+* Fixed mirrored cube textures on trooper armors
+* Fixed mirrored textures on species bodies in some circumstances
 
 # Internal Changes
 
-* Update to Gradle 8.0.2
-* Update to Fabric Loader 0.14.19
-* Update to Fabric API 0.77.0+1.19.4
-* Update LambDynamicLights dependency to 2.3.0+1.19.4
+* Species models now use split-head models
+* Species texture resolution bumped to 150x from 96x
+* Aurek can now export Blockbench-compatible files from compiled NEM models
+* Aurek NEM compiler now properly respects cube mirroring when importing NEMi models
