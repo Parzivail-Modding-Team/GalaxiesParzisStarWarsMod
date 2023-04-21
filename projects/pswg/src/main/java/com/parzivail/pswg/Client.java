@@ -452,7 +452,7 @@ public class Client implements ClientModInitializer
 				beachInsurgenceHatId,
 				new ArmorRenderer.Assets(Resources.id("armor/beach_insurgence_hat"),
 				                         Resources.id("textures/armor/beach_insurgence_hat.png")),
-				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
+				ArmorRenderer.Metadata.NO_CHANGE
 		);
 		ArmorRenderer.registerTransformer(beachInsurgenceHatId, (entity, slim, model, opt) -> {
 			model.head.getChild("goggles_up").visible = true;
@@ -465,7 +465,7 @@ public class Client implements ClientModInitializer
 				desertInsurgenceHatId,
 				new ArmorRenderer.Assets(Resources.id("armor/desert_insurgence_hat"),
 				                         Resources.id("textures/armor/desert_insurgence_hat.png")),
-				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
+				ArmorRenderer.Metadata.NO_CHANGE
 		);
 		ArmorRenderer.registerTransformer(desertInsurgenceHatId, (entity, slim, model, opt) -> {
 			model.head.getChild("visor_up").visible = true;
