@@ -111,6 +111,15 @@ public class SwgItems
 		@RegistryName("khaki_imperial_officer_hat")
 		@TarkinItem
 		public static final ArmorItem KhakiImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("tan_goggles_cap")
+		@TarkinItem
+		public static final ArmorItem TanGogglesCap = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("gray_goggles_cap")
+		@TarkinItem
+		public static final ArmorItem GrayGogglesCap = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("brown_goggles_cap")
+		@TarkinItem
+		public static final ArmorItem BrownGogglesCap = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("brown_specialist_backpack")
 		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
 		public static final TrinketItem BrownSpecialistBackpack = new TrinketItem(new Item.Settings().maxCount(1));

@@ -296,7 +296,7 @@ public class Client implements ClientModInitializer
 				Resources.id("rebel_forest"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_forest.png")),
-				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
+				ArmorRenderer.Metadata.NO_CHANGE
 		);
 
 		ArmorRenderer.register(
@@ -304,7 +304,7 @@ public class Client implements ClientModInitializer
 				Resources.id("rebel_tropical"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_tropical.png")),
-				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
+				ArmorRenderer.Metadata.NO_CHANGE
 		);
 
 		ArmorRenderer.register(
@@ -312,28 +312,50 @@ public class Client implements ClientModInitializer
 				Resources.id("black_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_black.png")),
-				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
+				ArmorRenderer.Metadata.NO_CHANGE
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.GrayImperialOfficer,
 				Resources.id("gray_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_gray.png")),
-				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
+				ArmorRenderer.Metadata.NO_CHANGE
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.LightGrayImperialOfficer,
 				Resources.id("light_gray_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_light_gray.png")),
-				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
+				ArmorRenderer.Metadata.NO_CHANGE
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.KhakiImperialOfficer,
 				Resources.id("khaki_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_khaki.png")),
-				ArmorRenderer.Metadata.HIDE_CHEST_KEEP_HAIR
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+
+		ArmorRenderer.register(
+				SwgItems.Armor.TanGogglesCap,
+				Resources.id("tan_goggles_cap"),
+				new ArmorRenderer.Assets(Resources.id("armor/goggles_cap"),
+				                         Resources.id("textures/armor/tan_goggles_cap.png")),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.GrayGogglesCap,
+				Resources.id("gray_goggles_cap"),
+				new ArmorRenderer.Assets(Resources.id("armor/goggles_cap"),
+				                         Resources.id("textures/armor/gray_goggles_cap.png")),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.BrownGogglesCap,
+				Resources.id("brown_goggles_cap"),
+				new ArmorRenderer.Assets(Resources.id("armor/goggles_cap"),
+				                         Resources.id("textures/armor/brown_goggles_cap.png")),
+				ArmorRenderer.Metadata.NO_CHANGE
 		);
 
 		var stormtrooperId = Resources.id("stormtrooper");
