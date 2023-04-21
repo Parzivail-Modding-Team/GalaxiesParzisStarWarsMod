@@ -34,9 +34,6 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 	@Override
 	public void render(BlasterBoltEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumerProvider, int light)
 	{
-		if (entity.age == 0)
-			return;
-
 		var velocity = entity.getVelocity();
 		velocity = velocity.normalize();
 
@@ -72,21 +69,23 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 			matrices.scale(s, s, s);
 		}
 
-		matrices.multiply(new Quaternionf().rotationY(bYaw - MathHelper.PI / 2));
-		matrices.multiply(new Quaternionf().rotationZ(bPitch - MathHelper.PI / 2));
-
-		if (shouldOffset)
+		if (ownerDist > 0)
 		{
-			var side = 1;
-			if (sourceArm.get() == Arm.LEFT)
-				side = -1;
+			matrices.multiply(new Quaternionf().rotationY(bYaw - MathHelper.PI / 2));
+			matrices.multiply(new Quaternionf().rotationZ(bPitch - MathHelper.PI / 2));
 
-			var d = 1 - Ease.outCubic((float)MathHelper.clamp(ownerDist / 15, 0, 1));
-			matrices.translate(0.2f * d, 0, 0.5f * d * side);
+			if (shouldOffset)
+			{
+				var side = 1;
+				if (sourceArm.get() == Arm.LEFT)
+					side = -1;
+
+				var d = 1 - Ease.outCubic((float)MathHelper.clamp(ownerDist / 15, 0, 1));
+				matrices.translate(0.2f * d, 0, 0.5f * d * side);
+			}
+
+			EnergyRenderer.renderEnergy(ModelTransformationMode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, entity.getLength(), entity.getRadius(), false, entity.getColor());
 		}
-
-		EnergyRenderer.renderEnergy(ModelTransformationMode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, entity.getLength(), entity.getRadius(), false, entity.getColor());
-
 		matrices.pop();
 	}
 }

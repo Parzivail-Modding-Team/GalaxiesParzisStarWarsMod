@@ -144,7 +144,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	@Override
 	protected void initDataTracker()
 	{
-		dataTracker.startTracking(LIFE, -1);
+		dataTracker.startTracking(LIFE, 100);
 		dataTracker.startTracking(COLOR, 0);
 		dataTracker.startTracking(LENGTH, 1f);
 		dataTracker.startTracking(RADIUS, 1f);
@@ -208,7 +208,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		final var life = getLife() - 1;
 		setLife(life);
 
-		if (life <= 0)
+		if (!world.isClient && life <= 0)
 		{
 			this.discard();
 			return;

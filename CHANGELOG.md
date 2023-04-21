@@ -25,6 +25,7 @@
 * Fixed pauldron clipping on stormtrooper and sandtrooper armor
 * Fixed mirrored cube textures on trooper armors
 * Fixed mirrored textures on species bodies in some circumstances
+* Fixed blaster bolts disappearing with high ping
 
 # Internal Changes
 
