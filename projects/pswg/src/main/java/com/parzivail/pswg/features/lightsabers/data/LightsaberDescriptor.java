@@ -12,6 +12,8 @@ public final class LightsaberDescriptor
 	public int bladeColor;
 	public LightsaberBladeType bladeType;
 
+	public boolean defaultUnstable;
+
 	private HashMap<String, Float> bladeLengthMap;
 
 	public LightsaberDescriptor(Identifier id, String ownerName, int bladeColor, LightsaberBladeType bladeType)
@@ -22,6 +24,12 @@ public final class LightsaberDescriptor
 		this.bladeType = bladeType;
 
 		bladeLengthMap = new HashMap<>();
+	}
+
+	public LightsaberDescriptor unstable()
+	{
+		this.defaultUnstable = true;
+		return this;
 	}
 
 	public LightsaberDescriptor bladeLength(String name, float length)

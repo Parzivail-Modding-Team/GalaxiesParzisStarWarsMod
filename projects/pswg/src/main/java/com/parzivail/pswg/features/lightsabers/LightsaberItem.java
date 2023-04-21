@@ -226,6 +226,7 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 			lightsaberTag.owner = descriptor.ownerName;
 			lightsaberTag.hilt = descriptor.id;
 			lightsaberTag.bladeColor = descriptor.bladeColor;
+			lightsaberTag.unstable = descriptor.defaultUnstable;
 		});
 
 		return stack;

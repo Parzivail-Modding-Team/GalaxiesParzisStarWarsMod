@@ -17,6 +17,7 @@
 * Full-head helmets no longer allow hair to flow out of them
 * Lightsaber damage boosted to 22 from 15
 * When not blocking, lightsabers now use the vanilla hold and swing animation
+* Kylo Ren's lightsaber now defaults to unstable rendering
 
 # Fixes
 

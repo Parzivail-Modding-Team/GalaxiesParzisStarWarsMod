@@ -244,6 +244,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 				new LightsaberDescriptor(Resources.id("dooku"), "Count Dooku", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("revan"), "Darth Revan", ColorUtil.packHsv(0.81f, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("kylo"), "Kylo Ren", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT)
+						.unstable()
 						.bladeLength("blade_secondary_l", 0.15f)
 						.bladeLength("blade_secondary_r", 0.15f),
 				new LightsaberDescriptor(Resources.id("dume"), "Kanan Jarrus", ColorUtil.packHsv(0.62f, 1, 1), LightsaberBladeType.DEFAULT)
