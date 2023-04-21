@@ -358,6 +358,32 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.NO_CHANGE
 		);
 
+		var beachInsurgenceHatId = Resources.id("beach_insurgence_hat");
+		ArmorRenderer.register(
+				SwgItems.Armor.BeachInsurgenceHat,
+				beachInsurgenceHatId,
+				new ArmorRenderer.Assets(Resources.id("armor/beach_insurgence_hat"),
+				                         Resources.id("textures/armor/beach_insurgence_hat.png")),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+		ArmorRenderer.registerTransformer(beachInsurgenceHatId, (entity, slim, model, opt) -> {
+			model.head.getChild("goggles_up").visible = true;
+			model.head.getChild("goggles_down").visible = false;
+		});
+
+		var desertInsurgenceHatId = Resources.id("desert_insurgence_hat");
+		ArmorRenderer.register(
+				SwgItems.Armor.DesertInsurgenceHat,
+				desertInsurgenceHatId,
+				new ArmorRenderer.Assets(Resources.id("armor/desert_insurgence_hat"),
+				                         Resources.id("textures/armor/desert_insurgence_hat.png")),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+		ArmorRenderer.registerTransformer(desertInsurgenceHatId, (entity, slim, model, opt) -> {
+			model.head.getChild("visor_up").visible = true;
+			model.head.getChild("visor_down").visible = false;
+		});
+
 		var stormtrooperId = Resources.id("stormtrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Stormtrooper,

@@ -120,6 +120,12 @@ public class SwgItems
 		@RegistryName("brown_goggles_cap")
 		@TarkinItem
 		public static final ArmorItem BrownGogglesCap = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("beach_insurgence_hat")
+		@TarkinItem
+		public static final ArmorItem BeachInsurgenceHat = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("desert_insurgence_hat")
+		@TarkinItem
+		public static final ArmorItem DesertInsurgenceHat = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("brown_specialist_backpack")
 		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
 		public static final TrinketItem BrownSpecialistBackpack = new TrinketItem(new Item.Settings().maxCount(1));
