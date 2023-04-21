@@ -21,5 +21,11 @@ public class BlasterStunBoltEntity extends BlasterBoltEntity
 	{
 		return false;
 	}
+
+	@Override
+	protected boolean deflect(LivingEntity entity)
+	{
+		return false;
+	}
 }
 

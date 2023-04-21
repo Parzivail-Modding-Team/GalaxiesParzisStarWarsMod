@@ -4,6 +4,7 @@ import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
+import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.IPrecisionEntity;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
@@ -22,7 +23,9 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Arm;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -232,9 +235,9 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	{
 		super.onCollision(hitResult);
 
-		if (!this.world.isClient && shouldCreateScorch())
+		if (!this.world.isClient)
 		{
-			if (hitResult.getType() == HitResult.Type.BLOCK)
+			if (hitResult.getType() == HitResult.Type.BLOCK && shouldCreateScorch())
 			{
 				var blockHit = (BlockHitResult)hitResult;
 
@@ -255,8 +258,35 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 				for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, blockHit.getBlockPos()))
 					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
 			}
+			else if (hitResult.getType() == HitResult.Type.ENTITY)
+			{
+				var entityHit = (EntityHitResult)hitResult;
+				var entity = entityHit.getEntity();
+
+				if (entity instanceof LivingEntity le && le.getActiveItem().getItem() instanceof LightsaberItem && le.isUsingItem())
+					if (deflect(le))
+						return;
+			}
 		}
 
 		this.discard();
+	}
+
+	protected boolean deflect(LivingEntity entity)
+	{
+		var speed = this.getVelocity().length();
+
+		var yaw = entity.getHeadYaw();
+		var pitch = entity.getPitch();
+
+		float x = -MathHelper.sin(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
+		float y = -MathHelper.sin(pitch * MathHelper.RADIANS_PER_DEGREE);
+		float z = MathHelper.cos(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
+
+		this.setYaw(yaw);
+		this.setPitch(pitch);
+		this.setVelocity(x * speed, y * speed, z * speed);
+
+		return true;
 	}
 }

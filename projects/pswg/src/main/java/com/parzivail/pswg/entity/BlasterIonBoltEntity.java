@@ -41,4 +41,10 @@ public class BlasterIonBoltEntity extends BlasterBoltEntity
 
 		this.discard();
 	}
+
+	@Override
+	protected boolean deflect(LivingEntity entity)
+	{
+		return false;
+	}
 }
