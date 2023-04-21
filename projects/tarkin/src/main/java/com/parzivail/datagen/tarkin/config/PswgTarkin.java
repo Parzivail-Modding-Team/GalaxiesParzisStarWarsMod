@@ -19,9 +19,9 @@ import com.parzivail.pswg.features.blasters.data.BlasterArchetype;
 import com.parzivail.pswg.features.blasters.data.BlasterFiringMode;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.util.block.InvertedLampBlock;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
@@ -132,20 +132,61 @@ public class PswgTarkin
 
 	public static void generateTags(List<BuiltAsset> assets)
 	{
-		TagGenerator.forBlockTag(BlockTags.LOGS_THAT_BURN, SwgTags.Block.SEQUOIA_LOG).build(assets);
-		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Block.SEQUOIA_LOG).build(assets);
+		TagGenerator.forBlock(BlockTags.LOGS_THAT_BURN, SwgTags.Blocks.SEQUOIA_LOG).build(assets);
+		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Blocks.SEQUOIA_LOG).build(assets);
 
-		TagGenerator.forBlockTag(BlockTags.LOGS_THAT_BURN, SwgTags.Block.JAPOR_LOG).build(assets);
-		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Block.JAPOR_LOG).build(assets);
+		TagGenerator.forBlock(BlockTags.LOGS_THAT_BURN, SwgTags.Blocks.JAPOR_LOG).build(assets);
+		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Blocks.JAPOR_LOG).build(assets);
 
-		TagGenerator.forBlockTag(BlockTags.LOGS_THAT_BURN, SwgTags.Block.TATOOINE_LOG).build(assets);
-		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Block.TATOOINE_LOG).build(assets);
+		TagGenerator.forBlock(BlockTags.LOGS_THAT_BURN, SwgTags.Blocks.TATOOINE_LOG).build(assets);
+		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Blocks.TATOOINE_LOG).build(assets);
 
-		TagGenerator.forBlockTag(BlockTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
-		TagGenerator.forBlockTag(BlockTags.SHOVEL_MINEABLE, SwgTags.Block.DESERT_SAND).build(assets);
-		TagGenerator.forItemTag(ItemTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
+		TagGenerator.forBlock(BlockTags.SAND, SwgTags.Blocks.DESERT_SAND).build(assets);
+		TagGenerator.forBlock(BlockTags.SHOVEL_MINEABLE, SwgTags.Blocks.DESERT_SAND).build(assets);
+		TagGenerator.forItemTag(ItemTags.SAND, SwgTags.Blocks.DESERT_SAND).build(assets);
 
-		TagGenerator.forBlockTag(BlockTags.WALLS, SwgTags.Block.SLIDING_DOORS).build(assets);
+		TagGenerator.forBlock(BlockTags.WALLS, SwgTags.Blocks.SLIDING_DOORS).build(assets);
+
+		// Why is there no block tag for glass?
+		TagGenerator.addBlocksToTag(
+				SwgTags.Blocks.BLASTER_DESTROY,
+				assets,
+				Blocks.GLASS,
+				Blocks.WHITE_STAINED_GLASS,
+				Blocks.ORANGE_STAINED_GLASS,
+				Blocks.MAGENTA_STAINED_GLASS,
+				Blocks.LIGHT_BLUE_STAINED_GLASS,
+				Blocks.YELLOW_STAINED_GLASS,
+				Blocks.LIME_STAINED_GLASS,
+				Blocks.PINK_STAINED_GLASS,
+				Blocks.GRAY_STAINED_GLASS,
+				Blocks.LIGHT_GRAY_STAINED_GLASS,
+				Blocks.CYAN_STAINED_GLASS,
+				Blocks.PURPLE_STAINED_GLASS,
+				Blocks.BLUE_STAINED_GLASS,
+				Blocks.BROWN_STAINED_GLASS,
+				Blocks.GREEN_STAINED_GLASS,
+				Blocks.RED_STAINED_GLASS,
+				Blocks.BLACK_STAINED_GLASS,
+				Blocks.GLASS_PANE,
+				Blocks.WHITE_STAINED_GLASS_PANE,
+				Blocks.ORANGE_STAINED_GLASS_PANE,
+				Blocks.MAGENTA_STAINED_GLASS_PANE,
+				Blocks.LIGHT_BLUE_STAINED_GLASS_PANE,
+				Blocks.YELLOW_STAINED_GLASS_PANE,
+				Blocks.LIME_STAINED_GLASS_PANE,
+				Blocks.PINK_STAINED_GLASS_PANE,
+				Blocks.GRAY_STAINED_GLASS_PANE,
+				Blocks.LIGHT_GRAY_STAINED_GLASS_PANE,
+				Blocks.CYAN_STAINED_GLASS_PANE,
+				Blocks.PURPLE_STAINED_GLASS_PANE,
+				Blocks.BLUE_STAINED_GLASS_PANE,
+				Blocks.BROWN_STAINED_GLASS_PANE,
+				Blocks.GREEN_STAINED_GLASS_PANE,
+				Blocks.RED_STAINED_GLASS_PANE,
+				Blocks.BLACK_STAINED_GLASS_PANE,
+				Blocks.TINTED_GLASS
+		);
 	}
 
 	public static void generateRecipes(List<BuiltAsset> assets)
@@ -261,47 +302,47 @@ public class PswgTarkin
 		RecipeGenerator.buildFood(assets, SwgItems.Food.QrikkiBread, SwgItems.Food.QrikkiWaffle);
 
 		//Plasteel alternative recipes
-		RecipeGenerator.Shaped.of(new ItemStack(Items.ANVIL))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.ANVIL))
 		                      .grid3x3("plasteel",
 		                               SwgBlocks.Composite.PlasteelBlock, SwgBlocks.Composite.PlasteelBlock, SwgBlocks.Composite.PlasteelBlock,
 		                               null, SwgItems.Material.PlasteelIngot, null,
 		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.BLAST_FURNACE))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.BLAST_FURNACE))
 		                      .grid3x3("plasteel",
 		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, Items.FURNACE, SwgItems.Material.PlasteelIngot,
-		                               Items.SMOOTH_STONE, Items.SMOOTH_STONE, Items.SMOOTH_STONE)
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.FURNACE, SwgItems.Material.PlasteelIngot,
+		                               net.minecraft.item.Items.SMOOTH_STONE, net.minecraft.item.Items.SMOOTH_STONE, net.minecraft.item.Items.SMOOTH_STONE)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.BUCKET))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.BUCKET))
 		                      .grid3x2("plasteel",
 		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
 		                               null, SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.CAULDRON))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.CAULDRON))
 		                      .grid3x3("plasteel",
 		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
 		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
 		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.CHAIN))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.CHAIN))
 		                      .grid1x3("plasteel",
 		                               SwgItems.Material.PlasteelNugget,
 		                               SwgItems.Material.PlasteelIngot,
 		                               SwgItems.Material.PlasteelNugget)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.COMPASS))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.COMPASS))
 		                      .grid3x3("plasteel",
 		                               null, SwgItems.Material.PlasteelIngot, null,
-		                               SwgItems.Material.PlasteelIngot, Items.REDSTONE, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.REDSTONE, SwgItems.Material.PlasteelIngot,
 		                               null, SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
-		RecipeGenerator.Shaped.of(new ItemStack(Items.SHEARS))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.SHEARS))
 		                      .grid2x2("plasteel_left",
 		                               SwgItems.Material.PlasteelIngot, null,
 		                               null, SwgItems.Material.PlasteelIngot)
@@ -309,96 +350,96 @@ public class PswgTarkin
 		                               null, SwgItems.Material.PlasteelIngot,
 		                               SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
-		RecipeGenerator.Shapeless.of(new ItemStack(Items.FLINT_AND_STEEL), "plasteel")
+		RecipeGenerator.Shapeless.of(new ItemStack(net.minecraft.item.Items.FLINT_AND_STEEL), "plasteel")
 		                         .ingredient(SwgItems.Material.PlasteelIngot)
-		                         .ingredient(Items.FLINT)
+		                         .ingredient(net.minecraft.item.Items.FLINT)
 		                         .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.CROSSBOW))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.CROSSBOW))
 		                      .grid3x3("plasteel",
-		                               Items.STICK, SwgItems.Material.PlasteelIngot, Items.STICK,
-		                               Items.STRING, Items.TRIPWIRE_HOOK, Items.STRING,
-		                               null, Items.STICK, null)
+		                               net.minecraft.item.Items.STICK, SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.STICK,
+		                               net.minecraft.item.Items.STRING, net.minecraft.item.Items.TRIPWIRE_HOOK, net.minecraft.item.Items.STRING,
+		                               null, net.minecraft.item.Items.STICK, null)
 		                      .build(assets);
-		RecipeGenerator.Shaped.of(new ItemStack(Items.SHIELD))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.SHIELD))
 		                      .grid3x3("plasteel",
 		                               ItemTags.PLANKS, SwgItems.Material.PlasteelIngot, ItemTags.PLANKS,
 		                               ItemTags.PLANKS, ItemTags.PLANKS, ItemTags.PLANKS,
 		                               null, ItemTags.PLANKS, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.HEAVY_WEIGHTED_PRESSURE_PLATE))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.HEAVY_WEIGHTED_PRESSURE_PLATE))
 		                      .grid2x1("plasteel", SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.HOPPER))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.HOPPER))
 		                      .grid3x3("plasteel",
 		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, Items.CHEST, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.CHEST, SwgItems.Material.PlasteelIngot,
 		                               null, SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.MINECART))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.MINECART))
 		                      .grid3x2("plasteel",
 		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
 		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
-		RecipeGenerator.Shaped.of(new ItemStack(Items.RAIL, 16))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.RAIL, 16))
 		                      .grid3x3("plasteel",
 		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, Items.STICK, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.STICK, SwgItems.Material.PlasteelIngot,
 		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
-		RecipeGenerator.Shaped.of(new ItemStack(Items.ACTIVATOR_RAIL, 6))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.ACTIVATOR_RAIL, 6))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Material.PlasteelIngot, Items.STICK, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, Items.REDSTONE_TORCH, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, Items.STICK, SwgItems.Material.PlasteelIngot)
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.STICK, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.REDSTONE_TORCH, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.STICK, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
-		RecipeGenerator.Shaped.of(new ItemStack(Items.DETECTOR_RAIL, 6))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.DETECTOR_RAIL, 6))
 		                      .grid3x3("plasteel",
 		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, Items.STONE_PRESSURE_PLATE, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, Items.REDSTONE, SwgItems.Material.PlasteelIngot)
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.STONE_PRESSURE_PLATE, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.REDSTONE, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.PISTON))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.PISTON))
 		                      .grid3x3("plasteel",
 		                               ItemTags.PLANKS, ItemTags.PLANKS, ItemTags.PLANKS,
-		                               Items.COBBLESTONE, SwgItems.Material.PlasteelIngot, Items.COBBLESTONE,
-		                               Items.COBBLESTONE, Items.REDSTONE, Items.COBBLESTONE)
+		                               net.minecraft.item.Items.COBBLESTONE, SwgItems.Material.PlasteelIngot, net.minecraft.item.Items.COBBLESTONE,
+		                               net.minecraft.item.Items.COBBLESTONE, net.minecraft.item.Items.REDSTONE, net.minecraft.item.Items.COBBLESTONE)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.SMITHING_TABLE))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.SMITHING_TABLE))
 		                      .grid2x3("plasteel",
 		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot,
 		                               ItemTags.PLANKS, ItemTags.PLANKS,
 		                               ItemTags.PLANKS, ItemTags.PLANKS)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.STONECUTTER))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.STONECUTTER))
 		                      .grid3x2("plasteel",
 		                               null, SwgItems.Material.PlasteelIngot, null,
-		                               Items.STONE, Items.STONE, Items.STONE)
+		                               net.minecraft.item.Items.STONE, net.minecraft.item.Items.STONE, net.minecraft.item.Items.STONE)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.TRIPWIRE_HOOK, 2))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.TRIPWIRE_HOOK, 2))
 		                      .grid1x3("plasteel",
 		                               SwgItems.Material.PlasteelIngot,
-		                               Items.STICK,
+		                               net.minecraft.item.Items.STICK,
 		                               ItemTags.PLANKS)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(Items.LANTERN))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.LANTERN))
 		                      .grid3x3("plasteel",
 		                               SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget,
-		                               SwgItems.Material.PlasteelNugget, Items.TORCH, SwgItems.Material.PlasteelNugget,
+		                               SwgItems.Material.PlasteelNugget, net.minecraft.item.Items.TORCH, SwgItems.Material.PlasteelNugget,
 		                               SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget)
 		                      .build(assets);
-		RecipeGenerator.Shaped.of(new ItemStack(Items.SOUL_LANTERN))
+		RecipeGenerator.Shaped.of(new ItemStack(net.minecraft.item.Items.SOUL_LANTERN))
 		                      .grid3x3("plasteel",
 		                               SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget,
-		                               SwgItems.Material.PlasteelNugget, Items.SOUL_TORCH, SwgItems.Material.PlasteelNugget,
+		                               SwgItems.Material.PlasteelNugget, net.minecraft.item.Items.SOUL_TORCH, SwgItems.Material.PlasteelNugget,
 		                               SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget)
 		                      .build(assets);
 
@@ -517,8 +558,8 @@ public class PswgTarkin
 		RecipeGenerator.Shapeless.of(new ItemStack(SwgBlocks.Dirt.WetPourstone, 8), null)
 		                         .ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam)
 		                         .ingredient(ItemTags.SAND).ingredient(ItemTags.SAND).ingredient(ItemTags.SAND)
-		                         .ingredient(Items.WHEAT).ingredient(Items.WHEAT)
-		                         .ingredient(Items.WATER_BUCKET)
+		                         .ingredient(net.minecraft.item.Items.WHEAT).ingredient(net.minecraft.item.Items.WHEAT)
+		                         .ingredient(net.minecraft.item.Items.WATER_BUCKET)
 		                         .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Dirt.WetPourstoneStairs, 6))
@@ -541,8 +582,8 @@ public class PswgTarkin
 		RecipeGenerator.Shapeless.of(new ItemStack(SwgBlocks.Dirt.RuinedWetPourstone, 8), null)
 		                         .ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam)
 		                         .ingredient(ItemTags.SAND).ingredient(ItemTags.SAND).ingredient(ItemTags.SAND)
-		                         .ingredient(Items.WHEAT).ingredient(Items.WHEAT)
-		                         .ingredient(Items.WATER_BUCKET)
+		                         .ingredient(net.minecraft.item.Items.WHEAT).ingredient(net.minecraft.item.Items.WHEAT)
+		                         .ingredient(net.minecraft.item.Items.WATER_BUCKET)
 		                         .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Dirt.RuinedWetPourstoneStairs, 6))
@@ -568,22 +609,22 @@ public class PswgTarkin
 		//Light Blocks
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.Fixture, 3))
 		                      .grid3x3(null,
-		                               Items.GLASS_PANE, Items.GLASS_PANE, Items.GLASS_PANE,
-		                               Items.GLASS_PANE, SwgItems.CraftingComponents.LightPanel, Items.GLASS_PANE,
-		                               Items.GLASS_PANE, Items.GLASS_PANE, Items.GLASS_PANE)
+		                               net.minecraft.item.Items.GLASS_PANE, net.minecraft.item.Items.GLASS_PANE, net.minecraft.item.Items.GLASS_PANE,
+		                               net.minecraft.item.Items.GLASS_PANE, SwgItems.CraftingComponents.LightPanel, net.minecraft.item.Items.GLASS_PANE,
+		                               net.minecraft.item.Items.GLASS_PANE, net.minecraft.item.Items.GLASS_PANE, net.minecraft.item.Items.GLASS_PANE)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.RedHangar, 4))
 		                      .grid3x3(null,
 		                               null, SwgItems.Material.PlasteelIngot, null,
 		                               SwgItems.Material.PlasteelIngot, SwgItems.CraftingComponents.LightPanel, SwgItems.Material.PlasteelIngot,
-		                               null, Items.RED_DYE, null)
+		                               null, net.minecraft.item.Items.RED_DYE, null)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.BlueHangar, 4))
 		                      .grid3x3(null,
 		                               null, SwgItems.Material.PlasteelIngot, null,
 		                               SwgItems.Material.PlasteelIngot, SwgItems.CraftingComponents.LightPanel, SwgItems.Material.PlasteelIngot,
-		                               null, Items.BLUE_DYE, null)
+		                               null, net.minecraft.item.Items.BLUE_DYE, null)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.WallCluster, 4))
@@ -626,19 +667,19 @@ public class PswgTarkin
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.OrangeKyber))
 		                      .grid3x3(null,
 		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
-		                               SwgItems.Material.TitaniumIngot, Items.ORANGE_DYE, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, net.minecraft.item.Items.ORANGE_DYE, SwgItems.Material.TitaniumIngot,
 		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.GrayKyber))
 		                      .grid3x3(null,
 		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
-		                               SwgItems.Material.TitaniumIngot, Items.GRAY_DYE, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, net.minecraft.item.Items.GRAY_DYE, SwgItems.Material.TitaniumIngot,
 		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.BlackKyber))
 		                      .grid3x3(null,
 		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
-		                               SwgItems.Material.TitaniumIngot, Items.BLACK_DYE, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, net.minecraft.item.Items.BLACK_DYE, SwgItems.Material.TitaniumIngot,
 		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot)
 		                      .build(assets);
 
@@ -646,7 +687,7 @@ public class PswgTarkin
 		                      .grid3x3(null,
 		                               SwgItems.Material.DeshIngot, SwgItems.Material.DeshIngot, SwgItems.Material.DeshIngot,
 		                               SwgItems.Material.DeshIngot, null, SwgItems.Material.DeshIngot,
-		                               Items.IRON_INGOT, Items.IRON_INGOT, Items.IRON_INGOT)
+		                               net.minecraft.item.Items.IRON_INGOT, net.minecraft.item.Items.IRON_INGOT, net.minecraft.item.Items.IRON_INGOT)
 		                      .build(assets);
 
 		//Crafting Components
@@ -754,45 +795,45 @@ public class PswgTarkin
 		              .build(assets);
 
 		BlockGenerator.column(SwgBlocks.Tree.SequoiaLog, Resources.id("block/sequoia_log_top"))
-		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .blockTag(SwgTags.Blocks.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
+		              .itemTag(SwgTags.Items.SEQUOIA_LOG)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Tree.StrippedSequoiaLog, Resources.id("block/stripped_sequoia_log_top"))
-		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .blockTag(SwgTags.Blocks.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
+		              .itemTag(SwgTags.Items.SEQUOIA_LOG)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Tree.MossySequoiaLog, Resources.id("block/mossy_sequoia_log_top"))
-		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .blockTag(SwgTags.Blocks.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
+		              .itemTag(SwgTags.Items.SEQUOIA_LOG)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Tree.JaporLog, Resources.id("block/japor_log_top"))
-		              .blockTag(SwgTags.Block.JAPOR_LOG)
+		              .blockTag(SwgTags.Blocks.JAPOR_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Item.JAPOR_LOG)
+		              .itemTag(SwgTags.Items.JAPOR_LOG)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Tree.TatooineLog, Resources.id("block/tatooine_log_top"))
-		              .blockTag(SwgTags.Block.TATOOINE_LOG)
+		              .blockTag(SwgTags.Blocks.TATOOINE_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Item.TATOOINE_LOG)
+		              .itemTag(SwgTags.Items.TATOOINE_LOG)
 		              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Tree.SequoiaWood, Resources.id("block/sequoia_log"))
-		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .blockTag(SwgTags.Blocks.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
+		              .itemTag(SwgTags.Items.SEQUOIA_LOG)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Tree.JaporWood, Resources.id("block/japor_log"))
-		              .blockTag(SwgTags.Block.JAPOR_LOG)
+		              .blockTag(SwgTags.Blocks.JAPOR_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Item.JAPOR_LOG)
+		              .itemTag(SwgTags.Items.JAPOR_LOG)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Tree.TatooineWood, Resources.id("block/tatooine_log"))
-		              .blockTag(SwgTags.Block.TATOOINE_LOG)
+		              .blockTag(SwgTags.Blocks.TATOOINE_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Item.TATOOINE_LOG)
+		              .itemTag(SwgTags.Items.TATOOINE_LOG)
 		              .build(assets);
 
 		BlockGenerator.basicWoodProducts(SwgBlocks.Tree.JaporProducts, BlockTags.AXE_MINEABLE, assets);
@@ -1007,38 +1048,38 @@ public class PswgTarkin
 		BlockGenerator.block(SwgBlocks.Sand.Desert)
 		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
 		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.1f, 2))
-		              .blockTag(SwgTags.Block.DESERT_SAND)
-		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .blockTag(SwgTags.Blocks.DESERT_SAND)
+		              .itemTag(SwgTags.Items.DESERT_SAND)
 		              .build(assets);
 		BlockGenerator.block(SwgBlocks.Sand.Pit)
 		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
 		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.24f, 2))
-		              .blockTag(SwgTags.Block.DESERT_SAND)
-		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .blockTag(SwgTags.Blocks.DESERT_SAND)
+		              .itemTag(SwgTags.Items.DESERT_SAND)
 		              .build(assets);
 		BlockGenerator.block(SwgBlocks.Sand.Fine)
 		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.18f, 2))
-		              .blockTag(SwgTags.Block.DESERT_SAND)
-		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .blockTag(SwgTags.Blocks.DESERT_SAND)
+		              .itemTag(SwgTags.Items.DESERT_SAND)
 		              .build(assets);
 		BlockGenerator.accumulatingLayers(SwgBlocks.Sand.LooseDesert)
-		              .blockTag(SwgTags.Block.DESERT_SAND)
-		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .blockTag(SwgTags.Blocks.DESERT_SAND)
+		              .itemTag(SwgTags.Items.DESERT_SAND)
 		              .build(assets);
 		BlockGenerator.block(SwgBlocks.Sand.Canyon)
 		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
 		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.04f, 2))
-		              .blockTag(SwgTags.Block.DESERT_SAND)
-		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .blockTag(SwgTags.Blocks.DESERT_SAND)
+		              .itemTag(SwgTags.Items.DESERT_SAND)
 		              .build(assets);
 
-		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.Canyon, SwgTags.Block.DESERT_SANDSTONE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.Canyon, SwgTags.Blocks.DESERT_SANDSTONE, assets);
 
-		BlockGenerator.stoneProducts(SwgBlocks.Sandstone.Desert, b -> BlockGenerator.staticColumn(b, Resources.id("block/smooth_desert_sandstone")), SwgTags.Block.DESERT_SANDSTONE, assets);
+		BlockGenerator.stoneProducts(SwgBlocks.Sandstone.Desert, b -> BlockGenerator.staticColumn(b, Resources.id("block/smooth_desert_sandstone")), SwgTags.Blocks.DESERT_SANDSTONE, assets);
 
 		BlockGenerator.staticColumnTopBottom(SwgBlocks.Sandstone.Dunestone)
-		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
-		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .blockTag(SwgTags.Blocks.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Items.DESERT_SANDSTONE)
 		              .build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)

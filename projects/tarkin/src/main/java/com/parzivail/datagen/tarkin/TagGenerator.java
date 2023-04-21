@@ -1,5 +1,7 @@
 package com.parzivail.datagen.tarkin;
 
+import net.minecraft.block.Block;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
@@ -18,14 +20,20 @@ public class TagGenerator
 		return new TagGenerator(tagDataType, tag, TagEntry.create(id));
 	}
 
-	public static TagGenerator forItemTag(TagKey<?> tag, TagKey<?> other)
+	public static TagGenerator forItemTag(TagKey<?> parent, TagKey<?> child)
 	{
-		return forTag("tags/items", tag, other.id());
+		return forTag("tags/items", parent, child.id());
 	}
 
-	public static TagGenerator forBlockTag(TagKey<?> tag, TagKey<?> other)
+	public static TagGenerator forBlock(TagKey<?> parent, TagKey<?> child)
 	{
-		return forTag("tags/blocks", tag, other.id());
+		return forTag("tags/blocks", parent, child.id());
+	}
+
+	public static void addBlocksToTag(TagKey<?> parent, List<BuiltAsset> assets, Block... children)
+	{
+		for (var block : children)
+			forObject("tags/blocks", parent, Registries.BLOCK.getId(block)).build(assets);
 	}
 
 	private final String tagDataType;

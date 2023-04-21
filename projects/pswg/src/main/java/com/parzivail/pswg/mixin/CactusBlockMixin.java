@@ -17,7 +17,7 @@ public abstract class CactusBlockMixin
 	private void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
 	{
 		var below = world.getBlockState(pos.down());
-		if (below.isIn(SwgTags.Block.DESERT_SAND))
+		if (below.isIn(SwgTags.Blocks.DESERT_SAND))
 			cir.setReturnValue(true);
 	}
 }

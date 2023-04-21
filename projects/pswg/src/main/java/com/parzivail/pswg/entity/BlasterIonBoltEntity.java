@@ -47,4 +47,10 @@ public class BlasterIonBoltEntity extends BlasterBoltEntity
 	{
 		return false;
 	}
+
+	@Override
+	protected boolean shouldDestroyBlocks()
+	{
+		return false;
+	}
 }

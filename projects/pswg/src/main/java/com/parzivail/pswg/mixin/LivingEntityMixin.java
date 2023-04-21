@@ -19,7 +19,7 @@ public class LivingEntityMixin
 	@Inject(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;getAttacker()Lnet/minecraft/entity/Entity;"))
 	public void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
 	{
-		if (source.isIn(SwgTags.DamageType.IS_IGNORES_INVULNERABLE_FRAMES))
+		if (source.isIn(SwgTags.DamageTypes.IS_IGNORES_INVULNERABLE_FRAMES))
 			lastDamageTaken = 0;
 	}
 

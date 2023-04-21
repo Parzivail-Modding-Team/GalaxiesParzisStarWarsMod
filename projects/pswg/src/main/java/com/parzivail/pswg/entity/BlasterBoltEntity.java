@@ -4,6 +4,7 @@ import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
+import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.IPrecisionEntity;
@@ -74,6 +75,11 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	}
 
 	protected boolean shouldCreateScorch()
+	{
+		return true;
+	}
+
+	protected boolean shouldDestroyBlocks()
 	{
 		return true;
 	}
@@ -237,26 +243,34 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 
 		if (!this.world.isClient)
 		{
-			if (hitResult.getType() == HitResult.Type.BLOCK && shouldCreateScorch())
+			if (hitResult.getType() == HitResult.Type.BLOCK)
 			{
 				var blockHit = (BlockHitResult)hitResult;
 
 				var blockPos = blockHit.getBlockPos();
-				if (world.isWater(blockPos) && ignoreWater)
-					return;
 
-				var incident = this.getVelocity().normalize();
-				var normal = new Vec3d(blockHit.getSide().getUnitVector());
+				if (shouldDestroyBlocks() && world.getBlockState(blockPos).isIn(SwgTags.Blocks.BLASTER_DESTROY))
+				{
+					world.breakBlock(blockPos, false, this);
+				}
+				else if (shouldCreateScorch())
+				{
+					if (world.isWater(blockPos) && ignoreWater)
+						return;
 
-				var pos = hitResult.getPos();
+					var incident = this.getVelocity().normalize();
+					var normal = new Vec3d(blockHit.getSide().getUnitVector());
 
-				var passedData = WorldEvent.createBuffer(WorldEvent.BLASTER_BOLT_HIT);
-				PacketByteBufHelper.writeVec3d(passedData, pos);
-				PacketByteBufHelper.writeVec3d(passedData, incident);
-				PacketByteBufHelper.writeVec3d(passedData, normal);
+					var pos = hitResult.getPos();
 
-				for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, blockHit.getBlockPos()))
-					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
+					var passedData = WorldEvent.createBuffer(WorldEvent.BLASTER_BOLT_HIT);
+					PacketByteBufHelper.writeVec3d(passedData, pos);
+					PacketByteBufHelper.writeVec3d(passedData, incident);
+					PacketByteBufHelper.writeVec3d(passedData, normal);
+
+					for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, blockHit.getBlockPos()))
+						ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
+				}
 			}
 			else if (hitResult.getType() == HitResult.Type.ENTITY)
 			{

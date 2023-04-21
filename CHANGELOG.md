@@ -18,6 +18,7 @@
 * Lightsaber damage boosted to 22 from 15
 * When not blocking, lightsabers now use the vanilla hold and swing animation
 * Kylo Ren's lightsaber now defaults to unstable rendering
+* Blaster bolts can now destroy vanilla glass and panes
 
 # Fixes
 

@@ -23,6 +23,12 @@ public class BlasterStunBoltEntity extends BlasterBoltEntity
 	}
 
 	@Override
+	protected boolean shouldDestroyBlocks()
+	{
+		return false;
+	}
+
+	@Override
 	protected boolean deflect(LivingEntity entity)
 	{
 		return false;

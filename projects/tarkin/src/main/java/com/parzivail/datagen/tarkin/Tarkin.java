@@ -130,8 +130,8 @@ public class Tarkin
 				{
 					case TrinketsChestBack -> TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
 					case Leaves -> ItemTags.LEAVES;
-					case DesertSand -> SwgTags.Item.DESERT_SAND;
-					case DesertSandstone -> SwgTags.Item.DESERT_SANDSTONE;
+					case DesertSand -> SwgTags.Items.DESERT_SAND;
+					case DesertSandstone -> SwgTags.Items.DESERT_SANDSTONE;
 					default -> throw new RuntimeException("Unsupported value " + preset);
 				};
 	}
@@ -139,16 +139,16 @@ public class Tarkin
 	private static TagKey<Block> getTagKey(TrBlockTag preset)
 	{
 		return switch (preset)
-				{
-					case PickaxeMineable -> BlockTags.PICKAXE_MINEABLE;
-					case ShearsMineable -> FabricMineableTags.SHEARS_MINEABLE;
-					case SlidingDoor -> SwgTags.Block.SLIDING_DOORS;
-					case DesertSand -> SwgTags.Block.DESERT_SAND;
-					case DesertSandstone -> SwgTags.Block.DESERT_SANDSTONE;
-					case Leaves -> BlockTags.LEAVES;
-					case DeadBushSubstrate -> BlockTags.DEAD_BUSH_MAY_PLACE_ON;
-					default -> throw new RuntimeException("Unsupported value " + preset);
-				};
+		{
+			case PickaxeMineable -> BlockTags.PICKAXE_MINEABLE;
+			case ShearsMineable -> FabricMineableTags.SHEARS_MINEABLE;
+			case SlidingDoor -> SwgTags.Blocks.SLIDING_DOORS;
+			case DesertSand -> SwgTags.Blocks.DESERT_SAND;
+			case DesertSandstone -> SwgTags.Blocks.DESERT_SANDSTONE;
+			case Leaves -> BlockTags.LEAVES;
+			case DeadBushSubstrate -> BlockTags.DEAD_BUSH_MAY_PLACE_ON;
+			default -> throw new RuntimeException("Unsupported value " + preset);
+		};
 	}
 
 	public static void registerItemFields(Class<?> rootClazz, List<BuiltAsset> assets)
