@@ -291,6 +291,94 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Y10, AstromechRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroQTKT, AstromechRenderer::new);
 
+		ICustomItemRenderer.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
+		ICustomPoseItem.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
+
+		ICustomItemRenderer.register(BlasterItem.class, BlasterItemRenderer.INSTANCE);
+		ICustomPoseItem.register(BlasterItem.class, BlasterItemRenderer.INSTANCE);
+		ICustomHudRenderer.register(BlasterItem.class, BlasterHudRenderer.INSTANCE);
+
+		//		TODO: ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
+
+		registerArmor();
+
+		SwgParticles.register();
+
+		PlayerEvent.EVENT_BUS.subscribe(PlayerEvent.ACCUMULATE_RECOIL, BlasterRecoilManager::handleAccumulateRecoil);
+
+		WorldEvent.EVENT_BUS.subscribe(WorldEvent.BLASTER_BOLT_HIT, BlasterUtil::handleBoltHit);
+
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+			if (client.player != null)
+			{
+				var config = Resources.CONFIG.get();
+
+				if (!config.disableUpdateCheck && Resources.REMOTE_VERSION != null)
+				{
+					Text versionText = Text.literal(Resources.REMOTE_VERSION.name)
+					                       .styled((style) -> style
+							                       .withItalic(true)
+					                       );
+					Text urlText = Text.literal("https://www.curseforge.com/minecraft/mc-mods/pswg")
+					                   .styled((style) -> style
+							                   .withColor(TextColor.fromRgb(0x5bc0de))
+							                   .withUnderline(true)
+							                   .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
+							                   .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("PSWG on CurseForge")))
+					                   );
+					client.player.sendMessage(Text.translatable("msg.pswg.update", versionText, urlText), false);
+				}
+
+				if (config.client.showCharacterCustomizeTip)
+				{
+					client.player.sendMessage(Text.translatable("msg.pswg.tip.customize_character", TextUtil.stylizeKeybind(Client.KEY_SPECIES_SELECT.getBoundKeyLocalizedText())), false);
+					config.client.showCharacterCustomizeTip = false;
+					Resources.CONFIG.save();
+				}
+			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE::handlePacket);
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerEvent, (client, handler, buf, responseSender) -> {
+			var eventId = buf.readByte();
+
+			if (PlayerEvent.ID_LOOKUP.containsKey(eventId))
+			{
+				var event = PlayerEvent.ID_LOOKUP.get(eventId);
+				PlayerEvent.EVENT_BUS.publish(event, receiver -> receiver.receive(client, handler, buf, responseSender));
+			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.WorldEvent, (client, handler, buf, responseSender) -> {
+			var eventId = buf.readByte();
+
+			if (WorldEvent.ID_LOOKUP.containsKey(eventId))
+			{
+				var event = WorldEvent.ID_LOOKUP.get(eventId);
+				WorldEvent.EVENT_BUS.publish(event, receiver -> receiver.receive(client, handler, buf, responseSender));
+			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlockToClient, BlockEntityClientSerializable::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
+
+		blasterZoomInstance = new ZoomInstance(
+				Resources.id("blaster_zoom"),
+				10.0F,
+				new SmoothTransitionMode(),
+				new ZoomDivisorMouseModifier(),
+				null
+		);
+
+		Galaxies.LOG.info("Loading PSWG addons via pswg-client-addon");
+		EntrypointUtils.invoke("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
+	}
+
+	private static void registerArmor()
+	{
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelForest,
 				Resources.id("rebel_forest"),
@@ -364,7 +452,7 @@ public class Client implements ClientModInitializer
 				beachInsurgenceHatId,
 				new ArmorRenderer.Assets(Resources.id("armor/beach_insurgence_hat"),
 				                         Resources.id("textures/armor/beach_insurgence_hat.png")),
-				ArmorRenderer.Metadata.NO_CHANGE
+				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.registerTransformer(beachInsurgenceHatId, (entity, slim, model, opt) -> {
 			model.head.getChild("goggles_up").visible = true;
@@ -377,7 +465,7 @@ public class Client implements ClientModInitializer
 				desertInsurgenceHatId,
 				new ArmorRenderer.Assets(Resources.id("armor/desert_insurgence_hat"),
 				                         Resources.id("textures/armor/desert_insurgence_hat.png")),
-				ArmorRenderer.Metadata.NO_CHANGE
+				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.registerTransformer(desertInsurgenceHatId, (entity, slim, model, opt) -> {
 			model.head.getChild("visor_up").visible = true;
@@ -707,89 +795,6 @@ public class Client implements ClientModInitializer
 				),
 				ArmorRenderer.Metadata.NO_CHANGE
 		);
-
-		ICustomItemRenderer.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
-		ICustomPoseItem.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
-
-		ICustomItemRenderer.register(BlasterItem.class, BlasterItemRenderer.INSTANCE);
-		ICustomPoseItem.register(BlasterItem.class, BlasterItemRenderer.INSTANCE);
-		ICustomHudRenderer.register(BlasterItem.class, BlasterHudRenderer.INSTANCE);
-
-		//		TODO: ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
-
-		SwgParticles.register();
-
-		PlayerEvent.EVENT_BUS.subscribe(PlayerEvent.ACCUMULATE_RECOIL, BlasterRecoilManager::handleAccumulateRecoil);
-
-		WorldEvent.EVENT_BUS.subscribe(WorldEvent.BLASTER_BOLT_HIT, BlasterUtil::handleBoltHit);
-
-		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-			if (client.player != null)
-			{
-				var config = Resources.CONFIG.get();
-
-				if (!config.disableUpdateCheck && Resources.REMOTE_VERSION != null)
-				{
-					Text versionText = Text.literal(Resources.REMOTE_VERSION.name)
-					                       .styled((style) -> style
-							                       .withItalic(true)
-					                       );
-					Text urlText = Text.literal("https://www.curseforge.com/minecraft/mc-mods/pswg")
-					                   .styled((style) -> style
-							                   .withColor(TextColor.fromRgb(0x5bc0de))
-							                   .withUnderline(true)
-							                   .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
-							                   .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("PSWG on CurseForge")))
-					                   );
-					client.player.sendMessage(Text.translatable("msg.pswg.update", versionText, urlText), false);
-				}
-
-				if (config.client.showCharacterCustomizeTip)
-				{
-					client.player.sendMessage(Text.translatable("msg.pswg.tip.customize_character", TextUtil.stylizeKeybind(Client.KEY_SPECIES_SELECT.getBoundKeyLocalizedText())), false);
-					config.client.showCharacterCustomizeTip = false;
-					Resources.CONFIG.save();
-				}
-			}
-		});
-
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE::handlePacket);
-
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerEvent, (client, handler, buf, responseSender) -> {
-			var eventId = buf.readByte();
-
-			if (PlayerEvent.ID_LOOKUP.containsKey(eventId))
-			{
-				var event = PlayerEvent.ID_LOOKUP.get(eventId);
-				PlayerEvent.EVENT_BUS.publish(event, receiver -> receiver.receive(client, handler, buf, responseSender));
-			}
-		});
-
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.WorldEvent, (client, handler, buf, responseSender) -> {
-			var eventId = buf.readByte();
-
-			if (WorldEvent.ID_LOOKUP.containsKey(eventId))
-			{
-				var event = WorldEvent.ID_LOOKUP.get(eventId);
-				WorldEvent.EVENT_BUS.publish(event, receiver -> receiver.receive(client, handler, buf, responseSender));
-			}
-		});
-
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlockToClient, BlockEntityClientSerializable::handle);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
-
-		blasterZoomInstance = new ZoomInstance(
-				Resources.id("blaster_zoom"),
-				10.0F,
-				new SmoothTransitionMode(),
-				new ZoomDivisorMouseModifier(),
-				null
-		);
-
-		Galaxies.LOG.info("Loading PSWG addons via pswg-client-addon");
-		EntrypointUtils.invoke("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
 	}
 
 	private static void registerBlockData(ClientBlockRegistryData data, Block block)

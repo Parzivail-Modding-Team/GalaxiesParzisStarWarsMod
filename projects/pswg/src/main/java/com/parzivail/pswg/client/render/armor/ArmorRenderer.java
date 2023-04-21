@@ -53,6 +53,7 @@ public class ArmorRenderer
 		public static final Metadata NO_CHANGE = new Metadata(FemaleChestplateAction.KEEP_CUBE, CubeAction.KEEP);
 		public static final Metadata HIDE_CHEST_KEEP_HAIR = new Metadata(FemaleChestplateAction.HIDE_CUBE, CubeAction.KEEP);
 		public static final Metadata HIDE_CHEST_HIDE_HAIR = new Metadata(FemaleChestplateAction.HIDE_CUBE, CubeAction.HIDE);
+		public static final Metadata KEEP_CHEST_HIDE_HAIR = new Metadata(FemaleChestplateAction.KEEP_CUBE, CubeAction.HIDE);
 	}
 
 	@FunctionalInterface
