@@ -319,12 +319,15 @@ public class Client implements ClientModInitializer
 					                       .styled((style) -> style
 							                       .withItalic(true)
 					                       );
-					Text urlText = Text.literal("https://www.curseforge.com/minecraft/mc-mods/pswg")
+
+					var url = "https://modrinth.com/mod/pswg/version/" + Resources.REMOTE_VERSION;
+
+					Text urlText = Text.literal(url)
 					                   .styled((style) -> style
 							                   .withColor(TextColor.fromRgb(0x5bc0de))
 							                   .withUnderline(true)
-							                   .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
-							                   .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("PSWG on CurseForge")))
+							                   .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url))
+							                   .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("PSWG on Modrinth")))
 					                   );
 					client.player.sendMessage(Text.translatable("msg.pswg.update", versionText, urlText), false);
 				}

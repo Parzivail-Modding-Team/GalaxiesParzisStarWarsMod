@@ -120,7 +120,7 @@ public class Resources
 			{
 				REMOTE_VERSION = mostRecentRelease;
 
-				Galaxies.LOG.warn("A new version is available at https://www.curseforge.com/minecraft/mc-mods/pswg: %s (vs: %s)", REMOTE_VERSION.name, container.getMetadata().getVersion());
+				Galaxies.LOG.warn("A new version is available at https://modrinth.com/mod/pswg: %s (vs: %s)", REMOTE_VERSION.name, container.getMetadata().getVersion());
 			}
 		}
 		catch (Exception e)
