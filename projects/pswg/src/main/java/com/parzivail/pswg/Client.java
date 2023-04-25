@@ -311,16 +311,14 @@ public class Client implements ClientModInitializer
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (client.player != null)
 			{
-				var config = Resources.CONFIG.get();
-
-				if (!config.disableUpdateCheck && Resources.REMOTE_VERSION != null)
+				if (Resources.REMOTE_VERSION != null)
 				{
 					Text versionText = Text.literal(Resources.REMOTE_VERSION.name)
 					                       .styled((style) -> style
 							                       .withItalic(true)
 					                       );
 
-					var url = "https://modrinth.com/mod/pswg/version/" + Resources.REMOTE_VERSION;
+					var url = "https://modrinth.com/mod/pswg/version/" + Resources.REMOTE_VERSION.tag_name;
 
 					Text urlText = Text.literal(url)
 					                   .styled((style) -> style
@@ -332,6 +330,7 @@ public class Client implements ClientModInitializer
 					client.player.sendMessage(Text.translatable("msg.pswg.update", versionText, urlText), false);
 				}
 
+				var config = Resources.CONFIG.get();
 				if (config.client.showCharacterCustomizeTip)
 				{
 					client.player.sendMessage(Text.translatable("msg.pswg.tip.customize_character", TextUtil.stylizeKeybind(Client.KEY_SPECIES_SELECT.getBoundKeyLocalizedText())), false);

@@ -7,12 +7,12 @@ import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgSpeciesManager;
-import com.parzivail.util.entity.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchScreenHandler;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
+import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.entity.TrackedDataHandlers;
 import com.parzivail.util.network.PlayerPacketHandler;
 import com.parzivail.util.world.DimensionTeleporter;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -67,8 +67,7 @@ public class Galaxies implements ModInitializer
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
 
-		if (!Resources.CONFIG.get().disableUpdateCheck)
-			Resources.checkVersion();
+		Resources.checkVersion();
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgSpeciesManager.INSTANCE);
 
