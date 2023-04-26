@@ -76,7 +76,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			var cooldownBarX = (scaledWidth - cooldownWidth) / 2;
 
 			// translucent background
-			this.drawTexture(matrices, cooldownBarX, top + 30, 0, 0, cooldownWidth, 3);
+			drawTexture(matrices, cooldownBarX, top + 30, 0, 0, cooldownWidth, 3);
 
 			final float maxHeat = bd.heat.capacity;
 
@@ -87,7 +87,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				cooldownTimer = MathHelper.clamp(cooldownTimer, 0, 0.98f);
 
 				// cooldown background
-				this.drawTexture(matrices, cooldownBarX, top + 30, 0, 16, cooldownWidth, 3);
+				drawTexture(matrices, cooldownBarX, top + 30, 0, 16, cooldownWidth, 3);
 
 				if (bt.canBypassCooling)
 				{
@@ -97,15 +97,15 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 					var secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance * cooldownWidth);
 
 					// blue primary bypass
-					this.drawTexture(matrices, cooldownBarX + primaryBypassStartX, top + 30, primaryBypassStartX, 8, primaryBypassWidth, 3);
+					drawTexture(matrices, cooldownBarX + primaryBypassStartX, top + 30, primaryBypassStartX, 8, primaryBypassWidth, 3);
 					// yellow secondary bypass
-					this.drawTexture(matrices, cooldownBarX + secondaryBypassStartX, top + 30, secondaryBypassStartX, 12, secondaryBypassWidth, 3);
+					drawTexture(matrices, cooldownBarX + secondaryBypassStartX, top + 30, secondaryBypassStartX, 12, secondaryBypassWidth, 3);
 				}
 
 				// cursor
 				matrices.push();
 				matrices.translate(cooldownBarX + cooldownTimer * cooldownWidth - 1, 0, 0);
-				this.drawTexture(matrices, 0, top + 28, 0, 24, 3, 7);
+				drawTexture(matrices, 0, top + 28, 0, 24, 3, 7);
 				matrices.pop();
 			}
 			else if (bt.readyTimer > 0)
@@ -115,12 +115,12 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				readyTimer = MathHelper.clamp(readyTimer, 0, 0.98f);
 
 				// cooldown background
-				this.drawTexture(matrices, cooldownBarX, top + 30, 0, 32, cooldownWidth, 3);
+				drawTexture(matrices, cooldownBarX, top + 30, 0, 32, cooldownWidth, 3);
 
 				// cursor
 				matrices.push();
 				matrices.translate(cooldownBarX + readyTimer * cooldownWidth - 1, 0, 0);
-				this.drawTexture(matrices, 0, top + 28, 0, 24, 3, 7);
+				drawTexture(matrices, 0, top + 28, 0, 24, 3, 7);
 				matrices.pop();
 			}
 			else
@@ -149,13 +149,13 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				}
 
 				if (bt.overchargeTimer > 0)
-					this.drawTexture(matrices, cooldownBarX, top + 30, 0, 12, (int)(cooldownWidth * heatPercentage), 3);
+					drawTexture(matrices, cooldownBarX, top + 30, 0, 12, (int)(cooldownWidth * heatPercentage), 3);
 				else
-					this.drawTexture(matrices, cooldownBarX, top + 30, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
+					drawTexture(matrices, cooldownBarX, top + 30, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
 			}
 
 			// endcaps
-			this.drawTexture(matrices, cooldownBarX, top + 30, 0, 20, cooldownWidth, 3);
+			drawTexture(matrices, cooldownBarX, top + 30, 0, 20, cooldownWidth, 3);
 		}
 
 		/*
@@ -165,7 +165,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		if (bt.isAimingDownSights)
 		{
 			RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-			this.drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
+			drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
 			RenderSystem.defaultBlendFunc();
 		}
 
