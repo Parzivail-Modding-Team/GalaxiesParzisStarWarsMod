@@ -34,13 +34,15 @@ public class InGameHudMixin
 	{
 		assert this.client.player != null;
 
-		var mainHandStack = this.client.player.getInventory().getMainHandStack();
+		var mainHandStack = this.client.player.getMainHandStack();
 		var customHUDRenderer = ICustomHudRenderer.REGISTRY.get(mainHandStack.getItem().getClass());
-		if (customHUDRenderer != null)
-		{
-			if (customHUDRenderer.renderCrosshair(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices))
-				ci.cancel();
-		}
+		if (customHUDRenderer != null && customHUDRenderer.renderCrosshair(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices))
+			ci.cancel();
+
+		var offHandStack = this.client.player.getOffHandStack();
+		customHUDRenderer = ICustomHudRenderer.REGISTRY.get(offHandStack.getItem().getClass());
+		if (customHUDRenderer != null && customHUDRenderer.renderCrosshair(this.client.player, Hand.OFF_HAND, offHandStack, matrices))
+			ci.cancel();
 	}
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F", shift = At.Shift.AFTER))
