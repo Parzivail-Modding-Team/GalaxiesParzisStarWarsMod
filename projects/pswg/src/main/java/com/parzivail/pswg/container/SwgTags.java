@@ -18,6 +18,7 @@ public class SwgTags
 		public static final TagKey<Block> SLIDING_DOORS = register("sliding_doors");
 		public static final TagKey<Block> TATOOINE_LOG = register("tatooine_log");
 		public static final TagKey<Block> BLASTER_DESTROY = register("blaster_destroy");
+		public static final TagKey<Block> BLASTER_EXPLODE = register("blaster_explode");
 
 		private static TagKey<Block> register(String id)
 		{

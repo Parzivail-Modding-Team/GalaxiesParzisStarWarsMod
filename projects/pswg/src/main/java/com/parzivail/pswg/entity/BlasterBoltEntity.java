@@ -11,8 +11,10 @@ import com.parzivail.util.entity.IPrecisionEntity;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.TntBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -57,21 +59,21 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	public void setSourceArm(Arm arm)
 	{
 		this.dataTracker.set(ARM, (byte)(switch (arm)
-				{
-					case LEFT -> 1;
-					case RIGHT -> 2;
-				}));
+		{
+			case LEFT -> 1;
+			case RIGHT -> 2;
+		}));
 	}
 
 	public Optional<Arm> getSourceArm()
 	{
 		var arm = this.dataTracker.get(ARM);
 		return switch (arm)
-				{
-					case 1 -> Optional.of(Arm.LEFT);
-					case 2 -> Optional.of(Arm.RIGHT);
-					default -> Optional.empty();
-				};
+		{
+			case 1 -> Optional.of(Arm.LEFT);
+			case 2 -> Optional.of(Arm.RIGHT);
+			default -> Optional.empty();
+		};
 	}
 
 	protected boolean shouldCreateScorch()
@@ -248,12 +250,36 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 				var blockHit = (BlockHitResult)hitResult;
 
 				var blockPos = blockHit.getBlockPos();
+				var shouldScorch = true;
 
-				if (shouldDestroyBlocks() && world.getBlockState(blockPos).isIn(SwgTags.Blocks.BLASTER_DESTROY))
+				if (shouldDestroyBlocks())
 				{
-					world.breakBlock(blockPos, false, this);
+					var state = world.getBlockState(blockPos);
+					if (state.isIn(SwgTags.Blocks.BLASTER_DESTROY))
+					{
+						world.breakBlock(blockPos, false, this);
+						shouldScorch = false;
+					}
+					else if (state.isIn(SwgTags.Blocks.BLASTER_EXPLODE))
+					{
+						world.breakBlock(blockPos, false, this);
+						if (state.getBlock() instanceof TntBlock)
+						{
+							TntEntity tntEntity = new TntEntity(world, (double)blockPos.getX() + 0.5, (double)blockPos.getY(), (double)blockPos.getZ() + 0.5, null);
+							tntEntity.setFuse(0);
+							world.spawnEntity(tntEntity);
+						}
+						else
+						{
+							// TODO: explosion power registry?
+							this.world.createExplosion(this, this.getX(), this.getBodyY(0.0625), this.getZ(), 4.0F, World.ExplosionSourceType.BLOCK);
+						}
+
+						shouldScorch = false;
+					}
 				}
-				else if (shouldCreateScorch())
+
+				if (shouldCreateScorch() && shouldScorch)
 				{
 					if (world.isWater(blockPos) && ignoreWater)
 						return;

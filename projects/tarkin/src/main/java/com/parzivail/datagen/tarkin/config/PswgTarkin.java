@@ -187,6 +187,11 @@ public class PswgTarkin
 				Blocks.BLACK_STAINED_GLASS_PANE,
 				Blocks.TINTED_GLASS
 		);
+		TagGenerator.addBlocksToTag(
+				SwgTags.Blocks.BLASTER_EXPLODE,
+				assets,
+				Blocks.TNT
+		);
 	}
 
 	public static void generateRecipes(List<BuiltAsset> assets)

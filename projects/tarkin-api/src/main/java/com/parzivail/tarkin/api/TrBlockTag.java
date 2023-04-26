@@ -8,5 +8,7 @@ public enum TrBlockTag
 	DesertSand,
 	DesertSandstone,
 	Leaves,
-	DeadBushSubstrate
+	DeadBushSubstrate,
+	BlasterDestroy,
+	BlasterExplode
 }

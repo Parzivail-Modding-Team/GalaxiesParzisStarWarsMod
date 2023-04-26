@@ -147,6 +147,8 @@ public class Tarkin
 			case DesertSandstone -> SwgTags.Blocks.DESERT_SANDSTONE;
 			case Leaves -> BlockTags.LEAVES;
 			case DeadBushSubstrate -> BlockTags.DEAD_BUSH_MAY_PLACE_ON;
+			case BlasterDestroy -> SwgTags.Blocks.BLASTER_DESTROY;
+			case BlasterExplode -> SwgTags.Blocks.BLASTER_EXPLODE;
 			default -> throw new RuntimeException("Unsupported value " + preset);
 		};
 	}
