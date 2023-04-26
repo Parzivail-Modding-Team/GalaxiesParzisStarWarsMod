@@ -1,36 +1,39 @@
 # Additions
 
-* Added green and brown specialist backpacks
-* Added green, white, and tan light backpacks
-* Added green, white, and tan heavy backpacks
-* Lightsabers now have a blocking animation
-* Lightsabers can now deflect blaster bolts when blocking
-* Added artillery trooper armor
-* Added hovertank pilot armor
-* Added incinerator trooper armor
-* Added tan, gray, and brown goggles caps
-* Added beach insurgence hat
-* Added desert insurgence hat
+* Added sprites for remaining armor items
+* Proper support for dual-wielding single-handed blasters
+  * When holding one in the off-hand and one in the main-hand, left click to fire the off-hand blaster and right click
+    to fire the main-hand blaster
 
 # Changes
 
-* Full-head helmets no longer allow hair to flow out of them
-* Lightsaber damage boosted to 22 from 15
-* When not blocking, lightsabers now use the vanilla hold and swing animation
-* Kylo Ren's lightsaber now defaults to unstable rendering
-* Blaster bolts can now destroy vanilla glass and panes
+* Updated ingame links to also reference Modrinth
+* Rename "Desert Insurgence Hat" to "Rebel Desert Helmet"
+* Update block textures for:
+  * Chromium block
+  * Chromium ore
+  * Cortosis block
+  * Cortosis ore
+  * Desh block
+  * Desh ore
+  * Diatium block
+  * Diatium ore
+  * Durasteel block
+  * Helicite block
+  * Helicite ore
+  * Ionite block
+  * Ionite ore
+  * Lommite block
+  * Lommite ore
+  * Thorilide block
+  * Zersium block
+  * Zersium ore
 
 # Fixes
 
-* Fixed pauldron clipping on stormtrooper and sandtrooper armor
-* Fixed mirrored cube textures on trooper armors
-* Fixed mirrored textures on species bodies in some circumstances
-* Fixed blaster bolts disappearing with high ping
-* Fixed hands showing up when aiming down sights in blasters
+*
 
 # Internal Changes
 
-* Species models now use split-head models
-* Species texture resolution bumped to 150x from 96x
-* Aurek can now export Blockbench-compatible files from compiled NEM models
-* Aurek NEM compiler now properly respects cube mirroring when importing NEMi models
+* Downgrade Gradle to 7.6.1 to fix loom decompilation bug
+* Abstract out online version checking system
