@@ -517,7 +517,14 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			boolean passThroughWater = hasWaterproofBolts(bd, bt.attachmentBitmask);
 
-			switch (bt.getFiringMode())
+			var firingMode = bt.getFiringMode();
+
+			if (firingMode == BlasterFiringMode.ION && hasAttachment(bd, bt.attachmentBitmask, BlasterAttachmentFunction.ION_TO_GAS_CONVERSION))
+				firingMode = BlasterFiringMode.SEMI_AUTOMATIC;
+			else if (firingMode == BlasterFiringMode.ION && hasAttachment(bd, bt.attachmentBitmask, BlasterAttachmentFunction.ION_TO_REPULSOR_CONVERSION))
+				firingMode = BlasterFiringMode.STUN;
+
+			switch (firingMode)
 			{
 				case SEMI_AUTOMATIC, BURST, AUTOMATIC, SLUGTHROWER ->
 				{
@@ -577,6 +584,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		}
 
 		return TypedActionResult.success(stack);
+	}
+
+	public static boolean hasAttachment(BlasterDescriptor bd, int attachmentBitmask, BlasterAttachmentFunction function)
+	{
+		return bd.mapWithAttachment(attachmentBitmask, function, true).orElse(false);
 	}
 
 	public static boolean canFireUnderwater(BlasterDescriptor bd, int attachmentBitmask)
