@@ -2,6 +2,7 @@ package com.parzivail.pswg.handler;
 
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ship.ShipEntity;
+import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.util.item.ILeftClickConsumer;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -27,23 +28,33 @@ public class LeftClickHandler
 		if (ship != null && !ship.usePlayerPerspective())
 			return;
 
-		var stack = minecraft.player.getMainHandStack();
+		if (!minecraft.options.attackKey.isPressed())
+			return;
 
-		// Repeated events
-		if (stack.getItem() instanceof ILeftClickConsumer lcc)
+		// Repeated left-click events
+		if (BlasterItem.isDualWielding(minecraft.player) && minecraft.player.getStackInHand(Hand.OFF_HAND).getItem() instanceof ILeftClickConsumer lcc)
 		{
-			if (!minecraft.options.attackKey.isPressed())
+			handleLccInputEvents(interactionManager, ci, minecraft, Hand.OFF_HAND, lcc);
+			return;
+		}
+
+		var stack = minecraft.player.getMainHandStack();
+		if (stack.getItem() instanceof ILeftClickConsumer lcc)
+			handleLccInputEvents(interactionManager, ci, minecraft, Hand.MAIN_HAND, lcc);
+	}
+
+	private static void handleLccInputEvents(@NotNull ClientPlayerInteractionManager interactionManager, CallbackInfo ci, MinecraftClient minecraft, Hand hand, ILeftClickConsumer lcc)
+	{
+		assert minecraft.player != null;
+
+		ci.cancel();
+
+		if (lcc.allowRepeatedLeftHold(minecraft.player.world, minecraft.player, hand))
+		{
+			if (useItemLeft(minecraft.player, lcc, hand, true))
 				return;
 
-			ci.cancel();
-
-			if (lcc.allowRepeatedLeftHold(minecraft.player.world, minecraft.player, Hand.MAIN_HAND))
-			{
-				if (useItemLeft(ci, minecraft.player, lcc, true))
-					return;
-
-				interactionManager.cancelBlockBreaking();
-			}
+			interactionManager.cancelBlockBreaking();
 		}
 	}
 
@@ -64,18 +75,19 @@ public class LeftClickHandler
 		}
 	}
 
-	private static boolean useItemLeft(CallbackInfo ci, PlayerEntity player, ILeftClickConsumer lcc, boolean isRepeatEvent)
+	private static boolean useItemLeft(PlayerEntity player, ILeftClickConsumer lcc, Hand hand, boolean isRepeatEvent)
 	{
 		if (player.isSpectator())
 			return false;
 
-		var tar = lcc.useLeft(player.world, player, Hand.MAIN_HAND, isRepeatEvent);
+		var tar = lcc.useLeft(player.world, player, hand, isRepeatEvent);
 		var ar = tar.getResult();
 
 		if (ar == ActionResult.PASS)
 			return false;
 
 		var passedData = new PacketByteBuf(Unpooled.buffer());
+		passedData.writeInt(hand.ordinal());
 		passedData.writeBoolean(isRepeatEvent);
 		ClientPlayNetworking.send(SwgPackets.C2S.PlayerLeftClickItem, passedData);
 		return true;
@@ -96,10 +108,17 @@ public class LeftClickHandler
 
 		var stack = minecraft.player.getMainHandStack();
 
+		if (BlasterItem.isDualWielding(minecraft.player) && minecraft.player.getStackInHand(Hand.OFF_HAND).getItem() instanceof ILeftClickConsumer lcc)
+		{
+			useItemLeft(minecraft.player, lcc, Hand.OFF_HAND, false);
+			cir.setReturnValue(false);
+			return;
+		}
+
 		// Single-fire events
 		if (stack.getItem() instanceof ILeftClickConsumer lcc)
 		{
-			useItemLeft(cir, minecraft.player, lcc, false);
+			useItemLeft(minecraft.player, lcc, Hand.MAIN_HAND, false);
 			cir.setReturnValue(false);
 		}
 	}

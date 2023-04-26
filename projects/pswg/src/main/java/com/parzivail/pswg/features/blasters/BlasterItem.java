@@ -117,8 +117,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var modifierId = UUID.nameUUIDFromBytes(String.format("pswg:ads_speed_penalty/%f", d.adsSpeedModifier).getBytes());
 			var modifier = new EntityAttributeModifier(modifierId, "pswg:ads_speed_penalty", d.adsSpeedModifier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 			ATTRIB_MODS_ADS.put(d.adsSpeedModifier, ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-			                                        .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, modifier)
-			                                        .build());
+			                                                         .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, modifier)
+			                                                         .build());
 		}
 	}
 
@@ -186,6 +186,27 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
+	public int getMaxUseTime(ItemStack stack)
+	{
+		return 72000;
+	}
+
+	@Override
+	public UseAction getUseAction(ItemStack stack)
+	{
+		return UseAction.NONE;
+	}
+
+	@Override
+	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
+	{
+		var bt = new BlasterTag(stack.getOrCreateNbt());
+
+		if (!world.isClient && user.getItemUseTime() > 3 && bt.isAimingDownSights)
+			BlasterTag.mutate(stack, BlasterTag::stopAds);
+	}
+
+	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
 	{
 		final var stack = player.getStackInHand(hand);
@@ -193,7 +214,14 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (hand != Hand.MAIN_HAND)
 			return TypedActionResult.pass(stack);
 
-		if (!world.isClient)
+		if (isDualWielding(player))
+		{
+			var isRepeatEvent = player.getItemUseTime() > 0;
+			Galaxies.LOG.log(player.getItemUseTime());
+			if (!isRepeatEvent || allowRepeatedLeftHold(world, player, hand))
+				useLeft(world, player, hand, isRepeatEvent);
+		}
+		else if (!world.isClient)
 			BlasterTag.mutate(stack, blasterTag -> tryToggleAds(blasterTag, world, player, hand));
 
 		player.setCurrentHand(hand);
@@ -303,9 +331,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
-	public boolean allowRepeatedLeftHold(World world, PlayerEntity player, Hand mainHand)
+	public boolean allowRepeatedLeftHold(World world, PlayerEntity player, Hand hand)
 	{
-		final var stack = player.getStackInHand(mainHand);
+		final var stack = player.getStackInHand(hand);
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = getBlasterDescriptor(stack);
 
@@ -313,27 +341,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
 
 		return automatic || (burst && bt.burstCounter > 0);
-	}
-
-	@Override
-	public int getMaxUseTime(ItemStack stack)
-	{
-		return 72000;
-	}
-
-	@Override
-	public UseAction getUseAction(ItemStack stack)
-	{
-		return UseAction.NONE;
-	}
-
-	@Override
-	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
-	{
-		var bt = new BlasterTag(stack.getOrCreateNbt());
-
-		if (!world.isClient && user.getItemUseTime() > 3 && bt.isAimingDownSights)
-			BlasterTag.mutate(stack, BlasterTag::stopAds);
 	}
 
 	@Override
