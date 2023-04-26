@@ -30,6 +30,7 @@
   * Thorilide block
   * Zersium block
   * Zersium ore
+* Reduce blaster damage distance falloff for most blasters
 
 # Fixes
 
