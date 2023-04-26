@@ -46,7 +46,10 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 
 		var mc = MinecraftClient.getInstance();
 		var sourceArm = entity.getSourceArm();
-		var shouldScale = entity.getOwner() == mc.player && mc.options.getPerspective() == Perspective.FIRST_PERSON && mc.getCameraEntity() == mc.player && sourceArm.isPresent();
+		var isOwnedByClient = entity.getOwner() == mc.player;
+		var isFirstPerson = mc.options.getPerspective() == Perspective.FIRST_PERSON;
+		var isCameraPlayer = isFirstPerson && mc.getCameraEntity() == mc.player;
+		var shouldScale = isOwnedByClient && isFirstPerson && isCameraPlayer;
 		var shouldOffset = shouldScale;
 
 		if (shouldScale)
@@ -74,7 +77,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 			matrices.multiply(new Quaternionf().rotationY(bYaw - MathHelper.PI / 2));
 			matrices.multiply(new Quaternionf().rotationZ(bPitch - MathHelper.PI / 2));
 
-			if (shouldOffset)
+			if (shouldOffset && sourceArm.isPresent())
 			{
 				var side = 1;
 				if (sourceArm.get() == Arm.LEFT)

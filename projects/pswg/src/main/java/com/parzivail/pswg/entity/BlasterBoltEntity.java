@@ -1,5 +1,6 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
@@ -8,9 +9,11 @@ import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.IPrecisionEntity;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.TntBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -58,11 +61,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 
 	public void setSourceArm(Arm arm)
 	{
-		this.dataTracker.set(ARM, (byte)(switch (arm)
-		{
-			case LEFT -> 1;
-			case RIGHT -> 2;
-		}));
+		this.dataTracker.set(ARM, (byte)arm.getId());
 	}
 
 	public Optional<Arm> getSourceArm()
@@ -70,8 +69,8 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		var arm = this.dataTracker.get(ARM);
 		return switch (arm)
 		{
-			case 1 -> Optional.of(Arm.LEFT);
-			case 2 -> Optional.of(Arm.RIGHT);
+			case 0 -> Optional.of(Arm.LEFT);
+			case 1 -> Optional.of(Arm.RIGHT);
 			default -> Optional.empty();
 		};
 	}
@@ -151,7 +150,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		dataTracker.startTracking(LENGTH, 1f);
 		dataTracker.startTracking(RADIUS, 1f);
 		dataTracker.startTracking(SMOLDERING, false);
-		dataTracker.startTracking(ARM, (byte)0);
+		dataTracker.startTracking(ARM, (byte)255);
 	}
 
 	private int getLife()
@@ -235,6 +234,8 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 			}
 		}
 
+		Galaxies.LOG.log(getPos());
+
 		super.tick();
 	}
 
@@ -243,18 +244,25 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	{
 		super.onCollision(hitResult);
 
-		if (!this.world.isClient)
+		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
-			if (hitResult.getType() == HitResult.Type.BLOCK)
+			var blockHit = (BlockHitResult)hitResult;
+
+			var blockPos = blockHit.getBlockPos();
+			var shouldScorch = true;
+
+			var state = world.getBlockState(blockPos);
+
+			if (state.isIn(SwgTags.Blocks.BLASTER_REFLECT))
 			{
-				var blockHit = (BlockHitResult)hitResult;
+				if (deflect(blockHit, state))
+					return;
+			}
 
-				var blockPos = blockHit.getBlockPos();
-				var shouldScorch = true;
-
-				if (shouldDestroyBlocks())
+			if (shouldDestroyBlocks())
+			{
+				if (!this.world.isClient)
 				{
-					var state = world.getBlockState(blockPos);
 					if (state.isIn(SwgTags.Blocks.BLASTER_DESTROY))
 					{
 						world.breakBlock(blockPos, false, this);
@@ -278,8 +286,11 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 						shouldScorch = false;
 					}
 				}
+			}
 
-				if (shouldCreateScorch() && shouldScorch)
+			if (shouldCreateScorch() && shouldScorch)
+			{
+				if (!this.world.isClient)
 				{
 					if (world.isWater(blockPos) && ignoreWater)
 						return;
@@ -298,18 +309,24 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 						ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
 				}
 			}
-			else if (hitResult.getType() == HitResult.Type.ENTITY)
-			{
-				var entityHit = (EntityHitResult)hitResult;
-				var entity = entityHit.getEntity();
+		}
+		else if (hitResult.getType() == HitResult.Type.ENTITY)
+		{
+			var entityHit = (EntityHitResult)hitResult;
+			var entity = entityHit.getEntity();
 
-				if (entity instanceof LivingEntity le && le.getActiveItem().getItem() instanceof LightsaberItem && le.isUsingItem())
-					if (deflect(le))
-						return;
-			}
+			if (entity instanceof LivingEntity le && le.getActiveItem().getItem() instanceof LightsaberItem && le.isUsingItem())
+				if (deflect(le))
+					return;
 		}
 
 		this.discard();
+	}
+
+	@Override
+	public void remove(RemovalReason reason)
+	{
+		super.remove(reason);
 	}
 
 	protected boolean deflect(LivingEntity entity)
@@ -326,6 +343,20 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		this.setYaw(yaw);
 		this.setPitch(pitch);
 		this.setVelocity(x * speed, y * speed, z * speed);
+
+		return true;
+	}
+
+	protected boolean deflect(BlockHitResult hit, BlockState state)
+	{
+		var velocity = this.getVelocity();
+		var dir = velocity.normalize();
+
+		var normal = new Vec3d(hit.getSide().getUnitVector());
+		var newDir = MathUtil.reflect(dir, normal);
+
+		// TODO: decrease damage on reflection?
+		this.setVelocity(newDir.multiply(velocity.length()));
 
 		return true;
 	}

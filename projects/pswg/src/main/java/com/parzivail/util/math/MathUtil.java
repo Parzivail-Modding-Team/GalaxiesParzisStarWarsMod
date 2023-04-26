@@ -165,13 +165,19 @@ public class MathUtil
 	public static Quaternionf getRotation(Direction direction)
 	{
 		return switch (direction)
-				{
-					case DOWN -> new Quaternionf().rotationXYZ(0, 0, (float)(Math.PI / -2));
-					case UP -> new Quaternionf().rotationXYZ(0, 0, (float)(Math.PI / 2));
-					case NORTH -> new Quaternionf().rotationXYZ(0, (float)(Math.PI / 2), 0);
-					case SOUTH -> new Quaternionf().rotationXYZ(0, (float)(Math.PI / -2), 0);
-					case WEST -> new Quaternionf().rotationXYZ(0, (float)Math.PI, 0);
-					case EAST -> new Quaternionf().rotationXYZ(0, 0, 0);
-				};
+		{
+			case DOWN -> new Quaternionf().rotationXYZ(0, 0, (float)(Math.PI / -2));
+			case UP -> new Quaternionf().rotationXYZ(0, 0, (float)(Math.PI / 2));
+			case NORTH -> new Quaternionf().rotationXYZ(0, (float)(Math.PI / 2), 0);
+			case SOUTH -> new Quaternionf().rotationXYZ(0, (float)(Math.PI / -2), 0);
+			case WEST -> new Quaternionf().rotationXYZ(0, (float)Math.PI, 0);
+			case EAST -> new Quaternionf().rotationXYZ(0, 0, 0);
+		};
+	}
+
+	public static Vec3d reflect(Vec3d incident, Vec3d normal)
+	{
+		var reflection = normal.multiply(2 * normal.dotProduct(incident)).subtract(incident);
+		return reflection.multiply(-1);
 	}
 }

@@ -10,5 +10,6 @@ public enum TrBlockTag
 	Leaves,
 	DeadBushSubstrate,
 	BlasterDestroy,
-	BlasterExplode
+	BlasterExplode,
+	BlasterReflect
 }

@@ -149,6 +149,7 @@ public class Tarkin
 			case DeadBushSubstrate -> BlockTags.DEAD_BUSH_MAY_PLACE_ON;
 			case BlasterDestroy -> SwgTags.Blocks.BLASTER_DESTROY;
 			case BlasterExplode -> SwgTags.Blocks.BLASTER_EXPLODE;
+			case BlasterReflect -> SwgTags.Blocks.BLASTER_REFLECT;
 			default -> throw new RuntimeException("Unsupported value " + preset);
 		};
 	}

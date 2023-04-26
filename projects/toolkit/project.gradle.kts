@@ -7,6 +7,9 @@ repositories {
 dependencies {
 	"api"(project(":projects:pswg", configuration = "namedElements"))
 
+	"modImplementation"("org.objenesis:objenesis:3.2")
+	"include"("org.objenesis:objenesis:3.2")
+
 	"modImplementation"("io.github.kostaskougios:cloning:1.10.3")
 	"include"("io.github.kostaskougios:cloning:1.10.3")
 

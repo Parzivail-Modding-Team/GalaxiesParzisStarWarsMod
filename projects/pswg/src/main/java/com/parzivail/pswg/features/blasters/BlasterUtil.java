@@ -132,9 +132,7 @@ public class BlasterUtil
 		var heatEncodedNormal = normal.multiply(energyScorch ? 1 : 0.3f);
 		client.world.addParticle(SwgParticles.SCORCH, pos.x + normal.x * offset, pos.y + normal.y * offset, pos.z + normal.z * offset, heatEncodedNormal.x, heatEncodedNormal.y, heatEncodedNormal.z);
 
-		var reflection = normal.multiply(2 * normal.dotProduct(incident)).subtract(incident);
-
-		reflection = reflection.multiply(-1);
+		var reflection = MathUtil.reflect(incident, normal);
 
 		for (var i = 0; i < 16; i++)
 		{

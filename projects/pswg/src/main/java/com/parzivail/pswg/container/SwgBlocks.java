@@ -2,11 +2,11 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlock;
-import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlockEntity;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.block.crop.*;
 import com.parzivail.pswg.blockentity.*;
+import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlock;
+import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlockEntity;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeBlock;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeBlockEntity;
 import com.parzivail.tarkin.api.*;
@@ -324,7 +324,7 @@ public class SwgBlocks
 		@RegistryName("diatium_ore")
 		public static final Block DiatiumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("diatium_block")
-		@TarkinBlock
+		@TarkinBlock(tags = { TrBlockTag.BlasterReflect })
 		public static final Block DiatiumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 
 		@RegistryName("ionite_ore")
