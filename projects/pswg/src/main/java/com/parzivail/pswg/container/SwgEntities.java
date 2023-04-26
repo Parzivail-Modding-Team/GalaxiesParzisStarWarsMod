@@ -4,7 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
-import com.parzivail.pswg.features.lightsabers.client.ThrownLightsaberEntity;
+import com.parzivail.pswg.entity.MannequinEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.mammal.BanthaEntity;
@@ -12,6 +12,7 @@ import com.parzivail.pswg.entity.rodent.SandSkitterEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.pswg.entity.ship.X34LandspeederEntity;
 import com.parzivail.pswg.entity.ship.ZephyrJEntity;
+import com.parzivail.pswg.features.lightsabers.client.ThrownLightsaberEntity;
 import com.parzivail.util.entity.BucketableFishEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -218,36 +219,43 @@ public class SwgEntities
 	{
 		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registries.ENTITY_TYPE, Resources.id("blaster_bolt"), FabricEntityTypeBuilder
 				.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
-				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
 		public static final EntityType<BlasterStunBoltEntity> BlasterStunBolt = Registry.register(Registries.ENTITY_TYPE, Resources.id("blaster_stun_bolt"), FabricEntityTypeBuilder
 				.<BlasterStunBoltEntity>create(SpawnGroup.MISC, BlasterStunBoltEntity::new)
-				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
 		public static final EntityType<BlasterIonBoltEntity> BlasterIonBolt = Registry.register(Registries.ENTITY_TYPE, Resources.id("blaster_ion_bolt"), FabricEntityTypeBuilder
 				.<BlasterIonBoltEntity>create(SpawnGroup.MISC, BlasterIonBoltEntity::new)
-				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
 		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registries.ENTITY_TYPE, Resources.id("thrown_lightsaber"), FabricEntityTypeBuilder
 				.<ThrownLightsaberEntity>create(SpawnGroup.MISC, ThrownLightsaberEntity::new)
-				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+				.trackRangeBlocks(50)
+				.build());
+
+		public static final EntityType<MannequinEntity> Mannequin = Registry.register(Registries.ENTITY_TYPE, Resources.id("mannequin"), FabricEntityTypeBuilder
+				.<MannequinEntity>create(SpawnGroup.MISC, MannequinEntity::new)
+				.dimensions(EntityDimensions.fixed(0.5F, 1.975F))
 				.trackRangeBlocks(50)
 				.build());
 
 		static void register()
 		{
 			entityTypes.add(BlasterBolt);
+			entityTypes.add(BlasterStunBolt);
+			entityTypes.add(BlasterIonBolt);
 			entityTypes.add(ThrownLightsaber);
+
+			entityTypes.add(Mannequin);
+			FabricDefaultAttributeRegistry.register(Mannequin, MannequinEntity.createLivingAttributes());
 		}
 	}
 

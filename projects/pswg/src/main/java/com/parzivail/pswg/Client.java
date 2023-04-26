@@ -10,6 +10,7 @@ import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.client.render.block.*;
+import com.parzivail.pswg.client.render.entity.MannequinEntityRenderer;
 import com.parzivail.pswg.client.render.entity.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.entity.amphibian.WorrtEntityRenderer;
 import com.parzivail.pswg.client.render.entity.droid.AstromechRenderer;
@@ -279,6 +280,7 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Misc.BlasterStunBolt, BlasterStunBoltRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.BlasterIonBolt, BlasterBoltRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.ThrownLightsaber, ThrownLightsaberRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Misc.Mannequin, MannequinEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Fish.Faa, FaaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);

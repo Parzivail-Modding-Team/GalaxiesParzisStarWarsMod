@@ -9,6 +9,7 @@ import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.DoorInsertItem;
+import com.parzivail.pswg.item.MannequinItem;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
@@ -683,6 +684,10 @@ public class SwgItems
 		@RegistryName("spawn_sand_skitter")
 		@TarkinItem(model = TrModel.SpawnEgg)
 		public static final Item SandSkitter = new SpawnEggItem(SwgEntities.Rodent.SandSkitter, 0x4F3733, 0xE2946E, new Item.Settings());
+
+		@RegistryName("mannequin")
+		@TarkinItem
+		public static final Item Mannequin = new MannequinItem(new Item.Settings());
 	}
 
 	@RegistryOrder(13)

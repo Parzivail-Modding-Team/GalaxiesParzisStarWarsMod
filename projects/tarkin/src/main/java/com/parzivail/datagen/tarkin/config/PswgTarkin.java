@@ -68,7 +68,10 @@ public class PswgTarkin
 
 		// Entities
 		lang.entity(SwgEntities.Misc.BlasterBolt).build(assets);
+		lang.entity(SwgEntities.Misc.BlasterIonBolt).build(assets);
+		lang.entity(SwgEntities.Misc.BlasterStunBolt).build(assets);
 		lang.entity(SwgEntities.Misc.ThrownLightsaber).build(assets);
+		lang.entity(SwgEntities.Misc.Mannequin).build(assets);
 		lang.entity(SwgEntities.Ship.T65bXwing).build(assets);
 		lang.entity(SwgEntities.Speeder.X34).build(assets);
 		lang.entity(SwgEntities.Speeder.ZephyrJ).build(assets);

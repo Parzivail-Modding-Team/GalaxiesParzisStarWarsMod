@@ -1,6 +1,5 @@
 package com.parzivail.pswg.entity;
 
-import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
@@ -233,8 +232,6 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 				vec = vec.add(dVel);
 			}
 		}
-
-		Galaxies.LOG.log(getPos());
 
 		super.tick();
 	}

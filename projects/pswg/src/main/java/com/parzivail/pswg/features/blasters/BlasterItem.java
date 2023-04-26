@@ -217,7 +217,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (isDualWielding(player))
 		{
 			var isRepeatEvent = player.getItemUseTime() > 0;
-			Galaxies.LOG.log(player.getItemUseTime());
 			if (!isRepeatEvent || allowRepeatedLeftHold(world, player, hand))
 				useLeft(world, player, hand, isRepeatEvent);
 		}
@@ -871,8 +870,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
 		var changed = stack.getOrCreateNbt().hashCode() != oldNbtHashcode;
-		if (changed)
-			Galaxies.LOG.debug("changed");
 		return changed;
 	}
 }

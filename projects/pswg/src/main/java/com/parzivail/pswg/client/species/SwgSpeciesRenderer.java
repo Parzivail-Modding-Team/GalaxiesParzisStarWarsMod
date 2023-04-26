@@ -8,7 +8,9 @@ import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -18,7 +20,7 @@ import java.util.function.Supplier;
 
 public class SwgSpeciesRenderer
 {
-	private static final Identifier HUMANOID_BASE_MODEL_ID = Resources.id("species/humanoid_base");
+	public static final Identifier HUMANOID_BASE_MODEL_ID = Resources.id("species/humanoid_base");
 
 	public static final HashMap<Identifier, SwgSpeciesModel> MODELS = new HashMap<>();
 
@@ -39,6 +41,11 @@ public class SwgSpeciesRenderer
 		register(SwgSpeciesRegistry.SPECIES_CHISS, humanoidBase(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_PANTORAN, humanoidBase(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_WOOKIEE, fullModel(Resources.id("species/wookiee")), null);
+	}
+
+	public static Supplier<BipedEntityModel<LivingEntity>> getHumanModel()
+	{
+		return Client.NEM_MANAGER.getOverridingBipedModel(Resources.id("species/human"), HUMANOID_BASE_MODEL_ID, true);
 	}
 
 	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> fullModel(Identifier id)

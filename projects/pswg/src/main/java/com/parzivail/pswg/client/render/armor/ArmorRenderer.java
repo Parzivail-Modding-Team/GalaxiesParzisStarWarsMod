@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.armor;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.entity.MannequinEntity;
 import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.armor.BipedEntityArmorModel;
 import com.parzivail.util.registry.ArmorItems;
@@ -278,6 +279,9 @@ public class ArmorRenderer
 				return pc.getSpecies() != null;
 			}
 		}
+
+		if (entity instanceof MannequinEntity)
+			return true;
 
 		return false;
 	}
