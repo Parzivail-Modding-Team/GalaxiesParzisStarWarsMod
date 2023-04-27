@@ -561,7 +561,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setColor(bd.boltColor);
-						entity.setLength(0.04f);
+						entity.setLength(bd.boltLength);
+						entity.setRadius(bd.boltRadius);
 					});
 				}
 			}

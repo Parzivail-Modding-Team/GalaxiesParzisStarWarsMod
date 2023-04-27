@@ -32,6 +32,9 @@
   * Zersium block
   * Zersium ore
 * Reduce blaster damage distance falloff for most blasters
+* Ion bolts now emit sparks instead of smoke
+* Ion bolts are now longer
+* Ion bolts are now lighter
 
 # Fixes
 
@@ -43,3 +46,5 @@
 * Downgrade Gradle to 7.6.1 to fix loom decompilation bug
 * Abstract out online version checking system
 * Added attachment functionality to ion-to-gas and ion-to-repulsor type attachments
+* Changed internal name of player data components (your species will be reset)
+* Added keybind to toggle "patrol" posture for blaster animations (will make sense in later alphas)
