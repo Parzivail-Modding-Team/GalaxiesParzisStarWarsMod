@@ -6,6 +6,7 @@
     to fire the main-hand blaster
 * Blaster bolts can now deflect off of some blocks (currently just diatium)
 * Blaster bolts can not detonate some blocks (currently just TNT)
+* Added armor mannequins which properly show armor as would be worn with an underlayer
 
 # Changes
 
