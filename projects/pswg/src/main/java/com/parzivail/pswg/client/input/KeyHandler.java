@@ -21,19 +21,16 @@ public class KeyHandler
 			return;
 
 		if (Client.KEY_SPECIES_SELECT.wasPressed())
-		{
 			mc.setScreen(new CharacterScreen(mc.currentScreen));
-		}
 
 		if (Client.KEY_PRIMARY_ITEM_ACTION.wasPressed())
-		{
-			sendAction(ItemAction.PRIMARY);
-		}
+			sendItemAction(ItemAction.PRIMARY);
 
 		if (Client.KEY_SECONDARY_ITEM_ACTION.wasPressed())
-		{
-			sendAction(ItemAction.SECONDARY);
-		}
+			sendItemAction(ItemAction.SECONDARY);
+
+		if (Client.KEY_PATROL_POSTURE.wasPressed())
+			ClientPlayNetworking.send(SwgPackets.C2S.TogglePatrolPosture, new PacketByteBuf(Unpooled.buffer()));
 
 		var ship = ShipEntity.getShip(mc.player);
 
@@ -94,7 +91,7 @@ public class KeyHandler
 		}
 	}
 
-	private static void sendAction(ItemAction action)
+	private static void sendItemAction(ItemAction action)
 	{
 		var passedData = new PacketByteBuf(Unpooled.buffer());
 		passedData.writeInt(action.ordinal());

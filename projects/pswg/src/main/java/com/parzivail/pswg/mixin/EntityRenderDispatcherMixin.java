@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.util.client.render.HitboxHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,7 +34,7 @@ public class EntityRenderDispatcherMixin
 		if (!(entity instanceof PlayerEntity))
 			return;
 
-		var pc = SwgEntityComponents.getPersistent((PlayerEntity)entity);
+		var pc = PlayerData.getPersistentPublic((PlayerEntity)entity);
 
 		var species = pc.getSpecies();
 		if (species == null)

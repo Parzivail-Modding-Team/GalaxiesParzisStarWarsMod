@@ -7,14 +7,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public class SwgVolatileComponents implements ComponentV3, AutoSyncedComponent
+public class VolatilePrivatePlayerData implements ComponentV3, AutoSyncedComponent
 {
 	private final PlayerEntity provider;
 
 	private static final int CREDITS_SYNCOP = 1;
 	private int credits;
 
-	public SwgVolatileComponents(PlayerEntity provider)
+	public VolatilePrivatePlayerData(PlayerEntity provider)
 	{
 		this.provider = provider;
 	}
@@ -27,7 +27,7 @@ public class SwgVolatileComponents implements ComponentV3, AutoSyncedComponent
 	public void setCredits(int credits)
 	{
 		this.credits = credits;
-		SwgEntityComponents.VOLATILE.sync(provider, (buf, recipient) -> writeSyncPacket(buf, recipient, CREDITS_SYNCOP));
+		PlayerData.VOLATILE_PRIVATE.sync(provider, (buf, recipient) -> writeSyncPacket(buf, recipient, CREDITS_SYNCOP));
 	}
 
 	@Override
@@ -43,11 +43,11 @@ public class SwgVolatileComponents implements ComponentV3, AutoSyncedComponent
 	}
 
 	/**
-	 * See comment on {@link SwgPersistentComponents#syncAll}
+	 * See comment on {@link PersistentPublicPlayerData#syncAll}
 	 */
 	public void syncAll()
 	{
-		SwgEntityComponents.VOLATILE.sync(provider);
+		PlayerData.VOLATILE_PRIVATE.sync(provider);
 	}
 
 	@Override
@@ -97,19 +97,7 @@ public class SwgVolatileComponents implements ComponentV3, AutoSyncedComponent
 	@Override
 	public boolean shouldSyncWith(ServerPlayerEntity player)
 	{
-		// If we have any properties that should* be
-		// synced to other players, we should just
-		// define another component that is local
-		// to the player in question. If we leave
-		// this as player == this.provider, and
-		// use syncOp to send only specific props
-		// to clients, they won't get synced on the
-		// initial, full sync, so having two different
-		// components is the best compromise in
-		// my opinion.
-
-		// TODO: * which we will, the current force power etc.
-
+		// Sync only to the owner
 		return player == provider;
 	}
 }

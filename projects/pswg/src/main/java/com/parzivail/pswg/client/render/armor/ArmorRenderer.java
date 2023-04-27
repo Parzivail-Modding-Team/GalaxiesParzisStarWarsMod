@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.render.armor;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.entity.MannequinEntity;
 import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.armor.BipedEntityArmorModel;
@@ -275,7 +275,7 @@ public class ArmorRenderer
 				// Also use the slim model if the player has customized
 				// their character, since all PSWG species use the slim
 				// model
-				var pc = SwgEntityComponents.getPersistent(player);
+				var pc = PlayerData.getPersistentPublic(player);
 				return pc.getSpecies() != null;
 			}
 		}

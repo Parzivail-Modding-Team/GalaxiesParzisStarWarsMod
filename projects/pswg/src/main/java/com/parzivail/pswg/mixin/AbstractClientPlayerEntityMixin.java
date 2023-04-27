@@ -2,7 +2,7 @@ package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
-import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.PlayerData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -24,7 +24,7 @@ public class AbstractClientPlayerEntityMixin
 	@Inject(method = "getSkinTexture", at = @At(value = "HEAD"), cancellable = true)
 	private void getSkinTexture(CallbackInfoReturnable<Identifier> cir)
 	{
-		var pc = SwgEntityComponents.getPersistent((PlayerEntity)(Object)this);
+		var pc = PlayerData.getPersistentPublic((PlayerEntity)(Object)this);
 
 		var species = pc.getSpecies();
 		if (species == null)

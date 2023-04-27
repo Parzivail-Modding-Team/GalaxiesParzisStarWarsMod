@@ -106,6 +106,8 @@ public class Client implements ClientModInitializer
 	public static final KeyBinding KEY_SECONDARY_ITEM_ACTION = new KeyBinding(Resources.keyBinding("secondary_item_action"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.category.pswg");
 	public static final KeyBinding KEY_SHIP_INPUT_MODE_OVERRIDE = new KeyBinding(Resources.keyBinding("ship_input_mode_override"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.pswg");
 
+	public static final KeyBinding KEY_PATROL_POSTURE = new KeyBinding(Resources.keyBinding("toggle_patrol_posture"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.category.pswg");
+
 	public static final KeyBinding KEY_SPECIES_SELECT = new KeyBinding(Resources.keyBinding("species_select"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category.pswg");
 
 	public static final Identifier TEX_TRANSPARENT = Resources.id("textures/effect/transparent.png");
@@ -155,6 +157,7 @@ public class Client implements ClientModInitializer
 		KeyBindingHelper.registerKeyBinding(KEY_PRIMARY_ITEM_ACTION);
 		KeyBindingHelper.registerKeyBinding(KEY_SECONDARY_ITEM_ACTION);
 		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_OVERRIDE);
+		KeyBindingHelper.registerKeyBinding(KEY_PATROL_POSTURE);
 		KeyBindingHelper.registerKeyBinding(KEY_SPECIES_SELECT);
 
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::tick);

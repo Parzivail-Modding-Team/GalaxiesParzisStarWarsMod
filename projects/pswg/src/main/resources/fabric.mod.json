@@ -31,7 +31,7 @@
 			"com.parzivail.pswg.BaseContent"
 		],
 		"cardinal-components-entity": [
-			"com.parzivail.pswg.component.SwgEntityComponents"
+			"com.parzivail.pswg.component.PlayerData"
 		],
 		"modmenu": [
 			"com.parzivail.pswg.compat.modmenu.GalaxiesModMenuIntegration"
@@ -70,8 +70,9 @@
 	},
 	"custom": {
 		"cardinal-components": [
-			"pswg:persistent",
-			"pswg:volatile"
+			"pswg:per_pub",
+			"pswg:vol_pub",
+			"pswg:vol_prv"
 		],
 		"modmenu": {
 			"links": {

@@ -12,7 +12,7 @@ import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesIcons;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
-import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
@@ -296,7 +296,7 @@ public class CharacterScreen extends Screen
 	protected void init()
 	{
 		var mc = MinecraftClient.getInstance();
-		var components = SwgEntityComponents.getPersistent(mc.player);
+		var components = PlayerData.getPersistentPublic(mc.player);
 		if (components.getSpecies() != null)
 			previewSpecies = SwgSpeciesRegistry.deserialize(components.getSpecies().serialize());
 	}
@@ -786,7 +786,7 @@ public class CharacterScreen extends Screen
 	private boolean isPlayerSpecies()
 	{
 		var mc = MinecraftClient.getInstance();
-		var components = SwgEntityComponents.getPersistent(mc.player);
+		var components = PlayerData.getPersistentPublic(mc.player);
 		return components.getSpecies() != null;
 	}
 

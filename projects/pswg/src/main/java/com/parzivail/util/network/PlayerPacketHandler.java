@@ -1,5 +1,6 @@
 package com.parzivail.util.network;
 
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.util.ParziUtil;
 import com.parzivail.util.item.IItemActionListener;
 import com.parzivail.util.item.ILeftClickConsumer;
@@ -45,6 +46,16 @@ public class PlayerPacketHandler
 
 			if (stack.getItem() instanceof IItemActionListener)
 				((IItemActionListener)stack.getItem()).onItemAction(player.world, player, stack, actions[action]);
+		});
+	}
+
+	public static void handleTogglePatrolPosture(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	{
+		server.execute(() -> {
+			var data = PlayerData.getVolatilePublic(player);
+
+			data.setPatrolPosture(!data.getPatrolPosture());
+			data.syncAll();
 		});
 	}
 }

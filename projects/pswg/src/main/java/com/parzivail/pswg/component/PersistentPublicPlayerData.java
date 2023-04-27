@@ -9,14 +9,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
+public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedComponent
 {
 	private final PlayerEntity provider;
 
 	private static final int SPECIES_SYNCOP = 1;
 	private String species = "";
 
-	public SwgPersistentComponents(PlayerEntity provider)
+	public PersistentPublicPlayerData(PlayerEntity provider)
 	{
 		this.provider = provider;
 	}
@@ -36,7 +36,7 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 		if (species != null)
 			this.species = species.serialize();
 
-		SwgEntityComponents.PERSISTENT.sync(provider, (buf, recipient) -> writeSyncPacket(buf, recipient, SPECIES_SYNCOP));
+		PlayerData.PERSISTENT_PUBLIC.sync(provider, (buf, recipient) -> writeSyncPacket(buf, recipient, SPECIES_SYNCOP));
 	}
 
 	@Override
@@ -58,15 +58,15 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 	}
 
 	/**
-	 * This should be used in place of SwgComponents.PERSISTENT.sync(...) if multiple fields get set
+	 * This should be used in place of SwgComponents.PERSISTENT_PUBLIC.sync(...) if multiple fields get set
 	 * in one tick, as per https://github.com/OnyxStudios/Cardinal-Components-API/wiki/Synchronizing-components
 	 *
-	 * If that is the case, calls to SwgComponents.PERSISTENT.sync(...) should be removed from setters, and this
+	 * If that is the case, calls to SwgComponents.PERSISTENT_PUBLIC.sync(...) should be removed from setters, and this
 	 * method should be called when all fields have been set in that tick. Otherwise, this method is unnecessary.
 	 */
 	public void syncAll()
 	{
-		SwgEntityComponents.PERSISTENT.sync(provider);
+		PlayerData.PERSISTENT_PUBLIC.sync(provider);
 	}
 
 	@Override
@@ -120,17 +120,7 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 	@Override
 	public boolean shouldSyncWith(ServerPlayerEntity player)
 	{
-		// If we have any properties that shouldn't be
-		// synced to other players, we should just
-		// define another component that is local
-		// to the player in question. If we leave
-		// this as player == this.provider, and
-		// use syncOp to send only specific props
-		// to clients, they won't get synced on the
-		// initial, full sync, so having two different
-		// components is the best compromise in
-		// my opinion.
-
+		// Sync to all players
 		return true;
 	}
 }

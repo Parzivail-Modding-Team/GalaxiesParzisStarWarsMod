@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.parzivail.pswg.api.PswgAddon;
 import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.character.SwgSpecies;
-import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
@@ -132,7 +132,7 @@ public class Galaxies implements ModInitializer
 
 				                                                                          for (var player : players)
 				                                                                          {
-					                                                                          var pc = SwgEntityComponents.getPersistent(player);
+					                                                                          var pc = PlayerData.getPersistentPublic(player);
 					                                                                          pc.setSpecies(swgspecies);
 				                                                                          }
 
@@ -151,6 +151,7 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipRotation, ShipEntity::handleRotationPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipControls, ShipEntity::handleControlPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.JetpackControls, JetpackItem::handeControlPacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.TogglePatrolPosture, PlayerPacketHandler::handleTogglePatrolPosture);
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-addon");
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgStarting);

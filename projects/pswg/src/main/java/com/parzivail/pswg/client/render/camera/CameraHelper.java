@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.render.camera;
 
-import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.client.BlasterRecoilManager;
 import com.parzivail.util.math.MathUtil;
@@ -96,7 +96,7 @@ public class CameraHelper
 			return;
 		}
 
-		var pc = SwgEntityComponents.getPersistent(player);
+		var pc = PlayerData.getPersistentPublic(player);
 		var species = pc.getSpecies();
 		if (species == null)
 			return;
@@ -109,7 +109,7 @@ public class CameraHelper
 
 	public static void playerRenderReturn(AbstractClientPlayerEntity player, MatrixStack matrixStack, CallbackInfo ci)
 	{
-		var pc = SwgEntityComponents.getPersistent(player);
+		var pc = PlayerData.getPersistentPublic(player);
 		var species = pc.getSpecies();
 		if (species == null)
 			return;

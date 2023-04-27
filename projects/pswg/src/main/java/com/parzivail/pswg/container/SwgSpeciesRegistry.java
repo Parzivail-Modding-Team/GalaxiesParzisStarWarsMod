@@ -5,7 +5,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.character.species.*;
-import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.PlayerData;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -103,7 +103,7 @@ public class SwgSpeciesRegistry
 	{
 		var speciesString = packetByteBuf.readString();
 
-		var c = SwgEntityComponents.getPersistent(serverPlayerEntity);
+		var c = PlayerData.getPersistentPublic(serverPlayerEntity);
 		c.setSpecies(deserialize(speciesString));
 	}
 }

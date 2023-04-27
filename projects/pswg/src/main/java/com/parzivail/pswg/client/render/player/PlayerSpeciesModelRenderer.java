@@ -3,7 +3,7 @@ package com.parzivail.pswg.client.render.player;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
-import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.PlayerData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -81,7 +81,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		var species = overrideSpecies;
 		if (species == null)
 		{
-			var components = SwgEntityComponents.getPersistent(player);
+			var components = PlayerData.getPersistentPublic(player);
 			species = components.getSpecies();
 			if (species == null)
 				return;
@@ -120,7 +120,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		var species = overrideSpecies;
 		if (species == null)
 		{
-			var components = SwgEntityComponents.getPersistent(player);
+			var components = PlayerData.getPersistentPublic(player);
 			species = components.getSpecies();
 			if (species == null)
 				return;
