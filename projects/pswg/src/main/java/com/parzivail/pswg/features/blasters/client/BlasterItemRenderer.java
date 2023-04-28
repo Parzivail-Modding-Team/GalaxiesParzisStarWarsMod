@@ -10,7 +10,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.BlasterTransformer;
 import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.features.blasters.BlasterItem;
-import com.parzivail.pswg.features.blasters.BlasterWield;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
 import com.parzivail.pswg.features.blasters.data.BlasterTag;
 import com.parzivail.util.client.ImmediateBuffer;
@@ -21,7 +20,6 @@ import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
-import imgui.ImGui;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -482,14 +480,9 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var mainArm = entity.getMainArm();
 
-		if (wield.baseHand != hand)
-			// Prevent double-posing
+		if (!wield.isBaseHand(hand) || !wield.hasBlaster)
+			// Prevent double-posing, or posing without a blaster
 			return;
-
-		if (wield == BlasterWield.Invalid || wield == BlasterWield.None)
-			return;
-
-		ImGui.text(String.valueOf(wield));
 
 		// TODO: This can probably be simplified
 		switch (wield)

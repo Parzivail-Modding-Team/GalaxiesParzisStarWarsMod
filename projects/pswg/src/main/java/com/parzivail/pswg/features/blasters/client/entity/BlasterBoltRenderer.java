@@ -40,12 +40,15 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		var bYaw = (float)Math.atan2(velocity.x, velocity.z);
 		var bPitch = (float)Math.asin(velocity.y);
 
+		var sourceArm = entity.getSourceArm();
+		if (entity.age == 0 && sourceArm.isEmpty())
+			return;
+
 		matrices.push();
 
 		matrices.translate(0, 0.5f * entity.getHeight(), 0);
 
 		var mc = MinecraftClient.getInstance();
-		var sourceArm = entity.getSourceArm();
 		var isOwnedByClient = entity.getOwner() == mc.player;
 		var isFirstPerson = mc.options.getPerspective() == Perspective.FIRST_PERSON;
 		var isCameraPlayer = isFirstPerson && mc.getCameraEntity() == mc.player;
