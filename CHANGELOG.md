@@ -8,8 +8,10 @@
 * Blaster bolts can not detonate some blocks (currently just TNT)
 * Added armor mannequins which properly show armor as would be worn with an underlayer
 * Added keybind to toggle "patrol" posture for blaster animations (configurable, `G` by default)
+  * Indicated by a horizontal line crosshair
   * Manually enabled/disabled with keybind
   * Automatically disabled when aiming down sights
+  * Automatically un-aims when enabled
 * Added new context-based blaster poses/animations
 
 # Changes
@@ -38,6 +40,7 @@
   * Zersium block
   * Zersium ore
 * Reduce blaster damage distance falloff for most blasters
+  * Limited maximum effect of falloff to 75% (i.e. minimum damage due to falloff is 25% of base)
 * Ion bolts now emit sparks instead of smoke
 * Ion bolts are now longer
 * Ion bolts are now lighter
