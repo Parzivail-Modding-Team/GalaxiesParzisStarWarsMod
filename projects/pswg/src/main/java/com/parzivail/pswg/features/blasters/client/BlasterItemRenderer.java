@@ -14,6 +14,7 @@ import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
 import com.parzivail.pswg.features.blasters.data.BlasterTag;
 import com.parzivail.util.client.ImmediateBuffer;
 import com.parzivail.util.client.NativeImageUtil;
+import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.data.TintedIdentifier;
@@ -521,41 +522,33 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private void poseSingleLeft(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		float armPitchOffset = 0;
-		float armPitchScale = 1;
-
-		if (!bt.isAimingDownSights)
+		if (patrol || entity.isSprinting())
 		{
-			armPitchOffset = 0.7f;
-			armPitchScale = 0.6f;
+			ModelUtil.lerpLeftArmTo(model, 1, -1.436f, 0.808f, -0.269f);
+			ModelUtil.lerpRightArmTo(model, 1, -1.077f, 0, -0.539f);
 		}
-
-		model.leftArm.yaw = 0.1F + model.head.yaw;
-		model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
-		if (bt.isAimingDownSights && !bd.type.isOneHanded())
+		else
 		{
+			model.leftArm.yaw = 0.1F + model.head.yaw;
+			model.leftArm.pitch = -1.5707964F + model.head.pitch;
 			model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
-			model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+			model.rightArm.pitch = -1.5707964F + model.head.pitch;
 		}
 	}
 
 	private void poseSingleRight(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		float armPitchOffset = 0;
-		float armPitchScale = 1;
-
-		if (!bt.isAimingDownSights)
+		if (patrol || entity.isSprinting())
 		{
-			armPitchOffset = 0.7f;
-			armPitchScale = 0.6f;
+			ModelUtil.lerpLeftArmTo(model, 1, -1.077f, 0, 0.539f);
+			ModelUtil.lerpRightArmTo(model, 1, -1.436f, -0.808f, 0.269f);
 		}
-
-		model.rightArm.yaw = -0.1F + model.head.yaw;
-		model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
-		if (bt.isAimingDownSights && !bd.type.isOneHanded())
+		else
 		{
+			model.rightArm.yaw = -0.1F + model.head.yaw;
+			model.rightArm.pitch = -1.6F + model.head.pitch;
 			model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
-			model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+			model.leftArm.pitch = -1.5F + model.head.pitch;
 		}
 	}
 

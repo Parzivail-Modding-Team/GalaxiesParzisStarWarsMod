@@ -7,6 +7,8 @@
 * Blaster bolts can now deflect off of some blocks (currently just diatium)
 * Blaster bolts can not detonate some blocks (currently just TNT)
 * Added armor mannequins which properly show armor as would be worn with an underlayer
+* Added keybind to toggle "patrol" posture for blaster animations
+* Added new context-based blaster poses/animations
 
 # Changes
 
@@ -48,4 +50,3 @@
 * Abstract out online version checking system
 * Added attachment functionality to ion-to-gas and ion-to-repulsor type attachments
 * Changed internal name of player data components (your species will be reset)
-* Added keybind to toggle "patrol" posture for blaster animations (will make sense in later alphas)
