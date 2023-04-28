@@ -65,7 +65,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 			}
 		}
 
-		var ownerDist = 0d;
+		var ownerDist = 1d;
 		if (shouldScale)
 		{
 			var dist = mc.player.getCameraPosVec(tickDelta).distanceTo(entity.getLerpedPos(tickDelta));
