@@ -49,7 +49,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.firingBehavior(List.of(BlasterFiringMode.SLUGTHROWER), BlasterWaterBehavior.CAN_FIRE_UNDERWATER)
 						.mechanicalProperties(6.7f, -0.5f, 10, 100)
 						.damage(16, 188f, Falloff.cliff(10))
-						.bolt(0, 1, 0.75f)
+						.bolt(ColorUtil.packHsv(0.98f, 1, 1), 1, 0.75f)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 338, 100, 20, 14, 100, 40))

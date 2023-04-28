@@ -50,6 +50,7 @@
 
 * Blaster bolts now deflect properly off lightsabers
 * Fix blaster bolts disappearing (again)
+* Fix cycler bolt color
 
 # Internal Changes
 
