@@ -26,7 +26,7 @@ public class LivingEntityMixin
 	@Inject(method = "isClimbing()Z", at = @At("HEAD"), cancellable = true)
 	public void isClimbing(CallbackInfoReturnable<Boolean> cir)
 	{
-		if (BlasterItem.areBothHandsOccupied((LivingEntity)(Object)this))
+		if (BlasterItem.getWield((LivingEntity)(Object)this).areBothHandsOccupied())
 			cir.setReturnValue(false);
 	}
 }

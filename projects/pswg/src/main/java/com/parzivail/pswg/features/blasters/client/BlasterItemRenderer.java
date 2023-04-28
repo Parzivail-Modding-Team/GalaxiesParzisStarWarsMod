@@ -8,6 +8,7 @@ import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.BlasterTransformer;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
 import com.parzivail.pswg.features.blasters.data.BlasterTag;
@@ -19,15 +20,17 @@ import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
+import imgui.ImGui;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceReloader;
@@ -453,19 +456,39 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	}
 
 	@Override
-	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	public void modifyPose(LivingEntity entity, Hand hand, ItemStack stack, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
 		if (skipPose)
 		{
-			rightArm.setPivot(0, 0, 0);
-			rightArm.setAngles(0, 0, 0);
-			leftArm.setPivot(0, 0, 0);
-			leftArm.setAngles(0, 0, 0);
+			model.rightArm.setPivot(0, 0, 0);
+			model.rightArm.setAngles(0, 0, 0);
+			model.leftArm.setPivot(0, 0, 0);
+			model.leftArm.setAngles(0, 0, 0);
 			return;
 		}
 
+		var patrolPosture = false;
+		if (entity instanceof PlayerEntity pe)
+		{
+			var data = PlayerData.getVolatilePublic(pe);
+			patrolPosture = data.isPatrolPosture();
+		}
+
+		var wield = BlasterItem.getWield(entity);
+
+		ImGui.text(String.valueOf(wield));
+
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = BlasterItem.getBlasterDescriptor(stack);
+
+		switch (wield)
+		{
+			case SingleMain -> poseSingleMain(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			case SingleOff -> poseSingleOff(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			case DoubleMain -> poseDoubleMain(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			case DoubleOff -> poseDoubleOff(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			case Dual -> poseDual(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+		}
 
 		float armPitchOffset = 0;
 		float armPitchScale = 1;
@@ -482,25 +505,45 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		{
 			case LEFT ->
 			{
-				leftArm.yaw = 0.1F + head.yaw;
-				leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
+				model.leftArm.yaw = 0.1F + model.head.yaw;
+				model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
 				if (bt.isAimingDownSights && !bd.type.isOneHanded())
 				{
-					rightArm.yaw = -0.1F + head.yaw - 0.4F;
-					rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
+					model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
+					model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
 				}
 			}
 			case RIGHT ->
 			{
-				rightArm.yaw = -0.1F + head.yaw;
-				rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
+				model.rightArm.yaw = -0.1F + model.head.yaw;
+				model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
 				if (bt.isAimingDownSights && !bd.type.isOneHanded())
 				{
-					leftArm.yaw = 0.1F + head.yaw + 0.4F;
-					leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
+					model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
+					model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
 				}
 			}
 		}
+	}
+
+	private void poseSingleMain(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
+	}
+
+	private void poseSingleOff(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
+	}
+
+	private void poseDoubleMain(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
+	}
+
+	private void poseDoubleOff(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
+	}
+
+	private void poseDual(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
 	}
 
 	public record ModelEntry(P3dModel model, Identifier baseTexture)

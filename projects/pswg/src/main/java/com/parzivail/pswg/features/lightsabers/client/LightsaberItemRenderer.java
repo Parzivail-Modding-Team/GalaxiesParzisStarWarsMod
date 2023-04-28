@@ -10,14 +10,15 @@ import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.math.MathUtil;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -184,19 +185,19 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	}
 
 	@Override
-	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	public void modifyPose(LivingEntity entity, Hand hand, ItemStack stack, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
 		if (entity.isUsingItem())
 		{
 			var useTime = MathHelper.clamp(entity.getItemUseTime() + tickDelta, 0, 2) / 2f;
 
-			rightArm.pitch = MathHelper.lerp(useTime, rightArm.pitch, -1.672f);
-			rightArm.yaw = MathHelper.lerp(useTime, rightArm.yaw, -0.266f);
-			rightArm.roll = MathHelper.lerp(useTime, rightArm.roll, 0.882f);
+			model.rightArm.pitch = MathHelper.lerp(useTime, model.rightArm.pitch, -1.672f);
+			model.rightArm.yaw = MathHelper.lerp(useTime, model.rightArm.yaw, -0.266f);
+			model.rightArm.roll = MathHelper.lerp(useTime, model.rightArm.roll, 0.882f);
 
-			leftArm.pitch = MathHelper.lerp(useTime, leftArm.pitch, -1.164f);
-			leftArm.yaw = MathHelper.lerp(useTime, leftArm.yaw, 0.602f);
-			leftArm.roll = MathHelper.lerp(useTime, leftArm.roll, 0.426f);
+			model.leftArm.pitch = MathHelper.lerp(useTime, model.leftArm.pitch, -1.164f);
+			model.leftArm.yaw = MathHelper.lerp(useTime, model.leftArm.yaw, 0.602f);
+			model.leftArm.roll = MathHelper.lerp(useTime, model.leftArm.roll, 0.426f);
 		}
 	}
 

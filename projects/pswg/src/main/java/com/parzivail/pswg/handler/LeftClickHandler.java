@@ -3,6 +3,7 @@ package com.parzivail.pswg.handler;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.BlasterWield;
 import com.parzivail.util.item.ILeftClickConsumer;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -32,7 +33,7 @@ public class LeftClickHandler
 			return;
 
 		// Repeated left-click events
-		if (BlasterItem.isDualWielding(minecraft.player) && minecraft.player.getStackInHand(Hand.OFF_HAND).getItem() instanceof ILeftClickConsumer lcc)
+		if (BlasterItem.getWield(minecraft.player) == BlasterWield.Dual && minecraft.player.getStackInHand(Hand.OFF_HAND).getItem() instanceof ILeftClickConsumer lcc)
 		{
 			handleLccInputEvents(interactionManager, ci, minecraft, Hand.OFF_HAND, lcc);
 			return;
@@ -108,7 +109,7 @@ public class LeftClickHandler
 
 		var stack = minecraft.player.getMainHandStack();
 
-		if (BlasterItem.isDualWielding(minecraft.player) && minecraft.player.getStackInHand(Hand.OFF_HAND).getItem() instanceof ILeftClickConsumer lcc)
+		if (BlasterItem.getWield(minecraft.player) == BlasterWield.Dual && minecraft.player.getStackInHand(Hand.OFF_HAND).getItem() instanceof ILeftClickConsumer lcc)
 		{
 			useItemLeft(minecraft.player, lcc, Hand.OFF_HAND, false);
 			cir.setReturnValue(false);

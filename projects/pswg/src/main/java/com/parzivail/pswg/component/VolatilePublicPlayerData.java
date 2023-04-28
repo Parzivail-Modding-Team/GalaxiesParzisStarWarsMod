@@ -19,7 +19,7 @@ public class VolatilePublicPlayerData implements ComponentV3, AutoSyncedComponen
 		this.provider = provider;
 	}
 
-	public boolean getPatrolPosture()
+	public boolean isPatrolPosture()
 	{
 		return patrolPosture;
 	}

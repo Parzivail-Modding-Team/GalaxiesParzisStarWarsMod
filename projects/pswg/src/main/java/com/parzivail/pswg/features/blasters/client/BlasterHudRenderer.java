@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.BlasterWield;
 import com.parzivail.pswg.features.blasters.data.BlasterArchetype;
 import com.parzivail.pswg.features.blasters.data.BlasterAttachmentFunction;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
@@ -56,7 +57,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var top = scaledHeight / 2;
 		final var cooldownWidth = 61;
 
-		if (BlasterItem.isDualWielding(player) && hand == Hand.OFF_HAND)
+		if (BlasterItem.getWield(player) == BlasterWield.Dual && hand == Hand.OFF_HAND)
 			top += 10;
 
 		var b = (BlasterItem)stack.getItem();

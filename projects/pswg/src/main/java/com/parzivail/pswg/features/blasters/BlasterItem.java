@@ -138,45 +138,36 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return Text.translatable(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
 	}
 
-	public static boolean areBothHandsOccupied(LivingEntity entity)
+	public static BlasterWield getWield(LivingEntity entity)
 	{
 		if (entity == null)
-			return false;
+			return BlasterWield.None;
 
 		var mainHandStack = entity.getMainHandStack();
 		var offHandStack = entity.getOffHandStack();
 
-		var occupiedHands = 0;
+		var wield = BlasterWield.None;
 
 		if (mainHandStack.getItem() instanceof BlasterItem)
 		{
 			var mainBd = getBlasterDescriptor(mainHandStack);
-			occupiedHands += mainBd.type.isOneHanded() ? 1 : 2;
+			if (mainBd.type.isOneHanded())
+				wield = BlasterWield.SingleMain;
+			else
+				wield = BlasterWield.DoubleMain;
 		}
 
 		if (offHandStack.getItem() instanceof BlasterItem)
 		{
 			var offBd = getBlasterDescriptor(offHandStack);
-			occupiedHands += offBd.type.isOneHanded() ? 1 : 2;
+			if (offBd.type.isOneHanded())
+				wield = wield == BlasterWield.SingleMain ? BlasterWield.Dual :
+				        (wield == BlasterWield.DoubleMain ? BlasterWield.Invalid : BlasterWield.SingleOff);
+			else
+				wield = wield == BlasterWield.None ? BlasterWield.DoubleOff : BlasterWield.Invalid;
 		}
 
-		return occupiedHands > 1;
-	}
-
-	public static boolean isDualWielding(LivingEntity entity)
-	{
-		if (entity == null)
-			return false;
-
-		var occupiedHands = 0;
-
-		if (entity.getMainHandStack().getItem() instanceof BlasterItem)
-			occupiedHands++;
-
-		if (entity.getOffHandStack().getItem() instanceof BlasterItem)
-			occupiedHands++;
-
-		return occupiedHands > 1;
+		return wield;
 	}
 
 	@Override
@@ -214,7 +205,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (hand != Hand.MAIN_HAND)
 			return TypedActionResult.pass(stack);
 
-		if (isDualWielding(player))
+		if (getWield(player) == BlasterWield.Dual)
 		{
 			var isRepeatEvent = player.getItemUseTime() > 0;
 			if (!isRepeatEvent || allowRepeatedLeftHold(world, player, hand))
@@ -229,10 +220,13 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	private void tryToggleAds(BlasterTag blasterTag, World world, PlayerEntity player, Hand hand)
 	{
-		if (isDualWielding(player))
+		if (getWield(player) == BlasterWield.Dual)
 			return;
 
-		blasterTag.toggleAds();
+		if (player.isSprinting())
+			blasterTag.setAimingDownSights(false);
+		else
+			blasterTag.toggleAds();
 	}
 
 	@Override
@@ -783,6 +777,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				shouldContinueBurst = true;
 
 			bt.tick(bd);
+
+			if (entity.isSprinting())
+				bt.setAimingDownSights(false);
 
 			bt.serializeAsSubtag(stack);
 

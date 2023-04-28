@@ -54,7 +54,7 @@ public class PlayerPacketHandler
 		server.execute(() -> {
 			var data = PlayerData.getVolatilePublic(player);
 
-			data.setPatrolPosture(!data.getPatrolPosture());
+			data.setPatrolPosture(!data.isPatrolPosture());
 			data.syncAll();
 		});
 	}
