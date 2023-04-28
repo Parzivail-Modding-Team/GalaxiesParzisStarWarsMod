@@ -17,10 +17,12 @@ import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.data.NamedBufferUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
+import imgui.ImGui;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -527,8 +529,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private void poseSingleLeft(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		var limbBounce = entity.forwardSpeed * MathHelper.sin(limbAngle / 2f) * 0.05f;
-		if (patrol || entity.isSprinting())
+		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
+		if (patrol)
 		{
 			ModelUtil.lerpLeftArmTo(model, 1, -1.436f + limbBounce, 0.808f, -0.269f);
 			ModelUtil.lerpRightArmTo(model, 1, -1.077f - limbBounce, 0, -0.539f);
@@ -549,13 +551,17 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				model.leftArm.pitch = -1.35F + model.head.pitch + limbBounce;
 
 			model.leftArm.yaw = 0.1F + model.head.yaw;
+
+			var lerp = MathHelper.clamp(Ease.outCubic((float)Math.pow(limbDistance / 0.8, 2)), 0, 1);
+			ModelUtil.lerpLeftArmTo(model, lerp, -1.436f + limbBounce, 0.808f, -0.269f);
+			ModelUtil.lerpRightArmTo(model, lerp, -1.077f - limbBounce, 0, -0.539f);
 		}
 	}
 
 	private void poseSingleRight(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		var limbBounce = entity.forwardSpeed * MathHelper.sin(limbAngle / 2f) * 0.05f;
-		if (patrol || entity.isSprinting())
+		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
+		if (patrol)
 		{
 			ModelUtil.lerpLeftArmTo(model, 1, -1.077f - limbBounce, 0, 0.539f);
 			ModelUtil.lerpRightArmTo(model, 1, -1.436f + limbBounce, -0.808f, 0.269f);
@@ -575,93 +581,102 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				model.rightArm.pitch = -1.35F + model.head.pitch - limbBounce;
 
 			model.rightArm.yaw = -0.1F + model.head.yaw;
+
+			var lerp = MathHelper.clamp(Ease.outCubic((float)Math.pow(limbDistance / 0.8, 2)), 0, 1);
+			ModelUtil.lerpLeftArmTo(model, lerp, -1.077f - limbBounce, 0, 0.539f);
+			ModelUtil.lerpRightArmTo(model, lerp, -1.436f + limbBounce, -0.808f, 0.269f);
 		}
 	}
 
 	private void poseDoubleLeft(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		// TODO
-		float armPitchOffset = 0;
-		float armPitchScale = 1;
+		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
+		var breatheBounceLeft = MathHelper.sin(animationProgress / 15f + entity.getId()) * 0.01f;
+		var breatheBounceRight = MathHelper.cos(animationProgress / 15f - entity.getId()) * 0.01f;
 
-		if (!bt.isAimingDownSights)
+		if (patrol)
 		{
-			armPitchOffset = 0.7f;
-			armPitchScale = 0.6f;
+			ModelUtil.lerpLeftArmTo(model, 1, -0.539f - limbBounce + breatheBounceLeft, -0.269f, 0.09f);
+			ModelUtil.lerpRightArmTo(model, 1, -0.808f + limbBounce + breatheBounceRight, -1.077f, 0);
 		}
-
-		model.leftArm.yaw = 0.1F + model.head.yaw;
-		model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
-		if (bt.isAimingDownSights && !bd.type.isOneHanded())
+		else
 		{
+			var pitchChange = bt.isAimingDownSights ? 0.4f : 0;
+
+			model.leftArm.yaw = 0.1F + model.head.yaw;
+			model.leftArm.pitch = -1.1F + model.head.pitch - pitchChange;
+
 			model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
-			model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+			model.rightArm.pitch = -1.2F + model.head.pitch - pitchChange;
+
+			if (bt.isAimingDownSights)
+				model.head.roll = 0.2f;
 		}
 	}
 
 	private void poseDoubleRight(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		// TODO
-		float armPitchOffset = 0;
-		float armPitchScale = 1;
+		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
+		var breatheBounceLeft = MathHelper.sin(animationProgress / 15f + entity.getId()) * 0.01f;
+		var breatheBounceRight = MathHelper.cos(animationProgress / 15f - entity.getId()) * 0.01f;
 
-		if (!bt.isAimingDownSights)
+		if (patrol)
 		{
-			armPitchOffset = 0.7f;
-			armPitchScale = 0.6f;
+			ModelUtil.lerpLeftArmTo(model, 1, -0.539f - limbBounce + breatheBounceLeft, -0.269f, 0.09f);
+			ModelUtil.lerpRightArmTo(model, 1, -0.808f + limbBounce + breatheBounceRight, -1.077f, 0);
 		}
-
-		model.rightArm.yaw = -0.1F + model.head.yaw;
-		model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
-		if (bt.isAimingDownSights && !bd.type.isOneHanded())
+		else
 		{
+			var pitchChange = bt.isAimingDownSights ? 0.4f : 0;
+
+			model.rightArm.yaw = -0.1F + model.head.yaw;
+			model.rightArm.pitch = -1.1F + model.head.pitch - pitchChange;
+
 			model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
-			model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+			model.leftArm.pitch = -1.2F + model.head.pitch - pitchChange;
+
+			if (bt.isAimingDownSights)
+				model.head.roll = -0.2f;
 		}
 	}
 
 	private void poseDual(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		var breatheBounceLeft = MathHelper.sin(animationProgress / 15f + entity.getId()) * 0.01f;
+		var breatheBounceRight = MathHelper.cos(animationProgress / 15f - entity.getId()) * 0.01f;
+
+		var lerp = MathHelper.clamp(Ease.outCubic((float)Math.pow(limbDistance / 0.8, 2)), 0, 1);
+		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.1f;
+
 		if (patrol)
 		{
-			if (entity.forwardSpeed > 0)
-				return;
-			ModelUtil.lerpLeftArmTo(model, 1, -2.424f, -0.18f, 0.09f);
-			ModelUtil.lerpRightArmTo(model, 1, -2.424f, 0.18f, -0.09f);
+			ModelUtil.lerpLeftArmTo(model, 1 - lerp, -2.424f + limbBounce + breatheBounceLeft, -0.18f, 0.09f);
+			ModelUtil.lerpRightArmTo(model, 1 - lerp, -2.424f - limbBounce + breatheBounceRight, 0.18f, -0.09f);
 		}
 		else
 		{
-			if (entity.forwardSpeed > 0)
-			{
-				if (entity.isSprinting())
-				{
-					var limbBounce = MathHelper.sin(limbAngle / 2f) * 0.1f;
-					ModelUtil.lerpLeftArmTo(model, 1, -0.718f + limbBounce, 0.09f, 0.359f);
-					ModelUtil.lerpRightArmTo(model, 1, -0.628f - limbBounce, -0.539f, -0.359f);
-				}
-			}
-			else
-			{
-				ModelUtil.lerpLeftArmTo(model, 1, -1.526f, 0, -0.18f);
-				ModelUtil.lerpRightArmTo(model, 1, -1.526f, 0, 0.18f);
-			}
+			ModelUtil.lerpLeftArmTo(model, 1, -1.526f + breatheBounceLeft, 0, -0.18f);
+			ModelUtil.lerpRightArmTo(model, 1, -1.526f + breatheBounceRight, 0, 0.18f);
+
+			ModelUtil.lerpLeftArmTo(model, lerp, -0.718f + limbBounce + breatheBounceLeft, 0.09f, 0.359f);
+			ModelUtil.lerpRightArmTo(model, lerp, -0.628f - limbBounce + breatheBounceRight, -0.539f, -0.359f);
 		}
 	}
 
 	public static <T extends LivingEntity> void poseBipedArms(BipedEntityModel<T> model)
 	{
-		//		var leftRotate = NamedBufferUtil.getF("__left_arm_rotate", model.leftArm.pitch, model.leftArm.yaw, model.leftArm.roll);
-		//		var rightRotate = NamedBufferUtil.getF("__right_arm_rotate", model.rightArm.pitch, model.rightArm.yaw, model.rightArm.roll);
-		//
-		//		ImGui.sliderFloat3("Left", leftRotate, -MathHelper.PI, MathHelper.PI);
-		//		ImGui.sliderFloat3("Right", rightRotate, -MathHelper.PI, MathHelper.PI);
-		//
-		//		model.leftArm.pitch = leftRotate[0];
-		//		model.leftArm.yaw = leftRotate[1];
-		//		model.leftArm.roll = leftRotate[2];
-		//
-		//		model.rightArm.pitch = rightRotate[0];
-		//		model.rightArm.yaw = rightRotate[1];
-		//		model.rightArm.roll = rightRotate[2];
+		var leftRotate = NamedBufferUtil.getF("__left_arm_rotate", model.leftArm.pitch, model.leftArm.yaw, model.leftArm.roll);
+		var rightRotate = NamedBufferUtil.getF("__right_arm_rotate", model.rightArm.pitch, model.rightArm.yaw, model.rightArm.roll);
+
+		ImGui.sliderFloat3("Left", leftRotate, -MathHelper.PI, MathHelper.PI);
+		ImGui.sliderFloat3("Right", rightRotate, -MathHelper.PI, MathHelper.PI);
+
+		model.leftArm.pitch = leftRotate[0];
+		model.leftArm.yaw = leftRotate[1];
+		model.leftArm.roll = leftRotate[2];
+
+		model.rightArm.pitch = rightRotate[0];
+		model.rightArm.yaw = rightRotate[1];
+		model.rightArm.roll = rightRotate[2];
 	}
 }

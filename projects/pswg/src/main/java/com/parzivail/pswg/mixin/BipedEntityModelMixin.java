@@ -26,6 +26,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 		if (livingEntity.isSwimming())
 			return;
 
+		var model = (BipedEntityModel<T>)(Object)this;
+		model.head.roll = 0;
+
 		for (var hand : Hand.values())
 		{
 			var stack = livingEntity.getStackInHand(hand);
@@ -34,7 +37,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 				@Nullable
 				final ICustomPoseItem pose = ICustomPoseItem.REGISTRY.get(stack.getItem().getClass());
 				if (pose != null)
-					pose.modifyPose(livingEntity, hand, stack, (BipedEntityModel<T>)(Object)this, limbAngle, limbDistance, animationProgress, headYaw, headPitch, Client.getTickDelta());
+					pose.modifyPose(livingEntity, hand, stack, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, Client.getTickDelta());
 			}
 		}
 	}

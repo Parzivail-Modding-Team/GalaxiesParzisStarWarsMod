@@ -22,16 +22,16 @@ public class ModelUtil
 
 	public static <T extends LivingEntity> void lerpLeftArmTo(BipedEntityModel<T> model, float delta, float pitch, float yaw, float roll)
 	{
-		model.leftArm.pitch = MathHelper.lerp(delta, model.leftArm.pitch, pitch);
-		model.leftArm.yaw = MathHelper.lerp(delta, model.leftArm.yaw, yaw);
-		model.leftArm.roll = MathHelper.lerp(delta, model.leftArm.roll, roll);
+		model.leftArm.pitch = MathHelper.lerpAngleDegrees(delta, model.leftArm.pitch * MathHelper.DEGREES_PER_RADIAN, pitch * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
+		model.leftArm.yaw = MathHelper.lerpAngleDegrees(delta, model.leftArm.yaw * MathHelper.DEGREES_PER_RADIAN, yaw * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
+		model.leftArm.roll = MathHelper.lerpAngleDegrees(delta, model.leftArm.roll * MathHelper.DEGREES_PER_RADIAN, roll * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
 	}
 
 	public static <T extends LivingEntity> void lerpRightArmTo(BipedEntityModel<T> model, float delta, float pitch, float yaw, float roll)
 	{
-		model.rightArm.pitch = MathHelper.lerp(delta, model.rightArm.pitch, pitch);
-		model.rightArm.yaw = MathHelper.lerp(delta, model.rightArm.yaw, yaw);
-		model.rightArm.roll = MathHelper.lerp(delta, model.rightArm.roll, roll);
+		model.rightArm.pitch = MathHelper.lerpAngleDegrees(delta, model.rightArm.pitch * MathHelper.DEGREES_PER_RADIAN, pitch * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
+		model.rightArm.yaw = MathHelper.lerpAngleDegrees(delta, model.rightArm.yaw * MathHelper.DEGREES_PER_RADIAN, yaw * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
+		model.rightArm.roll = MathHelper.lerpAngleDegrees(delta, model.rightArm.roll * MathHelper.DEGREES_PER_RADIAN, roll * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
 	}
 
 	public static Box getBounds(Collection<Vector3f> verts)
