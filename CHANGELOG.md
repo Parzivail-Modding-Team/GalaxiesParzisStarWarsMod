@@ -8,6 +8,8 @@
 * Blaster bolts can not detonate some blocks (currently just TNT)
 * Added armor mannequins which properly show armor as would be worn with an underlayer
 * Added keybind to toggle "patrol" posture for blaster animations (configurable, `G` by default)
+  * Manually enabled/disabled with keybind
+  * Automatically disabled when aiming down sights
 * Added new context-based blaster poses/animations
 
 # Changes
@@ -31,6 +33,8 @@
   * Lommite block
   * Lommite ore
   * Thorilide block
+  * Thorilide ore
+  * Rubindum ore
   * Zersium block
   * Zersium ore
 * Reduce blaster damage distance falloff for most blasters

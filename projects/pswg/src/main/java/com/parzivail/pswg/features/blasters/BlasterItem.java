@@ -6,6 +6,7 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.features.blasters.data.*;
@@ -227,6 +228,16 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			blasterTag.setAimingDownSights(false);
 		else
 			blasterTag.toggleAds();
+
+		if (blasterTag.isAimingDownSights)
+		{
+			var data = PlayerData.getVolatilePublic(player);
+			if (data.isPatrolPosture())
+			{
+				data.setPatrolPosture(false);
+				data.syncAll();
+			}
+		}
 	}
 
 	@Override
