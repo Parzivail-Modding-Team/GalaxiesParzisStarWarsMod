@@ -513,7 +513,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			var range = getRange(bd, bt);
 			var damageRange = range * getRangeMultiplier(bd, bt.attachmentBitmask);
-			Function<Double, Double> damage = (x) -> getDamage(bd, bt) * bd.damageFalloff.apply(x / damageRange);
+			Function<Double, Double> damage = (x) -> getDamage(bd, bt) * (0.25 + bd.damageFalloff.apply(x / damageRange) * 0.75);
 
 			var shouldRecoil = true;
 
@@ -791,6 +791,13 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			if (entity.isSprinting())
 				bt.setAimingDownSights(false);
+
+			if (entity instanceof PlayerEntity player)
+			{
+				var data = PlayerData.getVolatilePublic(player);
+				if (data.isPatrolPosture())
+					bt.setAimingDownSights(false);
+			}
 
 			bt.serializeAsSubtag(stack);
 

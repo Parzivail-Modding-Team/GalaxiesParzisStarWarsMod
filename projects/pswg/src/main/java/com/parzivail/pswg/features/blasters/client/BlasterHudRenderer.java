@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.BlasterWield;
 import com.parzivail.pswg.features.blasters.data.BlasterArchetype;
@@ -64,7 +65,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		var profile = bd.cooling;
-		final var crosshairIdx = getCrosshairIndex(bd, bt.attachmentBitmask);
+		var crosshairIdx = getCrosshairIndex(bd, bt.attachmentBitmask);
 
 		var tickDelta = Client.getTickDelta();
 
@@ -163,16 +164,32 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		 * Crosshair
 		 */
 
+		var cancelCrosshair = false;
 		if (bt.isAimingDownSights)
 		{
-			RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-			drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
-			RenderSystem.defaultBlendFunc();
+			drawCrosshair(matrices, scaledWidth, scaledHeight, crosshairIdx);
+			cancelCrosshair = true;
+		}
+		else
+		{
+			var data = PlayerData.getVolatilePublic(player);
+			if (data.isPatrolPosture())
+			{
+				drawCrosshair(matrices, scaledWidth, scaledHeight, 11);
+				cancelCrosshair = true;
+			}
 		}
 
 		RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
 
-		return bt.isAimingDownSights;
+		return cancelCrosshair;
+	}
+
+	private static void drawCrosshair(MatrixStack matrices, int scaledWidth, int scaledHeight, int crosshairIdx)
+	{
+		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
+		drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
+		RenderSystem.defaultBlendFunc();
 	}
 
 	public static int getCrosshairIndex(BlasterDescriptor bd, int attachmentBitmask)
