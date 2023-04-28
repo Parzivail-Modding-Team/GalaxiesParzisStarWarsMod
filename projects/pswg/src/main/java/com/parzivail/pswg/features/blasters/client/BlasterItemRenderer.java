@@ -10,6 +10,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.BlasterTransformer;
 import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.BlasterWield;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
 import com.parzivail.pswg.features.blasters.data.BlasterTag;
 import com.parzivail.util.client.ImmediateBuffer;
@@ -240,11 +241,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			// pistol = new Vec3d(-2.2f, 1.9f, -3f);
 
 			var adsVec = switch (bd.type)
-					{
-						case PISTOL -> new Vec3d(-2.2f, 1.5f, -3f);
-						case RIFLE, HEAVY, SLUGTHROWER, ION -> new Vec3d(-2.1f, 1.5f, -3f);
-						case SNIPER -> new Vec3d(-2.8f, 2.65f, -5f);
-					};
+			{
+				case PISTOL -> new Vec3d(-2.2f, 1.5f, -3f);
+				case RIFLE, HEAVY, SLUGTHROWER, ION -> new Vec3d(-2.1f, 1.5f, -3f);
+				case SNIPER -> new Vec3d(-2.8f, 2.65f, -5f);
+			};
 
 			// recoil
 			var recoilKick = recoilKickDecay(shotTime / 4.5f);
@@ -476,20 +477,57 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var wield = BlasterItem.getWield(entity);
 
-		ImGui.text(String.valueOf(wield));
-
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = BlasterItem.getBlasterDescriptor(stack);
 
+		var mainArm = entity.getMainArm();
+
+		if (wield.baseHand != hand)
+			// Prevent double-posing
+			return;
+
+		if (wield == BlasterWield.Invalid || wield == BlasterWield.None)
+			return;
+
+		ImGui.text(String.valueOf(wield));
+
+		// TODO: This can probably be simplified
 		switch (wield)
 		{
-			case SingleMain -> poseSingleMain(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
-			case SingleOff -> poseSingleOff(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
-			case DoubleMain -> poseDoubleMain(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
-			case DoubleOff -> poseDoubleOff(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			case SingleMain ->
+			{
+				if (mainArm == Arm.LEFT)
+					poseSingleLeft(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+				else
+					poseSingleRight(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			}
+			case SingleOff ->
+			{
+				if (mainArm == Arm.RIGHT)
+					poseSingleLeft(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+				else
+					poseSingleRight(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			}
+			case DoubleMain ->
+			{
+				if (mainArm == Arm.LEFT)
+					poseDoubleLeft(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+				else
+					poseDoubleRight(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			}
+			case DoubleOff ->
+			{
+				if (mainArm == Arm.RIGHT)
+					poseDoubleLeft(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+				else
+					poseDoubleRight(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
+			}
 			case Dual -> poseDual(entity, bt, bd, patrolPosture, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, tickDelta);
 		}
+	}
 
+	private void poseSingleLeft(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
 		float armPitchOffset = 0;
 		float armPitchScale = 1;
 
@@ -499,50 +537,76 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			armPitchScale = 0.6f;
 		}
 
-		var preferredHand = entity.getMainArm();
-
-		switch (preferredHand)
+		model.leftArm.yaw = 0.1F + model.head.yaw;
+		model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+		if (bt.isAimingDownSights && !bd.type.isOneHanded())
 		{
-			case LEFT ->
-			{
-				model.leftArm.yaw = 0.1F + model.head.yaw;
-				model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
-				if (bt.isAimingDownSights && !bd.type.isOneHanded())
-				{
-					model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
-					model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
-				}
-			}
-			case RIGHT ->
-			{
-				model.rightArm.yaw = -0.1F + model.head.yaw;
-				model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
-				if (bt.isAimingDownSights && !bd.type.isOneHanded())
-				{
-					model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
-					model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
-				}
-			}
+			model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
+			model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
 		}
 	}
 
-	private void poseSingleMain(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	private void poseSingleRight(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		float armPitchOffset = 0;
+		float armPitchScale = 1;
+
+		if (!bt.isAimingDownSights)
+		{
+			armPitchOffset = 0.7f;
+			armPitchScale = 0.6f;
+		}
+
+		model.rightArm.yaw = -0.1F + model.head.yaw;
+		model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+		if (bt.isAimingDownSights && !bd.type.isOneHanded())
+		{
+			model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
+			model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+		}
 	}
 
-	private void poseSingleOff(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	private void poseDoubleLeft(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		float armPitchOffset = 0;
+		float armPitchScale = 1;
+
+		if (!bt.isAimingDownSights)
+		{
+			armPitchOffset = 0.7f;
+			armPitchScale = 0.6f;
+		}
+
+		model.leftArm.yaw = 0.1F + model.head.yaw;
+		model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+		if (bt.isAimingDownSights && !bd.type.isOneHanded())
+		{
+			model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
+			model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+		}
 	}
 
-	private void poseDoubleMain(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	private void poseDoubleRight(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		float armPitchOffset = 0;
+		float armPitchScale = 1;
+
+		if (!bt.isAimingDownSights)
+		{
+			armPitchOffset = 0.7f;
+			armPitchScale = 0.6f;
+		}
+
+		model.rightArm.yaw = -0.1F + model.head.yaw;
+		model.rightArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+		if (bt.isAimingDownSights && !bd.type.isOneHanded())
+		{
+			model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
+			model.leftArm.pitch = -1.5707964F + model.head.pitch * armPitchScale + armPitchOffset;
+		}
 	}
 
-	private void poseDoubleOff(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
-	{
-	}
-
-	private void poseDual(LivingEntity entity, BlasterTag tag, BlasterDescriptor descriptor, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	private void poseDual(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
 	}
 

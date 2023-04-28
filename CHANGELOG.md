@@ -35,6 +35,7 @@
 * Ion bolts now emit sparks instead of smoke
 * Ion bolts are now longer
 * Ion bolts are now lighter
+* You can no longer aim-down-sights with blasters while sprinting
 
 # Fixes
 
