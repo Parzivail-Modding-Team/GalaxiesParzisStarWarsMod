@@ -535,10 +535,20 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		}
 		else
 		{
+			var ads = bt.isAimingDownSights;
+
+			if (ads)
+			{
+				model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
+				model.rightArm.pitch = -1.5F + model.head.pitch - limbBounce;
+
+				model.leftArm.pitch = -1.6F + model.head.pitch + limbBounce;
+			}
+			else
+
+				model.leftArm.pitch = -1.35F + model.head.pitch + limbBounce;
+
 			model.leftArm.yaw = 0.1F + model.head.yaw;
-			model.leftArm.pitch = -1.5707964F + model.head.pitch + limbBounce;
-			model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
-			model.rightArm.pitch = -1.5707964F + model.head.pitch - limbBounce;
 		}
 	}
 
@@ -552,10 +562,19 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		}
 		else
 		{
+			var ads = bt.isAimingDownSights;
+
+			if (ads)
+			{
+				model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
+				model.leftArm.pitch = -1.5F + model.head.pitch + limbBounce;
+
+				model.rightArm.pitch = -1.6F + model.head.pitch - limbBounce;
+			}
+			else
+				model.rightArm.pitch = -1.35F + model.head.pitch - limbBounce;
+
 			model.rightArm.yaw = -0.1F + model.head.yaw;
-			model.rightArm.pitch = -1.6F + model.head.pitch - limbBounce;
-			model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
-			model.leftArm.pitch = -1.5F + model.head.pitch + limbBounce;
 		}
 	}
 
