@@ -17,12 +17,10 @@ import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
-import com.parzivail.util.data.NamedBufferUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
-import imgui.ImGui;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -665,18 +663,18 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	public static <T extends LivingEntity> void poseBipedArms(BipedEntityModel<T> model)
 	{
-		var leftRotate = NamedBufferUtil.getF("__left_arm_rotate", model.leftArm.pitch, model.leftArm.yaw, model.leftArm.roll);
-		var rightRotate = NamedBufferUtil.getF("__right_arm_rotate", model.rightArm.pitch, model.rightArm.yaw, model.rightArm.roll);
-
-		ImGui.sliderFloat3("Left", leftRotate, -MathHelper.PI, MathHelper.PI);
-		ImGui.sliderFloat3("Right", rightRotate, -MathHelper.PI, MathHelper.PI);
-
-		model.leftArm.pitch = leftRotate[0];
-		model.leftArm.yaw = leftRotate[1];
-		model.leftArm.roll = leftRotate[2];
-
-		model.rightArm.pitch = rightRotate[0];
-		model.rightArm.yaw = rightRotate[1];
-		model.rightArm.roll = rightRotate[2];
+		//		var leftRotate = NamedBufferUtil.getF("__left_arm_rotate", model.leftArm.pitch, model.leftArm.yaw, model.leftArm.roll);
+		//		var rightRotate = NamedBufferUtil.getF("__right_arm_rotate", model.rightArm.pitch, model.rightArm.yaw, model.rightArm.roll);
+		//
+		//		ImGui.sliderFloat3("Left", leftRotate, -MathHelper.PI, MathHelper.PI);
+		//		ImGui.sliderFloat3("Right", rightRotate, -MathHelper.PI, MathHelper.PI);
+		//
+		//		model.leftArm.pitch = leftRotate[0];
+		//		model.leftArm.yaw = leftRotate[1];
+		//		model.leftArm.roll = leftRotate[2];
+		//
+		//		model.rightArm.pitch = rightRotate[0];
+		//		model.rightArm.yaw = rightRotate[1];
+		//		model.rightArm.roll = rightRotate[2];
 	}
 }
