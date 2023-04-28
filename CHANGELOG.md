@@ -7,7 +7,7 @@
 * Blaster bolts can now deflect off of some blocks (currently just diatium)
 * Blaster bolts can not detonate some blocks (currently just TNT)
 * Added armor mannequins which properly show armor as would be worn with an underlayer
-* Added keybind to toggle "patrol" posture for blaster animations
+* Added keybind to toggle "patrol" posture for blaster animations (configurable, `G` by default)
 * Added new context-based blaster poses/animations
 
 # Changes

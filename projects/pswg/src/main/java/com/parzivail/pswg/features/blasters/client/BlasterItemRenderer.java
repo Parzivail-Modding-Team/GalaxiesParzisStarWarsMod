@@ -52,7 +52,11 @@ import java.util.function.Supplier;
 
 public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem, SimpleResourceReloadListener<Void>
 {
-	record AttachmentRenderData(boolean visible, Identifier texture)
+	public record ModelEntry(P3dModel model, Identifier baseTexture)
+	{
+	}
+
+	public record AttachmentRenderData(boolean visible, Identifier texture)
 	{
 	}
 
@@ -481,7 +485,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var mainArm = entity.getMainArm();
 
-		if (!wield.isBaseHand(hand) || !wield.hasBlaster)
+		var mc = MinecraftClient.getInstance();
+		if (!wield.isBaseHand(hand) || !wield.hasBlaster || (entity == mc.cameraEntity && mc.options.getPerspective().isFirstPerson()))
 			// Prevent double-posing, or posing without a blaster
 			return;
 
@@ -522,38 +527,41 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private void poseSingleLeft(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		var limbBounce = entity.forwardSpeed * MathHelper.sin(limbAngle / 2f) * 0.05f;
 		if (patrol || entity.isSprinting())
 		{
-			ModelUtil.lerpLeftArmTo(model, 1, -1.436f, 0.808f, -0.269f);
-			ModelUtil.lerpRightArmTo(model, 1, -1.077f, 0, -0.539f);
+			ModelUtil.lerpLeftArmTo(model, 1, -1.436f + limbBounce, 0.808f, -0.269f);
+			ModelUtil.lerpRightArmTo(model, 1, -1.077f - limbBounce, 0, -0.539f);
 		}
 		else
 		{
 			model.leftArm.yaw = 0.1F + model.head.yaw;
-			model.leftArm.pitch = -1.5707964F + model.head.pitch;
+			model.leftArm.pitch = -1.5707964F + model.head.pitch + limbBounce;
 			model.rightArm.yaw = -0.1F + model.head.yaw - 0.4F;
-			model.rightArm.pitch = -1.5707964F + model.head.pitch;
+			model.rightArm.pitch = -1.5707964F + model.head.pitch - limbBounce;
 		}
 	}
 
 	private void poseSingleRight(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		var limbBounce = entity.forwardSpeed * MathHelper.sin(limbAngle / 2f) * 0.05f;
 		if (patrol || entity.isSprinting())
 		{
-			ModelUtil.lerpLeftArmTo(model, 1, -1.077f, 0, 0.539f);
-			ModelUtil.lerpRightArmTo(model, 1, -1.436f, -0.808f, 0.269f);
+			ModelUtil.lerpLeftArmTo(model, 1, -1.077f - limbBounce, 0, 0.539f);
+			ModelUtil.lerpRightArmTo(model, 1, -1.436f + limbBounce, -0.808f, 0.269f);
 		}
 		else
 		{
 			model.rightArm.yaw = -0.1F + model.head.yaw;
-			model.rightArm.pitch = -1.6F + model.head.pitch;
+			model.rightArm.pitch = -1.6F + model.head.pitch - limbBounce;
 			model.leftArm.yaw = 0.1F + model.head.yaw + 0.4F;
-			model.leftArm.pitch = -1.5F + model.head.pitch;
+			model.leftArm.pitch = -1.5F + model.head.pitch + limbBounce;
 		}
 	}
 
 	private void poseDoubleLeft(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		// TODO
 		float armPitchOffset = 0;
 		float armPitchScale = 1;
 
@@ -574,6 +582,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private void poseDoubleRight(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		// TODO
 		float armPitchOffset = 0;
 		float armPitchScale = 1;
 
@@ -594,9 +603,46 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private void poseDual(LivingEntity entity, BlasterTag bt, BlasterDescriptor bd, boolean patrol, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		if (patrol)
+		{
+			if (entity.forwardSpeed > 0)
+				return;
+			ModelUtil.lerpLeftArmTo(model, 1, -2.424f, -0.18f, 0.09f);
+			ModelUtil.lerpRightArmTo(model, 1, -2.424f, 0.18f, -0.09f);
+		}
+		else
+		{
+			if (entity.forwardSpeed > 0)
+			{
+				if (entity.isSprinting())
+				{
+					var limbBounce = MathHelper.sin(limbAngle / 2f) * 0.1f;
+					ModelUtil.lerpLeftArmTo(model, 1, -0.718f + limbBounce, 0.09f, 0.359f);
+					ModelUtil.lerpRightArmTo(model, 1, -0.628f - limbBounce, -0.539f, -0.359f);
+				}
+			}
+			else
+			{
+				ModelUtil.lerpLeftArmTo(model, 1, -1.526f, 0, -0.18f);
+				ModelUtil.lerpRightArmTo(model, 1, -1.526f, 0, 0.18f);
+			}
+		}
 	}
 
-	public record ModelEntry(P3dModel model, Identifier baseTexture)
+	public static <T extends LivingEntity> void poseBipedArms(BipedEntityModel<T> model)
 	{
+		//		var leftRotate = NamedBufferUtil.getF("__left_arm_rotate", model.leftArm.pitch, model.leftArm.yaw, model.leftArm.roll);
+		//		var rightRotate = NamedBufferUtil.getF("__right_arm_rotate", model.rightArm.pitch, model.rightArm.yaw, model.rightArm.roll);
+		//
+		//		ImGui.sliderFloat3("Left", leftRotate, -MathHelper.PI, MathHelper.PI);
+		//		ImGui.sliderFloat3("Right", rightRotate, -MathHelper.PI, MathHelper.PI);
+		//
+		//		model.leftArm.pitch = leftRotate[0];
+		//		model.leftArm.yaw = leftRotate[1];
+		//		model.leftArm.roll = leftRotate[2];
+		//
+		//		model.rightArm.pitch = rightRotate[0];
+		//		model.rightArm.yaw = rightRotate[1];
+		//		model.rightArm.roll = rightRotate[2];
 	}
 }
