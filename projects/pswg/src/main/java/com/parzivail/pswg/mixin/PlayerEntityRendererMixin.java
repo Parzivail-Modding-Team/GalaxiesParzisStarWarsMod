@@ -40,12 +40,6 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 		CameraHelper.playerRenderHead(abstractClientPlayerEntity, matrixStack, ci);
 	}
 
-	@Inject(method = "render(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("RETURN"), cancellable = true)
-	private void render$return(AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci)
-	{
-		CameraHelper.playerRenderReturn(abstractClientPlayerEntity, matrixStack, ci);
-	}
-
 	@Inject(method = "renderArm(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/client/network/AbstractClientPlayerEntity;Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/model/ModelPart;)V", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci, PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel)
 	{
