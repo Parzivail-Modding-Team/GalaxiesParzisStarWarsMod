@@ -50,6 +50,7 @@
 	"mixins": [
 		"pswg.mixins.json",
 		"blasters.mixins.json",
+		"debug.mixins.json",
 		"errorman.mixins.json",
 		"nem.mixins.json"
 	],

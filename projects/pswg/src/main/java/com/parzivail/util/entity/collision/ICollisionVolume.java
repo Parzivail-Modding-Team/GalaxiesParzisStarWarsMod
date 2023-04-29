@@ -15,5 +15,5 @@ public interface ICollisionVolume
 
 	ICollisionVolume transform(Matrix4f m);
 
-	void resolveCapsuleCollision(CapsuleVolume sourceHitbox, MutableObject<Vec3d> m);
+	boolean resolveCapsuleCollision(CapsuleVolume sourceHitbox, MutableObject<Vec3d> m);
 }

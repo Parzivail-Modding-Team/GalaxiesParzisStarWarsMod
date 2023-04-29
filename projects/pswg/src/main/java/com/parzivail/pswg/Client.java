@@ -37,6 +37,7 @@ import com.parzivail.pswg.features.blasters.client.BlasterZoomHandler;
 import com.parzivail.pswg.features.blasters.client.entity.BlasterBoltRenderer;
 import com.parzivail.pswg.features.blasters.client.entity.BlasterStunBoltRenderer;
 import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
+import com.parzivail.pswg.features.debug.DebugUtil;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.client.forge.LightsaberForgeScreen;
@@ -164,6 +165,7 @@ public class Client implements ClientModInitializer
 		ClientTickEvents.START_CLIENT_TICK.register(BlasterRecoilManager::tick);
 
 		ClientTickEvents.END_CLIENT_TICK.register(BlasterZoomHandler::tick);
+		ClientTickEvents.END_CLIENT_TICK.register(DebugUtil::tick);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Tree.SequoiaLeaves);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Tree.SequoiaLeaves);

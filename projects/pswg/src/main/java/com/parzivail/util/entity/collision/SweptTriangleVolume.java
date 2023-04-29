@@ -23,7 +23,7 @@ public record SweptTriangleVolume(Vec3d a, Vec3d b, Vec3d c, double radius) impl
 	}
 
 	@Override
-	public void resolveCapsuleCollision(CapsuleVolume sourceHitbox, MutableObject<Vec3d> movementContainer)
+	public boolean resolveCapsuleCollision(CapsuleVolume sourceHitbox, MutableObject<Vec3d> movementContainer)
 	{
 		var movement = movementContainer.getValue();
 		var result = CollisionUtil.closestPointsTriangleSegment(sourceHitbox.start().add(movement), sourceHitbox.end().add(movement), a, b, c);
@@ -34,21 +34,17 @@ public record SweptTriangleVolume(Vec3d a, Vec3d b, Vec3d c, double radius) impl
 
 		// Check if the volume is intersecting
 		if (result.squareDistance() > minDistance * minDistance)
-			return;
+			return false;
 
 		var intersectionLength = intersectionRay.length();
 		var overlap = intersectionLength - minDistance;
-
-//		var aPos = result.a().add(rayDir.multiply(sourceHitbox.radius()));
-//		var bPos = result.b().subtract(rayDir.multiply(radius));
-//
-//		MinecraftClient.getInstance().world.addParticle(ParticleTypes.FLAME, aPos.x, aPos.y, aPos.z, 0, 0, 0.1f);
-//		MinecraftClient.getInstance().world.addParticle(ParticleTypes.FLAME, bPos.x, bPos.y, bPos.z, 0, 0, 0.1f);
 
 		var impulse = intersectionRay.multiply(overlap / intersectionLength);
 
 		var slideMovement = movement.add(impulse);
 
 		movementContainer.setValue(slideMovement);
+
+		return true;
 	}
 }

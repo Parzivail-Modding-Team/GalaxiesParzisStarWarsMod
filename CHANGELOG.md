@@ -51,6 +51,7 @@
 * Blaster bolts now deflect properly off lightsabers
 * Fix blaster bolts disappearing (again)
 * Fix cycler bolt color
+* Partial fix for X-Wing hitbox (can still clip through wings and engines from top)
 
 # Internal Changes
 

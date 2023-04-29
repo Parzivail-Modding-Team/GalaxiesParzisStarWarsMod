@@ -5,34 +5,41 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import java.util.Optional;
+
 public class ComplexCollisionManager
 {
-	public static Vec3d adjustMovementForCollisions(Entity entity, Vec3d currentMovement)
+	public static Optional<Vec3d> adjustMovementForCollisions(Entity entity, Vec3d currentMovement)
 	{
 		var box = entity.getBoundingBox();
 		if (box.getAverageSideLength() < 1.0E-7D)
-			return currentMovement;
+			return Optional.empty();
 
 		Box box2 = box.expand(5);
-		var complexEntities = entity.world.getOtherEntities(entity, box2, other -> other instanceof IComplexEntityHitbox iceh && roughCollidesWith(iceh, entity)).stream();
+		var complexEntities = entity.world.getOtherEntities(entity, box2, other -> other instanceof IComplexEntityHitbox iceh && roughCollidesWith(iceh, entity));
 
 		var sourceHitbox = CapsuleVolume.of(entity.getBoundingBox());
 
 		final var m = new MutableObject<>(currentMovement);
 
-		complexEntities.forEach(e -> {
-			collide(entity, sourceHitbox, m, (IComplexEntityHitbox)e);
-		});
+		var collided = false;
+		for (var e : complexEntities)
+			collided |= collide(entity, sourceHitbox, m, (IComplexEntityHitbox)e);
 
-		return m.getValue();
+		if (collided)
+			return Optional.of(m.getValue());
+		return Optional.empty();
 	}
 
-	private static void collide(Entity entity, CapsuleVolume sourceHitbox, MutableObject<Vec3d> m, IComplexEntityHitbox e)
+	private static boolean collide(Entity entity, CapsuleVolume sourceHitbox, MutableObject<Vec3d> m, IComplexEntityHitbox e)
 	{
 		var hitbox = e.getCollision();
 
+		var collided = false;
 		for (var volume : hitbox)
-			volume.resolveCapsuleCollision(sourceHitbox, m);
+			collided |= volume.resolveCapsuleCollision(sourceHitbox, m);
+
+		return collided;
 	}
 
 	private static boolean roughCollidesWith(IComplexEntityHitbox iceh, Entity other)

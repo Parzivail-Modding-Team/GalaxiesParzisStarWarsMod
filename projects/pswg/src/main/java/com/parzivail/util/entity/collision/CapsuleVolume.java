@@ -20,28 +20,28 @@ public record CapsuleVolume(Vec3d start, Vec3d end, double radius) implements IC
 		                         r);
 	}
 
-//	public boolean collidesWith(ICollisionVolume other)
-//	{
-//		if (other instanceof CapsuleVolume capsule)
-//		{
-//			var result = CollisionUtil.closestPointsOnSegments(start, end, capsule.start, capsule.end);
-//			var r = radius + capsule.radius;
-//			return result.squareDistance() <= r * r;
-//		}
-//
-//		return false;
-//	}
-//
-//	public Vec3d closestDistanceTo(ICollisionVolume other)
-//	{
-//		if (other instanceof CapsuleVolume capsule)
-//		{
-//			var result = CollisionUtil.closestPointsOnSegments(start, end, capsule.start, capsule.end);
-//			return result.b().subtract(result.a());
-//		}
-//
-//		return null;
-//	}
+	//	public boolean collidesWith(ICollisionVolume other)
+	//	{
+	//		if (other instanceof CapsuleVolume capsule)
+	//		{
+	//			var result = CollisionUtil.closestPointsOnSegments(start, end, capsule.start, capsule.end);
+	//			var r = radius + capsule.radius;
+	//			return result.squareDistance() <= r * r;
+	//		}
+	//
+	//		return false;
+	//	}
+	//
+	//	public Vec3d closestDistanceTo(ICollisionVolume other)
+	//	{
+	//		if (other instanceof CapsuleVolume capsule)
+	//		{
+	//			var result = CollisionUtil.closestPointsOnSegments(start, end, capsule.start, capsule.end);
+	//			return result.b().subtract(result.a());
+	//		}
+	//
+	//		return null;
+	//	}
 
 	@Override
 	public ICollisionVolume transform(Quaternionf q)
@@ -56,7 +56,7 @@ public record CapsuleVolume(Vec3d start, Vec3d end, double radius) implements IC
 	}
 
 	@Override
-	public void resolveCapsuleCollision(CapsuleVolume sourceHitbox, MutableObject<Vec3d> movementContainer)
+	public boolean resolveCapsuleCollision(CapsuleVolume sourceHitbox, MutableObject<Vec3d> movementContainer)
 	{
 		var movement = movementContainer.getValue();
 		var result = CollisionUtil.closestPointsOnSegments(sourceHitbox.start().add(movement), sourceHitbox.end().add(movement), start, end);
@@ -67,21 +67,16 @@ public record CapsuleVolume(Vec3d start, Vec3d end, double radius) implements IC
 
 		// Check if the volume is intersecting
 		if (result.squareDistance() > minDistance * minDistance)
-			return;
+			return false;
 
 		var intersectionLength = intersectionRay.length();
 		var overlap = intersectionLength - minDistance;
 
 		var rayDir = intersectionRay.normalize();
 
-		//			var aPos = result.a().add(rayDir.multiply(sourceHitbox.radius()));
-		//			var bPos = result.b().subtract(rayDir.multiply(volume.radius()));
-		//
-		//			entity.world.addParticle(ParticleTypes.FLAME, aPos.x, aPos.y, aPos.z, 0, 0, 0);
-		//			entity.world.addParticle(ParticleTypes.FLAME, bPos.x, bPos.y, bPos.z, 0, 0, 0);
-
 		var impulse = rayDir.multiply(overlap);
 
 		movementContainer.setValue(movement.add(impulse));
+		return true;
 	}
 }
