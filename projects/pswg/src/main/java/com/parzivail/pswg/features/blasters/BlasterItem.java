@@ -484,6 +484,13 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		if (!world.isClient)
 		{
+			var data = PlayerData.getVolatilePublic(player);
+			if (data.isPatrolPosture())
+			{
+				data.setPatrolPosture(false);
+				data.syncAll();
+			}
+
 			var m = new Matrix4f();
 
 			m.rotateY(MathUtil.toRadians(-player.getYaw()));
