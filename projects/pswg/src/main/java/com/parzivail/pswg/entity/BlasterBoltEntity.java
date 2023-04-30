@@ -33,6 +33,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -66,6 +67,12 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	public Optional<Arm> getSourceArm()
 	{
 		var arm = this.dataTracker.get(ARM);
+		return deserializeArm(arm);
+	}
+
+	@NotNull
+	private static Optional<Arm> deserializeArm(byte arm)
+	{
 		return switch (arm)
 		{
 			case 0 -> Optional.of(Arm.LEFT);
@@ -119,6 +126,11 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		super.writeCustomDataToNbt(tag);
 		tag.putInt("life", getLife());
 		tag.putBoolean("ignoreWater", ignoreWater);
+		tag.putInt("color", getColor());
+		tag.putFloat("length", getLength());
+		tag.putFloat("radius", getRadius());
+		tag.putBoolean("smoldering", isSmoldering());
+		tag.putByte("arm", (byte)getSourceArm().orElse(Arm.LEFT).getId());
 	}
 
 	@Override
@@ -127,6 +139,11 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		super.readCustomDataFromNbt(tag);
 		setLife(tag.getInt("life"));
 		ignoreWater = tag.getBoolean("ignoreWater");
+		setColor(tag.getInt("color"));
+		setLength(tag.getFloat("length"));
+		setRadius(tag.getFloat("radius"));
+		setSmoldering(tag.getBoolean("smoldering"));
+		setSourceArm(deserializeArm(tag.getByte("arm")).orElse(Arm.RIGHT));
 	}
 
 	@Override

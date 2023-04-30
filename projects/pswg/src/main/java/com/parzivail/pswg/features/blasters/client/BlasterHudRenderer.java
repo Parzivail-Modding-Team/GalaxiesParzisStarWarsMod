@@ -74,9 +74,6 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			matrices.translate(-top + 10 + cooldownWidth / 2f, (isOff ? -1 : 1) * 130, 0);
 		}
 
-		var skdjfhsajldf = (scaledWidth - cooldownWidth) / 2;
-		drawTexture(matrices, skdjfhsajldf, top + cooldownOffset, 0, 20, cooldownWidth, 3);
-
 		var b = (BlasterItem)stack.getItem();
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
