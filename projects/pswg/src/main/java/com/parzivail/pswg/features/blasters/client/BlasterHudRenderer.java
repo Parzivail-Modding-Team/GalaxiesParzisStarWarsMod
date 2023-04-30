@@ -22,6 +22,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import org.joml.Quaternionf;
 
 import java.util.HashMap;
 
@@ -41,6 +42,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	@Override
 	public boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
 	{
+		matrices.push();
 		var bd = BlasterItem.getBlasterDescriptor(stack);
 
 		if (bd == null)
@@ -57,9 +59,23 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var left = scaledWidth / 2;
 		var top = scaledHeight / 2;
 		final var cooldownWidth = 61;
+		var cooldownOffset = 30;
 
-		if (BlasterItem.getWield(player) == BlasterWield.Dual && hand == Hand.OFF_HAND)
-			top += 10;
+		var isDual = BlasterItem.getWield(player) == BlasterWield.Dual;
+		var isOff = hand == Hand.OFF_HAND;
+
+		if (isDual)
+		{
+			matrices.translate(left, top, 0);
+			matrices.multiply(new Quaternionf().rotationZ(-90 * MathHelper.RADIANS_PER_DEGREE));
+			matrices.translate(-left, -top, 0);
+
+			cooldownOffset = 0;
+			matrices.translate(-top + 10 + cooldownWidth / 2f, (isOff ? -1 : 1) * 130, 0);
+		}
+
+		var skdjfhsajldf = (scaledWidth - cooldownWidth) / 2;
+		drawTexture(matrices, skdjfhsajldf, top + cooldownOffset, 0, 20, cooldownWidth, 3);
 
 		var b = (BlasterItem)stack.getItem();
 		var bt = new BlasterTag(stack.getOrCreateNbt());
@@ -78,7 +94,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			var cooldownBarX = (scaledWidth - cooldownWidth) / 2;
 
 			// translucent background
-			drawTexture(matrices, cooldownBarX, top + 30, 0, 0, cooldownWidth, 3);
+			drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 0, cooldownWidth, 3);
 
 			final float maxHeat = bd.heat.capacity;
 
@@ -89,7 +105,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				cooldownTimer = MathHelper.clamp(cooldownTimer, 0, 0.98f);
 
 				// cooldown background
-				drawTexture(matrices, cooldownBarX, top + 30, 0, 16, cooldownWidth, 3);
+				drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 16, cooldownWidth, 3);
 
 				if (bt.canBypassCooling)
 				{
@@ -99,15 +115,15 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 					var secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance * cooldownWidth);
 
 					// blue primary bypass
-					drawTexture(matrices, cooldownBarX + primaryBypassStartX, top + 30, primaryBypassStartX, 8, primaryBypassWidth, 3);
+					drawTexture(matrices, cooldownBarX + primaryBypassStartX, top + cooldownOffset, primaryBypassStartX, 8, primaryBypassWidth, 3);
 					// yellow secondary bypass
-					drawTexture(matrices, cooldownBarX + secondaryBypassStartX, top + 30, secondaryBypassStartX, 12, secondaryBypassWidth, 3);
+					drawTexture(matrices, cooldownBarX + secondaryBypassStartX, top + cooldownOffset, secondaryBypassStartX, 12, secondaryBypassWidth, 3);
 				}
 
 				// cursor
 				matrices.push();
 				matrices.translate(cooldownBarX + cooldownTimer * cooldownWidth - 1, 0, 0);
-				drawTexture(matrices, 0, top + 28, 0, 24, 3, 7);
+				drawTexture(matrices, 0, top + cooldownOffset - 2, 0, 24, 3, 7);
 				matrices.pop();
 			}
 			else if (bt.readyTimer > 0)
@@ -117,12 +133,12 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				readyTimer = MathHelper.clamp(readyTimer, 0, 0.98f);
 
 				// cooldown background
-				drawTexture(matrices, cooldownBarX, top + 30, 0, 32, cooldownWidth, 3);
+				drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 32, cooldownWidth, 3);
 
 				// cursor
 				matrices.push();
 				matrices.translate(cooldownBarX + readyTimer * cooldownWidth - 1, 0, 0);
-				drawTexture(matrices, 0, top + 28, 0, 24, 3, 7);
+				drawTexture(matrices, 0, top + cooldownOffset - 2, 0, 24, 3, 7);
 				matrices.pop();
 			}
 			else
@@ -151,13 +167,13 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				}
 
 				if (bt.overchargeTimer > 0)
-					drawTexture(matrices, cooldownBarX, top + 30, 0, 12, (int)(cooldownWidth * heatPercentage), 3);
+					drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 12, (int)(cooldownWidth * heatPercentage), 3);
 				else
-					drawTexture(matrices, cooldownBarX, top + 30, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
+					drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
 			}
 
 			// endcaps
-			drawTexture(matrices, cooldownBarX, top + 30, 0, 20, cooldownWidth, 3);
+			drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 20, cooldownWidth, 3);
 		}
 
 		/*
@@ -181,6 +197,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		}
 
 		RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
+		matrices.pop();
 
 		return cancelCrosshair;
 	}
