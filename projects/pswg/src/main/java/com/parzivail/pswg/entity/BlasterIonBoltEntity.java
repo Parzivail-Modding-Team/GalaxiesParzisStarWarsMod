@@ -24,7 +24,7 @@ public class BlasterIonBoltEntity extends BlasterBoltEntity
 	{
 		super.tick();
 
-		if (world.isClient)
+		if (world.isClient && this.age > 1)
 		{
 			var normal = this.getVelocity().normalize().multiply(-1);
 
