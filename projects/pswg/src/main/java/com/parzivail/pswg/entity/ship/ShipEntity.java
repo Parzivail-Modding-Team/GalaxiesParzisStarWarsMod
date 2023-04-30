@@ -6,12 +6,8 @@ import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.client.render.camera.ChaseCam;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.util.entity.TrackedDataHandlers;
 import com.parzivail.util.data.PacketByteBufHelper;
-import com.parzivail.util.entity.EntityUtil;
-import com.parzivail.util.entity.IFlyingVehicle;
-import com.parzivail.util.entity.IPrecisionEntity;
-import com.parzivail.util.entity.TrackedAnimationValue;
+import com.parzivail.util.entity.*;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import io.netty.buffer.Unpooled;
@@ -48,7 +44,7 @@ import org.joml.Quaternionf;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrecisionEntity
+public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrecisionVelocityEntity
 {
 	private static final TrackedData<Quaternionf> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);

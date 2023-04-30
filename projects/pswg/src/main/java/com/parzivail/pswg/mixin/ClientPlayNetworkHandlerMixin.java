@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.util.entity.IPrecisionEntity;
+import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +25,7 @@ public class ClientPlayNetworkHandlerMixin
 	private void onEntityVelocityUpdate(EntityVelocityUpdateS2CPacket packet, CallbackInfo ci)
 	{
 		Entity entity = this.world.getEntityById(packet.getId());
-		if (!(entity instanceof IPrecisionEntity ipe))
+		if (!(entity instanceof IPrecisionVelocityEntity ipe))
 			return;
 
 		if (packet instanceof PreciseEntityVelocityUpdateS2CPacket pevu)

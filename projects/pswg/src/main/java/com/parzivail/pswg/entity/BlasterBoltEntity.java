@@ -7,7 +7,8 @@ import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.util.data.PacketByteBufHelper;
-import com.parzivail.util.entity.IPrecisionEntity;
+import com.parzivail.util.entity.IPrecisionSpawnEntity;
+import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
+public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocityEntity, IPrecisionSpawnEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> COLOR = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -111,19 +112,15 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		SoundHelper.playBlasterBoltHissSound(this);
 
 		if (packet instanceof PreciseEntitySpawnS2CPacket pes)
+		{
 			this.setVelocity(pes.getVelocity());
+			this.readSpawnData(pes.getData());
+		}
 	}
 
 	@Override
-	public void setVelocity(Vec3d velocity)
+	public void writeSpawnData(NbtCompound tag)
 	{
-		super.setVelocity(velocity);
-	}
-
-	@Override
-	public void writeCustomDataToNbt(NbtCompound tag)
-	{
-		super.writeCustomDataToNbt(tag);
 		tag.putInt("life", getLife());
 		tag.putBoolean("ignoreWater", ignoreWater);
 		tag.putInt("color", getColor());
@@ -134,9 +131,8 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound tag)
+	public void readSpawnData(NbtCompound tag)
 	{
-		super.readCustomDataFromNbt(tag);
 		setLife(tag.getInt("life"));
 		ignoreWater = tag.getBoolean("ignoreWater");
 		setColor(tag.getInt("color"));
@@ -144,6 +140,20 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		setRadius(tag.getFloat("radius"));
 		setSmoldering(tag.getBoolean("smoldering"));
 		setSourceArm(deserializeArm(tag.getByte("arm")).orElse(Arm.RIGHT));
+	}
+
+	@Override
+	public void writeCustomDataToNbt(NbtCompound tag)
+	{
+		super.writeCustomDataToNbt(tag);
+		writeSpawnData(tag);
+	}
+
+	@Override
+	public void readCustomDataFromNbt(NbtCompound tag)
+	{
+		super.readCustomDataFromNbt(tag);
+		readSpawnData(tag);
 	}
 
 	@Override

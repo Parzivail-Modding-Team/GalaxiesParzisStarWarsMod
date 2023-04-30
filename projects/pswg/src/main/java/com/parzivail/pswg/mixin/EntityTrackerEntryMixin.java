@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.util.entity.IPrecisionEntity;
+import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -27,7 +27,7 @@ public abstract class EntityTrackerEntryMixin
 	@Inject(method = "tick()V", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/server/network/EntityTrackerEntry;trackingTick:I"), cancellable = true)
 	void tick(CallbackInfo ci)
 	{
-		if (!(entity instanceof IPrecisionEntity))
+		if (!(entity instanceof IPrecisionVelocityEntity))
 			return;
 
 		if (this.entity.velocityModified)
