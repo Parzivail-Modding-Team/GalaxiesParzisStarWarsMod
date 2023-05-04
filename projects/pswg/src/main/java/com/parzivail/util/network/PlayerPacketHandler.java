@@ -6,6 +6,8 @@ import com.parzivail.util.item.IItemActionListener;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.item.ItemAction;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -35,8 +37,6 @@ public class PlayerPacketHandler
 		var action = buf.readInt();
 
 		server.execute(() -> {
-			var stack = player.getMainHandStack();
-
 			var actions = ItemAction.values();
 			if (action < 0 || action >= actions.length)
 			{
@@ -44,9 +44,26 @@ public class PlayerPacketHandler
 				return;
 			}
 
+			var stack = getStackInHand(player, false);
 			if (stack.getItem() instanceof IItemActionListener)
 				((IItemActionListener)stack.getItem()).onItemAction(player.world, player, stack, actions[action]);
+			else
+			{
+				stack = getStackInHand(player, true);
+				if (stack.getItem() instanceof IItemActionListener)
+					((IItemActionListener)stack.getItem()).onItemAction(player.world, player, stack, actions[action]);
+			}
 		});
+	}
+
+	private static ItemStack getStackInHand(PlayerEntity player, boolean altHand)
+	{
+		// TODO: separate keybind?
+		altHand ^= player.isSneaking();
+
+		if (altHand)
+			return player.getOffHandStack();
+		return player.getMainHandStack();
 	}
 
 	public static void handleTogglePatrolPosture(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
