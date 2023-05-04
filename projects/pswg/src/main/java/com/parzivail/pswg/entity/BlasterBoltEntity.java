@@ -288,7 +288,8 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 	@Override
 	protected void onCollision(HitResult hitResult)
 	{
-		super.onCollision(hitResult);
+		if (hitResult.getType() != HitResult.Type.MISS)
+			this.setPosition(hitResult.getPos());
 
 		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
@@ -387,6 +388,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 		this.setYaw(yaw);
 		this.setPitch(pitch);
 		this.setVelocity(x * speed, y * speed, z * speed);
+		this.velocityModified = true;
 
 		return true;
 	}
@@ -401,6 +403,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 
 		// TODO: decrease damage on reflection?
 		this.setVelocity(newDir.multiply(velocity.length()));
+		this.velocityModified = true;
 
 		return true;
 	}
