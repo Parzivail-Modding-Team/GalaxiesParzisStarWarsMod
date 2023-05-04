@@ -1,7 +1,5 @@
 package com.parzivail.pswg.features.blasters;
 
-import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
@@ -15,18 +13,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.function.Consumer;
@@ -34,36 +28,14 @@ import java.util.function.Function;
 
 public class BlasterUtil
 {
-	public static DamageSource getDamageSource(Entity projectile, Entity attacker)
-	{
-		return new DamageSource(attacker.world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(SwgDamageTypes.BLASTER), projectile, attacker);
-	}
-
-	public static DamageSource getSlugDamageSource(Entity attacker)
-	{
-		return new DamageSource(attacker.world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(SwgDamageTypes.BLASTER_SLUG), attacker);
-	}
-
 	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, Function<Double, Double> damage, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
 	{
 		final var bolt = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world, ignoreWater);
 		entityInitializer.accept(bolt);
 		bolt.setRange(range);
+		bolt.setDamageFunction(damage);
 
 		world.spawnEntity(bolt);
-
-		var start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
-
-		var hit = EntityUtil.raycastEntities(getTargetedEntityClass(), start, fromDir, range, player, new Entity[] { player });
-		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.COLLIDER, ignoreWater ? RaycastContext.FluidHandling.NONE : RaycastContext.FluidHandling.ANY);
-
-		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
-		var blockDistance = blockHit.getType() == HitResult.Type.MISS ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
-
-		if (hit != null && entityDistance < blockDistance)
-		{
-			hit.entity().damage(getDamageSource(bolt, player), (float)(double)damage.apply(entityDistance));
-		}
 	}
 
 	public static void fireIon(World world, PlayerEntity player, float range, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
@@ -75,15 +47,6 @@ public class BlasterUtil
 		// TODO: ion effects
 
 		world.spawnEntity(bolt);
-	}
-
-	private static Class<? extends Entity> getTargetedEntityClass()
-	{
-		var config = Resources.CONFIG.get();
-		if (config.server.allowBlasterNonlivingDamage)
-			return Entity.class;
-
-		return LivingEntity.class;
 	}
 
 	public static void fireStun(World world, PlayerEntity player, Vec3d fromDir, float range, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)

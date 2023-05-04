@@ -1,6 +1,7 @@
 package com.parzivail.pswg.entity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.hit.BlockHitResult;
@@ -40,6 +41,11 @@ public class BlasterStunBoltEntity extends BlasterBoltEntity
 	protected boolean deflect(BlockHitResult hit, BlockState state)
 	{
 		return false;
+	}
+
+	@Override
+	protected void damage(Entity target)
+	{
 	}
 }
 

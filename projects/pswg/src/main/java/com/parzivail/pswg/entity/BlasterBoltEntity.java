@@ -1,7 +1,9 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
+import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.container.SwgTags;
@@ -15,9 +17,11 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TntBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.TntEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -26,6 +30,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Arm;
 import net.minecraft.util.hit.BlockHitResult;
@@ -37,17 +42,20 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocityEntity, IPrecisionSpawnEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> COLOR = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Float> ODOMETER = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Float> LENGTH = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Float> RADIUS = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Boolean> SMOLDERING = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private static final TrackedData<Byte> ARM = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.BYTE);
 
 	private boolean ignoreWater;
+	private Function<Double, Double> damageFunction;
 
 	public BlasterBoltEntity(EntityType<? extends BlasterBoltEntity> type, World world)
 	{
@@ -126,6 +134,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 		tag.putInt("color", getColor());
 		tag.putFloat("length", getLength());
 		tag.putFloat("radius", getRadius());
+		tag.putFloat("odometer", getOdometer());
 		tag.putBoolean("smoldering", isSmoldering());
 		tag.putByte("arm", (byte)getSourceArm().orElse(Arm.LEFT).getId());
 	}
@@ -138,6 +147,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 		setColor(tag.getInt("color"));
 		setLength(tag.getFloat("length"));
 		setRadius(tag.getFloat("radius"));
+		setOdometer(tag.getFloat("odometer"));
 		setSmoldering(tag.getBoolean("smoldering"));
 		setSourceArm(deserializeArm(tag.getByte("arm")).orElse(Arm.RIGHT));
 	}
@@ -174,6 +184,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 		dataTracker.startTracking(LIFE, 100);
 		dataTracker.startTracking(COLOR, 0);
 		dataTracker.startTracking(LENGTH, 1f);
+		dataTracker.startTracking(ODOMETER, 0f);
 		dataTracker.startTracking(RADIUS, 1f);
 		dataTracker.startTracking(SMOLDERING, false);
 		dataTracker.startTracking(ARM, (byte)255);
@@ -209,6 +220,16 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 		dataTracker.set(RADIUS, radius);
 	}
 
+	public float getOdometer()
+	{
+		return dataTracker.get(ODOMETER);
+	}
+
+	public void setOdometer(float odometer)
+	{
+		dataTracker.set(ODOMETER, odometer);
+	}
+
 	public float getLength()
 	{
 		return dataTracker.get(LENGTH);
@@ -232,10 +253,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 	@Override
 	public void tick()
 	{
-		final var life = getLife() - 1;
-		setLife(life);
-
-		if (!world.isClient && life <= 0)
+		if (!world.isClient && this.age > this.getLife())
 		{
 			this.discard();
 			return;
@@ -259,6 +277,10 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 				vec = vec.add(dVel);
 			}
 		}
+
+		var dist = getOdometer();
+		dist += this.getVelocity().length();
+		setOdometer(dist);
 
 		super.tick();
 	}
@@ -340,17 +362,15 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 			var entity = entityHit.getEntity();
 
 			if (entity instanceof LivingEntity le && le.getActiveItem().getItem() instanceof LightsaberItem && le.isUsingItem())
+			{
 				if (deflect(le))
 					return;
+			}
+			else
+				damage(entity);
 		}
 
 		this.discard();
-	}
-
-	@Override
-	public void remove(RemovalReason reason)
-	{
-		super.remove(reason);
 	}
 
 	protected boolean deflect(LivingEntity entity)
@@ -383,5 +403,33 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 		this.setVelocity(newDir.multiply(velocity.length()));
 
 		return true;
+	}
+
+	protected void damage(Entity target)
+	{
+		// TODO: registry of damage functions to allow serializing them?
+		if (damageFunction == null || !getTargetedEntityClass().isAssignableFrom(target.getClass()))
+			return;
+
+		target.damage(getDamageSource(this, this.getOwner()), (float)(double)damageFunction.apply((double)getOdometer()));
+	}
+
+	public static DamageSource getDamageSource(Entity projectile, Entity attacker)
+	{
+		return new DamageSource(attacker.world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(SwgDamageTypes.BLASTER), projectile, attacker);
+	}
+
+	private static Class<? extends Entity> getTargetedEntityClass()
+	{
+		var config = Resources.CONFIG.get();
+		if (config.server.allowBlasterNonlivingDamage)
+			return Entity.class;
+
+		return LivingEntity.class;
+	}
+
+	public void setDamageFunction(Function<Double, Double> damage)
+	{
+		this.damageFunction = damage;
 	}
 }
