@@ -33,7 +33,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.burstParameters(2, 3, 2)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 42, 12, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 42, 24, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f)),
 				new BlasterDescriptor(Resources.id("bowcaster"), BlasterArchetype.HEAVY)
 						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC), BlasterWaterBehavior.BOLTS_PASS_THROUGH_WATER)
@@ -42,7 +42,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.bolt(ColorUtil.packHsv(0.98f, 1, 1), 1.25f, 1)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 100, 12, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 100, 24, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.5f, 0.05f, 0.3f, 0.06f))
 						.attachments(b -> b.attachment(1, "repeater", BlasterAttachmentFunction.ALLOW_BURST, BlasterAttachmentCategory.INTERNAL_ORDNANCE_CONFIG)),
 				new BlasterDescriptor(Resources.id("cycler"), BlasterArchetype.SLUGTHROWER)
@@ -52,7 +52,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.bolt(ColorUtil.packHsv(0.98f, 1, 1), 1, 0.75f)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 338, 100, 20, 14, 100, 40))
+						.heat(new BlasterHeatInfo(1008, 338, 200, 20, 14, 20, 40))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.08f, 0.3f, 0.03f))
 						.attachments(b -> b.attachment(1, "barrel", BlasterAttachmentFunction.REDUCE_RECOIL, BlasterAttachmentCategory.BARREL, "barrel_extension", null)
 						                   .attachment(2, "scope", BlasterAttachmentFunction.SNIPER_SCOPE, BlasterAttachmentCategory.SCOPE, "scope_extension", null)),
@@ -64,7 +64,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.autoParameters(3)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 42, 12, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 42, 24, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f)),
 				new BlasterDescriptor(Resources.id("dc15a"), BlasterArchetype.RIFLE)
 						.sound(Resources.id("dc15"))
@@ -75,7 +75,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.autoParameters(4)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 42, 12, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 42, 24, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f)),
 				new BlasterDescriptor(Resources.id("dh17"), BlasterArchetype.PISTOL)
 						.firingBehavior(List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
@@ -85,7 +85,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.autoParameters(3)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 60, 10, 54, 14, 18, 80))
+						.heat(new BlasterHeatInfo(1008, 60, 20, 54, 14, 5, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.03f)),
 				new BlasterDescriptor(Resources.id("dl18"), BlasterArchetype.PISTOL)
 						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
@@ -94,7 +94,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.bolt(ColorUtil.packHsv(0.98f, 1, 1), 1, 1)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 70, 8, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 70, 16, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.4f, 0.04f))
 						.attachments(b -> b.attachment(1, "firing", BlasterAttachmentFunction.ALLOW_AUTO, BlasterAttachmentCategory.INTERNAL_ORDNANCE_CONFIG)
 						                   .attachment(2, "cooling", BlasterAttachmentFunction.IMPROVE_COOLING, BlasterAttachmentCategory.INTERNAL_COOLING)
@@ -107,7 +107,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.bolt(ColorUtil.packHsv(0.98f, 1, 1), 1, 1)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 120, 8, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 120, 16, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.5f, 0.05f, 0.3f, 0.02f)),
 				new BlasterDescriptor(Resources.id("dlt19"), BlasterArchetype.HEAVY)
 						.firingBehavior(List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
@@ -117,7 +117,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.autoParameters(2)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 30, 9, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 30, 18, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.8f, 0.06f, 0.3f, 0.03f))
 						.attachments(b -> b.attachment(1, "scope_d", BlasterAttachmentFunction.DEFAULT_SCOPE, BlasterAttachmentCategory.SCOPE, "scope_d", null)
 						                   .attachment(1, "scope_x", BlasterAttachmentFunction.SNIPER_SCOPE, BlasterAttachmentCategory.SCOPE, "scope_x", null)
@@ -134,7 +134,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.autoParameters(4)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 55, 10, 54, 14, 10, 80))
+						.heat(new BlasterHeatInfo(1008, 55, 20, 54, 14, 5, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.07f, 0.3f, 0.03f)),
 				new BlasterDescriptor(Resources.id("ee3"), BlasterArchetype.RIFLE)
 						.firingBehavior(List.of(BlasterFiringMode.BURST, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
@@ -144,7 +144,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.burstParameters(2, 3, 2)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 45, 8, 54, 14, 14, 80))
+						.heat(new BlasterHeatInfo(1008, 45, 16, 54, 14, 5, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.07f, 0.2f, 0.03f))
 						.attachments(b -> b.attachment(1, "stock_wood", BlasterAttachmentFunction.REDUCE_RECOIL, BlasterAttachmentCategory.STOCK, "stock", Resources.id("textures/item/model/blaster/ee3_esb.png"))
 						                   .attachment(1, "stock_metal", BlasterAttachmentFunction.REDUCE_SPREAD, BlasterAttachmentCategory.STOCK, "stock", Resources.id("textures/item/model/blaster/ee3_rotj.png"))
@@ -162,7 +162,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.bolt(ColorUtil.packHsv(0.62f, 0.51f, 1), 0.5f, 1)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 42, 8, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 42, 16, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.05f, 0.3f, 0.01f))
 						.attachments(b -> b.attachment(1, "gas_conversion", BlasterAttachmentFunction.ION_TO_GAS_CONVERSION, BlasterAttachmentCategory.INTERNAL_ORDNANCE_CONFIG)
 						                   .attachment(1, "repulsor_addon", BlasterAttachmentFunction.ION_TO_REPULSOR_CONVERSION, BlasterAttachmentCategory.INTERNAL_ORDNANCE_CONFIG)),
@@ -173,7 +173,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.bolt(ColorUtil.packHsv(0.62f, 1, 1), 0.5f, 1)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 42, 8, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 42, 16, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.05f, 0.3f, 0.01f)),
 				new BlasterDescriptor(Resources.id("rk3"), BlasterArchetype.PISTOL)
 						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
@@ -182,7 +182,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.bolt(ColorUtil.packHsv(0.98f, 1, 1), 1, 1)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 85, 12, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 85, 24, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.02f))
 						.attachments(b -> b.attachment(1, "cooling", BlasterAttachmentFunction.IMPROVE_COOLING, BlasterAttachmentCategory.INTERNAL_COOLING)),
 				new BlasterDescriptor(Resources.id("rt97c"), BlasterArchetype.HEAVY)
@@ -193,7 +193,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.autoParameters(2)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 28, 8, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 28, 16, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f))
 						.attachments(b -> b.attachment(1, "cooling", BlasterAttachmentFunction.IMPROVE_COOLING, BlasterAttachmentCategory.INTERNAL_COOLING)),
 				new BlasterDescriptor(Resources.id("se14c"), BlasterArchetype.PISTOL)
@@ -204,7 +204,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.burstParameters(2, 5, 2)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 85, 20, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 85, 40, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.03f))
 						.attachments(b -> b.attachment(1, "barrel_extension", BlasterAttachmentFunction.REDUCE_SPREAD, BlasterAttachmentCategory.BARREL, "barrel_extension", null)
 						                   .attachment(2, "cooling", BlasterAttachmentFunction.IMPROVE_COOLING, BlasterAttachmentCategory.INTERNAL_COOLING)),
@@ -217,7 +217,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.burstParameters(2, 3, 2)
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
-						.heat(new BlasterHeatInfo(1008, 95, 12, 20, 14, 100, 80))
+						.heat(new BlasterHeatInfo(1008, 95, 24, 20, 14, 20, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.5f, 0.05f, 0.3f, 0.03f))
 						.attachments(b -> b.attachment(1, "long_barrel", BlasterAttachmentFunction.REDUCE_SPREAD, BlasterAttachmentCategory.BARREL, "long_barrel", null)
 						                   .attachment(1, "short_barrel", BlasterAttachmentFunction.INCREASE_DAMAGE, BlasterAttachmentCategory.BARREL, "short_barrel", null)
