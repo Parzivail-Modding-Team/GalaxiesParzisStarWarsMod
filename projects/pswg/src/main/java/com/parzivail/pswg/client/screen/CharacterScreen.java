@@ -332,7 +332,7 @@ public class CharacterScreen extends Screen
 			close();
 		}
 
-		var allSpecies = SwgSpeciesRegistry.ALL_SPECIES.get();
+		var allSpecies = new ArrayList<>(SwgSpeciesRegistry.getAllSlugs());
 
 		var listOverflowSize = Math.max(0, LIST_ROW_HEIGHT * allSpecies.size() - LEFT_LIST_CUTOUT.height);
 		var scrollOffset = -(int)(listOverflowSize * LEFT_SCROLL_THUMB.getScroll());
@@ -346,7 +346,7 @@ public class CharacterScreen extends Screen
 
 			previewVariable = null;
 			previewVariableValue = null;
-			previewSpecies = SwgSpeciesRegistry.create(allSpecies.get(i).getSlug(), previewSpeciesGender);
+			previewSpecies = SwgSpeciesRegistry.create(allSpecies.get(i), previewSpeciesGender);
 			RIGHT_SCROLL_THUMB.setScroll(0);
 			return true;
 		}
@@ -634,7 +634,7 @@ public class CharacterScreen extends Screen
 
 		var x = width / 2 - HALF_WIDTH;
 		var y = height / 2 - HALF_HEIGHT;
-		var selectedSpeciesSlug = previewSpecies == null ? SwgSpeciesRegistry.SPECIES_NONE : previewSpecies.getSlug();
+		var selectedSpeciesSlug = previewSpecies == null ? SwgSpeciesRegistry.METASPECIES_NONE : previewSpecies.getSlug();
 		var isSpeciesPage = page == Page.SPECIES;
 
 		LEFT_LIST_CUTOUT.setOrigin(x, y);
@@ -724,7 +724,7 @@ public class CharacterScreen extends Screen
 
 		this.textRenderer.draw(matrices, this.title, x + 9, y + 9, 0x404040);
 
-		if (!selectedSpeciesSlug.equals(SwgSpeciesRegistry.SPECIES_NONE))
+		if (!selectedSpeciesSlug.equals(SwgSpeciesRegistry.METASPECIES_NONE))
 		{
 			var speciesHeaderText = Text.translatable(SwgSpeciesRegistry.getTranslationKey(selectedSpeciesSlug));
 			var speciesHeaderOffset = -textRenderer.getWidth(speciesHeaderText) / 2f;
@@ -867,7 +867,7 @@ public class CharacterScreen extends Screen
 
 	private void renderLeftScrollPanelPageSpecies(MatrixStack matrices, int mouseX, int mouseY, int x, int y, Identifier selectedSpeciesSlug)
 	{
-		var allSpecies = SwgSpeciesRegistry.ALL_SPECIES.get();
+		var allSpecies = new ArrayList<>(SwgSpeciesRegistry.getAllSlugs());
 		LEFT_SCROLL_THUMB.setScrollInputFactor(allSpecies.size());
 
 		var listOverflowSize = Math.max(0, LIST_ROW_HEIGHT * allSpecies.size() - LEFT_LIST_CUTOUT.height);
@@ -881,8 +881,8 @@ public class CharacterScreen extends Screen
 				continue;
 
 			var entry = allSpecies.get(i);
-			var hovering = entry.getSlug().equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width));
-			SwgSpeciesIcons.renderLargeCircle(matrices, x + SPECIES_LIST_PANEL_X, y + SPECIES_LIST_PANEL_Y + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, entry.getSlug(), hovering);
+			var hovering = entry.equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width));
+			SwgSpeciesIcons.renderLargeCircle(matrices, x + SPECIES_LIST_PANEL_X, y + SPECIES_LIST_PANEL_Y + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, entry, hovering);
 		}
 
 		for (var i = 0; i < allSpecies.size(); i++)
@@ -891,9 +891,9 @@ public class CharacterScreen extends Screen
 				continue;
 
 			var entry = allSpecies.get(i);
-			var hovering = entry.getSlug().equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width));
+			var hovering = entry.equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width));
 
-			var translatedText = Text.translatable(SwgSpeciesRegistry.getTranslationKey(entry.getSlug()));
+			var translatedText = Text.translatable(SwgSpeciesRegistry.getTranslationKey(entry));
 			var wrapped = this.textRenderer.wrapLines(translatedText, 60);
 			this.textRenderer.draw(matrices, wrapped.get(0), x + SPECIES_LIST_PANEL_X + 27, y + SPECIES_LIST_PANEL_Y + 6 + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, hovering ? 0xFFFFFF : 0x000000);
 		}

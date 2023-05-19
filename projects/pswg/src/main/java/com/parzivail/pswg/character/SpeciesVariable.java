@@ -11,7 +11,7 @@ public abstract class SpeciesVariable
 	protected final Identifier targetSpecies;
 	protected final String name;
 
-	public static boolean isNotEmpty(SwgSpecies species, SpeciesVariable variable)
+	public static boolean isNotNone(SwgSpecies species, SpeciesVariable variable)
 	{
 		return !species.getVariable(variable).equals(NONE);
 	}

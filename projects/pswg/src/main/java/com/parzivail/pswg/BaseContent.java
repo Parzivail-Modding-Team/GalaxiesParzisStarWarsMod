@@ -1,8 +1,8 @@
 package com.parzivail.pswg;
 
 import com.parzivail.pswg.api.PswgAddon;
-import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.pswg.api.PswgContent;
+import com.parzivail.pswg.character.SpeciesBuilder;
 import com.parzivail.pswg.features.blasters.data.*;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberDescriptor;
@@ -12,13 +12,35 @@ import net.fabricmc.loader.api.FabricLoader;
 
 import java.util.List;
 
-public class BaseContent implements PswgAddon, PswgClientAddon
+public class BaseContent implements PswgAddon
 {
 	@Override
 	public void onPswgReady()
 	{
+		registerSpecies();
 		registerLightsabers();
 		registerBlasters();
+	}
+
+	private void registerSpecies()
+	{
+		PswgContent.registerSpecies(
+				new SpeciesBuilder(Resources.id("chiss"))
+						.withHumanoidClothing()
+						.withHumanoidBodyModifications()
+						.humanoidVariable("eyebrows", "black", "white")
+						.humanoidVariable("hair", "1", "2", "3", "4")
+						.variable("hair_color", 0x1f1f1f, 0xf8e7c6, 0xedf2f1, 0xb8bcbc)
+						.variable("body", "1", "2", "3", "4", "5", "6")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .then("eyes")
+						                         .thenGender("eyebrows", false)
+						                         .thenTint("hair", "hair_color", true)
+						                         .thenHumanoidClothing()
+						)
+						.build()
+		);
 	}
 
 	private static void registerBlasters()
@@ -254,10 +276,5 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 			PswgContent.registerLightsaberPreset(
 					new LightsaberDescriptor(Resources.id("rig_test"), "parzi", ColorUtil.packHsv(0.62f, 1, 1), LightsaberBladeType.DEFAULT)
 			);
-	}
-
-	@Override
-	public void onPswgClientReady()
-	{
 	}
 }

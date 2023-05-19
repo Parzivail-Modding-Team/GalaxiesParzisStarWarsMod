@@ -1,7 +1,7 @@
 package com.parzivail.pswg.container;
 
-import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.character.SpeciesFactory;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.character.species.*;
@@ -13,21 +13,17 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class SwgSpeciesRegistry
 {
 	protected static final HashMap<Identifier, Function<String, SwgSpecies>> SPECIES = new LinkedHashMap<>();
 
 	// Species with special meaning internally
-	public static final Identifier SPECIES_GLOBAL = Resources.id("global"); // "global" species contains shared textures
-	public static final Identifier SPECIES_HUMANOID = Resources.id("humanoid"); // "humanoid" species contains shared textures for the "human" model
-	public static final Identifier SPECIES_NONE = new Identifier("none"); // "none" species delegates player models back to Minecraft
+	public static final Identifier METASPECIES_GLOBAL = Resources.id("global"); // "global" species contains shared textures
+	public static final Identifier METASPECIES_HUMANOID = Resources.id("humanoid"); // "humanoid" species contains shared textures for the "human" model
+	public static final Identifier METASPECIES_NONE = new Identifier("none"); // "none" species delegates player models back to Minecraft
 
 	// Normal species and variants
 	public static final Identifier SPECIES_AQUALISH = Resources.id("aqualish");
@@ -49,14 +45,6 @@ public class SwgSpeciesRegistry
 	public static final Identifier SPECIES_TWILEK = Resources.id("twilek");
 	public static final Identifier SPECIES_WOOKIEE = Resources.id("wookiee");
 
-	public static final Supplier<List<SwgSpecies>> ALL_SPECIES = Suppliers.memoize(
-			() -> SPECIES
-					.values()
-					.stream()
-					.map(stringSwgSpeciesFunction -> stringSwgSpeciesFunction.apply(null))
-					.collect(Collectors.toList())
-	);
-
 	static
 	{
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_AQUALISH, SpeciesAqualish::new);
@@ -68,9 +56,24 @@ public class SwgSpeciesRegistry
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_TOGRUTA, SpeciesTogruta::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_TWILEK, SpeciesTwilek::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_HUMAN, SpeciesHuman::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_CHISS, SpeciesChiss::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_PANTORAN, SpeciesPantoran::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_WOOKIEE, SpeciesWookiee::new);
+	}
+
+	public static void registerAll(Map<Identifier, SpeciesFactory> speciesPresets)
+	{
+		for (var entry : speciesPresets.entrySet())
+			SPECIES.put(entry.getKey(), (serialized) -> entry.getValue().create(serialized));
+	}
+
+	public static Set<Identifier> getAllSlugs()
+	{
+		return SPECIES.keySet();
+	}
+
+	public static Collection<Function<String, SwgSpecies>> getFactories()
+	{
+		return SPECIES.values();
 	}
 
 	public static SwgSpecies deserialize(String serialized)

@@ -38,7 +38,6 @@ public class SwgSpeciesRenderer
 		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, humanoidBase(Resources.id("species/togruta_m")), humanoidBase(Resources.id("species/togruta_f")), null);
 		register(SwgSpeciesRegistry.SPECIES_TWILEK, humanoidBase(Resources.id("species/twilek")), SwgSpeciesRenderer::animateTwilek);
 		register(SwgSpeciesRegistry.SPECIES_HUMAN, humanoidBase(Resources.id("species/human")), null);
-		register(SwgSpeciesRegistry.SPECIES_CHISS, humanoidBase(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_PANTORAN, humanoidBase(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_WOOKIEE, fullModel(Resources.id("species/wookiee")), null);
 	}
@@ -53,7 +52,7 @@ public class SwgSpeciesRenderer
 		return Client.NEM_MANAGER.getPlayerModel(id, true);
 	}
 
-	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> humanoidBase(Identifier id)
+	public static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> humanoidBase(Identifier id)
 	{
 		return Client.NEM_MANAGER.getOverridingPlayerModel(id, HUMANOID_BASE_MODEL_ID, true);
 	}
@@ -68,13 +67,13 @@ public class SwgSpeciesRenderer
 		register(new SwgSpeciesModel(SwgSpecies.toModel(speciesSlug, gender), Suppliers.memoize(model::get), animator));
 	}
 
-	private static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> male, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> female, PlayerSpeciesModelRenderer.Animator animator)
+	public static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> male, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> female, PlayerSpeciesModelRenderer.Animator animator)
 	{
 		register(speciesSlug, SpeciesGender.MALE, male, animator);
 		register(speciesSlug, SpeciesGender.FEMALE, female, animator);
 	}
 
-	private static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> androgynousModel, PlayerSpeciesModelRenderer.Animator animator)
+	public static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> androgynousModel, PlayerSpeciesModelRenderer.Animator animator)
 	{
 		register(speciesSlug, SpeciesGender.MALE, androgynousModel, animator);
 		register(speciesSlug, SpeciesGender.FEMALE, androgynousModel, animator);

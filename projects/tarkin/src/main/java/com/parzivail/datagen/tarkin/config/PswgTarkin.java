@@ -1242,8 +1242,10 @@ public class PswgTarkin
 
 		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
 
-		for (var species : SwgSpeciesRegistry.ALL_SPECIES.get())
+		for (var factory : SwgSpeciesRegistry.getFactories())
 		{
+			var species = factory.apply(null);
+
 			if (!species.getSlug().getNamespace().equals(namespace))
 				continue;
 

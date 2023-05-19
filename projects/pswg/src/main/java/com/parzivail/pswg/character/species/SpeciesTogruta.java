@@ -62,17 +62,17 @@ public class SpeciesTogruta extends SwgSpecies
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
 
-		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_SCARS))
+		if (SpeciesVariable.isNotNone(this, VAR_HUMANOID_SCARS))
 			stack.add(getTexture(this, VAR_HUMANOID_SCARS));
-		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_TATTOOS))
+		if (SpeciesVariable.isNotNone(this, VAR_HUMANOID_TATTOOS))
 			stack.add(tint(getTexture(this, VAR_HUMANOID_TATTOOS), this, VAR_HUMANOID_TATTOO_COLOR));
 
 		stack.add(getGenderedTexture(this, VAR_LOWER_MONTRAL));
 
-		if (SpeciesVariable.isNotEmpty(this, VAR_UPPER_MONTRAL))
+		if (SpeciesVariable.isNotNone(this, VAR_UPPER_MONTRAL))
 			stack.add(getGenderedTexture(this, VAR_UPPER_MONTRAL));
 
-		if (SpeciesVariable.isNotEmpty(this, VAR_FACE))
+		if (SpeciesVariable.isNotNone(this, VAR_FACE))
 			stack.add(getTexture(this, VAR_FACE));
 
 		stack.add(getGlobalTexture("eyes_whites"));

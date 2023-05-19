@@ -1,6 +1,8 @@
 package com.parzivail.pswg.api;
 
 import com.google.common.collect.ImmutableMap;
+import com.parzivail.pswg.character.SpeciesFactory;
+import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberDescriptor;
@@ -28,6 +30,12 @@ public class PswgContent
 		void blasterRegistered(Identifier id, BlasterDescriptor descriptor);
 	}
 
+	@FunctionalInterface
+	public interface SpeciesRegistered
+	{
+		void speciesRegistered(Identifier id, SpeciesFactory species);
+	}
+
 	public static final Event<LightsaberRegistered> LIGHTSABER_REGISTERED = EventFactory.createArrayBacked(LightsaberRegistered.class, (id, descriptor) -> {
 	}, callbacks -> (id, descriptor) -> {
 		for (final var callback : callbacks)
@@ -40,10 +48,17 @@ public class PswgContent
 			callback.blasterRegistered(id, descriptor);
 	});
 
+	public static final Event<SpeciesRegistered> SPECIES_REGISTERED = EventFactory.createArrayBacked(SpeciesRegistered.class, (id, species) -> {
+	}, callbacks -> (id, species) -> {
+		for (final var callback : callbacks)
+			callback.speciesRegistered(id, species);
+	});
+
 	private static boolean isBaked = false;
 
 	private static Map<Identifier, LightsaberDescriptor> lightsaberPresets = new HashMap<>();
 	private static Map<Identifier, BlasterDescriptor> blasterPresets = new HashMap<>();
+	private static Map<Identifier, SpeciesFactory> speciesPresets = new HashMap<>();
 
 	public static void registerLightsaberPreset(LightsaberDescriptor... descriptors)
 	{
@@ -102,6 +117,21 @@ public class PswgContent
 		return blasterPresets;
 	}
 
+	public static void registerSpecies(SpeciesFactory... species)
+	{
+		checkBaked();
+		for (var entry : species)
+		{
+			SPECIES_REGISTERED.invoker().speciesRegistered(entry.getSlug(), entry);
+			speciesPresets.put(entry.getSlug(), entry);
+		}
+	}
+
+	public static Map<Identifier, SpeciesFactory> getSpecies()
+	{
+		return speciesPresets;
+	}
+
 	private static void checkBaked()
 	{
 		if (!isBaked)
@@ -112,6 +142,9 @@ public class PswgContent
 
 	public static void bake()
 	{
+		speciesPresets = ImmutableMap.copyOf(speciesPresets);
+		SwgSpeciesRegistry.registerAll(speciesPresets);
+
 		lightsaberPresets = ImmutableMap.copyOf(lightsaberPresets);
 
 		for (var preset : blasterPresets.values())

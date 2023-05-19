@@ -19,23 +19,23 @@ public abstract class SwgSpecies
 	private static final String VARIABLE_SEPARATOR = ",";
 	private static final String MODEL_SEPARATOR = ";";
 
-	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eyebrows");
-	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "hair");
-	protected static final SpeciesVariable VAR_HUMANOID_SCARS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "scars");
-	protected static final SpeciesVariable VAR_HUMANOID_TATTOOS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "tattoos");
+	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "eyebrows");
+	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "hair");
+	protected static final SpeciesVariable VAR_HUMANOID_SCARS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "scars");
+	protected static final SpeciesVariable VAR_HUMANOID_TATTOOS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "tattoos");
 
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_UNDERLAYER = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_underlayer");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_TOPS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_top");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOTTOMS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_bottom");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BELTS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_belt");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOOTS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_boots");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_GLOVES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_gloves");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_ACCESSORIES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_accessories");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_OUTERWEAR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_outerwear");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_UNDERLAYER = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_underlayer");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_TOPS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_top");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOTTOMS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_bottom");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BELTS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_belt");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOOTS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_boots");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_GLOVES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_gloves");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_ACCESSORIES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_accessories");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_OUTERWEAR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_outerwear");
 
-	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eye_color", 0x226622);
-	protected static final SpeciesColorVariable VAR_HUMANOID_TATTOO_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "tattoo_color", 0x665544);
-	protected static final SpeciesColorVariable VAR_HUMANOID_HAIR_COLOR = new DatapackedSpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "hair_color");
+	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "eye_color", 0x226622);
+	protected static final SpeciesColorVariable VAR_HUMANOID_TATTOO_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "tattoo_color", 0x665544);
+	protected static final SpeciesColorVariable VAR_HUMANOID_HAIR_COLOR = new DatapackedSpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "hair_color");
 
 	public static Identifier getSpeciesSlug(String serializedSpecies)
 	{
@@ -67,7 +67,7 @@ public abstract class SwgSpecies
 
 	protected static Identifier getGlobalTexture(String texture)
 	{
-		return getTexture(SwgSpeciesRegistry.SPECIES_GLOBAL, texture);
+		return getTexture(SwgSpeciesRegistry.METASPECIES_GLOBAL, texture);
 	}
 
 	protected static Identifier getClothes(SwgSpecies species, PlayerEntity player)
@@ -149,7 +149,7 @@ public abstract class SwgSpecies
 
 	protected static Identifier getGenderedGlobalTexture(SpeciesGender gender, String texture)
 	{
-		return getTexture(toModel(SwgSpeciesRegistry.SPECIES_GLOBAL, gender), texture);
+		return getTexture(toModel(SwgSpeciesRegistry.METASPECIES_GLOBAL, gender), texture);
 	}
 
 	protected static Identifier getTexture(Identifier slug, String texture)
