@@ -102,6 +102,7 @@ public class BlasterTag extends TagSerializer
 	public void setFiringMode(BlasterFiringMode mode)
 	{
 		this.firingMode = mode.getId();
+		this.burstCounter = 0;
 	}
 
 	public void toggleAds()
