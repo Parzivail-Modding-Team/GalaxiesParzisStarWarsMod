@@ -17,6 +17,7 @@ import com.parzivail.util.lang.ImplicitOverride;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -36,6 +37,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -83,6 +85,18 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	{
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
 		return ColorUtil.hsvToRgb(ColorUtil.hsvGetH(lt.bladeColor), ColorUtil.hsvGetS(lt.bladeColor), ColorUtil.hsvGetV(lt.bladeColor));
+	}
+
+	@Override
+	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner)
+	{
+		return false;
 	}
 
 	@ImplicitOverride("IrisItemLightProvider::getLightEmission")
