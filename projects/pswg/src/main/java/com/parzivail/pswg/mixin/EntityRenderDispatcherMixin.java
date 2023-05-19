@@ -36,7 +36,7 @@ public class EntityRenderDispatcherMixin
 
 		var pc = PlayerData.getPersistentPublic((PlayerEntity)entity);
 
-		var species = pc.getSpecies();
+		var species = pc.getCharacter();
 		if (species == null)
 			return;
 

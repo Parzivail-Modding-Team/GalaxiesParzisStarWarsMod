@@ -13,40 +13,40 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 {
 	private final PlayerEntity provider;
 
-	private static final int SPECIES_SYNCOP = 1;
-	private String species = "";
+	private static final int CHARACTER_SYNCOP = 1;
+	private String character = "";
 
 	public PersistentPublicPlayerData(PlayerEntity provider)
 	{
 		this.provider = provider;
 	}
 
-	public SwgSpecies getSpecies()
+	public SwgSpecies getCharacter()
 	{
-		if (species.isEmpty())
+		if (character.isEmpty())
 			return null;
 
-		return SwgSpeciesRegistry.deserialize(species);
+		return SwgSpeciesRegistry.deserialize(character);
 	}
 
-	public void setSpecies(SwgSpecies species)
+	public void setCharacter(SwgSpecies character)
 	{
-		this.species = "";
+		this.character = "";
 
-		if (species != null)
-			this.species = species.serialize();
+		if (character != null)
+			this.character = character.serialize();
 
-		PlayerData.PERSISTENT_PUBLIC.sync(provider, (buf, recipient) -> writeSyncPacket(buf, recipient, SPECIES_SYNCOP));
+		PlayerData.PERSISTENT_PUBLIC.sync(provider, (buf, recipient) -> writeSyncPacket(buf, recipient, CHARACTER_SYNCOP));
 	}
 
 	@Override
 	public void readFromNbt(NbtCompound tag)
 	{
-		species = tag.getString("species");
-		onSpeciesChange();
+		character = tag.getString("character");
+		onCharacterChange();
 	}
 
-	private void onSpeciesChange()
+	private void onCharacterChange()
 	{
 		provider.calculateDimensions();
 	}
@@ -54,7 +54,7 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 	@Override
 	public void writeToNbt(NbtCompound tag)
 	{
-		tag.putString("species", species);
+		tag.putString("character", character);
 	}
 
 	/**
@@ -81,12 +81,13 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 
 		switch (syncOp)
 		{
-			case 0 -> { // Full sync
+			case 0 ->
+			{ // Full sync
 				var tag = new NbtCompound();
 				writeToNbt(tag);
 				buf.writeNbt(tag);
 			}
-			case SPECIES_SYNCOP -> buf.writeString(species);
+			case CHARACTER_SYNCOP -> buf.writeString(character);
 		}
 	}
 
@@ -104,15 +105,16 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 
 		switch (syncOp)
 		{
-			case 0 -> { // Full sync
+			case 0 ->
+			{ // Full sync
 				var tag = buf.readNbt();
 				if (tag != null)
 					this.readFromNbt(tag);
 			}
-			case SPECIES_SYNCOP ->
+			case CHARACTER_SYNCOP ->
 			{
-				species = buf.readString();
-				onSpeciesChange();
+				character = buf.readString();
+				onCharacterChange();
 			}
 		}
 	}

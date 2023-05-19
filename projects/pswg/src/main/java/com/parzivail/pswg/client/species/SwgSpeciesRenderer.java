@@ -6,7 +6,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
-import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -24,30 +23,17 @@ public class SwgSpeciesRenderer
 
 	public static final HashMap<Identifier, SwgSpeciesModel> MODELS = new HashMap<>();
 
-	static
-	{
-		//		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
-		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
-		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
-		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
-		register(SwgSpeciesRegistry.SPECIES_AQUALISH, humanoidBase(Resources.id("species/aqualish")), null);
-		register(SwgSpeciesRegistry.SPECIES_BITH, humanoidBase(Resources.id("species/bith")), null);
-		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, humanoidBase(Resources.id("species/chagrian")), null);
-		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, fullModel(Resources.id("species/kaminoan")), null);
-		register(SwgSpeciesRegistry.SPECIES_JAWA, humanoidBase(Resources.id("species/jawa")), null);
-		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, humanoidBase(Resources.id("species/togruta_m")), humanoidBase(Resources.id("species/togruta_f")), null);
-		register(SwgSpeciesRegistry.SPECIES_TWILEK, humanoidBase(Resources.id("species/twilek")), SwgSpeciesRenderer::animateTwilek);
-		register(SwgSpeciesRegistry.SPECIES_HUMAN, humanoidBase(Resources.id("species/human")), null);
-		register(SwgSpeciesRegistry.SPECIES_PANTORAN, humanoidBase(Resources.id("species/human")), null);
-		register(SwgSpeciesRegistry.SPECIES_WOOKIEE, fullModel(Resources.id("species/wookiee")), null);
-	}
+	//		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
+	//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
+	//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
+	//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
 
 	public static Supplier<BipedEntityModel<LivingEntity>> getHumanModel()
 	{
 		return Client.NEM_MANAGER.getOverridingBipedModel(Resources.id("species/human"), HUMANOID_BASE_MODEL_ID, true);
 	}
 
-	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> fullModel(Identifier id)
+	public static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> fullModel(Identifier id)
 	{
 		return Client.NEM_MANAGER.getPlayerModel(id, true);
 	}

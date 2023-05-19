@@ -12,7 +12,6 @@ import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
 import com.parzivail.pswg.features.blasters.data.BlasterArchetype;
@@ -25,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 
@@ -1236,8 +1234,6 @@ public class PswgTarkin
 
 	public static void generateSpeciesLang(List<BuiltAsset> assets, LanguageBuilder lang, String namespace)
 	{
-		var speciesManager = SwgSpeciesManager.INSTANCE;
-		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
 		var speciesLangBase = lang.entry("species").modid();
 
 		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);

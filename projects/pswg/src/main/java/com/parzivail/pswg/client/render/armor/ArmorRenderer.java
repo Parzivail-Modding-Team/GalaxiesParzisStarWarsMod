@@ -276,7 +276,7 @@ public class ArmorRenderer
 				// their character, since all PSWG species use the slim
 				// model
 				var pc = PlayerData.getPersistentPublic(player);
-				return pc.getSpecies() != null;
+				return pc.getCharacter() != null;
 			}
 		}
 

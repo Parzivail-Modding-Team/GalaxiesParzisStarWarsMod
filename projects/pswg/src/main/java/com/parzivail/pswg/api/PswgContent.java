@@ -2,6 +2,8 @@ package com.parzivail.pswg.api;
 
 import com.google.common.collect.ImmutableMap;
 import com.parzivail.pswg.character.SpeciesFactory;
+import com.parzivail.pswg.character.SpeciesVariable;
+import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
@@ -36,6 +38,12 @@ public class PswgContent
 		void speciesRegistered(Identifier id, SpeciesFactory species);
 	}
 
+	@FunctionalInterface
+	public interface HumanoidCustomizationRegistered
+	{
+		void humanoidCustomizationRegistered(String id, HumanoidCustomizationOptions options);
+	}
+
 	public static final Event<LightsaberRegistered> LIGHTSABER_REGISTERED = EventFactory.createArrayBacked(LightsaberRegistered.class, (id, descriptor) -> {
 	}, callbacks -> (id, descriptor) -> {
 		for (final var callback : callbacks)
@@ -54,11 +62,18 @@ public class PswgContent
 			callback.speciesRegistered(id, species);
 	});
 
+	public static final Event<HumanoidCustomizationRegistered> HUMANOID_CUSTOMIZATION_REGISTERED = EventFactory.createArrayBacked(HumanoidCustomizationRegistered.class, (id, species) -> {
+	}, callbacks -> (id, options) -> {
+		for (final var callback : callbacks)
+			callback.humanoidCustomizationRegistered(id, options);
+	});
+
 	private static boolean isBaked = false;
 
 	private static Map<Identifier, LightsaberDescriptor> lightsaberPresets = new HashMap<>();
 	private static Map<Identifier, BlasterDescriptor> blasterPresets = new HashMap<>();
 	private static Map<Identifier, SpeciesFactory> speciesPresets = new HashMap<>();
+	private static Map<String, HumanoidCustomizationOptions> humanoidCustomizationOptions = new HashMap<>();
 
 	public static void registerLightsaberPreset(LightsaberDescriptor... descriptors)
 	{
@@ -142,6 +157,26 @@ public class PswgContent
 
 	public static void bake()
 	{
+		humanoidCustomizationOptions.put("humanoid_eyebrows", new HumanoidCustomizationOptions("black"));
+		humanoidCustomizationOptions.put("humanoid_scars", new HumanoidCustomizationOptions(SpeciesVariable.NONE));
+		humanoidCustomizationOptions.put("humanoid_tattoos", new HumanoidCustomizationOptions(SpeciesVariable.NONE));
+		humanoidCustomizationOptions.put("humanoid_hair", new HumanoidCustomizationOptions("1"));
+		humanoidCustomizationOptions.put("humanoid_hair_color", new HumanoidCustomizationOptions("37281e"));
+		humanoidCustomizationOptions.put("humanoid_clothes_underlayer", new HumanoidCustomizationOptions(SpeciesVariable.NONE));
+		humanoidCustomizationOptions.put("humanoid_clothes_top", new HumanoidCustomizationOptions("tatooine_civ1"));
+		humanoidCustomizationOptions.put("humanoid_clothes_bottom", new HumanoidCustomizationOptions("tatooine_civ1"));
+		humanoidCustomizationOptions.put("humanoid_clothes_belt", new HumanoidCustomizationOptions("tatooine_civ1"));
+		humanoidCustomizationOptions.put("humanoid_clothes_boots", new HumanoidCustomizationOptions("tatooine_civ1"));
+		humanoidCustomizationOptions.put("humanoid_clothes_gloves", new HumanoidCustomizationOptions("tatooine_civ1"));
+		humanoidCustomizationOptions.put("humanoid_clothes_accessories", new HumanoidCustomizationOptions(SpeciesVariable.NONE));
+		humanoidCustomizationOptions.put("humanoid_clothes_outerwear", new HumanoidCustomizationOptions("tatooine_civ1"));
+
+		for (var option : humanoidCustomizationOptions.entrySet())
+		{
+			HUMANOID_CUSTOMIZATION_REGISTERED.invoker().humanoidCustomizationRegistered(option.getKey(), option.getValue());
+			SwgSpecies.registerHumanoidOptions(option.getKey(), option.getValue());
+		}
+
 		speciesPresets = ImmutableMap.copyOf(speciesPresets);
 		SwgSpeciesRegistry.registerAll(speciesPresets);
 

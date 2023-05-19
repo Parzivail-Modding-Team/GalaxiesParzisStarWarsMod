@@ -26,7 +26,7 @@ public class AbstractClientPlayerEntityMixin
 	{
 		var pc = PlayerData.getPersistentPublic((PlayerEntity)(Object)this);
 
-		var species = pc.getSpecies();
+		var species = pc.getCharacter();
 		if (species == null)
 			return;
 

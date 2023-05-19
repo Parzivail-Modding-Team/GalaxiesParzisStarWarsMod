@@ -6,7 +6,6 @@ import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchScreenHandler;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
@@ -19,17 +18,14 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 
@@ -68,8 +64,6 @@ public class Galaxies implements ModInitializer
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
 
 		Resources.checkVersion();
-
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgSpeciesManager.INSTANCE);
 
 		TrackedDataHandlers.register();
 
@@ -133,14 +127,12 @@ public class Galaxies implements ModInitializer
 				                                                                          for (var player : players)
 				                                                                          {
 					                                                                          var pc = PlayerData.getPersistentPublic(player);
-					                                                                          pc.setSpecies(swgspecies);
+					                                                                          pc.setCharacter(swgspecies);
 				                                                                          }
 
 				                                                                          return 1;
 			                                                                          }))));
 		});
-
-		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> ServerPlayNetworking.send(player, SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE.createPacket()));
 
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.LightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.BlasterWorkbenchApply, BlasterWorkbenchScreenHandler::handleSetBlasterTag);

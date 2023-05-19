@@ -82,7 +82,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		if (species == null)
 		{
 			var components = PlayerData.getPersistentPublic(player);
-			species = components.getSpecies();
+			species = components.getCharacter();
 			if (species == null)
 				return;
 		}
@@ -121,7 +121,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		if (species == null)
 		{
 			var components = PlayerData.getPersistentPublic(player);
-			species = components.getSpecies();
+			species = components.getCharacter();
 			if (species == null)
 				return;
 		}

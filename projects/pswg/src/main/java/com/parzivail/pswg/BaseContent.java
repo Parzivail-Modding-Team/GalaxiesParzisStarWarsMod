@@ -3,6 +3,7 @@ package com.parzivail.pswg;
 import com.parzivail.pswg.api.PswgAddon;
 import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.character.SpeciesBuilder;
+import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.features.blasters.data.*;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberDescriptor;
@@ -10,6 +11,7 @@ import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Falloff;
 import net.fabricmc.loader.api.FabricLoader;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class BaseContent implements PswgAddon
@@ -24,20 +26,312 @@ public class BaseContent implements PswgAddon
 
 	private void registerSpecies()
 	{
+		var customizationOptions = new HashMap<String, List<String>>();
+		customizationOptions.put("humanoid_eyebrows", List.of(
+				"black",
+				"blonde",
+				"brown",
+				"white"
+		));
+		customizationOptions.put("humanoid_scars", List.of(
+				"none",
+				"scar_head_1",
+				"scar_head_2",
+				"scar_head_3",
+				"scar_head_4"
+		));
+		customizationOptions.put("humanoid_tattoos", List.of(
+				"none",
+				"tattoo_head_1",
+				"tattoo_head_2",
+				"tattoo_head_3",
+				"tattoo_head_4",
+				"tattoo_head_5",
+				"tattoo_head_6",
+				"tattoo_head_7",
+				"tattoo_head_8",
+				"tattoo_leftarm_1",
+				"tattoo_leftarm_2",
+				"tattoo_leftarm_3",
+				"tattoo_rightarm_1",
+				"tattoo_rightarm_2",
+				"tattoo_rightarm_3"
+		));
+		customizationOptions.put("humanoid_hair", List.of(
+				"none",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7"
+		));
+		customizationOptions.put("humanoid_hair_color", List.of(
+				"37281e",
+				"1f1f1f",
+				"c6a26e",
+				"f2ce85",
+				"f8e7c6",
+				"edf2f1",
+				"b8bcbc",
+				"d34e3f",
+				"e48652"
+		));
+		customizationOptions.put("humanoid_clothes_underlayer", List.of(
+				"none",
+				"body_glove",
+				"jumpsuit",
+				"radar_technician",
+				"imperial_pilot"
+		));
+		customizationOptions.put("humanoid_clothes_top", List.of(
+				"tatooine_civ1",
+				"the_gunslinger",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"smuggler3",
+				"the_knight",
+				"the_marshall",
+				"imperial_director",
+				"imperial_officer_gray",
+				"imperial_officer_khaki",
+				"kakashi_black",
+				"kakashi_dark_blue",
+				"kakashi_sleeveless_black",
+				"kakashi_sleeveless_dark_blue",
+				"kakashi_tan",
+				"shirt_black",
+				"shirt_brown",
+				"vest"
+		));
+		customizationOptions.put("humanoid_clothes_bottom", List.of(
+				"tatooine_civ1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"smuggler3",
+				"the_knight",
+				"the_gunslinger",
+				"the_marshall",
+				"imperial_director",
+				"imperial_officer_gray",
+				"imperial_officer_khaki",
+				"cargo_brown",
+				"cargo_green"
+		));
+		customizationOptions.put("humanoid_clothes_belt", List.of(
+				"none",
+				"default",
+				"tatooine_civ1",
+				"jedi1",
+				"jedi2",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
+				"the_gunslinger",
+				"the_marshall",
+				"imperial_officer",
+				"imperial_pilot"
+		));
+		customizationOptions.put("humanoid_clothes_boots", List.of(
+				"none",
+				"default",
+				"imperial_pilot1",
+				"imperial_pilot2",
+				"rebel_pilot",
+				"tatooine_civ1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"smuggler3",
+				"the_knight",
+				"the_gunslinger",
+				"the_marshall",
+				"imperial_officer",
+				"imperial_scout_trooper"
+		));
+		customizationOptions.put("humanoid_clothes_gloves", List.of(
+				"none",
+				"imperial_pilot1",
+				"imperial_pilot2",
+				"rebel_pilot",
+				"tatooine_civ1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
+				"the_gunslinger",
+				"the_marshall",
+				"imperial_officer"
+		));
+		customizationOptions.put("humanoid_clothes_accessories", List.of(
+				"none",
+				"the_marshall",
+				"goggles_black",
+				"goggles_green",
+				"goggles_orange",
+				"mouthcover_black",
+				"mouthcover_blue",
+				"mouthcover_red",
+				"scarf_blue",
+				"scarf_brown",
+				"scarf_green",
+				"scarf_tan",
+				"yes"
+		));
+		customizationOptions.put("humanoid_clothes_outerwear", List.of(
+				"none",
+				"tatooine_civ1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"smuggler3",
+				"the_knight",
+				"the_gunslinger",
+				"ballistic",
+				"light1",
+				"radar_technician",
+				"senatorial_vest",
+				"heavy_blue",
+				"heavy_green",
+				"jedi_robe_brown",
+				"jedi_robe_tan",
+				"shroud_black",
+				"shroud_brown",
+				"shroud_tan",
+				"sleeveless",
+				"vest1",
+				"vest2"
+		));
+
+		PswgContent.HUMANOID_CUSTOMIZATION_REGISTERED.register((id, options) -> {
+			if (customizationOptions.containsKey(id))
+				options.possibleValues.addAll(customizationOptions.get(id));
+		});
+
 		PswgContent.registerSpecies(
-				new SpeciesBuilder(Resources.id("chiss"))
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_AQUALISH)
 						.withHumanoidClothing()
 						.withHumanoidBodyModifications()
-						.humanoidVariable("eyebrows", "black", "white")
-						.humanoidVariable("hair", "1", "2", "3", "4")
+						.variable("body", "beige", "green")
+						.variable("eyes", "two", "four")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .then("eyes", false)
+						                         .thenHumanoidClothing()
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_BITH)
+						.withHumanoidClothing()
+						.withHumanoidBodyModifications()
+						.variable("body", "white", "green", "pink")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .thenHumanoidClothing()
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_CHAGRIAN)
+						.withHumanoidBodyModifications()
+						.withHumanoidEyes()
+						.withHumanoidClothing()
+						.variable("body", "blue", "black", "cyan", "gray", "light_blue")
+						.variable("eyebrows", "black")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .thenHumanoidEyes()
+						                         .thenHumanoidClothing()
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_CHISS)
+						.withHumanoidBodyModifications()
+						.withHumanoidClothing()
+						.humanoidVariable("humanoid_eyebrows", "black", "white")
+						.humanoidVariable("humanoid_hair", "1", "2", "3", "4")
 						.variable("hair_color", 0x1f1f1f, 0xf8e7c6, 0xedf2f1, 0xb8bcbc)
 						.variable("body", "1", "2", "3", "4", "5", "6")
 						.layerRenderer(tbb -> tbb.thenGender("body", false)
 						                         .thenHumanoidBodyModifications()
-						                         .then("eyes")
-						                         .thenGender("eyebrows", false)
-						                         .thenTint("hair", "hair_color", true)
+						                         .thenStatic("eyes")
+						                         .thenGender("humanoid_eyebrows", true)
+						                         .thenTint("humanoid_hair", "hair_color", true)
 						                         .thenHumanoidClothing()
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_HUMAN)
+						.withHumanoidBodyModifications()
+						.withHumanoidEyes()
+						.withHumanoidEyebrows()
+						.withHumanoidClothing()
+						.withHumanoidHair()
+						.variable("skin_tone", "almond", "chocolate", "ivory", "limestone", "sand")
+						.layerRenderer(tbb -> tbb.thenGender("skin_tone", false)
+						                         .thenHumanoidBodyModifications()
+						                         .thenHumanoidEyes()
+						                         .thenHumanoidEyebrows()
+						                         .thenHumanoidClothing()
+						                         .thenHumanoidHair()
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_JAWA)
+						.variable("body", "brown")
+						.layerRenderer(tbb -> tbb.thenGender("body", false))
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_PANTORAN)
+						.withHumanoidBodyModifications()
+						.withHumanoidEyes()
+						.withHumanoidEyebrows()
+						.withHumanoidClothing()
+						.withHumanoidHair()
+						.variable("tattoos", "none", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14")
+						.variable("hair_color", 0xbc519c, 0xefbbff, 0xfad6ff, 0x915590, 0x37477e)
+						.layerRenderer(tbb -> tbb.thenGenderStatic("skin")
+						                         .thenHumanoidBodyModifications()
+						                         .then("tattoos", true)
+						                         .thenHumanoidEyes()
+						                         .thenHumanoidEyebrows()
+						                         .thenHumanoidClothing()
+						                         .thenHumanoidHair("hair_color")
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_TOGRUTA)
+						.withHumanoidBodyModifications()
+						.withHumanoidEyes()
+						.withHumanoidClothing()
+						.variable("body", "orange", "blue", "gray", "green", "light_blue", "light_gray", "lilac", "pink", "red", "teal", "yellow", "light_yellow")
+						.variable("face", "none", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22")
+						.variable("eyebrows", "default")
+						.variable("lower_montral", "cream", "beige", "white")
+						.variable("upper_montral", "blue", "none", "brown", "dark_blue", "green", "light_green", "pink", "purple", "red", "turquoise")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .thenGender("lower_montral", true)
+						                         .thenGender("upper_montral", true)
+						                         .then("face", true)
+						                         .thenHumanoidEyes()
+						                         .thenGender("eyebrows", true)
+						                         .thenHumanoidClothing()
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_TWILEK)
+						.withHumanoidBodyModifications()
+						.withHumanoidEyes()
+						.withHumanoidEyebrows()
+						.withHumanoidClothing()
+						.variable("body", "green", "blue", "cyan", "flesh", "lime", "magenta", "orange", "pink", "purple", "red", "white", "yellow")
+						.variable("eyebrows", "default")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .thenHumanoidEyes()
+						                         .thenHumanoidEyebrows()
+						                         .thenHumanoidClothing()
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_WOOKIEE)
+						.variable("body", "chestnut", "black", "brown", "gray")
+						.layerRenderer(tbb -> tbb.then("body", false)
+						                         .thenStatic("eyes")
 						)
 						.build()
 		);

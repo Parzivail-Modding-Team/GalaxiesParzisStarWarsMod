@@ -297,8 +297,8 @@ public class CharacterScreen extends Screen
 	{
 		var mc = MinecraftClient.getInstance();
 		var components = PlayerData.getPersistentPublic(mc.player);
-		if (components.getSpecies() != null)
-			previewSpecies = SwgSpeciesRegistry.deserialize(components.getSpecies().serialize());
+		if (components.getCharacter() != null)
+			previewSpecies = SwgSpeciesRegistry.deserialize(components.getCharacter().serialize());
 	}
 
 	@Override
@@ -787,7 +787,7 @@ public class CharacterScreen extends Screen
 	{
 		var mc = MinecraftClient.getInstance();
 		var components = PlayerData.getPersistentPublic(mc.player);
-		return components.getSpecies() != null;
+		return components.getCharacter() != null;
 	}
 
 	private static void renderColorPreview(int x, int y, int size, float r, float g, float b, float a)

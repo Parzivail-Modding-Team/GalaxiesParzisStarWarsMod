@@ -26,7 +26,6 @@ import com.parzivail.pswg.client.screen.CrateGenericSmallScreen;
 import com.parzivail.pswg.client.screen.CrateOctagonScreen;
 import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.BlasterUtil;
@@ -346,8 +345,6 @@ public class Client implements ClientModInitializer
 				}
 			}
 		});
-
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE::handlePacket);
 
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerEvent, (client, handler, buf, responseSender) -> {
 			var eventId = buf.readByte();

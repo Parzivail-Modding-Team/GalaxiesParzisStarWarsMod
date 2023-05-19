@@ -28,7 +28,7 @@
 			"com.parzivail.pswg.BaseContent"
 		],
 		"pswg-client-addon": [
-			"com.parzivail.pswg.BaseContentClient"
+			"com.parzivail.pswg.BaseClientContent"
 		],
 		"cardinal-components-entity": [
 			"com.parzivail.pswg.component.PlayerData"

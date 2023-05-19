@@ -1,11 +1,13 @@
 package com.parzivail.pswg.character;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.api.HumanoidCustomizationOptions;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,23 +21,50 @@ public abstract class SwgSpecies
 	private static final String VARIABLE_SEPARATOR = ",";
 	private static final String MODEL_SEPARATOR = ";";
 
-	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "eyebrows");
-	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "hair");
-	protected static final SpeciesVariable VAR_HUMANOID_SCARS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "scars");
-	protected static final SpeciesVariable VAR_HUMANOID_TATTOOS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "tattoos");
+	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_eyebrows");
+	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_hair");
+	protected static final SpeciesVariable VAR_HUMANOID_SCARS = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_scars");
+	protected static final SpeciesVariable VAR_HUMANOID_TATTOOS = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_tattoos");
 
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_UNDERLAYER = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_underlayer");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_TOPS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_top");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOTTOMS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_bottom");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BELTS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_belt");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOOTS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_boots");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_GLOVES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_gloves");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_ACCESSORIES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_accessories");
-	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_OUTERWEAR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "clothes_outerwear");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_UNDERLAYER = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_clothes_underlayer");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_TOPS = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_clothes_top");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOTTOMS = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_clothes_bottom");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BELTS = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_clothes_belt");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOOTS = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_clothes_boots");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_GLOVES = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_clothes_gloves");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_ACCESSORIES = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_clothes_accessories");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_OUTERWEAR = new BakedSpeciesVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_clothes_outerwear");
 
-	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "eye_color", 0x226622);
-	protected static final SpeciesColorVariable VAR_HUMANOID_TATTOO_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "tattoo_color", 0x665544);
-	protected static final SpeciesColorVariable VAR_HUMANOID_HAIR_COLOR = new DatapackedSpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "hair_color");
+	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_eye_color", 0x226622);
+	protected static final SpeciesColorVariable VAR_HUMANOID_TATTOO_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_tattoo_color", 0x665544);
+	protected static final SpeciesColorVariable VAR_HUMANOID_HAIR_COLOR = new BakedSpeciesColorVariable(SwgSpeciesRegistry.METASPECIES_HUMANOID, "humanoid_hair_color");
+
+	private static final HashMap<String, SpeciesVariable> VARIABLE_TABLE = Util.make(new HashMap<>(), (h) -> {
+		h.put("humanoid_eyebrows", VAR_HUMANOID_EYEBROWS);
+		h.put("humanoid_scars", VAR_HUMANOID_SCARS);
+		h.put("humanoid_tattoos", VAR_HUMANOID_TATTOOS);
+		h.put("humanoid_hair", VAR_HUMANOID_HAIR);
+		h.put("humanoid_hair_color", VAR_HUMANOID_HAIR_COLOR);
+		h.put("humanoid_clothes_underlayer", VAR_HUMANOID_CLOTHES_UNDERLAYER);
+		h.put("humanoid_clothes_top", VAR_HUMANOID_CLOTHES_TOPS);
+		h.put("humanoid_clothes_bottom", VAR_HUMANOID_CLOTHES_BOTTOMS);
+		h.put("humanoid_clothes_belt", VAR_HUMANOID_CLOTHES_BELTS);
+		h.put("humanoid_clothes_boots", VAR_HUMANOID_CLOTHES_BOOTS);
+		h.put("humanoid_clothes_gloves", VAR_HUMANOID_CLOTHES_GLOVES);
+		h.put("humanoid_clothes_accessories", VAR_HUMANOID_CLOTHES_ACCESSORIES);
+		h.put("humanoid_clothes_outerwear", VAR_HUMANOID_CLOTHES_OUTERWEAR);
+	});
+
+	public static void registerHumanoidOptions(String key, HumanoidCustomizationOptions value)
+	{
+		if (VARIABLE_TABLE.containsKey(key))
+		{
+			if (VARIABLE_TABLE.get(key) instanceof BakedSpeciesVariable bakedVar)
+				bakedVar.bakeWith(value);
+			else if (VARIABLE_TABLE.get(key) instanceof BakedSpeciesColorVariable bakedColorVar)
+				bakedColorVar.bakeWith(value);
+		}
+	}
 
 	public static Identifier getSpeciesSlug(String serializedSpecies)
 	{

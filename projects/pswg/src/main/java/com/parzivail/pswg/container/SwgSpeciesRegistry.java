@@ -4,7 +4,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesFactory;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
-import com.parzivail.pswg.character.species.*;
 import com.parzivail.pswg.component.PlayerData;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
@@ -44,21 +43,6 @@ public class SwgSpeciesRegistry
 	public static final Identifier SPECIES_TRANDOSHAN = Resources.id("trandoshan");
 	public static final Identifier SPECIES_TWILEK = Resources.id("twilek");
 	public static final Identifier SPECIES_WOOKIEE = Resources.id("wookiee");
-
-	static
-	{
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_AQUALISH, SpeciesAqualish::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_BITH, SpeciesBith::new);
-		//		SPECIES.put(SwgSpeciesRegistry.SPECIES_BOTHAN, SpeciesBothan::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_CHAGRIAN, SpeciesChagrian::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_JAWA, SpeciesJawa::new);
-		//		SPECIES.put(SwgSpeciesRegistry.SPECIES_KAMINOAN, SpeciesKaminoan::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_TOGRUTA, SpeciesTogruta::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_TWILEK, SpeciesTwilek::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_HUMAN, SpeciesHuman::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_PANTORAN, SpeciesPantoran::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_WOOKIEE, SpeciesWookiee::new);
-	}
 
 	public static void registerAll(Map<Identifier, SpeciesFactory> speciesPresets)
 	{
@@ -107,6 +91,6 @@ public class SwgSpeciesRegistry
 		var speciesString = packetByteBuf.readString();
 
 		var c = PlayerData.getPersistentPublic(serverPlayerEntity);
-		c.setSpecies(deserialize(speciesString));
+		c.setCharacter(deserialize(speciesString));
 	}
 }
