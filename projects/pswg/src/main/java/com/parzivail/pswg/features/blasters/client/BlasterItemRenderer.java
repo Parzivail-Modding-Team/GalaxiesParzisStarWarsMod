@@ -601,8 +601,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		if (patrol)
 		{
-			ModelUtil.lerpLeftArmTo(model, 1, -0.539f - limbBounce + breatheBounceLeft, -0.269f, 0.09f);
-			ModelUtil.lerpRightArmTo(model, 1, -0.808f + limbBounce + breatheBounceRight, -1.077f, 0);
+			ModelUtil.lerpRightArmTo(model, 1, -0.539f - limbBounce + breatheBounceLeft, 0.269f, -0.09f);
+			ModelUtil.lerpLeftArmTo(model, 1, -0.808f + limbBounce + breatheBounceRight, 1.077f, 0);
 		}
 		else
 		{
