@@ -94,8 +94,8 @@ public class SwgSpeciesRenderer
 		tailMidL.pitch = tailMidR.pitch = (5.11f * h4 + 2.01f * h3 - 10.2f * h2 - 26.38f * h - 1.48f) * MathHelper.RADIANS_PER_DEGREE;
 		tailLowerL.pitch = tailLowerR.pitch = (-3.15f * h4 + 2.57f * h2 - 23.03f * h - 2.93f) * MathHelper.RADIANS_PER_DEGREE;
 
-		var y = MathHelper.wrapDegrees(entity.getYaw(tickDelta) - MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)) * MathHelper.RADIANS_PER_DEGREE;
-		tailBaseL.roll = Math.max(0, y / 3f);
-		tailBaseR.roll = Math.min(0, y / 3f);
+		var y = MathHelper.wrapDegrees(model.head.yaw * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
+		tailBaseL.roll = Math.max(0, y / 3f) + Math.min(0, y / 9f);
+		tailBaseR.roll = Math.min(0, y / 3f) + Math.max(0, y / 9f);
 	}
 }
