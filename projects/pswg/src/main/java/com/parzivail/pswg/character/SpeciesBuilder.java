@@ -183,10 +183,16 @@ public class SpeciesBuilder
 		return this;
 	}
 
-	public SpeciesBuilder withHumanoidHair()
+	public SpeciesBuilder withHumanoidHairAndColor()
 	{
 		variableTable.put("humanoid_hair", SwgSpecies.VAR_HUMANOID_HAIR);
 		variableTable.put("humanoid_hair_color", SwgSpecies.VAR_HUMANOID_HAIR_COLOR);
+		return this;
+	}
+
+	public SpeciesBuilder withHumanoidHair()
+	{
+		variableTable.put("humanoid_hair", SwgSpecies.VAR_HUMANOID_HAIR);
 		return this;
 	}
 

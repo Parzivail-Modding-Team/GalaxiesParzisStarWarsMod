@@ -36,10 +36,4 @@ public class BakedSpeciesColorVariable extends SpeciesColorVariable
 	{
 		return defaultValue;
 	}
-
-	@Override
-	public String getTranslationFor(String value)
-	{
-		return getTranslationKey() + ".preset." + value;
-	}
 }
