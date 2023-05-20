@@ -29,12 +29,6 @@
 	"species.pswg.chiss": "チス",
 	"species.pswg.chiss.body.2": "青",
 	"species.pswg.human": "人間",
-	"species.pswg.humanoid.clothes_boots": "ブーツ",
-	"species.pswg.humanoid.eyebrows.black": "黒",
-	"species.pswg.humanoid.eyebrows.blonde": "金髪",
-	"species.pswg.humanoid.eyebrows.brown": "茶色",
-	"species.pswg.humanoid.eyebrows.white": "白",
-	"species.pswg.humanoid.hair": "髪",
 	"species.pswg.jawa": "ジャワ",
 	"species.pswg.jawa.body.brown": "茶色",
 	"species.pswg.pantoran": "パントラン",
@@ -55,6 +49,5 @@
 	"species.pswg.twilek.body.orange": "オレンジ",
 	"species.pswg.twilek.body.red": "赤",
 	"species.pswg.twilek.body.white": "白",
-	"species.pswg.twilek.body.yellow": "黄",
-	"species.pswg.twilek.eyebrows.black": "黒"
+	"species.pswg.twilek.body.yellow": "黄"
 }
