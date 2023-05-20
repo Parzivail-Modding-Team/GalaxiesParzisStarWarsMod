@@ -40,7 +40,7 @@ public class SpeciesColorVariable extends SpeciesVariable
 	@Override
 	public String getTranslationFor(String value)
 	{
-		if (allowedValues.isEmpty())
+		if (getPossibleValues().isEmpty())
 			return getTranslationKey();
 		else
 			return getTranslationKey() + ".preset." + value;
