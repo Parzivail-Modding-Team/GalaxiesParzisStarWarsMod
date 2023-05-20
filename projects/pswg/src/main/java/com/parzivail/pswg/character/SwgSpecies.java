@@ -1,5 +1,6 @@
 package com.parzivail.pswg.character;
 
+import com.google.common.hash.Hashing;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.api.HumanoidCustomizationOptions;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -9,10 +10,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class SwgSpecies
@@ -107,44 +106,40 @@ public abstract class SwgSpecies
 		);
 	}
 
-	private static long longHashCode(String s)
+	private static String serializeVariablePairs(Map<String, String> variables)
 	{
-		var h = 0L;
-		for (byte v : s.getBytes())
-			h = 31 * h + (v & 0xff);
-		return h;
+		return variables
+				.entrySet()
+				.stream()
+				.map(variable -> variable.getKey() + VARIABLE_EQUALS + variable.getValue())
+				.collect(Collectors.joining(VARIABLE_SEPARATOR));
 	}
 
-	private static long hashVariableValues(SwgSpecies species, SpeciesVariable... variables)
+	private static String digestVariables(SwgSpecies species, SpeciesVariable... variables)
 	{
-		var hash = 0L;
-		for (var variable : variables)
-			hash = 31 * hash + longHashCode(species.getVariable(variable));
-		return hash;
-	}
+		var variableString = Arrays.stream(variables)
+		                           .map(variable -> variable.getName() + VARIABLE_EQUALS + species.getVariable(variable))
+		                           .collect(Collectors.joining(VARIABLE_SEPARATOR));
 
-	private static long hashVariableValues(Map<String, String> variables)
-	{
-		var hash = 0L;
-		for (var variable : variables.entrySet())
-			hash = 31 * hash + longHashCode(variable.getKey() + "=" + variable.getValue());
-		return hash;
+		return Hashing.sha256()
+		              .hashString(variableString, StandardCharsets.UTF_8)
+		              .toString();
 	}
 
 	private static Identifier getClothingStack(SwgSpecies species, PlayerEntity player)
 	{
-		var hashCode = SwgSpecies.hashVariableValues(species,
-		                                             VAR_HUMANOID_CLOTHES_UNDERLAYER,
-		                                             VAR_HUMANOID_CLOTHES_TOPS,
-		                                             VAR_HUMANOID_CLOTHES_BOTTOMS,
-		                                             VAR_HUMANOID_CLOTHES_BELTS,
-		                                             VAR_HUMANOID_CLOTHES_BOOTS,
-		                                             VAR_HUMANOID_CLOTHES_GLOVES,
-		                                             VAR_HUMANOID_CLOTHES_ACCESSORIES,
-		                                             VAR_HUMANOID_CLOTHES_OUTERWEAR
+		var digest = SwgSpecies.digestVariables(species,
+		                                        VAR_HUMANOID_CLOTHES_UNDERLAYER,
+		                                        VAR_HUMANOID_CLOTHES_TOPS,
+		                                        VAR_HUMANOID_CLOTHES_BOTTOMS,
+		                                        VAR_HUMANOID_CLOTHES_BELTS,
+		                                        VAR_HUMANOID_CLOTHES_BOOTS,
+		                                        VAR_HUMANOID_CLOTHES_GLOVES,
+		                                        VAR_HUMANOID_CLOTHES_ACCESSORIES,
+		                                        VAR_HUMANOID_CLOTHES_OUTERWEAR
 		);
 		return Client.stackedTextureProvider.getId(
-				String.format("clothing/%08x", hashCode),
+				String.format("clothing/%s", digest),
 				() -> getGenderedGlobalTexture(species.getGender(), "clothes"),
 				() -> SwgSpecies.createClothingStack(species, player)
 		);
@@ -293,12 +288,7 @@ public abstract class SwgSpecies
 
 	public String serialize()
 	{
-		var variablePairs = variables
-				.entrySet()
-				.stream()
-				.map(variable -> variable.getKey() + VARIABLE_EQUALS + variable.getValue())
-				.collect(Collectors.joining(VARIABLE_SEPARATOR));
-
+		var variablePairs = serializeVariablePairs(variables);
 		return toModel(this) + MODEL_SEPARATOR + variablePairs;
 	}
 
@@ -320,15 +310,14 @@ public abstract class SwgSpecies
 	@Override
 	public int hashCode()
 	{
-		return (int)longHashCode();
+		return digest().hashCode();
 	}
 
-	public long longHashCode()
+	public String digest()
 	{
-		var result = longHashCode(getSlug().toString());
-		result = 31 * result + gender.hashCode();
-		result = 31 * result + hashVariableValues(variables);
-		return result;
+		return Hashing.sha256()
+		              .hashString(serialize(), StandardCharsets.UTF_8)
+		              .toString();
 	}
 
 	public boolean isSameSpecies(SwgSpecies other)
