@@ -279,6 +279,8 @@ public abstract class SwgSpecies
 		this.gender = gender;
 	}
 
+	public abstract SpeciesVariable getVariableReference(String variableName);
+
 	public String getVariable(SpeciesVariable variable)
 	{
 		return variables.get(variable.getName());

@@ -341,7 +341,7 @@ public class BaseContent implements PswgAddon
 						.withHumanoidClothing()
 						.withHumanoidHairAndColor()
 						.variable("body", "red", "chartreuse", "darkred", "flesh", "green", "mustard", "orange", "pink", "red")
-						.variable("horns", "1", "2", "3", "4", "5", "6", "none")
+						.variable("horns", "1", "2", "3", "4", "5", "6")
 						.layerRenderer(tbb -> tbb.thenGender("body", false)
 						                         .thenHumanoidBodyModifications()
 						                         .thenHumanoidEyes()

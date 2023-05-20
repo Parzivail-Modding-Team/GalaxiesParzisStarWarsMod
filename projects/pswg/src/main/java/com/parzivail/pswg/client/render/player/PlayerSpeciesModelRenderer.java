@@ -23,7 +23,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 	@FunctionalInterface
 	public interface Animator
 	{
-		void animateModel(AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta);
+		void animateModel(SwgSpecies species, AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta);
 	}
 
 	private Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> modelSupplier;
@@ -65,27 +65,34 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 	@Override
 	public void render(AbstractClientPlayerEntity player, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light)
 	{
+		var species = getSpecies(player);
+
 		if (animator != null)
-			animator.animateModel(player, model, this, tickDelta);
+			animator.animateModel(species, player, model, this, tickDelta);
 
 		transformChestCube(player);
-		transformHairCube(player);
+		transformHairCube(species, player);
 
 		super.render(player, yaw, tickDelta, matrices, vertexConsumerProvider, light);
 	}
 
-	private void transformHairCube(AbstractClientPlayerEntity player)
+	private SwgSpecies getSpecies(AbstractClientPlayerEntity player)
 	{
-		var model = getModel();
-
 		var species = overrideSpecies;
 		if (species == null)
 		{
 			var components = PlayerData.getPersistentPublic(player);
 			species = components.getCharacter();
-			if (species == null)
-				return;
 		}
+		return species;
+	}
+
+	private void transformHairCube(SwgSpecies species, AbstractClientPlayerEntity player)
+	{
+		if (species == null)
+			return;
+
+		var model = getModel();
 
 		var cubeVisible = true;
 

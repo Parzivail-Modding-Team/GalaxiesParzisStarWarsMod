@@ -12,7 +12,6 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -69,33 +68,5 @@ public class SwgSpeciesRenderer
 	{
 		var hashCode = species.longHashCode();
 		return Client.stackedTextureProvider.getId(String.format("species/%016x", hashCode), () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player));
-	}
-
-	public static void animateTwilek(AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta)
-	{
-		if (!model.head.hasChild("TailBaseL"))
-			return;
-
-		var h = entity.getPitch(tickDelta) * MathHelper.RADIANS_PER_DEGREE;
-		var h2 = (float)Math.pow(h, 2);
-		var h3 = (float)Math.pow(h, 3);
-		var h4 = (float)Math.pow(h, 4);
-
-		var tailBaseL = model.head.getChild("TailBaseL");
-		var tailMidL = tailBaseL.getChild("TailMidL");
-		var tailLowerL = tailMidL.getChild("TailLowerL");
-
-		var tailBaseR = model.head.getChild("TailBaseR");
-		var tailMidR = tailBaseR.getChild("TailMidR");
-		var tailLowerR = tailMidR.getChild("TailLowerR");
-
-		// https://www.desmos.com/calculator/52kcd69qgc
-		tailBaseL.pitch = tailBaseR.pitch = (-2.34f * h3 + 11.05f * h2 + 3.4f * h + 7.06f) * MathHelper.RADIANS_PER_DEGREE;
-		tailMidL.pitch = tailMidR.pitch = (5.11f * h4 + 2.01f * h3 - 10.2f * h2 - 26.38f * h - 1.48f) * MathHelper.RADIANS_PER_DEGREE;
-		tailLowerL.pitch = tailLowerR.pitch = (-3.15f * h4 + 2.57f * h2 - 23.03f * h - 2.93f) * MathHelper.RADIANS_PER_DEGREE;
-
-		var y = MathHelper.wrapDegrees(model.head.yaw * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
-		tailBaseL.roll = Math.max(0, y / 3f) + Math.min(0, y / 9f);
-		tailBaseR.roll = Math.min(0, y / 3f) + Math.max(0, y / 9f);
 	}
 }

@@ -37,6 +37,12 @@ public class SpeciesFactory
 				component.addLayer(stack, SpeciesFactory.this.variableTable, this, player);
 			return stack;
 		}
+
+		@Override
+		public SpeciesVariable getVariableReference(String variableName)
+		{
+			return SpeciesFactory.this.variableTable.get(variableName);
+		}
 	}
 
 	private final Identifier slug;
