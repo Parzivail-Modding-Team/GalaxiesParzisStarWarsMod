@@ -49,6 +49,8 @@ public class BaseClientContent implements PswgClientAddon
 		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_WOOKIEE, SwgSpeciesRenderer.fullModel(Resources.id("species/wookiee")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_DEVARONIAN, Resources.id("textures/gui/character/icons.png"), 5);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_DEVARONIAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/devaronian")), null);
+
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_DUROS, Resources.id("textures/gui/character/icons.png"), 7);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_RODIAN, Resources.id("textures/gui/character/icons.png"), 11);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_TRANDOSHAN, Resources.id("textures/gui/character/icons.png"), 14);

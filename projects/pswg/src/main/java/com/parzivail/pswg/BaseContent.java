@@ -31,7 +31,8 @@ public class BaseContent implements PswgAddon
 				"black",
 				"blonde",
 				"brown",
-				"white"
+				"white",
+				"none"
 		));
 		customizationOptions.put("humanoid_scars", List.of(
 				"none",
@@ -320,7 +321,6 @@ public class BaseContent implements PswgAddon
 						.withHumanoidEyebrows()
 						.withHumanoidClothing()
 						.variable("body", "green", "blue", "cyan", "flesh", "lime", "magenta", "orange", "pink", "purple", "red", "white", "yellow")
-						.variable("eyebrows", "default")
 						.layerRenderer(tbb -> tbb.thenGender("body", false)
 						                         .thenHumanoidBodyModifications()
 						                         .thenHumanoidEyes()
@@ -332,6 +332,22 @@ public class BaseContent implements PswgAddon
 						.variable("body", "chestnut", "black", "brown", "gray")
 						.layerRenderer(tbb -> tbb.then("body", false)
 						                         .thenStatic("eyes")
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_DEVARONIAN)
+						.withHumanoidBodyModifications()
+						.withHumanoidEyes()
+						.withHumanoidEyebrows()
+						.withHumanoidClothing()
+						.withHumanoidHair()
+						.variable("body", "red", "chartreuse", "darkred", "flesh", "green", "mustard", "orange", "pink", "red")
+						.variable("horns", "1", "2", "3", "4", "5", "6", "none")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .thenHumanoidEyes()
+						                         .thenHumanoidEyebrows()
+						                         .thenHumanoidClothing()
+						                         .thenHumanoidHair()
 						)
 						.build()
 		);
