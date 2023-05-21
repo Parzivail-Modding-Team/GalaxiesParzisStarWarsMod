@@ -7,6 +7,7 @@ import com.parzivail.pswg.component.PlayerData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
@@ -14,6 +15,7 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -76,6 +78,19 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		super.render(player, yaw, tickDelta, matrices, vertexConsumerProvider, light);
 	}
 
+	@Nullable
+	@Override
+	protected RenderLayer getRenderLayer(AbstractClientPlayerEntity entity, boolean showBody, boolean translucent, boolean showOutline)
+	{
+		Identifier identifier = this.getTexture(entity);
+		if (translucent)
+			return RenderLayer.getItemEntityTranslucentCull(identifier);
+		else if (showBody)
+			return RenderLayer.getEntityTranslucentCull(identifier);
+		else
+			return showOutline ? RenderLayer.getOutline(identifier) : null;
+	}
+
 	private SwgSpecies getSpecies(AbstractClientPlayerEntity player)
 	{
 		var species = overrideSpecies;
@@ -107,7 +122,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 			var vanillaArmor = ArmorRenderer.getVanillaArmor(player, EquipmentSlot.HEAD);
 			if (vanillaArmor != null)
 			{
-				// TODO: How should vanilla armor be handles?
+				// TODO: How should vanilla armor be handled?
 			}
 		}
 

@@ -56,8 +56,10 @@ public class BaseClientContent implements PswgClientAddon
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_DEVARONIAN, Resources.id("textures/gui/character/icons.png"), 5);
 		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_DEVARONIAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/devaronian")), BaseClientContent::animateDevaronian);
 
-		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_DUROS, Resources.id("textures/gui/character/icons.png"), 7);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_RODIAN, Resources.id("textures/gui/character/icons.png"), 11);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_RODIAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/rodian")), null);
+
+		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_DUROS, Resources.id("textures/gui/character/icons.png"), 7);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_TRANDOSHAN, Resources.id("textures/gui/character/icons.png"), 14);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_MON_CALAMARI, Resources.id("textures/gui/character/icons.png"), 16);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_IKTOTCHI, Resources.id("textures/gui/character/icons.png"), 17);

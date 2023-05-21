@@ -349,6 +349,17 @@ public class BaseContent implements PswgAddon
 						                         .thenHumanoidClothing()
 						                         .thenHumanoidHair()
 						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_RODIAN)
+						.withHumanoidBodyModifications()
+						.withHumanoidClothing()
+						.variable("body", "green", "blue", "brown", "cyan", "dark_green", "flesh", "orange", "purple", "red", "violet")
+						.variable("eyes", "violet", "black", "blue", "green", "purple")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .then("eyes", false)
+						                         .thenHumanoidClothing()
+						)
 						.build()
 		);
 	}
