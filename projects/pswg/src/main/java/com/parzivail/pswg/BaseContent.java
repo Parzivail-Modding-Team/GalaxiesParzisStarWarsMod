@@ -360,6 +360,17 @@ public class BaseContent implements PswgAddon
 						                         .then("eyes", false)
 						                         .thenHumanoidClothing()
 						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_DUROS)
+						.withHumanoidBodyModifications()
+						.withHumanoidClothing()
+						.variable("body", "light_blue", "blue", "cyan", "green", "gunmetal", "purple", "turquoise")
+						.variable("eyes", "small", "large")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .then("eyes", false)
+						                         .thenHumanoidClothing()
+						)
 						.build()
 		);
 	}
