@@ -38,7 +38,7 @@ public class ImGuiHelper
 
 	public static final int ImGuiWindowFlags_Tooltip = 1 << 25;
 
-	private static String glslVersion = null;
+	private static String glslVersion;
 
 	private static ImGuiContext context;
 	private static final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();

@@ -13,12 +13,12 @@ dependencies {
 	"modImplementation"("io.github.kostaskougios:cloning:1.10.3")
 	"include"("io.github.kostaskougios:cloning:1.10.3")
 
-	"modImplementation"("io.github.spair:imgui-java-binding:1.86.6")
-	"include"("io.github.spair:imgui-java-binding:1.86.6")
-	"modImplementation"("io.github.spair:imgui-java-lwjgl3:1.86.6")
-	"include"("io.github.spair:imgui-java-lwjgl3:1.86.6")
-	"modImplementation"("io.github.spair:imgui-java-natives-windows:1.86.6")
-	"include"("io.github.spair:imgui-java-natives-windows:1.86.6")
+	"modImplementation"("io.github.spair:imgui-java-binding:1.86.10")
+	"include"("io.github.spair:imgui-java-binding:1.86.10")
+	"modImplementation"("io.github.spair:imgui-java-lwjgl3:1.86.10")
+	"include"("io.github.spair:imgui-java-lwjgl3:1.86.10")
+	"modImplementation"("io.github.spair:imgui-java-natives-windows:1.86.10")
+	"include"("io.github.spair:imgui-java-natives-windows:1.86.10")
 
 	"modImplementation"("io.wispforest:worldmesher:0.2.14+1.19.3")
 	"include"("io.wispforest:worldmesher:0.2.14+1.19.3")
