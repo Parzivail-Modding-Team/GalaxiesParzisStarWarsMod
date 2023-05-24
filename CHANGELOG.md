@@ -1,24 +1,33 @@
+# Additions
+
+* Add new species to the character customizer:
+  * Duros
+  * Devaronians
+  * Rodians
+* Added lang entries for blaster bolt entities
+
 # Changes
 
-* Lekkus now animate more fluidly (and avoid clipping more) when turning your head
-* Lightsabers can no longer mine blocks
-* Lightsabers can no longer accumulate durability damage
+* Convert lightsabers to unique items
+  * Like blasters, each lightsaber has its own unique ID now (e.g. `pswg:lightsaber_luke_rotj`)
 
 # Fixes
 
-* Fix various texture bugs for some species within the character customizer
-* Fix bug that prevents joining servers with errors like: `Cannot get species descriptor for unknown key pswg:aqualish`
-* Fix lekku animations when riding another entity
-* Fix muzzle flash color for stun and ion bolts
-* Fix blaster rapid-fire issue when switching from burst fire during the middle of a burst
-* Fix patrol posture when a double-handed gun is held in the offhand
+* Fix lang entry for QT-KT
 
 # Internal Changes
 
-* Convert species registration from datapack system to addon system
+* Convert dynamic textures to sha256 hashes from int64
+* Start work on a no-code addon creation toolkit
+  * Like MCreator, but for addons
+  * More information coming soon
 
 # Localization
 
 * Update translations into:
-  * Brazilian Portuguese
+  * French
+  * Italian
+  * Japanese
   * Russian
+  * Brazilian Portuguese
+  * Canadian French
