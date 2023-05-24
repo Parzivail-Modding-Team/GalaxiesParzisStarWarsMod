@@ -12,6 +12,7 @@ import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
+import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
 import com.parzivail.util.math.ColorUtil;
 import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiTableColumnFlags;
@@ -68,6 +69,7 @@ public class AddonBuilder extends ImguiScreen
 		public final ImString id;
 		public final ImBoolean unstable;
 		public final float[] defaultColor;
+		private final ImInt bladeType = new ImInt();
 
 		private final HashMap<String, ImFloat> bladeCoefs = new HashMap<>();
 
@@ -133,10 +135,12 @@ public class AddonBuilder extends ImguiScreen
 		public void serialize(String domain, ZipOutputStream zip, PrintWriter writer)
 		{
 			var buf = new PacketByteBuf(Unpooled.buffer());
+			buf.writeInt(1); // Schema version
 			buf.writeString(domain);
 			buf.writeString(getName());
 			buf.writeString(getId());
 			buf.writeBoolean(unstable.get());
+			buf.writeString(LightsaberBladeType.values()[bladeType.get()].getId());
 			buf.writeInt(ColorUtil.packHsv(this.defaultColor[0], this.defaultColor[1], this.defaultColor[2]));
 
 			buf.writeInt(bladeCoefs.size());
@@ -188,8 +192,14 @@ public class AddonBuilder extends ImguiScreen
 
 	private IAddonFeature currentEditingFeature = null;
 
-	private final String[] featureTypes = Arrays.stream(FeatureType.values()).map(featureType -> featureType.name).toArray(String[]::new);
+	private static final String[] featureTypes = Arrays.stream(FeatureType.values())
+	                                                   .map(featureType -> featureType.name)
+	                                                   .toArray(String[]::new);
 	private final ImInt selectedFeatureType = new ImInt();
+
+	private static final String[] lightsaberBladeTypes = Arrays.stream(LightsaberBladeType.values())
+	                                                           .map(featureType -> LangUtil.translate(featureType.getLangKey()))
+	                                                           .toArray(String[]::new);
 
 	public AddonBuilder(Screen parent)
 	{
@@ -332,7 +342,7 @@ public class AddonBuilder extends ImguiScreen
 		}
 	}
 
-	private static void renderLightsaberFeatureEditor(LightsaberAddonFeature feature)
+	private void renderLightsaberFeatureEditor(LightsaberAddonFeature feature)
 	{
 		if (ImGui.beginTable("lightsaberMetadataInputTable", 2))
 		{
@@ -353,6 +363,11 @@ public class AddonBuilder extends ImguiScreen
 			ImGui.text("Unstable");
 			ImGui.tableNextColumn();
 			ImGui.checkbox("##saberUnstable", feature.unstable);
+
+			ImGui.tableNextColumn();
+			ImGui.text("Blade Type");
+			ImGui.tableNextColumn();
+			ImGui.combo("##saberBladeType", feature.bladeType, lightsaberBladeTypes);
 
 			ImGui.tableNextColumn();
 			ImGui.text("Hilt Model");
