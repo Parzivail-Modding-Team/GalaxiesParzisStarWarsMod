@@ -5,7 +5,6 @@ import com.parzivail.pswg.character.SpeciesFactory;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberDescriptor;
 import net.fabricmc.fabric.api.event.Event;
@@ -16,7 +15,6 @@ import net.minecraft.util.crash.CrashReport;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class PswgContent
 {
@@ -90,33 +88,6 @@ public class PswgContent
 		return lightsaberPresets;
 	}
 
-	public static LightsaberDescriptor getLightsaberPreset(Identifier key)
-	{
-		return lightsaberPresets.get(key);
-	}
-
-	public static LightsaberDescriptor assertLightsaberPreset(Identifier key)
-	{
-		var data = getLightsaberPreset(key);
-		if (data != null)
-			return data;
-
-		var keyName = key == null ? "[null]" : '"' + key.toString() + '"';
-		var j = CrashReport.create(new NullPointerException("Cannot get lightsaber descriptor for unknown key " + keyName), "Getting lightsaber descriptor");
-
-		var k = j.addElement("Lightsaber Manager Data");
-		k.add("Defined keys", PswgContent::getLightsaberDataString);
-
-		throw new CrashException(j);
-	}
-
-	private static String getLightsaberDataString()
-	{
-		if (lightsaberPresets == null)
-			return "null";
-		return lightsaberPresets.keySet().stream().map(Identifier::toString).collect(Collectors.joining(", "));
-	}
-
 	public static void registerBlasterPreset(BlasterDescriptor... descriptors)
 	{
 		checkBaked();
@@ -185,8 +156,6 @@ public class PswgContent
 		for (var preset : blasterPresets.values())
 			preset.build();
 		blasterPresets = ImmutableMap.copyOf(blasterPresets);
-
-		BlasterItem.bakeAttributeModifiers(blasterPresets);
 
 		isBaked = true;
 	}

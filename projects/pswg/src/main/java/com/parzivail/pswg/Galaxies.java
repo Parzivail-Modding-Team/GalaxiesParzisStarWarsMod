@@ -8,6 +8,8 @@ import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchScreenHandler;
+import com.parzivail.pswg.features.lightsabers.addon.AddonLightsaberManager;
+import com.parzivail.pswg.features.lightsabers.data.LightsaberDescriptor;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.util.Lumberjack;
@@ -20,15 +22,20 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.resource.LifecycledResourceManagerImpl;
+import net.minecraft.resource.ResourcePack;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Galaxies implements ModInitializer
@@ -47,12 +54,12 @@ public class Galaxies implements ModInitializer
 
 	public static final ItemGroup TabBlasters = FabricItemGroup
 			.builder(Resources.id("blasters"))
-			.icon(() -> new ItemStack(Registries.ITEM.get(Resources.id("blaster_a280"))))
+			.icon(() -> new ItemStack(Registries.ITEM.get(SwgItems.getBlasterRegistrationId(Resources.id("a280")))))
 			.build();
 
 	public static final ItemGroup TabLightsabers = FabricItemGroup
 			.builder(Resources.id("lightsabers"))
-			.icon(() -> new ItemStack(SwgItems.Lightsaber.Lightsaber))
+			.icon(() -> new ItemStack(Registries.ITEM.get(SwgItems.getLightsaberRegistrationId(Resources.id("luke_rotj")))))
 			.build();
 
 	@Override
@@ -106,7 +113,7 @@ public class Galaxies implements ModInitializer
 
 				                                                                          SwgSpecies swgspecies = null;
 
-				                                                                          if (!"minecraft:none" .equals(species))
+				                                                                          if (!"minecraft:none".equals(species))
 				                                                                          {
 					                                                                          try
 					                                                                          {
@@ -149,9 +156,29 @@ public class Galaxies implements ModInitializer
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgStarting);
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 
+		Galaxies.LOG.info("Loading PSWG addons via datapack instantiation");
+		var list = new ArrayList<ResourcePack>();
+		new ModResourcePackCreator(ResourceType.SERVER_DATA).register(resourcePackProfile -> list.add(resourcePackProfile.createResourcePack()));
+		var resourceManager = new LifecycledResourceManagerImpl(ResourceType.SERVER_DATA, list);
+
+		AddonLightsaberManager.INSTANCE.load(resourceManager);
+		for (var data : AddonLightsaberManager.INSTANCE.getData().values())
+		{
+			var descriptor = new LightsaberDescriptor(data.identifier(), data.owner(), data.bladeColor(), data.bladeType());
+
+			if (data.unstable())
+				descriptor.unstable();
+
+			for (var entry : data.bladeLengthCoefficients().entrySet())
+				descriptor.bladeLength(entry.getKey(), entry.getValue());
+
+			PswgContent.registerLightsaberPreset(descriptor);
+		}
+
 		Galaxies.LOG.info("Baking PSWG addon content");
 		PswgContent.bake();
 
 		SwgItems.registerAddons();
+		SwgItems.hookTabs();
 	}
 }

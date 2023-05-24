@@ -690,21 +690,15 @@ public class SwgItems
 		public static final Item Mannequin = new MannequinItem(new Item.Settings());
 	}
 
-	@RegistryOrder(13)
-	public static class Lightsaber
-	{
-		@RegistryName("lightsaber")
-		@TabInclude("pswg:lightsabers")
-		@TarkinItem(model = TrModel.Empty)
-		public static final LightsaberItem Lightsaber = new LightsaberItem(new Item.Settings().maxCount(1));
-	}
-
 	static HashMap<Identifier, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();
 
 	public static void register()
 	{
 		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, SwgItems::tryRegisterItem);
+	}
 
+	public static void hookTabs()
+	{
 		for (var entry : ITEM_GROUPS.entrySet())
 		{
 			var group = entry.getKey();
@@ -755,7 +749,9 @@ public class SwgItems
 
 	public static void registerAddons()
 	{
-		for (var blaster : PswgContent.getBlasterPresets().entrySet())
+		var blasterPresets = PswgContent.getBlasterPresets();
+		BlasterItem.bakeAttributeModifiers(blasterPresets);
+		for (var blaster : blasterPresets.entrySet())
 		{
 			var id = blaster.getKey();
 			registerWithTab(
@@ -765,11 +761,29 @@ public class SwgItems
 					Galaxies.TabBlasters.getId().toString()
 			);
 		}
+
+		var lightsaberPresets = PswgContent.getLightsaberPresets();
+		for (var lightsaber : lightsaberPresets.entrySet())
+		{
+			var id = lightsaber.getKey();
+			registerWithTab(
+					getLightsaberRegistrationId(id),
+					new LightsaberItem(new Item.Settings().maxCount(1), id, lightsaber.getValue()),
+					false,
+					Galaxies.TabLightsabers.getId().toString()
+			);
+		}
 	}
 
 	@NotNull
 	public static Identifier getBlasterRegistrationId(Identifier id)
 	{
 		return new Identifier(id.getNamespace(), "blaster_" + id.getPath());
+	}
+
+	@NotNull
+	public static Identifier getLightsaberRegistrationId(Identifier id)
+	{
+		return new Identifier(id.getNamespace(), "lightsaber_" + id.getPath());
 	}
 }

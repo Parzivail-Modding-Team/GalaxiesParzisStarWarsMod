@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.parzivail.aurek.editor.BlasterEditor;
 import com.parzivail.aurek.imgui.Notifier;
 import com.parzivail.aurek.ui.view.*;
+import com.parzivail.aurek.ui.view.addonbuilder.AddonBuilder;
 import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.BlasterTransformer;

@@ -135,7 +135,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static Text getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
 	{
-
 		return Text.translatable(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
 	}
 

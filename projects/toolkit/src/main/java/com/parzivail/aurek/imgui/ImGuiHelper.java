@@ -2,6 +2,7 @@ package com.parzivail.aurek.imgui;
 
 import com.parzivail.aurek.ToolkitClient;
 import com.parzivail.aurek.imgui.toast.ImguiNotify;
+import com.parzivail.aurek.util.DialogUtil;
 import imgui.ImFont;
 import imgui.ImFontConfig;
 import imgui.ImGuiIO;
@@ -26,6 +27,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ImGuiHelper
 {
@@ -229,5 +232,20 @@ public class ImGuiHelper
 		}
 		if (mutableDeleteIndex.getValue() != -1)
 			items.remove((int)mutableDeleteIndex.getValue());
+	}
+
+	public static void filePicker(String id, Supplier<String> filenameGetter, Consumer<String> filenameSetter, String title, String filterName, String... filters)
+	{
+		if (ImGui.button("Choose File##" + id))
+			DialogUtil.openFile(title, filterName, false, filters)
+			          .ifPresent(paths -> filenameSetter.accept(paths[0]));
+
+		ImGui.sameLine();
+
+		var filename = filenameGetter.get();
+		if (filename != null)
+			ImGui.textWrapped(filename);
+		else
+			ImGui.textDisabled("No file selected");
 	}
 }

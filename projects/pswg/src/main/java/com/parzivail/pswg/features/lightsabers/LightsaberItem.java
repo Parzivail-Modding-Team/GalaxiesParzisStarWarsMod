@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.features.lightsabers.client.ThrownLightsaberEntity;
@@ -16,7 +15,6 @@ import com.parzivail.util.item.*;
 import com.parzivail.util.lang.ImplicitOverride;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -35,6 +33,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
@@ -45,7 +44,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class LightsaberItem extends SwordItem implements ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityStackSetListener, IItemActionListener, IItemHotbarListener, ITabStackProvider
+public class LightsaberItem extends SwordItem implements ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityStackSetListener, IItemActionListener, IItemHotbarListener
 {
 	@TarkinLang
 	public static final String I18N_TOOLTIP_LIGHTSABER_INFO = Resources.tooltip("lightsaber.info");
@@ -55,10 +54,15 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnOffhand;
+	private final Identifier model;
+	private final LightsaberDescriptor descriptor;
 
-	public LightsaberItem(Settings settings)
+	public LightsaberItem(Settings settings, Identifier model, LightsaberDescriptor descriptor)
 	{
 		super(ToolMaterials.DIAMOND, 1, -2.4f, settings);
+
+		this.model = model;
+		this.descriptor = descriptor;
 
 		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -2.4f, EntityAttributeModifier.Operation.ADDITION));
@@ -73,6 +77,11 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 		builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -2.4f, EntityAttributeModifier.Operation.ADDITION));
 		builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", 22, EntityAttributeModifier.Operation.ADDITION));
 		this.attribModsOnOffhand = builder.build();
+	}
+
+	public LightsaberDescriptor getDescriptor()
+	{
+		return descriptor;
 	}
 
 	private static boolean isActive(ItemStack stack)
@@ -171,7 +180,7 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 				toggle(world, player, stack);
 				break;
 			case SECONDARY:
-//				throwAsEntity(world, player, stack);
+				//				throwAsEntity(world, player, stack);
 				break;
 		}
 	}
@@ -206,14 +215,27 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	public String getTranslationKey(LightsaberTag tag, ItemStack stack)
 	{
 		if (tag.owner == null)
-			return super.getTranslationKey(stack) + "." + tag.hilt.getPath();
-		return super.getTranslationKey(stack);
+			return getTranslationKey(tag.hilt);
+		return "item.pswg.lightsaber";
+	}
+
+	public static String getTranslationKey(Identifier hiltId)
+	{
+		return "item.%s.lightsaber.%s".formatted(hiltId.getNamespace(), hiltId.getPath());
 	}
 
 	@Override
 	public NbtCompound getDefaultTag(ItemConvertible item, int count)
 	{
-		return new LightsaberTag().toSubtag();
+		var lightsaberTag = new LightsaberTag(new NbtCompound());
+		lightsaberTag.owner = descriptor.ownerName;
+		lightsaberTag.hilt = descriptor.id;
+		lightsaberTag.bladeColor = descriptor.bladeColor;
+		lightsaberTag.unstable = descriptor.defaultUnstable;
+
+		var tag = new NbtCompound();
+		lightsaberTag.serializeAsSubtag(tag);
+		return tag;
 	}
 
 	@Override
@@ -221,50 +243,29 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	{
 		super.appendTooltip(stack, world, tooltip, context);
 		tooltip.add(Text.translatable(I18N_TOOLTIP_LIGHTSABER_INFO));
-//		tooltip.add(Text.translatable("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+		//		tooltip.add(Text.translatable("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 		tooltip.add(Text.translatable(I18N_TOOLTIP_LIGHTSABER_CONTROLS, TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText())));
-	}
-
-	@Override
-	public void appendStacks(FabricItemGroupEntries entries)
-	{
-		for (var entry : PswgContent.getLightsaberPresets().values())
-			entries.add(forType(entry));
-	}
-
-	private ItemStack forType(LightsaberDescriptor descriptor)
-	{
-		var stack = new ItemStack(this);
-
-		LightsaberTag.mutate(stack, lightsaberTag -> {
-			lightsaberTag.owner = descriptor.ownerName;
-			lightsaberTag.hilt = descriptor.id;
-			lightsaberTag.bladeColor = descriptor.bladeColor;
-			lightsaberTag.unstable = descriptor.defaultUnstable;
-		});
-
-		return stack;
 	}
 
 	@Override
 	public ImmutableMultimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot)
 	{
 		return switch (slot)
-				{
-					case MAINHAND -> isActive(stack) ? attribModsOnMainhand : attribModsOff;
-					case OFFHAND -> isActive(stack) ? attribModsOnOffhand : attribModsOff;
-					default -> ImmutableMultimap.of();
-				};
+		{
+			case MAINHAND -> isActive(stack) ? attribModsOnMainhand : attribModsOff;
+			case OFFHAND -> isActive(stack) ? attribModsOnOffhand : attribModsOff;
+			default -> ImmutableMultimap.of();
+		};
 	}
 
 	@Override
 	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot)
 	{
 		return switch (slot)
-				{
-					case MAINHAND, OFFHAND -> attribModsOff;
-					default -> ImmutableMultimap.of();
-				};
+		{
+			case MAINHAND, OFFHAND -> attribModsOff;
+			default -> ImmutableMultimap.of();
+		};
 	}
 
 	@Override

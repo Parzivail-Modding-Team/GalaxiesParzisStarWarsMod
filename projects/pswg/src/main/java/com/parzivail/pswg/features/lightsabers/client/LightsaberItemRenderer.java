@@ -4,8 +4,8 @@ import com.parzivail.p3d.P3dManager;
 import com.parzivail.p3d.P3dSocket;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
+import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
@@ -95,6 +95,9 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	public void renderDirect(ItemStack stack, ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade, boolean useHandPos)
 	{
+		if (!(stack.getItem() instanceof LightsaberItem li))
+			return;
+
 		matrices.push();
 		MathUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
 
@@ -137,7 +140,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		if (renderMode != ModelTransformationMode.GUI)
 		{
-			var ld = PswgContent.getLightsaberPreset(lt.hilt);
+			var ld = li.getDescriptor();
 			var bladeType = ld == null ? LightsaberBladeType.DEFAULT : ld.bladeType;
 
 			var socketedBlades = 0;

@@ -1,25 +1,19 @@
 package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.features.lightsabers.client.ThrownLightsaberEntity;
 import com.parzivail.util.math.MathUtil;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.joml.Quaternionf;
 
 public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEntity>
 {
 	private final ItemRenderer itemRenderer;
-
-	private final ItemStack stack = new ItemStack(SwgItems.Lightsaber.Lightsaber);
 
 	public ThrownLightsaberRenderer(EntityRendererFactory.Context ctx)
 	{
@@ -53,11 +47,12 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 
 		matrices.multiply(new Quaternionf().rotationZ(MathUtil.toRadians(-(entity.age + tickDelta) * 31)));
 
-		var lt = entity.getLightsaberData();
-		lt.active = true;
-		lt.serializeAsSubtag(stack);
-
-		this.itemRenderer.renderItem(stack, ModelTransformationMode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider, entity.world, 0);
+		// TODO
+		//		var lt = entity.getLightsaberData();
+		//		lt.active = true;
+		//		lt.serializeAsSubtag(stack);
+		//
+		//		this.itemRenderer.renderItem(stack, ModelTransformationMode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider, entity.world, 0);
 
 		matrices.pop();
 	}
