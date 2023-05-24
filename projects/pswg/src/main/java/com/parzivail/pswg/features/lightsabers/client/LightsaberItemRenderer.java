@@ -1,6 +1,7 @@
 package com.parzivail.pswg.features.lightsabers.client;
 
 import com.parzivail.p3d.P3dManager;
+import com.parzivail.p3d.P3dSocket;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgContent;
@@ -142,7 +143,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			var socketedBlades = 0;
 			for (var o : m.transformables().values())
 			{
-				if (!o.name.startsWith("blade_"))
+				if (!isBladeSocket(o))
 					continue;
 
 				socketedBlades++;
@@ -172,6 +173,11 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				renderBlade(renderMode, matrices, vertexConsumers, light, overlay, lt, unstable, lengthCoefficient, bladeType, baseLength);
 			}
 		}
+	}
+
+	public static boolean isBladeSocket(P3dSocket socket)
+	{
+		return socket.name.startsWith("blade_");
 	}
 
 	private static void renderBlade(ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, LightsaberTag lt, boolean unstable, float lengthCoefficient, LightsaberBladeType bladeType, float length)

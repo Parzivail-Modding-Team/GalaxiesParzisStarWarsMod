@@ -79,7 +79,7 @@ public class ToolkitClient implements PswgClientAddon
 				new Tool("worldgen_visualizer", ToolkitWorldgenScreen::new)
 		));
 		TOOLS.put(LangUtil.translate("tool.category.addon_development"), ImmutableList.of(
-				new Tool("jar_builder", JarBuilderScreen::new)
+				new Tool("addon_builder", AddonBuilder::new)
 		));
 		TOOLS.put(LangUtil.translate("tool.category.other"), ImmutableList.of(
 				new Tool("test", TestScreen::new)

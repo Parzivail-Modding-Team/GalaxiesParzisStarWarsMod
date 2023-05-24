@@ -18,15 +18,23 @@ import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class ImGuiHelper
 {
+	@FunctionalInterface
+	public interface LoopWithDeleteFunction<T>
+	{
+		void consume(Runnable delete, int i, T item);
+	}
+
 	static
 	{
 		final boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
@@ -208,5 +216,18 @@ public class ImGuiHelper
 		var itemSizeX = ImGui.calcItemSizeX(split_vertically ? thickness : splitter_long_axis_size, split_vertically ? splitter_long_axis_size : thickness, 0, 0);
 		var itemSizeY = ImGui.calcItemSizeY(split_vertically ? thickness : splitter_long_axis_size, split_vertically ? splitter_long_axis_size : thickness, 0, 0);
 		return ImGui.splitterBehavior(min.x, min.y, min.x + itemSizeX, min.y + itemSizeY, id, split_vertically ? ImGuiAxis.X : ImGuiAxis.Y, size1, size2, min_size1, min_size2, 0);
+	}
+
+	public static <T> void loopWithDelete(List<T> items, LoopWithDeleteFunction<T> function)
+	{
+		var mutableDeleteIndex = new MutableInt(-1);
+		var numItems = items.size();
+		for (var i = 0; i < numItems; i++)
+		{
+			final var deleteIndex = i;
+			function.consume(() -> mutableDeleteIndex.setValue(deleteIndex), i, items.get(i));
+		}
+		if (mutableDeleteIndex.getValue() != -1)
+			items.remove((int)mutableDeleteIndex.getValue());
 	}
 }
