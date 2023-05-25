@@ -55,8 +55,11 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		if (entity.sourceOffset == null && entity.getOwner() instanceof PlayerEntity player)
 		{
 			var socket = PlayerSocket.getSocket(player, BlasterItemRenderer.SOCKET_ID_BARREL_END);
-			var source = socket.position();
-			entity.sourceOffset = new Vec3d(source.x, source.y, source.z).subtract(entity.getOwner().getEyePos());
+			if (socket != null)
+			{
+				var source = socket.position();
+				entity.sourceOffset = new Vec3d(source.x, source.y, source.z).subtract(entity.getOwner().getEyePos());
+			}
 		}
 
 		var mc = MinecraftClient.getInstance();
