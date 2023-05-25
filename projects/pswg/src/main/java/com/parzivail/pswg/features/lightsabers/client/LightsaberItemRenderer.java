@@ -88,12 +88,12 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				break;
 		}
 
-		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay, false, true);
+		renderDirect(entity, stack, renderMode, matrices, vertexConsumers, light, overlay, false, true);
 
 		matrices.pop();
 	}
 
-	public void renderDirect(ItemStack stack, ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade, boolean useHandPos)
+	public void renderDirect(LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade, boolean useHandPos)
 	{
 		if (!(stack.getItem() instanceof LightsaberItem li))
 			return;

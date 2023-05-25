@@ -2,9 +2,9 @@ package com.parzivail.pswg.features.lightsabers.client.forge;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
+import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
 import com.parzivail.util.client.screen.EventCheckboxWidget;
@@ -257,7 +257,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			DiffuseLighting.disableGuiDepthLighting();
 			DiffuseLighting.enableForLevel(matrices.peek().getPositionMatrix());
 
-			LightsaberItemRenderer.INSTANCE.renderDirect(lightsaber, ModelTransformationMode.NONE, matrices, immediate, 0xFFFFFF, OverlayTexture.DEFAULT_UV, true, true);
+			LightsaberItemRenderer.INSTANCE.renderDirect(null, lightsaber, ModelTransformationMode.NONE, matrices, immediate, 0xFFFFFF, OverlayTexture.DEFAULT_UV, true, true);
 			immediate.draw();
 
 			DiffuseLighting.enableGuiDepthLighting();
