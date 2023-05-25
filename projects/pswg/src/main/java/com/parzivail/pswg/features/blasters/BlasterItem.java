@@ -17,6 +17,7 @@ import com.parzivail.util.math.MathUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -71,6 +72,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public static final String I18N_TOOLTIP_BLASTER_STATS_RANGE = Resources.tooltip("blaster.stats.range");
 	@TarkinLang
 	public static final String I18N_MESSAGE_MODE_CHANGED = Resources.msg("blaster_mode_changed");
+
+	public static final String SOCKET_ID_BARREL_END = "blaster_barrel_end";
 
 	private static final HashMap<Float, ImmutableMultimap<EntityAttribute, EntityAttributeModifier>> ATTRIB_MODS_ADS = new HashMap<>();
 
@@ -575,7 +578,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 						entity.setColor(bd.boltColor);
 						entity.setLength(bd.boltLength);
 						entity.setRadius(bd.boltRadius);
+
+						entity.setSourceArm(hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite());
 					});
+
+					var passedData = new PacketByteBuf(Unpooled.buffer());
+					passedData.writeInt(player.getId());
+					passedData.writeString(SOCKET_ID_BARREL_END);
+
+					var sPlayer = (ServerPlayerEntity)player;
+					for (var trackingPlayer : PlayerLookup.tracking(sPlayer.getWorld(), player.getBlockPos()))
+						ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PlayerSparks, passedData);
 				}
 			}
 

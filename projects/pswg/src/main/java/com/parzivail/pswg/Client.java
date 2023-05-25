@@ -346,6 +346,7 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.AccumulateRecoil, BlasterRecoilManager::handleAccumulateRecoil);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.BlasterHit, BlasterUtil::handleBoltHit);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSparks, SwgParticles::handlePlayerSparks);
 
 		blasterZoomInstance = new ZoomInstance(
 				Resources.id("blaster_zoom"),

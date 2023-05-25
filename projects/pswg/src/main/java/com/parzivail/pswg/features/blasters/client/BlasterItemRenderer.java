@@ -56,7 +56,6 @@ import java.util.function.Supplier;
 
 public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem, SimpleResourceReloadListener<Void>
 {
-	public static final String SOCKET_ID_BARREL_END = "blaster_barrel_end";
 
 	public record ModelEntry(P3dModel model, Identifier baseTexture)
 	{
@@ -358,7 +357,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				matrices.multiplyPositionMatrix(muzzleFlashTransform.transform);
 
 				if (player != null)
-					PlayerSocket.save(player, SOCKET_ID_BARREL_END, matrices, new Vector3f(0, 0, 1));
+					PlayerSocket.save(player, BlasterItem.SOCKET_ID_BARREL_END, matrices, new Vector3f(0, 0, 1));
 				renderMuzzleFlash(renderMode, matrices, vertexConsumers, bt, bd, shotTime, opacity, light, overlay, d);
 
 				matrices.pop();

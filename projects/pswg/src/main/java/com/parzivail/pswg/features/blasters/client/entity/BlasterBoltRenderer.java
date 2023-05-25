@@ -5,7 +5,6 @@ import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.client.render.player.PlayerSocket;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
-import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
 import com.parzivail.pswg.features.blasters.data.BlasterTag;
 import com.parzivail.util.math.Ease;
 import net.minecraft.client.MinecraftClient;
@@ -54,7 +53,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 
 		if (entity.sourceOffset == null && entity.getOwner() instanceof PlayerEntity player)
 		{
-			var socket = PlayerSocket.getSocket(player, BlasterItemRenderer.SOCKET_ID_BARREL_END);
+			var socket = PlayerSocket.getSocket(player, BlasterItem.SOCKET_ID_BARREL_END);
 			if (socket != null)
 			{
 				var source = socket.position();
