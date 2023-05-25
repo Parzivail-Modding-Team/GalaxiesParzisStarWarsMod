@@ -371,6 +371,20 @@ public class BaseContent implements PswgAddon
 						                         .then("eyes", false)
 						                         .thenHumanoidClothing()
 						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_GOTAL)
+						.withHumanoidEyes()
+						.withHumanoidClothing()
+						.variable("fur", "cedar", "blonde", "brown", "chocolate", "maroon", "peanut", "red", "white")
+						.variable("skin", "gray", "ash", "cream", "olive", "peach", "pink", "slate", "tan")
+						.variable("horns", "1", "2", "3", "4", "5", "6")
+						.variable("beard", "1", "2", "3", "4", "5", "6", "7")
+						.layerRenderer(tbb -> tbb.thenGender("fur", false)
+						                         .then("skin", false)
+						                         .thenTintStatic("eyes_whites", "humanoid_eye_color")
+						                         .thenStatic("eyes")
+						                         .thenHumanoidClothing()
+						)
 						.build()
 		);
 	}

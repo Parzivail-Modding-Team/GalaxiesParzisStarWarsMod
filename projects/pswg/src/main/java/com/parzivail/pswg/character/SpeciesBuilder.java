@@ -91,6 +91,17 @@ public class SpeciesBuilder
 			return this;
 		}
 
+		public TextureBuilderBuilder thenTintStatic(String name, String tintVariableId)
+		{
+			components.add((stack, variables, species, player) -> {
+				var tintVariable = getCheckedVariable(variables, tintVariableId);
+				if (!(tintVariable instanceof SpeciesColorVariable colorVariable))
+					throw new RuntimeException("Cannot tint based on a non-color variable");
+				stack.add(SwgSpecies.tint(SwgSpecies.getTexture(species.getSlug(), name), species, colorVariable));
+			});
+			return this;
+		}
+
 		public TextureBuilderBuilder thenGenderStatic(String name)
 		{
 			components.add((stack, variables, species, player) -> {
