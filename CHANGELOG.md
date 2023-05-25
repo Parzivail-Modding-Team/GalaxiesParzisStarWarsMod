@@ -10,6 +10,7 @@
 
 * Convert lightsabers to unique items
   * Like blasters, each lightsaber has its own unique ID now (e.g. `pswg:lightsaber_luke_rotj`)
+* Blasters fired in 3rd person now actually look like they're coming from the blaster
 
 # Fixes
 

@@ -1,10 +1,10 @@
 package com.parzivail.pswg.client.render.block;
 
-import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlockEntity;
-import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
 import com.parzivail.pswg.features.blasters.data.BlasterArchetype;
+import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlockEntity;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
@@ -54,7 +54,7 @@ public class BlasterWorkbenchWeaponRenderer implements BlockEntityRenderer<Blast
 		matrices.multiply(QuatUtil.ROT_Y_POS10);
 		matrices.multiply(QuatUtil.ROT_Z_POS80);
 
-		BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformationMode.NONE, false, matrices, vertexConsumers, light, overlay, null);
+		BlasterItemRenderer.INSTANCE.render(null, blaster, ModelTransformationMode.NONE, false, matrices, vertexConsumers, light, overlay, null);
 
 		matrices.pop();
 	}

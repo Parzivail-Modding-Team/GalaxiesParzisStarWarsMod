@@ -8,6 +8,7 @@ import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.BlasterTransformer;
+import com.parzivail.pswg.client.render.player.PlayerSocket;
 import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
@@ -24,6 +25,7 @@ import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -42,6 +44,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,6 +56,8 @@ import java.util.function.Supplier;
 
 public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem, SimpleResourceReloadListener<Void>
 {
+	public static final String SOCKET_ID_BARREL_END = "blaster_barrel_end";
+
 	public record ModelEntry(P3dModel model, Identifier baseTexture)
 	{
 	}
@@ -162,7 +167,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	}
 
 	@Override
-	public void render(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
+	public void render(LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
 	{
 		var bdId = BlasterItem.getBlasterModel(stack);
 		if (bdId == null)
@@ -173,6 +178,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var bd = BlasterItem.getBlasterDescriptor(stack, true);
 		if (bd == null)
 			return;
+
+		ClientPlayerEntity player = null;
+		if (entity instanceof ClientPlayerEntity)
+			player = (ClientPlayerEntity)entity;
 
 		var b = (BlasterItem)stack.getItem();
 
@@ -279,9 +288,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var foreGripTransform = m.transformables().get("off_hand");
 			if (foreGripTransform != null)
 			{
-				var client = MinecraftClient.getInstance();
-				var player = client.player;
-
 				assert player != null;
 
 				var playerLeftHand = player.getMainArm() == Arm.LEFT ? Hand.MAIN_HAND : Hand.OFF_HAND;
@@ -290,6 +296,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				var altStack = player.getStackInHand(leftHand ? playerRightHand : playerLeftHand);
 				if (altStack.isEmpty())
 				{
+					var client = MinecraftClient.getInstance();
+
 					RenderSystem.setShaderTexture(0, player.getSkinTexture());
 					var playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
 					matrices.push();
@@ -349,6 +357,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 				matrices.multiplyPositionMatrix(muzzleFlashTransform.transform);
 
+				if (player != null)
+					PlayerSocket.save(player, SOCKET_ID_BARREL_END, matrices, new Vector3f(0, 0, 1));
 				renderMuzzleFlash(renderMode, matrices, vertexConsumers, bt, bd, shotTime, opacity, light, overlay, d);
 
 				matrices.pop();

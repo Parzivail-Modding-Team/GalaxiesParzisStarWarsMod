@@ -13,6 +13,8 @@ import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -56,6 +58,9 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 
 	private boolean ignoreWater;
 	private Function<Double, Double> damageFunction;
+
+	@Environment(EnvType.CLIENT)
+	public Vec3d sourceOffset;
 
 	public BlasterBoltEntity(EntityType<? extends BlasterBoltEntity> type, World world)
 	{

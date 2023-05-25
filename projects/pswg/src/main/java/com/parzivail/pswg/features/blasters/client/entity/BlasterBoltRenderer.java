@@ -2,8 +2,10 @@ package com.parzivail.pswg.features.blasters.client.entity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
+import com.parzivail.pswg.client.render.player.PlayerSocket;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
 import com.parzivail.pswg.features.blasters.data.BlasterTag;
 import com.parzivail.util.math.Ease;
 import net.minecraft.client.MinecraftClient;
@@ -13,9 +15,11 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
 
 public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
@@ -48,6 +52,13 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 
 		matrices.translate(0, 0.5f * entity.getHeight(), 0);
 
+		if (entity.sourceOffset == null && entity.getOwner() instanceof PlayerEntity player)
+		{
+			var socket = PlayerSocket.getSocket(player, BlasterItemRenderer.SOCKET_ID_BARREL_END);
+			var source = socket.position();
+			entity.sourceOffset = new Vec3d(source.x, source.y, source.z).subtract(entity.getOwner().getEyePos());
+		}
+
 		var mc = MinecraftClient.getInstance();
 		var isOwnedByClient = entity.getOwner() == mc.player;
 		var isFirstPerson = mc.options.getPerspective() == Perspective.FIRST_PERSON;
@@ -65,6 +76,8 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 			}
 		}
 
+		shouldOffset = shouldOffset && sourceArm.isPresent();
+
 		var ownerDist = 1d;
 		if (shouldScale)
 		{
@@ -77,10 +90,17 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 
 		if (ownerDist > 0)
 		{
+			if (!shouldOffset && entity.sourceOffset != null)
+			{
+				var d = 1 - Ease.outCubic((float)MathHelper.clamp(ownerDist / 15, 0, 1));
+				var posDiff = entity.sourceOffset.multiply(d);
+				matrices.translate(posDiff.x, posDiff.y, posDiff.z);
+			}
+
 			matrices.multiply(new Quaternionf().rotationY(bYaw - MathHelper.PI / 2));
 			matrices.multiply(new Quaternionf().rotationZ(bPitch - MathHelper.PI / 2));
 
-			if (shouldOffset && sourceArm.isPresent())
+			if (shouldOffset)
 			{
 				var side = 1;
 				if (sourceArm.get() == Arm.LEFT)

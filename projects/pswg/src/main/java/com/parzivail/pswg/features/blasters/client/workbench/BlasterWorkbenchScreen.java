@@ -355,7 +355,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			MathUtil.scalePos(matrices, 5, 5, 5);
 
-			BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformationMode.NONE, false, matrices, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, null);
+			BlasterItemRenderer.INSTANCE.render(null, blaster, ModelTransformationMode.NONE, false, matrices, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, null);
 			immediate.draw();
 
 			DiffuseLighting.enableGuiDepthLighting();

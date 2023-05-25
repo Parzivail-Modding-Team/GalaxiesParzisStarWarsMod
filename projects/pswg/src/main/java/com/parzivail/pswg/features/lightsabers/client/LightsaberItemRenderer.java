@@ -58,7 +58,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	}
 
 	@Override
-	public void render(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
+	public void render(LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
 	{
 		matrices.push();
 
