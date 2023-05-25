@@ -63,7 +63,7 @@ public class BaseClientContent implements PswgClientAddon
 		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_DUROS, SwgSpeciesRenderer.humanoidBase(Resources.id("species/duros")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_GOTAL, Resources.id("textures/gui/character/icons.png"), 18);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_GOTAL, SwgSpeciesRenderer.humanoidBase(Resources.id("species/gotal")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_GOTAL, SwgSpeciesRenderer.humanoidBase(Resources.id("species/gotal")), BaseClientContent::animateGotal);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_TRANDOSHAN, Resources.id("textures/gui/character/icons.png"), 14);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_MON_CALAMARI, Resources.id("textures/gui/character/icons.png"), 16);
@@ -100,9 +100,6 @@ public class BaseClientContent implements PswgClientAddon
 
 	public static void animateDevaronian(SwgSpecies species, AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta)
 	{
-		if (!model.head.hasChild("horns1"))
-			return;
-
 		var hornsVariable = species.getVariableReference("horns");
 		if (hornsVariable == null)
 			return;
@@ -112,7 +109,42 @@ public class BaseClientContent implements PswgClientAddon
 		for (var i = 0; i < 6; i++)
 		{
 			var hornId = String.valueOf(i + 1);
-			model.head.getChild("horns%s".formatted(hornId)).visible = horns.equals(hornId);
+			var childId = "horns%s".formatted(hornId);
+			if (!model.head.hasChild(childId))
+				continue;
+
+			model.head.getChild(childId).visible = horns.equals(hornId);
+		}
+	}
+
+	public static void animateGotal(SwgSpecies species, AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta)
+	{
+		var hornsVariable = species.getVariableReference("horns");
+		var beardVariable = species.getVariableReference("beard");
+		if (hornsVariable == null || beardVariable == null)
+			return;
+
+		var horns = species.getVariable(hornsVariable);
+		var beard = species.getVariable(beardVariable);
+
+		for (var i = 0; i < 6; i++)
+		{
+			var hornId = String.valueOf(i + 1);
+			var childId = "horns%s".formatted(hornId);
+			if (!model.head.hasChild(childId))
+				continue;
+
+			model.head.getChild(childId).visible = horns.equals(hornId);
+		}
+
+		for (var i = 0; i < 7; i++)
+		{
+			var hornId = String.valueOf(i + 1);
+			var childId = "beard%s".formatted(hornId);
+			if (!model.head.hasChild(childId))
+				continue;
+
+			model.head.getChild(childId).visible = beard.equals(hornId);
 		}
 	}
 }

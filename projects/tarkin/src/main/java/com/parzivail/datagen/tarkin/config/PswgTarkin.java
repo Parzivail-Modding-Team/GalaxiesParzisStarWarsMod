@@ -93,6 +93,7 @@ public class PswgTarkin
 		Tarkin.registerLangFields(BlasterWorkbenchScreen.class, lang, assets);
 
 		// Item
+		lang.item("lightsaber").build(assets);
 		lang.item("lightsaber").dot("darksaber").build(assets);
 
 		for (var entry : LightsaberBladeType.values())
