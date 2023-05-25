@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
 import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.SwgPackets;
@@ -15,6 +14,7 @@ import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.TooltipUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.MathUtil;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -32,6 +32,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -580,7 +581,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			if (shouldRecoil)
 			{
-				var passedData = PlayerEvent.createBuffer(PlayerEvent.ACCUMULATE_RECOIL);
+				var passedData = new PacketByteBuf(Unpooled.buffer());
 				var horizNoise = world.random.nextGaussian();
 				horizNoise = horizNoise * 0.3 + 0.7 * Math.signum(horizNoise);
 
@@ -588,7 +589,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.horizontal * horizNoise));
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
-				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.PlayerEvent, passedData);
+				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.AccumulateRecoil, passedData);
 			}
 
 			bt.serializeAsSubtag(stack);

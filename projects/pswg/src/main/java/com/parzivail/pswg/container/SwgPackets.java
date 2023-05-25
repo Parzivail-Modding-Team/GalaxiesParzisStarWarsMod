@@ -22,11 +22,11 @@ public class SwgPackets
 	public static class S2C
 	{
 		public static final Identifier SyncSpecies = Resources.id("sync_species");
-		public static final Identifier PlayerEvent = Resources.id("pevt");
-		public static final Identifier WorldEvent = Resources.id("wevt");
 		public static final Identifier SyncBlockToClient = Resources.id("csync");
 		public static final Identifier PreciseEntityVelocityUpdate = Resources.id("pevel");
 		public static final Identifier PreciseEntitySpawn = Resources.id("pesp");
 		public static final Identifier OpenEntityInventory = Resources.id("entity_inventory");
+		public static final Identifier AccumulateRecoil = Resources.id("recoil");
+		public static final Identifier BlasterHit = Resources.id("blaster_hit");
 	}
 }

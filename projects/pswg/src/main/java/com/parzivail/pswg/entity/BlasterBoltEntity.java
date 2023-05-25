@@ -1,7 +1,6 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgPackets;
@@ -13,6 +12,7 @@ import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -29,6 +29,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -352,13 +353,13 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 
 					var pos = hitResult.getPos();
 
-					var passedData = WorldEvent.createBuffer(WorldEvent.BLASTER_BOLT_HIT);
+					var passedData = new PacketByteBuf(Unpooled.buffer());
 					PacketByteBufHelper.writeVec3d(passedData, pos);
 					PacketByteBufHelper.writeVec3d(passedData, incident);
 					PacketByteBufHelper.writeVec3d(passedData, normal);
 
 					for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, blockHit.getBlockPos()))
-						ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
+						ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.BlasterHit, passedData);
 				}
 			}
 		}

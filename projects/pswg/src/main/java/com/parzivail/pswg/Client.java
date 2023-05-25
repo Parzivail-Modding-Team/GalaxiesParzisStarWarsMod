@@ -4,8 +4,6 @@ import com.parzivail.nem.NemManager;
 import com.parzivail.p3d.P3dBlockRendererRegistry;
 import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.api.PswgClientAddon;
-import com.parzivail.pswg.client.event.PlayerEvent;
-import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
@@ -310,10 +308,6 @@ public class Client implements ClientModInitializer
 
 		SwgParticles.register();
 
-		PlayerEvent.EVENT_BUS.subscribe(PlayerEvent.ACCUMULATE_RECOIL, BlasterRecoilManager::handleAccumulateRecoil);
-
-		WorldEvent.EVENT_BUS.subscribe(WorldEvent.BLASTER_BOLT_HIT, BlasterUtil::handleBoltHit);
-
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (client.player != null)
 			{
@@ -346,30 +340,12 @@ public class Client implements ClientModInitializer
 			}
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerEvent, (client, handler, buf, responseSender) -> {
-			var eventId = buf.readByte();
-
-			if (PlayerEvent.ID_LOOKUP.containsKey(eventId))
-			{
-				var event = PlayerEvent.ID_LOOKUP.get(eventId);
-				PlayerEvent.EVENT_BUS.publish(event, receiver -> receiver.receive(client, handler, buf, responseSender));
-			}
-		});
-
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.WorldEvent, (client, handler, buf, responseSender) -> {
-			var eventId = buf.readByte();
-
-			if (WorldEvent.ID_LOOKUP.containsKey(eventId))
-			{
-				var event = WorldEvent.ID_LOOKUP.get(eventId);
-				WorldEvent.EVENT_BUS.publish(event, receiver -> receiver.receive(client, handler, buf, responseSender));
-			}
-		});
-
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlockToClient, BlockEntityClientSerializable::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.AccumulateRecoil, BlasterRecoilManager::handleAccumulateRecoil);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.BlasterHit, BlasterUtil::handleBoltHit);
 
 		blasterZoomInstance = new ZoomInstance(
 				Resources.id("blaster_zoom"),
