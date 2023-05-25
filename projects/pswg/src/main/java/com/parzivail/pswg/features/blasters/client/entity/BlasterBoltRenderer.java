@@ -58,7 +58,9 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 			if (socket != null)
 			{
 				var source = socket.position();
-				entity.sourceOffset = new Vec3d(source.x, source.y, source.z).subtract(entity.getOwner().getEyePos());
+				var sourceOffset = new Vec3d(source.x, source.y, source.z).subtract(entity.getOwner().getEyePos());
+				if (sourceOffset.lengthSquared() < 1)
+					entity.sourceOffset = sourceOffset;
 			}
 		}
 
