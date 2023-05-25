@@ -11,10 +11,15 @@ public class CameraUtil
 {
 	public static PositionNormal3f unproject(MatrixStack matrices, Vector3f normal)
 	{
-		var worldPos = matrices.peek().getPositionMatrix().transform(new Vector4f(0, 0, 0, 1));
+		var worldPos = new Vector4f(0, 0, 0, 1);
+
+		matrices.peek().getPositionMatrix().transform(worldPos);
 		var worldNormal = matrices.peek().getNormalMatrix().transform(normal);
 		worldPos.mul(1, -1, 1, 1);
 		worldNormal.mul(1, -1, 1);
+
+		// TODO: incorporate projection matrix to fix first-person FOV issues
+		// TODO: why doesn't RenderSystem.getInverseViewRotationMatrix() work instead of manually removing rotation?
 
 		var cam = MinecraftClient.getInstance().gameRenderer.getCamera();
 

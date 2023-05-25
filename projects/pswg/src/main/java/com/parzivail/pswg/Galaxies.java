@@ -157,9 +157,9 @@ public class Galaxies implements ModInitializer
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 
 		Galaxies.LOG.info("Loading PSWG addons via datapack instantiation");
-		var list = new ArrayList<ResourcePack>();
-		new ModResourcePackCreator(ResourceType.SERVER_DATA).register(resourcePackProfile -> list.add(resourcePackProfile.createResourcePack()));
-		var resourceManager = new LifecycledResourceManagerImpl(ResourceType.SERVER_DATA, list);
+		var packs = new ArrayList<ResourcePack>();
+		new ModResourcePackCreator(ResourceType.SERVER_DATA).register(resourcePackProfile -> packs.add(resourcePackProfile.createResourcePack()));
+		var resourceManager = new LifecycledResourceManagerImpl(ResourceType.SERVER_DATA, packs);
 
 		AddonLightsaberManager.INSTANCE.load(resourceManager);
 		for (var data : AddonLightsaberManager.INSTANCE.getData().values())
