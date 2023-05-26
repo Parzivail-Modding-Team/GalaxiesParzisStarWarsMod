@@ -332,7 +332,7 @@ public class CharacterScreen extends Screen
 			close();
 		}
 
-		var allSpecies = new ArrayList<>(SwgSpeciesRegistry.getAllSlugs());
+		var allSpecies = SwgSpeciesRegistry.getAllSlugs().stream().sorted().toList();
 
 		var listOverflowSize = Math.max(0, LIST_ROW_HEIGHT * allSpecies.size() - LEFT_LIST_CUTOUT.height);
 		var scrollOffset = -(int)(listOverflowSize * LEFT_SCROLL_THUMB.getScroll());
@@ -540,10 +540,10 @@ public class CharacterScreen extends Screen
 		}
 
 		if (switch (page)
-				{
-					case SPECIES -> mouseClickedPageSpecies(mouseX, mouseY, button);
-					case VARIABLES -> mouseClickedPageVariables(mouseX, mouseY, button);
-				})
+		{
+			case SPECIES -> mouseClickedPageSpecies(mouseX, mouseY, button);
+			case VARIABLES -> mouseClickedPageVariables(mouseX, mouseY, button);
+		})
 			return true;
 
 		canDrag = true;
@@ -584,10 +584,10 @@ public class CharacterScreen extends Screen
 		canDrag = false;
 
 		return switch (page)
-				{
-					case SPECIES -> mouseReleasedPageSpecies(mouseX, mouseY, button);
-					case VARIABLES -> mouseReleasedPageVariables(mouseX, mouseY, button);
-				};
+		{
+			case SPECIES -> mouseReleasedPageSpecies(mouseX, mouseY, button);
+			case VARIABLES -> mouseReleasedPageVariables(mouseX, mouseY, button);
+		};
 	}
 
 	@Override
@@ -867,7 +867,7 @@ public class CharacterScreen extends Screen
 
 	private void renderLeftScrollPanelPageSpecies(MatrixStack matrices, int mouseX, int mouseY, int x, int y, Identifier selectedSpeciesSlug)
 	{
-		var allSpecies = new ArrayList<>(SwgSpeciesRegistry.getAllSlugs());
+		var allSpecies = SwgSpeciesRegistry.getAllSlugs().stream().sorted().toList();
 		LEFT_SCROLL_THUMB.setScrollInputFactor(allSpecies.size());
 
 		var listOverflowSize = Math.max(0, LIST_ROW_HEIGHT * allSpecies.size() - LEFT_LIST_CUTOUT.height);
