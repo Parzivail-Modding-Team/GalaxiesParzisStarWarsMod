@@ -66,7 +66,10 @@ public class BaseClientContent implements PswgClientAddon
 		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_GOTAL, SwgSpeciesRenderer.humanoidBase(Resources.id("species/gotal")), BaseClientContent::animateGotal);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_ONGREE, Resources.id("textures/gui/character/icons.png"), 19);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_ONGREE, SwgSpeciesRenderer.humanoidBase(Resources.id("species/ongree")), null);
+
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_GRAN, Resources.id("textures/gui/character/icons.png"), 20);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_GRAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/gran")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_TRANDOSHAN, Resources.id("textures/gui/character/icons.png"), 14);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_MON_CALAMARI, Resources.id("textures/gui/character/icons.png"), 16);

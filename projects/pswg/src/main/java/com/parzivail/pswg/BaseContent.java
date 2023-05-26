@@ -386,6 +386,26 @@ public class BaseContent implements PswgAddon
 						                         .thenStatic("eyes")
 						                         .thenHumanoidClothing()
 						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_GRAN)
+						.withHumanoidBodyModifications()
+						.withHumanoidClothing()
+						.variable("body", "orange", "banana", "bronze", "coral", "cream", "tangerine", "yellow")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .thenHumanoidBodyModifications()
+						                         .thenHumanoidClothing()
+						)
+						.build(),
+				new SpeciesBuilder(SwgSpeciesRegistry.SPECIES_ONGREE)
+						.withHumanoidClothing()
+						.variable("body", "orange", "brass", "brown", "gold", "green", "silver", "tangerine", "yellow")
+						.variable("eyes", "yellow", "orange", "pink", "white")
+						.variable("mouth", "gray", "pink", "white")
+						.layerRenderer(tbb -> tbb.thenGender("body", false)
+						                         .then("eyes", false)
+						                         .then("mouth", false)
+						                         .thenHumanoidClothing()
+						)
 						.build()
 		);
 	}
