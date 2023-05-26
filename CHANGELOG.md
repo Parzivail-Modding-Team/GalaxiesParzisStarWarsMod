@@ -5,6 +5,8 @@
   * Devaronians
   * Gotals
   * Rodians
+  * Gran
+  * Ongree
 * Added lang entries for blaster bolt entities
 * Sparks now shoot from the barrels of the Jawa ion blaster and CA-87
 
