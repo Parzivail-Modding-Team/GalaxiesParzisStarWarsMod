@@ -26,6 +26,8 @@ public class BlasterDescriptor
 	public float boltRadius;
 	public int magazineSize;
 
+	public boolean pyrotechnics;
+
 	public int automaticRepeatTime = 1;
 	public int burstRepeatTime = 1;
 
@@ -61,6 +63,12 @@ public class BlasterDescriptor
 	public BlasterDescriptor sound(Identifier sound)
 	{
 		this.sound = sound;
+		return this;
+	}
+
+	public BlasterDescriptor usePyrotechnics()
+	{
+		this.pyrotechnics = true;
 		return this;
 	}
 

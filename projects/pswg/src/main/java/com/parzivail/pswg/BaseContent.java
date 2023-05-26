@@ -526,6 +526,7 @@ public class BaseContent implements PswgAddon
 						                   .requireLayer(3, "smooth_barrel")),
 				new BlasterDescriptor(Resources.id("ca87"), BlasterArchetype.ION)
 						.firingBehavior(List.of(BlasterFiringMode.ION), BlasterWaterBehavior.NONE)
+						.usePyrotechnics()
 						.mechanicalProperties(6.7f, -0.5f, 10, 100)
 						.damage(10, 20, Falloff.linear())
 						.bolt(ColorUtil.packHsv(0.62f, 0.51f, 1), 0.5f, 1)
@@ -537,6 +538,7 @@ public class BaseContent implements PswgAddon
 						                   .attachment(1, "repulsor_addon", BlasterAttachmentFunction.ION_TO_REPULSOR_CONVERSION, BlasterAttachmentCategory.INTERNAL_ORDNANCE_CONFIG)),
 				new BlasterDescriptor(Resources.id("jawa_ion"), BlasterArchetype.ION)
 						.firingBehavior(List.of(BlasterFiringMode.ION), BlasterWaterBehavior.NONE)
+						.usePyrotechnics()
 						.mechanicalProperties(6.7f, -0.5f, 10, 100)
 						.damage(10, 20, Falloff.linear())
 						.bolt(ColorUtil.packHsv(0.62f, 1, 1), 0.5f, 1)

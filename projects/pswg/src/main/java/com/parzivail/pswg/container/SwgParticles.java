@@ -18,6 +18,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -56,7 +57,7 @@ public class SwgParticles
 	{
 	}
 
-	public static void handlePlayerSparks(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handlePlayerSocketPyro(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
 		var playerId = buf.readInt();
 		var playerSocket = buf.readString();
@@ -88,6 +89,20 @@ public class SwgParticles
 						sparkVelocity.y + vy,
 						sparkVelocity.z + vz
 				);
+
+				if (i % 3 == 0)
+				{
+					var smokeVelocity = socket.normal().mul(0.05f * (client.world.random.nextFloat() * 0.5f + 0.5f), new Vector3f());
+					client.world.addParticle(
+							ParticleTypes.SMOKE,
+							socket.position().x,
+							socket.position().y,
+							socket.position().z,
+							smokeVelocity.x + vx,
+							smokeVelocity.y + vy,
+							smokeVelocity.z + vz
+					);
+				}
 			}
 		});
 	}

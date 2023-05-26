@@ -27,6 +27,6 @@ public class SwgPackets
 		public static final Identifier OpenEntityInventory = Resources.id("entity_inventory");
 		public static final Identifier AccumulateRecoil = Resources.id("recoil");
 		public static final Identifier BlasterHit = Resources.id("blaster_hit");
-		public static final Identifier PlayerSparks = Resources.id("player_sparks");
+		public static final Identifier PlayerSocketPyro = Resources.id("player_sparks");
 	}
 }

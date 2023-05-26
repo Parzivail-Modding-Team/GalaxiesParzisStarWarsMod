@@ -581,14 +581,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 						entity.setSourceArm(hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite());
 					});
-
-					var passedData = new PacketByteBuf(Unpooled.buffer());
-					passedData.writeInt(player.getId());
-					passedData.writeString(SOCKET_ID_BARREL_END);
-
-					var sPlayer = (ServerPlayerEntity)player;
-					for (var trackingPlayer : PlayerLookup.tracking(sPlayer.getWorld(), player.getBlockPos()))
-						ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PlayerSparks, passedData);
 				}
 			}
 
@@ -603,6 +595,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.horizontal * horizNoise));
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
 				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.AccumulateRecoil, passedData);
+			}
+
+			if (bd.pyrotechnics)
+			{
+				var passedData = new PacketByteBuf(Unpooled.buffer());
+				passedData.writeInt(player.getId());
+				passedData.writeString(SOCKET_ID_BARREL_END);
+
+				var sPlayer = (ServerPlayerEntity)player;
+				for (var trackingPlayer : PlayerLookup.tracking(sPlayer.getWorld(), player.getBlockPos()))
+					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PlayerSocketPyro, passedData);
 			}
 
 			bt.serializeAsSubtag(stack);
