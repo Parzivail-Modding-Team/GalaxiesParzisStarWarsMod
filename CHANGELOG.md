@@ -6,7 +6,7 @@
   * Gotals
   * Rodians
 * Added lang entries for blaster bolt entities
-* Sparks now shoot from blaster barrels for ion weapons
+* Sparks now shoot from the barrels of the Jawa ion blaster and CA-87
 
 # Changes
 

@@ -44,6 +44,8 @@ public class SwgSpeciesRegistry
 	public static final Identifier SPECIES_TWILEK = Resources.id("twilek");
 	public static final Identifier SPECIES_WOOKIEE = Resources.id("wookiee");
 	public static final Identifier SPECIES_GOTAL = Resources.id("gotal");
+	public static final Identifier SPECIES_ONGREE = Resources.id("ongree");
+	public static final Identifier SPECIES_GRAN = Resources.id("gran");
 
 	public static void registerAll(Map<Identifier, SpeciesFactory> speciesPresets)
 	{
