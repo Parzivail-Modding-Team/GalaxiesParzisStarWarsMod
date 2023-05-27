@@ -18,7 +18,8 @@ public class ClassLoadingHelper
 		}
 		catch (Exception e)
 		{
-			ParziUtil.LOG.warn("Failed to load optional class.");
+			ParziUtil.LOG.warn("Failed to load optional class:");
+			e.printStackTrace();
 			return Optional.empty();
 		}
 	}
