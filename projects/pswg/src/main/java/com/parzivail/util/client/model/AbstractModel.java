@@ -16,6 +16,9 @@
 
 package com.parzivail.util.client.model;
 
+import com.parzivail.pswg.Galaxies;
+import com.parzivail.util.client.model.compat.FrapiCompat;
+import com.parzivail.util.client.model.compat.IndiumCompat;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
@@ -23,8 +26,6 @@ import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.impl.client.indigo.renderer.RenderMaterialImpl;
-import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
@@ -62,7 +63,13 @@ public abstract class AbstractModel implements BakedModel, FabricBakedModel
 		return Optional
 				.ofNullable(RendererAccess.INSTANCE.getRenderer()).map(Renderer::materialFinder)
 				.or(IndiumCompat::getMaterialFinder)
-				.orElse(new RenderMaterialImpl.Finder());
+				.or(() -> {
+					Galaxies.LOG.warn("No MaterialFinder found in Fabric API or Indium!");
+					return FrapiCompat.getMaterialFinder82();
+				})
+				// TODO: remove in 1.20, not present in 1.20.x FAPI builds
+				.or(FrapiCompat::getMaterialFinderLegacy)
+				.orElseThrow(() -> new RuntimeException("No MaterialFinder found in Fabric API, Indium, or Fabric (impl)!"));
 	}
 
 	protected static MeshBuilder createMeshBuilder()
@@ -70,7 +77,11 @@ public abstract class AbstractModel implements BakedModel, FabricBakedModel
 		return Optional
 				.ofNullable(RendererAccess.INSTANCE.getRenderer()).map(Renderer::meshBuilder)
 				.or(IndiumCompat::getMeshBuilder)
-				.orElse(new MeshBuilderImpl());
+				.or(() -> {
+					Galaxies.LOG.warn("No MeshBuilder found in Fabric API or Indium!");
+					return FrapiCompat.getMeshBuilder();
+				})
+				.orElseThrow(() -> new RuntimeException("No MeshBuilder found in Fabric API, Indium, or Fabric (impl)!"));
 	}
 
 	@Override

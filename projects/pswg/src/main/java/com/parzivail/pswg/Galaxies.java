@@ -13,6 +13,7 @@ import com.parzivail.pswg.features.lightsabers.data.LightsaberDescriptor;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.data.pack.ModDataHelper;
 import com.parzivail.util.entity.TrackedDataHandlers;
 import com.parzivail.util.network.PlayerPacketHandler;
 import com.parzivail.util.world.DimensionTeleporter;
@@ -22,20 +23,16 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.resource.LifecycledResourceManagerImpl;
-import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Galaxies implements ModInitializer
@@ -157,11 +154,11 @@ public class Galaxies implements ModInitializer
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 
 		Galaxies.LOG.info("Loading PSWG addons via datapack instantiation");
-		var packs = new ArrayList<ResourcePack>();
-		new ModResourcePackCreator(ResourceType.SERVER_DATA).register(resourcePackProfile -> packs.add(resourcePackProfile.createResourcePack()));
-		var resourceManager = new LifecycledResourceManagerImpl(ResourceType.SERVER_DATA, packs);
+		ModDataHelper.withResources(ResourceType.SERVER_DATA, resourceManager -> {
+			AddonLightsaberManager.INSTANCE.load(resourceManager);
+			// TODO: blasters, etc.
+		});
 
-		AddonLightsaberManager.INSTANCE.load(resourceManager);
 		for (var data : AddonLightsaberManager.INSTANCE.getData().values())
 		{
 			var descriptor = new LightsaberDescriptor(data.identifier(), data.owner(), data.bladeColor(), data.bladeType());
