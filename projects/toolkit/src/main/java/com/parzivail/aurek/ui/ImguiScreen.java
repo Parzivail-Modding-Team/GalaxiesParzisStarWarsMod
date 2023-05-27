@@ -32,6 +32,6 @@ public abstract class ImguiScreen extends Screen
 
 	protected void drawBackground(MatrixStack matrices)
 	{
-		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
+		fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
 	}
 }

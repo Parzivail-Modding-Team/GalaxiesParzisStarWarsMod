@@ -14,12 +14,6 @@ public class FrapiCompat
 		return ClassLoadingHelper.tryInit("net.fabricmc.fabric.impl.client.indigo.renderer.material.MaterialFinderImpl");
 	}
 
-	public static Optional<MaterialFinder> getMaterialFinderLegacy()
-	{
-		// FAPI <0.82.0+1.19.4
-		return ClassLoadingHelper.tryInit("net.fabricmc.fabric.impl.client.indigo.renderer.RenderMaterialImpl$Finder");
-	}
-
 	public static Optional<MeshBuilder> getMeshBuilder()
 	{
 		return ClassLoadingHelper.tryInit("net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl");

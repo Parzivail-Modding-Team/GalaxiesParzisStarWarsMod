@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
@@ -54,9 +55,9 @@ public abstract class AbstractModel implements BakedModel, FabricBakedModel
 			MATERIAL_FINDER = createMaterialFinder();
 
 			MAT_DIFFUSE_OPAQUE = MATERIAL_FINDER.find();
-			MAT_DIFFUSE_CUTOUT = MATERIAL_FINDER.blendMode(0, BlendMode.CUTOUT_MIPPED).find();
-			MAT_DIFFUSE_TRANSLUCENT = MATERIAL_FINDER.blendMode(0, BlendMode.TRANSLUCENT).find();
-			MAT_EMISSIVE = MATERIAL_FINDER.emissive(0, true).disableAo(0, true).disableDiffuse(0, true).find();
+			MAT_DIFFUSE_CUTOUT = MATERIAL_FINDER.blendMode(BlendMode.CUTOUT_MIPPED).find();
+			MAT_DIFFUSE_TRANSLUCENT = MATERIAL_FINDER.blendMode(BlendMode.TRANSLUCENT).find();
+			MAT_EMISSIVE = MATERIAL_FINDER.emissive(true).ambientOcclusion(TriState.FALSE).disableDiffuse(true).find();
 		}
 	}
 
@@ -69,8 +70,6 @@ public abstract class AbstractModel implements BakedModel, FabricBakedModel
 					Galaxies.LOG.warn("No MaterialFinder found in Fabric API or Indium!");
 					return FrapiCompat.getMaterialFinder82();
 				})
-				// TODO: remove in 1.20, not present in 1.20.x FAPI builds
-				.or(FrapiCompat::getMaterialFinderLegacy)
 				.orElseThrow(() -> new RuntimeException("No MaterialFinder found in Fabric API, Indium, or Fabric (impl)!"));
 	}
 

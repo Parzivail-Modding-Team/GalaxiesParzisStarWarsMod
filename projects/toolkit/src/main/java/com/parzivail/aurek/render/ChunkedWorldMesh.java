@@ -140,7 +140,7 @@ public class ChunkedWorldMesh
 			if (mesh == null)
 				return;
 
-			var state = mesh.getState();
+			var state = mesh.state();
 			if (!state.canRender)
 				continue;
 

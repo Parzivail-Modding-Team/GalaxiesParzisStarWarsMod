@@ -20,8 +20,8 @@ dependencies {
 	"modImplementation"("io.github.spair:imgui-java-natives-windows:1.86.10")
 	"include"("io.github.spair:imgui-java-natives-windows:1.86.10")
 
-	"modImplementation"("io.wispforest:worldmesher:0.2.14+1.19.3")
-	"include"("io.wispforest:worldmesher:0.2.14+1.19.3")
+	"modImplementation"("io.wispforest:worldmesher:0.3.0+1.19.3")
+	"include"("io.wispforest:worldmesher:0.3.0+1.19.3")
 	//	"modImplementation"(files("/home/cnewman/IdeaProjects/worldmesher/build/libs/worldmesher-0.2.13+build.11+1.19.jar"))
 	//	"include"(files("/home/cnewman/IdeaProjects/worldmesher/build/libs/worldmesher-0.2.13+build.11+1.19.jar"))
 }

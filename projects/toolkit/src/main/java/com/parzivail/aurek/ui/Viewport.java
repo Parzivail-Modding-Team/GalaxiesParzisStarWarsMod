@@ -64,6 +64,7 @@ public class Viewport
 
 		renderTarget.beginWrite(setViewport);
 
+		GL11.glClearColor(1, 0, 1, 1);
 		RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT, false);
 	}
 
