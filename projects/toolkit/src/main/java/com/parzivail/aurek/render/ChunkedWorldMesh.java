@@ -171,7 +171,7 @@ public class ChunkedWorldMesh
 
 	public void close()
 	{
-		// TODO: renderMap.values().forEach(WorldMesh::reset);
+		renderMap.values().forEach(WorldMesh::reset);
 	}
 
 	public boolean isChunkHidden(int chunkX, int chunkZ)

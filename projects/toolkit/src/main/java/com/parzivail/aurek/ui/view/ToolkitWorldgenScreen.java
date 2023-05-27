@@ -12,11 +12,8 @@ import com.parzivail.util.math.MathUtil;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ChunkPos;
@@ -75,18 +72,11 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 		var f = 1 / (float)client.getWindow().getScaleFactor();
 		MathUtil.scalePos(ms, f, f, f);
 		viewport.translateAndZoom(ms, tickDelta);
-		MathUtil.scalePos(ms, 16, 16, 16);
-		MathUtil.scalePos(ms, 10, 10, 10);
+
+		// TODO: why?
+		ms.translate(0, 0, -10000);
 
 		viewport.rotate(ms, tickDelta);
-		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
-
-		ms.push();
-		ms.translate(-0.5f, -1, -0.5f);
-		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
-		ms.pop();
-
-		immediate.draw();
 
 		var dim = mesh.getDimensions();
 		ms.translate(-dim.getX() / 2f, -dim.getY() / 2f, -dim.getZ() / 2f);
