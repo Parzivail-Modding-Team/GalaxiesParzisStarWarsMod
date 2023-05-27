@@ -9,7 +9,7 @@ public class ClassLoadingHelper
 	@SuppressWarnings("unchecked")
 	public static <T> Optional<T> tryInit(String className)
 	{
-		ParziUtil.LOG.warn("Attempting to load optional class: {}", className);
+		ParziUtil.LOG.warn("Attempting to load optional class: %s", className);
 
 		try
 		{

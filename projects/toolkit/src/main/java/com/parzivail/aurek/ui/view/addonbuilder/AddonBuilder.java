@@ -116,7 +116,7 @@ public class AddonBuilder extends ImguiScreen
 				{
 					case Lightsaber ->
 					{
-						project.addonFeatures.add(currentEditingFeature = new LightsaberAddonFeature("The Heavysaber", "heavysaber", ColorUtil.packHsv(0.62f, 1, 1), false));
+						project.addonFeatures.add(currentEditingFeature = new LightsaberAddonFeature("Jedi Bob", "bricksaber", ColorUtil.packHsv(0.37f, 1, 1), false));
 					}
 				}
 			}
