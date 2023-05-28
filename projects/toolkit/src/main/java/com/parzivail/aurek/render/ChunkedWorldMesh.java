@@ -1,20 +1,24 @@
 package com.parzivail.aurek.render;
 
+import com.parzivail.aurek.util.WorkerUtil;
 import com.parzivail.aurek.world.GeneratingBlockRenderView;
 import com.parzivail.aurek.world.SliceController;
 import io.wispforest.worldmesher.WorldMesh;
 import it.unimi.dsi.fastutil.longs.Long2ObjectAVLTreeMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 public class ChunkedWorldMesh
 {
+	private static final ExecutorService WORLDGEN_WORKER = WorkerUtil.createWorker("WorldGenerationWorker", Runtime.getRuntime().availableProcessors() / 2);
+	private static final ExecutorService MESH_REBUILD_WORKER = WorkerUtil.createThreadPool(1, "MeshRebuildWorker");
+
 	private final Long2ObjectMap<WorldMesh> renderMap;
 	private final GeneratingBlockRenderView world;
 	private final ChunkPos min;
@@ -95,7 +99,7 @@ public class ChunkedWorldMesh
 			for (var entry : renderMap.keySet())
 			{
 				var pos = new ChunkPos(entry);
-				var regenFuture = CompletableFuture.runAsync(() -> world.regenerate(pos), Util.getMainWorkerExecutor());
+				var regenFuture = CompletableFuture.runAsync(() -> world.regenerate(pos), WORLDGEN_WORKER);
 				regenFutures.add(regenFuture);
 
 				regenFuture.whenComplete((unused, throwable) -> {
@@ -110,7 +114,7 @@ public class ChunkedWorldMesh
 			// Schedule decoration
 			var decorateFutures = new ArrayList<CompletableFuture<Void>>();
 			for (var entry : renderMap.keySet())
-				decorateFutures.add(CompletableFuture.runAsync(() -> world.decorate(new ChunkPos(entry)), Util.getMainWorkerExecutor()));
+				decorateFutures.add(CompletableFuture.runAsync(() -> world.decorate(new ChunkPos(entry)), WORLDGEN_WORKER));
 
 			// Wait until decoration has completed
 			for (var f : decorateFutures)
@@ -119,7 +123,7 @@ public class ChunkedWorldMesh
 			// Rebuild modified chunk
 			for (var dirtyPos : world.getDirtyChunks())
 				scheduleRebuild(new ChunkPos(dirtyPos));
-		}, Util.getMainWorkerExecutor());
+		}, MESH_REBUILD_WORKER);
 	}
 
 	public void scheduleRebuild(ChunkPos pos)

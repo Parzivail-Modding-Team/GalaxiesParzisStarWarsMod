@@ -16,6 +16,11 @@ public class Lumberjack
 		forceDebugLog = Boolean.parseBoolean(System.getProperty("pswg.debug", "false"));
 	}
 
+	public Logger getLogger()
+	{
+		return logger;
+	}
+
 	/**
 	 * Prints a message to log only in Debug mode
 	 *

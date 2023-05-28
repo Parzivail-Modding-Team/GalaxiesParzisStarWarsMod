@@ -8,10 +8,7 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Locale;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinWorkerThread;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WorkerUtil
@@ -67,5 +64,19 @@ public class WorkerUtil
 		}
 
 		ToolkitClient.LOG.error(String.format(Locale.ROOT, "Caught exception in thread %s", thread), t);
+	}
+
+	public static ExecutorService createThreadPool(int nThreads, String name)
+	{
+		return Executors.newFixedThreadPool(
+				nThreads,
+				(runnable) ->
+				{
+					Thread thread = new Thread(runnable);
+					thread.setName(name);
+					thread.setUncaughtExceptionHandler(WorkerUtil::uncaughtExceptionHandler);
+					return thread;
+				}
+		);
 	}
 }
