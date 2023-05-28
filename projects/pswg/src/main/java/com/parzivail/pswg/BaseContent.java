@@ -207,7 +207,7 @@ public class BaseContent implements PswgAddon
 				"vest2"
 		));
 
-		PswgContent.HUMANOID_CUSTOMIZATION_REGISTERED.register((id, options) -> {
+		PswgContent.COLLECT_HUMANOID_CUSTOMIZATION.register((id, options) -> {
 			if (customizationOptions.containsKey(id))
 				options.possibleValues.addAll(customizationOptions.get(id));
 		});
