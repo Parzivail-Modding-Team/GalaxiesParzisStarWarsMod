@@ -16,7 +16,7 @@ public class ComplexCollisionManager
 			return Optional.empty();
 
 		Box box2 = box.expand(5);
-		var complexEntities = entity.world.getOtherEntities(entity, box2, other -> other instanceof IComplexEntityHitbox iceh && roughCollidesWith(iceh, entity));
+		var complexEntities = entity.getWorld().getOtherEntities(entity, box2, other -> other instanceof IComplexEntityHitbox iceh && roughCollidesWith(iceh, entity));
 
 		var sourceHitbox = CapsuleVolume.of(entity.getBoundingBox());
 

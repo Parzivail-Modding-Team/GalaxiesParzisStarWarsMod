@@ -19,7 +19,7 @@ public class TwoJointIk
 
 		var lTotal = upperLegLength + lowerLegLength;
 
-		var world = entity.world;
+		var world = entity.getWorld();
 		var result = world.raycast(new RaycastContext(hip.add(entityPos), hip.add(entityPos).subtract(0, lTotal, 0), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity));
 		if (result.getType() == HitResult.Type.MISS)
 			return new Result(Vec3d.ZERO, Vec3d.ZERO, hipYaw, 0, 0);
@@ -44,7 +44,7 @@ public class TwoJointIk
 		if (hip.distanceTo(footRequest) >= lTotal)
 			return getFullyExtendedResult(hip, footRequest, hipYaw);
 
-		var world = entity.world;
+		var world = entity.getWorld();
 		var result = world.raycast(new RaycastContext(footRequest.add(entityPos), footRequest.add(entityPos).subtract(0, lTotal, 0), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity));
 		if (result.getType() == HitResult.Type.MISS)
 			return getFullyExtendedResult(hip, footRequest, hipYaw);

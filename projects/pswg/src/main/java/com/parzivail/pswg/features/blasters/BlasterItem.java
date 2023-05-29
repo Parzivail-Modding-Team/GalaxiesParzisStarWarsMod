@@ -604,7 +604,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				passedData.writeString(SOCKET_ID_BARREL_END);
 
 				var sPlayer = (ServerPlayerEntity)player;
-				for (var trackingPlayer : PlayerLookup.tracking(sPlayer.getWorld(), player.getBlockPos()))
+				for (var trackingPlayer : PlayerLookup.tracking(sPlayer.getServerWorld(), player.getBlockPos()))
 					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PlayerSocketPyro, passedData);
 			}
 

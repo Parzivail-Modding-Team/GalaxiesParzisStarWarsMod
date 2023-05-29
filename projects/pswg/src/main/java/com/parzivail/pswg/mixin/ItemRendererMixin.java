@@ -65,21 +65,4 @@ public abstract class ItemRendererMixin
 			}
 		}
 	}
-
-	@Inject(method = "renderGuiItemOverlay(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
-	private void renderGuiItemOverlay(MatrixStack matrixStack, TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci)
-	{
-		var mc = MinecraftClient.getInstance();
-		if (!stack.isEmpty() && stack.getItem() instanceof ICooldownItem && mc.currentScreen == null)
-		{
-			var clientPlayerEntity = mc.player;
-			var f = clientPlayerEntity == null ? 0.0F : ((ICooldownItem)stack.getItem()).getCooldownProgress(clientPlayerEntity, clientPlayerEntity.world, stack, Client.getTickDelta());
-			if (f > 0.0F)
-			{
-				RenderSystem.disableDepthTest();
-				DrawableHelper.fill(matrixStack, x, y + MathHelper.floor(16.0F * (1.0F - f)), x + 16, y + 16, 0x7fffffff);
-				RenderSystem.enableDepthTest();
-			}
-		}
-	}
 }

@@ -1,6 +1,6 @@
 package com.parzivail.util.client.texture;
 
-import com.mojang.authlib.minecraft.InsecureTextureException;
+import com.mojang.authlib.minecraft.InsecurePublicKeyException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.util.ParziUtil;
 import com.parzivail.util.data.FallbackIdentifier;
@@ -134,10 +134,9 @@ public abstract class TextureProvider<TData>
 				var minecraft = MinecraftClient.getInstance();
 				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> registerTexture(cacheId, request)));
 			}
-			catch (InsecureTextureException insecureTextureException)
+			catch (InsecurePublicKeyException insecureTextureException)
 			{
-				ParziUtil.LOG.warn("Attempt to load insecure texture blocked: %s ", cacheId);
-				insecureTextureException.printStackTrace();
+				ParziUtil.LOG.warn("Attempt to load insecure texture blocked: %s ", cacheId, insecureTextureException);
 			}
 		});
 	}

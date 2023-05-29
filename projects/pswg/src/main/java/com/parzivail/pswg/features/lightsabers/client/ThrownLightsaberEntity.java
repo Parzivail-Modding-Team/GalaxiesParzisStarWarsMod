@@ -109,9 +109,9 @@ public class ThrownLightsaberEntity extends ThrownEntity implements IPrecisionVe
 	protected void onCollision(HitResult hitResult)
 	{
 		super.onCollision(hitResult);
-		if (!this.world.isClient)
+		if (!this.getWorld().isClient)
 		{
-			this.world.sendEntityStatus(this, (byte)3);
+			this.getWorld().sendEntityStatus(this, (byte)3);
 			this.discard();
 		}
 	}

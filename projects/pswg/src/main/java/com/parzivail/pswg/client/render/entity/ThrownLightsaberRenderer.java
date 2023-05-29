@@ -52,7 +52,7 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 		//		lt.active = true;
 		//		lt.serializeAsSubtag(stack);
 		//
-		//		this.itemRenderer.renderItem(stack, ModelTransformationMode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider, entity.world, 0);
+		//		this.itemRenderer.renderItem(stack, ModelTransformationMode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider, entity.getWorld(), 0);
 
 		matrices.pop();
 	}

@@ -93,9 +93,9 @@ public class WorrtEntity extends AnimalEntity
 			}
 		}
 
-		if (!this.world.isClient)
+		if (!this.getWorld().isClient)
 		{
-			this.world.sendEntityStatus(this, (byte)1);
+			this.getWorld().sendEntityStatus(this, (byte)1);
 		}
 	}
 
@@ -130,7 +130,7 @@ public class WorrtEntity extends AnimalEntity
 			--this.ticksUntilJump;
 		}
 
-		if (this.onGround)
+		if (this.isOnGround())
 		{
 			if (!this.lastOnGround)
 			{
@@ -160,7 +160,7 @@ public class WorrtEntity extends AnimalEntity
 			}
 		}
 
-		this.lastOnGround = this.onGround;
+		this.lastOnGround = this.isOnGround();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -290,7 +290,7 @@ public class WorrtEntity extends AnimalEntity
 		@Override
 		public void tick()
 		{
-			if (this.worrt.onGround && !this.worrt.jumping && !((WorrtEntity.WorrtJumpControl)this.worrt.jumpControl).isActive())
+			if (this.worrt.isOnGround() && !this.worrt.jumping && !((WorrtEntity.WorrtJumpControl)this.worrt.jumpControl).isActive())
 			{
 				this.worrt.setSpeed(0.0D);
 			}

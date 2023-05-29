@@ -36,7 +36,7 @@ public class EntityUtil
 		fromDir = fromDir.normalize();
 
 		var endPos = startPos.add(fromDir.multiply(distance));
-		var list = fromEntity.world.getEntitiesByClass(clazz, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
+		var list = fromEntity.getWorld().getEntitiesByClass(clazz, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
 
 		for (var entity : list)
 		{
@@ -74,7 +74,7 @@ public class EntityUtil
 
 		fromDir = fromDir.normalize();
 
-		var list = fromEntity.world.getEntitiesByClass(LivingEntity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
+		var list = fromEntity.getWorld().getEntitiesByClass(LivingEntity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
 
 		var hit = new ArrayList<Entity>();
 
@@ -99,7 +99,7 @@ public class EntityUtil
 	public static BlockHitResult raycastBlocks(Vec3d startPos, Vec3d fromDir, double distance, Entity fromEntity, RaycastContext.ShapeType shapeType, RaycastContext.FluidHandling fluidHandling)
 	{
 		var end = startPos.add(fromDir.multiply(distance));
-		return fromEntity.world.raycast(new RaycastContext(startPos, end, shapeType, fluidHandling, fromEntity));
+		return fromEntity.getWorld().raycast(new RaycastContext(startPos, end, shapeType, fluidHandling, fromEntity));
 	}
 
 	public static void setVelocityFromAngles(Entity entity, float pitch, float yaw, float scalar)

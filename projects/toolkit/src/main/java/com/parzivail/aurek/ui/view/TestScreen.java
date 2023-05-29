@@ -10,6 +10,7 @@ import imgui.extension.imguizmo.flag.Mode;
 import imgui.extension.imguizmo.flag.Operation;
 import imgui.internal.ImGui;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -36,9 +37,9 @@ public class TestScreen extends ImguiScreen
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices)
+	protected void drawBackground(DrawContext context)
 	{
-		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000011);
+		context.fillGradient(0, 0, this.width, this.height, 0xFF000000, 0xFF000011);
 
 		assert this.client != null;
 		var tickDelta = client.getTickDelta();

@@ -1,6 +1,6 @@
 package com.parzivail.util.client.render;
 
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ public interface ICustomHudRenderer
 		REGISTRY.put(item, renderer);
 	}
 
-	boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices);
+	boolean renderCrosshair(DrawContext context, PlayerEntity player, Hand hand, ItemStack stack);
 
-	void renderOverlay(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices, int scaledWidth, int scaledHeight, float tickDelta);
+	void renderOverlay(DrawContext context, PlayerEntity player, Hand hand, ItemStack stack, int scaledWidth, int scaledHeight, float tickDelta);
 }

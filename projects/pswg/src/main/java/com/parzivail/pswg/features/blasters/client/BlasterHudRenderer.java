@@ -13,6 +13,7 @@ import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
 import com.parzivail.pswg.features.blasters.data.BlasterTag;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -40,7 +41,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	});
 
 	@Override
-	public boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
+	public boolean renderCrosshair(DrawContext context, PlayerEntity player, Hand hand, ItemStack stack)
 	{
 		matrices.push();
 		var bd = BlasterItem.getBlasterDescriptor(stack);
@@ -212,7 +213,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	}
 
 	@Override
-	public void renderOverlay(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices, int scaledWidth, int scaledHeight, float tickDelta)
+	public void renderOverlay(DrawContext context, PlayerEntity player, Hand hand, ItemStack stack, int scaledWidth, int scaledHeight, float tickDelta)
 	{
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
