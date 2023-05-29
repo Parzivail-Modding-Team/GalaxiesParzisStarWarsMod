@@ -5,27 +5,12 @@
 ![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/total.svg) 
 ![Discord](https://img.shields.io/discord/412945916476129280.svg)
 
-
-In 2015, Parzi's Star Wars Mod was launched as a cooperative effort to bring together my favorite cinematic and digital worlds. Working alongside the community, we brought to life some of the most in-depth and complex systems ever implemented in a Minecraft mod, and supported over a million players worldwide.
-
-Today, I'm working again to create the **next generation** of mods which push the limit of the immersion possible within Minecraft, essentially using it as a game engine. This starts with Galaxies: Parzi's Star Wars Mod, which is slated to have **dozens of planets, locations, and landmarks** to explore, **hundreds of NPCs** to interact with, and **story-driven quests**.
-
 ## Community and Support
 You can join the community in [the Discord server!](https://discord.gg/54MVQZZ) I also encourage everyone to voice your suggestions, comments, and questions in the Discord.
 
 If you'd like to help support and sustain the mod, please consider becoming a donor!
 
 [![Become a donor!](https://storage.ko-fi.com/cdn/brandasset/kofi_bg_tag_white.png)](https://ko-fi.com/parzivail/tiers)
-
-Perks include:
-* Early mod releases and developer builds
-* Custom cosmetics for character customization
-* Your name in the credits
-
-Goals include:
-* Bringing on more developers and artists
-* Community MMO server
-* Ad-free website and downloads
 
 ## Building
 PSWG builds using the Gradle build system. I recommend you use IntelliJ as an IDE. Simply import the gradle project, setup your development workspace, and build.
