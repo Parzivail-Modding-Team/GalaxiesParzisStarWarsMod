@@ -97,7 +97,7 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 		@Override
 		public VaporatorRecipe read(Identifier identifier, JsonObject jsonObject)
 		{
-			var ingredient = Ingredient.fromJson(JsonHelper.getObject(jsonObject, "ingredient"));
+			var ingredient = Ingredient.fromJson(JsonHelper.getObject(jsonObject, "ingredient"), false);
 			var duration = JsonHelper.getInt(jsonObject, "duration");
 
 			var result = JsonHelper.getObject(jsonObject, "result");

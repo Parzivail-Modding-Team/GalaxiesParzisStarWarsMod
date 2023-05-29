@@ -52,7 +52,7 @@ public class MutableCameraEntity extends Entity
 
 	public MutableCameraEntity with(World world, Vec3d position, Quaternionf rotation, boolean forceEnable)
 	{
-		this.world = world;
+		this.setWorld(world);
 
 		var pos = this.getPos();
 		this.prevX = pos.x;
@@ -71,7 +71,7 @@ public class MutableCameraEntity extends Entity
 
 	public MutableCameraEntity with(ShipEntity parent, ChaseCam camera)
 	{
-		this.world = parent.world;
+		this.setWorld(parent.getWorld());
 
 		this.prevX = camera.prevPos.x;
 		this.prevY = camera.prevPos.y;

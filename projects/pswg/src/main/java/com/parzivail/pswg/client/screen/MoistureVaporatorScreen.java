@@ -5,6 +5,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -35,26 +36,23 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		this.renderBackground(matrices);
-		super.render(matrices, mouseX, mouseY, delta);
-		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+		this.renderBackground(context);
+		super.render(context, mouseX, mouseY, delta);
+		this.drawMouseoverTooltip(context, mouseX, mouseY);
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
+	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY)
 	{
-		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, TEXTURE);
 		var i = (this.width - this.backgroundWidth) / 2;
 		var j = (this.height - this.backgroundHeight) / 2;
-		this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
 		var timer = this.handler.getCollectionTimer();
 		var timerLength = this.handler.getCollectionTimerLength();
 		var height = timerLength <= 0 ? 30 : (int)((1 - timer / (float)timerLength) * 30);
-		this.drawTexture(matrices, i + 103, j + 28 + 30 - height, 176, 30 - height, 9, height);
+		context.drawTexture(TEXTURE, i + 103, j + 28 + 30 - height, 176, 30 - height, 9, height);
 	}
 }

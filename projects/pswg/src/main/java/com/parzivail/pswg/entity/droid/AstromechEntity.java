@@ -310,9 +310,9 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	{
 		if (player.shouldCancelInteraction())
 		{
-			if (!this.world.isClient)
+			if (!this.getWorld().isClient)
 				EntityWithInventory.openScreen(SwgPackets.S2C.OpenEntityInventory, (ServerPlayerEntity)player, this);
-			return ActionResult.success(this.world.isClient);
+			return ActionResult.success(this.getWorld().isClient);
 		}
 
 		return super.interactMob(player, hand);

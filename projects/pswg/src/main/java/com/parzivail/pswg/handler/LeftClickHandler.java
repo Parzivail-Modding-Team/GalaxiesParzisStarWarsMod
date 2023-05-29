@@ -50,7 +50,7 @@ public class LeftClickHandler
 
 		ci.cancel();
 
-		if (lcc.allowRepeatedLeftHold(minecraft.player.world, minecraft.player, hand))
+		if (lcc.allowRepeatedLeftHold(minecraft.player.getWorld(), minecraft.player, hand))
 		{
 			if (useItemLeft(minecraft.player, lcc, hand, true))
 				return;
@@ -81,7 +81,7 @@ public class LeftClickHandler
 		if (player.isSpectator())
 			return false;
 
-		var tar = lcc.useLeft(player.world, player, hand, isRepeatEvent);
+		var tar = lcc.useLeft(player.getWorld(), player, hand, isRepeatEvent);
 		var ar = tar.getResult();
 
 		if (ar == ActionResult.PASS)

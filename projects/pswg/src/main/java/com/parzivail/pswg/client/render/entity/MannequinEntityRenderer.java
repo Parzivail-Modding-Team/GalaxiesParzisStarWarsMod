@@ -199,7 +199,7 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 			return;
 
 		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - bodyYaw));
-		float i = (float)(mannequin.world.getTime() - mannequin.lastHitTime) + tickDelta;
+		float i = (float)(mannequin.getWorld().getTime() - mannequin.lastHitTime) + tickDelta;
 		if (i < 5.0F)
 			matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.sin(i / 1.5F * (float)Math.PI) * 3.0F));
 	}

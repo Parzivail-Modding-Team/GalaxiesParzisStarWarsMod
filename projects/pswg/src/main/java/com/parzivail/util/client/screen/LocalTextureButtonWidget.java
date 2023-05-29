@@ -3,6 +3,7 @@ package com.parzivail.util.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -52,7 +53,7 @@ public class LocalTextureButtonWidget extends ButtonWidget
 	}
 
 	@Override
-	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void renderButton(DrawContext context, int mouseX, int mouseY, float delta)
 	{
 		var oldTexture = RenderSystem.getShaderTexture(0);
 

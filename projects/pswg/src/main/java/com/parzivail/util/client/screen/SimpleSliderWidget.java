@@ -1,8 +1,8 @@
 package com.parzivail.util.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -106,7 +106,7 @@ public class SimpleSliderWidget extends ButtonWidget
 	}
 
 	@Override
-	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void renderButton(DrawContext context, int mouseX, int mouseY, float delta)
 	{
 		var oldTexture = RenderSystem.getShaderTexture(0);
 

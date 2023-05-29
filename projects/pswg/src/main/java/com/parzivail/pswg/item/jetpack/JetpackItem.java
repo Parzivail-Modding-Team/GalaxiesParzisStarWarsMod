@@ -112,7 +112,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		entity.setVelocity(velocity.multiply(0.95f).add(acceleration));
 
 		entity.move(MovementType.SELF, entity.getVelocity());
-		if (entity.horizontalCollision && !entity.world.isClient)
+		if (entity.horizontalCollision && !entity.getWorld().isClient)
 		{
 			var o = entity.getVelocity().horizontalLength();
 			if (o > 0.0F)
@@ -130,7 +130,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 	@Override
 	public void tick(ItemStack stack, SlotReference slot, LivingEntity living)
 	{
-		var world = living.world;
+		var world = living.getWorld();
 
 		if (!stack.isEmpty())
 		{

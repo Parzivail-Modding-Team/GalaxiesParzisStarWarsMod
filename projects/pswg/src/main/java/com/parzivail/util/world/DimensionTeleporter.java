@@ -40,7 +40,7 @@ public class DimensionTeleporter
 				((ServerPlayerEntity)entity).wakeUp(true, true);
 			}
 
-			if (world == entity.world)
+			if (world == entity.getWorld())
 			{
 				((ServerPlayerEntity)entity).networkHandler.requestTeleport(x, y, z, yaw, pitch, movementFlags);
 			}
@@ -56,7 +56,7 @@ public class DimensionTeleporter
 			var f = MathHelper.wrapDegrees(yaw);
 			var g = MathHelper.wrapDegrees(pitch);
 			g = MathHelper.clamp(g, -90.0F, 90.0F);
-			if (world == entity.world)
+			if (world == entity.getWorld())
 			{
 				entity.refreshPositionAndAngles(x, y, z, f, g);
 				entity.setHeadYaw(f);

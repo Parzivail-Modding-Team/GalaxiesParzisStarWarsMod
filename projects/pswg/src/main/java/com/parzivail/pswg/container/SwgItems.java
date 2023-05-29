@@ -27,6 +27,8 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -690,7 +692,7 @@ public class SwgItems
 		public static final Item Mannequin = new MannequinItem(new Item.Settings());
 	}
 
-	static HashMap<Identifier, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();
+	static HashMap<RegistryKey<ItemGroup>, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();
 
 	public static void register()
 	{
@@ -737,7 +739,7 @@ public class SwgItems
 	{
 		if (!ignoreTab)
 		{
-			var tab = tabOverride == null ? Galaxies.TabItems.getId() : new Identifier(tabOverride);
+			var tab = tabOverride == null ? Registries.ITEM_GROUP.getKey(Galaxies.TabItems).orElseThrow() : RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(tabOverride));
 			if (!ITEM_GROUPS.containsKey(tab))
 				ITEM_GROUPS.put(tab, new ArrayList<>());
 
@@ -758,7 +760,7 @@ public class SwgItems
 					getBlasterRegistrationId(id),
 					new BlasterItem(new Item.Settings().maxCount(1), id, blaster.getValue()),
 					false,
-					Galaxies.TabBlasters.getId().toString()
+					Registries.ITEM_GROUP.getId(Galaxies.TabBlasters).toString()
 			);
 		}
 
@@ -770,7 +772,7 @@ public class SwgItems
 					getLightsaberRegistrationId(id),
 					new LightsaberItem(new Item.Settings().maxCount(1), id, lightsaber.getValue()),
 					false,
-					Galaxies.TabLightsabers.getId().toString()
+					Registries.ITEM_GROUP.getId(Galaxies.TabLightsabers).toString()
 			);
 		}
 	}

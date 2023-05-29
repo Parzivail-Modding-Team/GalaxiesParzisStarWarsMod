@@ -36,7 +36,7 @@ public class MoistureVaporatorScreenHandler extends AbstractRecipeScreenHandler<
 		this.inventory = inventory;
 		this.propertyDelegate = propertyDelegate;
 		checkSize(inventory, 2);
-		this.world = playerInventory.player.world;
+		this.world = playerInventory.player.getWorld();
 		inventory.onOpen(playerInventory.player);
 
 		this.addSlot(new Slot(inventory, 0, 31, 35)

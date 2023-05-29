@@ -271,7 +271,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 		EntityUtil.updateEulerRotation(this, viewRotation);
 
-		if (world.isClient)
+		if (getWorld().isClient)
 		{
 			if (Client.isShipClientControlled(this))
 			{
@@ -335,7 +335,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		if (player.shouldCancelInteraction())
 			return ActionResult.FAIL;
 		else
-			return !this.world.isClient && player.startRiding(this) ? ActionResult.CONSUME : ActionResult.FAIL;
+			return !this.getWorld().isClient && player.startRiding(this) ? ActionResult.CONSUME : ActionResult.FAIL;
 	}
 
 	protected int getMaxPassengers()
@@ -355,7 +355,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	}
 
 	@Override
-	public void updatePassengerPosition(Entity passenger)
+	protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater)
 	{
 		if (this.hasPassenger(passenger))
 		{
@@ -369,7 +369,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 			else
 				passenger.setBodyYaw(this.getYaw());
 
-			passenger.setPosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
+			positionUpdater.accept(passenger, this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
 			//			this.copyEntityData(passenger);
 		}
 	}
@@ -464,7 +464,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 		setControls(controls);
 
-		if (this.world.isClient)
+		if (this.getWorld().isClient)
 		{
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeShort(ShipControls.pack(controls));

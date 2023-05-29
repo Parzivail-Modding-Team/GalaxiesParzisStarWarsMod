@@ -66,7 +66,7 @@ public class SpeederEntity extends ShipEntity
 
 		setRotation(rotation);
 
-		if (world.isClient)
+		if (getWorld().isClient)
 		{
 			clientInstRotation = new Quaternionf(rotation);
 		}
@@ -108,7 +108,7 @@ public class SpeederEntity extends ShipEntity
 			{
 				var pos = start.add(left.multiply(x * spacingSideways)).add(forward.multiply(z * spacingForward * 3)).add(0, range, 0);
 
-				if (!world.isAir(new BlockPos(MathUtil.floorInt(pos))))
+				if (!getWorld().isAir(new BlockPos(MathUtil.floorInt(pos))))
 					continue;
 
 				var blockHit = EntityUtil.raycastBlocks(pos, MathUtil.V3D_NEG_Y, range * 2, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.SOURCE_ONLY);

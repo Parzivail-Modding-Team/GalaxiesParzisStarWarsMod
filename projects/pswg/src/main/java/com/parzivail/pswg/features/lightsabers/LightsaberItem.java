@@ -296,11 +296,11 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	public boolean onItemDeselected(PlayerEntity player, ItemStack stack)
 	{
 		LightsaberTag.mutate(stack, tag -> {
-			if (!player.world.isClient && tag.active)
+			if (!player.getWorld().isClient && tag.active)
 			{
 				tag.active = false;
 				tag.finalizeMovement();
-				LightsaberItem.playSound(player.world, player, tag);
+				LightsaberItem.playSound(player.getWorld(), player, tag);
 			}
 		});
 		return true;

@@ -28,6 +28,7 @@
 		"ClientWorldMixin",
 		"DebugHudMixin",
 		"DimensionEffectsAccessor",
+		"DrawContextMixin",
 		"EntityClientMixin",
 		"EntityRenderDispatcherAccessor",
 		"EntityRenderDispatcherMixin",

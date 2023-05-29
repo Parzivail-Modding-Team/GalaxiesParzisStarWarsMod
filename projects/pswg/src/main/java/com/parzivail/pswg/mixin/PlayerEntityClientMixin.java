@@ -22,7 +22,7 @@ public class PlayerEntityClientMixin
 	private void tick(CallbackInfo ci)
 	{
 		var player = (PlayerEntity)(Object)this;
-		if (!player.world.isClient)
+		if (!player.getWorld().isClient)
 			return;
 
 		var meetsConditionsForLightsaberSound = LightsaberIdleSoundInstance.areConditionsMet(player);

@@ -31,7 +31,7 @@ public class SlowTurningMoveControl extends MoveControl
 			PathNodeMaker pathNodeMaker = entityNavigation.getNodeMaker();
 			return pathNodeMaker == null
 			       || pathNodeMaker.getDefaultNodeType(
-					this.entity.world,
+					this.entity.getWorld(),
 					MathHelper.floor(this.entity.getX() + (double)dX),
 					this.entity.getBlockY(),
 					MathHelper.floor(this.entity.getZ() + (double)dZ)
@@ -93,8 +93,8 @@ public class SlowTurningMoveControl extends MoveControl
 
 			this.entity.setMovementSpeed((float)(this.speed * this.entity.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED)));
 			BlockPos blockPos = this.entity.getBlockPos();
-			BlockState blockState = this.entity.world.getBlockState(blockPos);
-			VoxelShape voxelShape = blockState.getCollisionShape(this.entity.world, blockPos);
+			BlockState blockState = this.entity.getWorld().getBlockState(blockPos);
+			VoxelShape voxelShape = blockState.getCollisionShape(this.entity.getWorld(), blockPos);
 			if (j > (double)this.entity.getStepHeight() && f * f + h * h < (double)Math.max(1.0F, this.entity.getWidth())
 			    || !voxelShape.isEmpty()
 			       && this.entity.getY() < voxelShape.getMax(Direction.Axis.Y) + (double)blockPos.getY()

@@ -64,7 +64,7 @@ public abstract class LivingEntityJetpackMixin extends Entity implements IJetpac
 	@Override
 	public void pswg_tryCancelFallFlying()
 	{
-		if (this.onGround && !this.world.isClient)
+		if (this.isOnGround() && !this.getWorld().isClient)
 		{
 			this.setFlag(Entity.FALL_FLYING_FLAG_INDEX, false);
 		}
@@ -100,7 +100,7 @@ public abstract class LivingEntityJetpackMixin extends Entity implements IJetpac
 	@Inject(method = "tickFallFlying()V", at = @At("TAIL"))
 	public void tickFallFlying(CallbackInfo ci)
 	{
-		if (world.isClient)
+		if (getWorld().isClient)
 			return;
 
 		var jetpack = JetpackItem.getEquippedJetpack((LivingEntity)(Object)this);

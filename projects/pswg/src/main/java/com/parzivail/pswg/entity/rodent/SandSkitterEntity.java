@@ -81,12 +81,12 @@ public class SandSkitterEntity extends PathAwareEntity
 	@Override
 	protected void mobTick()
 	{
-		this.world.getProfiler().push("sandSkitterBrain");
-		this.getBrain().tick((ServerWorld)this.world, this);
-		this.world.getProfiler().pop();
-		this.world.getProfiler().push("sandSkitterActivityUpdate");
+		this.getWorld().getProfiler().push("sandSkitterBrain");
+		this.getBrain().tick((ServerWorld)this.getWorld(), this);
+		this.getWorld().getProfiler().pop();
+		this.getWorld().getProfiler().push("sandSkitterActivityUpdate");
 		SandSkitterBrain.updateActivities(this);
-		this.world.getProfiler().pop();
+		this.getWorld().getProfiler().pop();
 		super.mobTick();
 	}
 

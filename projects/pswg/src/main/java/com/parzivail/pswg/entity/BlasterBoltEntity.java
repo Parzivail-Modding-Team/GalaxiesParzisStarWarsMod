@@ -259,13 +259,13 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 	@Override
 	public void tick()
 	{
-		if (!world.isClient && this.age > this.getLife())
+		if (!getWorld().isClient && this.age > this.getLife())
 		{
 			this.discard();
 			return;
 		}
 
-		if (world.isClient && age > 1 && isSmoldering())
+		if (getWorld().isClient && age > 1 && isSmoldering())
 		{
 			var vec = getPos();
 			var vel = getVelocity();
@@ -274,11 +274,11 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 
 			for (var i = 0; i < n; i++)
 			{
-				var dx = 0.01 * world.random.nextGaussian();
-				var dy = 0.01 * world.random.nextGaussian();
-				var dz = 0.01 * world.random.nextGaussian();
+				var dx = 0.01 * getWorld().random.nextGaussian();
+				var dy = 0.01 * getWorld().random.nextGaussian();
+				var dz = 0.01 * getWorld().random.nextGaussian();
 
-				world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
+				getWorld().addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
 
 				vec = vec.add(dVel);
 			}
@@ -304,7 +304,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 			var blockPos = blockHit.getBlockPos();
 			var shouldScorch = true;
 
-			var state = world.getBlockState(blockPos);
+			var state = getWorld().getBlockState(blockPos);
 
 			if (state.isIn(SwgTags.Blocks.BLASTER_REFLECT))
 			{
@@ -314,26 +314,26 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 
 			if (shouldDestroyBlocks())
 			{
-				if (!this.world.isClient)
+				if (!this.getWorld().isClient)
 				{
 					if (state.isIn(SwgTags.Blocks.BLASTER_DESTROY))
 					{
-						world.breakBlock(blockPos, false, this);
+						getWorld().breakBlock(blockPos, false, this);
 						shouldScorch = false;
 					}
 					else if (state.isIn(SwgTags.Blocks.BLASTER_EXPLODE))
 					{
-						world.breakBlock(blockPos, false, this);
+						getWorld().breakBlock(blockPos, false, this);
 						if (state.getBlock() instanceof TntBlock)
 						{
-							TntEntity tntEntity = new TntEntity(world, (double)blockPos.getX() + 0.5, (double)blockPos.getY(), (double)blockPos.getZ() + 0.5, null);
+							TntEntity tntEntity = new TntEntity(getWorld(), (double)blockPos.getX() + 0.5, (double)blockPos.getY(), (double)blockPos.getZ() + 0.5, null);
 							tntEntity.setFuse(0);
-							world.spawnEntity(tntEntity);
+							getWorld().spawnEntity(tntEntity);
 						}
 						else
 						{
 							// TODO: explosion power registry?
-							this.world.createExplosion(this, this.getX(), this.getBodyY(0.0625), this.getZ(), 4.0F, World.ExplosionSourceType.BLOCK);
+							this.getWorld().createExplosion(this, this.getX(), this.getBodyY(0.0625), this.getZ(), 4.0F, World.ExplosionSourceType.BLOCK);
 						}
 
 						shouldScorch = false;
@@ -343,9 +343,9 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 
 			if (shouldCreateScorch() && shouldScorch)
 			{
-				if (!this.world.isClient)
+				if (!this.getWorld().isClient)
 				{
-					if (world.isWater(blockPos) && ignoreWater)
+					if (getWorld().isWater(blockPos) && ignoreWater)
 						return;
 
 					var incident = this.getVelocity().normalize();
@@ -358,7 +358,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 					PacketByteBufHelper.writeVec3d(passedData, incident);
 					PacketByteBufHelper.writeVec3d(passedData, normal);
 
-					for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, blockHit.getBlockPos()))
+					for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)getWorld(), blockHit.getBlockPos()))
 						ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.BlasterHit, passedData);
 				}
 			}
@@ -425,7 +425,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 
 	public static DamageSource getDamageSource(Entity projectile, Entity attacker)
 	{
-		return new DamageSource(attacker.world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(SwgDamageTypes.BLASTER), projectile, attacker);
+		return new DamageSource(attacker.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(SwgDamageTypes.BLASTER), projectile, attacker);
 	}
 
 	private static Class<? extends Entity> getTargetedEntityClass()

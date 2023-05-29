@@ -33,7 +33,7 @@ public class ChaseCam
 
 		prevPos = new Vec3d(pos.x, pos.y, pos.z);
 
-		var world = parent.world;
+		var world = parent.getWorld();
 
 		var lerpAmount = parent.getCameraLerp();
 

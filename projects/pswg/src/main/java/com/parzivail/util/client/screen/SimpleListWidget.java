@@ -1,8 +1,8 @@
 package com.parzivail.util.client.screen;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -30,10 +30,10 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 		}
 
 		@Override
-		public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
+		public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
 		{
 			assert parent.client != null;
-			drawTextWithShadow(matrices, parent.client.textRenderer, parent.entryFormatter.apply(value), x, y, 0xFFFFFF);
+			context.drawTextWithShadow(parent.client.textRenderer, parent.entryFormatter.apply(value), x, y, 0xFFFFFF);
 		}
 
 		@Override
@@ -133,7 +133,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
@@ -142,7 +142,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 
 		GL11.glScissor((int)(left * scaleFactor), window.getHeight() - (int)(bottom * scaleFactor), (int)((right - left) * scaleFactor), (int)((bottom - top) * scaleFactor));
 
-		super.render(matrices, mouseX, mouseY, delta);
+		super.render(context, mouseX, mouseY, delta);
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}

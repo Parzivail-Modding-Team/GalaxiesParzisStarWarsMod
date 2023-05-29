@@ -26,6 +26,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
@@ -628,9 +629,9 @@ public class CharacterScreen extends Screen
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		this.renderBackground(matrices);
+		this.renderBackground(context);
 
 		var x = width / 2 - HALF_WIDTH;
 		var y = height / 2 - HALF_HEIGHT;
@@ -745,14 +746,14 @@ public class CharacterScreen extends Screen
 		if (isSpeciesPage)
 		{
 			if (previewSpecies != null)
-				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.translatable(SwgSpeciesLore.DESCRIPTION.createLanguageKey(previewSpecies.getSlug())));
+				TextUtil.drawArea(context, textRenderer, x + 260, y + 40, 150, Text.translatable(SwgSpeciesLore.DESCRIPTION.createLanguageKey(previewSpecies.getSlug())));
 			else
-				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.translatable(I18N_CHOOSE_SPECIES));
+				TextUtil.drawArea(context, textRenderer, x + 260, y + 40, 150, Text.translatable(I18N_CHOOSE_SPECIES));
 		}
 		else
 		{
 			if (previewVariable == null)
-				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.translatable(I18N_CHOOSE_OPTION));
+				TextUtil.drawArea(context, textRenderer, x + 260, y + 40, 150, Text.translatable(I18N_CHOOSE_OPTION));
 
 			if (isColorVariable)
 			{

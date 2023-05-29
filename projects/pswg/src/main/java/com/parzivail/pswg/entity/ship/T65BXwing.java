@@ -125,13 +125,13 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 
 		var pDir = QuatUtil.rotate(MathUtil.V3D_POS_Z.multiply(5f), boltRotation);
 
-		BlasterUtil.fireBolt(world, player, pDir.normalize(), 100, distance -> (double)50, true, blasterBoltEntity -> {
+		BlasterUtil.fireBolt(getWorld(), player, pDir.normalize(), 100, distance -> (double)50, true, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
 			blasterBoltEntity.setPos(p.x, p.y, p.z);
 			blasterBoltEntity.setColor(ColorUtil.packHsv(0.98f, 1, 1));
 		});
 
-		world.playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 10);
+		getWorld().playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)getWorld().random.nextGaussian() / 10);
 
 		cannonState++;
 		setCannonState(cannonState);
@@ -152,7 +152,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		prevWingAnim = dataTracker.get(WING_ANIM);
 		prevCockpitAnim = dataTracker.get(COCKPIT_ANIM);
 
-		if (!world.isClient)
+		if (!getWorld().isClient)
 		{
 			var controls = getControls();
 
@@ -187,7 +187,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 			var blockHit = EntityUtil.raycastBlocks(sourcePos, rayDir, maxDistance, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.ANY);
 			if (blockHit.getType() != HitResult.Type.MISS)
 			{
-				var state = world.getBlockState(blockHit.getBlockPos());
+				var state = getWorld().getBlockState(blockHit.getBlockPos());
 				var particle = state.getFluidState().isIn(FluidTags.WATER) ? SwgParticles.WATER_WAKE : new BlockStateParticleEffect(SwgParticles.WAKE, state);
 
 				var hitPos = blockHit.getPos();
@@ -201,7 +201,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 				{
 					if (this.random.nextFloat() * 2 > velocityLength)
 						continue;
-					this.world.addParticle(particle, hitPos.x + this.random.nextGaussian() / 4, hitPos.y, hitPos.z + this.random.nextGaussian() / 4, lateralVelocity, verticalVelocity, lateralVelocity);
+					this.getWorld().addParticle(particle, hitPos.x + this.random.nextGaussian() / 4, hitPos.y, hitPos.z + this.random.nextGaussian() / 4, lateralVelocity, verticalVelocity, lateralVelocity);
 				}
 			}
 		}

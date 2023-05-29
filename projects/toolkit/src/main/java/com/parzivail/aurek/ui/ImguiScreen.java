@@ -1,7 +1,7 @@
 package com.parzivail.aurek.ui;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public abstract class ImguiScreen extends Screen
@@ -23,15 +23,15 @@ public abstract class ImguiScreen extends Screen
 	public abstract void process();
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		drawBackground(matrices);
+		drawBackground(context);
 
 		process();
 	}
 
-	protected void drawBackground(MatrixStack matrices)
+	protected void drawBackground(DrawContext context)
 	{
-		fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
+		context.fillGradient(0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
 	}
 }

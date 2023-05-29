@@ -28,7 +28,7 @@ public class PlayerPacketHandler
 			var stack = player.getStackInHand(hand);
 
 			if (stack.getItem() instanceof ILeftClickConsumer)
-				((ILeftClickConsumer)stack.getItem()).useLeft(player.world, player, hand, isRepeatEvent);
+				((ILeftClickConsumer)stack.getItem()).useLeft(player.getWorld(), player, hand, isRepeatEvent);
 		});
 	}
 
@@ -46,12 +46,12 @@ public class PlayerPacketHandler
 
 			var stack = getStackInHand(player, false);
 			if (stack.getItem() instanceof IItemActionListener)
-				((IItemActionListener)stack.getItem()).onItemAction(player.world, player, stack, actions[action]);
+				((IItemActionListener)stack.getItem()).onItemAction(player.getWorld(), player, stack, actions[action]);
 			else
 			{
 				stack = getStackInHand(player, true);
 				if (stack.getItem() instanceof IItemActionListener)
-					((IItemActionListener)stack.getItem()).onItemAction(player.world, player, stack, actions[action]);
+					((IItemActionListener)stack.getItem()).onItemAction(player.getWorld(), player, stack, actions[action]);
 			}
 		});
 	}

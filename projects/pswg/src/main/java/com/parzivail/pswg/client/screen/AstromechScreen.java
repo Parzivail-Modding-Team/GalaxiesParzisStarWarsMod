@@ -6,6 +6,7 @@ import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.screen.AstromechScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -24,33 +25,32 @@ public class AstromechScreen extends HandledScreen<AstromechScreenHandler>
 	{
 		super(handler, inventory, entity.getDisplayName());
 		this.entity = entity;
-		this.passEvents = false;
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
+	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY)
 	{
 		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		var i = (this.width - this.backgroundWidth) / 2;
 		var j = (this.height - this.backgroundHeight) / 2;
-		this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
 		// saddle
-		this.drawTexture(matrices, i + 7, j + 35 - 18, 18, this.backgroundHeight + 54, 18, 18);
+		context.drawTexture(TEXTURE, i + 7, j + 35 - 18, 18, this.backgroundHeight + 54, 18, 18);
 
 		// armor
-		this.drawTexture(matrices, i + 7, j + 35, 0, this.backgroundHeight + 54, 18, 18);
+		context.drawTexture(TEXTURE, i + 7, j + 35, 0, this.backgroundHeight + 54, 18, 18);
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		this.renderBackground(matrices);
+		this.renderBackground(context);
 		this.mouseX = (float)mouseX;
 		this.mouseY = (float)mouseY;
-		super.render(matrices, mouseX, mouseY, delta);
-		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+		super.render(context, mouseX, mouseY, delta);
+		this.drawMouseoverTooltip(context, mouseX, mouseY);
 	}
 }

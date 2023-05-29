@@ -18,6 +18,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.DiffuseLighting;
@@ -322,10 +323,10 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		this.renderBackground(matrices);
-		super.render(matrices, mouseX, mouseY, delta);
+		this.renderBackground(context);
+		super.render(context, mouseX, mouseY, delta);
 
 		var minecraft = MinecraftClient.getInstance();
 		Mutable<List<Text>> tooltip = new MutableObject<>();
@@ -334,9 +335,9 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		{
 			var bt = new BlasterTag(blaster.getOrCreateNbt());
 
-			matrices.push();
+			context.getMatrices().push();
 
-			matrices.translate(x + 105, y + 48, 10);
+			context.getMatrices().translate(x + 105, y + 48, 10);
 
 			DiffuseLighting.enableForLevel(MathUtil.MAT4_IDENTITY);
 
@@ -346,21 +347,21 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			var ratio = (float)Math.max(model.bounds().getZLength() / BLASTER_VIEWPORT_WIDTH, model.bounds().getYLength() / (BLASTER_VIEWPORT_HEIGHT * 0.6));
 
-			MathUtil.scalePos(matrices, -1 / ratio, 1 / ratio, 1);
+			MathUtil.scalePos(context.getMatrices(), -1 / ratio, 1 / ratio, 1);
 
-			matrices.multiply(new Quaternionf().rotationX(MathUtil.toRadians(180 - blasterViewportRotation.y)));
-			matrices.multiply(new Quaternionf().rotationY(MathUtil.toRadians(90 + blasterViewportRotation.x)));
+			context.getMatrices().multiply(new Quaternionf().rotationX(MathUtil.toRadians(180 - blasterViewportRotation.y)));
+			context.getMatrices().multiply(new Quaternionf().rotationY(MathUtil.toRadians(90 + blasterViewportRotation.x)));
 
-			matrices.translate(0, 0, -model.bounds().maxZ + model.bounds().getZLength() / 2);
+			context.getMatrices().translate(0, 0, -model.bounds().maxZ + model.bounds().getZLength() / 2);
 
-			MathUtil.scalePos(matrices, 5, 5, 5);
+			MathUtil.scalePos(context.getMatrices(), 5, 5, 5);
 
 			BlasterItemRenderer.INSTANCE.render(null, blaster, ModelTransformationMode.NONE, false, matrices, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, null);
 			immediate.draw();
 
 			DiffuseLighting.enableGuiDepthLighting();
 
-			matrices.pop();
+			context.getMatrices().pop();
 
 			RenderSystem.setShaderTexture(0, TEXTURE);
 
@@ -560,13 +561,10 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
+	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY)
 	{
-		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, TEXTURE);
 		var i = (this.width - this.backgroundWidth) / 2;
 		var j = (this.height - this.backgroundHeight) / 2;
-		this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 	}
 }
