@@ -58,7 +58,7 @@
 		"cardinal-components-base": "*",
 		"cardinal-components-entity": "*",
 		"cloth-config2": "*",
-		"fabric-api": ">=0.76.0",
+		"fabric-api": ">=0.82.0",
 		"fabricloader": ">=0.14.18",
 		"minecraft": "1.19.4",
 		"trinkets": "*"
