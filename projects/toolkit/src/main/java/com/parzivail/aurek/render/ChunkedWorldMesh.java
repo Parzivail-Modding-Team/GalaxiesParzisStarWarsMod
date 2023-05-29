@@ -123,6 +123,10 @@ public class ChunkedWorldMesh
 			for (var entry : renderMap.keySet())
 			{
 				var pos = new ChunkPos(entry);
+
+				if (!slice.shouldChunkRender(pos.x, pos.z))
+					continue;
+
 				var regenFuture = CompletableFuture.runAsync(() -> world.regenerate(pos), WORLDGEN_WORKER);
 				regenFutures.add(regenFuture);
 
@@ -138,7 +142,14 @@ public class ChunkedWorldMesh
 			// Schedule decoration
 			var decorateFutures = new ArrayList<CompletableFuture<Void>>();
 			for (var entry : renderMap.keySet())
+			{
+				var pos = new ChunkPos(entry);
+
+				if (!slice.shouldChunkRender(pos.x, pos.z))
+					continue;
+
 				decorateFutures.add(CompletableFuture.runAsync(() -> world.decorate(new ChunkPos(entry)), WORLDGEN_WORKER));
+			}
 
 			// Wait until decoration has completed
 			for (var f : decorateFutures)
