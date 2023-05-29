@@ -13,12 +13,14 @@ import net.minecraft.util.math.Vec3i;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChunkedWorldMesh
 {
 	private static final ExecutorService WORLDGEN_WORKER = WorkerUtil.createWorker("WorldGenerationWorker", Runtime.getRuntime().availableProcessors() / 2);
 	private static final ExecutorService MESH_REBUILD_WORKER = WorkerUtil.createThreadPool(1, "MeshRebuildWorker");
 
+	private final AtomicBoolean isRegenerating = new AtomicBoolean();
 	private final Long2ObjectMap<WorldMesh> renderMap;
 	private final GeneratingBlockRenderView world;
 	private final ChunkPos min;
@@ -27,6 +29,8 @@ public class ChunkedWorldMesh
 	private final int maxY;
 	private final Vec3i dimensions;
 	private final SliceController slice;
+
+	public boolean anyChunksBuilding = false;
 
 	public ChunkedWorldMesh(GeneratingBlockRenderView world, ChunkPos min, ChunkPos max, int minY, int maxY)
 	{
@@ -53,7 +57,6 @@ public class ChunkedWorldMesh
 
 	public void setSeed(int seed)
 	{
-
 	}
 
 	public int getSeed()
@@ -91,9 +94,26 @@ public class ChunkedWorldMesh
 		return slice;
 	}
 
+	public boolean isRegenerating()
+	{
+		return isRegenerating.get();
+	}
+
+	public boolean isBuilding()
+	{
+		return anyChunksBuilding;
+	}
+
+	public boolean isBusy()
+	{
+		return isBuilding() || isRegenerating();
+	}
+
 	public void scheduleRegererate()
 	{
 		CompletableFuture.runAsync(() -> {
+			isRegenerating.set(true);
+
 			// Schedule worldgen
 			var regenFutures = new ArrayList<CompletableFuture<Void>>();
 			for (var entry : renderMap.keySet())
@@ -123,6 +143,8 @@ public class ChunkedWorldMesh
 			// Rebuild modified chunk
 			for (var dirtyPos : world.getDirtyChunks())
 				scheduleRebuild(new ChunkPos(dirtyPos));
+
+			isRegenerating.set(false);
 		}, MESH_REBUILD_WORKER);
 	}
 
@@ -132,12 +154,14 @@ public class ChunkedWorldMesh
 		if (mesh == null)
 			return;
 
-		mesh.scheduleRebuild();
+		mesh.scheduleRebuild(MESH_REBUILD_WORKER);
 		world.clearDirty(pos.toLong());
 	}
 
 	public void render(MatrixStack matrixStack)
 	{
+		var anyBuilding = false;
+
 		for (var entry : renderMap.long2ObjectEntrySet())
 		{
 			var mesh = entry.getValue();
@@ -145,6 +169,10 @@ public class ChunkedWorldMesh
 				return;
 
 			var state = mesh.state();
+
+			if (state.isBuildStage)
+				anyBuilding = true;
+
 			if (!state.canRender)
 				continue;
 
@@ -171,6 +199,8 @@ public class ChunkedWorldMesh
 			mesh.render(matrixStack);
 			matrixStack.pop();
 		}
+
+		this.anyChunksBuilding = anyBuilding;
 	}
 
 	public void close()

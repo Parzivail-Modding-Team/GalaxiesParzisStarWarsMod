@@ -1,6 +1,7 @@
 package com.parzivail.aurek.ui.view;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.aurek.imgui.AurekIconFont;
 import com.parzivail.aurek.imgui.ImGuiHelper;
 import com.parzivail.aurek.render.ChunkedWorldMesh;
 import com.parzivail.aurek.ui.ImguiScreen;
@@ -9,9 +10,12 @@ import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.aurek.world.GeneratingBlockRenderView;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.math.MathUtil;
+import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
+import imgui.type.ImBoolean;
+import imgui.type.ImInt;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
@@ -20,15 +24,25 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.random.Random;
 
 public class ToolkitWorldgenScreen extends ImguiScreen
 {
 	private static final String I18N_TOOLKIT_WORLDGEN = Resources.screen("toolkit_worldgen");
+	private static final Random SEED_RANDOM = Random.createLocal();
 
 	private final GeneratingBlockRenderView world;
 	private final Viewport viewport = new Viewport();
 
 	private ChunkedWorldMesh mesh;
+
+	private final ImInt seed = new ImInt();
+	private final ImBoolean activeX = new ImBoolean();
+	private final ImBoolean reverseX = new ImBoolean();
+	private final ImInt sliceX = new ImInt();
+	private final ImBoolean activeZ = new ImBoolean();
+	private final ImBoolean reverseZ = new ImBoolean();
+	private final ImInt sliceZ = new ImInt();
 
 	public ToolkitWorldgenScreen(Screen parent)
 	{
@@ -135,8 +149,63 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 
 			if (ImGui.begin("Controls", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove))
 			{
-				if (ImGui.button("Regenerate"))
+				ImGui.beginDisabled(this.mesh.isBusy());
+
+				if (ImGui.button("Generate"))
 					this.mesh.scheduleRegererate();
+
+				ImGui.sameLine();
+
+				if (this.mesh.isBusy())
+					ImGui.text("Regenerating...");
+				else
+					ImGui.text("Ready");
+
+				ImGui.separator();
+
+				if (ImGui.inputInt("##seed", seed, 1, 10, ImGuiInputTextFlags.EnterReturnsTrue))
+					this.mesh.setSeed(seed.get());
+
+				ImGui.sameLine();
+
+				var size = ImGui.getFrameHeight();
+				if (ImGui.button(AurekIconFont.file_refresh, size, size))
+				{
+					seed.set(SEED_RANDOM.nextInt());
+					this.mesh.setSeed(seed.get());
+				}
+
+				ImGui.separator();
+
+				ImGui.text("X Slice");
+
+				if (ImGui.checkbox("Active##x", activeX))
+					this.mesh.getSlice().setActiveX(activeX.get());
+
+				ImGui.sameLine();
+				ImGui.beginDisabled(!activeX.get());
+				if (ImGui.checkbox("Reverse##x", reverseX))
+					this.mesh.getSlice().setReverseX(reverseX.get());
+				if (ImGui.inputInt("Value##x", sliceX, 1, 10, ImGuiInputTextFlags.EnterReturnsTrue))
+					this.mesh.getSlice().setValueX(sliceX.get());
+				ImGui.endDisabled();
+
+				ImGui.separator();
+
+				ImGui.text("Z Slice");
+
+				if (ImGui.checkbox("Active##z", activeZ))
+					this.mesh.getSlice().setActiveX(activeZ.get());
+
+				ImGui.sameLine();
+				ImGui.beginDisabled(!activeZ.get());
+				if (ImGui.checkbox("Reverse##z", reverseZ))
+					this.mesh.getSlice().setReverseX(reverseZ.get());
+				if (ImGui.inputInt("Value##z", sliceZ, 1, 10, ImGuiInputTextFlags.EnterReturnsTrue))
+					this.mesh.getSlice().setValueX(sliceZ.get());
+				ImGui.endDisabled();
+
+				ImGui.endDisabled();
 			}
 			ImGui.end();
 		}

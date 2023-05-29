@@ -144,7 +144,7 @@ public class AddonBuilder extends ImguiScreen
 						if (ImGui.button("%s##edit%s".formatted(AurekIconFont.greasepencil, i), frameSize, frameSize))
 							currentEditingFeature = feature;
 						ImGui.sameLine();
-						if (ImGui.button("%s##delete%s".formatted(AurekIconFont.x, i), frameSize, frameSize))
+						if (ImGui.button("%s##delete%s".formatted(AurekIconFont.panel_close, i), frameSize, frameSize))
 						{
 							// TODO: ask first
 							delete.run();

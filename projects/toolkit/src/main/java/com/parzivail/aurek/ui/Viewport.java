@@ -102,7 +102,8 @@ public class Viewport
 
 		prevMousePos = pos;
 
-		pollKeyboard();
+		if (ImGui.isItemFocused())
+			pollKeyboard();
 	}
 
 	private void pollKeyboard()
