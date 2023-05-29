@@ -3,7 +3,7 @@ package com.parzivail.aurek.world;
 import com.parzivail.aurek.render.ChunkedWorldMesh;
 import net.minecraft.util.math.ChunkPos;
 
-public class SliceController
+public class SliceController implements IChunkOverrider
 {
 	private final ChunkedWorldMesh mesh;
 
@@ -131,6 +131,7 @@ public class SliceController
 		return (isActiveX && (x == valueX || x == valueX - 1)) || (isActiveZ && (z == valueZ || z == valueZ - 1));
 	}
 
+	@Override
 	public boolean shouldChunkBeEmpty(int x, int z)
 	{
 		if (isActiveX)

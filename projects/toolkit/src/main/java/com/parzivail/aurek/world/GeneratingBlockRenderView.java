@@ -18,7 +18,14 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GeneratingBlockRenderView extends ProceduralBlockRenderView implements WorldGenView
 {
-	private final TerrainGenerator terrainGenerator = new TerrainGenerator(0, new BiomeGenerator(0), null, Blocks.STONE.getDefaultState());
+	private TerrainGenerator terrainGenerator = createTerrainGenerator(0);
+	private IChunkOverrider overrider;
+
+	private static TerrainGenerator createTerrainGenerator(long seed)
+	{
+		return new TerrainGenerator(seed, new BiomeGenerator(seed), null, Blocks.STONE.getDefaultState());
+	}
+
 	private final Long2ObjectMap<ChunkView> chunks = new Long2ObjectAVLTreeMap<>();
 	private final Set<Long> dirtyChunks = new ConcurrentSkipListSet<>();
 
@@ -27,12 +34,25 @@ public class GeneratingBlockRenderView extends ProceduralBlockRenderView impleme
 		ChunkPos.stream(min, max).forEach(chunkPos -> chunks.put(chunkPos.toLong(), new ArrayChunk(chunkPos, minY, maxY)));
 	}
 
+	public void setSeed(long seed)
+	{
+		terrainGenerator = createTerrainGenerator(seed);
+	}
+
+	public void setChunkOverrider(IChunkOverrider overrider)
+	{
+		this.overrider = overrider;
+	}
+
 	@Override
 	public BlockState getBlockState(BlockPos blockPos)
 	{
-		var pos = ChunkPos.toLong(blockPos.getX() >> 4, blockPos.getZ() >> 4);
+		var chunkX = blockPos.getX() >> 4;
+		var chunkZ = blockPos.getZ() >> 4;
+
+		var pos = ChunkPos.toLong(chunkX, chunkZ);
 		var chunk = chunks.get(pos);
-		if (chunk == null)
+		if (chunk == null || (overrider != null && overrider.shouldChunkBeEmpty(chunkX, chunkZ)))
 			return Blocks.VOID_AIR.getDefaultState();
 
 		return chunk.getBlockState(blockPos);

@@ -30,13 +30,9 @@ public class WorkerUtil
 					protected void onTermination(Throwable throwable)
 					{
 						if (throwable != null)
-						{
-							ToolkitClient.LOG.warn("{} died", this.getName(), throwable);
-						}
+							ToolkitClient.LOG.warn("%s died", this.getName(), throwable);
 						else
-						{
-							ToolkitClient.LOG.debug("{} shutdown", this.getName());
-						}
+							ToolkitClient.LOG.debug("%s shutdown", this.getName());
 
 						super.onTermination(throwable);
 					}
@@ -53,9 +49,7 @@ public class WorkerUtil
 	{
 		Util.throwOrPause(t);
 		if (t instanceof CompletionException)
-		{
 			t = t.getCause();
-		}
 
 		if (t instanceof CrashException)
 		{
@@ -63,7 +57,7 @@ public class WorkerUtil
 			System.exit(-1);
 		}
 
-		ToolkitClient.LOG.error(String.format(Locale.ROOT, "Caught exception in thread %s", thread), t);
+		ToolkitClient.LOG.getLogger().error(String.format(Locale.ROOT, "Caught exception in thread %s", thread), t);
 	}
 
 	public static ExecutorService createThreadPool(int nThreads, String name)

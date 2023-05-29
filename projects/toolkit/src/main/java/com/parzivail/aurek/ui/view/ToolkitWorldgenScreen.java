@@ -195,14 +195,14 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 				ImGui.text("Z Slice");
 
 				if (ImGui.checkbox("Active##z", activeZ))
-					this.mesh.getSlice().setActiveX(activeZ.get());
+					this.mesh.getSlice().setActiveZ(activeZ.get());
 
 				ImGui.sameLine();
 				ImGui.beginDisabled(!activeZ.get());
 				if (ImGui.checkbox("Reverse##z", reverseZ))
-					this.mesh.getSlice().setReverseX(reverseZ.get());
+					this.mesh.getSlice().setReverseZ(reverseZ.get());
 				if (ImGui.inputInt("Value##z", sliceZ, 1, 10, ImGuiInputTextFlags.EnterReturnsTrue))
-					this.mesh.getSlice().setValueX(sliceZ.get());
+					this.mesh.getSlice().setValueZ(sliceZ.get());
 				ImGui.endDisabled();
 
 				ImGui.endDisabled();

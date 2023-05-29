@@ -45,6 +45,8 @@ public class ChunkedWorldMesh
 		this.renderMap = new Long2ObjectAVLTreeMap<>();
 		this.slice = new SliceController(this);
 
+		this.world.setChunkOverrider(this.slice);
+
 		ChunkPos.stream(min, max).forEach(pos -> {
 			this.renderMap.put(
 					pos.toLong(),
@@ -55,13 +57,15 @@ public class ChunkedWorldMesh
 		});
 	}
 
-	public void setSeed(int seed)
+	public void setSeed(long seed)
 	{
+		this.world.setSeed(seed);
+		scheduleRegererate();
 	}
 
-	public int getSeed()
+	public long getSeed()
 	{
-		return 0;
+		return this.world.getSeed();
 	}
 
 	public int getMinY()
