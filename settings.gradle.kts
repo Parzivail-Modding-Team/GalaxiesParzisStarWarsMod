@@ -28,3 +28,7 @@ include(":projects:toolkit")
 
 // Lexer, parser, and API for the Mara programming language
 include(":projects:mara")
+
+// Content API documentation generator
+include(":projects:docgen")
+

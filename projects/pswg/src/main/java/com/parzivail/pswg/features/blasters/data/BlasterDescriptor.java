@@ -52,6 +52,12 @@ public class BlasterDescriptor
 
 	private BlasterAttachmentBuilder attachmentBuilder = new BlasterAttachmentBuilder();
 
+	/**
+	 * Create a new BlasterDescriptor using the default values
+	 *
+	 * @param id   The unique ID that this blaster will be referenced with throughout PSWG, and as a part of the item name
+	 * @param type The broad category that best describes the blaster. The value is used internally to determine how many hands are required to hold the blaster, etc.
+	 */
 	public BlasterDescriptor(Identifier id, BlasterArchetype type)
 	{
 		this.id = id;
@@ -60,6 +66,13 @@ public class BlasterDescriptor
 		this.sound = id;
 	}
 
+	/**
+	 * Specifies the blaster's firing sound
+	 *
+	 * @param sound The ID of the sound that plays each time the blaster is fired
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor sound(Identifier sound)
 	{
 		this.sound = sound;
@@ -78,6 +91,14 @@ public class BlasterDescriptor
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's available firing modes and behavior regarding water
+	 *
+	 * @param firingModes   A list of firing modes that the player can switch this blaster into. The order provided here is the order the player will cycle through them.
+	 * @param waterBehavior Determines how the blaster will behave when fired at or while submerged in water.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor firingBehavior(List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior)
 	{
 		this.firingModes = firingModes;
