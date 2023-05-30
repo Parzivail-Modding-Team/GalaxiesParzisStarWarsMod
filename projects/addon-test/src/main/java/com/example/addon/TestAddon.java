@@ -20,7 +20,7 @@ public class TestAddon implements PswgAddon
 	@Override
 	public void onPswgStarting()
 	{
-		// Example event handler, modifying Luke's ROTH saber preset
+		// Example event handler, modifying Luke's ROTJ saber preset
 		// from green to magenta
 		PswgContent.LIGHTSABER_REGISTERED.register((id, descriptor) -> {
 			if (id.toString().equals("pswg:luke_rotj"))

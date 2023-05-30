@@ -1,6 +1,7 @@
 package com.parzivail.pswg.features.blasters.data;
 
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -79,12 +80,26 @@ public class BlasterDescriptor
 		return this;
 	}
 
+	/**
+	 * Specifies that the blaster should emit smoke and spark particles from the barrel
+	 * when fired. Emulates the pyrotechnics used on the Jawa ionization blaster in
+	 * A New Hope.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor usePyrotechnics()
 	{
 		this.pyrotechnics = true;
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's default HUD crosshair.
+	 *
+	 * @param defaultCrosshair The zero-based index into the HUD crosshair texture table.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor crosshair(int defaultCrosshair)
 	{
 		this.defaultCrosshair = defaultCrosshair;
@@ -94,7 +109,8 @@ public class BlasterDescriptor
 	/**
 	 * Specifies the blaster's available firing modes and behavior regarding water.
 	 *
-	 * @param firingModes   A list of firing modes that the player can switch this blaster into. The order provided here is the order the player will cycle through them.
+	 * @param firingModes   A list of firing modes that the player can switch this blaster into. The
+	 *                      order provided here is the order the player will cycle through them.
 	 * @param waterBehavior Determines how the blaster will behave when fired at or while submerged in water.
 	 *
 	 * @return this
@@ -106,6 +122,21 @@ public class BlasterDescriptor
 		return this;
 	}
 
+	/**
+	 * Specifies properties related to the blaster's physical attributes.
+	 *
+	 * @param weight           The weight of the blaster, in units (reserved for future use).
+	 * @param adsSpeedModifier The player speed attribute coefficient used to slow down the player. When
+	 *                         ADS, the player's speed is multiplied by this value to determine the new
+	 *                         speed of the player with the equation $AdsSpeed_{Player} = adsSpeedModifier \cdot BaseSpeed_{Player}$.
+	 * @param quickdrawDelay   The delay, in ticks, it takes for this blaster to become "ready" after
+	 *                         scrolling to it in your hotbar.
+	 * @param magazineSize     The size of the blaster's internal "magazine" of rounds. This is the maximum number
+	 *                         of shots the blaster will attempt to draw from power packs in the inventory when
+	 *                         the internal magazine is empty.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor mechanicalProperties(float weight, float adsSpeedModifier, int quickdrawDelay, int magazineSize)
 	{
 		this.adsSpeedModifier = adsSpeedModifier;
@@ -118,9 +149,13 @@ public class BlasterDescriptor
 	/**
 	 * Specifies the blaster's combat characteristics.
 	 *
-	 * @param damage        The maximum amount of half-hearts a single blaster bolt can deal to a target. The actual damage value may be lower than this, as described in `damageFalloff`.
+	 * @param damage        The maximum amount of half-hearts a single blaster bolt can deal to a target. The
+	 *                      actual damage value may be lower than this, as described in `damageFalloff`.
 	 * @param range         The maximum range of the fired bolts, in blocks.
-	 * @param damageFalloff A function that takes in a value $x$ as a fraction $0\lt x\lt 1$ that corresponds to the percentage of `range` the target is away (i.e. $\frac{d_{target}}{range}$) and returns the percentage of the maximum damage as a fraction $0\le x \le 1$ that should be dealt to a target at that range.
+	 * @param damageFalloff A function that takes in a value $x$ as a fraction $0\lt x\lt 1$ that corresponds
+	 *                      to the percentage of `range` the target is away (i.e. $\frac{d_{target}}{range}$)
+	 *                      and returns the percentage of the maximum damage as a fraction $0\le x \le 1$ that
+	 *                      should be dealt to a target at that range.
 	 *
 	 * @return this
 	 */
@@ -132,6 +167,15 @@ public class BlasterDescriptor
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's bolt presentation.
+	 *
+	 * @param boltColor  The color of the bolt, as a packed HSV integer (See `com.parzivail.util.math.ColorUtil::packHsv`).
+	 * @param boltLength The length coefficient of the blaster bolt relative to a standard bolt.
+	 * @param boltRadius The radius coefficient of the blaster bolt relative to a standard bolt.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor bolt(int boltColor, float boltLength, float boltRadius)
 	{
 		this.boltColor = boltColor;
@@ -140,12 +184,30 @@ public class BlasterDescriptor
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's parameters when automatic-firing. Only required if "automatic" is
+	 * a valid firing mode for this blaster.
+	 *
+	 * @param automaticRepeatTime The time, in ticks, between two automatic rounds being fired.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor autoParameters(int automaticRepeatTime)
 	{
 		this.automaticRepeatTime = automaticRepeatTime;
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's parameters when burst-firing. Only required if "burst" is
+	 * a valid firing mode for this blaster.
+	 *
+	 * @param burstRepeatTime The time, in ticks, between two burst rounds being fired.
+	 * @param burstSize       The size of a burst, in rounds.
+	 * @param burstGap        The minimum time, in ticks, between two successive bursts.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor burstParameters(int burstRepeatTime, int burstSize, int burstGap)
 	{
 		this.burstRepeatTime = burstRepeatTime;
@@ -154,36 +216,76 @@ public class BlasterDescriptor
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's recoiling effects on the player who fired it.
+	 *
+	 * @param recoil The maximum extent of recoil in the axial directions, in degrees.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor recoil(BlasterAxialInfo recoil)
 	{
 		this.recoil = recoil;
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's bolt spreading inaccuracy.
+	 *
+	 * @param spread The maximum extent of bolt spreading in the axial directions, in degrees.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor spread(BlasterAxialInfo spread)
 	{
 		this.spread = spread;
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's heating characteristics.
+	 *
+	 * @param heat An instance of a heating characteristics object.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor heat(BlasterHeatInfo heat)
 	{
 		this.heat = heat;
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's cooling "minigame" parameters.
+	 *
+	 * @param cooling An instance of a cooling characteristics object.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor cooling(BlasterCoolingBypassProfile cooling)
 	{
 		this.cooling = cooling;
 		return this;
 	}
 
+	/**
+	 * Specifies this blaster's attachments.
+	 *
+	 * @param b A consumer for an attachment builder instance to append attachments to.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor attachments(Consumer<BlasterAttachmentBuilder> b)
 	{
 		b.accept(attachmentBuilder);
 		return this;
 	}
 
+	/**
+	 * Freezes this builder and considers it built. Should not be called by addons -- it is
+	 * called automatically during mod initialization.
+	 */
+	@ApiStatus.Internal
 	public void build()
 	{
 		var map = attachmentBuilder.build();
@@ -195,6 +297,16 @@ public class BlasterDescriptor
 		this.attachmentBuilder = null;
 	}
 
+	/**
+	 * Given a set of attachments, selects a value from a map that correlates a set of functions to a
+	 * set of related values.
+	 *
+	 * @param attachmentBitmask The populated attachment values of a blaster.
+	 * @param map               The map used to find the appropriate return value from the present attachments.
+	 * @param <T>               The generic type, inferred from the map value type, to return.
+	 *
+	 * @return An optional value, if any, containing the first matching value from the map.
+	 */
 	public <T> Optional<T> mapWithAttachment(int attachmentBitmask, HashMap<BlasterAttachmentFunction, T> map)
 	{
 		for (var attachment : attachmentMap.values())
@@ -212,6 +324,17 @@ public class BlasterDescriptor
 		return Optional.empty();
 	}
 
+	/**
+	 * Given an attachment function and related value, determine if the given blaster meets the requirements
+	 * to provide that value.
+	 *
+	 * @param attachmentBitmask The populated attachment values of a blaster.
+	 * @param function          The attachment function one of the blaster's attachments must have to provide the value.
+	 * @param value             The value to provide should the requisite attachment be present.
+	 * @param <T>               The generic type, inferred from the value type, to return.
+	 *
+	 * @return An optional value, if any, containing the matching value.
+	 */
 	public <T> Optional<T> mapWithAttachment(int attachmentBitmask, BlasterAttachmentFunction function, T value)
 	{
 		for (var attachment : attachmentMap.values())
@@ -229,6 +352,14 @@ public class BlasterDescriptor
 		return Optional.empty();
 	}
 
+	/**
+	 * Combines a set of stacking coefficients based on the present attachments of the given blaster.
+	 *
+	 * @param attachmentBitmask The populated attachment values of a blaster.
+	 * @param map               The map used to correlate attachment function with coefficient value.
+	 *
+	 * @return The coefficient generated by the equation: $presentValueCoefficient_{1} \cdot presentValueCoefficient_{2} \cdot \ldots \cdot presentValueCoefficient_{n}$
+	 */
 	public float stackWithAttachment(int attachmentBitmask, HashMap<BlasterAttachmentFunction, Float> map)
 	{
 		var coefficient = 1f;
@@ -242,25 +373,6 @@ public class BlasterDescriptor
 			{
 				if (map.containsKey(attachment.function))
 					coefficient *= map.get(attachment.function);
-			}
-		}
-
-		return coefficient;
-	}
-
-	public float stackWithAttachment(int attachmentBitmask, BlasterAttachmentFunction function, float multiplier)
-	{
-		var coefficient = 1f;
-
-		for (var attachment : attachmentMap.values())
-		{
-			if (attachment.function == BlasterAttachmentFunction.NONE)
-				continue;
-
-			if ((attachment.bit & attachmentBitmask) != 0)
-			{
-				if (attachment.function == function)
-					coefficient *= multiplier;
 			}
 		}
 

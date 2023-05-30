@@ -1,6 +1,7 @@
 package com.parzivail.pswg.features.blasters.data;
 
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,11 +18,33 @@ public class BlasterAttachmentBuilder
 	private final HashMap<Integer, String> layerDefaults = new HashMap<>();
 	private final HashSet<Integer> requiredLayers = new HashSet<>();
 
+	/**
+	 * Adds an attachment option without a visual component.
+	 *
+	 * @param layer    The attachment layer this attachment will belong to.
+	 * @param id       The ID this attachment will have.
+	 * @param function The function that this attachment will have.
+	 * @param category The category (and by extension, icon) the attachment falls under.
+	 *
+	 * @return this
+	 */
 	public BlasterAttachmentBuilder attachment(int layer, String id, BlasterAttachmentFunction function, BlasterAttachmentCategory category)
 	{
 		return attachment(layer, id, function, category, null, null);
 	}
 
+	/**
+	 * Adds an attachment option with a visual component.
+	 *
+	 * @param layer           The attachment layer this attachment will belong to.
+	 * @param id              The ID this attachment will have.
+	 * @param function        The function that this attachment will have.
+	 * @param category        The category (and by extension, icon) the attachment falls under.
+	 * @param visualComponent The part name within the model that should be hidden or shown with regard to this attachment's presence.
+	 * @param texture         The texture identifier this attachment's model part should render with, or null if it should use the blaster's main texture.
+	 *
+	 * @return this
+	 */
 	public BlasterAttachmentBuilder attachment(int layer, String id, BlasterAttachmentFunction function, BlasterAttachmentCategory category, String visualComponent, Identifier texture)
 	{
 		if (!entries.containsKey(layer))
@@ -31,19 +54,43 @@ public class BlasterAttachmentBuilder
 		return this;
 	}
 
-	public BlasterAttachmentBuilder preset(int layer, String id)
+	/**
+	 * Sets a specific attachment to be the "default" attachment of that attachment layer.
+	 *
+	 * @param layer    The attachment layer to select a preset for.
+	 * @param presetId The ID of the attachment that will be enabled by default on that layer.
+	 *
+	 * @return this
+	 */
+	public BlasterAttachmentBuilder preset(int layer, String presetId)
 	{
-		layerDefaults.put(layer, id);
-		return this;
-	}
-
-	public BlasterAttachmentBuilder requireLayer(int layer, String presetId)
-	{
-		requiredLayers.add(layer);
 		layerDefaults.put(layer, presetId);
 		return this;
 	}
 
+	/**
+	 * Sets a specific layer to require an attachment to be present on that layer, and sets the given
+	 * attachment to be the "default" attachment of that layer.
+	 *
+	 * @param layer    The attachment layer to require an attachment on and select a preset for.
+	 * @param presetId The ID of the attachment that will be enabled by default on that layer.
+	 *
+	 * @return this
+	 */
+	public BlasterAttachmentBuilder requireLayer(int layer, String presetId)
+	{
+		preset(layer, presetId);
+		requiredLayers.add(layer);
+		return this;
+	}
+
+	/**
+	 * Finalizes this builder and generates an object describing the properties built using the builder
+	 * methods. This should not be called by addons, it will be called automatically during mod initialization.
+	 *
+	 * @return A new built object describing the possible attachments and their layers as a set of bitmaps.
+	 */
+	@ApiStatus.Internal
 	public BlasterAttachmentMap build()
 	{
 		int minimumBitmap = 0;
