@@ -1,7 +1,6 @@
 package com.parzivail.util.block;
 
 import net.minecraft.block.*;
-import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
@@ -96,11 +95,5 @@ public class BushLeavesBlock extends LeavesBlock
 	{
 		super.appendProperties(builder);
 		builder.add(FACING);
-	}
-
-	@Override
-	public PistonBehavior getPistonBehavior(BlockState state)
-	{
-		return PistonBehavior.DESTROY;
 	}
 }

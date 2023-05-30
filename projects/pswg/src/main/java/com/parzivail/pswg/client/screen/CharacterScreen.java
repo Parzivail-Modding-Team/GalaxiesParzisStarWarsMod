@@ -97,10 +97,10 @@ public class CharacterScreen extends Screen
 	private static final int LIST_ROW_CONTENT_CENTERING_OFFSET = (LIST_ROW_HEIGHT - LIST_ROW_CONTENT_HEIGHT) / 2;
 
 	private final BlitRectangle<BlittableAsset> TRANSPARENT_VIEWPORT_BACKGROUND = new BlitRectangle<>(
-			new BlittableAsset(16, 251, 25, 25, 512, 512),
+			new BlittableAsset(BACKGROUND, 16, 251, 25, 25, 512, 512),
 			270, 178, 25, 25
 	);
-	private static final BlittableAsset LIST_BG_PATCH = new BlittableAsset(10, 241, 8, 8, 512, 512);
+	private static final BlittableAsset LIST_BG_PATCH = new BlittableAsset(BACKGROUND, 10, 241, 8, 8, 512, 512);
 	private final BlitRectangle<BlittableAsset> LEFT_LIST_CUTOUT = new BlitRectangle<>(
 			LIST_BG_PATCH,
 			SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, 79, 190
@@ -111,133 +111,133 @@ public class CharacterScreen extends Screen
 	);
 
 	private static final Blittable3Patch SCROLLBAR_TRACK = new Blittable3Patch(
-			new BlittableAsset(0, 241, 3, 3, 512, 512),
-			new BlittableAsset(5, 241, 3, 8, 512, 512),
-			new BlittableAsset(0, 246, 3, 3, 512, 512),
+			new BlittableAsset(BACKGROUND, 0, 241, 3, 3, 512, 512),
+			new BlittableAsset(BACKGROUND, 5, 241, 3, 8, 512, 512),
+			new BlittableAsset(BACKGROUND, 0, 246, 3, 3, 512, 512),
 			1, 1
 	);
 
-	private static final BlittableAsset SLIDER_TRACK = new BlittableAsset(0, 424, 8, 4, 512, 512);
+	private static final BlittableAsset SLIDER_TRACK = new BlittableAsset(BACKGROUND, 0, 424, 8, 4, 512, 512);
 	private static final Blittable3Patch SLIDER_TRACK_WHITE = new Blittable3Patch(
-			new BlittableAsset(0, 430, 4, 4, 512, 512),
+			new BlittableAsset(BACKGROUND, 0, 430, 4, 4, 512, 512),
 			SLIDER_TRACK,
-			new BlittableAsset(5, 430, 5, 4, 512, 512),
+			new BlittableAsset(BACKGROUND, 5, 430, 5, 4, 512, 512),
 			2, 2
 	);
 	private static final Blittable3Patch SLIDER_TRACK_RED = new Blittable3Patch(
-			new BlittableAsset(0, 436, 4, 4, 512, 512),
+			new BlittableAsset(BACKGROUND, 0, 436, 4, 4, 512, 512),
 			SLIDER_TRACK,
-			new BlittableAsset(5, 436, 5, 4, 512, 512),
+			new BlittableAsset(BACKGROUND, 5, 436, 5, 4, 512, 512),
 			2, 2
 	);
 	private static final Blittable3Patch SLIDER_TRACK_GREEN = new Blittable3Patch(
-			new BlittableAsset(0, 442, 4, 4, 512, 512),
+			new BlittableAsset(BACKGROUND, 0, 442, 4, 4, 512, 512),
 			SLIDER_TRACK,
-			new BlittableAsset(5, 442, 5, 4, 512, 512),
+			new BlittableAsset(BACKGROUND, 5, 442, 5, 4, 512, 512),
 			2, 2
 	);
 	private static final Blittable3Patch SLIDER_TRACK_BLUE = new Blittable3Patch(
-			new BlittableAsset(0, 448, 4, 4, 512, 512),
+			new BlittableAsset(BACKGROUND, 0, 448, 4, 4, 512, 512),
 			SLIDER_TRACK,
-			new BlittableAsset(5, 448, 5, 4, 512, 512),
+			new BlittableAsset(BACKGROUND, 5, 448, 5, 4, 512, 512),
 			2, 2
 	);
 
 	private final BlitRectangle<HoverableBlittableAsset> LEFT_ARROW = new BlitRectangle<>(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 278, 7, 11, 512, 512),
-					new BlittableAsset(7, 278, 7, 11, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 278, 7, 11, 512, 512),
+					new BlittableAsset(BACKGROUND, 7, 278, 7, 11, 512, 512)
 			),
 			126,
 			110
 	);
 	private final BlitRectangle<HoverableBlittableAsset> RIGHT_ARROW = new BlitRectangle<>(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 291, 7, 11, 512, 512),
-					new BlittableAsset(7, 291, 7, 11, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 291, 7, 11, 512, 512),
+					new BlittableAsset(BACKGROUND, 7, 291, 7, 11, 512, 512)
 			),
 			233,
 			110
 	);
 	private final BlitRectangle<HoverableBlittableAsset> NEXT_PAGE_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
-			new BlittableAsset(0, 304, 42, 18, 512, 512),
-			new BlittableAsset(42, 304, 42, 18, 512, 512)
+			new BlittableAsset(BACKGROUND, 0, 304, 42, 18, 512, 512),
+			new BlittableAsset(BACKGROUND, 42, 304, 42, 18, 512, 512)
 	), 313, 210);
 	private final BlitRectangle<HoverableBlittableAsset> PREV_PAGE_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
-			new BlittableAsset(86, 304, 42, 18, 512, 512),
-			new BlittableAsset(128, 304, 42, 18, 512, 512)
+			new BlittableAsset(BACKGROUND, 86, 304, 42, 18, 512, 512),
+			new BlittableAsset(BACKGROUND, 128, 304, 42, 18, 512, 512)
 	), 313, 210);
 	private final BlitRectangle<HoverableBlittableAsset> APPLY_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
-			new BlittableAsset(0, 324, 42, 18, 512, 512),
-			new BlittableAsset(42, 324, 42, 18, 512, 512)
+			new BlittableAsset(BACKGROUND, 0, 324, 42, 18, 512, 512),
+			new BlittableAsset(BACKGROUND, 42, 324, 42, 18, 512, 512)
 	), 365, 210);
 	private final BlitRectangle<HoverableBlittableAsset> CLEAR_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
-			new BlittableAsset(86, 324, 42, 18, 512, 512),
-			new BlittableAsset(128, 324, 42, 18, 512, 512)
+			new BlittableAsset(BACKGROUND, 86, 324, 42, 18, 512, 512),
+			new BlittableAsset(BACKGROUND, 128, 324, 42, 18, 512, 512)
 	), 365, 210);
 	private final BlitRectangle<HoverableBlittableAsset> RANDOM_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
-			new BlittableAsset(0, 344, 20, 18, 512, 512),
-			new BlittableAsset(20, 344, 20, 18, 512, 512)
+			new BlittableAsset(BACKGROUND, 0, 344, 20, 18, 512, 512),
+			new BlittableAsset(BACKGROUND, 20, 344, 20, 18, 512, 512)
 	), 128, 210);
 	private final BlitRectangle<TogglableBlittableAsset> GENDER_TOGGLE = new BlitRectangle<>(new TogglableBlittableAsset(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 404, 20, 18, 512, 512),
-					new BlittableAsset(20, 404, 20, 18, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 404, 20, 18, 512, 512),
+					new BlittableAsset(BACKGROUND, 20, 404, 20, 18, 512, 512)
 			),
 			new HoverableBlittableAsset(
-					new BlittableAsset(40, 404, 20, 18, 512, 512),
-					new BlittableAsset(60, 404, 20, 18, 512, 512)
+					new BlittableAsset(BACKGROUND, 40, 404, 20, 18, 512, 512),
+					new BlittableAsset(BACKGROUND, 60, 404, 20, 18, 512, 512)
 			)
 	), 158, 210);
 	private final BlitRectangle<HoverableBlittableAsset> SAVE_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
-			new BlittableAsset(0, 364, 20, 18, 512, 512),
-			new BlittableAsset(20, 364, 20, 18, 512, 512)
+			new BlittableAsset(BACKGROUND, 0, 364, 20, 18, 512, 512),
+			new BlittableAsset(BACKGROUND, 20, 364, 20, 18, 512, 512)
 	), 188, 210);
 	private final BlitRectangle<HoverableBlittableAsset> EXPORT_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
-			new BlittableAsset(0, 384, 20, 18, 512, 512),
-			new BlittableAsset(20, 384, 20, 18, 512, 512)
+			new BlittableAsset(BACKGROUND, 0, 384, 20, 18, 512, 512),
+			new BlittableAsset(BACKGROUND, 20, 384, 20, 18, 512, 512)
 	), 218, 210);
 
 	private final BlitScrollThumb LEFT_SCROLL_THUMB = new BlitScrollThumb(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 251, 7, 15, 512, 512),
-					new BlittableAsset(7, 251, 7, 15, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 251, 7, 15, 512, 512),
+					new BlittableAsset(BACKGROUND, 7, 251, 7, 15, 512, 512)
 			),
 			88, 24, 192
 	);
 	private final BlitScrollThumb RIGHT_SCROLL_THUMB = new BlitScrollThumb(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 251, 7, 15, 512, 512),
-					new BlittableAsset(7, 251, 7, 15, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 251, 7, 15, 512, 512),
+					new BlittableAsset(BACKGROUND, 7, 251, 7, 15, 512, 512)
 			),
 			415, 41, 117
 	);
 
 	private final BlitScrollThumb WHITE_SCROLL_THUMB = new BlitScrollThumb(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 268, 6, 8, 512, 512),
-					new BlittableAsset(6, 268, 6, 8, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 268, 6, 8, 512, 512),
+					new BlittableAsset(BACKGROUND, 6, 268, 6, 8, 512, 512)
 			),
 			270, 163, 140
 	);
 	private final BlitScrollThumb RED_SCROLL_THUMB = new BlitScrollThumb(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 268, 6, 8, 512, 512),
-					new BlittableAsset(6, 268, 6, 8, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 268, 6, 8, 512, 512),
+					new BlittableAsset(BACKGROUND, 6, 268, 6, 8, 512, 512)
 			),
 			305, 176, 105
 	);
 	private final BlitScrollThumb GREEN_SCROLL_THUMB = new BlitScrollThumb(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 268, 6, 8, 512, 512),
-					new BlittableAsset(6, 268, 6, 8, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 268, 6, 8, 512, 512),
+					new BlittableAsset(BACKGROUND, 6, 268, 6, 8, 512, 512)
 			),
 			305, 186, 105
 	);
 	private final BlitScrollThumb BLUE_SCROLL_THUMB = new BlitScrollThumb(
 			new HoverableBlittableAsset(
-					new BlittableAsset(0, 268, 6, 8, 512, 512),
-					new BlittableAsset(6, 268, 6, 8, 512, 512)
+					new BlittableAsset(BACKGROUND, 0, 268, 6, 8, 512, 512),
+					new BlittableAsset(BACKGROUND, 6, 268, 6, 8, 512, 512)
 			),
 			305, 196, 105
 	);
@@ -652,19 +652,18 @@ public class CharacterScreen extends Screen
 		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 		RenderSystem.setShaderTexture(0, BACKGROUND);
 
-		LEFT_LIST_CUTOUT.blit(matrices);
-		RIGHT_LIST_CUTOUT.blit(matrices);
+		LEFT_LIST_CUTOUT.blit(context);
+		RIGHT_LIST_CUTOUT.blit(context);
 
 		if (isSpeciesPage)
-			renderLeftScrollPanelPageSpecies(matrices, mouseX, mouseY, x, y, selectedSpeciesSlug);
+			renderLeftScrollPanelPageSpecies(context, mouseX, mouseY, x, y, selectedSpeciesSlug);
 		else
 		{
-			renderLeftScrollPanelPageVariables(matrices, mouseX, mouseY, x, y);
-			renderRightScrollPanelPageVariables(matrices, mouseX, mouseY, x, y);
+			renderLeftScrollPanelPageVariables(context, mouseX, mouseY, x, y);
+			renderRightScrollPanelPageVariables(context, mouseX, mouseY, x, y);
 		}
 
-		RenderSystem.setShaderTexture(0, BACKGROUND);
-		drawTexture(matrices, x, y, 0, 0, 427, 240, 512, 512);
+		context.drawTexture(BACKGROUND, x, y, 0, 0, 427, 240, 512, 512);
 
 		GENDER_TOGGLE.x = isSpeciesPage ? 218 : 158;
 		SAVE_BUTTON.visible = !isSpeciesPage;
@@ -685,14 +684,14 @@ public class CharacterScreen extends Screen
 		BLUE_SCROLL_THUMB.updateMouseStateHorizontal(mouseX, mouseY);
 		blitRectangles.forEach(blitRectangle -> blitRectangle.updateMouseState(mouseX, mouseY));
 
-		SCROLLBAR_TRACK.blitVertical(matrices, x + 90, y + 25, 190);
-		LEFT_SCROLL_THUMB.blitVertical(matrices);
+		SCROLLBAR_TRACK.blitVertical(context, x + 90, y + 25, 190);
+		LEFT_SCROLL_THUMB.blitVertical(context);
 
 		var isColorVariable = previewVariable instanceof SpeciesColorVariable scv && scv.getPossibleValues().isEmpty();
 		if (!isSpeciesPage)
 		{
-			SCROLLBAR_TRACK.blitVertical(matrices, x + 417, y + 42, 115);
-			RIGHT_SCROLL_THUMB.blitVertical(matrices);
+			SCROLLBAR_TRACK.blitVertical(context, x + 417, y + 42, 115);
+			RIGHT_SCROLL_THUMB.blitVertical(context);
 
 			WHITE_SCROLL_THUMB.setVisible(isColorVariable);
 			RED_SCROLL_THUMB.setVisible(isColorVariable);
@@ -701,18 +700,18 @@ public class CharacterScreen extends Screen
 
 			if (isColorVariable)
 			{
-				SLIDER_TRACK_WHITE.blitHorizontal(matrices, x + 270, y + 165, 140);
-				SLIDER_TRACK_RED.blitHorizontal(matrices, x + 305, y + 178, 105);
-				SLIDER_TRACK_GREEN.blitHorizontal(matrices, x + 305, y + 188, 105);
-				SLIDER_TRACK_BLUE.blitHorizontal(matrices, x + 305, y + 198, 105);
+				SLIDER_TRACK_WHITE.blitHorizontal(context, x + 270, y + 165, 140);
+				SLIDER_TRACK_RED.blitHorizontal(context, x + 305, y + 178, 105);
+				SLIDER_TRACK_GREEN.blitHorizontal(context, x + 305, y + 188, 105);
+				SLIDER_TRACK_BLUE.blitHorizontal(context, x + 305, y + 198, 105);
 
-				WHITE_SCROLL_THUMB.blitHorizontal(matrices);
-				RED_SCROLL_THUMB.blitHorizontal(matrices);
-				GREEN_SCROLL_THUMB.blitHorizontal(matrices);
-				BLUE_SCROLL_THUMB.blitHorizontal(matrices);
+				WHITE_SCROLL_THUMB.blitHorizontal(context);
+				RED_SCROLL_THUMB.blitHorizontal(context);
+				GREEN_SCROLL_THUMB.blitHorizontal(context);
+				BLUE_SCROLL_THUMB.blitHorizontal(context);
 			}
 		}
-		blitRectangles.forEach(blitRectangle -> blitRectangle.blit(matrices));
+		blitRectangles.forEach(blitRectangle -> blitRectangle.blit(context));
 
 		var rsm = RenderSystem.getModelViewStack();
 		rsm.push();
@@ -723,20 +722,21 @@ public class CharacterScreen extends Screen
 		rsm.pop();
 		RenderSystem.applyModelViewMatrix();
 
-		this.textRenderer.draw(matrices, this.title, x + 9, y + 9, 0x404040);
+		context.drawText(this.textRenderer, this.title, x + 9, y + 9, 0x404040, false);
 
 		if (!selectedSpeciesSlug.equals(SwgSpeciesRegistry.METASPECIES_NONE))
 		{
 			var speciesHeaderText = Text.translatable(SwgSpeciesRegistry.getTranslationKey(selectedSpeciesSlug));
 			var speciesHeaderOffset = -textRenderer.getWidth(speciesHeaderText) / 2f;
 
+			var matrices = context.getMatrices();
 			matrices.push();
 			matrices.translate(x + 344, y + 15, 0);
 			matrices.scale(2, 2, 2);
-			textRenderer.draw(matrices, speciesHeaderText, speciesHeaderOffset, 0, 0x000000);
+			context.drawText(this.textRenderer, speciesHeaderText, (int)speciesHeaderOffset, 0, 0x000000, false);
 			matrices.pop();
 
-			SwgSpeciesIcons.renderLargeCircle(matrices, (int)(x + 320 + 2 * speciesHeaderOffset), y + 12, selectedSpeciesSlug, false);
+			SwgSpeciesIcons.renderLargeCircle(context, (int)(x + 320 + 2 * speciesHeaderOffset), y + 12, selectedSpeciesSlug, false);
 		}
 		else
 		{
@@ -758,7 +758,7 @@ public class CharacterScreen extends Screen
 			if (isColorVariable)
 			{
 				RenderSystem.setShaderTexture(0, BACKGROUND);
-				TRANSPARENT_VIEWPORT_BACKGROUND.blit(matrices);
+				TRANSPARENT_VIEWPORT_BACKGROUND.blit(context);
 				renderColorPreview(x + 270, y + 178, 25, RED_SCROLL_THUMB.getScroll(), GREEN_SCROLL_THUMB.getScroll(), BLUE_SCROLL_THUMB.getScroll(), WHITE_SCROLL_THUMB.getScroll());
 			}
 		}
@@ -769,7 +769,7 @@ public class CharacterScreen extends Screen
 				hoveringEntry = null;
 
 			if (hoveringEntry != null && hoverText.containsKey(hoveringEntry.area) && hoveringEntry.shouldShowTooltip())
-				renderTooltip(matrices, hoverText.get(hoveringEntry.area).get(), mouseX, mouseY);
+				context.drawTooltip(this.textRenderer, hoverText.get(hoveringEntry.area).get(), mouseX, mouseY);
 		}
 
 		if (hoveringEntry == null)
@@ -781,7 +781,7 @@ public class CharacterScreen extends Screen
 					.ifPresent(rect -> hoveringEntry = new HoveringEntry(rect));
 		}
 
-		super.render(matrices, mouseX, mouseY, delta);
+		super.render(context, mouseX, mouseY, delta);
 	}
 
 	private boolean isPlayerSpecies()
@@ -806,7 +806,7 @@ public class CharacterScreen extends Screen
 		RenderSystem.disableBlend();
 	}
 
-	private void renderLeftScrollPanelPageVariables(MatrixStack matrices, int mouseX, int mouseY, int x, int y)
+	private void renderLeftScrollPanelPageVariables(DrawContext context, int mouseX, int mouseY, int x, int y)
 	{
 		if (previewSpecies == null)
 		{
@@ -832,11 +832,11 @@ public class CharacterScreen extends Screen
 
 			var translatedText = Text.translatable(entry.getTranslationKey());
 			var wrapped = this.textRenderer.wrapLines(translatedText, 80);
-			this.textRenderer.draw(matrices, wrapped.get(0), x + SPECIES_LIST_PANEL_X + 7, y + SPECIES_LIST_PANEL_Y + 6 + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, hovering ? 0xFFFFFF : 0x000000);
+			context.drawText(this.textRenderer, wrapped.get(0), x + SPECIES_LIST_PANEL_X + 7, y + SPECIES_LIST_PANEL_Y + 6 + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, hovering ? 0xFFFFFF : 0x000000, false);
 		}
 	}
 
-	private void renderRightScrollPanelPageVariables(MatrixStack matrices, int mouseX, int mouseY, int x, int y)
+	private void renderRightScrollPanelPageVariables(DrawContext context, int mouseX, int mouseY, int x, int y)
 	{
 		if (previewVariable == null)
 		{
@@ -862,11 +862,11 @@ public class CharacterScreen extends Screen
 
 			var translatedText = Text.translatable(previewVariable.getTranslationFor(entry));
 			var wrapped = this.textRenderer.wrapLines(translatedText, 150);
-			this.textRenderer.draw(matrices, wrapped.get(0), x + OPTION_LIST_PANEL_X + 7, y + OPTION_LIST_PANEL_Y + 6 + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, hovering ? 0xFFFFFF : 0x000000);
+			context.drawText(this.textRenderer, wrapped.get(0), x + OPTION_LIST_PANEL_X + 7, y + OPTION_LIST_PANEL_Y + 6 + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, hovering ? 0xFFFFFF : 0x000000, false);
 		}
 	}
 
-	private void renderLeftScrollPanelPageSpecies(MatrixStack matrices, int mouseX, int mouseY, int x, int y, Identifier selectedSpeciesSlug)
+	private void renderLeftScrollPanelPageSpecies(DrawContext context, int mouseX, int mouseY, int x, int y, Identifier selectedSpeciesSlug)
 	{
 		var allSpecies = SwgSpeciesRegistry.getAllSlugs().stream().sorted().toList();
 		LEFT_SCROLL_THUMB.setScrollInputFactor(allSpecies.size());
@@ -883,7 +883,7 @@ public class CharacterScreen extends Screen
 
 			var entry = allSpecies.get(i);
 			var hovering = entry.equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width));
-			SwgSpeciesIcons.renderLargeCircle(matrices, x + SPECIES_LIST_PANEL_X, y + SPECIES_LIST_PANEL_Y + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, entry, hovering);
+			SwgSpeciesIcons.renderLargeCircle(context, x + SPECIES_LIST_PANEL_X, y + SPECIES_LIST_PANEL_Y + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, entry, hovering);
 		}
 
 		for (var i = 0; i < allSpecies.size(); i++)
@@ -896,7 +896,7 @@ public class CharacterScreen extends Screen
 
 			var translatedText = Text.translatable(SwgSpeciesRegistry.getTranslationKey(entry));
 			var wrapped = this.textRenderer.wrapLines(translatedText, 60);
-			this.textRenderer.draw(matrices, wrapped.get(0), x + SPECIES_LIST_PANEL_X + 27, y + SPECIES_LIST_PANEL_Y + 6 + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, hovering ? 0xFFFFFF : 0x000000);
+			context.drawText(this.textRenderer, wrapped.get(0), x + SPECIES_LIST_PANEL_X + 27, y + SPECIES_LIST_PANEL_Y + 6 + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, hovering ? 0xFFFFFF : 0x000000, false);
 		}
 	}
 

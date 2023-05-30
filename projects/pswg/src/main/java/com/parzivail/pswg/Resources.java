@@ -79,6 +79,11 @@ public class Resources
 		return dotModId("tooltip", str);
 	}
 
+	public static String tab(String str)
+	{
+		return dotModId("itemGroup", str);
+	}
+
 	public static boolean isUpdateCheckDisabled()
 	{
 		var config = CONFIG.get();

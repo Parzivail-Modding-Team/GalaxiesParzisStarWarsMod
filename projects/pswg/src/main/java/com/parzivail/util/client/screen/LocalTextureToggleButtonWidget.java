@@ -3,13 +3,15 @@ package com.parzivail.util.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 @Environment(value = EnvType.CLIENT)
 public class LocalTextureToggleButtonWidget extends ButtonWidget
 {
+	private final Identifier source;
 	private final int u;
 	private final int v;
 	private final int textureWidth;
@@ -21,24 +23,25 @@ public class LocalTextureToggleButtonWidget extends ButtonWidget
 
 	private boolean pressed;
 
-	public LocalTextureToggleButtonWidget(int x, int y, int width, int height, int u, int v, ButtonWidget.PressAction pressAction)
+	public LocalTextureToggleButtonWidget(Identifier source, int x, int y, int width, int height, int u, int v, ButtonWidget.PressAction pressAction)
 	{
-		this(x, y, width, height, u, v, u, v, u, v, pressAction);
+		this(source, x, y, width, height, u, v, u, v, u, v, pressAction);
 	}
 
-	public LocalTextureToggleButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, ButtonWidget.PressAction pressAction)
+	public LocalTextureToggleButtonWidget(Identifier source, int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, ButtonWidget.PressAction pressAction)
 	{
-		this(x, y, width, height, u, v, hoveredU, hoveredV, pressedU, pressedV, 256, 256, pressAction);
+		this(source, x, y, width, height, u, v, hoveredU, hoveredV, pressedU, pressedV, 256, 256, pressAction);
 	}
 
-	public LocalTextureToggleButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction)
+	public LocalTextureToggleButtonWidget(Identifier source, int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction)
 	{
-		this(x, y, width, height, u, v, hoveredU, hoveredV, pressedU, pressedV, textureWidth, textureHeight, pressAction, Text.empty());
+		this(source, x, y, width, height, u, v, hoveredU, hoveredV, pressedU, pressedV, textureWidth, textureHeight, pressAction, Text.empty());
 	}
 
-	public LocalTextureToggleButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction, Text text)
+	public LocalTextureToggleButtonWidget(Identifier source, int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction, Text text)
 	{
 		super(x, y, width, height, text, pressAction, DEFAULT_NARRATION_SUPPLIER);
+		this.source = source;
 		this.textureWidth = textureWidth;
 		this.textureHeight = textureHeight;
 		this.u = u;
@@ -60,7 +63,7 @@ public class LocalTextureToggleButtonWidget extends ButtonWidget
 	}
 
 	@Override
-	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void renderButton(DrawContext context, int mouseX, int mouseY, float delta)
 	{
 		var tU = this.u;
 		var tV = this.v;
@@ -77,7 +80,7 @@ public class LocalTextureToggleButtonWidget extends ButtonWidget
 		}
 
 		RenderSystem.enableDepthTest();
-		drawTexture(matrices, this.getX(), this.getY(), tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
+		context.drawTexture(source, this.getX(), this.getY(), tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
 
 		var oldTexture = RenderSystem.getShaderTexture(0);
 		//		if (this.hovered)

@@ -1,19 +1,19 @@
 package com.parzivail.util.client.screen.blit;
 
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 
-public record BlittableAsset(int u, int v, int width, int height, int sourceWidth, int sourceHeight) implements IBlittable
+public record BlittableAsset(Identifier source, int u, int v, int width, int height, int sourceWidth, int sourceHeight) implements IBlittable
 {
 	@Override
-	public void blit(MatrixStack matrices, int destX, int destY)
+	public void blit(DrawContext context, int destX, int destY)
 	{
-		blit(matrices, destX, destY, width, height);
+		blit(context, destX, destY, width, height);
 	}
 
 	@Override
-	public void blit(MatrixStack matrices, int destX, int destY, int destWidth, int destHeight)
+	public void blit(DrawContext context, int destX, int destY, int destWidth, int destHeight)
 	{
-		DrawableHelper.drawTexture(matrices, destX, destY, destWidth, destHeight, u, v, width, height, sourceWidth, sourceHeight);
+		context.drawTexture(source, destX, destY, destWidth, destHeight, u, v, width, height, sourceWidth, sourceHeight);
 	}
 }

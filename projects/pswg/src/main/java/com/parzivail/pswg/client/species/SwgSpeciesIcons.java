@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.species;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.util.client.screen.blit.BlittableAsset;
+import com.parzivail.util.client.screen.blit.BlittableDynamicAsset;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
@@ -15,8 +14,8 @@ public class SwgSpeciesIcons
 
 	private static final HashMap<Identifier, Entry> SPECIES_TO_ATLAS = new HashMap<>();
 
-	private static final BlittableAsset SMALL_BG_CIRCLE = new BlittableAsset(0, 30, 15, 15, 512, 512);
-	private static final BlittableAsset LARGE_BG_CIRCLE = new BlittableAsset(0, 280, 20, 20, 512, 512);
+	private static final BlittableDynamicAsset SMALL_BG_CIRCLE = new BlittableDynamicAsset(0, 30, 15, 15, 512, 512);
+	private static final BlittableDynamicAsset LARGE_BG_CIRCLE = new BlittableDynamicAsset(0, 280, 20, 20, 512, 512);
 
 	public static void register(Identifier id, Identifier atlas, int index)
 	{
@@ -32,9 +31,11 @@ public class SwgSpeciesIcons
 	public static void renderSmallCircle(DrawContext context, int x, int y, Identifier species, boolean selected)
 	{
 		var entry = SPECIES_TO_ATLAS.get(species);
-		RenderSystem.setShaderTexture(0, entry.atlas);
 		if (selected)
-			SMALL_BG_CIRCLE.blit(matrices, x, y);
+		{
+			SMALL_BG_CIRCLE.setSource(entry.atlas);
+			SMALL_BG_CIRCLE.blit(context, x, y);
+		}
 		context.drawTexture(entry.atlas, x, y, 15 + 15 * entry.index, 30, 15, 15, 512, 512);
 	}
 
@@ -47,9 +48,11 @@ public class SwgSpeciesIcons
 	public static void renderLargeCircle(DrawContext context, int x, int y, Identifier species, boolean selected)
 	{
 		var entry = SPECIES_TO_ATLAS.get(species);
-		RenderSystem.setShaderTexture(0, entry.atlas);
 		if (selected)
-			LARGE_BG_CIRCLE.blit(matrices, x, y);
+		{
+			LARGE_BG_CIRCLE.setSource(entry.atlas);
+			LARGE_BG_CIRCLE.blit(context, x, y);
+		}
 		context.drawTexture(entry.atlas, x, y, 20 * entry.index, 280, 20, 20, 512, 512);
 	}
 }

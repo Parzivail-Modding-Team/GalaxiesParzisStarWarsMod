@@ -26,10 +26,10 @@
 		]
 	},
 	"depends": {
-		"fabric-api": "*",
-		"fabricloader": ">=0.14.18",
-		"minecraft": "1.19.4",
-		"pswg": "${version}"
+		"pswg": [
+			">=0.0.108+1.20.0",
+			"${version}"
+		]
 	},
 	"custom": {
 		"modmenu": {

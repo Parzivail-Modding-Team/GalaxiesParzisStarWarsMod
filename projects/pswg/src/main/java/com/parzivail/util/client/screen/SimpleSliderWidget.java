@@ -108,11 +108,6 @@ public class SimpleSliderWidget extends ButtonWidget
 	@Override
 	public void renderButton(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		var oldTexture = RenderSystem.getShaderTexture(0);
-
-		if (texture != null)
-			RenderSystem.setShaderTexture(0, texture);
-
 		var tU = this.thumbU;
 		var tV = this.thumbV;
 
@@ -124,13 +119,8 @@ public class SimpleSliderWidget extends ButtonWidget
 
 		RenderSystem.enableDepthTest();
 
-		drawTexture(matrices, this.getX(), this.getY(), this.trackU, this.trackV, this.width, this.height, this.textureWidth, this.textureHeight);
-
-		drawTexture(matrices, this.getX() + 1 + Math.round(value * (width - 2)) - this.thumbWidth / 2, this.getY() - (this.thumbHeight - this.height) / 2, tU, tV, this.thumbWidth, this.thumbHeight, this.textureWidth, this.textureHeight);
-
-		//		if (this.isHovered())
-		//			this.renderTooltip(matrices, mouseX, mouseY);
-		RenderSystem.setShaderTexture(0, oldTexture);
+		context.drawTexture(texture, this.getX(), this.getY(), this.trackU, this.trackV, this.width, this.height, this.textureWidth, this.textureHeight);
+		context.drawTexture(texture, this.getX() + 1 + Math.round(value * (width - 2)) - this.thumbWidth / 2, this.getY() - (this.thumbHeight - this.height) / 2, tU, tV, this.thumbWidth, this.thumbHeight, this.textureWidth, this.textureHeight);
 	}
 
 	public void commit()

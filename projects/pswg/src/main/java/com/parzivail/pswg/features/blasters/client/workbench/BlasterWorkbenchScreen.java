@@ -22,11 +22,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -356,19 +354,17 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			MathUtil.scalePos(context.getMatrices(), 5, 5, 5);
 
-			BlasterItemRenderer.INSTANCE.render(null, blaster, ModelTransformationMode.NONE, false, matrices, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, null);
+			BlasterItemRenderer.INSTANCE.render(null, blaster, ModelTransformationMode.NONE, false, context.getMatrices(), immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, null);
 			immediate.draw();
 
 			DiffuseLighting.enableGuiDepthLighting();
 
 			context.getMatrices().pop();
 
-			RenderSystem.setShaderTexture(0, TEXTURE);
-
 			// damage
 			var oldDamage = BlasterItem.getDamageMultiplier(blasterDescriptor, originalBitmask);
 			var newDamage = BlasterItem.getDamageMultiplier(blasterDescriptor, bt.attachmentBitmask);
-			drawStackedStatBar(matrices, newDamage, oldDamage, 20, 142);
+			drawStackedStatBar(context, newDamage, oldDamage, 20, 142);
 
 			if (MathUtil.rectContains(x + 20, y + 142, 67, 4, mouseX, mouseY))
 				tooltip.setValue(List.of(Text.translatable(
@@ -380,7 +376,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			// accuracy
 			var oldAccuracy = BlasterItem.getAccuracyStatistic(blasterDescriptor, originalBitmask);
 			var newAccuracy = BlasterItem.getAccuracyStatistic(blasterDescriptor, bt.attachmentBitmask);
-			drawStackedStatBar(matrices, newAccuracy, oldAccuracy, 103, 142);
+			drawStackedStatBar(context, newAccuracy, oldAccuracy, 103, 142);
 
 			if (MathUtil.rectContains(x + 103, y + 142, 67, 4, mouseX, mouseY))
 				tooltip.setValue(List.of(Text.translatable(
@@ -392,7 +388,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			// cooling
 			var oldCooling = BlasterItem.getCoolingMultiplier(blasterDescriptor, originalBitmask);
 			var newCooling = BlasterItem.getCoolingMultiplier(blasterDescriptor, bt.attachmentBitmask);
-			drawStackedStatBar(matrices, newCooling, oldCooling, 20, 155);
+			drawStackedStatBar(context, newCooling, oldCooling, 20, 155);
 
 			if (MathUtil.rectContains(x + 20, y + 155, 67, 4, mouseX, mouseY))
 				tooltip.setValue(List.of(Text.translatable(
@@ -404,7 +400,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			// speed
 			var oldRate = 1 / BlasterItem.getShotTimerMultiplier(blasterDescriptor, originalBitmask);
 			var newRate = 1 / BlasterItem.getShotTimerMultiplier(blasterDescriptor, bt.attachmentBitmask);
-			drawStackedStatBar(matrices, newRate, oldRate, 103, 155);
+			drawStackedStatBar(context, newRate, oldRate, 103, 155);
 
 			if (MathUtil.rectContains(x + 103, y + 155, 67, 4, mouseX, mouseY))
 				tooltip.setValue(List.of(Text.translatable(
@@ -413,18 +409,18 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 						Text.translatable(I18N_STAT_MULT_ENTRY, newRate).formatted(Formatting.GOLD)
 				)));
 
-			drawAttachmentList(matrices, blasterModel, bt, attachmentList, this::getAttachmentError, tooltip::setValue, mouseX, mouseY);
+			drawAttachmentList(context, blasterModel, bt, attachmentList, this::getAttachmentError, tooltip::setValue, mouseX, mouseY);
 		}
 
 		if (tooltip.getValue() != null)
-			this.renderTooltip(matrices, tooltip.getValue(), mouseX, mouseY);
+			context.drawTooltip(this.textRenderer, tooltip.getValue(), mouseX, mouseY);
 
-		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+		this.drawMouseoverTooltip(context, mouseX, mouseY);
 	}
 
-	private void drawAttachmentList(MatrixStack matrices, Identifier blasterModel, BlasterTag bt, List<BlasterAttachmentDescriptor> attachments, BiFunction<BlasterTag, BlasterAttachmentDescriptor, List<Text>> errorProvider, Consumer<List<Text>> tooltipPropogator, double mouseX, double mouseY)
+	private void drawAttachmentList(DrawContext context, Identifier blasterModel, BlasterTag bt, List<BlasterAttachmentDescriptor> attachments, BiFunction<BlasterTag, BlasterAttachmentDescriptor, List<Text>> errorProvider, Consumer<List<Text>> tooltipPropogator, double mouseX, double mouseY)
 	{
-		drawScrollbar(matrices, canScroll(), scrollPosition);
+		drawScrollbar(context, canScroll(), scrollPosition);
 
 		var topRow = getAttachmentListTopRowIdx();
 
@@ -433,7 +429,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			var rowIdx = topRow + i;
 
 			if (rowIdx >= attachmentList.size())
-				drawAttachmentRow(matrices, i, 0, 0, ROW_STATE_EMPTY, Text.empty());
+				drawAttachmentRow(context, i, 0, 0, ROW_STATE_EMPTY, Text.empty());
 			else
 			{
 				var attachment = attachments.get(rowIdx);
@@ -459,7 +455,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 				var iconU = attachment.category.getId() / 3;
 				var iconV = attachment.category.getId() % 3;
 
-				drawAttachmentRow(matrices, i, iconU, iconV, rowState, BlasterItem.getAttachmentTranslation(blasterModel, attachment));
+				drawAttachmentRow(context, i, iconU, iconV, rowState, BlasterItem.getAttachmentTranslation(blasterModel, attachment));
 			}
 		}
 	}
@@ -469,32 +465,31 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		return Math.max(Math.round(scrollPosition * (float)(attachmentList.size() - NUM_VISIBLE_ATTACHMENT_ROWS)), 0);
 	}
 
-	private void drawScrollbar(MatrixStack matrices, boolean enabled, float percent)
+	private void drawScrollbar(DrawContext context, boolean enabled, float percent)
 	{
 		if (!enabled)
 			percent = 0;
 
-		drawTexture(matrices, x + 148, y + 70 + Math.round(36 * percent), enabled ? 228 : 243, 3, 12, 15, 256, 256);
+		context.drawTexture(TEXTURE, x + 148, y + 70 + Math.round(36 * percent), enabled ? 228 : 243, 3, 12, 15, 256, 256);
 	}
 
-	private void drawAttachmentRow(MatrixStack matrices, int row, int iconUi, int iconVi, int state, Text attachmentText)
+	private void drawAttachmentRow(DrawContext context, int row, int iconUi, int iconVi, int state, Text attachmentText)
 	{
 		if (state == -1)
 			return;
 
-		RenderSystem.setShaderTexture(0, TEXTURE);
-		drawTexture(matrices, x + 68, y + 70 + row * 17, 178, 31 + state * 17, 77, 17, 256, 256);
-		drawTexture(matrices, x + 51, y + 70 + row * 17, 178, 85 + state * 17, 17, 17, 256, 256);
+		context.drawTexture(TEXTURE, x + 68, y + 70 + row * 17, 178, 31 + state * 17, 77, 17, 256, 256);
+		context.drawTexture(TEXTURE, x + 51, y + 70 + row * 17, 178, 85 + state * 17, 17, 17, 256, 256);
 
 		if (state == 0)
 			RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
-		drawTexture(matrices, x + 52, y + 71 + row * 17, 199 + iconUi * 17, 86 + iconVi * 17, 15, 15, 256, 256);
+		context.drawTexture(TEXTURE, x + 52, y + 71 + row * 17, 199 + iconUi * 17, 86 + iconVi * 17, 15, 15, 256, 256);
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 
-		this.textRenderer.drawWithShadow(matrices, attachmentText, x + 71, y + 74 + row * 17, state > 0 ? 0xFFFFFF : 0xA0A0A0);
+		context.drawText(this.textRenderer, attachmentText, x + 71, y + 74 + row * 17, state > 0 ? 0xFFFFFF : 0xA0A0A0, true);
 	}
 
-	private void drawStackedStatBar(MatrixStack matrices, float newValue, float oldValue, int targetX, int targetY)
+	private void drawStackedStatBar(DrawContext context, float newValue, float oldValue, int targetX, int targetY)
 	{
 		var divisor = Math.max(2, Math.max(newValue, oldValue));
 
@@ -503,13 +498,13 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 		if (newValue < oldValue)
 		{
-			drawTexture(matrices, x + targetX, y + targetY, 179, 142, Math.round(67 * oldValue), 4, 256, 256);
-			drawTexture(matrices, x + targetX, y + targetY, 179, 147, Math.round(67 * newValue), 4, 256, 256);
+			context.drawTexture(TEXTURE, x + targetX, y + targetY, 179, 142, Math.round(67 * oldValue), 4, 256, 256);
+			context.drawTexture(TEXTURE, x + targetX, y + targetY, 179, 147, Math.round(67 * newValue), 4, 256, 256);
 		}
 		else
 		{
-			drawTexture(matrices, x + targetX, y + targetY, 179, 147, Math.round(67 * newValue), 4, 256, 256);
-			drawTexture(matrices, x + targetX, y + targetY, 179, 142, Math.round(67 * oldValue), 4, 256, 256);
+			context.drawTexture(TEXTURE, x + targetX, y + targetY, 179, 147, Math.round(67 * newValue), 4, 256, 256);
+			context.drawTexture(TEXTURE, x + targetX, y + targetY, 179, 142, Math.round(67 * oldValue), 4, 256, 256);
 		}
 	}
 

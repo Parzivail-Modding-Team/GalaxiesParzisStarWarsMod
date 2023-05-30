@@ -1,7 +1,7 @@
 package com.parzivail.util.client.screen.blit;
 
 import com.parzivail.util.math.MathUtil;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 
 public class BlitRectangle<T extends IBlittable>
 {
@@ -58,10 +58,10 @@ public class BlitRectangle<T extends IBlittable>
 		this.originY = originY;
 	}
 
-	public void blit(MatrixStack matrices)
+	public void blit(DrawContext context)
 	{
 		if (!visible)
 			return;
-		blittable.blit(matrices, originX + x, originY + y, width, height);
+		blittable.blit(context, originX + x, originY + y, width, height);
 	}
 }

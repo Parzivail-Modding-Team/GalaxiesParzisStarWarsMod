@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -55,11 +54,6 @@ public class LocalTextureButtonWidget extends ButtonWidget
 	@Override
 	public void renderButton(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		var oldTexture = RenderSystem.getShaderTexture(0);
-
-		if (texture != null)
-			RenderSystem.setShaderTexture(0, texture);
-
 		var tU = this.u;
 		var tV = this.v;
 
@@ -70,10 +64,9 @@ public class LocalTextureButtonWidget extends ButtonWidget
 		}
 
 		RenderSystem.enableDepthTest();
-		drawTexture(matrices, this.getX(), this.getY(), tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
+		context.drawTexture(texture, this.getX(), this.getY(), tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
 
 		//		if (this.hovered)
 		//			this.renderTooltip(matrices, mouseX, mouseY);
-		RenderSystem.setShaderTexture(0, oldTexture);
 	}
 }

@@ -1,7 +1,7 @@
 package com.parzivail.util.client.screen.blit;
 
 import com.parzivail.util.math.MathUtil;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.math.MathHelper;
 
 public class BlitScrollThumb
@@ -28,20 +28,20 @@ public class BlitScrollThumb
 		this.trackSize = trackSize;
 	}
 
-	public void blitVertical(MatrixStack matrices)
+	public void blitVertical(DrawContext context)
 	{
 		if (!visible)
 			return;
 
-		thumb.blit(matrices, this.originX + trackX, this.originY + trackY + (int)((trackSize - thumb.height()) * scroll));
+		thumb.blit(context, this.originX + trackX, this.originY + trackY + (int)((trackSize - thumb.height()) * scroll));
 	}
 
-	public void blitHorizontal(MatrixStack matrices)
+	public void blitHorizontal(DrawContext context)
 	{
 		if (!visible)
 			return;
 
-		thumb.blit(matrices, this.originX + trackX + (int)((trackSize - thumb.width()) * scroll), this.originY + trackY);
+		thumb.blit(context, this.originX + trackX + (int)((trackSize - thumb.width()) * scroll), this.originY + trackY);
 	}
 
 	public void setOrigin(int originX, int originY)

@@ -1,6 +1,6 @@
 package com.parzivail.util.client.screen.blit;
 
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 
 public class HoverableBlittableAsset implements IBlittable, IHoverable
 {
@@ -39,14 +39,14 @@ public class HoverableBlittableAsset implements IBlittable, IHoverable
 	}
 
 	@Override
-	public void blit(MatrixStack matrices, int destX, int destY)
+	public void blit(DrawContext context, int destX, int destY)
 	{
-		(hovering ? hover : normal).blit(matrices, destX, destY);
+		(hovering ? hover : normal).blit(context, destX, destY);
 	}
 
 	@Override
-	public void blit(MatrixStack matrices, int destX, int destY, int destWidth, int destHeight)
+	public void blit(DrawContext context, int destX, int destY, int destWidth, int destHeight)
 	{
-		(hovering ? hover : normal).blit(matrices, destX, destY, destWidth, destHeight);
+		(hovering ? hover : normal).blit(context, destX, destY, destWidth, destHeight);
 	}
 }

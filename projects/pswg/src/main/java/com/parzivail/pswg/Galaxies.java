@@ -40,22 +40,26 @@ public class Galaxies implements ModInitializer
 	public static final Lumberjack LOG = new Lumberjack(Resources.MODID);
 
 	public static final ItemGroup TabBlocks = FabricItemGroup
-			.builder(Resources.id("blocks"))
+			.builder()
+			.displayName(Text.translatable(Resources.tab("blocks")))
 			.icon(() -> new ItemStack(SwgBlocks.Panel.GrayImperialLightOn1))
 			.build();
 
 	public static final ItemGroup TabItems = FabricItemGroup
-			.builder(Resources.id("items"))
+			.builder()
+			.displayName(Text.translatable(Resources.tab("items")))
 			.icon(() -> new ItemStack(SwgItems.Armor.Stormtrooper.helmet))
 			.build();
 
 	public static final ItemGroup TabBlasters = FabricItemGroup
-			.builder(Resources.id("blasters"))
+			.builder()
+			.displayName(Text.translatable(Resources.tab("blasters")))
 			.icon(() -> new ItemStack(Registries.ITEM.get(SwgItems.getBlasterRegistrationId(Resources.id("a280")))))
 			.build();
 
 	public static final ItemGroup TabLightsabers = FabricItemGroup
-			.builder(Resources.id("lightsabers"))
+			.builder()
+			.displayName(Text.translatable(Resources.tab("lightsabers")))
 			.icon(() -> new ItemStack(Registries.ITEM.get(SwgItems.getLightsaberRegistrationId(Resources.id("luke_rotj")))))
 			.build();
 
@@ -123,7 +127,7 @@ public class Galaxies implements ModInitializer
 
 					                                                                          if (swgspecies == null)
 					                                                                          {
-						                                                                          context.getSource().sendFeedback(Text.translatable(Resources.command("species.invalid"), species), false);
+						                                                                          context.getSource().sendFeedback(() -> Text.translatable(Resources.command("species.invalid"), species), false);
 						                                                                          return 0;
 					                                                                          }
 				                                                                          }

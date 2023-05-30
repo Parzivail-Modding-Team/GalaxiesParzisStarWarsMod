@@ -21,7 +21,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -226,10 +225,9 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, TEXTURE);
 		var i = (this.width - this.backgroundWidth) / 2;
 		var j = (this.height - this.backgroundHeight) / 2;
-		this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
 		final var stencilX = 9;
 		final var stencilY = 17;
@@ -237,6 +235,8 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		final var stencilHeight = 39;
 
 		final var hiltLength = 60;
+
+		var matrices = context.getMatrices();
 
 		matrices.push();
 		matrices.translate(x + stencilX + hiltLength, y + stencilY + stencilHeight / 2f, 500);

@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.camera;
 
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.systems.VertexSorter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.SimpleFramebuffer;
@@ -53,7 +54,7 @@ public class RenderTarget
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(client.player.age + tickDelta)); // yaw
 
 		var projMat = client.gameRenderer.getBasicProjectionMatrix(90);
-		RenderSystem.setProjectionMatrix(projMat);
+		RenderSystem.setProjectionMatrix(projMat, VertexSorter.BY_Z);
 
 		client.worldRenderer.setupFrustum(matrices, CAMERA.getPos(), projMat);
 		client.worldRenderer.render(matrices, tickDelta, 0, false, CAMERA, client.gameRenderer, client.gameRenderer.getLightmapTextureManager(), projMat);

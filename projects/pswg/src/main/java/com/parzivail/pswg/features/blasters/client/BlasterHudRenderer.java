@@ -14,9 +14,7 @@ import com.parzivail.pswg.features.blasters.data.BlasterTag;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -27,7 +25,7 @@ import org.joml.Quaternionf;
 
 import java.util.HashMap;
 
-public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRenderer
+public class BlasterHudRenderer implements ICustomHudRenderer
 {
 	public static final BlasterHudRenderer INSTANCE = new BlasterHudRenderer();
 
@@ -43,6 +41,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	@Override
 	public boolean renderCrosshair(DrawContext context, PlayerEntity player, Hand hand, ItemStack stack)
 	{
+		var matrices = context.getMatrices();
 		matrices.push();
 		var bd = BlasterItem.getBlasterDescriptor(stack);
 
@@ -52,10 +51,6 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var client = MinecraftClient.getInstance();
 		var scaledWidth = client.getWindow().getScaledWidth();
 		var scaledHeight = client.getWindow().getScaledHeight();
-
-		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, HUD_ELEMENTS_TEXTURE);
 
 		var left = scaledWidth / 2;
 		var top = scaledHeight / 2;
@@ -92,7 +87,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			var cooldownBarX = (scaledWidth - cooldownWidth) / 2;
 
 			// translucent background
-			drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 0, cooldownWidth, 3);
+			context.drawTexture(HUD_ELEMENTS_TEXTURE, cooldownBarX, top + cooldownOffset, 0, 0, cooldownWidth, 3);
 
 			final float maxHeat = bd.heat.capacity;
 
@@ -103,7 +98,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				cooldownTimer = MathHelper.clamp(cooldownTimer, 0, 0.98f);
 
 				// cooldown background
-				drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 16, cooldownWidth, 3);
+				context.drawTexture(HUD_ELEMENTS_TEXTURE, cooldownBarX, top + cooldownOffset, 0, 16, cooldownWidth, 3);
 
 				if (bt.canBypassCooling)
 				{
@@ -113,15 +108,15 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 					var secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance * cooldownWidth);
 
 					// blue primary bypass
-					drawTexture(matrices, cooldownBarX + primaryBypassStartX, top + cooldownOffset, primaryBypassStartX, 8, primaryBypassWidth, 3);
+					context.drawTexture(HUD_ELEMENTS_TEXTURE, cooldownBarX + primaryBypassStartX, top + cooldownOffset, primaryBypassStartX, 8, primaryBypassWidth, 3);
 					// yellow secondary bypass
-					drawTexture(matrices, cooldownBarX + secondaryBypassStartX, top + cooldownOffset, secondaryBypassStartX, 12, secondaryBypassWidth, 3);
+					context.drawTexture(HUD_ELEMENTS_TEXTURE, cooldownBarX + secondaryBypassStartX, top + cooldownOffset, secondaryBypassStartX, 12, secondaryBypassWidth, 3);
 				}
 
 				// cursor
 				matrices.push();
 				matrices.translate(cooldownBarX + cooldownTimer * cooldownWidth - 1, 0, 0);
-				drawTexture(matrices, 0, top + cooldownOffset - 2, 0, 24, 3, 7);
+				context.drawTexture(HUD_ELEMENTS_TEXTURE, 0, top + cooldownOffset - 2, 0, 24, 3, 7);
 				matrices.pop();
 			}
 			else if (bt.readyTimer > 0)
@@ -131,12 +126,12 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				readyTimer = MathHelper.clamp(readyTimer, 0, 0.98f);
 
 				// cooldown background
-				drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 32, cooldownWidth, 3);
+				context.drawTexture(HUD_ELEMENTS_TEXTURE, cooldownBarX, top + cooldownOffset, 0, 32, cooldownWidth, 3);
 
 				// cursor
 				matrices.push();
 				matrices.translate(cooldownBarX + readyTimer * cooldownWidth - 1, 0, 0);
-				drawTexture(matrices, 0, top + cooldownOffset - 2, 0, 24, 3, 7);
+				context.drawTexture(HUD_ELEMENTS_TEXTURE, 0, top + cooldownOffset - 2, 0, 24, 3, 7);
 				matrices.pop();
 			}
 			else
@@ -165,13 +160,13 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				}
 
 				if (bt.overchargeTimer > 0)
-					drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 12, (int)(cooldownWidth * heatPercentage), 3);
+					context.drawTexture(HUD_ELEMENTS_TEXTURE, cooldownBarX, top + cooldownOffset, 0, 12, (int)(cooldownWidth * heatPercentage), 3);
 				else
-					drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
+					context.drawTexture(HUD_ELEMENTS_TEXTURE, cooldownBarX, top + cooldownOffset, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
 			}
 
 			// endcaps
-			drawTexture(matrices, cooldownBarX, top + cooldownOffset, 0, 20, cooldownWidth, 3);
+			context.drawTexture(HUD_ELEMENTS_TEXTURE, cooldownBarX, top + cooldownOffset, 0, 20, cooldownWidth, 3);
 		}
 
 		/*
@@ -181,7 +176,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var cancelCrosshair = false;
 		if (bt.isAimingDownSights)
 		{
-			drawCrosshair(matrices, scaledWidth, scaledHeight, crosshairIdx);
+			drawCrosshair(context, scaledWidth, scaledHeight, crosshairIdx);
 			cancelCrosshair = true;
 		}
 		else
@@ -189,21 +184,20 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			var data = PlayerData.getVolatilePublic(player);
 			if (data.isPatrolPosture())
 			{
-				drawCrosshair(matrices, scaledWidth, scaledHeight, 11);
+				drawCrosshair(context, scaledWidth, scaledHeight, 11);
 				cancelCrosshair = true;
 			}
 		}
 
-		RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
 		matrices.pop();
 
 		return cancelCrosshair;
 	}
 
-	private static void drawCrosshair(MatrixStack matrices, int scaledWidth, int scaledHeight, int crosshairIdx)
+	private static void drawCrosshair(DrawContext context, int scaledWidth, int scaledHeight, int crosshairIdx)
 	{
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
+		context.drawTexture(HUD_ELEMENTS_TEXTURE, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
 		RenderSystem.defaultBlendFunc();
 	}
 
