@@ -40,6 +40,7 @@ class DocGen
 			this.level--;
 			if (this.level < 0)
 				throw new RuntimeException("Section underflow");
+			out.println();
 		}
 
 		public void printCodeBlock(String language, String body)
@@ -108,5 +109,33 @@ class DocGen
 
 	private static void documentMethod(Context context, MethodDeclaration node, Javadoc doc)
 	{
+		context.beginSection(String.format("Method: `%s`", node.getName()));
+
+		context.out.println(doc.getDescription().toText());
+		context.out.println();
+
+		context.printCodeBlock("java", node.getDeclarationAsString(true, true, true));
+
+		context.printTableHeader("Parameter", "Description");
+
+		for (var tag : doc.getBlockTags())
+		{
+			if (tag.getType() == JavadocBlockTag.Type.PARAM)
+				context.printTableRow(String.format("`%s`", tag.getName().get()), tag.getContent().toText());
+		}
+
+		context.out.println();
+
+		context.beginSection("Returns");
+
+		for (var tag : doc.getBlockTags())
+		{
+			if (tag.getType() == JavadocBlockTag.Type.RETURN)
+				context.out.printf("* %s%n", tag.getContent().toText());
+		}
+
+		context.endSection();
+
+		context.endSection();
 	}
 }

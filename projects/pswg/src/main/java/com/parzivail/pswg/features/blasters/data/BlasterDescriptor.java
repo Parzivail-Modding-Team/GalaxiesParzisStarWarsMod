@@ -53,9 +53,9 @@ public class BlasterDescriptor
 	private BlasterAttachmentBuilder attachmentBuilder = new BlasterAttachmentBuilder();
 
 	/**
-	 * Create a new BlasterDescriptor using the default values
+	 * Create a new BlasterDescriptor using the default values.
 	 *
-	 * @param id   The unique ID that this blaster will be referenced with throughout PSWG, and as a part of the item name
+	 * @param id   The unique ID that this blaster will be referenced with throughout PSWG, and as a part of the item name.
 	 * @param type The broad category that best describes the blaster. The value is used internally to determine how many hands are required to hold the blaster, etc.
 	 */
 	public BlasterDescriptor(Identifier id, BlasterArchetype type)
@@ -67,9 +67,9 @@ public class BlasterDescriptor
 	}
 
 	/**
-	 * Specifies the blaster's firing sound
+	 * Specifies the blaster's firing sound.
 	 *
-	 * @param sound The ID of the sound that plays each time the blaster is fired
+	 * @param sound The ID of the sound that plays each time the blaster is fired.
 	 *
 	 * @return this
 	 */
@@ -92,7 +92,7 @@ public class BlasterDescriptor
 	}
 
 	/**
-	 * Specifies the blaster's available firing modes and behavior regarding water
+	 * Specifies the blaster's available firing modes and behavior regarding water.
 	 *
 	 * @param firingModes   A list of firing modes that the player can switch this blaster into. The order provided here is the order the player will cycle through them.
 	 * @param waterBehavior Determines how the blaster will behave when fired at or while submerged in water.
@@ -115,6 +115,15 @@ public class BlasterDescriptor
 		return this;
 	}
 
+	/**
+	 * Specifies the blaster's combat characteristics.
+	 *
+	 * @param damage        The maximum amount of half-hearts a single blaster bolt can deal to a target. The actual damage value may be lower than this, as described in `damageFalloff`.
+	 * @param range         The maximum range of the fired bolts, in blocks.
+	 * @param damageFalloff A function that takes in a value $x$ as a fraction $0\lt x\lt 1$ that corresponds to the percentage of `range` the target is away (i.e. $\frac{d_{target}}{range}$) and returns the percentage of the maximum damage as a fraction $0\le x \le 1$ that should be dealt to a target at that range.
+	 *
+	 * @return this
+	 */
 	public BlasterDescriptor damage(float damage, float range, Function<Double, Double> damageFalloff)
 	{
 		this.damage = damage;
