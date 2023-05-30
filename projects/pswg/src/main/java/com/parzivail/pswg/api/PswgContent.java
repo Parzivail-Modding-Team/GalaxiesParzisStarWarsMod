@@ -122,7 +122,7 @@ public class PswgContent
 		checkBaked();
 		for (var entry : species)
 		{
-			if (!SPECIES_REGISTERED.invoker().speciesRegistered(entry.getSlug(), entry).shouldRegister())
+			if (SPECIES_REGISTERED.invoker().speciesRegistered(entry.getSlug(), entry).shouldRegister())
 				speciesPresets.put(entry.getSlug(), entry);
 		}
 	}
