@@ -28,6 +28,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
@@ -952,8 +954,8 @@ public class SwgBlocks
 		if (!ignoreTab)
 		{
 			var tab = tabOverride == null
-			          ? Registries.ITEM_GROUP.getKey(Galaxies.TabBlocks).orElseThrow()
-			          : Registries.ITEM_GROUP.getKey(Registries.ITEM_GROUP.get(new Identifier(identifier.getNamespace(), tabOverride))).orElseThrow();
+			          ? Galaxies.TabBlocksKey
+			          : RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(tabOverride));
 			if (!SwgItems.ITEM_GROUPS.containsKey(tab))
 				SwgItems.ITEM_GROUPS.put(tab, new ArrayList<>());
 

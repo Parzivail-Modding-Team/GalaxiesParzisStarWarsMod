@@ -696,6 +696,10 @@ public class SwgItems
 
 	public static void register()
 	{
+		Registry.register(Registries.ITEM_GROUP, Galaxies.TabBlocksKey, Galaxies.TabBlocks);
+		Registry.register(Registries.ITEM_GROUP, Galaxies.TabItemsKey, Galaxies.TabItems);
+		Registry.register(Registries.ITEM_GROUP, Galaxies.TabBlastersKey, Galaxies.TabBlasters);
+		Registry.register(Registries.ITEM_GROUP, Galaxies.TabLightsabersKey, Galaxies.TabLightsabers);
 		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, SwgItems::tryRegisterItem);
 	}
 
@@ -739,7 +743,7 @@ public class SwgItems
 	{
 		if (!ignoreTab)
 		{
-			var tab = tabOverride == null ? Registries.ITEM_GROUP.getKey(Galaxies.TabItems).orElseThrow() : RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(tabOverride));
+			var tab = tabOverride == null ? Galaxies.TabItemsKey : RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(tabOverride));
 			if (!ITEM_GROUPS.containsKey(tab))
 				ITEM_GROUPS.put(tab, new ArrayList<>());
 
@@ -760,7 +764,7 @@ public class SwgItems
 					getBlasterRegistrationId(id),
 					new BlasterItem(new Item.Settings().maxCount(1), id, blaster.getValue()),
 					false,
-					Registries.ITEM_GROUP.getId(Galaxies.TabBlasters).toString()
+					Galaxies.TabBlastersKey.getValue().toString()
 			);
 		}
 
@@ -772,7 +776,7 @@ public class SwgItems
 					getLightsaberRegistrationId(id),
 					new LightsaberItem(new Item.Settings().maxCount(1), id, lightsaber.getValue()),
 					false,
-					Registries.ITEM_GROUP.getId(Galaxies.TabLightsabers).toString()
+					Galaxies.TabLightsabersKey.getValue().toString()
 			);
 		}
 	}

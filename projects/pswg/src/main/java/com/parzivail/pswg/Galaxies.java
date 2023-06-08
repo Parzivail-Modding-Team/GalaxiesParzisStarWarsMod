@@ -29,6 +29,8 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
@@ -44,24 +46,28 @@ public class Galaxies implements ModInitializer
 			.displayName(Text.translatable(Resources.tab("blocks")))
 			.icon(() -> new ItemStack(SwgBlocks.Panel.GrayImperialLightOn1))
 			.build();
+	public static final RegistryKey<ItemGroup> TabBlocksKey = RegistryKey.of(RegistryKeys.ITEM_GROUP, Resources.id("blocks"));
 
 	public static final ItemGroup TabItems = FabricItemGroup
 			.builder()
 			.displayName(Text.translatable(Resources.tab("items")))
 			.icon(() -> new ItemStack(SwgItems.Armor.Stormtrooper.helmet))
 			.build();
+	public static final RegistryKey<ItemGroup> TabItemsKey = RegistryKey.of(RegistryKeys.ITEM_GROUP, Resources.id("items"));
 
 	public static final ItemGroup TabBlasters = FabricItemGroup
 			.builder()
 			.displayName(Text.translatable(Resources.tab("blasters")))
 			.icon(() -> new ItemStack(Registries.ITEM.get(SwgItems.getBlasterRegistrationId(Resources.id("a280")))))
 			.build();
+	public static final RegistryKey<ItemGroup> TabBlastersKey = RegistryKey.of(RegistryKeys.ITEM_GROUP, Resources.id("blasters"));
 
 	public static final ItemGroup TabLightsabers = FabricItemGroup
 			.builder()
 			.displayName(Text.translatable(Resources.tab("lightsabers")))
 			.icon(() -> new ItemStack(Registries.ITEM.get(SwgItems.getLightsaberRegistrationId(Resources.id("luke_rotj")))))
 			.build();
+	public static final RegistryKey<ItemGroup> TabLightsabersKey = RegistryKey.of(RegistryKeys.ITEM_GROUP, Resources.id("lightsabers"));
 
 	@Override
 	public void onInitialize()
