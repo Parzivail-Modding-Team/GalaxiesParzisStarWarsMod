@@ -220,7 +220,7 @@ public class SwgBlocks
 		@TabIgnore
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final CropBlock Chasuka = new ChasukaCrop(FabricBlockSettings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+		public static final ChasukaCrop Chasuka = new ChasukaCrop(FabricBlockSettings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("hkak_bush")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
