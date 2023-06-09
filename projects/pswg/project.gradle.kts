@@ -48,7 +48,4 @@ dependencies {
 
 	// Gravity Changer
 	"modCompileOnly"("maven.modrinth:gravity-api:${gravity_changer_version}")
-
-	// IMGUI
-	"modImplementation"("io.github.spair:imgui-java-binding:1.86.6")
 }

@@ -160,7 +160,7 @@ signing {
 }
 
 val modPublish by tasks.registering {
-	dependsOn(tasks.modrinth, tasks.curseforge, github, /*"publishMavenJavaPublicationToCentralRepository"*/)
+	dependsOn(tasks.modrinth, tasks.curseforge, github, "publishMavenJavaPublicationToCentralRepository")
 	group = "publishing"
 }
 

@@ -45,6 +45,14 @@ val versionName: String = run {
 }
 
 allprojects {
+	// ensure that the encoding is set to UTF-8, no matter what the system default is
+	// this fixes some edge cases with special characters not displaying correctly
+	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+	tasks.withType<JavaCompile> {
+		options.encoding = "UTF-8"
+		options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000", "-Xdiags:verbose"))
+	}
+
 	if (!file("project.gradle.kts").exists()) return@allprojects
 
 	repositories {
@@ -99,9 +107,9 @@ allprojects {
 	group = maven_group
 
 	dependencies {
-		implementation("com.google.code.findbugs:jsr305:3.0.2")
+		compileOnlyApi("org.jetbrains:annotations:24.0.1")
 		// Used by dependencies
-		implementation("com.demonwav.mcdev:annotations:1.0")
+		compileOnlyApi("com.demonwav.mcdev:annotations:1.0")
 
 		// To change the versions, see the gradle.properties file
 		minecraft("com.mojang:minecraft:${minecraft_version}")
@@ -118,14 +126,6 @@ allprojects {
 		filesMatching("fabric.mod.json") {
 			expand("version" to project.version)
 		}
-	}
-
-	// ensure that the encoding is set to UTF-8, no matter what the system default is
-	// this fixes some edge cases with special characters not displaying correctly
-	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-	tasks.withType<JavaCompile> {
-		options.encoding = "UTF-8"
-		options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000", "-Xdiags:verbose"))
 	}
 
 	tasks.jar {

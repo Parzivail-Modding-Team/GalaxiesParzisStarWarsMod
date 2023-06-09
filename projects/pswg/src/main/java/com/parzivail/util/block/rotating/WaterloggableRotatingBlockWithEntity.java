@@ -8,8 +8,7 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class WaterloggableRotatingBlockWithEntity extends WaterloggableRotatingBlock implements BlockEntityProvider
 {

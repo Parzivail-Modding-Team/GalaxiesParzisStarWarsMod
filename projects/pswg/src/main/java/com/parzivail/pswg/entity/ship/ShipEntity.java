@@ -39,9 +39,9 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrecisionVelocityEntity
