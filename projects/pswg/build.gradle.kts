@@ -8,6 +8,7 @@ import org.apache.hc.core5.http.ContentType
 plugins {
 	id("com.modrinth.minotaur") version "2.+"
 	id("io.github.CDAGaming.cursegradle") version "1.6.0"
+	signing
 }
 
 buildscript {
@@ -17,17 +18,22 @@ buildscript {
 	}
 }
 
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
+
 val pswgVersionName = Regex("^0\\.([0-9]+)\\.([0-9]+)\\+(.+)$").matchEntire(version as String)?.destructured
 	?.let { (minor, patch, mc) -> "PSWG 0.$minor.$patch-${if (minor.toInt() != 0) "beta" else "alpha"}-$mc" }
 
 
 modrinth {
-	token.set(rootProject.findProperty("githubToken") as? String?)
-	changelog.set(rootProject.file("CHANGELOG.md").readText())
-	projectId.set("9rBI0wQz")
-	versionName.set(pswgVersionName)
-	versionType.set("alpha")
-	uploadFile.set(tasks.remapJar as Any)
+	token = rootProject.findProperty("githubToken") as? String?
+	changelog = rootProject.file("CHANGELOG.md").readText()
+	projectId = "9rBI0wQz"
+	versionName = pswgVersionName
+	versionType = "alpha"
+	uploadFile = tasks.remapJar as Any
 	required.project("P7dR8mSH") // Fabric API
 	optional.project("mOgUt4GM") // Mod Menu
 	optional.project("nfn13YXA") // REI
@@ -109,12 +115,56 @@ class JsonObjectDsl {
 
 fun jsonObject(f: JsonObjectDsl.() -> Unit) = JsonObjectDsl().apply(f).jsonObject
 
+publishing {
+	publications {
+		named<MavenPublication>("mavenJava") {
+			pom {
+				name = "Galaxies: Parzi's Star Wars Mod"
+				description = "Explore the galaxy with Galaxies: Parzi's Star Wars Mod!"
+				url = "https://pswg.dev/"
+				licenses {
+					license {
+						name = "GNU Lesser General Public License Version 3"
+						url = "https://www.gnu.org/licenses/lgpl-3.0.txt"
+					}
+				}
+				developers {
+					developer {
+						id = "parzivail"
+					}
+				}
+				scm {
+					connection = "scm:git:https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod.git"
+					developerConnection = "scm:git:git@github.com:Parzivail-Modding-Team/GalaxiesParzisStarWarsMod.git"
+					url = "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod"
+				}
+			}
+		}
+	}
+	repositories {
+		maven(url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+			name = "central"
+
+			if (project.hasProperty("ossrhUsername") && project.hasProperty("ossrhPassword"))
+				credentials {
+					username = project.findProperty("ossrhUsername") as String
+					password = project.findProperty("ossrhPassword") as String
+				}
+		}
+	}
+}
+
+signing {
+	useGpgCmd()
+	sign(publishing.publications["mavenJava"])
+}
+
 val modPublish by tasks.registering {
-	dependsOn(tasks.modrinth, tasks.curseforge, github)
+	dependsOn(tasks.modrinth, tasks.curseforge, github, /*"publishMavenJavaPublicationToCentralRepository"*/)
 	group = "publishing"
 }
 
-for (task in arrayOf(tasks.modrinth, tasks.curseforge, modPublish)) {
+for (task in arrayOf(tasks.modrinth, tasks.curseforge, modPublish, tasks.named("publishMavenJavaPublicationToCentralRepository"))) {
 	task {
 		doFirst {
 			check(pswgVersionName != null)
