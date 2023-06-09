@@ -97,7 +97,7 @@ public class Spline2D
 	}
 
 	/**
-	 * @param t 0 <= t <= 1
+	 * @param t 0 &lt;= t &lt;= 1
 	 */
 	public Vec2f getPoint(double t)
 	{

@@ -91,7 +91,7 @@ public class Spline3D
 	}
 
 	/**
-	 * @param t 0 <= t <= 1
+	 * @param t 0 &lt;= t &lt;= 1
 	 */
 	public Vec3d getPoint(double t)
 	{
