@@ -5,4 +5,4 @@
 # Internal Changes
 
 * Port to 1.20.1
-* Update Fabric API dependency to 0.82.0
+* Update Fabric API dependency to 0.83.1
