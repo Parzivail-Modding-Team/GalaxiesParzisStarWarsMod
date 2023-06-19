@@ -1,13 +1,8 @@
 # Fixes
 
-* Fix gran ear texture
-* Fix crash when using "too new" version of Fabric API
+* Fix species selection menu not showing species
 
 # Internal Changes
 
-* Improve classloading and fallback resolution for Sodium compatability
+* Port to 1.20.1
 * Update Fabric API dependency to 0.82.0
-
-# Localization
-
-* Update translations into multiple languages
