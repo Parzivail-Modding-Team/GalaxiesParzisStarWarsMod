@@ -1,8 +1,16 @@
+# Changes
+
+* Updated textures for:
+  * Canyon stone
+  * Canyon cobblestone
+  * Chiseled canyon stone
+  * Molo shrub and flower
+  * Regular and dried poonten grass
+  * H'kak bush and bean
+  * Chasuka plant and leaf
+  * Funnel flower
+  * Black melon
+
 # Fixes
 
-* Fix species selection menu not showing species
-
-# Internal Changes
-
-* Port to 1.20.1
-* Update Fabric API dependency to 0.83.1
+* Fix blaster workbench crashing when inserting a blaster
