@@ -113,6 +113,9 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		this.addDrawableChild(buildButton = new LocalTextureButtonWidget(x + 51, y + 124, 22, 12, 178, 3, 178, 17, 256, 256, this::onBuildClicked, Text.empty()));
 		this.addDrawableChild(cancelButton = new LocalTextureButtonWidget(x + 76, y + 124, 22, 12, 203, 3, 203, 17, this::onCancelClicked));
 
+		buildButton.setTexture(TEXTURE);
+		cancelButton.setTexture(TEXTURE);
+
 		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 70, 93, 17, button -> attachmentList.size() > 0, button -> onRowClicked(0)));
 		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 87, 93, 17, button -> attachmentList.size() > 1, button -> onRowClicked(1)));
 		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 104, 93, 17, button -> attachmentList.size() > 2, button -> onRowClicked(2)));
