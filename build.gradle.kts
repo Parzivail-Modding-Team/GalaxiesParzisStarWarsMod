@@ -58,7 +58,7 @@ allprojects {
 	repositories {
 		mavenCentral()
 
-		maven(url = "https://ladysnake.jfrog.io/artifactory/mods") {
+		maven(url = "https://maven.ladysnake.org/releases") {
 			name = "Ladysnake Mods"
 		}
 
