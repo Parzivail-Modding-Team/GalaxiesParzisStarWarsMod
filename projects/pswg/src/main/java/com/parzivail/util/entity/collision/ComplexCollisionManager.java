@@ -11,6 +11,7 @@ public class ComplexCollisionManager
 {
 	public static Optional<Vec3d> adjustMovementForCollisions(Entity entity, Vec3d currentMovement)
 	{
+		// TODO: add config to fail early
 		var box = entity.getBoundingBox();
 		if (box.getAverageSideLength() < 1.0E-7D)
 			return Optional.empty();
@@ -44,6 +45,7 @@ public class ComplexCollisionManager
 
 	private static boolean roughCollidesWith(IComplexEntityHitbox iceh, Entity other)
 	{
+		// TODO: rough collision
 		return true;
 	}
 }
