@@ -1,8 +1,11 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.mixinaccessor.AbstractClientPlayerEntityAccessor;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.client.render.camera.CameraHelper;
 import com.parzivail.pswg.client.render.player.features.ForceFeatureRenderer;
+import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
+import com.parzivail.pswg.component.PlayerData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
@@ -13,10 +16,12 @@ import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(PlayerEntityRenderer.class)
@@ -44,5 +49,20 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	private void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci, PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel)
 	{
 		ArmorRenderer.renderArm(matrices, vertexConsumers, light, player, arm, sleeve, ci, playerEntityModel);
+	}
+
+	@Inject(method = "getTexture(Lnet/minecraft/client/network/AbstractClientPlayerEntity;)Lnet/minecraft/util/Identifier;", at = @At(value = "HEAD"), cancellable = true)
+	private void getSkinTexture(AbstractClientPlayerEntity abstractClientPlayerEntity, CallbackInfoReturnable<Identifier> cir)
+	{
+		var pc = PlayerData.getPersistentPublic(abstractClientPlayerEntity);
+
+		var species = pc.getCharacter();
+		if (species == null)
+			return;
+
+		var speciesTexture = ((AbstractClientPlayerEntityAccessor)abstractClientPlayerEntity).pswg$getSpeciesTexture(SwgSpeciesRenderer.getTexture(abstractClientPlayerEntity, species));
+
+		cir.setReturnValue(speciesTexture);
+		cir.cancel();
 	}
 }

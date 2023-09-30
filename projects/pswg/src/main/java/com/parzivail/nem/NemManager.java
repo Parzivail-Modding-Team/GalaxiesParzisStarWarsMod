@@ -52,7 +52,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	@Override
 	public TexturedModelData readResource(ResourceManager resourceManager, Profiler profiler, InputStream stream) throws IOException
 	{
-		return buildModel(NbtIo.read(new DataInputStream(stream)));
+		return buildModel(NbtIo.readCompound(new DataInputStream(stream)));
 	}
 
 	@NotNull

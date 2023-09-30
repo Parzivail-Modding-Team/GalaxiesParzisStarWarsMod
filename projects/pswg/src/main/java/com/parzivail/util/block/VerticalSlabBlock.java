@@ -3,6 +3,7 @@ package com.parzivail.util.block;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -202,9 +203,9 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	}
 
 	@Override
-	public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid)
+	public boolean canFillWithFluid(@Nullable PlayerEntity player, BlockView world, BlockPos pos, BlockState state, Fluid fluid)
 	{
-		return state.get(TYPE) != SlabType.DOUBLE && Waterloggable.super.canFillWithFluid(world, pos, state, fluid);
+		return state.get(TYPE) != SlabType.DOUBLE && Waterloggable.super.canFillWithFluid(player, world, pos, state, fluid);
 	}
 
 	@Override

@@ -3,7 +3,7 @@ import java.io.ByteArrayOutputStream
 plugins {
 	id("com.parzivail.internal.pswg-submodule-dependencies")
 	id("fabric-loom")
-	id("io.github.juuxel.loom-quiltflower")
+	id("io.github.juuxel.loom-vineflower")
 	`maven-publish`
 }
 
@@ -12,7 +12,7 @@ subprojects {
 
 	apply(plugin = "com.parzivail.internal.pswg-submodule-dependencies")
 	apply(plugin = "fabric-loom")
-	apply(plugin = "io.github.juuxel.loom-quiltflower")
+	apply(plugin = "io.github.juuxel.loom-vineflower")
 	apply(plugin = "maven-publish")
 }
 
@@ -97,12 +97,12 @@ allprojects {
 		withSourcesJar()
 	}
 
-	quiltflower {
-		quiltflowerVersion.set("1.9.0")
+	vineflower {
+		toolVersion = "1.9.3"
 	}
 
 	if (project.parent != null)
-		base.archivesName.set(if (project.name.startsWith(archives_base_name)) project.name else "$archives_base_name-${project.name}")
+		base.archivesName = if (project.name.startsWith(archives_base_name)) project.name else "$archives_base_name-${project.name}"
 	version = versionName
 	group = maven_group
 

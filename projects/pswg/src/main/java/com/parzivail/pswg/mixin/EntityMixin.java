@@ -20,9 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityMixin
 {
 	@Shadow
-	public World world;
-
-	@Shadow
 	@Nullable
 	public abstract Entity getVehicle();
 

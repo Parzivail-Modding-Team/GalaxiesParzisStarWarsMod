@@ -20,7 +20,7 @@ public class EmptyBlockEntityRenderer<T extends BlockEntity> implements BlockEnt
 	public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
 	{
 		var minecraft = MinecraftClient.getInstance();
-		if (!minecraft.options.debugEnabled)
+		if (!minecraft.getDebugHud().shouldShowDebugHud())
 			return;
 
 		var world = blockEntity.getWorld();

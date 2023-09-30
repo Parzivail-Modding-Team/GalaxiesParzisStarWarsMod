@@ -225,8 +225,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var angle = (float)(Math.PI / 4);
 			matrices.multiply(new Quaternionf().rotationX(MathUtil.toRadians(angle)));
 
-			var yi = m.bounds().getYLength() * Math.abs(Math.sin(angle)) + m.bounds().getZLength() * Math.abs(Math.cos(angle));
-			var zi = m.bounds().getYLength() * Math.abs(Math.cos(angle)) + m.bounds().getZLength() * Math.abs(Math.sin(angle));
+			var yi = m.bounds().getLengthY() * Math.abs(Math.sin(angle)) + m.bounds().getLengthZ() * Math.abs(Math.cos(angle));
+			var zi = m.bounds().getLengthY() * Math.abs(Math.cos(angle)) + m.bounds().getLengthZ() * Math.abs(Math.sin(angle));
 
 			if (renderMode != ModelTransformationMode.FIXED)
 			{
@@ -234,7 +234,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				MathUtil.scalePos(matrices, f, f, f);
 			}
 
-			matrices.translate(0, (float)-m.bounds().minY - m.bounds().getYLength() / 2f, (float)-m.bounds().minZ - m.bounds().getZLength() / 2f);
+			matrices.translate(0, (float)-m.bounds().minY - m.bounds().getLengthY() / 2f, (float)-m.bounds().minZ - m.bounds().getLengthZ() / 2f);
 		}
 		else if (renderMode.isFirstPerson())
 		{
@@ -297,7 +297,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				{
 					var client = MinecraftClient.getInstance();
 
-					RenderSystem.setShaderTexture(0, player.getSkinTexture());
+					RenderSystem.setShaderTexture(0, player.getSkinTextures().texture());
 					var playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
 					matrices.push();
 

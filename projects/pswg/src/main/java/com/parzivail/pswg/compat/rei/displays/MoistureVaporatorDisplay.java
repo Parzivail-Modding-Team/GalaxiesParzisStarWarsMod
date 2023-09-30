@@ -8,6 +8,7 @@ import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,9 +20,9 @@ public class MoistureVaporatorDisplay extends BasicDisplay implements SimpleGrid
 {
 	private final int duration;
 
-	public MoistureVaporatorDisplay(@NotNull VaporatorRecipe recipe) {
-		this(EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(recipe.getOutput(BasicDisplay.registryAccess()))),
-		     Optional.ofNullable(recipe.getId()), recipe.getDuration());
+	public MoistureVaporatorDisplay(RecipeEntry<VaporatorRecipe> recipeEntry) {
+		this(EntryIngredients.ofIngredients(recipeEntry.value().getIngredients()), Collections.singletonList(EntryIngredients.of(recipeEntry.value().getResult(BasicDisplay.registryAccess()))),
+		     Optional.ofNullable(recipeEntry.id()), recipeEntry.value().getDuration());
 	}
 
 	public MoistureVaporatorDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<Identifier> location, NbtCompound tag) {

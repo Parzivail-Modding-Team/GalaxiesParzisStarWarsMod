@@ -54,7 +54,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
 {
 	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_CONTROLS = Resources.tooltip("blaster.controls");
@@ -709,7 +709,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
-	public NbtCompound getDefaultTag(ItemConvertible item, int count)
+	public ItemStack getDefaultStack()
 	{
 		var blasterTag = new BlasterTag(new NbtCompound());
 		if (descriptor.firingModes.isEmpty())
@@ -722,7 +722,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		var tag = new NbtCompound();
 		blasterTag.serializeAsSubtag(tag);
-		return tag;
+		var stack = new ItemStack(this);
+		stack.setNbt(tag);
+		return stack;
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class EntityRenderDispatcherMixin
 	private Map<String, PlayerEntityRenderer> modelRenderers;
 
 	@SuppressWarnings("unchecked")
-	@Inject(method = "getRenderer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getModel()Ljava/lang/String;"), cancellable = true)
+	@Inject(method = "getRenderer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/SkinTextures;model()Lnet/minecraft/client/util/SkinTextures$Model;"), cancellable = true)
 	private <T extends Entity> void getRenderer(T entity, CallbackInfoReturnable<EntityRenderer<? super T>> cir)
 	{
 		if (!(entity instanceof PlayerEntity))

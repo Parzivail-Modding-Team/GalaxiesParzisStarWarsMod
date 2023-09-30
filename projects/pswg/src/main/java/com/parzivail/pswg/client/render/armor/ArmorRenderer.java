@@ -14,6 +14,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.SkinTextures;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -268,7 +269,7 @@ public class ArmorRenderer
 		if (entity instanceof AbstractClientPlayerEntity player)
 		{
 			// Use the slim model if the player's model is slim
-			if (player.getModel().equals("slim"))
+			if (player.getSkinTextures().model() == SkinTextures.Model.SLIM)
 				return true;
 			else
 			{

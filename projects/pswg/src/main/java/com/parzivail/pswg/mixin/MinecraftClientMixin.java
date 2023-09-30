@@ -38,9 +38,6 @@ public abstract class MinecraftClientMixin
 	@Shadow
 	protected abstract boolean doAttack();
 
-	@Shadow
-	private int itemUseCooldown;
-
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initTail(RunArgs args, CallbackInfo ci)
 	{

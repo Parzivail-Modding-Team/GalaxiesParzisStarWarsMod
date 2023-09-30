@@ -10,6 +10,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.recipe.book.RecipeBookCategory;
@@ -132,9 +133,9 @@ public class MoistureVaporatorScreenHandler extends AbstractRecipeScreenHandler<
 	}
 
 	@Override
-	public boolean matches(Recipe<? super Inventory> recipe)
+	public boolean matches(RecipeEntry<? extends Recipe<Inventory>> recipe)
 	{
-		return recipe.matches(this.inventory, this.world);
+		return recipe.value().matches(this.inventory, this.world);
 	}
 
 	@Override
