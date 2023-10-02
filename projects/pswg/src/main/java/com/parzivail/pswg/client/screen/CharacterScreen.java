@@ -631,7 +631,7 @@ public class CharacterScreen extends Screen
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		this.renderBackground(context, mouseX, mouseY, delta);
+		super.render(context, mouseX, mouseY, delta);
 
 		var x = width / 2 - HALF_WIDTH;
 		var y = height / 2 - HALF_HEIGHT;
@@ -780,8 +780,6 @@ public class CharacterScreen extends Screen
 					.findFirst()
 					.ifPresent(rect -> hoveringEntry = new HoveringEntry(rect));
 		}
-
-		super.render(context, mouseX, mouseY, delta);
 	}
 
 	private boolean isPlayerSpecies()
