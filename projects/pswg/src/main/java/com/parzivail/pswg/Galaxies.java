@@ -23,7 +23,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
@@ -160,8 +160,8 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.TogglePatrolPosture, PlayerPacketHandler::handleTogglePatrolPosture);
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-addon");
-		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgStarting);
-		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", PswgAddon.class, PswgAddon::onPswgStarting);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 
 		Galaxies.LOG.info("Loading PSWG addons via datapack instantiation");
 		ModDataHelper.withResources(ResourceType.SERVER_DATA, resourceManager -> {

@@ -76,7 +76,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
@@ -357,7 +357,7 @@ public class Client implements ClientModInitializer
 		);
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-client-addon");
-		EntrypointUtils.invoke("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
 	}
 
 	private static void registerArmor()
