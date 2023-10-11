@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.parzivail.errorman.model.*;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.client.model.compat.FmlCompat;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.util.crash.CrashReport;
@@ -50,6 +51,10 @@ public class ErrorManager
 			return;
 
 		LOG.warn("Not in a development environment");
+
+		// Do not report errors if Forge is loaded in any capacity
+		if (FmlCompat.isForge())
+			return;
 
 		var cause = report.getCause();
 		var atFault = false;

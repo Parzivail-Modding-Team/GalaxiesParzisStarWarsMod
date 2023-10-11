@@ -23,4 +23,23 @@ public class ClassLoadingHelper
 			return Optional.empty();
 		}
 	}
+
+	public static boolean exists(String className)
+	{
+		try
+		{
+			Class.forName(className, false, ClassLoadingHelper.class.getClassLoader());
+			return true;
+		}
+		catch (ClassNotFoundException e)
+		{
+			return false;
+		}
+		catch (Throwable e)
+		{
+			ParziUtil.LOG.warn("Failed to test if class %s exists:", className);
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
