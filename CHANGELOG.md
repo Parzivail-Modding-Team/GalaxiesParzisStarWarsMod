@@ -1,16 +1,16 @@
+# Additions
+
+* Add server-side config flag for complex entity collisions
+
 # Changes
 
-* Updated textures for:
-  * Canyon stone
-  * Canyon cobblestone
-  * Chiseled canyon stone
-  * Molo shrub and flower
-  * Regular and dried poonten grass
-  * H'kak bush and bean
-  * Chasuka plant and leaf
-  * Funnel flower
-  * Black melon
+* Update to 1.20.2
+* Prevent error logging when loaded under Forge
 
 # Fixes
 
-* Fix blaster workbench crashing when inserting a blaster
+* Fix some blocks not being added to doors/slabs/stairs/trapdoors/walls tag
+* Fix crash when loading entrypoints with new Fabric API versions
+* Fix REI ingredients
+* Fix blaster tab stacks
+* Fix chasuka loot table
