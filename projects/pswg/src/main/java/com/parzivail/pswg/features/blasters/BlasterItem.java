@@ -17,6 +17,7 @@ import com.parzivail.util.math.MathUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -30,7 +31,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -54,7 +54,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener, ITabStackProvider
 {
 	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_CONTROLS = Resources.tooltip("blaster.controls");
@@ -912,5 +912,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
 		var changed = stack.getOrCreateNbt().hashCode() != oldNbtHashcode;
 		return changed;
+	}
+
+	@Override
+	public void appendStacks(FabricItemGroupEntries entries)
+	{
+		entries.add(forType(descriptor));
 	}
 }
