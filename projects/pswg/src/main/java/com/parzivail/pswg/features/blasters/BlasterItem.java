@@ -105,6 +105,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		h.put(BlasterAttachmentFunction.INCREASE_DAMAGE, 1.5f);
 	});
 
+	private static final HashMap<BlasterAttachmentFunction, Float> MAGAZINE_SIZE_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.INCREASE_MAGAZINE_SIZE, 2f);
+	});
+
 	private static final HashMap<BlasterAttachmentFunction, Float> ZOOM_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_2X, 2f);
 		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_3X, 3f);
@@ -429,7 +433,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				}
 				else if (!world.isClient)
 				{
-					bt.shotsRemaining = nextPack.getRight().numShots();
+					var capacity = getMagazineSize(bd, bt);
+					bt.shotsRemaining = Math.min(capacity, nextPack.getRight().numShots());
+
+					// TODO: allow leaving a remainder of a pack in the
+					// inventory if the whole pack wasn't consumed
+
 					player.getInventory().removeStack(nextPack.getLeft(), 1);
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.RELOAD, SoundCategory.PLAYERS, 1f, 1f);
 				}
@@ -651,6 +660,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return bd.stackWithAttachment(attachmentBitmask, DAMAGE_MAP);
 	}
 
+	public static float getMagazineSizeMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, MAGAZINE_SIZE_MAP);
+	}
+
 	public static float getSpreadAmount(BlasterDescriptor bd, int attachmentBitmask)
 	{
 		return bd.stackWithAttachment(attachmentBitmask, SPREAD_MAP);
@@ -757,6 +771,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	private float getDamage(BlasterDescriptor bd, BlasterTag bt)
 	{
 		return bd.damage * getDamageMultiplier(bd, bt.attachmentBitmask);
+	}
+
+	private int getMagazineSize(BlasterDescriptor bd, BlasterTag bt)
+	{
+		return (int)Math.ceil(bd.magazineSize * getMagazineSizeMultiplier(bd, bt.attachmentBitmask));
 	}
 
 	private ItemStack forType(BlasterDescriptor descriptor)
