@@ -23,6 +23,7 @@ import com.parzivail.pswg.client.render.sky.SpaceSkyRenderer;
 import com.parzivail.pswg.client.screen.CrateGenericSmallScreen;
 import com.parzivail.pswg.client.screen.CrateOctagonScreen;
 import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
+import com.parzivail.pswg.client.sound.EnvironmentSoundManager;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
@@ -160,6 +161,7 @@ public class Client implements ClientModInitializer
 
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::tick);
 		ClientTickEvents.START_CLIENT_TICK.register(BlasterRecoilManager::tick);
+		ClientTickEvents.START_CLIENT_TICK.register(EnvironmentSoundManager::tick);
 
 		ClientTickEvents.END_CLIENT_TICK.register(BlasterZoomHandler::tick);
 		ClientTickEvents.END_CLIENT_TICK.register(DebugUtil::tick);
