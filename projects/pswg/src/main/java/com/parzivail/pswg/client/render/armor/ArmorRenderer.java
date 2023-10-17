@@ -23,6 +23,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
@@ -248,7 +250,10 @@ public class ArmorRenderer
 			var armorModel = armorModelEntry.modelSupplier.get();
 
 			if (armorModel == null)
-				return;
+			{
+				var crashReport = CrashReport.create(null, String.format("Unable to load armor model: %s", armorPair.getLeft()));
+				throw new CrashException(crashReport);
+			}
 
 			transformer.transform(entity, shouldUseSlimModel, armorModel, option);
 

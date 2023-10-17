@@ -21,6 +21,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
@@ -115,6 +117,13 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		{
 			m = P3dManager.INSTANCE.get(FALLBACK_MODEL.model);
 			t = FALLBACK_MODEL.texture;
+
+			// Crash if even the fallback model is null
+			if (m == null)
+			{
+				var crashReport = CrashReport.create(null, String.format("Unable to load lightsaber fallback model: %s", FALLBACK_MODEL.model));
+				throw new CrashException(crashReport);
+			}
 		}
 
 		matrices.push();
