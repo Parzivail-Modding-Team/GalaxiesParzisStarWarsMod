@@ -247,6 +247,9 @@ public class ArmorRenderer
 			var shouldUseSlimModel = entityRequiresSlimModel(entity);
 			var armorModel = armorModelEntry.modelSupplier.get();
 
+			if (armorModel == null)
+				return;
+
 			transformer.transform(entity, shouldUseSlimModel, armorModel, option);
 
 			ModelUtil.getChild(armorModel.leftArm, PART_LEFT_ARM_DEFAULT).ifPresent(p -> p.visible = !shouldUseSlimModel);
