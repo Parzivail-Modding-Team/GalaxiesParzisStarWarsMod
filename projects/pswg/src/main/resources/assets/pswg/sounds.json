@@ -17,12 +17,10 @@
 			}
 		]
 	},
-	"blaster.hiss": {
+	"blaster.flyby": {
 		"sounds": [
-			{
-				"name": "pswg:blaster/hiss",
-				"attenuation_distance": 16
-			}
+			"pswg:blaster/flyby/a",
+			"pswg:blaster/flyby/b"
 		]
 	},
 	"blaster.reload": {
