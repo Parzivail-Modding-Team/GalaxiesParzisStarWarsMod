@@ -20,6 +20,7 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
@@ -36,6 +37,8 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	private static final ModelEntry FALLBACK_MODEL;
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
+
+	private static final float RIGHT_ARM_ROLL = 0.882f;
 
 	static
 	{
@@ -74,7 +77,17 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			case HEAD:
 			case FIRST_PERSON_LEFT_HAND:
 			case FIRST_PERSON_RIGHT_HAND:
-				break;
+			{
+				if (entity.isUsingItem())
+				{
+					var delta = getBlockAnimationDelta(entity, Client.getTickDelta());
+
+					if (entity.getMainArm() == Arm.LEFT)
+						delta = -delta;
+
+					matrices.multiply(new Quaternionf().rotationZ(RIGHT_ARM_ROLL * delta));
+				}
+			}
 			case THIRD_PERSON_LEFT_HAND:
 			case THIRD_PERSON_RIGHT_HAND:
 				matrices.translate(0, 0, 0.08f);
@@ -208,20 +221,25 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	{
 		if (entity.isUsingItem())
 		{
-			var useTime = MathHelper.clamp(entity.getItemUseTime() + tickDelta, 0, 2) / 2f;
+			var delta = getBlockAnimationDelta(entity, tickDelta);
 
 			ModelUtil.smartLerpArmsRadians(
 					entity,
 					model,
-					useTime,
+					delta,
 					-1.164f,
 					0.602f,
 					0.426f,
 					-1.672f,
 					-0.266f,
-					0.882f
+					RIGHT_ARM_ROLL
 			);
 		}
+	}
+
+	private static float getBlockAnimationDelta(LivingEntity entity, float tickDelta)
+	{
+		return MathHelper.clamp(entity.getItemUseTime() + tickDelta, 0, 2) / 2f;
 	}
 
 	private record ModelEntry(Identifier model,
