@@ -4,6 +4,8 @@ import com.parzivail.util.generics.ReflectionSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -55,6 +57,9 @@ public class TagSerializer extends ReflectionSerializer<NbtCompound>
 		this(slug);
 		Class<?> clazz = this.getClass();
 		var clFields = getClassFields(clazz);
+
+		if (source == null)
+			throw new CrashException(CrashReport.create(null, "Attempted to deserialize tag data from null NBT"));
 
 		var domain = source.getCompound(this.slug);
 
