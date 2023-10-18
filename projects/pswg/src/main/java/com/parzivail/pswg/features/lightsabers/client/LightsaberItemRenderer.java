@@ -8,6 +8,7 @@ import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
+import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.math.MathUtil;
@@ -19,7 +20,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
@@ -210,27 +210,17 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		{
 			var useTime = MathHelper.clamp(entity.getItemUseTime() + tickDelta, 0, 2) / 2f;
 
-			var mainArm = entity.getMainArm();
-			if (mainArm == Arm.LEFT)
-			{
-				model.leftArm.pitch = MathHelper.lerp(useTime, model.leftArm.pitch, -1.672f);
-				model.leftArm.yaw = MathHelper.lerp(useTime, model.leftArm.yaw, 0.266f);
-				model.leftArm.roll = MathHelper.lerp(useTime, model.leftArm.roll, -0.882f);
-
-				model.rightArm.pitch = MathHelper.lerp(useTime, model.rightArm.pitch, -1.164f);
-				model.rightArm.yaw = MathHelper.lerp(useTime, model.rightArm.yaw, -0.602f);
-				model.rightArm.roll = MathHelper.lerp(useTime, model.rightArm.roll, -0.426f);
-			}
-			else
-			{
-				model.rightArm.pitch = MathHelper.lerp(useTime, model.rightArm.pitch, -1.672f);
-				model.rightArm.yaw = MathHelper.lerp(useTime, model.rightArm.yaw, -0.266f);
-				model.rightArm.roll = MathHelper.lerp(useTime, model.rightArm.roll, 0.882f);
-
-				model.leftArm.pitch = MathHelper.lerp(useTime, model.leftArm.pitch, -1.164f);
-				model.leftArm.yaw = MathHelper.lerp(useTime, model.leftArm.yaw, 0.602f);
-				model.leftArm.roll = MathHelper.lerp(useTime, model.leftArm.roll, 0.426f);
-			}
+			ModelUtil.smartLerpArmsRadians(
+					entity,
+					model,
+					useTime,
+					-1.164f,
+					0.602f,
+					0.426f,
+					-1.672f,
+					-0.266f,
+					0.882f
+			);
 		}
 	}
 
