@@ -8,6 +8,7 @@ import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
+import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.math.MathUtil;
@@ -19,8 +20,11 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
@@ -33,6 +37,8 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	private static final ModelEntry FALLBACK_MODEL;
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
+
+	private static final float RIGHT_ARM_ROLL = 0.882f;
 
 	static
 	{
@@ -71,7 +77,17 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			case HEAD:
 			case FIRST_PERSON_LEFT_HAND:
 			case FIRST_PERSON_RIGHT_HAND:
-				break;
+			{
+				if (entity.isUsingItem())
+				{
+					var delta = getBlockAnimationDelta(entity, Client.getTickDelta());
+
+					if (entity.getMainArm() == Arm.LEFT)
+						delta = -delta;
+
+					matrices.multiply(new Quaternionf().rotationZ(RIGHT_ARM_ROLL * delta));
+				}
+			}
 			case THIRD_PERSON_LEFT_HAND:
 			case THIRD_PERSON_RIGHT_HAND:
 				matrices.translate(0, 0, 0.08f);
@@ -115,6 +131,13 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		{
 			m = P3dManager.INSTANCE.get(FALLBACK_MODEL.model);
 			t = FALLBACK_MODEL.texture;
+
+			// Crash if even the fallback model is null
+			if (m == null)
+			{
+				var crashReport = CrashReport.create(null, String.format("Unable to load lightsaber fallback model: %s", FALLBACK_MODEL.model));
+				throw new CrashException(crashReport);
+			}
 		}
 
 		matrices.push();
@@ -198,16 +221,25 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	{
 		if (entity.isUsingItem())
 		{
-			var useTime = MathHelper.clamp(entity.getItemUseTime() + tickDelta, 0, 2) / 2f;
+			var delta = getBlockAnimationDelta(entity, tickDelta);
 
-			model.rightArm.pitch = MathHelper.lerp(useTime, model.rightArm.pitch, -1.672f);
-			model.rightArm.yaw = MathHelper.lerp(useTime, model.rightArm.yaw, -0.266f);
-			model.rightArm.roll = MathHelper.lerp(useTime, model.rightArm.roll, 0.882f);
-
-			model.leftArm.pitch = MathHelper.lerp(useTime, model.leftArm.pitch, -1.164f);
-			model.leftArm.yaw = MathHelper.lerp(useTime, model.leftArm.yaw, 0.602f);
-			model.leftArm.roll = MathHelper.lerp(useTime, model.leftArm.roll, 0.426f);
+			ModelUtil.smartLerpArmsRadians(
+					entity,
+					model,
+					delta,
+					-1.164f,
+					0.602f,
+					0.426f,
+					-1.672f,
+					-0.266f,
+					RIGHT_ARM_ROLL
+			);
 		}
+	}
+
+	private static float getBlockAnimationDelta(LivingEntity entity, float tickDelta)
+	{
+		return MathHelper.clamp(entity.getItemUseTime() + tickDelta, 0, 2) / 2f;
 	}
 
 	private record ModelEntry(Identifier model,

@@ -13,6 +13,7 @@ import com.parzivail.pswg.features.lightsabers.data.LightsaberDescriptor;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.client.model.compat.FmlCompat;
 import com.parzivail.util.data.pack.ModDataHelper;
 import com.parzivail.util.entity.TrackedDataHandlers;
 import com.parzivail.util.network.PlayerPacketHandler;
@@ -23,7 +24,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
@@ -73,6 +74,9 @@ public class Galaxies implements ModInitializer
 	public void onInitialize()
 	{
 		Galaxies.LOG.debug("onInitialize");
+
+		if (FmlCompat.isForge())
+			Galaxies.LOG.error("PSWG seems to be running on Forge, which is unsupported and not recommended. Here be dragons!");
 
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
@@ -160,8 +164,8 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.TogglePatrolPosture, PlayerPacketHandler::handleTogglePatrolPosture);
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-addon");
-		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgStarting);
-		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", PswgAddon.class, PswgAddon::onPswgStarting);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 
 		Galaxies.LOG.info("Loading PSWG addons via datapack instantiation");
 		ModDataHelper.withResources(ResourceType.SERVER_DATA, resourceManager -> {

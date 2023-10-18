@@ -225,8 +225,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var angle = (float)(Math.PI / 4);
 			matrices.multiply(new Quaternionf().rotationX(MathUtil.toRadians(angle)));
 
-			var yi = m.bounds().getYLength() * Math.abs(Math.sin(angle)) + m.bounds().getZLength() * Math.abs(Math.cos(angle));
-			var zi = m.bounds().getYLength() * Math.abs(Math.cos(angle)) + m.bounds().getZLength() * Math.abs(Math.sin(angle));
+			var yi = m.bounds().getLengthY() * Math.abs(Math.sin(angle)) + m.bounds().getLengthZ() * Math.abs(Math.cos(angle));
+			var zi = m.bounds().getLengthY() * Math.abs(Math.cos(angle)) + m.bounds().getLengthZ() * Math.abs(Math.sin(angle));
 
 			if (renderMode != ModelTransformationMode.FIXED)
 			{
@@ -234,7 +234,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				MathUtil.scalePos(matrices, f, f, f);
 			}
 
-			matrices.translate(0, (float)-m.bounds().minY - m.bounds().getYLength() / 2f, (float)-m.bounds().minZ - m.bounds().getZLength() / 2f);
+			matrices.translate(0, (float)-m.bounds().minY - m.bounds().getLengthY() / 2f, (float)-m.bounds().minZ - m.bounds().getLengthZ() / 2f);
 		}
 		else if (renderMode.isFirstPerson())
 		{
@@ -297,7 +297,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				{
 					var client = MinecraftClient.getInstance();
 
-					RenderSystem.setShaderTexture(0, player.getSkinTexture());
+					RenderSystem.setShaderTexture(0, player.getSkinTextures().texture());
 					var playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
 					matrices.push();
 
@@ -546,8 +546,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
 		if (patrol)
 		{
-			ModelUtil.lerpLeftArmTo(model, 1, -1.436f + limbBounce, 0.808f, -0.269f);
-			ModelUtil.lerpRightArmTo(model, 1, -1.077f - limbBounce, 0, -0.539f);
+			ModelUtil.lerpLeftArmToDegrees(model, 1, -1.436f + limbBounce, 0.808f, -0.269f);
+			ModelUtil.lerpRightArmToDegrees(model, 1, -1.077f - limbBounce, 0, -0.539f);
 		}
 		else
 		{
@@ -567,8 +567,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			model.leftArm.yaw = 0.1F + model.head.yaw;
 
 			var lerp = MathHelper.clamp(Ease.outCubic((float)Math.pow(limbDistance / 0.8, 2)), 0, 1);
-			ModelUtil.lerpLeftArmTo(model, lerp, -1.436f + limbBounce, 0.808f, -0.269f);
-			ModelUtil.lerpRightArmTo(model, lerp, -1.077f - limbBounce, 0, -0.539f);
+			ModelUtil.lerpLeftArmToDegrees(model, lerp, -1.436f + limbBounce, 0.808f, -0.269f);
+			ModelUtil.lerpRightArmToDegrees(model, lerp, -1.077f - limbBounce, 0, -0.539f);
 		}
 	}
 
@@ -577,8 +577,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
 		if (patrol)
 		{
-			ModelUtil.lerpLeftArmTo(model, 1, -1.077f - limbBounce, 0, 0.539f);
-			ModelUtil.lerpRightArmTo(model, 1, -1.436f + limbBounce, -0.808f, 0.269f);
+			ModelUtil.lerpLeftArmToDegrees(model, 1, -1.077f - limbBounce, 0, 0.539f);
+			ModelUtil.lerpRightArmToDegrees(model, 1, -1.436f + limbBounce, -0.808f, 0.269f);
 		}
 		else
 		{
@@ -597,8 +597,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			model.rightArm.yaw = -0.1F + model.head.yaw;
 
 			var lerp = MathHelper.clamp(Ease.outCubic((float)Math.pow(limbDistance / 0.8, 2)), 0, 1);
-			ModelUtil.lerpLeftArmTo(model, lerp, -1.077f - limbBounce, 0, 0.539f);
-			ModelUtil.lerpRightArmTo(model, lerp, -1.436f + limbBounce, -0.808f, 0.269f);
+			ModelUtil.lerpLeftArmToDegrees(model, lerp, -1.077f - limbBounce, 0, 0.539f);
+			ModelUtil.lerpRightArmToDegrees(model, lerp, -1.436f + limbBounce, -0.808f, 0.269f);
 		}
 	}
 
@@ -610,8 +610,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		if (patrol)
 		{
-			ModelUtil.lerpRightArmTo(model, 1, -0.539f - limbBounce + breatheBounceLeft, 0.269f, -0.09f);
-			ModelUtil.lerpLeftArmTo(model, 1, -0.808f + limbBounce + breatheBounceRight, 1.077f, 0);
+			ModelUtil.lerpRightArmToDegrees(model, 1, -0.539f - limbBounce + breatheBounceLeft, 0.269f, -0.09f);
+			ModelUtil.lerpLeftArmToDegrees(model, 1, -0.808f + limbBounce + breatheBounceRight, 1.077f, 0);
 		}
 		else
 		{
@@ -636,8 +636,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		if (patrol)
 		{
-			ModelUtil.lerpLeftArmTo(model, 1, -0.539f - limbBounce + breatheBounceLeft, -0.269f, 0.09f);
-			ModelUtil.lerpRightArmTo(model, 1, -0.808f + limbBounce + breatheBounceRight, -1.077f, 0);
+			ModelUtil.lerpLeftArmToDegrees(model, 1, -0.539f - limbBounce + breatheBounceLeft, -0.269f, 0.09f);
+			ModelUtil.lerpRightArmToDegrees(model, 1, -0.808f + limbBounce + breatheBounceRight, -1.077f, 0);
 		}
 		else
 		{
@@ -664,16 +664,16 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		if (patrol)
 		{
-			ModelUtil.lerpLeftArmTo(model, 1 - lerp, -2.424f + limbBounce + breatheBounceLeft, -0.18f, 0.09f);
-			ModelUtil.lerpRightArmTo(model, 1 - lerp, -2.424f - limbBounce + breatheBounceRight, 0.18f, -0.09f);
+			ModelUtil.lerpLeftArmToDegrees(model, 1 - lerp, -2.424f + limbBounce + breatheBounceLeft, -0.18f, 0.09f);
+			ModelUtil.lerpRightArmToDegrees(model, 1 - lerp, -2.424f - limbBounce + breatheBounceRight, 0.18f, -0.09f);
 		}
 		else
 		{
-			ModelUtil.lerpLeftArmTo(model, 1, -1.526f + breatheBounceLeft, 0, -0.18f);
-			ModelUtil.lerpRightArmTo(model, 1, -1.526f + breatheBounceRight, 0, 0.18f);
+			ModelUtil.lerpLeftArmToDegrees(model, 1, -1.526f + breatheBounceLeft, 0, -0.18f);
+			ModelUtil.lerpRightArmToDegrees(model, 1, -1.526f + breatheBounceRight, 0, 0.18f);
 
-			ModelUtil.lerpLeftArmTo(model, lerp, -0.718f + limbBounce + breatheBounceLeft, 0.09f, 0.359f);
-			ModelUtil.lerpRightArmTo(model, lerp, -0.628f - limbBounce + breatheBounceRight, -0.539f, -0.359f);
+			ModelUtil.lerpLeftArmToDegrees(model, lerp, -0.718f + limbBounce + breatheBounceLeft, 0.09f, 0.359f);
+			ModelUtil.lerpRightArmToDegrees(model, lerp, -0.628f - limbBounce + breatheBounceRight, -0.539f, -0.359f);
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.parzivail.util.client.model;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.Arm;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -20,14 +21,40 @@ public class ModelUtil
 		return Optional.empty();
 	}
 
-	public static <T extends LivingEntity> void lerpLeftArmTo(BipedEntityModel<T> model, float delta, float pitch, float yaw, float roll)
+	public static <T extends LivingEntity> void smartLerpArmsRadians(T entity, BipedEntityModel<?> model, float delta, float leftPitch, float leftYaw, float leftRoll, float rightPitch, float rightYaw, float rightRoll)
+	{
+		ModelPart leftArm = model.leftArm;
+		ModelPart rightArm = model.rightArm;
+
+		if (entity.getMainArm() == Arm.LEFT)
+		{
+			rightYaw = -rightYaw;
+			rightRoll = -rightRoll;
+
+			leftYaw = -leftYaw;
+			leftRoll = -leftRoll;
+
+			leftArm = model.rightArm;
+			rightArm = model.leftArm;
+		}
+
+		rightArm.pitch = MathHelper.lerp(delta, rightArm.pitch, rightPitch);
+		rightArm.yaw = MathHelper.lerp(delta, rightArm.yaw, rightYaw);
+		rightArm.roll = MathHelper.lerp(delta, rightArm.roll, rightRoll);
+
+		leftArm.pitch = MathHelper.lerp(delta, leftArm.pitch, leftPitch);
+		leftArm.yaw = MathHelper.lerp(delta, leftArm.yaw, leftYaw);
+		leftArm.roll = MathHelper.lerp(delta, leftArm.roll, leftRoll);
+	}
+
+	public static <T extends LivingEntity> void lerpLeftArmToDegrees(BipedEntityModel<T> model, float delta, float pitch, float yaw, float roll)
 	{
 		model.leftArm.pitch = MathHelper.lerpAngleDegrees(delta, model.leftArm.pitch * MathHelper.DEGREES_PER_RADIAN, pitch * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
 		model.leftArm.yaw = MathHelper.lerpAngleDegrees(delta, model.leftArm.yaw * MathHelper.DEGREES_PER_RADIAN, yaw * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
 		model.leftArm.roll = MathHelper.lerpAngleDegrees(delta, model.leftArm.roll * MathHelper.DEGREES_PER_RADIAN, roll * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
 	}
 
-	public static <T extends LivingEntity> void lerpRightArmTo(BipedEntityModel<T> model, float delta, float pitch, float yaw, float roll)
+	public static <T extends LivingEntity> void lerpRightArmToDegrees(BipedEntityModel<T> model, float delta, float pitch, float yaw, float roll)
 	{
 		model.rightArm.pitch = MathHelper.lerpAngleDegrees(delta, model.rightArm.pitch * MathHelper.DEGREES_PER_RADIAN, pitch * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;
 		model.rightArm.yaw = MathHelper.lerpAngleDegrees(delta, model.rightArm.yaw * MathHelper.DEGREES_PER_RADIAN, yaw * MathHelper.DEGREES_PER_RADIAN) * MathHelper.RADIANS_PER_DEGREE;

@@ -1198,6 +1198,7 @@ public class PswgTarkin
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Scaffold.ScaffoldStairs)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .blockTag(BlockTags.STAIRS)
 		              .build(assets);
 
 		BlockGenerator.staticColumn(SwgBlocks.Vent.Air, Resources.id("block/air_vent_top"), Resources.id("block/air_vent_side"))

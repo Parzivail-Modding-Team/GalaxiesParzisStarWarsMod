@@ -14,6 +14,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.SkinTextures;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -22,6 +23,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
@@ -246,6 +249,12 @@ public class ArmorRenderer
 			var shouldUseSlimModel = entityRequiresSlimModel(entity);
 			var armorModel = armorModelEntry.modelSupplier.get();
 
+			if (armorModel == null)
+			{
+				var crashReport = CrashReport.create(null, String.format("Unable to load armor model: %s", armorPair.getLeft()));
+				throw new CrashException(crashReport);
+			}
+
 			transformer.transform(entity, shouldUseSlimModel, armorModel, option);
 
 			ModelUtil.getChild(armorModel.leftArm, PART_LEFT_ARM_DEFAULT).ifPresent(p -> p.visible = !shouldUseSlimModel);
@@ -268,7 +277,7 @@ public class ArmorRenderer
 		if (entity instanceof AbstractClientPlayerEntity player)
 		{
 			// Use the slim model if the player's model is slim
-			if (player.getModel().equals("slim"))
+			if (player.getSkinTextures().model() == SkinTextures.Model.SLIM)
 				return true;
 			else
 			{

@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -96,14 +97,14 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	protected int getHydrateTime()
 	{
 		assert this.world != null;
-		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, this, this.world).map(VaporatorRecipe::getDuration).orElse(200);
+		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, this, this.world).map(RecipeEntry::value).map(VaporatorRecipe::getDuration).orElse(200);
 	}
 
 	private boolean isHydratable(ItemStack stack)
 	{
 		assert this.world != null;
 		var recipeOptional = this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world);
-		return recipeOptional.filter(this::canAcceptOutput).isPresent();
+		return recipeOptional.map(RecipeEntry::value).filter(this::canAcceptOutput).isPresent();
 	}
 
 	private boolean canAcceptOutput(VaporatorRecipe recipe)
@@ -112,7 +113,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		if (outputStack.isEmpty())
 			return true;
 
-		var resultStack = recipe.getOutput(world.getRegistryManager());
+		var resultStack = recipe.getResult(world.getRegistryManager());
 
 		if (resultStack.getCount() + outputStack.getCount() > outputStack.getMaxCount())
 			return false;
@@ -123,7 +124,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	private VaporatorRecipe hydrate(ItemStack stack)
 	{
 		assert this.world != null;
-		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world).orElseThrow(RuntimeException::new);
+		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world).orElseThrow(RuntimeException::new).value();
 	}
 
 	public static <T extends BlockEntity> void serverTick(World world, BlockPos blockPos, BlockState blockState, T be)
@@ -143,7 +144,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 			else if (t.collectionTimer <= 0)
 			{
 				var outputStack = t.getStack(1).copy();
-				var resultStack = recipe.getOutput(world.getRegistryManager());
+				var resultStack = recipe.getResult(world.getRegistryManager());
 
 				stack.decrement(1);
 				t.setStack(0, stack.copy());

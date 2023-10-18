@@ -598,21 +598,21 @@ public class CharacterScreen extends Screen
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount)
 	{
 		if (LEFT_LIST_CUTOUT.contains((int)mouseX, (int)mouseY) || LEFT_SCROLL_THUMB.containsVertical((int)mouseX, (int)mouseY))
 		{
-			LEFT_SCROLL_THUMB.inputScroll(amount);
+			LEFT_SCROLL_THUMB.inputScroll(verticalAmount);
 			return true;
 		}
 
 		if (RIGHT_LIST_CUTOUT.contains((int)mouseX, (int)mouseY) || RIGHT_SCROLL_THUMB.containsVertical((int)mouseX, (int)mouseY))
 		{
-			RIGHT_SCROLL_THUMB.inputScroll(amount);
+			RIGHT_SCROLL_THUMB.inputScroll(verticalAmount);
 			return true;
 		}
 
-		return super.mouseScrolled(mouseX, mouseY, amount);
+		return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 	}
 
 	private void applySpecies()
@@ -631,7 +631,7 @@ public class CharacterScreen extends Screen
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		this.renderBackground(context);
+		super.render(context, mouseX, mouseY, delta);
 
 		var x = width / 2 - HALF_WIDTH;
 		var y = height / 2 - HALF_HEIGHT;
@@ -780,8 +780,6 @@ public class CharacterScreen extends Screen
 					.findFirst()
 					.ifPresent(rect -> hoveringEntry = new HoveringEntry(rect));
 		}
-
-		super.render(context, mouseX, mouseY, delta);
 	}
 
 	private boolean isPlayerSpecies()

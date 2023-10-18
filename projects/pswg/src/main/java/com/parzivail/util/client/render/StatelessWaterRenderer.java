@@ -110,11 +110,11 @@ public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void
 				if (fluidVelocity.x == 0.0 && fluidVelocity.z == 0.0)
 				{
 					var sprite = sprites[0];
-					u0 = sprite.getFrameU(0.0);
-					v0 = sprite.getFrameV(0.0);
+					u0 = sprite.getFrameU(0.0F);
+					v0 = sprite.getFrameV(0.0F);
 					u1 = u0;
-					v1 = sprite.getFrameV(16.0);
-					u2 = sprite.getFrameU(16.0);
+					v1 = sprite.getFrameV(16.0F);
+					u2 = sprite.getFrameU(16.0F);
 					v2 = v1;
 					u3 = u2;
 					v3 = v0;
@@ -246,11 +246,11 @@ public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void
 
 					var sprite2 = useOverlaySprite ? this.waterOverlaySprite : sprites[1];
 
-					var u1 = sprite2.getFrameU(0.0);
-					var u2 = sprite2.getFrameU(8.0);
+					var u1 = sprite2.getFrameU(0.0F);
+					var u2 = sprite2.getFrameU(8.0F);
 					var v1 = sprite2.getFrameV((1.0F - y1) * 16.0F * 0.5F);
 					var v2 = sprite2.getFrameV((1.0F - y2) * 16.0F * 0.5F);
-					var v3 = sprite2.getFrameV(8.0);
+					var v3 = sprite2.getFrameV(8.0F);
 
 					var dirLighting = direction.getAxis() == Direction.Axis.Z ? lightNorth : lightWest;
 					var r = lightUp * dirLighting * colorR;

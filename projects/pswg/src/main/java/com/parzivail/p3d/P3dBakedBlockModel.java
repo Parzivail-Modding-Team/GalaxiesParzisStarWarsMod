@@ -188,7 +188,7 @@ public class P3dBakedBlockModel extends DynamicBakedModel
 
 		var bounds = model.bounds();
 
-		var largestDimension = 0.625f * (float)Math.max(bounds.getXLength(), Math.max(bounds.getYLength(), bounds.getZLength()));
+		var largestDimension = 0.625f * (float)Math.max(bounds.getLengthX(), Math.max(bounds.getLengthY(), bounds.getLengthZ()));
 		var scale = 1 / largestDimension;
 
 		var minX = (float)bounds.minX * 0.625f;

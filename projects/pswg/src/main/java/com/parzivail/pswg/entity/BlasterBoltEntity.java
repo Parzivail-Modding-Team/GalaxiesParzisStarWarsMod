@@ -1,7 +1,6 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
@@ -123,7 +122,6 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 	public void onSpawnPacket(EntitySpawnS2CPacket packet)
 	{
 		super.onSpawnPacket(packet);
-		SoundHelper.playBlasterBoltHissSound(this);
 
 		if (packet instanceof PreciseEntitySpawnS2CPacket pes)
 		{

@@ -1,16 +1,15 @@
 package com.parzivail.pswg.recipe;
 
-import com.google.gson.JsonObject;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgRecipeSerializers;
 import com.parzivail.pswg.container.SwgRecipeType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
@@ -18,15 +17,12 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.crash.CrashException;
-import net.minecraft.util.crash.CrashReport;
 import net.minecraft.world.World;
 
-public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
-                              ItemStack result) implements Recipe<Inventory>
+import java.util.Optional;
+
+public record VaporatorRecipe(Ingredient base, int duration, ItemStack result) implements Recipe<Inventory>
 {
 
 	@Override
@@ -38,7 +34,7 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 	@Override
 	public ItemStack craft(Inventory inv, DynamicRegistryManager registryManager)
 	{
-		return this.getOutput(registryManager).copy();
+		return this.getResult(registryManager).copy();
 	}
 
 	@Override
@@ -49,7 +45,7 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 	}
 
 	@Override
-	public ItemStack getOutput(DynamicRegistryManager registryManager)
+	public ItemStack getResult(DynamicRegistryManager registryManager)
 	{
 		return this.result;
 	}
@@ -64,12 +60,6 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 	public ItemStack createIcon()
 	{
 		return new ItemStack(SwgBlocks.MoistureVaporator.Gx8);
-	}
-
-	@Override
-	public Identifier getId()
-	{
-		return this.id;
 	}
 
 	@Override
@@ -94,39 +84,35 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 
 	public static class Serializer implements RecipeSerializer<VaporatorRecipe>
 	{
+		private static final Codec<VaporatorRecipe> CODEC = RecordCodecBuilder.create(
+				builder -> builder.group(
+						Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter(VaporatorRecipe::base),
+						Codec.INT.fieldOf("duration").forGetter(VaporatorRecipe::duration),
+						RecordCodecBuilder.<ItemStack>create(instance -> instance.group(
+								Registries.ITEM.getCodec().fieldOf("item").forGetter(ItemStack::getItem),
+								Codec.INT.optionalFieldOf("count", 1).forGetter(ItemStack::getCount),
+								NbtCompound.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getNbt()))
+						).apply(instance, (item, integer, nbtCompound) -> {
+							var stack = new ItemStack(item, integer);
+							nbtCompound.ifPresent(stack::setNbt);
+							return stack;
+						})).fieldOf("result").forGetter(VaporatorRecipe::result)
+				).apply(builder, VaporatorRecipe::new)
+		);
+
 		@Override
-		public VaporatorRecipe read(Identifier identifier, JsonObject jsonObject)
+		public Codec<VaporatorRecipe> codec()
 		{
-			var ingredient = Ingredient.fromJson(JsonHelper.getObject(jsonObject, "ingredient"), false);
-			var duration = JsonHelper.getInt(jsonObject, "duration");
-
-			var result = JsonHelper.getObject(jsonObject, "result");
-			try
-			{
-				var resultItem = result.get("item").getAsString();
-				var resultCount = JsonHelper.getInt(result, "count", 1);
-				var itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(resultItem));
-
-				var itemStack = new ItemStack(itemResult.item(), resultCount);
-				itemStack.setNbt(itemResult.nbt());
-				return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
-			}
-			catch (CommandSyntaxException e)
-			{
-				var crashReport = CrashReport.create(e, "Recipe parsing");
-				var element = crashReport.addElement("Recipe");
-				element.add("Identifier", identifier);
-				throw new CrashException(crashReport);
-			}
+			return CODEC;
 		}
 
 		@Override
-		public VaporatorRecipe read(Identifier identifier, PacketByteBuf packetByteBuf)
+		public VaporatorRecipe read(PacketByteBuf packetByteBuf)
 		{
 			var ingredient = Ingredient.fromPacket(packetByteBuf);
 			var duration = packetByteBuf.readInt();
 			var itemStack = packetByteBuf.readItemStack();
-			return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
+			return new VaporatorRecipe(ingredient, duration, itemStack);
 		}
 
 		@Override

@@ -1,5 +1,6 @@
 package com.parzivail.util.entity.collision;
 
+import com.parzivail.pswg.Resources;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -11,6 +12,10 @@ public class ComplexCollisionManager
 {
 	public static Optional<Vec3d> adjustMovementForCollisions(Entity entity, Vec3d currentMovement)
 	{
+		var config = Resources.CONFIG.get();
+		if (!config.server.allowComplexCollisions)
+			return Optional.empty();
+
 		var box = entity.getBoundingBox();
 		if (box.getAverageSideLength() < 1.0E-7D)
 			return Optional.empty();
@@ -44,6 +49,7 @@ public class ComplexCollisionManager
 
 	private static boolean roughCollidesWith(IComplexEntityHitbox iceh, Entity other)
 	{
+		// TODO: rough collision
 		return true;
 	}
 }

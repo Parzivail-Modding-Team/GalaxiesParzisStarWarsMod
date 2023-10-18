@@ -99,6 +99,9 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 			this.modelSupplier = null;
 		}
 
+		if (this.model == null)
+			return;
+
 		matrixStack.push();
 		this.model.handSwingProgress = this.getHandSwingProgress(livingEntity, tickDelta);
 		this.model.riding = livingEntity.hasVehicle();

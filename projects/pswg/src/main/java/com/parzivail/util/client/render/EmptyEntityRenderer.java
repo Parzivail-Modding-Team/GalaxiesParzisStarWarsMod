@@ -31,7 +31,7 @@ public class EmptyEntityRenderer extends EntityRenderer<Entity>
 
 		matrix.push();
 
-		matrix.translate(0, box.getYLength() / 2, 0);
+		matrix.translate(0, box.getLengthY() / 2, 0);
 
 		var f = 0.025f;
 		var n = entity.getType().getTranslationKey();

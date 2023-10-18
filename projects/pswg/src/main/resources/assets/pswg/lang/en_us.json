@@ -1219,6 +1219,8 @@
 	"text.autoconfig.pswg.option.server.@Tooltip": "Here you can change general server options.",
 	"text.autoconfig.pswg.option.server.allowBlasterNonlivingDamage": "Allow Blaster Non-Living Damage",
 	"text.autoconfig.pswg.option.server.allowBlasterNonlivingDamage.@Tooltip": "Allows blasters to damage entities that are non-living (item frames, armor stands, etc.)",
+	"text.autoconfig.pswg.option.server.allowComplexCollisions": "Enable Complex Collisions",
+	"text.autoconfig.pswg.option.server.allowComplexCollisions.@Tooltip": "Enable complex collision calculation for large entities",
 	"text.autoconfig.pswg.option.server.vehiclePermissionLevel": "Vehicle Permission Level",
 	"text.autoconfig.pswg.option.server.vehiclePermissionLevel.@Tooltip": "Prevents players under a certain permission level from accessing vehicles",
 	"text.autoconfig.pswg.option.view": "View",

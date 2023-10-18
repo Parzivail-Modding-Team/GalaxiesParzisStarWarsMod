@@ -59,6 +59,10 @@ public class Config implements ConfigData
 		@Comment("Allows blasters to damage entities that are non-living (item frames, armor stands, etc.)")
 		@ConfigEntry.Gui.Tooltip
 		public boolean allowBlasterNonlivingDamage = false;
+
+		@Comment("Enable complex collision calculation for large entities")
+		@ConfigEntry.Gui.Tooltip
+		public boolean allowComplexCollisions = true;
 	}
 
 	@ConfigEntry.Gui.CollapsibleObject

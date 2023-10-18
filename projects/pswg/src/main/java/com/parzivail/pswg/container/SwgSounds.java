@@ -64,7 +64,7 @@ public class SwgSounds
 
 	public static class Blaster
 	{
-		public static final SoundEvent HISS = of(Resources.id("blaster.hiss"));
+		public static final SoundEvent FLYBY = of(Resources.id("blaster.flyby"));
 		public static final SoundEvent RELOAD = of(Resources.id("blaster.reload"));
 		public static final SoundEvent DRYFIRE = of(Resources.id("blaster.dryfire"));
 		public static final SoundEvent STUN = of(Resources.id("blaster.stun"));

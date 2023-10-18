@@ -13,8 +13,8 @@ public record CapsuleVolume(Vec3d start, Vec3d end, double radius) implements IC
 {
 	public static CapsuleVolume of(Box box)
 	{
-		var halfHeight = box.getYLength() / 2;
-		var r = Math.min(box.getZLength() / 2, halfHeight);
+		var halfHeight = box.getLengthY() / 2;
+		var r = Math.min(box.getLengthZ() / 2, halfHeight);
 		return new CapsuleVolume(box.getCenter().subtract(0, halfHeight - r, 0),
 		                         box.getCenter().add(0, halfHeight - r, 0),
 		                         r);

@@ -52,7 +52,7 @@ public class DataReader
 		s.readFully(bytesNbt);
 
 		var stream = new DataInputStream(new ByteArrayInputStream(bytesNbt));
-		var tag = NbtIo.read(stream);
+		var tag = NbtIo.readCompound(stream);
 		stream.close();
 		return tag;
 	}

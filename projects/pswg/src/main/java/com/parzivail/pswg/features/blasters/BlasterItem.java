@@ -17,6 +17,7 @@ import com.parzivail.util.math.MathUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -30,7 +31,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -54,7 +54,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener, ITabStackProvider
 {
 	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_CONTROLS = Resources.tooltip("blaster.controls");
@@ -103,6 +103,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	private static final HashMap<BlasterAttachmentFunction, Float> DAMAGE_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.INCREASE_DAMAGE, 1.5f);
+	});
+
+	private static final HashMap<BlasterAttachmentFunction, Float> MAGAZINE_SIZE_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.INCREASE_MAGAZINE_SIZE, 2f);
 	});
 
 	private static final HashMap<BlasterAttachmentFunction, Float> ZOOM_MAP = Util.make(new HashMap<>(), (h) -> {
@@ -183,7 +187,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public int getMaxUseTime(ItemStack stack)
 	{
-		return 72000;
+		var bt = new BlasterTag(stack.getOrCreateNbt());
+		if (bt.isAimingDownSights)
+			return 72000;
+
+		return 0;
 	}
 
 	@Override
@@ -214,11 +222,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var isRepeatEvent = player.getItemUseTime() > 0;
 			if (!isRepeatEvent || allowRepeatedLeftHold(world, player, hand))
 				useLeft(world, player, hand, isRepeatEvent);
+
+			player.setCurrentHand(hand);
 		}
 		else if (!world.isClient)
+		{
 			BlasterTag.mutate(stack, blasterTag -> tryToggleAds(blasterTag, world, player, hand));
 
-		player.setCurrentHand(hand);
+			if (!player.isSprinting())
+				player.setCurrentHand(hand);
+		}
+
 		return TypedActionResult.pass(stack);
 	}
 
@@ -429,7 +443,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				}
 				else if (!world.isClient)
 				{
-					bt.shotsRemaining = nextPack.getRight().numShots();
+					var capacity = getMagazineSize(bd, bt);
+					bt.shotsRemaining = Math.min(capacity, nextPack.getRight().numShots());
+
+					// TODO: allow leaving a remainder of a pack in the
+					// inventory if the whole pack wasn't consumed
+
 					player.getInventory().removeStack(nextPack.getLeft(), 1);
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.RELOAD, SoundCategory.PLAYERS, 1f, 1f);
 				}
@@ -651,6 +670,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return bd.stackWithAttachment(attachmentBitmask, DAMAGE_MAP);
 	}
 
+	public static float getMagazineSizeMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, MAGAZINE_SIZE_MAP);
+	}
+
 	public static float getSpreadAmount(BlasterDescriptor bd, int attachmentBitmask)
 	{
 		return bd.stackWithAttachment(attachmentBitmask, SPREAD_MAP);
@@ -709,7 +733,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
-	public NbtCompound getDefaultTag(ItemConvertible item, int count)
+	public ItemStack getDefaultStack()
 	{
 		var blasterTag = new BlasterTag(new NbtCompound());
 		if (descriptor.firingModes.isEmpty())
@@ -722,7 +746,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		var tag = new NbtCompound();
 		blasterTag.serializeAsSubtag(tag);
-		return tag;
+		var stack = new ItemStack(this);
+		stack.setNbt(tag);
+		return stack;
 	}
 
 	@Override
@@ -755,6 +781,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	private float getDamage(BlasterDescriptor bd, BlasterTag bt)
 	{
 		return bd.damage * getDamageMultiplier(bd, bt.attachmentBitmask);
+	}
+
+	private int getMagazineSize(BlasterDescriptor bd, BlasterTag bt)
+	{
+		return (int)Math.ceil(bd.magazineSize * getMagazineSizeMultiplier(bd, bt.attachmentBitmask));
 	}
 
 	private ItemStack forType(BlasterDescriptor descriptor)
@@ -866,6 +897,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			if (bt.isAimingDownSights)
 			{
+				Galaxies.LOG.debug("try");
 				var bd = getBlasterDescriptor(stack);
 				return ATTRIB_MODS_ADS.get(bd.adsSpeedModifier);
 			}
@@ -910,5 +942,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
 		var changed = stack.getOrCreateNbt().hashCode() != oldNbtHashcode;
 		return changed;
+	}
+
+	@Override
+	public void appendStacks(FabricItemGroupEntries entries)
+	{
+		entries.add(forType(descriptor));
 	}
 }

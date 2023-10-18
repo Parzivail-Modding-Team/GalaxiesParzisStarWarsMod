@@ -63,7 +63,7 @@ public class ConnectedTextureHelper
 
 	public static Sides getConnectedBlockTexture(BlockRenderView blockView, BlockState block, BlockPos pos, Direction facing, boolean horizontalConnect, boolean verticalConnect, boolean lateralConnect)
 	{
-		if (pos == null)
+		if (pos == null || blockView == null)
 		{
 			if (!horizontalConnect && (facing == Direction.UP || facing == Direction.DOWN))
 				return null;

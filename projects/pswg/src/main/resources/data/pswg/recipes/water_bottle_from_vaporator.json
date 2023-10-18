@@ -4,7 +4,10 @@
         "item": "minecraft:glass_bottle"
     },
     "result": {
-        "item": "minecraft:potion{Potion:'minecraft:water'}"
+        "item": "minecraft:potion",
+        "tag": {
+        	"Potion": "minecraft:water"
+        }
     },
     "duration": 400
 }

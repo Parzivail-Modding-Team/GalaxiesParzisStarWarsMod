@@ -244,12 +244,12 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount)
 	{
 		if (attachmentListContains(mouseX, mouseY))
 		{
 			var i = attachmentList.size() - NUM_VISIBLE_ATTACHMENT_ROWS;
-			this.scrollPosition = MathHelper.clamp((float)(this.scrollPosition - amount / i), 0, 1);
+			this.scrollPosition = MathHelper.clamp((float)(this.scrollPosition - verticalAmount / i), 0, 1);
 		}
 		return true;
 	}
@@ -326,7 +326,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		this.renderBackground(context);
+		this.renderBackground(context, mouseX, mouseY, delta);
 		super.render(context, mouseX, mouseY, delta);
 
 		var minecraft = MinecraftClient.getInstance();
@@ -346,14 +346,14 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			var modelEntry = BlasterItemRenderer.INSTANCE.getModel(blasterModel);
 			var model = modelEntry.model();
 
-			var ratio = (float)Math.max(model.bounds().getZLength() / BLASTER_VIEWPORT_WIDTH, model.bounds().getYLength() / (BLASTER_VIEWPORT_HEIGHT * 0.6));
+			var ratio = (float)Math.max(model.bounds().getLengthZ() / BLASTER_VIEWPORT_WIDTH, model.bounds().getLengthY() / (BLASTER_VIEWPORT_HEIGHT * 0.6));
 
 			MathUtil.scalePos(context.getMatrices(), -1 / ratio, 1 / ratio, 1);
 
 			context.getMatrices().multiply(new Quaternionf().rotationX(MathUtil.toRadians(180 - blasterViewportRotation.y)));
 			context.getMatrices().multiply(new Quaternionf().rotationY(MathUtil.toRadians(90 + blasterViewportRotation.x)));
 
-			context.getMatrices().translate(0, 0, -model.bounds().maxZ + model.bounds().getZLength() / 2);
+			context.getMatrices().translate(0, 0, -model.bounds().maxZ + model.bounds().getLengthZ() / 2);
 
 			MathUtil.scalePos(context.getMatrices(), 5, 5, 5);
 

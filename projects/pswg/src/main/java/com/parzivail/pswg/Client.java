@@ -23,6 +23,7 @@ import com.parzivail.pswg.client.render.sky.SpaceSkyRenderer;
 import com.parzivail.pswg.client.screen.CrateGenericSmallScreen;
 import com.parzivail.pswg.client.screen.CrateOctagonScreen;
 import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
+import com.parzivail.pswg.client.sound.EnvironmentSoundManager;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
@@ -76,7 +77,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
@@ -160,6 +161,7 @@ public class Client implements ClientModInitializer
 
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::tick);
 		ClientTickEvents.START_CLIENT_TICK.register(BlasterRecoilManager::tick);
+		ClientTickEvents.START_CLIENT_TICK.register(EnvironmentSoundManager::tick);
 
 		ClientTickEvents.END_CLIENT_TICK.register(BlasterZoomHandler::tick);
 		ClientTickEvents.END_CLIENT_TICK.register(DebugUtil::tick);
@@ -357,7 +359,7 @@ public class Client implements ClientModInitializer
 		);
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-client-addon");
-		EntrypointUtils.invoke("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
 	}
 
 	private static void registerArmor()
