@@ -187,7 +187,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public int getMaxUseTime(ItemStack stack)
 	{
-		return 72000;
+		var bt = new BlasterTag(stack.getOrCreateNbt());
+		if (bt.isAimingDownSights)
+			return 72000;
+
+		return 0;
 	}
 
 	@Override
@@ -218,11 +222,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var isRepeatEvent = player.getItemUseTime() > 0;
 			if (!isRepeatEvent || allowRepeatedLeftHold(world, player, hand))
 				useLeft(world, player, hand, isRepeatEvent);
+
+			player.setCurrentHand(hand);
 		}
 		else if (!world.isClient)
+		{
 			BlasterTag.mutate(stack, blasterTag -> tryToggleAds(blasterTag, world, player, hand));
 
-		player.setCurrentHand(hand);
+			if (!player.isSprinting())
+				player.setCurrentHand(hand);
+		}
+
 		return TypedActionResult.pass(stack);
 	}
 
@@ -887,6 +897,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			if (bt.isAimingDownSights)
 			{
+				Galaxies.LOG.debug("try");
 				var bd = getBlasterDescriptor(stack);
 				return ATTRIB_MODS_ADS.get(bd.adsSpeedModifier);
 			}
