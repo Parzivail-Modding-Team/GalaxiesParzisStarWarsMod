@@ -13,15 +13,15 @@ dependencies {
 	"modImplementation"("io.github.kostaskougios:cloning:1.10.3")
 	"include"("io.github.kostaskougios:cloning:1.10.3")
 
-	"modImplementation"("io.github.spair:imgui-java-binding:1.86.10")
-	"include"("io.github.spair:imgui-java-binding:1.86.10")
-	"modImplementation"("io.github.spair:imgui-java-lwjgl3:1.86.10")
-	"include"("io.github.spair:imgui-java-lwjgl3:1.86.10")
-	"modImplementation"("io.github.spair:imgui-java-natives-windows:1.86.10")
-	"include"("io.github.spair:imgui-java-natives-windows:1.86.10")
+	"modImplementation"("io.github.spair:imgui-java-binding:1.86.11")
+	"include"("io.github.spair:imgui-java-binding:1.86.11")
+	"modImplementation"("io.github.spair:imgui-java-lwjgl3:1.86.11")
+	"include"("io.github.spair:imgui-java-lwjgl3:1.86.11")
+	"modImplementation"("io.github.spair:imgui-java-natives-windows:1.86.11")
+	"include"("io.github.spair:imgui-java-natives-windows:1.86.11")
 
-	"modImplementation"("io.wispforest:worldmesher:0.3.0+1.20")
-	"include"("io.wispforest:worldmesher:0.3.0+1.20")
+	"modImplementation"("io.wispforest:worldmesher:0.4.2+1.20")
+	"include"("io.wispforest:worldmesher:0.4.2+1.20")
 	//	"modImplementation"(files("/home/cnewman/IdeaProjects/worldmesher/build/libs/worldmesher-0.2.13+build.11+1.19.jar"))
 	//	"include"(files("/home/cnewman/IdeaProjects/worldmesher/build/libs/worldmesher-0.2.13+build.11+1.19.jar"))
 }
