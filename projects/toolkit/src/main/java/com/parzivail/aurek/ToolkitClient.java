@@ -13,6 +13,7 @@ import com.parzivail.util.Lumberjack;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -65,7 +66,11 @@ public class ToolkitClient implements PswgClientAddon
 	public static final KeyBinding KEY_OPEN_GLOBAL_CONTROLS = new KeyBinding("key.aurek.global_controls", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F9, "key.category.aurek");
 
 	public static final String I18N_TOOLKIT = Resources.screen("toolkit");
-	public static final Identifier TEX_TOOLKIT = id("textures/gui/toolkit_button.png");
+	public static final ButtonTextures TEX_TOOLKIT_BUTTON = new ButtonTextures(
+			id("toolkit_button_enabled"),
+			id("toolkit_button_disabled"),
+			id("toolkit_button_focused")
+	);
 	public static final Identifier TEX_DEBUG = id("textures/debug.png");
 
 	public static final HashMap<String, List<Tool>> TOOLS = new HashMap<>();
