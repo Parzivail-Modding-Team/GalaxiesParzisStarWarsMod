@@ -1,18 +1,16 @@
 import java.io.ByteArrayOutputStream
 
 plugins {
-	id("com.parzivail.internal.pswg-submodule-dependencies")
-	id("fabric-loom")
-	id("io.github.juuxel.loom-vineflower")
+	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.1"
+	id("fabric-loom") version "1.4-SNAPSHOT"
 	`maven-publish`
 }
 
 subprojects {
-	if (!file("project.gradle.kts").exists()) return@subprojects
+	if (!file("project.gradle").exists()) return@subprojects
 
 	apply(plugin = "com.parzivail.internal.pswg-submodule-dependencies")
 	apply(plugin = "fabric-loom")
-	apply(plugin = "io.github.juuxel.loom-vineflower")
 	apply(plugin = "maven-publish")
 }
 
@@ -53,7 +51,7 @@ allprojects {
 		options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000", "-Xdiags:verbose"))
 	}
 
-	if (!file("project.gradle.kts").exists()) return@allprojects
+	if (!file("project.gradle").exists()) return@allprojects
 
 	repositories {
 		mavenCentral()
@@ -95,10 +93,6 @@ allprojects {
 		// if it is present.
 		// If you remove this task, sources will not be generated.
 		withSourcesJar()
-	}
-
-	vineflower {
-		toolVersion = "1.9.3"
 	}
 
 	if (project.parent != null)
@@ -149,7 +143,7 @@ allprojects {
 		}
 	}
 
-	apply(from = "project.gradle.kts")
+	apply(from = "project.gradle")
 }
 
 tasks.assemble {
