@@ -1,16 +1,22 @@
 # Additions
 
-* Add server-side config flag for complex entity collisions
+* Blasters bolts now have a proper "fly-by" sound
+* Lightsabers now show blocking in first person
 
 # Changes
 
-* Update to 1.20.2
-* Prevent error logging when loaded under Forge
+* Blaster magazine size is now used when reloading gas from canisters
+* Blasters no longer slow you down if you hold right click while sprinting
+
+# Addon Changes
+
+* Addons can now increase blaster capacity through attachments
 
 # Fixes
 
-* Fix some blocks not being added to doors/slabs/stairs/trapdoors/walls tag
-* Fix crash when loading entrypoints with new Fabric API versions
-* Fix REI ingredients
-* Fix blaster tab stacks
-* Fix chasuka loot table
+* Fix connected textures crashing when using sodium under some conditions
+* Fix mannequins crashing when rendering under certain conditions
+* Fix armor crashing when rendering if no model exists
+* Fixed lightsaber hand positions when left-handed
+* Forcefully crash with a more helpful error message when fallback models fail to load
+* Forcefully crash with a more helpful error message when null NBT is found in blaster, jetpack, and lightsaber tags
