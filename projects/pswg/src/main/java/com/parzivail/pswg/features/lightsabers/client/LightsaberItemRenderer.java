@@ -78,7 +78,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			case FIRST_PERSON_LEFT_HAND:
 			case FIRST_PERSON_RIGHT_HAND:
 			{
-				if (entity.isUsingItem())
+				if (entity != null && entity.isUsingItem())
 				{
 					var delta = getBlockAnimationDelta(entity, Client.getTickDelta());
 
