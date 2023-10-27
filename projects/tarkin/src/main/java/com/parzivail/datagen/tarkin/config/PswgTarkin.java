@@ -21,6 +21,7 @@ import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
 import com.parzivail.util.block.InvertedLampBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
@@ -760,6 +761,7 @@ public class PswgTarkin
 		for (var entry : SwgItems.Door.DoorInsert.entrySet())
 			ItemGenerator.basic(entry.getValue()).build(assets);
 
+		ItemGenerator.armor(SwgItems.Armor.EliteSquadTrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Shocktrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Purgetrooper, assets);

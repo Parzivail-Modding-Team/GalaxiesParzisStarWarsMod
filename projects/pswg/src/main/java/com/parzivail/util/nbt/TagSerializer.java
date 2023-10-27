@@ -59,7 +59,7 @@ public class TagSerializer extends ReflectionSerializer<NbtCompound>
 		var clFields = getClassFields(clazz);
 
 		if (source == null)
-			throw new CrashException(CrashReport.create(null, "Attempted to deserialize tag data from null NBT"));
+			throw new CrashException(CrashReport.create(new IllegalStateException("NBT source is null"), "Attempted to deserialize tag data from null NBT"));
 
 		var domain = source.getCompound(this.slug);
 
