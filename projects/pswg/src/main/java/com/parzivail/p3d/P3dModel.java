@@ -235,7 +235,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 				return AbstractModel.MAT_EMISSIVE;
 			default:
 			{
-				var crashReport = CrashReport.create(null, String.format("Unknown material ID: %s", material));
+				var crashReport = CrashReport.create(new IllegalStateException("Unknown material ID"), String.format("Unknown material ID: %s", material));
 				throw new CrashException(crashReport);
 			}
 		}

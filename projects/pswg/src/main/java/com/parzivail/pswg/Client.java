@@ -678,24 +678,6 @@ public class Client implements ClientModInitializer
 				),
 				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
 		);
-		ArmorRenderer.register(
-				SwgItems.Armor.TieColdMask,
-				Resources.id("tie_cold_mask"),
-				new ArmorRenderer.Assets(
-						Resources.id("armor/tie_cold_mask"),
-						Resources.id("textures/armor/tie_cold_mask.png")
-				),
-				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
-		);
-		ArmorRenderer.register(
-				SwgItems.Armor.TechnicalHelmet,
-				Resources.id("technical_helmet"),
-				new ArmorRenderer.Assets(
-						Resources.id("armor/technical_helmet"),
-						Resources.id("textures/armor/technical_helmet.png")
-				),
-				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
-		);
 		var shoretrooperId = Resources.id("shoretrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Shoretrooper,

@@ -96,12 +96,6 @@ public class SwgItems
 		@RegistryName("tie_cadet")
 		@TarkinItem
 		public static final ArmorItem TieCadetHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
-		@RegistryName("tie_cold_mask")
-		@TarkinItem
-		public static final ArmorItem TieColdMask = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
-		@RegistryName("technical_helmet")
-		@TarkinItem
-		public static final ArmorItem TechnicalHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_pilot_helmet")
 		@TarkinItem
 		public static final ArmorItem RebelPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
