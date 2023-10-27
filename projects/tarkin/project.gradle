@@ -1,0 +1,15 @@
+dependencies {
+	api(project(path: ":projects:pswg", configuration: "namedElements"))
+	api(project(path: ":projects:addon-clonewars", configuration: "namedElements"))
+	api(project(":projects:tarkin-api"))
+
+	// Cloth Config
+	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	include("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}")
+
+	// Trinkets
+	modImplementation("dev.emi:trinkets:${trinkets_version}")
+	include("dev.emi:trinkets:${trinkets_version}")
+}

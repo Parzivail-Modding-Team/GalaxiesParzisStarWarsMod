@@ -1,0 +1,3 @@
+dependencies {
+	runtimeOnly(project(path: ":projects:pswg", configuration: "namedElements"))
+}
