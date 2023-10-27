@@ -379,7 +379,6 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/rebel_tropical.png")),
 				ArmorRenderer.Metadata.NO_CHANGE
 		);
-
 		ArmorRenderer.register(
 				SwgItems.Armor.BlackImperialOfficer,
 				Resources.id("black_imperial_officer_hat"),
@@ -490,6 +489,14 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/purgetrooper.png")),
 				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
+		ArmorRenderer.register(
+				SwgItems.Armor.EliteSquadTrooper,
+				Resources.id("elite_squad"),
+				new ArmorRenderer.Assets(Resources.id("armor/elite_squad"),
+				                         Resources.id("textures/armor/elite_squad.png")),
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
+		);
+
 
 		var sandtrooperId = Resources.id("sandtrooper");
 		ArmorRenderer.register(
@@ -662,7 +669,33 @@ public class Client implements ClientModInitializer
 				),
 				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
-
+		ArmorRenderer.register(
+				SwgItems.Armor.TieCadetHelmet,
+				Resources.id("tie_cadet"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/tie_cadet"),
+						Resources.id("textures/armor/tie_cadet.png")
+				),
+				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.TieColdMask,
+				Resources.id("tie_cold_mask"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/tie_cold_mask"),
+						Resources.id("textures/armor/tie_cold_mask.png")
+				),
+				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.TechnicalHelmet,
+				Resources.id("technical_helmet"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/technical_helmet"),
+						Resources.id("textures/armor/technical_helmet.png")
+				),
+				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
+		);
 		var shoretrooperId = Resources.id("shoretrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Shoretrooper,

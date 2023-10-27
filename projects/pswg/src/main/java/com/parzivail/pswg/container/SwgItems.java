@@ -50,6 +50,9 @@ public class SwgItems
 	@RegistryOrder(1)
 	public static class Armor
 	{
+
+		@RegistryName("elite_squad")
+		public static final ArmorItems EliteSquadTrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("stormtrooper")
 		public static final ArmorItems Stormtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("shocktrooper")
@@ -90,6 +93,9 @@ public class SwgItems
 		@RegistryName("imperial_pilot_kit")
 		@TarkinItem
 		public static final ArmorItem ImperialPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1));
+		@RegistryName("tie_cadet")
+		@TarkinItem
+		public static final ArmorItem TieCadetHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_pilot_helmet")
 		@TarkinItem
 		public static final ArmorItem RebelPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
