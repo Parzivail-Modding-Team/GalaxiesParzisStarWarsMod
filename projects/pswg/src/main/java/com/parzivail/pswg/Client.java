@@ -678,6 +678,33 @@ public class Client implements ClientModInitializer
 				),
 				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
 		);
+		ArmorRenderer.register(
+				SwgItems.Armor.TieTechnicalHelmet,
+				Resources.id("tie_technical_helmet"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/tie_technical_helmet"),
+						Resources.id("textures/armor/tie_technical_helmet.png")
+				),
+				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.TieColdHelmet,
+				Resources.id("tie_cold_helmet"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/tie_cold_helmet"),
+						Resources.id("textures/armor/tie_cold_helmet.png")
+				),
+				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.TieCadetHelmet,
+				Resources.id("tie_cadet"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/tie_cadet"),
+						Resources.id("textures/armor/tie_cadet.png")
+				),
+				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
+		);
 		var shoretrooperId = Resources.id("shoretrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Shoretrooper,
@@ -792,6 +819,54 @@ public class Client implements ClientModInitializer
 				new ArmorRenderer.Assets(
 						Resources.id("armor/heavy_backpack"),
 						Resources.id("textures/armor/tan_heavy_backpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.CJ33Jetpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.CJ33Jetpack),
+				Resources.id("cj33_jetpack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("jetpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/cj33_jetpack"),
+						Resources.id("textures/armor/cj33_jetpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.JT12Jetpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.JT12Jetpack),
+				Resources.id("jt12_jetpack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("jetpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/jt12_jetpack"),
+						Resources.id("textures/armor/jt12_jetpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.Z6Jetpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.Z6Jetpack),
+				Resources.id("z6_jetpack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("jetpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/z6_jetpack"),
+						Resources.id("textures/armor/z6_jetpack.png")
+				),
+				ArmorRenderer.Metadata.NO_CHANGE
+		);
+		ArmorRenderer.registerAccessory(
+				SwgItems.Armor.RebelJumpPack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.RebelJumpPack),
+				Resources.id("rebel_jump_pack"),
+				EquipmentSlot.CHEST,
+				model -> model.body.getChild("jetpack"),
+				new ArmorRenderer.Assets(
+						Resources.id("armor/rebel_jump_pack"),
+						Resources.id("textures/armor/rebel_jump_pack.png")
 				),
 				ArmorRenderer.Metadata.NO_CHANGE
 		);

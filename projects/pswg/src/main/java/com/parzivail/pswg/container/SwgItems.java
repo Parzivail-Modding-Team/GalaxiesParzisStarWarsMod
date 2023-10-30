@@ -96,6 +96,12 @@ public class SwgItems
 		@RegistryName("tie_cadet")
 		@TarkinItem
 		public static final ArmorItem TieCadetHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("tie_technical_helmet")
+		@TarkinItem
+		public static final ArmorItem TieTechnicalHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("tie_cold_helmet")
+		@TarkinItem
+		public static final ArmorItem TieColdHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_pilot_helmet")
 		@TarkinItem
 		public static final ArmorItem RebelPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
@@ -159,6 +165,18 @@ public class SwgItems
 		@RegistryName("tan_heavy_backpack")
 		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
 		public static final TrinketItem TanHeavyBackpack = new TrinketItem(new Item.Settings().maxCount(1));
+		@RegistryName("cj33_jetpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem CJ33Jetpack = new JetpackItem(new Item.Settings().maxCount(1), new JetpackItem.Stats());
+		@RegistryName("jt12_jetpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem JT12Jetpack = new JetpackItem(new Item.Settings().maxCount(1), new JetpackItem.Stats());
+		@RegistryName("z6_jetpack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem Z6Jetpack = new JetpackItem(new Item.Settings().maxCount(1), new JetpackItem.Stats());
+		@RegistryName("rebel_jump_pack")
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
+		public static final TrinketItem RebelJumpPack = new JetpackItem(new Item.Settings().maxCount(1), new JetpackItem.Stats());
 	}
 
 	@RegistryOrder(2)
