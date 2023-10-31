@@ -93,15 +93,15 @@ public class SwgItems
 		@RegistryName("imperial_pilot_kit")
 		@TarkinItem
 		public static final ArmorItem ImperialPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1));
-		@RegistryName("tie_cadet")
+		@RegistryName("imperial_pilot_cadet")
 		@TarkinItem
-		public static final ArmorItem TieCadetHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
-		@RegistryName("tie_technical_helmet")
+		public static final ArmorItem ImperialPilotCadetHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("imperial_pilot_technical_helmet")
 		@TarkinItem
-		public static final ArmorItem TieTechnicalHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
-		@RegistryName("tie_cold_helmet")
+		public static final ArmorItem ImperialPilotTechnicalHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		@RegistryName("imperial_pilot_cold_helmet")
 		@TarkinItem
-		public static final ArmorItem TieColdHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
+		public static final ArmorItem ImperialPilotColdHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_pilot_helmet")
 		@TarkinItem
 		public static final ArmorItem RebelPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));

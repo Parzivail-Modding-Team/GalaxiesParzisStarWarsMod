@@ -670,8 +670,8 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.register(
-				SwgItems.Armor.TieCadetHelmet,
-				Resources.id("tie_cadet"),
+				SwgItems.Armor.ImperialPilotCadetHelmet,
+				Resources.id("imperial_pilot_cadet"),
 				new ArmorRenderer.Assets(
 						Resources.id("armor/tie_cadet"),
 						Resources.id("textures/armor/tie_cadet.png")
@@ -679,8 +679,8 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.register(
-				SwgItems.Armor.TieTechnicalHelmet,
-				Resources.id("tie_technical_helmet"),
+				SwgItems.Armor.ImperialPilotTechnicalHelmet,
+				Resources.id("imperial_pilot_technical_helmet"),
 				new ArmorRenderer.Assets(
 						Resources.id("armor/tie_technical_helmet"),
 						Resources.id("textures/armor/tie_technical_helmet.png")
@@ -688,8 +688,8 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.register(
-				SwgItems.Armor.TieColdHelmet,
-				Resources.id("tie_cold_helmet"),
+				SwgItems.Armor.ImperialPilotColdHelmet,
+				Resources.id("imperial_pilot_cold_helmet"),
 				new ArmorRenderer.Assets(
 						Resources.id("armor/tie_cold_helmet"),
 						Resources.id("textures/armor/tie_cold_helmet.png")
@@ -697,8 +697,8 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.KEEP_CHEST_HIDE_HAIR
 		);
 		ArmorRenderer.register(
-				SwgItems.Armor.TieCadetHelmet,
-				Resources.id("tie_cadet"),
+				SwgItems.Armor.ImperialPilotCadetHelmet,
+				Resources.id("imperial_pilot_cadet"),
 				new ArmorRenderer.Assets(
 						Resources.id("armor/tie_cadet"),
 						Resources.id("textures/armor/tie_cadet.png")
