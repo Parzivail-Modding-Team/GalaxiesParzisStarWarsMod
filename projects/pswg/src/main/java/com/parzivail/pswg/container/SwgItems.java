@@ -93,7 +93,7 @@ public class SwgItems
 		@RegistryName("imperial_pilot_kit")
 		@TarkinItem
 		public static final ArmorItem ImperialPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1));
-		@RegistryName("imperial_pilot_cadet")
+		@RegistryName("imperial_pilot_cadet_helmet")
 		@TarkinItem
 		public static final ArmorItem ImperialPilotCadetHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("imperial_pilot_technical_helmet")

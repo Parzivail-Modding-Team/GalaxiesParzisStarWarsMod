@@ -680,7 +680,7 @@ public class Client implements ClientModInitializer
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.ImperialPilotTechnicalHelmet,
-				Resources.id("imperial_pilot_technical_helmet"),
+				Resources.id("imperial_pilot_technical"),
 				new ArmorRenderer.Assets(
 						Resources.id("armor/tie_technical_helmet"),
 						Resources.id("textures/armor/tie_technical_helmet.png")
@@ -689,7 +689,7 @@ public class Client implements ClientModInitializer
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.ImperialPilotColdHelmet,
-				Resources.id("imperial_pilot_cold_helmet"),
+				Resources.id("imperial_pilot_cold"),
 				new ArmorRenderer.Assets(
 						Resources.id("armor/tie_cold_helmet"),
 						Resources.id("textures/armor/tie_cold_helmet.png")
