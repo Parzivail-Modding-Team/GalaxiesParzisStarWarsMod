@@ -37,9 +37,13 @@ public class ServerPlayNetworkHandlerMixin
 		var jetpack = JetpackItem.getEquippedJetpack(player);
 		if (jetpack != null)
 		{
-			var jt = new JetpackTag(jetpack.getOrCreateNbt());
-			if (jt.enabled)
-				floatingTicks = 0;
+			var tag = jetpack.getOrCreateNbt();
+			if (tag != null)
+			{
+				var jt = new JetpackTag(tag);
+				if (jt.enabled)
+					floatingTicks = 0;
+			}
 		}
 	}
 }
