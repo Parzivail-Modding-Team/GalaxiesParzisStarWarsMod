@@ -638,12 +638,16 @@ public class BaseContent implements PswgAddon
 						.unstable()
 						.bladeLength("blade_secondary_l", 0.15f)
 						.bladeLength("blade_secondary_r", 0.15f),
-				new LightsaberDescriptor(Resources.id("dume"), "Kanan Jarrus", ColorUtil.packHsv(0.62f, 1, 1), LightsaberBladeType.DEFAULT)
 				new LightsaberDescriptor(Resources.id("dume"), "Kanan Jarrus", ColorUtil.packHsv(0.62f, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("mace"), "Mace Windu", ColorUtil.packHsv(0.81f, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("shaagi"), "Sha'a Gi", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("starkiller"), "Galen Marek", ColorUtil.packHsv(0.62f, 1, 1), LightsaberBladeType.DEFAULT),
-				new LightsaberDescriptor(Resources.id("yoda"), "Yoda", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.DEFAULT).bladeLength("blade_primary", 0.5f)
+				new LightsaberDescriptor(Resources.id("yoda"), "Yoda", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.DEFAULT).bladeLength("blade_primary", 0.5f),
+				new LightsaberDescriptor(Resources.id("ahsoka_cw"), "Ahsoka", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("ahsoka_cw_shoto"), "Shoto Ahsoka", ColorUtil.packHsv(0.23f, 1, 1), LightsaberBladeType.DEFAULT).bladeLength("blade_primary", 0.5f),
+				new LightsaberDescriptor(Resources.id("ahsoka_rebel"), "Ahsoka", ColorUtil.packHsv(0.66f, 0, 0.66f), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("ahsoka_rebel_shoto"), "Shoto Ahsoka", ColorUtil.packHsv(0.66f, 0, 0.66f), LightsaberBladeType.DEFAULT).bladeLength("blade_primary", 0.75f)
+
 		);
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment())
