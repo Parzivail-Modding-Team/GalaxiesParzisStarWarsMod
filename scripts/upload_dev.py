@@ -46,7 +46,7 @@ if files and args.result == "success":
                 },
             ) as resp:
                 resp.raise_for_status()
-                token = resp.text
+                token = resp.json().value
             with open(file, "rb") as fp:
                 with requests.post(
                     url,
