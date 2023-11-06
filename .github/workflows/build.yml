@@ -47,6 +47,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: --stacktrace --parallel clean build
+      - name: Get Id Token
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let id_token = await core.getIDToken("https://mc.pswg.dev")
       - name: upload
         if: always() && github.ref == 'refs/heads/master' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
         continue-on-error: true

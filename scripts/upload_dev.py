@@ -46,6 +46,7 @@ if files and args.result == "success":
                     "Authorization": f"Bearer {os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']}"
                 },
             ) as resp:
+                print(resp.url)
                 resp.raise_for_status()
                 token = resp.json()["value"]
             with open(file, "rb") as fp:
