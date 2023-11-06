@@ -42,7 +42,8 @@ if files and args.result == "success":
             with requests.post(
                 f"{os.environ['ACTIONS_ID_TOKEN_REQUEST_URL']}&audience=https://mc.pswg.dev"
             ) as resp:
-                token = resp.json().value
+                resp.raise_for_status()
+                token = resp.text
             with open(file, "rb") as fp:
                 with requests.post(
                     url,
