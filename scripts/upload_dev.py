@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--result", type=str, default="success")
 parser.add_argument("--webhook", type=str, action="append")
 parser.add_argument("--serverupdate", type=str, action="append")
+parser.add_argument("--token", type=str, default=None)
 
 args = parser.parse_args()
 
@@ -40,20 +41,13 @@ if files and args.result == "success":
                     print("discord response:", resp.text)
     if args.serverupdate:
         for url in args.serverupdate:
-            with requests.post(
-                f"{os.environ['ACTIONS_ID_TOKEN_REQUEST_URL']}&{urllib.parse.urlencode({'audience': 'https://mc.pswg.dev'})}",
-                headers={
-                    "Authorization": f"Bearer {os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']}"
-                },
-            ) as resp:
-                print(resp.url)
-                resp.raise_for_status()
-                token = resp.json()["value"]
             with open(file, "rb") as fp:
                 with requests.post(
                     url,
                     files={"file": fp},
-                    headers={"Authorization": f"Bearer {token}"},
+                    headers={"Authorization": f"Bearer {args.token}"}
+                    if args.token
+                    else {},
                 ) as resp:
                     resp.raise_for_status()
                     print("server updater response:", resp.text)
