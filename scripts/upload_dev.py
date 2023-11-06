@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 import sys
+import urllib.parse
 
 import requests
 
@@ -40,7 +41,7 @@ if files and args.result == "success":
     if args.serverupdate:
         for url in args.serverupdate:
             with requests.post(
-                f"{os.environ['ACTIONS_ID_TOKEN_REQUEST_URL']}&audience=https://mc.pswg.dev",
+                f"{os.environ['ACTIONS_ID_TOKEN_REQUEST_URL']}&audience={urllib.parse.urlencode('https://mc.pswg.dev')}",
                 headers={
                     "Authorization": f"Bearer {os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']}"
                 },
