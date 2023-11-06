@@ -39,7 +39,12 @@ if files and args.result == "success":
                     print("discord response:", resp.text)
     if args.serverupdate:
         for url in args.serverupdate:
-            with requests.post(f"{os.environ['ACTIONS_ID_TOKEN_REQUEST_URL']}&audience=https://mc.pswg.dev", headers={"Authorization": "Bearer {os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']}"}) as resp:
+            with requests.post(
+                f"{os.environ['ACTIONS_ID_TOKEN_REQUEST_URL']}&audience=https://mc.pswg.dev",
+                headers={
+                    "Authorization": f"Bearer {os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']}"
+                },
+            ) as resp:
                 resp.raise_for_status()
                 token = resp.text
             with open(file, "rb") as fp:
