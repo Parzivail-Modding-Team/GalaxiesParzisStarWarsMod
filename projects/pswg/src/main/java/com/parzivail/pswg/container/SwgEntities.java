@@ -1,10 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.entity.BlasterBoltEntity;
-import com.parzivail.pswg.entity.BlasterIonBoltEntity;
-import com.parzivail.pswg.entity.BlasterStunBoltEntity;
-import com.parzivail.pswg.entity.MannequinEntity;
+import com.parzivail.pswg.entity.*;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.mammal.BanthaEntity;
@@ -246,6 +243,11 @@ public class SwgEntities
 				.dimensions(EntityDimensions.fixed(0.5F, 1.975F))
 				.trackRangeBlocks(50)
 				.build());
+		public static final EntityType<ThermalDetonatorEntity> ThermalDetonator = Registry.register(Registries.ENTITY_TYPE, Resources.id("thermal_detonator"), FabricEntityTypeBuilder
+				.<ThermalDetonatorEntity>create(SpawnGroup.MISC, ThermalDetonatorEntity::new)
+				.dimensions(EntityDimensions.fixed(0.1F, 0.1F))
+				.trackRangeBlocks(120)
+				.build());
 
 		static void register()
 		{
@@ -253,6 +255,7 @@ public class SwgEntities
 			entityTypes.add(BlasterStunBolt);
 			entityTypes.add(BlasterIonBolt);
 			entityTypes.add(ThrownLightsaber);
+			entityTypes.add(ThermalDetonator);
 
 			entityTypes.add(Mannequin);
 			FabricDefaultAttributeRegistry.register(Mannequin, MannequinEntity.createLivingAttributes());
