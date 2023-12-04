@@ -1,6 +1,7 @@
 package com.parzivail.pswg.entity;
 
 import com.ibm.icu.text.MessagePattern;
+import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
@@ -48,7 +49,7 @@ public class ThermalDetonatorEntity extends ThrownEntity implements IPrecisionSp
 	private static final TrackedData<Boolean> PRIMED = DataTracker.registerData(ThermalDetonatorEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	int delay = 0;
 	boolean shouldExplode= false;
-	float explosionPower =4f;
+	float explosionPower =5f;
 	public boolean shouldRenderVar = true;
 
 
@@ -124,15 +125,15 @@ public class ThermalDetonatorEntity extends ThrownEntity implements IPrecisionSp
 			ServerPlayerEntity player =world.getPlayers().get(i);
 			world.spawnParticles(player, ParticleTypes.FLASH, true, x, y, z, 1, 0, 0,0, 0);
 
-			world.spawnParticles(player,ParticleTypes.LARGE_SMOKE, true, x, y, z, 40*m, 2, 2, 2, 0);
-			world.spawnParticles(player,ParticleTypes.SMOKE, true, x, y, z, 30*m, 2.5*m/2, 2.5*m/2, 2.5*m/2, 0);
+			world.spawnParticles(player,ParticleTypes.LARGE_SMOKE, true, x, y, z, 40*m, 1.5, 1.5, 1.5, 0);
+			world.spawnParticles(player,ParticleTypes.SMOKE, true, x, y, z, 30*m, 1.5*m/2, 1.5*m/2, 1.5*m/2, 0);
 
-			world.spawnParticles(player,ParticleTypes.CAMPFIRE_COSY_SMOKE, true, x, y, z, 10*m, 0.25*m/2, 0.5*m/2, 0.25*m/2, 0.03);
-			world.spawnParticles(player,ParticleTypes.CAMPFIRE_COSY_SMOKE, true, x, y, z, 10*m, 0.5*m/2, 0.25*m/2, 0.25*m/2, 0.025);
-			world.spawnParticles(player,ParticleTypes.CAMPFIRE_COSY_SMOKE, true, x, y, z, 10*m, 0.25*m/2, 0.25*m/2, 0.5*m/2, 0.02);
-			world.spawnParticles(player,ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, true, x, y, z, 5*m, 0.2*m/2, 0.4*m/2, 0.2*m/2, 0.0075);
-			world.spawnParticles(player,ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, true, x, y, z, 5*m, 0.4*m/2, 0.2*m/2, 0.5*m/2, 0.01);
-			world.spawnParticles(player,ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, true, x, y, z, 5*m, 0.25*m/2, 0.5*m/2, 0.3*m/2, 0.015);
+			world.spawnParticles(player,SwgParticles.EXPLOSION_SMOKE, true, x, y, z, 10*m, 0.125*m/2, 0.25*m/2, 0.125*m/2, 0.03);
+			world.spawnParticles(player,SwgParticles.EXPLOSION_SMOKE, true, x, y, z, 10*m, 0.25*m/2, 0.125*m/2, 0.125*m/2, 0.025);
+			world.spawnParticles(player,SwgParticles.EXPLOSION_SMOKE, true, x, y, z, 10*m, 0.125*m/2, 0.125*m/2, 0.25*m/2, 0.02);
+			world.spawnParticles(player,SwgParticles.EXPLOSION_SMOKE, true, x, y, z, 5*m, 0.1*m/2, 0.2*m/2, 0.1*m/2, 0.0075);
+			world.spawnParticles(player,SwgParticles.EXPLOSION_SMOKE, true, x, y, z, 5*m, 0.2*m/2, 0.1*m/2, 0.25*m/2, 0.01);
+			world.spawnParticles(player, SwgParticles.EXPLOSION_SMOKE, true, x, y, z, 5 * m, 0.25 * m / 2, 0.5 * m / 2, 0.3 * m / 2, 0.015);
 
 			world.spawnParticles(player,ParticleTypes.FLAME, true, x, y, z, 15*m, 0.5*m/2, 0.5*m/2, 0.5*m/2, 0.1);
 			world.spawnParticles(player,ParticleTypes.SMALL_FLAME, true, x, y, z, 15*m, 1.2*m/2, 1.2*m/2, 1.2*m/2, 0.125);

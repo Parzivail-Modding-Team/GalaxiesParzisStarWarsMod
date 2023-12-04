@@ -17,15 +17,15 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 	protected ExplosionSmokeParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z);
-		this.scale(5.0f);
-		this.setBoundingBoxSpacing(0.25f, 0.25f);
-		this.maxAge = this.random.nextInt(50) + 280;
-		this.velocityX = vX;
-		this.velocityY = vY + (double)(this.random.nextFloat() / 500.0f);
-		this.velocityZ = vZ;
-		//this.angle = this.random.nextFloat() * MathHelper.PI;
+		scale(7.5f);
+		setBoundingBoxSpacing(0.25f, 0.25f);
+		maxAge = random.nextInt(120) + 640;
+		velocityX = vX;
+		velocityY = vY + (double)(random.nextFloat() / 500.0f);
+		velocityZ = vZ;
+		//angle = random.nextFloat() * MathHelper.PI;
 
-		this.variant = this.random.nextInt(NUM_VARIANTS);
+		variant = random.nextInt(NUM_VARIANTS);
 	}
 
 
@@ -33,19 +33,19 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 	public void tick()
 	{
 
-		this.prevPosX = this.x;
-		this.prevPosY = this.y;
-		this.prevPosZ = this.z;
-		if (this.age++ >= this.maxAge || this.alpha <= 0.0f) {
-			this.markDead();
+		prevPosX = x;
+		prevPosY = y;
+		prevPosZ = z;
+		if (alpha <= 0.0f||age++>maxAge) {
+			markDead();
 			return;
 		}
-		this.velocityX += (double)(this.random.nextFloat() / 500.0f * (float)(this.random.nextBoolean() ? 1 : -1));
-		this.velocityZ += (double)(this.random.nextFloat() / 500.0f * (float)(this.random.nextBoolean() ? 1 : -1));
-		this.velocityY +=0.0015;
-		this.move(this.velocityX, this.velocityY, this.velocityZ);
-		if (this.age >= this.maxAge - 60 && this.alpha > 0.01f) {
-			this.alpha -= 0.025f;
+		velocityX += (double)(random.nextFloat() / 500.0f * (float)(random.nextBoolean() ? 1 : -1));
+		velocityZ += (double)(random.nextFloat() / 500.0f * (float)(random.nextBoolean() ? 1 : -1));
+		velocityY +=0.0015;
+		move(velocityX, velocityY, velocityZ);
+		if(age >=  60 ) {
+			alpha-=0.005f;
 		}
 	}
 
@@ -67,9 +67,9 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		@Override
 		public Particle createParticle(PParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 		{
-			ExplosionSmokeParticle explosionSmokeParticle = new ExplosionSmokeParticle(world, x, y, z, velocityX,velocityY,velocityZ,  this.spriteProvider);
+			ExplosionSmokeParticle explosionSmokeParticle = new ExplosionSmokeParticle(world, x, y, z, velocityX,velocityY,velocityZ,  spriteProvider);
 			explosionSmokeParticle.setAlpha(0.9f);
-			explosionSmokeParticle.setSprite(this.spriteProvider);
+			explosionSmokeParticle.setSprite(spriteProvider);
 			return explosionSmokeParticle;
 		}
 	}
