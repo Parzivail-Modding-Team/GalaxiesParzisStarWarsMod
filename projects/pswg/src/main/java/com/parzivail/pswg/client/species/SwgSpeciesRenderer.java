@@ -10,7 +10,6 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -64,7 +63,7 @@ public class SwgSpeciesRenderer
 		register(speciesSlug, SpeciesGender.FEMALE, androgynousModel, animator);
 	}
 
-	public static Identifier getTexture(PlayerEntity player, SwgSpecies species)
+	public static Identifier getTexture(LivingEntity player, SwgSpecies species)
 	{
 		var digest = species.digest();
 		return Client.stackedTextureProvider.getId(String.format("species/%s", digest), () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player));

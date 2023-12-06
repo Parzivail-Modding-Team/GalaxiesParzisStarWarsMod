@@ -12,7 +12,6 @@ import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesIcons;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
-import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
@@ -25,7 +24,6 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -46,6 +44,10 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class CharacterScreen extends Screen
 {
+	public static record Context(boolean canClear, String originalSpecies)
+	{
+	}
+
 	private static class HoveringEntry
 	{
 		private final BlitRectangle area;
@@ -243,6 +245,7 @@ public class CharacterScreen extends Screen
 	);
 
 	private final Screen parent;
+	private final Context context;
 
 	@SuppressWarnings("rawtypes")
 	private final ArrayList<BlitRectangle> blitRectangles = new ArrayList<>();
@@ -262,10 +265,11 @@ public class CharacterScreen extends Screen
 	private boolean canDrag = false;
 	private float yaw = 0;
 
-	public CharacterScreen(Screen parent)
+	public CharacterScreen(Screen parent, Context context)
 	{
 		super(Text.translatable(I18N_TITLE));
 		this.parent = parent;
+		this.context = context;
 
 		blitRectangles.clear();
 		blitRectangles.add(LEFT_ARROW);
@@ -296,10 +300,7 @@ public class CharacterScreen extends Screen
 	@Override
 	protected void init()
 	{
-		var mc = MinecraftClient.getInstance();
-		var components = PlayerData.getPersistentPublic(mc.player);
-		if (components.getCharacter() != null)
-			previewSpecies = SwgSpeciesRegistry.deserialize(components.getCharacter().serialize());
+		previewSpecies = SwgSpeciesRegistry.deserialize(this.context.originalSpecies);
 	}
 
 	@Override
@@ -326,7 +327,7 @@ public class CharacterScreen extends Screen
 			return true;
 		}
 
-		if (CLEAR_BTN.contains((int)mouseX, (int)mouseY) && isPlayerSpecies())
+		if (CLEAR_BTN.contains((int)mouseX, (int)mouseY) && this.context.canClear)
 		{
 			previewSpecies = null;
 			applySpecies();
@@ -620,7 +621,7 @@ public class CharacterScreen extends Screen
 		var passedData = new PacketByteBuf(Unpooled.buffer());
 
 		if (previewSpecies == null)
-			passedData.writeString("minecraft:none");
+			passedData.writeString(SwgSpeciesRegistry.METASPECIES_NONE.toString());
 		else
 			passedData.writeString(this.previewSpecies.serialize());
 
@@ -669,7 +670,7 @@ public class CharacterScreen extends Screen
 		SAVE_BUTTON.visible = !isSpeciesPage;
 		EXPORT_BUTTON.visible = !isSpeciesPage;
 		NEXT_PAGE_BTN.visible = isSpeciesPage;
-		CLEAR_BTN.visible = isSpeciesPage && isPlayerSpecies();
+		CLEAR_BTN.visible = isSpeciesPage && this.context.canClear;
 		PREV_PAGE_BTN.visible = !isSpeciesPage;
 		APPLY_BTN.visible = !isSpeciesPage;
 
@@ -780,13 +781,6 @@ public class CharacterScreen extends Screen
 					.findFirst()
 					.ifPresent(rect -> hoveringEntry = new HoveringEntry(rect));
 		}
-	}
-
-	private boolean isPlayerSpecies()
-	{
-		var mc = MinecraftClient.getInstance();
-		var components = PlayerData.getPersistentPublic(mc.player);
-		return components.getCharacter() != null;
 	}
 
 	private static void renderColorPreview(int x, int y, int size, float r, float g, float b, float a)

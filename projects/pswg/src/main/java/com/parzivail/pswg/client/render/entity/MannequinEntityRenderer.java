@@ -1,8 +1,11 @@
 package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
+import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.entity.MannequinEntity;
+import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -101,12 +104,28 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 	}
 
 	@Override
-	public void render(LivingEntity livingEntity, float f, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i)
+	public void render(LivingEntity livingEntity, float f, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light)
 	{
-		if (modelSupplier != null)
+		if (livingEntity instanceof MannequinEntity mannequin)
 		{
+			var client = MinecraftClient.getInstance();
+			var erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
+			var renderers = erda.getModelRenderers();
+
+			var speciesStr = mannequin.getSpecies();
+			var species = SwgSpeciesRegistry.deserialize(speciesStr);
+			var renderer = renderers.get(species.getModel().toString());
+
+			if (renderer instanceof PlayerSpeciesModelRenderer perwm)
+			{
+				model = (BipedEntityModel)perwm.getModel();
+			}
+		}
+
+		if (modelSupplier != null && this.model == null)
+		{
+			// Attempt to load the fallback model
 			this.model = modelSupplier.get();
-			this.modelSupplier = null;
 		}
 
 		if (this.model == null)
@@ -183,14 +202,19 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 		{
 			VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(renderLayer);
 			int p = getOverlay(livingEntity, this.getAnimationCounter(livingEntity, tickDelta));
-			this.model.render(matrixStack, vertexConsumer, i, p, 1.0F, 1.0F, 1.0F, isVisibleToPlayer ? 0.15F : 1.0F);
+			this.model.render(matrixStack, vertexConsumer, light, p, 1.0F, 1.0F, 1.0F, isVisibleToPlayer ? 0.15F : 1.0F);
 		}
 
 		if (!livingEntity.isSpectator())
 			for (FeatureRenderer<LivingEntity, BipedEntityModel<LivingEntity>> featureRenderer : this.features)
-				featureRenderer.render(matrixStack, vertexConsumerProvider, i, livingEntity, limbAngle, limbDistance, tickDelta, animationProgress, headYawDelta, headPitch);
+				featureRenderer.render(matrixStack, vertexConsumerProvider, light, livingEntity, limbAngle, limbDistance, tickDelta, animationProgress, headYawDelta, headPitch);
 
 		matrixStack.pop();
+
+		if (this.hasLabel(livingEntity))
+		{
+			this.renderLabelIfPresent(livingEntity, livingEntity.getDisplayName(), matrixStack, vertexConsumerProvider, light);
+		}
 	}
 
 	@Override
@@ -202,6 +226,12 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 	@Override
 	public Identifier getTexture(LivingEntity mannequin)
 	{
+		if (mannequin instanceof MannequinEntity mannequinEntity)
+		{
+			var speciesStr = mannequinEntity.getSpecies();
+			var species = SwgSpeciesRegistry.deserialize(speciesStr);
+			return SwgSpeciesRenderer.getTexture(mannequin, species);
+		}
 		return TEXTURE;
 	}
 

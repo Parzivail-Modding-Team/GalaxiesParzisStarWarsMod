@@ -124,7 +124,7 @@ public class Galaxies implements ModInitializer
 
 				                                                                          SwgSpecies swgspecies = null;
 
-				                                                                          if (!"minecraft:none".equals(species))
+				                                                                          if (!SwgSpeciesRegistry.METASPECIES_NONE.toString().equals(species))
 				                                                                          {
 					                                                                          try
 					                                                                          {
