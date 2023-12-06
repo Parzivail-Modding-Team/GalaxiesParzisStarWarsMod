@@ -114,11 +114,14 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 
 			var speciesStr = mannequin.getSpecies();
 			var species = SwgSpeciesRegistry.deserialize(speciesStr);
-			var renderer = renderers.get(species.getModel().toString());
-
-			if (renderer instanceof PlayerSpeciesModelRenderer perwm)
+			if (species != null)
 			{
-				model = (BipedEntityModel)perwm.getModel();
+				var renderer = renderers.get(species.getModel().toString());
+
+				if (renderer instanceof PlayerSpeciesModelRenderer perwm)
+				{
+					model = (BipedEntityModel)perwm.getModel();
+				}
 			}
 		}
 
@@ -132,9 +135,14 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 			return;
 
 		matrixStack.push();
+
+		this.model.sneaking = false;
 		this.model.handSwingProgress = this.getHandSwingProgress(livingEntity, tickDelta);
 		this.model.riding = livingEntity.hasVehicle();
 		this.model.child = livingEntity.isBaby();
+
+		this.model.setAngles(livingEntity, 0, 0, 0, 0, 0);
+
 		float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, livingEntity.prevBodyYaw, livingEntity.bodyYaw);
 		float headYaw = MathHelper.lerpAngleDegrees(tickDelta, livingEntity.prevHeadYaw, livingEntity.headYaw);
 		float headYawDelta = headYaw - bodyYaw;
@@ -230,7 +238,8 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 		{
 			var speciesStr = mannequinEntity.getSpecies();
 			var species = SwgSpeciesRegistry.deserialize(speciesStr);
-			return SwgSpeciesRenderer.getTexture(mannequin, species);
+			if (species != null)
+				return SwgSpeciesRenderer.getTexture(mannequin, species);
 		}
 		return TEXTURE;
 	}

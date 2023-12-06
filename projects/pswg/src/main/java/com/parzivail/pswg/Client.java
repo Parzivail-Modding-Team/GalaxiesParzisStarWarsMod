@@ -252,9 +252,9 @@ public class Client implements ClientModInitializer
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSectional, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSectional1, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSectional2, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional, true, true, true, null, Resources.id("block/gray_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional1, true, true, true, null, Resources.id("block/gray_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional2, true, true, true, null, Resources.id("block/gray_imperial_panel_blank"));
+		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional, true, true, true, null, Resources.id("block/gray_imperial_panel_borderless"));
+		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional1, true, true, true, null, Resources.id("block/gray_imperial_panel_borderless"));
+		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional2, true, true, true, null, Resources.id("block/gray_imperial_panel_borderless"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.LightGrayImperialPanelSectional, true, true, true, null, Resources.id("block/light_gray_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.LightGrayImperialPanelSectional1, true, true, true, null, Resources.id("block/light_gray_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.LightGrayImperialPanelSectional2, true, true, true, null, Resources.id("block/light_gray_imperial_panel_blank"));
