@@ -15,6 +15,7 @@ import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
@@ -88,6 +89,15 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 		model.rightLeg.yaw = (float)(Math.PI / 180.0) * mannequin.getRightLegRotation().getYaw();
 		model.rightLeg.roll = (float)(Math.PI / 180.0) * mannequin.getRightLegRotation().getRoll();
 		model.hat.copyTransform(model.head);
+
+		if (model instanceof PlayerEntityModel<?> pem)
+		{
+			pem.jacket.copyTransform(model.body);
+			pem.leftSleeve.copyTransform(model.leftArm);
+			pem.rightSleeve.copyTransform(model.rightArm);
+			pem.leftPants.copyTransform(model.leftLeg);
+			pem.rightPants.copyTransform(model.rightLeg);
+		}
 	}
 
 	@Override
