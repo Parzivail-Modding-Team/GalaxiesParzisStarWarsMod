@@ -48,6 +48,7 @@ jobs:
         with:
           arguments: --stacktrace --parallel clean build
       - name: Get Id Token
+        if: github.ref == 'refs/heads/master'
         uses: actions/github-script@v6
         id: idtoken
         with:
