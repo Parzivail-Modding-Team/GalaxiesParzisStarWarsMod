@@ -712,6 +712,10 @@ public class SwgItems
 		@RegistryName("mannequin")
 		@TarkinItem
 		public static final Item Mannequin = new MannequinItem(new Item.Settings());
+
+		@RegistryName("mannequin_wizard")
+		@TarkinItem
+		public static final Item MannequinWizard = new Item(new Item.Settings());
 	}
 	@RegistryOrder(13)
 	public static class Explosives

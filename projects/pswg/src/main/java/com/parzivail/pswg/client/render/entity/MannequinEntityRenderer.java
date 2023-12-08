@@ -1,8 +1,11 @@
 package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
+import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.entity.MannequinEntity;
+import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -15,6 +18,7 @@ import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
@@ -88,24 +92,57 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 		model.rightLeg.yaw = (float)(Math.PI / 180.0) * mannequin.getRightLegRotation().getYaw();
 		model.rightLeg.roll = (float)(Math.PI / 180.0) * mannequin.getRightLegRotation().getRoll();
 		model.hat.copyTransform(model.head);
+
+		if (model instanceof PlayerEntityModel<?> pem)
+		{
+			pem.jacket.copyTransform(model.body);
+			pem.leftSleeve.copyTransform(model.leftArm);
+			pem.rightSleeve.copyTransform(model.rightArm);
+			pem.leftPants.copyTransform(model.leftLeg);
+			pem.rightPants.copyTransform(model.rightLeg);
+		}
 	}
 
 	@Override
-	public void render(LivingEntity livingEntity, float f, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i)
+	public void render(LivingEntity livingEntity, float f, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light)
 	{
-		if (modelSupplier != null)
+		if (livingEntity instanceof MannequinEntity mannequin)
 		{
+			var client = MinecraftClient.getInstance();
+			var erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
+			var renderers = erda.getModelRenderers();
+
+			var speciesStr = mannequin.getSpecies();
+			var species = SwgSpeciesRegistry.deserialize(speciesStr);
+			if (species != null)
+			{
+				var renderer = renderers.get(species.getModel().toString());
+
+				if (renderer instanceof PlayerSpeciesModelRenderer perwm)
+				{
+					model = (BipedEntityModel)perwm.getModel();
+				}
+			}
+		}
+
+		if (modelSupplier != null && this.model == null)
+		{
+			// Attempt to load the fallback model
 			this.model = modelSupplier.get();
-			this.modelSupplier = null;
 		}
 
 		if (this.model == null)
 			return;
 
 		matrixStack.push();
+
+		this.model.sneaking = false;
 		this.model.handSwingProgress = this.getHandSwingProgress(livingEntity, tickDelta);
 		this.model.riding = livingEntity.hasVehicle();
 		this.model.child = livingEntity.isBaby();
+
+		this.model.setAngles(livingEntity, 0, 0, 0, 0, 0);
+
 		float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, livingEntity.prevBodyYaw, livingEntity.bodyYaw);
 		float headYaw = MathHelper.lerpAngleDegrees(tickDelta, livingEntity.prevHeadYaw, livingEntity.headYaw);
 		float headYawDelta = headYaw - bodyYaw;
@@ -173,14 +210,19 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 		{
 			VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(renderLayer);
 			int p = getOverlay(livingEntity, this.getAnimationCounter(livingEntity, tickDelta));
-			this.model.render(matrixStack, vertexConsumer, i, p, 1.0F, 1.0F, 1.0F, isVisibleToPlayer ? 0.15F : 1.0F);
+			this.model.render(matrixStack, vertexConsumer, light, p, 1.0F, 1.0F, 1.0F, isVisibleToPlayer ? 0.15F : 1.0F);
 		}
 
 		if (!livingEntity.isSpectator())
 			for (FeatureRenderer<LivingEntity, BipedEntityModel<LivingEntity>> featureRenderer : this.features)
-				featureRenderer.render(matrixStack, vertexConsumerProvider, i, livingEntity, limbAngle, limbDistance, tickDelta, animationProgress, headYawDelta, headPitch);
+				featureRenderer.render(matrixStack, vertexConsumerProvider, light, livingEntity, limbAngle, limbDistance, tickDelta, animationProgress, headYawDelta, headPitch);
 
 		matrixStack.pop();
+
+		if (this.hasLabel(livingEntity))
+		{
+			this.renderLabelIfPresent(livingEntity, livingEntity.getDisplayName(), matrixStack, vertexConsumerProvider, light);
+		}
 	}
 
 	@Override
@@ -192,6 +234,13 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 	@Override
 	public Identifier getTexture(LivingEntity mannequin)
 	{
+		if (mannequin instanceof MannequinEntity mannequinEntity)
+		{
+			var speciesStr = mannequinEntity.getSpecies();
+			var species = SwgSpeciesRegistry.deserialize(speciesStr);
+			if (species != null)
+				return SwgSpeciesRenderer.getTexture(mannequin, species);
+		}
 		return TEXTURE;
 	}
 

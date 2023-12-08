@@ -6,6 +6,7 @@ import com.parzivail.pswg.api.HumanoidCustomizationOptions;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -98,7 +99,7 @@ public abstract class SwgSpecies
 		return getTexture(SwgSpeciesRegistry.METASPECIES_GLOBAL, texture);
 	}
 
-	protected static Identifier getClothes(SwgSpecies species, PlayerEntity player)
+	protected static Identifier getClothes(SwgSpecies species, LivingEntity player)
 	{
 		return Client.remoteSkinTextureProvider.getId(
 				String.format("character/%s", player.getUuidAsString()),
@@ -126,7 +127,7 @@ public abstract class SwgSpecies
 		              .toString();
 	}
 
-	private static Identifier getClothingStack(SwgSpecies species, PlayerEntity player)
+	private static Identifier getClothingStack(SwgSpecies species, LivingEntity player)
 	{
 		var digest = SwgSpecies.digestVariables(species,
 		                                        VAR_HUMANOID_CLOTHES_UNDERLAYER,
@@ -145,7 +146,7 @@ public abstract class SwgSpecies
 		);
 	}
 
-	private static Collection<Identifier> createClothingStack(SwgSpecies species, PlayerEntity player)
+	private static Collection<Identifier> createClothingStack(SwgSpecies species, LivingEntity player)
 	{
 		var stack = new ArrayList<Identifier>();
 		if (species.getVariable(VAR_HUMANOID_CLOTHES_UNDERLAYER).equals(SpeciesVariable.NONE))
@@ -245,7 +246,7 @@ public abstract class SwgSpecies
 	public abstract SpeciesVariable[] getVariables();
 
 	@Environment(EnvType.CLIENT)
-	public abstract Collection<Identifier> getTextureStack(PlayerEntity player);
+	public abstract Collection<Identifier> getTextureStack(LivingEntity player);
 
 	public void setDefaultVariables()
 	{

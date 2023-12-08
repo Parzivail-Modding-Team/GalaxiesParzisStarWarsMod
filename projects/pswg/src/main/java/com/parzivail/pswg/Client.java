@@ -46,6 +46,7 @@ import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
+import com.parzivail.pswg.network.OpenMannequinConfigureS2CPacket;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -253,9 +254,9 @@ public class Client implements ClientModInitializer
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSectional, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSectional1, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSectional2, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional, true, true, true, null, Resources.id("block/gray_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional1, true, true, true, null, Resources.id("block/gray_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional2, true, true, true, null, Resources.id("block/gray_imperial_panel_blank"));
+		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional, true, true, true, null, Resources.id("block/gray_imperial_panel_borderless"));
+		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional1, true, true, true, null, Resources.id("block/gray_imperial_panel_borderless"));
+		ModelRegistry.registerConnected(SwgBlocks.Panel.GrayImperialPanelSectional2, true, true, true, null, Resources.id("block/gray_imperial_panel_borderless"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.LightGrayImperialPanelSectional, true, true, true, null, Resources.id("block/light_gray_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.LightGrayImperialPanelSectional1, true, true, true, null, Resources.id("block/light_gray_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.LightGrayImperialPanelSectional2, true, true, true, null, Resources.id("block/light_gray_imperial_panel_blank"));
@@ -349,6 +350,7 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.MannequinConfigure, OpenMannequinConfigureS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.AccumulateRecoil, BlasterRecoilManager::handleAccumulateRecoil);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.BlasterHit, BlasterUtil::handleBoltHit);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSocketPyro, SwgParticles::handlePlayerSocketPyro);
