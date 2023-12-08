@@ -23,7 +23,6 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 	{
 		super(context);
 		this.model=P3dManager.INSTANCE.get(Resources.id("item/thermal_detonator/thermal_detonator"));
-
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 	@Override
 	public boolean shouldRender(ThermalDetonatorEntity entity, Frustum frustum, double x, double y, double z)
 	{
-		return entity.shouldRenderVar;
+		return true;
 	}
 
 	@Override

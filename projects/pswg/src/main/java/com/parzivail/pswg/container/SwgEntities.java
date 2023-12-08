@@ -245,7 +245,7 @@ public class SwgEntities
 				.build());
 		public static final EntityType<ThermalDetonatorEntity> ThermalDetonator = Registry.register(Registries.ENTITY_TYPE, Resources.id("thermal_detonator"), FabricEntityTypeBuilder
 				.<ThermalDetonatorEntity>create(SpawnGroup.MISC, ThermalDetonatorEntity::new)
-				.dimensions(EntityDimensions.fixed(0.1F, 0.1F))
+				.dimensions(EntityDimensions.fixed(0.2F, 0.2F))
 				.trackRangeBlocks(120)
 				.build());
 

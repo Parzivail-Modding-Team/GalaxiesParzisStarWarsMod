@@ -36,7 +36,8 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		prevPosX = x;
 		prevPosY = y;
 		prevPosZ = z;
-		if (alpha <= 0.0f||age++>maxAge) {
+		age++;
+		if (alpha <= 0.0f||age>=maxAge) {
 			markDead();
 			return;
 		}
@@ -44,7 +45,7 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		velocityZ += (double)(random.nextFloat() / 500.0f * (float)(random.nextBoolean() ? 1 : -1));
 		velocityY +=0.0015;
 		move(velocityX, velocityY, velocityZ);
-		if(age >=  60 ) {
+		if(age >=  75 && this.alpha > 0.01f) {
 			alpha-=0.005f;
 		}
 	}
