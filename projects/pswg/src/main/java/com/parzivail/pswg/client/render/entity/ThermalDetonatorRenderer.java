@@ -18,11 +18,11 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 
 	//public final P3dModel.PartTransformer partTransformer = (target, objectName, tickDelta) -> new Matrix4f();
 	public final Identifier TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator.png");
+	public final Identifier TEXTURE2 = Resources.id("item/thermal_detonator/thermal_detonator");
 	public P3dModel model ;
 	public ThermalDetonatorRenderer(EntityRendererFactory.Context context)
 	{
 		super(context);
-		this.model=P3dManager.INSTANCE.get(Resources.id("item/thermal_detonator/thermal_detonator"));
 	}
 
 	@Override
@@ -32,21 +32,13 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(entity.getYaw()));
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getPitch()));
-		//matrices.multiply(new Quaternionf(entity.getX(), entity.getY(), entity.getZ(), 1f), entity.getPitch(), entity.getYaw(), 1);
 		if(this.model==null){
-			this.model=P3dManager.INSTANCE.get(Resources.id("item/thermal_detonator/thermal_detonator"));
+			this.model=P3dManager.INSTANCE.get(TEXTURE2);
 		}
 		model.render(matrices, vertexConsumer, entity, null, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();
 		super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
 	}
-
-	@Override
-	public boolean shouldRender(ThermalDetonatorEntity entity, Frustum frustum, double x, double y, double z)
-	{
-		return true;
-	}
-
 	@Override
 	public Identifier getTexture(ThermalDetonatorEntity entity)
 	{

@@ -12,12 +12,12 @@ import org.jetbrains.annotations.Nullable;
 @Environment(value= EnvType.CLIENT)
 public class ExplosionSmokeParticle extends SpriteBillboardParticle
 {
-	private static final int NUM_VARIANTS = 12;
 	private final int variant;
 	protected ExplosionSmokeParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z);
 		scale(7.5f);
+		final int NUM_VARIANTS = 12;
 		setBoundingBoxSpacing(0.25f, 0.25f);
 		maxAge = random.nextInt(120) + 640;
 		velocityX = vX;
