@@ -1,16 +1,22 @@
 # Additions
 
-* Added TIE technical helmet
-* Added TIE cold helmet
-* Added Z-6 jetpack
-* Added rebel jump pack
-* Added JT-12 jetpack
-* Added CJ-33 jetpack
+* Added new lightsabers:
+  * Kanan Jarrus
+  * Mace Windu
+  * Sha'a Gi
+  * Galen Marek
+  * Yoda
+  * Ahsoka (CW)
+  * Ahsoka Shoto (CW)
+  * Ahsoka (Rebels)
+  * Ahsoka Shoto (Rebels)
+* Added Mannequin Wizard item, which can be used to change the species of a mannequin, and give them clothing
 
 # Changes
 
-* Rename `imperial_pilot_cadet` to `imperial_pilot_cadet_helmet`
+* Update imperial block textures
 
 # Fixes
 
-* Prevent NBT-related crash with jetpacks when certain mods are used
+* Fix mannequin texture layer angles
+* Fix borderless imperial panels
