@@ -199,7 +199,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 
 		for (var face : o.faces)
 		{
-			quadEmitter.colorIndex(1).spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF).material(getBlockMaterial(o.material));
+			quadEmitter.colorIndex(1).color(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF).material(getBlockMaterial(o.material));
 
 			var vA = modelMat.transformPosition(face.positions[0], new Vector3f());
 			var vB = modelMat.transformPosition(face.positions[1], new Vector3f());
@@ -210,12 +210,12 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 			n.mul(normalMat);
 			n.normalize();
 
-			quadEmitter.pos(0, vA).normal(0, n).sprite(0, 0, face.texture[0].x, 1 - face.texture[0].y);
-			quadEmitter.pos(1, vB).normal(1, n).sprite(1, 0, face.texture[1].x, 1 - face.texture[1].y);
-			quadEmitter.pos(2, vC).normal(2, n).sprite(2, 0, face.texture[2].x, 1 - face.texture[2].y);
-			quadEmitter.pos(3, vD).normal(3, n).sprite(3, 0, face.texture[3].x, 1 - face.texture[3].y);
+			quadEmitter.pos(0, vA).normal(0, n).uv(0, face.texture[0].x, 1 - face.texture[0].y);
+			quadEmitter.pos(1, vB).normal(1, n).uv(1, face.texture[1].x, 1 - face.texture[1].y);
+			quadEmitter.pos(2, vC).normal(2, n).uv(2, face.texture[2].x, 1 - face.texture[2].y);
+			quadEmitter.pos(3, vD).normal(3, n).uv(3, face.texture[3].x, 1 - face.texture[3].y);
 
-			quadEmitter.spriteBake(0, sprite, MutableQuadView.BAKE_NORMALIZED);
+			quadEmitter.spriteBake(sprite, MutableQuadView.BAKE_NORMALIZED);
 
 			quadEmitter.emit();
 		}
@@ -223,22 +223,18 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 
 	private RenderMaterial getBlockMaterial(byte material)
 	{
-		switch (material)
+		return switch (material)
 		{
-			case MAT_ID_DIFFUSE_OPAQUE:
-				return AbstractModel.MAT_DIFFUSE_OPAQUE;
-			case MAT_ID_DIFFUSE_CUTOUT:
-				return AbstractModel.MAT_DIFFUSE_CUTOUT;
-			case MAT_ID_DIFFUSE_TRANSLUCENT:
-				return AbstractModel.MAT_DIFFUSE_TRANSLUCENT;
-			case MAT_ID_EMISSIVE:
-				return AbstractModel.MAT_EMISSIVE;
-			default:
+			case MAT_ID_DIFFUSE_OPAQUE -> AbstractModel.MAT_DIFFUSE_OPAQUE;
+			case MAT_ID_DIFFUSE_CUTOUT -> AbstractModel.MAT_DIFFUSE_CUTOUT;
+			case MAT_ID_DIFFUSE_TRANSLUCENT -> AbstractModel.MAT_DIFFUSE_TRANSLUCENT;
+			case MAT_ID_EMISSIVE -> AbstractModel.MAT_EMISSIVE;
+			default ->
 			{
 				var crashReport = CrashReport.create(new IllegalStateException("Unknown material ID"), String.format("Unknown material ID: %s", material));
 				throw new CrashException(crashReport);
 			}
-		}
+		};
 	}
 
 	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vector3f vertex, Vector3f normal, Vector3f texCoord, int r, int g, int b, int a)

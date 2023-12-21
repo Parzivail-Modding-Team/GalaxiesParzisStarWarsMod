@@ -159,7 +159,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 		LightsaberTag.mutate(lightsaber, (lt) ->
 		{
-			lt.owner = player.getEntityName();
+			lt.owner = player.getNameForScoreboard();
 			lt.bladeColor = ColorUtil.packHsv(hue, sat, val);
 			lt.unstable = cbUnstable.isChecked();
 		});

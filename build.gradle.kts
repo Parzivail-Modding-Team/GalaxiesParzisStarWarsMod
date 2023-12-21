@@ -79,10 +79,6 @@ allprojects {
 		maven(url = "https://api.modrinth.com/maven") {
 			name = "Modrinth"
 		}
-
-		maven(url = "https://www.jetbrains.com/intellij-repository/releases/") {
-			name = "JetBrains"
-		}
 	}
 
 	java {

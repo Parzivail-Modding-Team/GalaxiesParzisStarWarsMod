@@ -43,7 +43,7 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 	}
 
 	@Override
-	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
+	public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state)
 	{
 		return new ItemStack(SwgItems.Food.HkakBean);
 	}

@@ -26,7 +26,7 @@
 		"AbstractClientPlayerEntityMixin",
 		"ArmorFeatureRendererMixin",
 		"BipedEntityModelMixin",
-		"BufferBuilderStorageAccessor",
+		"BufferBuilderStorageMixin",
 		"CameraMixin",
 		"ClientPlayNetworkHandlerMixin",
 		"ClientRecipeBookMixin",
