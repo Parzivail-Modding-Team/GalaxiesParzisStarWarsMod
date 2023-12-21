@@ -3,7 +3,6 @@ package com.parzivail.pswg.mixin;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.client.SkinRemoteTextureResolver;
-import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.handler.LeftClickHandler;
 import com.parzivail.util.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.util.client.texture.stacked.StackedTextureProvider;
@@ -47,8 +46,6 @@ public abstract class MinecraftClientMixin
 		Client.remoteSkinTextureProvider = new RemoteTextureProvider(textureManager, Client.TEX_TRANSPARENT, new SkinRemoteTextureResolver(), remoteAssetDir);
 		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, Client.TEX_TRANSPARENT);
 		Client.tintedTextureProvider = new TintedTextureProvider(textureManager);
-
-		Client.registerRenderLayer(EnergyRenderer.LAYER_ENERGY);
 	}
 
 	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)

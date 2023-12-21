@@ -56,20 +56,19 @@ public class CreatureCageBlock extends Block implements BlockEntityProvider
 	}
 
 	@Override
-	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player)
+	public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player)
 	{
-		super.onBreak(world, pos, state, player);
-
 		if (!world.isClient)
 		{
 			var tile = world.getBlockEntity(pos);
 			if (!(tile instanceof CreatureCageBlockEntity tbe) || !tbe.hasContainedEntity())
-				return;
+				return state;
 
 			var entity = tbe.getContainedEntity();
 			entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 			world.spawnEntity(entity);
 		}
+		return super.onBreak(world, pos, state, player);
 	}
 
 	@Override

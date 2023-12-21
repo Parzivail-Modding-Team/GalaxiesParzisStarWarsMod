@@ -20,8 +20,8 @@ public class WoodProducts
 		this.stairs = new PStairsBlock(plank.getDefaultState(), AbstractBlock.Settings.copy(plank));
 		this.slab = new VerticalSlabBlock(AbstractBlock.Settings.copy(plank));
 		this.fence = new FenceBlock(AbstractBlock.Settings.copy(plank));
-		this.gate = new FenceGateBlock(AbstractBlock.Settings.copy(plank), WoodType.OAK);
-		this.trapdoor = new TrapdoorBlock(AbstractBlock.Settings.copy(plank), BlockSetType.OAK);
-		this.door = new DoorBlock(AbstractBlock.Settings.copy(plank), BlockSetType.OAK);
+		this.gate = new FenceGateBlock(WoodType.OAK, AbstractBlock.Settings.copy(plank));
+		this.trapdoor = new TrapdoorBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(plank));
+		this.door = new DoorBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(plank));
 	}
 }

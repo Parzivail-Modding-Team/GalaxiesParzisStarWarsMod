@@ -16,7 +16,7 @@ public class AccessibleMetalTrapdoorBlock extends TrapdoorBlock
 {
 	public AccessibleMetalTrapdoorBlock(Settings settings)
 	{
-		super(settings, BlockSetType.IRON);
+		super(BlockSetType.IRON, settings);
 	}
 
 	@Override
