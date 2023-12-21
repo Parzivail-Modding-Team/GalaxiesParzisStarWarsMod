@@ -23,6 +23,7 @@ import net.minecraft.world.explosion.Explosion;
 
 public class ThermalDetonatorEntity extends ThrowableExplosive implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
 {
+	public int texturePhase=0;
 	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
 	{
 		super(type, world);
@@ -32,7 +33,13 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	public void tick()
 	{
-
+		if(isPrimed()){
+			if(texturePhase<3){
+				texturePhase++;
+			}else{
+				texturePhase=0;
+			}
+		}
 		this.speed = this.speed * 0.95f;
 		super.tick();
 	}

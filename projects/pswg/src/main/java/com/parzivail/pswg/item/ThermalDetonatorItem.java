@@ -6,10 +6,6 @@ import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.util.item.ICooldownItem;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
-import net.minecraft.client.item.ClampedModelPredicateProvider;
-import net.minecraft.client.item.ModelPredicateProvider;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ItemCooldownManager;
@@ -27,7 +23,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem
 {
@@ -42,8 +37,9 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 	{
 		ThermalDetonatorEntity td = new ThermalDetonatorEntity(SwgEntities.Misc.ThermalDetonator, world);
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
-		td.setLife(tdt.ticksToExplosion);
-		td.setPrimed(tdt.primed);
+		td.setLife(life);
+		td.setPrimed(primed);
+		td.shouldRenderVar=tdt.shouldRender;
 		td.onSpawnPacket(new EntitySpawnS2CPacket(td.getId(), td.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), td.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
 		return td;
 	}
@@ -54,11 +50,6 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 	{
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
 		tdt.tick();
-
-		if (tdt.primed)
-		{
-			tdt.ticksToExplosion--;
-		}
 		if (entity.isOnFire())
 		{
 			PlayerEntity player = (PlayerEntity)entity;
@@ -111,7 +102,7 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 				if (!world.isClient)
 				{
 					ThermalDetonatorItem thermalDetonatorItem = (ThermalDetonatorItem)(itemStack.getItem() instanceof ThermalDetonatorItem ? itemStack.getItem() : SwgItems.Explosives.ThermalDetonator);
-					ThermalDetonatorEntity thermalDetonatorEntity = thermalDetonatorItem.createThermalDetonator(world, tdt.ticksToExplosion / 20, tdt.primed, itemStack, playerEntity);
+					ThermalDetonatorEntity thermalDetonatorEntity = thermalDetonatorItem.createThermalDetonator(world, tdt.ticksToExplosion, tdt.primed, itemStack, playerEntity);
 					thermalDetonatorEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 1.0F);
 					thermalDetonatorEntity.setOwner(playerEntity);
 

@@ -20,6 +20,7 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 	public final Identifier TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator.png");
 	public final Identifier TEXTURE2 = Resources.id("item/thermal_detonator/thermal_detonator");
 	public final Identifier TEXTURE_PRIMED = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_primed_entity.png");
+	public final Identifier TEXTURE_INBETWEEN = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_inbetween_entity.png");
 	public P3dModel model ;
 	public ThermalDetonatorRenderer(EntityRendererFactory.Context context)
 	{
@@ -45,7 +46,13 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 	{
 		if(entity.isPrimed())
 		{
-			return TEXTURE_PRIMED;
+			int phase =entity.texturePhase/2;
+			if(entity.texturePhase==0){
+				return TEXTURE_PRIMED;
+			}else if(entity.texturePhase==1){
+				return TEXTURE_INBETWEEN;
+			}
+
 		}
 		return TEXTURE;
 	}
