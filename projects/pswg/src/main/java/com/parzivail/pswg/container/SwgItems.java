@@ -714,6 +714,10 @@ public class SwgItems
 		@RegistryName("mannequin")
 		@TarkinItem
 		public static final Item Mannequin = new MannequinItem(new Item.Settings());
+
+		@RegistryName("mannequin_wizard")
+		@TarkinItem
+		public static final Item MannequinWizard = new Item(new Item.Settings());
 	}
 
 	static HashMap<RegistryKey<ItemGroup>, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();

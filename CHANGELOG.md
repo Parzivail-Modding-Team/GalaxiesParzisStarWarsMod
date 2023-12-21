@@ -1,9 +1,22 @@
 # Additions
 
-* Added Elite Squad armor
-* Added TIE Cadet helmet
+* Added new lightsabers:
+  * Kanan Jarrus
+  * Mace Windu
+  * Sha'a Gi
+  * Galen Marek
+  * Yoda
+  * Ahsoka (CW)
+  * Ahsoka Shoto (CW)
+  * Ahsoka (Rebels)
+  * Ahsoka Shoto (Rebels)
+* Added Mannequin Wizard item, which can be used to change the species of a mannequin, and give them clothing
+
+# Changes
+
+* Update imperial block textures
 
 # Fixes
 
-* Fix crash when rendering lightsabers under some circumstances
-* Fix unhelpful crashes caused by null exceptions
+* Fix mannequin texture layer angles
+* Fix borderless imperial panels

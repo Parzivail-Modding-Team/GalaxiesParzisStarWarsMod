@@ -25,6 +25,7 @@ public class SwgPackets
 		public static final Identifier PreciseEntityVelocityUpdate = Resources.id("pevel");
 		public static final Identifier PreciseEntitySpawn = Resources.id("pesp");
 		public static final Identifier OpenEntityInventory = Resources.id("entity_inventory");
+		public static final Identifier MannequinConfigure = Resources.id("mannequin_configure");
 		public static final Identifier AccumulateRecoil = Resources.id("recoil");
 		public static final Identifier BlasterHit = Resources.id("blaster_hit");
 		public static final Identifier PlayerSocketPyro = Resources.id("player_sparks");

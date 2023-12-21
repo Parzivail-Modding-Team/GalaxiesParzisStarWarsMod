@@ -7,6 +7,10 @@ on:
     branches-ignore:
       - l10n
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     strategy:
@@ -43,6 +47,14 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: --stacktrace --parallel clean build
+      - name: Get Id Token
+        if: github.ref == 'refs/heads/master'
+        uses: actions/github-script@v6
+        id: idtoken
+        with:
+          script: |
+            let id_token = await core.getIDToken("https://mc.pswg.dev")
+            core.setOutput('id_token', id_token)
       - name: upload
         if: always() && github.ref == 'refs/heads/master' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
         continue-on-error: true
@@ -50,6 +62,6 @@ jobs:
           mkdir -p projects/pswg/build/libs
           cd projects/pswg/build/libs
           pip install -r ../../../../scripts/requirements.txt
-          python ../../../../scripts/upload_dev.py --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
+          python ../../../../scripts/upload_dev.py --token ${{ steps.idtoken.outputs.id_token }} --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
         env:
           BUILD_NUMBER: ${{ github.run_number }}

@@ -46,7 +46,7 @@ public class OpenEntityInventoryS2CPacket
 				var simpleInventory = new SimpleInventory(packet.getSlotCount());
 				var handler = inventoryEntity.createScreenHandler(packet.getSyncId(), clientPlayerEntity.getInventory(), simpleInventory);
 				clientPlayerEntity.currentScreenHandler = handler;
-				client.setScreen(ScreenHelper.createEntityScreen(handler, clientPlayerEntity.getInventory(), inventoryEntity));
+				client.setScreen(ScreenHelper.createEntityScreen(client, handler, clientPlayerEntity.getInventory(), inventoryEntity));
 			}
 		});
 	}

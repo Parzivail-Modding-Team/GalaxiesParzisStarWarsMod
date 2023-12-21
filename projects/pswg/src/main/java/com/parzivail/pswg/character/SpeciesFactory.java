@@ -1,6 +1,6 @@
 package com.parzivail.pswg.character;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class SpeciesFactory
 		}
 
 		@Override
-		public Collection<Identifier> getTextureStack(PlayerEntity player)
+		public Collection<Identifier> getTextureStack(LivingEntity player)
 		{
 			var stack = new ArrayList<Identifier>();
 			for (var component : SpeciesFactory.this.textureBuilder)

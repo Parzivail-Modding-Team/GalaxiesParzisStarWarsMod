@@ -176,6 +176,9 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		overrideSpecies = species;
 		overrideTexture = texture;
 
+		this.model.sneaking = false;
+		this.model.setAngles(abstractClientPlayerEntity, 0, 0, 0, 0, 0);
+
 		this.render(abstractClientPlayerEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, i);
 
 		overrideSpecies = null;

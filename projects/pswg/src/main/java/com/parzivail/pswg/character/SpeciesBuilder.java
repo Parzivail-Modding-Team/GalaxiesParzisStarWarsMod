@@ -2,7 +2,7 @@ package com.parzivail.pswg.character;
 
 import com.google.common.collect.ImmutableList;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class SpeciesBuilder
 	@FunctionalInterface
 	public interface TextureBuilderComponent
 	{
-		void addLayer(ArrayList<Identifier> stack, HashMap<String, SpeciesVariable> variables, SwgSpecies species, PlayerEntity player);
+		void addLayer(ArrayList<Identifier> stack, HashMap<String, SpeciesVariable> variables, SwgSpecies species, LivingEntity player);
 	}
 
 	public static class TextureBuilderBuilder
