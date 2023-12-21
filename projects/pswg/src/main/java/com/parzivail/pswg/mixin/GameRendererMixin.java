@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
@@ -28,13 +29,13 @@ public abstract class GameRendererMixin
 	public abstract void tick();
 
 	@Inject(method = "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;setupFrustum(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Vec3d;Lorg/joml/Matrix4f;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-	void applyCameraTransformations$setupFrustum(float tickDelta, long limitTime, MatrixStack matrices, CallbackInfo ci, boolean bl, Camera camera, MatrixStack matrixStack, double d, float f, float g, Matrix4f matrix4f, Matrix3f matrix3f)
+	void applyCameraTransformations$setupFrustum(float tickDelta, long limitTime, MatrixStack matrices, CallbackInfo ci, MatrixStack matrices2, boolean bl, Camera camera, Entity entity, MatrixStack matrixStack, double d, float f, float g, Matrix4f matrix4f, Matrix3f matrix3f)
 	{
 		CameraHelper.applyCameraTransformations(tickDelta, limitTime, matrices, camera);
 	}
 
 	@Inject(method = "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiplyPositionMatrix(Lorg/joml/Matrix4f;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-	void applyCameraTransformations$multiply(float tickDelta, long limitTime, MatrixStack matrices, CallbackInfo ci, boolean bl, Camera camera, MatrixStack matrixStack, double fov)
+	void applyCameraTransformations$multiply(float tickDelta, long limitTime, MatrixStack matrices, CallbackInfo ci, MatrixStack matrices2, boolean bl, Camera camera, Entity entity, MatrixStack matrixStack, double fov)
 	{
 		CameraHelper.applyCameraShake(tickDelta, limitTime, matrices, camera, fov);
 	}

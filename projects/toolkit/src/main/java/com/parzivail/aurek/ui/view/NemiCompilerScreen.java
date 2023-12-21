@@ -30,7 +30,6 @@ import net.minecraft.text.Text;
 import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -106,8 +105,8 @@ public class NemiCompilerScreen extends ImguiScreen
 
 		try
 		{
-			var file = new File(path);
-			file.delete();
+			var file = Path.of(path);
+			Files.deleteIfExists(file);
 			NbtIo.write(nem, file);
 			ToolkitClient.NOTIFIER.success("NEM Compiler", String.format("Exported NEM model as \"%s\"", path));
 		}
@@ -126,10 +125,10 @@ public class NemiCompilerScreen extends ImguiScreen
 
 		try
 		{
-			var file = new File(path);
-			file.delete();
+			var file = Path.of(path);
+			Files.deleteIfExists(file);
 
-			try (var pw = new PrintWriter(file))
+			try (var pw = new PrintWriter(Files.newBufferedWriter(file)))
 			{
 				pw.println(String.format("public class %s", project.getTitle()));
 				pw.println(String.format("public %s", project.getTitle()));
@@ -217,7 +216,7 @@ public class NemiCompilerScreen extends ImguiScreen
 	{
 		try
 		{
-			var nbt = NbtIo.read(new File(path));
+			var nbt = NbtIo.read(Path.of(path));
 			if (nbt == null)
 				return;
 			tabController.add(new NemiModelProject(path, nbt));
