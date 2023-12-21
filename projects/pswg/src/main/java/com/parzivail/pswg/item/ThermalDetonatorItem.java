@@ -3,83 +3,101 @@ package com.parzivail.pswg.item;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
+import com.parzivail.util.item.ICooldownItem;
+import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
+import net.minecraft.client.item.ClampedModelPredicateProvider;
+import net.minecraft.client.item.ModelPredicateProvider;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-public class ThermalDetonatorItem extends Item implements ILeftClickConsumer
+public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem
 {
+
 	public ThermalDetonatorItem(Settings settings)
 	{
 		super(settings);
 	}
 
-	public ThermalDetonatorEntity createThermalDetonator(World world, ItemStack stack, int life, boolean primed, PlayerEntity player)
+
+	public ThermalDetonatorEntity createThermalDetonator(World world, int life, boolean primed, ItemStack stack, PlayerEntity player)
 	{
 		ThermalDetonatorEntity td = new ThermalDetonatorEntity(SwgEntities.Misc.ThermalDetonator, world);
-		td.setLife(life);
-		td.setPrimed(primed);
+		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
+		td.setLife(tdt.ticksToExplosion);
+		td.setPrimed(tdt.primed);
 		td.onSpawnPacket(new EntitySpawnS2CPacket(td.getId(), td.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), td.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
 		return td;
 	}
 
-	int ticksToExplosion = 10000;
-	boolean isPrimed;
 
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		if (isPrimed)
+		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
+		tdt.tick();
+
+		if (tdt.primed)
 		{
-			ticksToExplosion--;
+			tdt.ticksToExplosion--;
 		}
-		if (entity.isOnFire()) {
+		if (entity.isOnFire())
+		{
 			PlayerEntity player = (PlayerEntity)entity;
 			var tdItem = (ThermalDetonatorItem)stack.getItem();
-			ThermalDetonatorEntity tdEnt = tdItem.createThermalDetonator(world, stack, 0, true, player);
+			ThermalDetonatorEntity tdEnt = tdItem.createThermalDetonator(world, 0, true, stack, player);
 			tdEnt.shouldRenderVar = false;
 			int power = player.getInventory().count(this);
-			for (int i = power; i >= 0; i--) {
+			for (int i = power; i >= 0; i--)
+			{
 				player.getInventory().removeOne(stack);
 			}
 			tdEnt.setExplosionPower(power * 2f);
 			world.spawnEntity(tdEnt);
 		}
 
-		if ((isPrimed && ticksToExplosion <= 0))
+		if ((tdt.primed && tdt.ticksToExplosion <= 0))
 		{
 			PlayerEntity player = (PlayerEntity)entity;
 			ThermalDetonatorItem tdi = (ThermalDetonatorItem)(stack.getItem() instanceof ThermalDetonatorItem ? stack.getItem() : SwgItems.Explosives.ThermalDetonator);
-			ThermalDetonatorEntity thermalDetonatorEntity = tdi.createThermalDetonator(world, stack, 0, true, player);
-			thermalDetonatorEntity.shouldRenderVar = false;
-			world.spawnEntity(thermalDetonatorEntity);
-			ticksToExplosion = 150;
-			isPrimed = false;
+			ThermalDetonatorEntity tdEntity = tdi.createThermalDetonator(world, 0, true, stack, player);
+			tdEntity.shouldRenderVar = false;
+			world.spawnEntity(tdEntity);
 			player.getItemCooldownManager().set(stack.getItem(), 0);
 			if (!player.isCreative())
 			{
 				stack.decrement(1);
 			}
+			tdt.ticksToExplosion=150;
+			tdt.shouldRender=true;
+			tdt.primed=false;
 		}
+		tdt.serializeAsSubtag(stack);
 		super.inventoryTick(stack, world, entity, slot, selected);
 	}
 
 	@Override
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
 	{
+		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
 		if (user instanceof PlayerEntity playerEntity)
 		{
 			boolean inCreative = playerEntity.getAbilities().creativeMode;
@@ -92,17 +110,17 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer
 				}
 				if (!world.isClient)
 				{
-					ThermalDetonatorItem ThermalDetonatorItem = (ThermalDetonatorItem)(itemStack.getItem() instanceof ThermalDetonatorItem ? itemStack.getItem() : SwgItems.Explosives.ThermalDetonator);
-					ThermalDetonatorEntity thermalDetonatorEntity = ThermalDetonatorItem.createThermalDetonator(world, itemStack, ticksToExplosion / 2, isPrimed, playerEntity);
+					ThermalDetonatorItem thermalDetonatorItem = (ThermalDetonatorItem)(itemStack.getItem() instanceof ThermalDetonatorItem ? itemStack.getItem() : SwgItems.Explosives.ThermalDetonator);
+					ThermalDetonatorEntity thermalDetonatorEntity = thermalDetonatorItem.createThermalDetonator(world, tdt.ticksToExplosion / 20, tdt.primed, itemStack, playerEntity);
 					thermalDetonatorEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 1.0F);
 					thermalDetonatorEntity.setOwner(playerEntity);
 
 					world.spawnEntity(thermalDetonatorEntity);
 					playerEntity.getItemCooldownManager().remove(itemStack.getItem());
-					isPrimed = false;
+					tdt.primed=false;
 				}
 
-				world.playSound((PlayerEntity)null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.ENTITY_CAT_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+				world.playSound((PlayerEntity)null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
 				if (!inCreative)
 				{
 					stack.decrement(1);
@@ -110,6 +128,8 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer
 				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
 			}
 		}
+		tdt.ticksToExplosion=150;
+		tdt.serializeAsSubtag(stack);
 	}
 
 	@Override
@@ -137,12 +157,14 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer
 	@Override
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity user, Hand hand, boolean isRepeatEvent)
 	{
-		if (!isPrimed)
+		ThermalDetonatorTag tdt = new ThermalDetonatorTag(user.getMainHandStack().getOrCreateNbt());
+		if (!tdt.primed)
 		{
-			isPrimed = true;
-			user.getItemCooldownManager().set(user.getMainHandStack().getItem(), 75);
-			ticksToExplosion = 150;
+			tdt.primed=true;
+			//user.getItemCooldownManager().set(user.getMainHandStack().getItem(), 75);
+			tdt.ticksToExplosion=150;
 		}
+		tdt.serializeAsSubtag(user.getMainHandStack());
 		return TypedActionResult.success(user.getMainHandStack());
 	}
 
@@ -151,4 +173,24 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer
 	{
 		return false;
 	}
+
+	@Override
+	public NbtCompound getDefaultTag(ItemConvertible item, int count)
+	{
+		return new ThermalDetonatorTag().toSubtag();
+	}
+
+	@Override
+	public float getCooldownProgress(PlayerEntity player, World world, ItemStack stack, float tickDelta)
+	{
+		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
+		if(tdt.primed)
+		{
+			return (float)(-150 + tdt.ticksToExplosion) / -150;
+		}else{
+			return 0;
+		}
+	}
+
+
 }

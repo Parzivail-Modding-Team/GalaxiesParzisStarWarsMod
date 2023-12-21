@@ -19,6 +19,7 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 	//public final P3dModel.PartTransformer partTransformer = (target, objectName, tickDelta) -> new Matrix4f();
 	public final Identifier TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator.png");
 	public final Identifier TEXTURE2 = Resources.id("item/thermal_detonator/thermal_detonator");
+	public final Identifier TEXTURE_PRIMED = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_primed_entity.png");
 	public P3dModel model ;
 	public ThermalDetonatorRenderer(EntityRendererFactory.Context context)
 	{
@@ -32,8 +33,8 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(entity.getYaw()));
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getPitch()));
-		if(this.model==null){
-			this.model=P3dManager.INSTANCE.get(TEXTURE2);
+		if(model==null){
+			model=P3dManager.INSTANCE.get(TEXTURE2);
 		}
 		model.render(matrices, vertexConsumer, entity, null, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();
@@ -42,6 +43,10 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 	@Override
 	public Identifier getTexture(ThermalDetonatorEntity entity)
 	{
+		if(entity.isPrimed())
+		{
+			return TEXTURE_PRIMED;
+		}
 		return TEXTURE;
 	}
 

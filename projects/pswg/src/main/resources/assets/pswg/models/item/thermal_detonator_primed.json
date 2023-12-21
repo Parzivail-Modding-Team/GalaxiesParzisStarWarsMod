@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "pswg:item/model/thermal_detonator/thermal_detonator"
+		"0": "pswg:item/model/thermal_detonator/thermal_detonator_primed"
 	},
 	"elements": [
 		{
@@ -69,13 +69,5 @@
 			"nbt": "{}",
 			"children": [0, 1]
 		}
-	],
-	  "overrides": [
-        {
-          "predicate": {
-            "primed": 1.0
-          },
-          "model": "pswg:item/thermal_detonator_primed"
-        }
-      ]
+	]
 }
