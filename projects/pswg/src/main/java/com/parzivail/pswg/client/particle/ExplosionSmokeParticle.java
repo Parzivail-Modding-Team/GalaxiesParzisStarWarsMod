@@ -23,8 +23,8 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		velocityX = vX;
 		velocityY = vY + (double)(random.nextFloat() / 500.0f);
 		velocityZ = vZ;
-		//angle = random.nextFloat() * MathHelper.PI;
 
+		this.setAlpha(0.9f);
 		variant = random.nextInt(NUM_VARIANTS);
 	}
 
@@ -45,7 +45,7 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		velocityZ += (double)(random.nextFloat() / 500.0f * (float)(random.nextBoolean() ? 1 : -1));
 		velocityY +=0.0015;
 		move(velocityX, velocityY, velocityZ);
-		if(age >=  75 && this.alpha > 0.01f) {
+		if(age >=  50 && this.alpha > 0.005f) {
 			alpha-=0.003f;
 		}
 	}
@@ -69,7 +69,6 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		public Particle createParticle(PParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 		{
 			ExplosionSmokeParticle explosionSmokeParticle = new ExplosionSmokeParticle(world, x, y, z, velocityX,velocityY,velocityZ,  spriteProvider);
-			explosionSmokeParticle.setAlpha(0.9f);
 			explosionSmokeParticle.setSprite(spriteProvider);
 			return explosionSmokeParticle;
 		}
