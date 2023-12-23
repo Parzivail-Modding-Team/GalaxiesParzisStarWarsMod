@@ -46,7 +46,7 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		velocityY +=0.0015;
 		move(velocityX, velocityY, velocityZ);
 		if(age >=  75 && this.alpha > 0.01f) {
-			alpha-=0.005f;
+			alpha-=0.003f;
 		}
 	}
 

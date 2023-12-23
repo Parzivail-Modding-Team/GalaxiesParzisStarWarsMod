@@ -45,6 +45,7 @@ public class SwgTags
 	public static class DamageTypes
 	{
 		public static final TagKey<DamageType> IS_IGNORES_INVULNERABLE_FRAMES = register("is_ignores_invulnerable_frames");
+		public static final TagKey<DamageType> IGNITES_EXPLOSIVE = register("ignites_explosive");
 
 		private static TagKey<DamageType> register(String id)
 		{

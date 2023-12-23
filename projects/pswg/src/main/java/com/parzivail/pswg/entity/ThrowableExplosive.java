@@ -1,11 +1,13 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.container.SwgDamageTypes;
+import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -120,7 +122,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 	@Override
 	public boolean isInvulnerableTo(DamageSource source)
 	{
-		if(source.isIn(DamageTypeTags.IS_EXPLOSION) || source.isIn(DamageTypeTags.IS_FIRE) || source.isIn(DamageTypeTags.IS_LIGHTNING) || source.isOf(SwgDamageTypes.BLASTER)){
+		if(source.isIn(SwgTags.DamageTypes.IGNITES_EXPLOSIVE)){
 			return false;
 		}
 		return true;
@@ -128,7 +130,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 	@Override
 	public boolean damage(DamageSource source, float amount)
 	{
-		if(source.isIn(DamageTypeTags.IS_EXPLOSION)||source.isIn(DamageTypeTags.IS_FIRE)||source.isIn(DamageTypeTags.IS_LIGHTNING))
+		if(source.isIn(DamageTypeTags.IS_EXPLOSION))
 		{
 			if(!this.shouldExplode){
 				this.delay =2;
@@ -136,7 +138,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 			}
 
 			//this.discard();
-		}else if(source.isOf(SwgDamageTypes.BLASTER)){
+		}else if(source.isIn(SwgTags.DamageTypes.IGNITES_EXPLOSIVE)){
 			if(!this.shouldExplode){
 				this.explode();
 			}

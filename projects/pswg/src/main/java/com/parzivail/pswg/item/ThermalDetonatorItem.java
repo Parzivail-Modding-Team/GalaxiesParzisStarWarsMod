@@ -1,13 +1,16 @@
 package com.parzivail.pswg.item;
 
+import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.util.item.ICooldownItem;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -15,6 +18,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -68,6 +72,7 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 		if ((tdt.primed && tdt.ticksToExplosion <= 0))
 		{
 			PlayerEntity player = (PlayerEntity)entity;
+			player.damage(new DamageSource(player.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(SwgDamageTypes.SELF_EXPLODE), player), 100f);
 			ThermalDetonatorItem tdi = (ThermalDetonatorItem)(stack.getItem() instanceof ThermalDetonatorItem ? stack.getItem() : SwgItems.Explosives.ThermalDetonator);
 			ThermalDetonatorEntity tdEntity = tdi.createThermalDetonator(world, 0, true, stack, player);
 			tdEntity.shouldRenderVar = false;

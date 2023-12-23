@@ -34,7 +34,7 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	public void tick()
 	{
 		if(isPrimed()){
-			if(texturePhase<3){
+			if(texturePhase<6){
 				texturePhase++;
 			}else{
 				texturePhase=0;

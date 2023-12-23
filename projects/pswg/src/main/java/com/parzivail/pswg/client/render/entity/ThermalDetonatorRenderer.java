@@ -15,8 +15,6 @@ import org.joml.Quaternionf;
 
 public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEntity>
 {
-
-	//public final P3dModel.PartTransformer partTransformer = (target, objectName, tickDelta) -> new Matrix4f();
 	public final Identifier TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator.png");
 	public final Identifier TEXTURE2 = Resources.id("item/thermal_detonator/thermal_detonator");
 	public final Identifier TEXTURE_PRIMED = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_primed_entity.png");
@@ -47,9 +45,9 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 		if(entity.isPrimed())
 		{
 			int phase =entity.texturePhase/2;
-			if(entity.texturePhase==0){
+			if(phase==0){
 				return TEXTURE_PRIMED;
-			}else if(entity.texturePhase==1){
+			}else if(phase==1){
 				return TEXTURE_INBETWEEN;
 			}
 
