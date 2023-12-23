@@ -108,7 +108,7 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 				{
 					ThermalDetonatorItem thermalDetonatorItem = (ThermalDetonatorItem)(itemStack.getItem() instanceof ThermalDetonatorItem ? itemStack.getItem() : SwgItems.Explosives.ThermalDetonator);
 					ThermalDetonatorEntity thermalDetonatorEntity = thermalDetonatorItem.createThermalDetonator(world, tdt.ticksToExplosion, tdt.primed, itemStack, playerEntity);
-					thermalDetonatorEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 1.0F);
+					thermalDetonatorEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 0F);
 					thermalDetonatorEntity.setOwner(playerEntity);
 
 					world.spawnEntity(thermalDetonatorEntity);
