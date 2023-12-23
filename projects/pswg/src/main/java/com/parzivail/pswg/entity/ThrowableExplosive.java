@@ -4,7 +4,9 @@ import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -16,6 +18,11 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
@@ -28,6 +35,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 	boolean shouldExplode= false;
 	float explosionPower =5f;
 	public boolean shouldRenderVar = true;
+	boolean gravity=true;
 
 	protected ThrowableExplosive(EntityType<? extends ThrownEntity> entityType, World world)
 	{
@@ -44,6 +52,46 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 			this.readSpawnData(pes.getData());
 		}
 	}
+	protected void deflect(HitResult hit)
+	{
+		var velocity = this.getVelocity();
+		BlockHitResult blockHit = (BlockHitResult)hit;
+
+		if (blockHit.getSide().equals(Direction.UP))
+		{
+			if (hit.squaredDistanceTo(this)<0.01)
+			{
+				stopMovement();
+			}else{
+				velocity=velocity.multiply(0.75f,-0.2 ,0.75f);
+			this.setVelocity(velocity);
+			}
+		}else
+		{
+			var dir = velocity.normalize();
+
+			var normal = new Vec3d(blockHit.getSide().getUnitVector());
+			var newDir = MathUtil.reflect(dir, normal);
+			this.setVelocity(newDir.multiply(velocity.length() * 0.5f));
+		}
+	}
+	protected void stopMovement(){
+		this.setVelocity(0f,0f,0f);
+		gravity=false;
+
+	}
+
+	@Override
+	protected float getGravity()
+	{
+		if(gravity)
+		{
+			return super.getGravity();
+		}else{
+			return 0f;
+		}
+	}
+
 	@Override
 	public void tick() {
 

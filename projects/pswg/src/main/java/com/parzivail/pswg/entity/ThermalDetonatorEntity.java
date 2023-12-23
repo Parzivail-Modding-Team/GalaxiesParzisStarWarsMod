@@ -81,11 +81,13 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 
 		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
+			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
+			/*
 			if (hitResult.squaredDistanceTo(this) < 0.01)
 			{
 				this.setVelocity(0, 0, 0);
 			}
-			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
+
 
 			Vec3d velocity = this.getVelocity();
 			Vec3d pos = hitResult.getPos();
@@ -149,6 +151,8 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 				}
 			}
 			this.setVelocity(velocity.x * modX, velocity.y * modY, velocity.z * modZ);
+			*/
+			this.deflect(blockHitResult);
 		}
 		super.onCollision(hitResult);
 	}
