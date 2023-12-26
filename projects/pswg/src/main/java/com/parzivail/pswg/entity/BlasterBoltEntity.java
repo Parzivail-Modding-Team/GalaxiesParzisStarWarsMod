@@ -17,6 +17,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.TargetBlock;
 import net.minecraft.block.TntBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -303,6 +305,10 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 			var shouldScorch = true;
 
 			var state = getWorld().getBlockState(blockPos);
+			if(state.getBlock() instanceof TargetBlock targetBlock){
+				targetBlock.onProjectileHit(getWorld(), state, blockHit, this);
+
+			}
 
 			if (state.isIn(SwgTags.Blocks.BLASTER_REFLECT))
 			{
