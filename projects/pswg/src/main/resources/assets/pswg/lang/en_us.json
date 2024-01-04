@@ -442,7 +442,7 @@
 	"container.pswg.toolbox": "Toolbox",
 	"death.attack.pswg.blaster": "%2$s shot first, %1$s shot second",
 	"death.attack.pswg.blaster.slug": "%1$s was no match for %2$s's slugthrower",
-	"death.attack.pswg.self_explode": "%1$s forgot their stove on. And also their grenade.",
+	"death.attack.pswg.self_explode": "%1$s forgot the red blinking light on a Thermal Detonator is bad",
 	"entity.pswg.artoo_arseven": "R2-R7",
 	"entity.pswg.artoo_cuefive": "R2-Q5",
 	"entity.pswg.artoo_detoo": "R2-D2",
