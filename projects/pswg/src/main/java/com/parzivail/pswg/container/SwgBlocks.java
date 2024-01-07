@@ -573,6 +573,10 @@ public class SwgBlocks
 		public static final Block GrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
 		@RegistryName("rusted_gray_imperial_panel_pattern_3")
 		public static final Block RustedGrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_3_stairs")
+		public static final Block RustedGrayImperialPanelPattern3Stairs = new LimitedStairsBlock(FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
+		@RegistryName("rusted_gray_imperial_panel_pattern_3_slab")
+		public static final Block RustedGrayImperialPanelPattern3Slab = new VerticalSlabBlock(FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
 		@RegistryName("mossy_gray_imperial_panel_pattern_3")
 		public static final Block MossyGrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_panel_pattern_4")
