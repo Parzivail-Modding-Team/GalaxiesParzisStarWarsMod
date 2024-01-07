@@ -618,10 +618,6 @@ public class SwgBlocks
 		@TarkinBlock
 		public static final Block GrayImperialPanelPattern11 = createPanel(MapColor.GRAY);
 
-		@RegistryName("gray_imperial_light_on_1")
-		public static final Block GrayImperialLightOn1 = createLitPanel(MapColor.GRAY);
-		@RegistryName("gray_imperial_light_on_2")
-		public static final Block GrayImperialLightOn2 = createLitPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_light_half_1")
 		public static final Block GrayImperialLightHalf1 = createLitPanel(MapColor.GRAY, 8);
 		@RegistryName("gray_imperial_light_half_2")
@@ -632,10 +628,6 @@ public class SwgBlocks
 		public static final Block GrayImperialLightHalf4 = createLitPanel(MapColor.GRAY, 8);
 		@RegistryName("gray_imperial_light_half_5")
 		public static final Block GrayImperialLightHalf5 = createLitPanel(MapColor.GRAY, 8);
-		@RegistryName("gray_imperial_light_off_1")
-		public static final Block GrayImperialLightOff1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_light_off_2")
-		public static final Block GrayImperialLightOff2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -720,6 +712,16 @@ public class SwgBlocks
 	@RegistryOrder(16)
 	public static class Light
 	{
+		@RegistryName("gray_imperial_light_panel_1")
+		public static final Block GrayImperialLightPanel1 = registerLightingPanelBlock(9);
+		@RegistryName("gray_imperial_light_panel_2")
+		public static final Block GrayImperialLightPanel2 = registerLightingPanelBlock(6);
+		@RegistryName("gray_imperial_light_panel_3")
+		public static final Block GrayImperialLightPanel3 = registerLightingPanelBlock(12);
+		@RegistryName("gray_imperial_light_1")
+		public static final Block GrayImperialLight1 = registerLightingPanelBlock(15);
+		@RegistryName("gray_imperial_light_2")
+		public static final Block GrayImperialLight2 = registerLightingPanelBlock(15);
 		@RegistryName("light_fixture")
 		public static final Block Fixture = new LightFixtureBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.GLASS).luminance((b) -> b.get(Properties.LIT) ? LightFixtureBlock.getBrightness(b.get(LightFixtureBlock.BRIGHTNESS)) : 0).strength(0.3F));
 
@@ -969,5 +971,15 @@ public class SwgBlocks
 	public static void registerBlockEntityType(BlockEntityType<?> blockEntityType, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		Registry.register(Registries.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
+	}
+
+	public static LightingPanelBlock registerLightingPanelBlock(int brightness)
+	{
+		return new LightingPanelBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
+			if (blockState.get(Properties.LIT))
+				return brightness;
+			return 0;
+		}).strength(0.3f));
+
 	}
 }
