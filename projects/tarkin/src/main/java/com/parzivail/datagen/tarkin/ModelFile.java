@@ -443,7 +443,20 @@ public class ModelFile
 						.texture("side", sideTexture)
 		);
 	}
+	public static Collection<ModelFile> columns(Block block, Identifier topTexture, String... suffixes)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		var models = new ArrayList<ModelFile>();
+		for (var suffix : suffixes)
+		{
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(AssetGenerator.getRegistryName(block), suffix), new Identifier("block/cube_column"))
+					           .texture("side", IdentifierUtil.concat(AssetGenerator.getTextureName(block), suffix))
+					           .texture("end", topTexture));
+		}
 
+		return models;
+	}
 	public static Collection<ModelFile> cubes(Block block, String... suffixes)
 	{
 		var id = AssetGenerator.getRegistryName(block);

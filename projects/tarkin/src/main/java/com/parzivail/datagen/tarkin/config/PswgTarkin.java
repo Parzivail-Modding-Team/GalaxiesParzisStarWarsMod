@@ -957,48 +957,63 @@ public class PswgTarkin
 		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		//		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialLightPanel1)
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
-		              .models(block -> ModelFile.cubes(block, "_off", "_on"))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialLightPanel2)
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
-		              .models(block -> ModelFile.cubes(block, "_off", "_on"))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialLightPanel3)
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
-		              .models(block -> ModelFile.cubes(block, "_off", "_on"))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialLight1)
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
-		              .models(block -> ModelFile.cubes(block, "_off", "_on"))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialLight2)
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
-		              .models(block -> ModelFile.cubes(block, "_off", "_on"))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
+		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightPanel1, Resources.id("block/gray_imperial_panel_pattern_3"))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
+		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightPanel2, Resources.id("block/gray_imperial_panel_pattern_3"))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
+		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightPanel3, Resources.id("block/gray_imperial_panel_pattern_3"))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
+		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLight1, Resources.id("block/gray_imperial_panel_pattern_3"))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
+		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLight2, Resources.id("block/gray_imperial_panel_pattern_3"))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
@@ -1013,6 +1028,12 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.RustedGrayImperialPanelPattern3, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Panel.RustedGrayImperialPanelPattern3Stairs, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.verticalSlab(SwgBlocks.Panel.RustedGrayImperialPanelPattern3Slab, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.MossyGrayImperialPanelPattern3, Resources.id("block/mossy_gray_imperial_panel_pattern_3"))
@@ -1034,6 +1055,42 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.MossyGrayImperialPanelPattern5, Resources.id("block/mossy_gray_imperial_panel_pattern_3"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.ImperialFlooringPattern1)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.ImperialFlooringPattern2)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialFlooring0)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialFlooring3)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialFlooring4)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialFlooring0)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialFlooring3)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialFlooring4)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialFlooring3)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialFlooring4)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.WhiteImperialFlooring3)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.WhiteImperialFlooring4)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

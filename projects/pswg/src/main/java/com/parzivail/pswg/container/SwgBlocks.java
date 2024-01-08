@@ -23,7 +23,10 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.data.client.BlockStateVariant;
+import net.minecraft.data.client.BlockStateVariantMap;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -574,7 +577,7 @@ public class SwgBlocks
 		@RegistryName("rusted_gray_imperial_panel_pattern_3")
 		public static final Block RustedGrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
 		@RegistryName("rusted_gray_imperial_panel_pattern_3_stairs")
-		public static final Block RustedGrayImperialPanelPattern3Stairs = new LimitedStairsBlock(FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
+		public static final Block RustedGrayImperialPanelPattern3Stairs = new StairsBlock(RustedGrayImperialPanelPattern3.getDefaultState(), FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
 		@RegistryName("rusted_gray_imperial_panel_pattern_3_slab")
 		public static final Block RustedGrayImperialPanelPattern3Slab = new VerticalSlabBlock(FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
 		@RegistryName("mossy_gray_imperial_panel_pattern_3")
@@ -630,6 +633,35 @@ public class SwgBlocks
 		@RegistryName("gray_imperial_flooring_4")
 		@TarkinBlock
 		public static final Block GrayImperialFlooring4 = createPanel(MapColor.GRAY);
+		@RegistryName("light_gray_imperial_flooring_0")
+		@TarkinBlock
+		public static final Block LightGrayImperialFlooring0 = createPanel(MapColor.GRAY);
+		@RegistryName("light_gray_imperial_flooring_3")
+		@TarkinBlock
+		public static final Block LightGrayImperialFlooring3 = createPanel(MapColor.GRAY);
+		@RegistryName("light_gray_imperial_flooring_4")
+		@TarkinBlock
+		public static final Block LightGrayImperialFlooring4 = createPanel(MapColor.GRAY);
+		@RegistryName("black_imperial_flooring_3")
+		@TarkinBlock
+		public static final Block BlackImperialFlooring3 = createPanel(MapColor.GRAY);
+		@RegistryName("black_imperial_flooring_4")
+		@TarkinBlock
+		public static final Block BlackImperialFlooring4 = createPanel(MapColor.GRAY);
+		@RegistryName("white_imperial_flooring_3")
+		@TarkinBlock
+		public static final Block WhiteImperialFlooring3 = createPanel(MapColor.GRAY);
+		@RegistryName("white_imperial_flooring_4")
+		@TarkinBlock
+		public static final Block WhiteImperialFlooring4 = createPanel(MapColor.GRAY);
+		@RegistryName("imperial_flooring_pattern_1")
+		@TarkinBlock
+		public static final Block ImperialFlooringPattern1 = createPanel(MapColor.GRAY);
+		@RegistryName("imperial_flooring_pattern_2")
+		@TarkinBlock
+		public static final Block ImperialFlooringPattern2 = createPanel(MapColor.GRAY);
+
+
 
 		@RegistryName("gray_imperial_light_half_1")
 		public static final Block GrayImperialLightHalf1 = createLightingPanelBlock(13);
@@ -645,6 +677,7 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialPanelPattern1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
 		public static final PillarBlock GrayImperialPanelPattern2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+
 
 		@RegistryName("gray_imperial_tall_panel_1")
 		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
