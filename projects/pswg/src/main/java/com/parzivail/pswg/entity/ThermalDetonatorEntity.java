@@ -1,20 +1,15 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.container.SwgParticles;
-import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 
 public class ThermalDetonatorEntity extends ThrowableExplosive implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
 {
@@ -82,11 +77,5 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 		}
 
 		super.onCollision(hitResult);
-	}
-
-	@Override
-	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
-	{
-		return state.isIn(SwgTags.Blocks.DETONATOR_EXPLODE);
 	}
 }
