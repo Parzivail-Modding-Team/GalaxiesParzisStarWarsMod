@@ -11,6 +11,7 @@ import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
+import com.parzivail.pswg.compat.rei.categories.MoistureVaporatorCategory;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
@@ -18,10 +19,10 @@ import com.parzivail.pswg.features.blasters.data.BlasterArchetype;
 import com.parzivail.pswg.features.blasters.data.BlasterFiringMode;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
+import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.util.block.InvertedLampBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
@@ -43,14 +44,11 @@ public class PswgTarkin
 		speciesCmd.dot("variant").dot("invalid").build(assets);
 
 		// Deaths
-		var deathBlaster = lang.cause_of_death("blaster");
-		deathBlaster.build(assets);
-		deathBlaster.dot("slug").build(assets);
+		lang.cause_of_death(SwgDamageTypes.BLASTER).build(assets);
+		lang.cause_of_death(SwgDamageTypes.SELF_EXPLODE).build(assets);
 
 		// REI categories
-		var reiVaporator = lang.category("vaporator");
-		reiVaporator.build(assets);
-		reiVaporator.dot("time").build(assets);
+		Tarkin.registerLangFields(MoistureVaporatorCategory.class, lang, assets);
 
 		// Containers
 		lang.container("blaster_workbench").build(assets);
@@ -66,11 +64,14 @@ public class PswgTarkin
 		lang.container("segmented_crate").build(assets);
 		lang.container("toolbox").build(assets);
 
+		// TODO: sounds
+
 		// Entities
 		lang.entity(SwgEntities.Misc.BlasterBolt).build(assets);
 		lang.entity(SwgEntities.Misc.BlasterIonBolt).build(assets);
 		lang.entity(SwgEntities.Misc.BlasterStunBolt).build(assets);
 		lang.entity(SwgEntities.Misc.ThrownLightsaber).build(assets);
+		lang.entity(SwgEntities.Misc.ThermalDetonator).build(assets);
 		lang.entity(SwgEntities.Misc.Mannequin).build(assets);
 		lang.entity(SwgEntities.Ship.T65bXwing).build(assets);
 		lang.entity(SwgEntities.Speeder.X34).build(assets);
@@ -90,6 +91,7 @@ public class PswgTarkin
 		Tarkin.registerLangFields(Resources.class, lang, assets);
 		Tarkin.registerLangFields(CharacterScreen.class, lang, assets);
 		Tarkin.registerLangFields(BlasterItem.class, lang, assets);
+		Tarkin.registerLangFields(ThermalDetonatorItem.class, lang, assets);
 		Tarkin.registerLangFields(LightsaberItem.class, lang, assets);
 		Tarkin.registerLangFields(BlasterWorkbenchScreen.class, lang, assets);
 

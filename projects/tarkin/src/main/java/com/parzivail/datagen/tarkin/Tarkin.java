@@ -150,7 +150,6 @@ public class Tarkin
 			case BlasterDestroy -> SwgTags.Blocks.BLASTER_DESTROY;
 			case BlasterExplode -> SwgTags.Blocks.BLASTER_EXPLODE;
 			case BlasterReflect -> SwgTags.Blocks.BLASTER_REFLECT;
-			case DetonatorExplode -> SwgTags.Blocks.DETONATOR_EXPLODE;
 			default -> throw new RuntimeException("Unsupported value " + preset);
 		};
 	}

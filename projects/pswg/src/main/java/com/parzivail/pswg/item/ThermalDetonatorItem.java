@@ -1,12 +1,17 @@
 package com.parzivail.pswg.item;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
+import com.parzivail.tarkin.api.TarkinLang;
+import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.ICooldownItem;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -20,14 +25,20 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem
 {
+	@TarkinLang
+	public static final String I18N_TOOLTIP_CONTROLS = Resources.tooltip("thermal_detonator.controls");
 
 	public ThermalDetonatorItem(Settings settings)
 	{
@@ -126,6 +137,16 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 	}
 
 	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
+	{
+		super.appendTooltip(stack, world, tooltip, context);
+
+		var mc = MinecraftClient.getInstance();
+		var opt = mc.options;
+		tooltip.add(Text.translatable(I18N_TOOLTIP_CONTROLS, TextUtil.stylizeKeybind(opt.attackKey.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(opt.useKey.getBoundKeyLocalizedText())));
+	}
+
+	@Override
 	public int getMaxUseTime(ItemStack stack)
 	{
 		return 20000;
@@ -140,7 +161,6 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand)
 	{
-
 		ItemStack itemStack = user.getStackInHand(hand);
 		user.setCurrentHand(hand);
 

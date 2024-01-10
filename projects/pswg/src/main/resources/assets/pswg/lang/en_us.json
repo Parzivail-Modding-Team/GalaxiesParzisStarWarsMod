@@ -441,7 +441,6 @@
 	"container.pswg.segmented_crate": "Panel Crate",
 	"container.pswg.toolbox": "Toolbox",
 	"death.attack.pswg.blaster": "%2$s shot first, %1$s shot second",
-	"death.attack.pswg.blaster.slug": "%1$s was no match for %2$s's slugthrower",
 	"death.attack.pswg.self_explode": "%1$s forgot the red blinking light on a Thermal Detonator is bad",
 	"entity.pswg.artoo_arseven": "R2-R7",
 	"entity.pswg.artoo_cuefive": "R2-Q5",
@@ -458,6 +457,7 @@
 	"entity.pswg.landspeeder_x34": "X-34 Landspeeder",
 	"entity.pswg.mannequin": "entity.pswg.mannequin",
 	"entity.pswg.sand_skitter": "Sand Skitter",
+	"entity.pswg.thermal_detonator": "Thermal Detonator",
 	"entity.pswg.thrown_lightsaber": "Thrown Lightsaber",
 	"entity.pswg.worrt": "Worrt",
 	"entity.pswg.xwing_t65b": "T65B X-Wing",
@@ -1261,5 +1261,6 @@
 	"tooltip.pswg.blaster.stats.unknown": "Unknown Stats",
 	"tooltip.pswg.lightsaber.controls": "Toggle: %s",
 	"tooltip.pswg.lightsaber.info": "§bLightsaber",
-	"tooltip.pswg.status.insulated_desh_cable": "Connected to: (%s, %s, %s)"
+	"tooltip.pswg.status.insulated_desh_cable": "Connected to: (%s, %s, %s)",
+	"tooltip.pswg.thermal_detonator.controls": "Prime: %s, Throw: %s"
 }

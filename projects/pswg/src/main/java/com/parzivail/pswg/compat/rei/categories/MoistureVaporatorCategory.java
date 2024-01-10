@@ -4,6 +4,7 @@ import com.parzivail.pswg.compat.rei.displays.MoistureVaporatorDisplay;
 import com.parzivail.pswg.compat.rei.plugins.GalaxiesREICategories;
 import com.parzivail.pswg.compat.rei.plugins.GalaxiesREIClientPlugin;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.tarkin.api.TarkinLang;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.REIRuntime;
@@ -23,6 +24,11 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class MoistureVaporatorCategory implements DisplayCategory<MoistureVaporatorDisplay>
 {
+	@TarkinLang
+	public static final String I18N_TITLE = "category.pswg.vaporator";
+	@TarkinLang
+	public static final String I18N_TIME = "category.pswg.vaporator.time";
+
 	@Override
 	public Renderer getIcon()
 	{
@@ -32,7 +38,7 @@ public class MoistureVaporatorCategory implements DisplayCategory<MoistureVapora
 	@Override
 	public Text getTitle()
 	{
-		return Text.translatable("category.pswg.vaporator");
+		return Text.translatable(I18N_TITLE);
 	}
 
 	@Override
@@ -51,7 +57,7 @@ public class MoistureVaporatorCategory implements DisplayCategory<MoistureVapora
 				Widgets.createRecipeBase(bounds),
 				Widgets.createTexturedWidget(REIRuntime.getInstance().isDarkThemeEnabled() ? GalaxiesREIClientPlugin.DISPLAY_TEXTURE_DARK : GalaxiesREIClientPlugin.DISPLAY_TEXTURE, bounds.getX() + 15, bounds.getY() + 15, 120, 34),
 				Widgets.createLabel(new Point(bounds.x + bounds.width - 5, bounds.y + 5),
-				                    Text.translatable("category.pswg.vaporator.time", df.format(duration / 20d))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB),
+				                    Text.translatable(I18N_TIME, df.format(duration / 20d))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB),
 				Widgets.createSlot(inputSlotPos).markInput().entries(display.getInputEntries().get(0)),
 				Widgets.createSlot(outputSlotPos).disableBackground().markOutput().entries(display.getOutputEntries().get(0))
 		);
