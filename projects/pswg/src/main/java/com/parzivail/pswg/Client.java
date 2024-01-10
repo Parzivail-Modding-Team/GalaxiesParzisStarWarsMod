@@ -26,7 +26,6 @@ import com.parzivail.pswg.client.screen.CrateOctagonScreen;
 import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
 import com.parzivail.pswg.client.sound.EnvironmentSoundManager;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.BlasterUtil;
@@ -209,8 +208,8 @@ public class Client implements ClientModInitializer
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0xFFFFFF, SwgBlocks.Tree.JaporLeaves);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0xFFFFFF, SwgBlocks.Tree.JaporLeaves);
 
-		HandledScreens.register(SwgScreenTypes.Crate.Octagon, CrateOctagonScreen::new);
-		HandledScreens.register(SwgScreenTypes.Crate.MosEisley, CrateGenericSmallScreen::new);
+		HandledScreens.register(SwgScreenTypes.Crate.Kyber, CrateOctagonScreen::new);
+		HandledScreens.register(SwgScreenTypes.Crate.Toolbox, CrateGenericSmallScreen::new);
 		HandledScreens.register(SwgScreenTypes.Crate.Corrugated, CrateGenericSmallScreen::new);
 		HandledScreens.register(SwgScreenTypes.Crate.Segmented, CrateGenericSmallScreen::new);
 		HandledScreens.register(SwgScreenTypes.MoistureVaporator.GX8, MoistureVaporatorScreen::new);

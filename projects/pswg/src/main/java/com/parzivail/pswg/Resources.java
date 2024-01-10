@@ -5,6 +5,8 @@ import com.parzivail.updater.GithubReleaseEntry;
 import com.parzivail.updater.UpdateChecker;
 import com.parzivail.util.noise.OpenSimplex2F;
 import me.shedaniel.autoconfig.ConfigHolder;
+import net.minecraft.registry.Registries;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
@@ -49,9 +51,10 @@ public class Resources
 		return dotModId("screen", str);
 	}
 
-	public static String container(String str)
+	public static String container(ScreenHandlerType<?> handler)
 	{
-		return dotModId("container", str);
+		var id = Registries.SCREEN_HANDLER.getId(handler);
+		return String.format("container.%s.%s", id.getNamespace(), id.getPath());
 	}
 
 	public static String command(String str)

@@ -23,7 +23,7 @@ public class CrateCorrugatedBlockEntity extends InventoryBlockEntity implements 
 	@Override
 	public Text getDisplayName()
 	{
-		return Text.translatable(Resources.container("corrugated_crate"));
+		return Text.translatable(Resources.container(SwgScreenTypes.Crate.Corrugated));
 	}
 
 	@Override

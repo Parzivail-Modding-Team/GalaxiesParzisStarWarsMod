@@ -1,5 +1,6 @@
 package com.parzivail.datagen.tarkin;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.client.TooltipUtil;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -9,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 
@@ -45,9 +47,9 @@ public class LanguageBuilder
 		return new LanguageBuilder(locale, data + root);
 	}
 
-	public LanguageBuilder container(String value)
+	public LanguageBuilder container(ScreenHandlerType<?> value)
 	{
-		return entry("container").modid().dot(value);
+		return entry(Resources.container(value));
 	}
 
 	public LanguageBuilder category(String value)

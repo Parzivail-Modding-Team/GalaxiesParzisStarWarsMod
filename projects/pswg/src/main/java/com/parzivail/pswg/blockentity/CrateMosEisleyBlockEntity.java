@@ -23,12 +23,12 @@ public class CrateMosEisleyBlockEntity extends InventoryBlockEntity implements N
 	@Override
 	public Text getDisplayName()
 	{
-		return Text.translatable(Resources.container("mos_eisley_crate"));
+		return Text.translatable(Resources.container(SwgScreenTypes.Crate.Toolbox));
 	}
 
 	@Override
 	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player)
 	{
-		return new CrateGenericSmallScreenHandler(SwgScreenTypes.Crate.MosEisley, syncId, inv, this);
+		return new CrateGenericSmallScreenHandler(SwgScreenTypes.Crate.Toolbox, syncId, inv, this);
 	}
 }

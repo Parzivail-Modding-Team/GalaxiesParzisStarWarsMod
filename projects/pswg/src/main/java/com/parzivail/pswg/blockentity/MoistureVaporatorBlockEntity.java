@@ -3,6 +3,7 @@ package com.parzivail.pswg.blockentity;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgRecipeType;
+import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.recipe.VaporatorRecipe;
 import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import com.parzivail.util.blockentity.InventoryBlockEntity;
@@ -69,7 +70,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	@Override
 	public Text getDisplayName()
 	{
-		return Text.translatable(Resources.container("moisture_vaporator_gx8"));
+		return Text.translatable(Resources.container(SwgScreenTypes.MoistureVaporator.GX8));
 	}
 
 	@Override

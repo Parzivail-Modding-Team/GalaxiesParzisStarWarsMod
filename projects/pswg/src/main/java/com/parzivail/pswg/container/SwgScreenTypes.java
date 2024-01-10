@@ -3,7 +3,9 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchScreenHandler;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
-import com.parzivail.pswg.screen.*;
+import com.parzivail.pswg.screen.CrateGenericSmallScreenHandler;
+import com.parzivail.pswg.screen.CrateOctagonScreenHandler;
+import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.resource.featuretoggle.FeatureSet;
@@ -16,10 +18,10 @@ public class SwgScreenTypes
 {
 	public static class Crate
 	{
-		public static final ScreenHandlerType<CrateOctagonScreenHandler> Octagon = Registry.register(Registries.SCREEN_HANDLER, Resources.id("kyber_crate"), new ScreenHandlerType<>(CrateOctagonScreenHandler::new, FeatureSet.empty()));
-		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> MosEisley = Registry.register(Registries.SCREEN_HANDLER, Resources.id("mos_eisley_crate"), makeScreenHandler(() -> Crate.MosEisley));
-		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Corrugated = Registry.register(Registries.SCREEN_HANDLER, Resources.id("corrugated"), makeScreenHandler(() -> Crate.Corrugated));
-		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Segmented = Registry.register(Registries.SCREEN_HANDLER, Resources.id("segmented"), makeScreenHandler(() -> Crate.Segmented));
+		public static final ScreenHandlerType<CrateOctagonScreenHandler> Kyber = Registry.register(Registries.SCREEN_HANDLER, Resources.id("kyber_crate"), new ScreenHandlerType<>(CrateOctagonScreenHandler::new, FeatureSet.empty()));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Toolbox = Registry.register(Registries.SCREEN_HANDLER, Resources.id("toolbox"), makeScreenHandler(() -> Crate.Toolbox));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Corrugated = Registry.register(Registries.SCREEN_HANDLER, Resources.id("corrugated_crate"), makeScreenHandler(() -> Crate.Corrugated));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Segmented = Registry.register(Registries.SCREEN_HANDLER, Resources.id("segmented_crate"), makeScreenHandler(() -> Crate.Segmented));
 
 		@NotNull
 		private static ScreenHandlerType<CrateGenericSmallScreenHandler> makeScreenHandler(Supplier<ScreenHandlerType<CrateGenericSmallScreenHandler>> handlerType)

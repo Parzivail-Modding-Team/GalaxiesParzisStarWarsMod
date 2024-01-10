@@ -3,6 +3,7 @@ package com.parzivail.pswg.features.blasters.workbench;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgPackets;
+import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.blockentity.InventoryBlockEntity;
 import net.minecraft.block.BlockState;
@@ -33,7 +34,7 @@ public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements
 	@Override
 	public Text getDisplayName()
 	{
-		return Text.translatable(Resources.container("blaster_workbench"));
+		return Text.translatable(Resources.container(SwgScreenTypes.Workbench.Blaster));
 	}
 
 	@Override

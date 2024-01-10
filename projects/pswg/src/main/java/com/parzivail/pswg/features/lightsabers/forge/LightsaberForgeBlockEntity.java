@@ -2,6 +2,7 @@ package com.parzivail.pswg.features.lightsabers.forge;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgScreenTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +23,7 @@ public class LightsaberForgeBlockEntity extends BlockEntity implements NamedScre
 	@Override
 	public Text getDisplayName()
 	{
-		return Text.translatable(Resources.container("lightsaber_forge"));
+		return Text.translatable(Resources.container(SwgScreenTypes.Workbench.Lightsaber));
 	}
 
 	@Override

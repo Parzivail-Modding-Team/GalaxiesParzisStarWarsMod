@@ -15,7 +15,7 @@ public class CrateOctagonScreenHandler extends InventoryScreenHandler
 
 	public CrateOctagonScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory)
 	{
-		super(SwgScreenTypes.Crate.Octagon, syncId, inventory);
+		super(SwgScreenTypes.Crate.Kyber, syncId, inventory);
 		checkSize(inventory, 39);
 		inventory.onOpen(playerInventory.player);
 

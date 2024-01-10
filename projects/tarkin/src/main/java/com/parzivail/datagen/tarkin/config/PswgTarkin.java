@@ -51,18 +51,13 @@ public class PswgTarkin
 		Tarkin.registerLangFields(MoistureVaporatorCategory.class, lang, assets);
 
 		// Containers
-		lang.container("blaster_workbench").build(assets);
-
-		lang.container("corrugated_crate").build(assets);
-		lang.container("kyber_crate").build(assets);
-		lang.container("lightsaber_forge").build(assets);
-
-		var gx8 = lang.container("moisture_vaporator_gx8");
-		gx8.build(assets);
-
-		lang.container("mos_eisley_crate").build(assets);
-		lang.container("segmented_crate").build(assets);
-		lang.container("toolbox").build(assets);
+		lang.container(SwgScreenTypes.Workbench.Blaster).build(assets);
+		lang.container(SwgScreenTypes.Workbench.Lightsaber).build(assets);
+		lang.container(SwgScreenTypes.Crate.Corrugated).build(assets);
+		lang.container(SwgScreenTypes.Crate.Segmented).build(assets);
+		lang.container(SwgScreenTypes.Crate.Toolbox).build(assets);
+		lang.container(SwgScreenTypes.Crate.Kyber).build(assets);
+		lang.container(SwgScreenTypes.MoistureVaporator.GX8).build(assets);
 
 		// TODO: sounds
 
