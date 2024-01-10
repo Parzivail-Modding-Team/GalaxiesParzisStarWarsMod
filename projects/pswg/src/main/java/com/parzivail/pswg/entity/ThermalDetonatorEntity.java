@@ -4,26 +4,22 @@ import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
-import com.parzivail.util.math.MathUtil;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
 public class ThermalDetonatorEntity extends ThrowableExplosive implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
 {
-	public int texturePhase=0;
+	public int texturePhase = 0;
+
 	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
 	{
 		super(type, world);
@@ -33,13 +29,14 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	public void tick()
 	{
-		if(isPrimed()){
-			if(texturePhase<6){
+		if (isPrimed())
+		{
+			if (texturePhase < 6)
 				texturePhase++;
-			}else{
-				texturePhase=0;
-			}
+			else
+				texturePhase = 0;
 		}
+
 		this.speed = this.speed * 0.95f;
 		super.tick();
 	}
@@ -47,7 +44,7 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	protected void createParticles(ServerWorld world, double x, double y, double z)
 	{
-		int m = (int)explosionPower / 2;
+		int m = (int)(getExplosionPower() / 2);
 		for (int i = 0; i < world.getPlayers().size(); ++i)
 		{
 			ServerPlayerEntity player = world.getPlayers().get(i);
@@ -78,22 +75,18 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	protected void onCollision(HitResult hitResult)
 	{
-
 		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
 			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-			this.deflect(blockHitResult);
+			this.bounce(blockHitResult);
 		}
+
 		super.onCollision(hitResult);
 	}
 
 	@Override
 	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
 	{
-		if (state.isIn(SwgTags.Blocks.DETONATOR_EXPLODE))
-		{
-			return true;
-		}
-		return false;
+		return state.isIn(SwgTags.Blocks.DETONATOR_EXPLODE);
 	}
 }

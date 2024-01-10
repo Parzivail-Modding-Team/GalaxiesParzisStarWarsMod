@@ -11,14 +11,17 @@ public class ThermalDetonatorTag extends TagSerializer
 	public boolean primed;
 	public int ticksToExplosion;
 	public boolean shouldRender;
-	public ThermalDetonatorTag( NbtCompound source)
+
+	public ThermalDetonatorTag(NbtCompound source)
 	{
-		super(SLUG,source);
+		super(SLUG, source);
 	}
+
 	public ThermalDetonatorTag()
 	{
 		super(SLUG, new NbtCompound());
 	}
+
 	public static ThermalDetonatorTag fromRootTag(NbtCompound tag)
 	{
 		var parent = new NbtCompound();
@@ -26,8 +29,10 @@ public class ThermalDetonatorTag extends TagSerializer
 		return new ThermalDetonatorTag();
 	}
 
-	public void tick(){
-		if(primed){
+	public void tick()
+	{
+		if (primed)
+		{
 			ticksToExplosion--;
 		}
 	}
