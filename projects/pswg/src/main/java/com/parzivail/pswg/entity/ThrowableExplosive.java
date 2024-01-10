@@ -190,7 +190,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 		if (!this.getWorld().isClient)
 		{
 			this.discard();
-			this.getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY(), this.getZ(), explosionPower, true, World.ExplosionSourceType.TNT, true);
+			this.getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY(), this.getZ(), explosionPower, false, World.ExplosionSourceType.TNT, true);
 		}
 		if (this.getWorld() instanceof ServerWorld serverWorld)
 			createParticles(serverWorld, this.getX(), this.getY(), this.getZ());
