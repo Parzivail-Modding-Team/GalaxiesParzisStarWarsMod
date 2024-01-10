@@ -2,6 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.mojang.serialization.Codec;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.particle.ExplosionSmokeParticle;
 import com.parzivail.pswg.client.particle.WakeParticle;
 import com.parzivail.pswg.client.particle.WaterWakeParticle;
 import com.parzivail.pswg.client.render.player.PlayerSocket;
@@ -31,6 +32,7 @@ public class SwgParticles
 	public static final PParticleType SCORCH = register(Resources.id("scorch"), true, ScorchParticle.Factory::new);
 	public static final PParticleType WATER_WAKE = register(Resources.id("water_wake"), true, WaterWakeParticle.Factory::new);
 	public static final ParticleType<BlockStateParticleEffect> WAKE = registerBlockStateBased(Resources.id("wake"), true, new WakeParticle.Factory());
+	public static final PParticleType EXPLOSION_SMOKE = register(Resources.id("explosion_smoke"), true, ExplosionSmokeParticle.Factory::new);
 
 	private static PParticleType register(Identifier name, boolean alwaysShow, ParticleFactoryRegistry.PendingParticleFactory<PParticleType> factory)
 	{

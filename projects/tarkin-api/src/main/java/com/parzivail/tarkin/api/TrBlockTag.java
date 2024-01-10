@@ -11,5 +11,6 @@ public enum TrBlockTag
 	DeadBushSubstrate,
 	BlasterDestroy,
 	BlasterExplode,
-	BlasterReflect
+	BlasterReflect,
+	DetonatorExplode
 }

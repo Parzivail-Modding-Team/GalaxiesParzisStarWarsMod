@@ -1,0 +1,72 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "pswg:item/model/thermal_detonator/thermal_detonator"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [9, 3, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [3, 3, 6, 6], "texture": "#1"},
+				"east": {"uv": [0, 3, 3, 6], "texture": "#1"},
+				"south": {"uv": [9, 3, 12, 6], "texture": "#1"},
+				"west": {"uv": [6, 3, 9, 6], "texture": "#1"},
+				"up": {"uv": [6, 3, 3, 0], "texture": "#1"},
+				"down": {"uv": [9, 0, 6, 3], "texture": "#1"}
+			}
+		},
+		{
+			"from": [7, 2.5, 6.75],
+			"to": [8, 3.5, 8.75],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [3, 8, 2, 9], "texture": "#1"},
+				"east": {"uv": [5, 8, 3, 9], "texture": "#1"},
+				"south": {"uv": [6, 8, 5, 9], "texture": "#1"},
+				"west": {"uv": [2, 8, 0, 9], "texture": "#1"},
+				"up": {"uv": [2, 8, 3, 6], "texture": "#1"},
+				"down": {"uv": [3, 6, 4, 8], "texture": "#1"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0.5, 6.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"translation": [-0.5, 6.5, 0.75]
+		},
+		"firstperson_righthand": {
+			"translation": [0, 6.5, 0]
+		},
+		"firstperson_lefthand": {
+			"translation": [0, 6.75, 0]
+		},
+		"ground": {
+			"translation": [0, 4.5, 0]
+		},
+		"gui": {
+			"rotation": [26, 125, 0],
+			"translation": [0, 11.75, 0],
+			"scale": [2, 2, 2]
+		},
+		"head": {
+			"translation": [0, 14, 0]
+		},
+		"fixed": {
+			"translation": [1.25, 15.25, 2.25],
+			"scale": [2.5, 2.5, 2.5]
+		}
+	},
+	"overrides": [
+	  {
+		"predicate": {
+		  "primed": 1.0
+		},
+		"model": "pswg:item/thermal_detonator_primed"
+	  }
+	]
+}

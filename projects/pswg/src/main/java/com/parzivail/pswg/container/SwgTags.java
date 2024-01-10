@@ -20,6 +20,7 @@ public class SwgTags
 		public static final TagKey<Block> BLASTER_DESTROY = register("blaster_destroy");
 		public static final TagKey<Block> BLASTER_EXPLODE = register("blaster_explode");
 		public static final TagKey<Block> BLASTER_REFLECT = register("blaster_reflect");
+		public static final TagKey<Block> DETONATOR_EXPLODE = register("detonator_explode");
 
 		private static TagKey<Block> register(String id)
 		{
@@ -44,6 +45,7 @@ public class SwgTags
 	public static class DamageTypes
 	{
 		public static final TagKey<DamageType> IS_IGNORES_INVULNERABLE_FRAMES = register("is_ignores_invulnerable_frames");
+		public static final TagKey<DamageType> IGNITES_EXPLOSIVE = register("ignites_explosive");
 
 		private static TagKey<DamageType> register(String id)
 		{

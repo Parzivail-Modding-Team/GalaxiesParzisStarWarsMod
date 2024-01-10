@@ -6,10 +6,7 @@ import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.BlasterPowerPackItem;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
-import com.parzivail.pswg.item.CableItem;
-import com.parzivail.pswg.item.DebugItem;
-import com.parzivail.pswg.item.DoorInsertItem;
-import com.parzivail.pswg.item.MannequinItem;
+import com.parzivail.pswg.item.*;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
@@ -20,6 +17,7 @@ import com.parzivail.tarkin.api.TrModel;
 import com.parzivail.util.item.*;
 import com.parzivail.util.registry.*;
 import dev.emi.trinkets.api.TrinketItem;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -718,6 +716,13 @@ public class SwgItems
 		@RegistryName("mannequin_wizard")
 		@TarkinItem
 		public static final Item MannequinWizard = new Item(new Item.Settings());
+	}
+	@RegistryOrder(13)
+	public static class Explosives
+	{
+		@RegistryName("thermal_detonator")
+		@TarkinItem
+		public static final Item ThermalDetonator = new ThermalDetonatorItem(new FabricItemSettings().maxCount(1));
 	}
 
 	static HashMap<RegistryKey<ItemGroup>, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();
