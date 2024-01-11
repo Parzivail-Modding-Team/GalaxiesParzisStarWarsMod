@@ -2,6 +2,7 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.tarkin.api.*;
 import com.parzivail.util.Lumberjack;
@@ -10,12 +11,19 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.block.Block;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 
 import java.lang.annotation.Annotation;
@@ -25,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * T.A.R.K.I.N. - Text Asset Record-Keeping, Integration, and Normalization
@@ -97,7 +106,65 @@ public class Tarkin
 		}
 	}
 
-	public static <T, TA extends Annotation> void consumeFields(Class<TA> annotationClazz, Class<?> rootClazz, Class<T> registryType, BiConsumer<T, TA> consumer)
+	public static <T, TA extends Annotation> void consumeFields(Class<?> rootClazz, Class<T> registryType, Consumer<T> consumer)
+	{
+		for (var field : rootClazz.getFields())
+		{
+			if (!Modifier.isStatic(field.getModifiers()) || !registryType.isAssignableFrom(field.getType()))
+				continue;
+
+			try
+			{
+				consumer.accept((T)field.get(null));
+			}
+			catch (IllegalAccessException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		for (var clazz : rootClazz.getClasses())
+			consumeFields(clazz, registryType, consumer);
+	}
+
+	public static void registerEntitiesLang(Class<?> rootClazz, List<BuiltAsset> assets)
+	{
+		consumeFields(rootClazz, EntityType.class, entry -> {
+			var id = Registries.ENTITY_TYPE.getId(entry);
+			new LanguageBuilder(Resources.id(LanguageProvider.OUTPUT_LOCALE), "entity").dot(id.getNamespace()).dot(id.getPath()).build(assets);
+		});
+	}
+
+	public static void registerItemGroupsLang(Class<?> rootClazz, List<BuiltAsset> assets)
+	{
+		consumeFields(rootClazz, ItemGroup.class, entry -> {
+			new LanguageBuilder(Resources.id(LanguageProvider.OUTPUT_LOCALE), ((TranslatableTextContent)entry.getDisplayName().getContent()).getKey()).build(assets);
+		});
+	}
+
+	public static void registerKeyBindingsLang(Class<?> rootClazz, List<BuiltAsset> assets)
+	{
+		consumeFields(rootClazz, KeyBinding.class, entry -> {
+			new LanguageBuilder(Resources.id(LanguageProvider.OUTPUT_LOCALE), entry.getTranslationKey()).build(assets);
+		});
+	}
+
+	public static void registerDeathMessageLang(Class<?> rootClazz, List<BuiltAsset> assets)
+	{
+		consumeFields(rootClazz, RegistryKey.class, entry -> {
+			new LanguageBuilder(Resources.id(LanguageProvider.OUTPUT_LOCALE), "death").dot("attack").dot(entry.getValue().getNamespace()).dot(entry.getValue().getPath()).build(assets);
+		});
+	}
+
+	public static void registerContainersLang(Class<?> rootClazz, List<BuiltAsset> assets)
+	{
+		consumeFields(rootClazz, ScreenHandlerType.class, entry -> {
+			var id = Registries.SCREEN_HANDLER.getId(entry);
+			new LanguageBuilder(Resources.id(LanguageProvider.OUTPUT_LOCALE), "container").dot(id.getNamespace()).dot(id.getPath()).build(assets);
+		});
+	}
+
+	public static <T, TA extends Annotation> void consumeAnnotatedFields(Class<TA> annotationClazz, Class<?> rootClazz, Class<T> registryType, BiConsumer<T, TA> consumer)
 	{
 		for (var field : rootClazz.getFields())
 		{
@@ -116,12 +183,14 @@ public class Tarkin
 		}
 
 		for (var clazz : rootClazz.getClasses())
-			consumeFields(annotationClazz, clazz, registryType, consumer);
+			consumeAnnotatedFields(annotationClazz, clazz, registryType, consumer);
 	}
 
-	public static void registerLangFields(Class<?> rootClazz, LanguageBuilder languageBuilder, List<BuiltAsset> assets)
+	public static void registerLangFields(Class<?> rootClazz, List<BuiltAsset> assets)
 	{
-		consumeFields(TarkinLang.class, rootClazz, String.class, (s, a) -> languageBuilder.entry(s).build(assets));
+		consumeAnnotatedFields(TarkinLang.class, rootClazz, String.class, (s, a) -> {
+			new LanguageBuilder(Resources.id(LanguageProvider.OUTPUT_LOCALE), s).build(assets);
+		});
 	}
 
 	private static TagKey<Item> getTagKey(TrItemTag preset)
@@ -156,7 +225,7 @@ public class Tarkin
 
 	public static void registerItemFields(Class<?> rootClazz, List<BuiltAsset> assets)
 	{
-		consumeFields(TarkinItem.class, rootClazz, Item.class, (item, a) -> {
+		consumeAnnotatedFields(TarkinItem.class, rootClazz, Item.class, (item, a) -> {
 			var gen = new ItemGenerator(item);
 
 			switch (a.lang())
@@ -183,7 +252,7 @@ public class Tarkin
 
 	public static void registerBlockFields(Class<?> rootClazz, List<BuiltAsset> assets)
 	{
-		consumeFields(TarkinBlock.class, rootClazz, Block.class, (block, a) -> {
+		consumeAnnotatedFields(TarkinBlock.class, rootClazz, Block.class, (block, a) -> {
 			var gen = new BlockGenerator(block);
 
 			switch (a.lang())

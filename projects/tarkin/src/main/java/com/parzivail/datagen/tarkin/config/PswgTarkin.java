@@ -44,51 +44,26 @@ public class PswgTarkin
 		speciesCmd.dot("variant").dot("invalid").build(assets);
 
 		// Deaths
-		lang.cause_of_death(SwgDamageTypes.BLASTER).build(assets);
-		lang.cause_of_death(SwgDamageTypes.SELF_EXPLODE).build(assets);
+		Tarkin.registerContainersLang(SwgScreenTypes.class, assets);
+		Tarkin.registerDeathMessageLang(SwgDamageTypes.class, assets);
+		Tarkin.registerEntitiesLang(SwgEntities.class, assets);
+		Tarkin.registerItemGroupsLang(Galaxies.class, assets);
+		Tarkin.registerKeyBindingsLang(Client.class, assets);
+
+		// TODO: sound subtitles -- MinecraftClient::soundManager is initialized
+		// after the mod entrypoint is called, should we generate the sounds.json
+		// from here too?
 
 		// REI categories
-		Tarkin.registerLangFields(MoistureVaporatorCategory.class, lang, assets);
+		Tarkin.registerLangFields(MoistureVaporatorCategory.class, assets);
 
-		// Containers
-		lang.container(SwgScreenTypes.Workbench.Blaster).build(assets);
-		lang.container(SwgScreenTypes.Workbench.Lightsaber).build(assets);
-		lang.container(SwgScreenTypes.Crate.Corrugated).build(assets);
-		lang.container(SwgScreenTypes.Crate.Segmented).build(assets);
-		lang.container(SwgScreenTypes.Crate.Toolbox).build(assets);
-		lang.container(SwgScreenTypes.Crate.Kyber).build(assets);
-		lang.container(SwgScreenTypes.MoistureVaporator.GX8).build(assets);
-
-		// TODO: sounds
-
-		// Entities
-		lang.entity(SwgEntities.Misc.BlasterBolt).build(assets);
-		lang.entity(SwgEntities.Misc.BlasterIonBolt).build(assets);
-		lang.entity(SwgEntities.Misc.BlasterStunBolt).build(assets);
-		lang.entity(SwgEntities.Misc.ThrownLightsaber).build(assets);
-		lang.entity(SwgEntities.Misc.ThermalDetonator).build(assets);
-		lang.entity(SwgEntities.Misc.Mannequin).build(assets);
-		lang.entity(SwgEntities.Ship.T65bXwing).build(assets);
-		lang.entity(SwgEntities.Speeder.X34).build(assets);
-		lang.entity(SwgEntities.Speeder.ZephyrJ).build(assets);
-		lang.entity(SwgEntities.Fish.Faa).build(assets);
-		lang.entity(SwgEntities.Fish.Laa).build(assets);
-		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
-		lang.entity(SwgEntities.Mammal.Bantha).build(assets);
-		lang.entity(SwgEntities.Rodent.SandSkitter).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2D2).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2Q5).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2KP).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2R7).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2Y10).build(assets);
-		lang.entity(SwgEntities.Droid.AstroQTKT).build(assets);
-
-		Tarkin.registerLangFields(Resources.class, lang, assets);
-		Tarkin.registerLangFields(CharacterScreen.class, lang, assets);
-		Tarkin.registerLangFields(BlasterItem.class, lang, assets);
-		Tarkin.registerLangFields(ThermalDetonatorItem.class, lang, assets);
-		Tarkin.registerLangFields(LightsaberItem.class, lang, assets);
-		Tarkin.registerLangFields(BlasterWorkbenchScreen.class, lang, assets);
+		// Extras
+		Tarkin.registerLangFields(Resources.class, assets);
+		Tarkin.registerLangFields(CharacterScreen.class, assets);
+		Tarkin.registerLangFields(BlasterItem.class, assets);
+		Tarkin.registerLangFields(ThermalDetonatorItem.class, assets);
+		Tarkin.registerLangFields(LightsaberItem.class, assets);
+		Tarkin.registerLangFields(BlasterWorkbenchScreen.class, assets);
 
 		// Item
 		lang.item("lightsaber").build(assets);
@@ -101,21 +76,8 @@ public class PswgTarkin
 		lang.lore(SwgItems.Food.Kreetlejuice).build(assets);
 		lang.status(SwgItems.Cable.Power).build(assets);
 
-		// Item groups
-		lang.itemGroup(Galaxies.TabBlocks).build(assets);
-		lang.itemGroup(Galaxies.TabItems).build(assets);
-		lang.itemGroup(Galaxies.TabBlasters).build(assets);
-		lang.itemGroup(Galaxies.TabLightsabers).build(assets);
-
 		// Key categories
 		lang.keyCategory("pswg").build(assets);
-
-		// Keys
-		lang.key(Client.KEY_PRIMARY_ITEM_ACTION).build(assets);
-		lang.key(Client.KEY_SECONDARY_ITEM_ACTION).build(assets);
-		lang.key(Client.KEY_SHIP_INPUT_MODE_OVERRIDE).build(assets);
-		lang.key(Client.KEY_PATROL_POSTURE).build(assets);
-		lang.key(Client.KEY_SPECIES_SELECT).build(assets);
 
 		// Messages
 		lang.message("update").build(assets);

@@ -5,13 +5,9 @@ import com.parzivail.util.client.TooltipUtil;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -57,11 +53,6 @@ public class LanguageBuilder
 		return entry("category").modid().dot(value);
 	}
 
-	public LanguageBuilder cause_of_death(RegistryKey<DamageType> value)
-	{
-		return entry("death").dot("attack").modid().dot(value.getValue().getPath());
-	}
-
 	public LanguageBuilder command(String value)
 	{
 		return entry("command").modid().dot(value);
@@ -96,11 +87,6 @@ public class LanguageBuilder
 	public LanguageBuilder status(Item item)
 	{
 		return entry(TooltipUtil.getStatusKey(item));
-	}
-
-	public LanguageBuilder itemGroup(ItemGroup value)
-	{
-		return new LanguageBuilder(locale, ((TranslatableTextContent)value.getDisplayName().getContent()).getKey());
 	}
 
 	public LanguageBuilder key(KeyBinding key)
