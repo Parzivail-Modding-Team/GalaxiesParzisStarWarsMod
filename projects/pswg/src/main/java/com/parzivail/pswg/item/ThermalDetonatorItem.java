@@ -8,6 +8,7 @@ import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.ICooldownItem;
+import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
 import net.minecraft.client.MinecraftClient;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem
+public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
 	@TarkinLang
 	public static final String I18N_TOOLTIP_CONTROLS = Resources.tooltip("thermal_detonator.controls");
@@ -96,6 +97,12 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 
 		tdt.serializeAsSubtag(stack);
 		super.inventoryTick(stack, world, entity, slot, selected);
+	}
+
+	@Override
+	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
+	{
+		return true;
 	}
 
 	@Override
