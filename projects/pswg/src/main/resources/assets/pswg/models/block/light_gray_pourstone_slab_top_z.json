@@ -1,1 +1,1 @@
-{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/light_gray_pourstone","top":"pswg:block/light_gray_pourstone","bottom":"pswg:block/light_gray_pourstone"}}
+{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/light_gray_pourstone","top":"pswg:block/light_gray_pourstone","end":"pswg:block/light_gray_pourstone"}}

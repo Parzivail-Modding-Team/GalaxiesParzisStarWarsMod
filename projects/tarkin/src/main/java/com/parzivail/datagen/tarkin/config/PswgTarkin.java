@@ -6,6 +6,7 @@ import com.parzivail.pswg.Config;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgContent;
+import com.parzivail.pswg.block.InvertedLampSlab;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.character.SpeciesVariable;
@@ -984,6 +985,12 @@ public class PswgTarkin
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
+		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.verticalSlabLit(SwgBlocks.Panel.GrayImperialLightingSlab, Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"),Resources.id("block/gray_imperial_lighting_panel_slab"))
+		              .state((block, modelId) -> BlockStateGenerator.createVerticalSlabBlockStateLit(block, Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab")))
+		              .models(block -> (ModelFile.column(block, Resources.id("block/gray_imperial_panel_pattern_3"),Resources.id("block/gray_imperial_lighting_panel_slab")).verticalSlabs(block, Resources.id("block/gray_imperial_panel_pattern_3"), Resources.id("block/gray_imperial_lighting_panel_slab"),"_off", "_on")))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);

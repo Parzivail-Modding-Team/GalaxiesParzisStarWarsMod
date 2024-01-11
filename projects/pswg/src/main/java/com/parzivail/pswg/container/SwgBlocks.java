@@ -673,6 +673,8 @@ public class SwgBlocks
 		public static final Block GrayImperialLightHalf4 = createLightingPanelBlock(13);
 		@RegistryName("gray_imperial_light_half_5")
 		public static final Block GrayImperialLightHalf5 = createLightingPanelBlock(13);
+		@RegistryName("gray_imperial_lighting_panel_slab")
+		public static final InvertedLampSlab GrayImperialLightingSlab = createLightingPanelSlab(12);
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -810,8 +812,12 @@ public class SwgBlocks
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final Block ImperialCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
+		@RegistryName("medical_corrugated_crate")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		public static final Block MedicalCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
 		@RegistryName("corrugated_crate")
-		public static final BlockEntityType<CrateCorrugatedBlockEntity> CorrugatedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateCorrugatedBlockEntity::new, BlockUtil.concat(CorrugatedCrate, ImperialCorrugatedCrate)).build();
+		public static final BlockEntityType<CrateCorrugatedBlockEntity> CorrugatedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateCorrugatedBlockEntity::new, BlockUtil.concat(CorrugatedCrate, ImperialCorrugatedCrate, MedicalCorrugatedCrate)).build();
 
 		@RegistryName("orange_kyber_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
@@ -1023,6 +1029,15 @@ public class SwgBlocks
 	public static InvertedLampBlock createLightingPanelBlock(int brightness)
 	{
 		return new InvertedLampBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
+			if (blockState.get(Properties.LIT))
+				return brightness;
+			return 0;
+		}).strength(0.3f));
+
+	}
+	public static InvertedLampSlab createLightingPanelSlab(int brightness)
+	{
+		return new InvertedLampSlab(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
 			if (blockState.get(Properties.LIT))
 				return brightness;
 			return 0;
