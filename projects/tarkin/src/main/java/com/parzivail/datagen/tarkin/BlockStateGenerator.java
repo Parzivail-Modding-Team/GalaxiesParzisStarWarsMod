@@ -127,6 +127,7 @@ public class BlockStateGenerator
 								.register(SlabType.DOUBLE, Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, fullModelId))
 				);
 	}
+
 	public static BlockStateSupplier createVerticalSlabBlockStateLit(Block slabBlock, Identifier bottomModelId, Identifier topModelId, Identifier fullModelId)
 	{
 		return VariantsBlockStateSupplier
@@ -136,23 +137,23 @@ public class BlockStateGenerator
 								.create(Properties.SLAB_TYPE, Properties.AXIS, Properties.LIT)
 								.register(SlabType.BOTTOM, Direction.Axis.Y, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(bottomModelId, "_on")))
 								.register(SlabType.TOP, Direction.Axis.Y, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(topModelId, "_top_on")))
-								.register(SlabType.DOUBLE, Direction.Axis.Y,true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_on")))
+								.register(SlabType.DOUBLE, Direction.Axis.Y, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_on")))
 								.register(SlabType.BOTTOM, Direction.Axis.X, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(bottomModelId, "_x_on")))
 								.register(SlabType.TOP, Direction.Axis.X, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(topModelId, "_top_x_on")))
-								.register(SlabType.DOUBLE, Direction.Axis.X,true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_on")))
-								.register(SlabType.BOTTOM, Direction.Axis.Z,true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(bottomModelId, "_z_on")))
-								.register(SlabType.TOP, Direction.Axis.Z,true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(topModelId, "_top_z_on")))
-								.register(SlabType.DOUBLE, Direction.Axis.Z,true,  BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_on")))
+								.register(SlabType.DOUBLE, Direction.Axis.X, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_on")))
+								.register(SlabType.BOTTOM, Direction.Axis.Z, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(bottomModelId, "_z_on")))
+								.register(SlabType.TOP, Direction.Axis.Z, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(topModelId, "_top_z_on")))
+								.register(SlabType.DOUBLE, Direction.Axis.Z, true, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_on")))
 
 								.register(SlabType.BOTTOM, Direction.Axis.Y, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(bottomModelId, "_off")))
 								.register(SlabType.TOP, Direction.Axis.Y, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(topModelId, "_top_off")))
-								.register(SlabType.DOUBLE, Direction.Axis.Y,false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_off")))
+								.register(SlabType.DOUBLE, Direction.Axis.Y, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_off")))
 								.register(SlabType.BOTTOM, Direction.Axis.X, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(bottomModelId, "_x_off")))
 								.register(SlabType.TOP, Direction.Axis.X, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(topModelId, "_top_x_off")))
 								.register(SlabType.DOUBLE, Direction.Axis.X, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_off")))
-								.register(SlabType.BOTTOM, Direction.Axis.Z,false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(bottomModelId, "_z_off")))
-								.register(SlabType.TOP, Direction.Axis.Z,false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(topModelId, "_top_z_off")))
-								.register(SlabType.DOUBLE, Direction.Axis.Z,false,  BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_off")))
+								.register(SlabType.BOTTOM, Direction.Axis.Z, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(bottomModelId, "_z_off")))
+								.register(SlabType.TOP, Direction.Axis.Z, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(topModelId, "_top_z_off")))
+								.register(SlabType.DOUBLE, Direction.Axis.Z, false, BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(fullModelId, "_double_off")))
 				);
 	}
 }

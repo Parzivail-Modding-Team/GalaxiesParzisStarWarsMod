@@ -988,9 +988,9 @@ public class PswgTarkin
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.verticalSlabLit(SwgBlocks.Panel.GrayImperialLightingSlab, Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"),Resources.id("block/gray_imperial_lighting_panel_slab"))
+		BlockGenerator.verticalSlabLit(SwgBlocks.Panel.GrayImperialLightingSlab, Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"))
 		              .state((block, modelId) -> BlockStateGenerator.createVerticalSlabBlockStateLit(block, Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab")))
-		              .models(block -> (ModelFile.column(block, Resources.id("block/gray_imperial_panel_pattern_3"),Resources.id("block/gray_imperial_lighting_panel_slab")).verticalSlabs(block, Resources.id("block/gray_imperial_panel_pattern_3"), Resources.id("block/gray_imperial_lighting_panel_slab"),"_off", "_on")))
+		              .models(block -> (ModelFile.column(block, Resources.id("block/gray_imperial_panel_pattern_3"), Resources.id("block/gray_imperial_lighting_panel_slab")).verticalSlabs(block, Resources.id("block/gray_imperial_panel_pattern_3"), Resources.id("block/gray_imperial_lighting_panel_slab"), "_off", "_on")))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);

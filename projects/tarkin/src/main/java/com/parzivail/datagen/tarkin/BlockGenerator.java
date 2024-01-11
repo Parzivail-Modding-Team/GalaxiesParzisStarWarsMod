@@ -216,12 +216,13 @@ public class BlockGenerator
 				.models(b -> ModelFile.verticalSlab(b, topTexture, sideTexture))
 				.blockTag(BlockTags.SLABS);
 	}
+
 	public static BlockGenerator verticalSlabLit(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
 		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.createVerticalSlabBlockStateLit(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
-				.models(b -> ModelFile.verticalSlabs(b, topTexture, sideTexture, "_on","_off"))
+				.models(b -> ModelFile.verticalSlabs(b, topTexture, sideTexture, "_on", "_off"))
 				.blockTag(BlockTags.SLABS);
 	}
 
