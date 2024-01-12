@@ -717,6 +717,14 @@ public class PswgTarkin
 				           .build(assets)
 		           );
 
+		PswgContent.getLightsaberPresets().keySet().stream()
+		           .filter(id -> id.getNamespace().equals(Resources.MODID))
+		           .forEach(id -> ItemGenerator
+				           .empty(Registries.ITEM.get(SwgItems.getLightsaberRegistrationId(id)))
+				           .lang(LanguageProvider::empty)
+				           .build(assets)
+		           );
+
 		for (var entry : SwgItems.Door.DoorInsert.entrySet())
 			ItemGenerator.basic(entry.getValue()).build(assets);
 
