@@ -1,4 +1,4 @@
-package com.parzivail.datagen.tarkin;
+package com.parzivail.datagen;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -6,12 +6,8 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
-import java.nio.file.Path;
-
-public class AssetGenerator
+public class AssetUtils
 {
-	private static Path rootDir = null;
-
 	public static Identifier getRegistryName(ItemConvertible item)
 	{
 		return Registries.ITEM.getId(item.asItem());
@@ -46,19 +42,5 @@ public class AssetGenerator
 	{
 		var id = Registries.ITEM.getId(item);
 		return new Identifier(id.getNamespace(), "item/" + id.getPath());
-	}
-
-	public static void setOutputRoot(Path rootDir)
-	{
-		AssetGenerator.rootDir = rootDir;
-		Tarkin.LOG.info(String.format("Set output directory to: %s", rootDir.toAbsolutePath()));
-	}
-
-	public static Path getRootDir()
-	{
-		if (rootDir == null)
-			throw new RuntimeException("Output directory cannot be null");
-
-		return rootDir;
 	}
 }

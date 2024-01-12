@@ -1,5 +1,6 @@
 package com.parzivail.datagen.tarkin.config;
 
+import com.parzivail.datagen.AssetUtils;
 import com.parzivail.datagen.tarkin.*;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Config;
@@ -771,7 +772,7 @@ public class PswgTarkin
 		BlockGenerator.basic(SwgBlocks.Light.Fixture)
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
 		              .models(block -> ModelFile.cubes(block, "", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
@@ -1011,12 +1012,12 @@ public class PswgTarkin
 		BlockGenerator.cross(SwgBlocks.Plant.DriedPoontenGrass).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.Tuber).build(assets);
 
-		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2"))
+		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetUtils.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2"))
 		              .lootTable(block1 -> LootTableFile.seedCrop(block1, SwgItems.Seeds.ChasukaSeeds, SwgItems.Food.ChasukaLeaf, 2, 3, 0.5714286))
 		              .build(assets);
 
-		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.HkakBush), "_stage3")).build(assets);
-		BlockGenerator.bloomingBushStages(SwgBlocks.Plant.MoloShrub, () -> MoloShrubBlock.AGE, () -> MoloShrubBlock.BLOOMING, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.MoloShrub), "_stage3_blooming"))
+		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, IdentifierUtil.concat(AssetUtils.getTextureName(SwgBlocks.Plant.HkakBush), "_stage3")).build(assets);
+		BlockGenerator.bloomingBushStages(SwgBlocks.Plant.MoloShrub, () -> MoloShrubBlock.AGE, () -> MoloShrubBlock.BLOOMING, IdentifierUtil.concat(AssetUtils.getTextureName(SwgBlocks.Plant.MoloShrub), "_stage3_blooming"))
 		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Natural.MoloFlower, new LootTableFile.Pool.CountFunction.Range(0, 2, new Identifier("uniform"))))
 		              .build(assets);
 

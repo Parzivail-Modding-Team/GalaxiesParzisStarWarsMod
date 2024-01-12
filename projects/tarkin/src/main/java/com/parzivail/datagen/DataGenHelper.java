@@ -11,6 +11,7 @@ public class DataGenHelper implements PswgClientAddon
 		try
 		{
 			Tarkin.main();
+			//			Tarkin2.main();
 		}
 		catch (Exception e)
 		{

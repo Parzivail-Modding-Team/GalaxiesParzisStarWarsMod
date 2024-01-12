@@ -1,5 +1,6 @@
 package com.parzivail.datagen.tarkin;
 
+import com.parzivail.datagen.FilesystemUtils;
 import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
 import com.parzivail.pswg.Resources;
@@ -44,7 +45,7 @@ public class Tarkin
 
 	public static void main() throws Exception
 	{
-		AssetGenerator.setOutputRoot(Path.of(System.getenv("TARKIN_OUT_DIR")));
+		FilesystemUtils.setOutputRoot(Path.of(System.getenv("TARKIN_OUT_DIR")));
 
 		List<BuiltAsset> assets = new ArrayList<>();
 
@@ -56,12 +57,12 @@ public class Tarkin
 			case "pswg_addon_clonewars" -> TcwTarkin.build(assets);
 		}
 
-		BuiltAsset.nukeRecipeDir();
-		BuiltAsset.nukeBlockstateDir();
-		BuiltAsset.nukeBlockModelJsons();
-		BuiltAsset.nukeItemModelJsons();
-		BuiltAsset.nukeBlockLootTables();
-		BuiltAsset.nukeTags();
+		FilesystemUtils.nukeRecipeDir();
+		FilesystemUtils.nukeBlockstateDir();
+		FilesystemUtils.nukeBlockModelJsons();
+		FilesystemUtils.nukeItemModelJsons();
+		FilesystemUtils.nukeBlockLootTables();
+		FilesystemUtils.nukeTags();
 
 		for (var asset : assets)
 		{
