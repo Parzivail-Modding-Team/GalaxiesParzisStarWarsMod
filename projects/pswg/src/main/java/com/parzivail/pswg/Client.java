@@ -268,6 +268,7 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Crate.GrayPanel, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("block/model/segmented_crate/gray_panel"), Resources.id("block/model/segmented_crate/gray_panel_particle")));
 
 		ModelRegistry.register(SwgBlocks.Crate.ImperialCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/imperial"), Resources.id("block/model/corrugated_crate/imperial_particle")));
+		ModelRegistry.register(SwgBlocks.Crate.MedicalCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/medical"), Resources.id("block/model/corrugated_crate/medical_particle")));
 		for (var color : DyeColor.values())
 			ModelRegistry.register(SwgBlocks.Crate.CorrugatedCrate.get(color), true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/" + color.getName()), Resources.id("block/model/corrugated_crate/" + color.getName() + "_particle")));
 

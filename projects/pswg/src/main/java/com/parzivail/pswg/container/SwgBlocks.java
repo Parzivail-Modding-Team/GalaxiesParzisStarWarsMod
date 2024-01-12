@@ -23,7 +23,10 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.data.client.BlockStateVariant;
+import net.minecraft.data.client.BlockStateVariantMap;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -573,6 +576,10 @@ public class SwgBlocks
 		public static final Block GrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
 		@RegistryName("rusted_gray_imperial_panel_pattern_3")
 		public static final Block RustedGrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_3_stairs")
+		public static final Block RustedGrayImperialPanelPattern3Stairs = new StairsBlock(RustedGrayImperialPanelPattern3.getDefaultState(), FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
+		@RegistryName("rusted_gray_imperial_panel_pattern_3_slab")
+		public static final Block RustedGrayImperialPanelPattern3Slab = new VerticalSlabBlock(FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
 		@RegistryName("mossy_gray_imperial_panel_pattern_3")
 		public static final Block MossyGrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_panel_pattern_4")
@@ -617,29 +624,62 @@ public class SwgBlocks
 		@RegistryName("gray_imperial_panel_pattern_11")
 		@TarkinBlock
 		public static final Block GrayImperialPanelPattern11 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_flooring_0")
+		@TarkinBlock
+		public static final Block GrayImperialFlooring0 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_flooring_3")
+		@TarkinBlock
+		public static final Block GrayImperialFlooring3 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_flooring_4")
+		@TarkinBlock
+		public static final Block GrayImperialFlooring4 = createPanel(MapColor.GRAY);
+		@RegistryName("light_gray_imperial_flooring_0")
+		@TarkinBlock
+		public static final Block LightGrayImperialFlooring0 = createPanel(MapColor.GRAY);
+		@RegistryName("light_gray_imperial_flooring_3")
+		@TarkinBlock
+		public static final Block LightGrayImperialFlooring3 = createPanel(MapColor.GRAY);
+		@RegistryName("light_gray_imperial_flooring_4")
+		@TarkinBlock
+		public static final Block LightGrayImperialFlooring4 = createPanel(MapColor.GRAY);
+		@RegistryName("black_imperial_flooring_3")
+		@TarkinBlock
+		public static final Block BlackImperialFlooring3 = createPanel(MapColor.GRAY);
+		@RegistryName("black_imperial_flooring_4")
+		@TarkinBlock
+		public static final Block BlackImperialFlooring4 = createPanel(MapColor.GRAY);
+		@RegistryName("white_imperial_flooring_3")
+		@TarkinBlock
+		public static final Block WhiteImperialFlooring3 = createPanel(MapColor.GRAY);
+		@RegistryName("white_imperial_flooring_4")
+		@TarkinBlock
+		public static final Block WhiteImperialFlooring4 = createPanel(MapColor.GRAY);
+		@RegistryName("imperial_flooring_pattern_1")
+		@TarkinBlock
+		public static final Block ImperialFlooringPattern1 = createPanel(MapColor.GRAY);
+		@RegistryName("imperial_flooring_pattern_2")
+		@TarkinBlock
+		public static final Block ImperialFlooringPattern2 = createPanel(MapColor.GRAY);
 
-		@RegistryName("gray_imperial_light_on_1")
-		public static final Block GrayImperialLightOn1 = createLitPanel(MapColor.GRAY);
-		@RegistryName("gray_imperial_light_on_2")
-		public static final Block GrayImperialLightOn2 = createLitPanel(MapColor.GRAY);
+
+
 		@RegistryName("gray_imperial_light_half_1")
-		public static final Block GrayImperialLightHalf1 = createLitPanel(MapColor.GRAY, 8);
+		public static final Block GrayImperialLightHalf1 = createLightingPanelBlock(13);
 		@RegistryName("gray_imperial_light_half_2")
-		public static final Block GrayImperialLightHalf2 = createLitPanel(MapColor.GRAY, 8);
+		public static final Block GrayImperialLightHalf2 = createLightingPanelBlock(13);
 		@RegistryName("gray_imperial_light_half_3")
-		public static final Block GrayImperialLightHalf3 = createLitPanel(MapColor.GRAY, 8);
+		public static final Block GrayImperialLightHalf3 = createLightingPanelBlock(13);
 		@RegistryName("gray_imperial_light_half_4")
-		public static final Block GrayImperialLightHalf4 = createLitPanel(MapColor.GRAY, 8);
+		public static final Block GrayImperialLightHalf4 = createLightingPanelBlock(13);
 		@RegistryName("gray_imperial_light_half_5")
-		public static final Block GrayImperialLightHalf5 = createLitPanel(MapColor.GRAY, 8);
-		@RegistryName("gray_imperial_light_off_1")
-		public static final Block GrayImperialLightOff1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_light_off_2")
-		public static final Block GrayImperialLightOff2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		public static final Block GrayImperialLightHalf5 = createLightingPanelBlock(13);
+		@RegistryName("gray_imperial_lighting_panel_slab")
+		public static final InvertedLampSlab GrayImperialLightingSlab = createLightingPanelSlab(12);
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
 		public static final PillarBlock GrayImperialPanelPattern2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+
 
 		@RegistryName("gray_imperial_tall_panel_1")
 		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
@@ -650,6 +690,16 @@ public class SwgBlocks
 		public static final SelfConnectingBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_tall_light_2")
 		public static final SelfConnectingBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_light_panel_1")
+		public static final Block GrayImperialLightPanel1 = createLightingPanelBlock(11);
+		@RegistryName("gray_imperial_light_panel_2")
+		public static final Block GrayImperialLightPanel2 = createLightingPanelBlock(9);
+		@RegistryName("gray_imperial_light_panel_3")
+		public static final Block GrayImperialLightPanel3 = createLightingPanelBlock(14);
+		@RegistryName("gray_imperial_light_1")
+		public static final Block GrayImperialLight1 = createLightingPanelBlock(15);
+		@RegistryName("gray_imperial_light_2")
+		public static final Block GrayImperialLight2 = createLightingPanelBlock(15);
 
 		@RegistryName("lab_wall")
 		@TabIgnore
@@ -720,6 +770,7 @@ public class SwgBlocks
 	@RegistryOrder(16)
 	public static class Light
 	{
+
 		@RegistryName("light_fixture")
 		public static final Block Fixture = new LightFixtureBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.GLASS).luminance((b) -> b.get(Properties.LIT) ? LightFixtureBlock.getBrightness(b.get(LightFixtureBlock.BRIGHTNESS)) : 0).strength(0.3F));
 
@@ -761,8 +812,12 @@ public class SwgBlocks
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final Block ImperialCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
+		@RegistryName("medical_corrugated_crate")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		public static final Block MedicalCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
 		@RegistryName("corrugated_crate")
-		public static final BlockEntityType<CrateCorrugatedBlockEntity> CorrugatedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateCorrugatedBlockEntity::new, BlockUtil.concat(CorrugatedCrate, ImperialCorrugatedCrate)).build();
+		public static final BlockEntityType<CrateCorrugatedBlockEntity> CorrugatedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateCorrugatedBlockEntity::new, BlockUtil.concat(CorrugatedCrate, ImperialCorrugatedCrate, MedicalCorrugatedCrate)).build();
 
 		@RegistryName("orange_kyber_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
@@ -969,5 +1024,24 @@ public class SwgBlocks
 	public static void registerBlockEntityType(BlockEntityType<?> blockEntityType, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		Registry.register(Registries.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
+	}
+
+	public static InvertedLampBlock createLightingPanelBlock(int brightness)
+	{
+		return new InvertedLampBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
+			if (blockState.get(Properties.LIT))
+				return brightness;
+			return 0;
+		}).strength(0.3f));
+
+	}
+	public static InvertedLampSlab createLightingPanelSlab(int brightness)
+	{
+		return new InvertedLampSlab(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
+			if (blockState.get(Properties.LIT))
+				return brightness;
+			return 0;
+		}).strength(0.3f));
+
 	}
 }

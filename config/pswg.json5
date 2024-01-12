@@ -1,0 +1,40 @@
+{
+	// Here you can change your preferred input methods.
+	"input": {
+		// Sets whether mouse inputs should be pitch and yaw, or pitch and roll
+		"shipRollPriority": false
+	},
+	// Here you can change your rendering preferences.
+	"view": {
+		// Sets the stiffness of ships' third person cameras
+		"shipCameraStiffness": 0.4000000059604645,
+		// Scales the base distance of ships' third person cameras
+		"shipCameraBaseDistance": 1.0,
+		// Scales the speed-varying distance of ships' third person cameras
+		"shipCameraSpeedDistance": 1.0,
+		// Enables or disables screen shake
+		"enableScreenShake": true,
+		// Force the perspective to first person when aiming down sights
+		"forceFirstPersonAds": true,
+		// The ambient brightness of an ignited lightsaber when shaders are installed and active
+		"lightsaberShaderBrightness": 11
+	},
+	// Here you can change general client options.
+	"client": {
+		// Show the character customization tip at next world join
+		"showCharacterCustomizeTip": true
+	},
+	// Here you can change general server options.
+	"server": {
+		// Prevents players under a certain permission level from accessing vehicles
+		"vehiclePermissionLevel": 0,
+		// Allows blasters to damage entities that are non-living (item frames, armor stands, etc.)
+		"allowBlasterNonlivingDamage": false,
+		// Enable complex collision calculation for large entities
+		"allowComplexCollisions": true
+	},
+	// Disable update checker
+	"disableUpdateCheck": false,
+	// Ask to send PSWG crash reports to the developers
+	"askToSendCrashReports": true
+}

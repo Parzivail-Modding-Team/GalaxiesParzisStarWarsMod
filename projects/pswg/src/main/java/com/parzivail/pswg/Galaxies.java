@@ -45,7 +45,7 @@ public class Galaxies implements ModInitializer
 	public static final ItemGroup TabBlocks = FabricItemGroup
 			.builder()
 			.displayName(Text.translatable(Resources.tab("blocks")))
-			.icon(() -> new ItemStack(SwgBlocks.Panel.GrayImperialLightOn1))
+			.icon(() -> new ItemStack(SwgBlocks.Panel.GrayImperialLight1))
 			.build();
 	public static final RegistryKey<ItemGroup> TabBlocksKey = RegistryKey.of(RegistryKeys.ITEM_GROUP, Resources.id("blocks"));
 

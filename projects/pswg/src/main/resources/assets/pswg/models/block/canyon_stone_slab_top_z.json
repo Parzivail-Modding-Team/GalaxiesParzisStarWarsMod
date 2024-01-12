@@ -1,1 +1,1 @@
-{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/canyon_stone","top":"pswg:block/canyon_stone","bottom":"pswg:block/canyon_stone"}}
+{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/canyon_stone","top":"pswg:block/canyon_stone","end":"pswg:block/canyon_stone"}}
