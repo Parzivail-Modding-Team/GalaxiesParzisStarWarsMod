@@ -1,7 +1,7 @@
 package com.parzivail.datagen.tarkin.crafting;
 
 import com.google.gson.JsonObject;
-import com.parzivail.datagen.tarkin.AssetGenerator;
+import com.parzivail.datagen.AssetUtils;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
 
@@ -11,7 +11,7 @@ public class ItemConvertibleJsonCraftingComponent implements IJsonCraftingCompon
 
 	public ItemConvertibleJsonCraftingComponent(ItemConvertible itemConvertible)
 	{
-		this.registryName = AssetGenerator.getRegistryName(itemConvertible);
+		this.registryName = AssetUtils.getRegistryName(itemConvertible);
 	}
 
 	@Override

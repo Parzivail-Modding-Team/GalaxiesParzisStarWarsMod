@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "type": "paletted_permutations",
+      "textures": ["pswg:trims/items/trim_debug"],
+      "palette_key": "pswg:trims/color_palettes/trim_palette",
+      "permutations": {
+        "binary_rgb": "pswg:trims/color_palettes/debug"
+      }
+    }
+  ]
+}

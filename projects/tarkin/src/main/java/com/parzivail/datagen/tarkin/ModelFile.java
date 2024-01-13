@@ -2,6 +2,7 @@ package com.parzivail.datagen.tarkin;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.parzivail.datagen.AssetUtils;
 import com.parzivail.pswg.Resources;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -39,17 +40,17 @@ public class ModelFile
 
 	public static ModelFile ofBlock(Block block)
 	{
-		return new ModelFile(AssetGenerator.getRegistryName(block), AssetGenerator.getTextureName(block));
+		return new ModelFile(AssetUtils.getRegistryName(block), AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile ofAccumulatingBlock(Block block)
 	{
-		return new ModelFile(AssetGenerator.getRegistryName(block), IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_height2"));
+		return new ModelFile(AssetUtils.getRegistryName(block), IdentifierUtil.concat(AssetUtils.getTextureName(block), "_height2"));
 	}
 
 	public static ModelFile ofBlockDifferentParent(Block block, Identifier parent)
 	{
-		return new ModelFile(AssetGenerator.getRegistryName(block), parent);
+		return new ModelFile(AssetUtils.getRegistryName(block), parent);
 	}
 
 	public static ModelFile noParent(Identifier filename)
@@ -65,89 +66,89 @@ public class ModelFile
 	public static ModelFile cube(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_all"))
-				.texture("all", AssetGenerator.getTextureName(block));
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_all"))
+				.texture("all", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile cube(Block block, Identifier texture)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_all"))
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_all"))
 				.texture("all", texture);
 	}
 
 	public static ModelFile cube_no_cull(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), Resources.id("block/template/double_cull_cube_all"))
-				.texture("all", AssetGenerator.getTextureName(block));
+				.ofModel(AssetUtils.getRegistryName(block), Resources.id("block/template/double_cull_cube_all"))
+				.texture("all", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile item(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("item/generated"))
-				.texture("layer0", AssetGenerator.getTextureName(block));
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("item/generated"))
+				.texture("layer0", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile blockSeparateItem(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("item/generated"))
-				.texture("layer0", AssetGenerator.getTextureName(block.asItem()));
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("item/generated"))
+				.texture("layer0", AssetUtils.getTextureName(block.asItem()));
 	}
 
 	public static ModelFile item(Block block, Identifier textureName)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("item/generated"))
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("item/generated"))
 				.texture("layer0", textureName);
 	}
 
 	public static ModelFile particle(Block block, Identifier particle)
 	{
 		return ModelFile
-				.noParent(AssetGenerator.getRegistryName(block))
+				.noParent(AssetUtils.getRegistryName(block))
 				.texture("particle", particle);
 	}
 
 	public static ModelFile item(Item item)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(item), new Identifier("item/generated"))
-				.texture("layer0", AssetGenerator.getTextureName(item));
+				.ofModel(AssetUtils.getRegistryName(item), new Identifier("item/generated"))
+				.texture("layer0", AssetUtils.getTextureName(item));
 	}
 
 	public static ModelFile handheld_item(Item item)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(item), new Identifier("item/handheld"))
-				.texture("layer0", AssetGenerator.getTextureName(item));
+				.ofModel(AssetUtils.getRegistryName(item), new Identifier("item/handheld"))
+				.texture("layer0", AssetUtils.getTextureName(item));
 	}
 
 	public static ModelFile spawn_egg(Item item)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(item), new Identifier("item/template_spawn_egg"));
+				.ofModel(AssetUtils.getRegistryName(item), new Identifier("item/template_spawn_egg"));
 	}
 
 	public static ModelFile empty(Item item)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(item), new Identifier("builtin/generated"));
+				.ofModel(AssetUtils.getRegistryName(item), new Identifier("builtin/generated"));
 	}
 
 	public static ModelFile leaves(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/leaves"))
-				.texture("all", AssetGenerator.getTextureName(block));
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/leaves"))
+				.texture("all", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile column(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_column"))
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_column"))
 				.texture("end", topTexture)
 				.texture("side", sideTexture);
 	}
@@ -155,7 +156,7 @@ public class ModelFile
 	public static ModelFile columnTopBottom(Block block, Identifier topTexture, Identifier sideTexture, Identifier bottomTexture)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_bottom_top"))
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_bottom_top"))
 				.texture("top", topTexture)
 				.texture("bottom", bottomTexture)
 				.texture("side", sideTexture);
@@ -163,9 +164,9 @@ public class ModelFile
 
 	public static ModelFile columnTopBottom(Block block)
 	{
-		var tex = AssetGenerator.getTextureName(block);
+		var tex = AssetUtils.getTextureName(block);
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_bottom_top"))
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_bottom_top"))
 				.texture("top", IdentifierUtil.concat(tex, "_top"))
 				.texture("bottom", IdentifierUtil.concat(tex, "_bottom"))
 				.texture("side", tex);
@@ -173,7 +174,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> verticalSlab(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(id, new Identifier("block/slab"))
@@ -250,7 +251,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> trapdoor(Block block, Identifier texture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_bottom"), new Identifier("block/template_orientable_trapdoor_bottom"))
@@ -266,7 +267,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> door(Block block, Identifier texture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		var textureTop = IdentifierUtil.concat(texture, "_top");
 		var textureBottom = IdentifierUtil.concat(texture, "_bottom");
 		return Arrays.asList(
@@ -307,7 +308,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> verticalSlabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(id, new Identifier("block/slab"))
@@ -357,13 +358,13 @@ public class ModelFile
 	public static ModelFile wallInventory(Block block, Identifier texture)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/wall_inventory"))
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/wall_inventory"))
 				.texture("wall", texture);
 	}
 
 	public static Collection<ModelFile> wall(Block block, Identifier texture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_post"), new Identifier("block/template_wall_post"))
@@ -379,7 +380,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> cropStages(Block block, IntProperty property)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		var modelFiles = new ArrayList<ModelFile>();
 
 		for (int i : property.getValues())
@@ -397,7 +398,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> accumulatingLayers(Block block)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		var modelFiles = new ArrayList<ModelFile>();
 
 		for (int i : Properties.LAYERS.getValues())
@@ -422,7 +423,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> bushStages(Block block, IntProperty property)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		var modelFiles = new ArrayList<ModelFile>();
 
 		for (int i : property.getValues())
@@ -440,7 +441,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> bloomingBushStages(Block block, IntProperty property)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		var modelFiles = new ArrayList<ModelFile>();
 
 		for (int i : property.getValues())
@@ -465,7 +466,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> slabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(id, new Identifier("block/slab"))
@@ -499,14 +500,14 @@ public class ModelFile
 	}
 	public static Collection<ModelFile> cubes(Block block, String... suffixes)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		var models = new ArrayList<ModelFile>();
 
 		for (var suffix : suffixes)
 		{
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(AssetGenerator.getRegistryName(block), suffix), new Identifier("block/cube_all"))
-					           .texture("all", IdentifierUtil.concat(AssetGenerator.getTextureName(block), suffix)));
+					           .ofModel(IdentifierUtil.concat(AssetUtils.getRegistryName(block), suffix), new Identifier("block/cube_all"))
+					           .texture("all", IdentifierUtil.concat(AssetUtils.getTextureName(block), suffix)));
 		}
 
 		return models;
@@ -514,7 +515,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> stairs(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(id, new Identifier("block/stairs"))
@@ -536,7 +537,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> fence(Block block, Identifier texture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_post"), new Identifier("block/fence_post"))
@@ -552,7 +553,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> fenceGate(Block block, Identifier texture)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(id, new Identifier("block/template_fence_gate"))
@@ -571,52 +572,52 @@ public class ModelFile
 
 	public static Collection<ModelFile> randomMirror(Block block)
 	{
-		var mirroredId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_mirrored");
+		var mirroredId = IdentifierUtil.concat(AssetUtils.getRegistryName(block), "_mirrored");
 		return Arrays.asList(
 				ModelFile.cube(block),
 				ModelFile
 						.ofModel(mirroredId, new Identifier("block/cube_mirrored_all"))
-						.texture("all", AssetGenerator.getTextureName(block))
+						.texture("all", AssetUtils.getTextureName(block))
 		);
 	}
 
 	public static Collection<ModelFile> fans(Block block)
 	{
-		var wallId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_wall");
+		var wallId = IdentifierUtil.concat(AssetUtils.getRegistryName(block), "_wall");
 		return Arrays.asList(
 				fan(block),
 				ModelFile
 						.ofModel(wallId, new Identifier("block/coral_wall_fan"))
-						.texture("fan", AssetGenerator.getTextureName(block))
+						.texture("fan", AssetUtils.getTextureName(block))
 		);
 	}
 
 	public static ModelFile fan(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/coral_fan"))
-				.texture("fan", AssetGenerator.getTextureName(block));
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/coral_fan"))
+				.texture("fan", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile wallFan(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/coral_wall_fan"))
-				.texture("fan", AssetGenerator.getTextureName(block));
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/coral_wall_fan"))
+				.texture("fan", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile cross(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cross"))
-				.texture("cross", AssetGenerator.getTextureName(block));
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cross"))
+				.texture("cross", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile tintedCross(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/tinted_cross"))
-				.texture("cross", AssetGenerator.getTextureName(block));
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/tinted_cross"))
+				.texture("cross", AssetUtils.getTextureName(block));
 	}
 
 	public ModelFile texture(String key, Identifier value)

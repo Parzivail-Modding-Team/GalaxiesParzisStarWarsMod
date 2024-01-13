@@ -1,6 +1,7 @@
 package com.parzivail.datagen.tarkin;
 
 import com.google.gson.JsonObject;
+import com.parzivail.datagen.AssetUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
@@ -23,13 +24,13 @@ public class LanguageProvider
 
 	public static LanguageProvider block(Block block)
 	{
-		var reg = AssetGenerator.getRegistryName(block);
+		var reg = AssetUtils.getRegistryName(block);
 		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "block." + reg.getNamespace() + "." + reg.getPath(), generateDefaultLang(reg));
 	}
 
 	public static LanguageProvider item(Item item)
 	{
-		var reg = AssetGenerator.getRegistryName(item);
+		var reg = AssetUtils.getRegistryName(item);
 		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "item." + reg.getNamespace() + "." + reg.getPath(), generateDefaultLang(reg));
 	}
 

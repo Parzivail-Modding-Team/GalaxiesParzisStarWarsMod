@@ -2,6 +2,7 @@ package com.parzivail.datagen.tarkin;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.parzivail.datagen.AssetUtils;
 import com.parzivail.datagen.tarkin.crafting.IJsonCraftingComponent;
 import com.parzivail.datagen.tarkin.crafting.IngredientTag;
 import com.parzivail.datagen.tarkin.crafting.ItemConvertibleJsonCraftingComponent;
@@ -134,24 +135,24 @@ public abstract class RecipeGenerator
 	{
 		public static Cooking smelting(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("smelting"), AssetGenerator.getRegistryName(output), input, sourceName);
+			return new Cooking(new Identifier("smelting"), AssetUtils.getRegistryName(output), input, sourceName);
 		}
 
 		public static Cooking blasting(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("blasting"), AssetGenerator.getRegistryName(output), input, sourceName)
+			return new Cooking(new Identifier("blasting"), AssetUtils.getRegistryName(output), input, sourceName)
 					.cookTime(100);
 		}
 
 		public static Cooking campfire(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("campfire_cooking"), AssetGenerator.getRegistryName(output), input, sourceName)
+			return new Cooking(new Identifier("campfire_cooking"), AssetUtils.getRegistryName(output), input, sourceName)
 					.cookTime(600);
 		}
 
 		public static Cooking smoking(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("smoking"), AssetGenerator.getRegistryName(output), input, sourceName)
+			return new Cooking(new Identifier("smoking"), AssetUtils.getRegistryName(output), input, sourceName)
 					.cookTime(100);
 		}
 
@@ -200,7 +201,7 @@ public abstract class RecipeGenerator
 
 		private Shapeless(ItemStack output, String sourceName)
 		{
-			super(new Identifier("crafting_shapeless"), AssetGenerator.getRegistryName(output.getItem()), sourceName);
+			super(new Identifier("crafting_shapeless"), AssetUtils.getRegistryName(output.getItem()), sourceName);
 			this.outputCount = output.getCount();
 			this.inputs = new ArrayList<>();
 		}
@@ -251,7 +252,7 @@ public abstract class RecipeGenerator
 
 		private Shaped(ItemStack output)
 		{
-			super(new Identifier("crafting_shaped"), AssetGenerator.getRegistryName(output.getItem()), null);
+			super(new Identifier("crafting_shaped"), AssetUtils.getRegistryName(output.getItem()), null);
 			this.outputCount = output.getCount();
 			this.shapes = new ArrayList<>();
 		}

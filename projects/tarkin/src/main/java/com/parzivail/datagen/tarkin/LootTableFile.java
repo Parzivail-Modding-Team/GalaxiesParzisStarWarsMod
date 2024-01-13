@@ -3,6 +3,7 @@ package com.parzivail.datagen.tarkin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.parzivail.datagen.AssetUtils;
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.rotating.WaterloggableRotating3BlockWithGuiEntity;
 import net.minecraft.block.Block;
@@ -21,7 +22,7 @@ public class LootTableFile
 {
 	public static LootTableFile empty(Block block)
 	{
-		var reg = AssetGenerator.getRegistryName(block);
+		var reg = AssetUtils.getRegistryName(block);
 		return new LootTableFile(IdentifierUtil.concat("blocks/", reg), new Identifier("block"));
 	}
 
@@ -32,7 +33,7 @@ public class LootTableFile
 
 	public static LootTableFile single(Block block, ItemConvertible drop)
 	{
-		var reg = AssetGenerator.getRegistryName(drop);
+		var reg = AssetUtils.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
 				              .condition(new Identifier("survives_explosion"))
@@ -48,8 +49,8 @@ public class LootTableFile
 	public static Function<Block, LootTableFile> singleSelfWithBonus(ItemConvertible bonus, float chance, int fortuneBonusMultiplier)
 	{
 		return block -> {
-			var regSelf = AssetGenerator.getRegistryName(block);
-			var regBonus = AssetGenerator.getRegistryName(bonus);
+			var regSelf = AssetUtils.getRegistryName(block);
+			var regBonus = AssetUtils.getRegistryName(bonus);
 			return ofPool(block,
 			              new Pool(1)
 					              .condition(new Identifier("survives_explosion"))
@@ -70,7 +71,7 @@ public class LootTableFile
 
 	public static <T extends Block & IPicklingBlock> LootTableFile pickling(T block)
 	{
-		var reg = AssetGenerator.getRegistryName(block);
+		var reg = AssetUtils.getRegistryName(block);
 
 		var entry = new Pool.Entry(new Identifier("item"), reg);
 
@@ -94,7 +95,7 @@ public class LootTableFile
 
 	public static LootTableFile count(Block block, ItemConvertible drop, Pool.CountFunction count)
 	{
-		var reg = AssetGenerator.getRegistryName(drop);
+		var reg = AssetUtils.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
 				              .entry(new Pool.Entry(new Identifier("alternatives"))
@@ -118,9 +119,9 @@ public class LootTableFile
 
 	public static LootTableFile seedCrop(Block block, ItemConvertible seeds, ItemConvertible crop, int cropAge, int extra, double probability)
 	{
-		var blockReg = AssetGenerator.getRegistryName(block);
-		var seedReg = AssetGenerator.getRegistryName(seeds);
-		var cropReg = AssetGenerator.getRegistryName(crop);
+		var blockReg = AssetUtils.getRegistryName(block);
+		var seedReg = AssetUtils.getRegistryName(seeds);
+		var cropReg = AssetUtils.getRegistryName(crop);
 		return empty(block)
 				.function(new Pool.Function(new Identifier("explosion_decay")))
 				.pool(new Pool(1)
@@ -144,7 +145,7 @@ public class LootTableFile
 
 	public static LootTableFile singleFortuneBonus(Block block, ItemConvertible drop)
 	{
-		var reg = AssetGenerator.getRegistryName(drop);
+		var reg = AssetUtils.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
 				              .entry(new Pool.Entry(new Identifier("alternatives"))
@@ -161,7 +162,7 @@ public class LootTableFile
 
 	public static LootTableFile door(Block block)
 	{
-		var reg = AssetGenerator.getRegistryName(block);
+		var reg = AssetUtils.getRegistryName(block);
 		return empty(block)
 				.pool(new Pool(1)
 						      .entry(new Pool.Entry(new Identifier("item"), reg)
@@ -175,7 +176,7 @@ public class LootTableFile
 
 	public static LootTableFile multiBlockOnlyCenter(Block block)
 	{
-		var reg = AssetGenerator.getRegistryName(block);
+		var reg = AssetUtils.getRegistryName(block);
 		return empty(block)
 				.pool(new Pool(1)
 						      .entry(new Pool.Entry(new Identifier("item"), reg)
