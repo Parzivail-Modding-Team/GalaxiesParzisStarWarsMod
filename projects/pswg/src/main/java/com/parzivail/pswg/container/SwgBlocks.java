@@ -23,10 +23,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.data.client.BlockStateVariant;
-import net.minecraft.data.client.BlockStateVariantMap;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -1023,18 +1020,18 @@ public class SwgBlocks
 		Registry.register(Registries.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
 	}
 
-	public static InvertedLampBlock createLightingPanelBlock(int brightness)
+	public static InteractableInvertedLampBlock createLightingPanelBlock(int brightness)
 	{
-		return new InvertedLampBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
+		return new InteractableInvertedLampBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
 			if (blockState.get(Properties.LIT))
 				return brightness;
 			return 0;
 		}).strength(0.3f));
 	}
 
-	public static InvertedLampSlab createLightingPanelSlab(int brightness)
+	public static InteractableInvertedLampSlab createLightingPanelSlab(int brightness)
 	{
-		return new InvertedLampSlab(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
+		return new InteractableInvertedLampSlab(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
 			if (blockState.get(Properties.LIT))
 				return brightness;
 			return 0;

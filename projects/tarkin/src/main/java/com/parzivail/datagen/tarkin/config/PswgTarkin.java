@@ -7,7 +7,6 @@ import com.parzivail.pswg.Config;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgContent;
-import com.parzivail.pswg.block.InvertedLampSlab;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.character.SpeciesVariable;

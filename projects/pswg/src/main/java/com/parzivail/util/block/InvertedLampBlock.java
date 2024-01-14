@@ -35,10 +35,10 @@ public class InvertedLampBlock extends Block
 	{
 		if (!world.isClient)
 		{
-			boolean bl = state.get(LIT);
-			if (bl == world.isReceivingRedstonePower(pos))
+			boolean isLit = state.get(LIT);
+			if (isLit == world.isReceivingRedstonePower(pos))
 			{
-				if (bl)
+				if (isLit)
 				{
 					world.scheduleBlockTick(pos, this, 4);
 				}

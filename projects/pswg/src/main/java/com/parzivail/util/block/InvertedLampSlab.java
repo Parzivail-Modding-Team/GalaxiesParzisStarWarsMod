@@ -1,6 +1,5 @@
-package com.parzivail.pswg.block;
+package com.parzivail.util.block;
 
-import com.parzivail.util.block.InvertedLampBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.ai.pathing.NavigationType;
