@@ -1,1 +1,1 @@
-{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/gray_imperial_panel_blank","top":"pswg:block/gray_imperial_panel_blank","end":"pswg:block/gray_imperial_panel_blank"}}
+{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/gray_imperial_panel_blank","top":"pswg:block/gray_imperial_panel_blank","bottom":"pswg:block/gray_imperial_panel_blank"}}

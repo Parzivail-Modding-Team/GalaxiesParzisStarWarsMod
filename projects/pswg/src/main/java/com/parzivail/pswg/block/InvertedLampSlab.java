@@ -33,16 +33,19 @@ public class InvertedLampSlab extends InvertedLampBlock implements Waterloggable
 	protected static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
 	protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 	protected static final VoxelShape WEST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 16.0D);
+
 	public InvertedLampSlab(AbstractBlock.Settings settings)
 	{
 		super(settings);
 		this.setDefaultState(this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, Boolean.FALSE).with(LIT, Boolean.TRUE));
 	}
+
 	@Override
 	public boolean hasSidedTransparency(BlockState state)
 	{
 		return state.get(TYPE) != SlabType.DOUBLE;
 	}
+
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
@@ -205,6 +208,7 @@ public class InvertedLampSlab extends InvertedLampBlock implements Waterloggable
 	{
 		return state.get(TYPE) != SlabType.DOUBLE && Waterloggable.super.canFillWithFluid(player, world, pos, state, fluid);
 	}
+
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
@@ -213,6 +217,7 @@ public class InvertedLampSlab extends InvertedLampBlock implements Waterloggable
 
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
+
 	@Override
 	public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type)
 	{
@@ -224,5 +229,4 @@ public class InvertedLampSlab extends InvertedLampBlock implements Waterloggable
 				return false;
 		}
 	}
-
 }

@@ -203,14 +203,14 @@ public class ModelFile
 						.texture("side", sideTexture),
 				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_top_z"), Resources.id("block/template/slab_top_z"))
-						.texture("end", topTexture)
+						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture)
 		);
 	}
 	public static Collection<ModelFile> verticalSlabs(Block block, Identifier topTexture, Identifier sideTexture, String... suffixes)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		var models = new ArrayList<ModelFile>();
 		 for(var suffix:suffixes){
 				models.add(ModelFile
@@ -486,13 +486,13 @@ public class ModelFile
 	}
 	public static Collection<ModelFile> columns(Block block, Identifier topTexture, String... suffixes)
 	{
-		var id = AssetGenerator.getRegistryName(block);
+		var id = AssetUtils.getRegistryName(block);
 		var models = new ArrayList<ModelFile>();
 		for (var suffix : suffixes)
 		{
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(AssetGenerator.getRegistryName(block), suffix), new Identifier("block/cube_column"))
-					           .texture("side", IdentifierUtil.concat(AssetGenerator.getTextureName(block), suffix))
+					           .ofModel(IdentifierUtil.concat(AssetUtils.getRegistryName(block), suffix), new Identifier("block/cube_column"))
+					           .texture("side", IdentifierUtil.concat(AssetUtils.getTextureName(block), suffix))
 					           .texture("end", topTexture));
 		}
 

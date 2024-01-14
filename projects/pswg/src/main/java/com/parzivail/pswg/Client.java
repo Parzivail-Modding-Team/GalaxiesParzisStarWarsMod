@@ -153,7 +153,9 @@ public class Client implements ClientModInitializer
 		var textureId = texture.getNamespace() + "/" + texture.getPath() + "/" + Integer.toHexString(color);
 		return Client.tintedTextureProvider.tint(textureId, texture, color);
 	}
-	private static void registerThermalDetonatorPredicate(){
+
+	private static void registerThermalDetonatorPredicate()
+	{
 		ModelPredicateProviderRegistry.register(SwgItems.Explosives.ThermalDetonator, new Identifier("primed"), (stack, world, livingEntity, seed) -> {
 
 			Entity entity = livingEntity != null ? livingEntity : stack.getHolder();

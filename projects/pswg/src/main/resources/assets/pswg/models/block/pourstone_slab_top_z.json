@@ -1,1 +1,1 @@
-{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/pourstone","top":"pswg:block/pourstone","end":"pswg:block/pourstone"}}
+{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/pourstone","top":"pswg:block/pourstone","bottom":"pswg:block/pourstone"}}

@@ -1,1 +1,1 @@
-{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/ilum_stone_bricks","top":"pswg:block/ilum_stone_bricks","end":"pswg:block/ilum_stone_bricks"}}
+{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/ilum_stone_bricks","top":"pswg:block/ilum_stone_bricks","bottom":"pswg:block/ilum_stone_bricks"}}

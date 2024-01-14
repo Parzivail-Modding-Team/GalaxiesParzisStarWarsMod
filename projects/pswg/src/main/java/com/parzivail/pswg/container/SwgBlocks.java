@@ -661,8 +661,6 @@ public class SwgBlocks
 		@TarkinBlock
 		public static final Block ImperialFlooringPattern2 = createPanel(MapColor.GRAY);
 
-
-
 		@RegistryName("gray_imperial_light_half_1")
 		public static final Block GrayImperialLightHalf1 = createLightingPanelBlock(13);
 		@RegistryName("gray_imperial_light_half_2")
@@ -679,7 +677,6 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialPanelPattern1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
 		public static final PillarBlock GrayImperialPanelPattern2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-
 
 		@RegistryName("gray_imperial_tall_panel_1")
 		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
@@ -1033,8 +1030,8 @@ public class SwgBlocks
 				return brightness;
 			return 0;
 		}).strength(0.3f));
-
 	}
+
 	public static InvertedLampSlab createLightingPanelSlab(int brightness)
 	{
 		return new InvertedLampSlab(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
@@ -1042,6 +1039,5 @@ public class SwgBlocks
 				return brightness;
 			return 0;
 		}).strength(0.3f));
-
 	}
 }

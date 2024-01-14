@@ -1,1 +1,1 @@
-{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/desert_sandstone","top":"pswg:block/desert_sandstone","end":"pswg:block/desert_sandstone"}}
+{"parent":"pswg:block/template/slab_top_z","textures":{"side":"pswg:block/desert_sandstone","top":"pswg:block/desert_sandstone","bottom":"pswg:block/desert_sandstone"}}

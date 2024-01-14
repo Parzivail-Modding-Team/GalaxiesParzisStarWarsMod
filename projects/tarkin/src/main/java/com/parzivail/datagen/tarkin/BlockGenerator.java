@@ -220,9 +220,9 @@ public class BlockGenerator
 
 	public static BlockGenerator verticalSlabLit(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
-		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
+		var top = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_top");
 		return basic(block)
-				.state((b, modelId) -> BlockStateGenerator.createVerticalSlabBlockStateLit(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
+				.state((b, modelId) -> BlockStateGenerator.createVerticalSlabBlockStateLit(block, AssetUtils.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.verticalSlabs(b, topTexture, sideTexture, "_on", "_off"))
 				.blockTag(BlockTags.SLABS);
 	}
