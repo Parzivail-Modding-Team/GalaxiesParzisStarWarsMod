@@ -1,1 +1,1 @@
-{"variants":{"axis=x":{"model":"pswg:block/gray_imperial_light_half_3","x":90,"y":90},"axis=y":{"model":"pswg:block/gray_imperial_light_half_3"},"axis=z":{"model":"pswg:block/gray_imperial_light_half_3","x":90}}}
+{"variants":{"lit=false":{"model":"pswg:block/gray_imperial_light_half_3"},"lit=true":{"model":"pswg:block/gray_imperial_light_half_3_on"}}}

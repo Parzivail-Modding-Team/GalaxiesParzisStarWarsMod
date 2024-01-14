@@ -208,6 +208,46 @@ public class ModelFile
 						.texture("side", sideTexture)
 		);
 	}
+	public static Collection<ModelFile> verticalSlabs(Block block, Identifier topTexture, Identifier sideTexture, String... suffixes)
+	{
+		var id = AssetUtils.getRegistryName(block);
+		var models = new ArrayList<ModelFile>();
+		 for(var suffix:suffixes){
+				models.add(ModelFile
+						.ofModel(IdentifierUtil.concat(id, suffix), new Identifier("block/slab"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+				models.add(ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top"+suffix), new Identifier("block/slab_top"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+				models.add(ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_x"+suffix), Resources.id("block/template/slab_x"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+				models.add(ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_x"+suffix), Resources.id("block/template/slab_top_x"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+				models.add(ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_z"+suffix), Resources.id("block/template/slab_z"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+				models.add(ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_z"+suffix), Resources.id("block/template/slab_top_z"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+			 models.addAll(ModelFile
+					     .columns(block,topTexture, "_double"+suffix));
+		}
+		return models;
+	}
 
 	public static Collection<ModelFile> trapdoor(Block block, Identifier texture)
 	{
@@ -444,7 +484,20 @@ public class ModelFile
 						.texture("side", sideTexture)
 		);
 	}
+	public static Collection<ModelFile> columns(Block block, Identifier topTexture, String... suffixes)
+	{
+		var id = AssetUtils.getRegistryName(block);
+		var models = new ArrayList<ModelFile>();
+		for (var suffix : suffixes)
+		{
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(AssetUtils.getRegistryName(block), suffix), new Identifier("block/cube_column"))
+					           .texture("side", IdentifierUtil.concat(AssetUtils.getTextureName(block), suffix))
+					           .texture("end", topTexture));
+		}
 
+		return models;
+	}
 	public static Collection<ModelFile> cubes(Block block, String... suffixes)
 	{
 		var id = AssetUtils.getRegistryName(block);
