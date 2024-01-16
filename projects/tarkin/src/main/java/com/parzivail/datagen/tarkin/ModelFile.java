@@ -1,25 +1,25 @@
 package com.parzivail.datagen.tarkin;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.parzivail.datagen.AssetUtils;
 import com.parzivail.pswg.Resources;
 import net.minecraft.block.Block;
+import net.minecraft.client.render.model.json.ModelOverride;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 public class ModelFile
 {
 	private final Identifier filename;
 	private final Identifier parent;
 	private final HashMap<String, Identifier> textures;
+	private final ArrayList<ModelOverride> overrides;
 
 	private ModelFile(Identifier filename)
 	{
@@ -31,6 +31,7 @@ public class ModelFile
 		this.filename = filename;
 		this.parent = parent;
 		this.textures = new HashMap<>();
+		this.overrides = new ArrayList<>();
 	}
 
 	public Identifier getId()
@@ -626,6 +627,12 @@ public class ModelFile
 		return this;
 	}
 
+	public ModelFile predicate(Identifier conditionType, float threshold, Identifier modelId)
+	{
+		this.overrides.add(new ModelOverride(modelId, List.of(new ModelOverride.Condition(conditionType, threshold))));
+		return this;
+	}
+
 	public JsonElement build()
 	{
 		var rootElement = new JsonObject();
@@ -641,6 +648,26 @@ public class ModelFile
 				textureElement.addProperty(entry.getKey(), entry.getValue().toString());
 
 			rootElement.add("textures", textureElement);
+		}
+
+		if (!overrides.isEmpty())
+		{
+			var overrideElement = new JsonArray();
+
+			for (var override : overrides)
+			{
+				var overrideEntry = new JsonObject();
+				overrideEntry.addProperty("model", override.getModelId().toString());
+
+				var predicateElement = new JsonObject();
+				override.streamConditions().forEach(condition -> predicateElement.addProperty(condition.getType().toString(), condition.getThreshold()));
+
+				overrideEntry.add("predicate", predicateElement);
+
+				overrideElement.add(overrideEntry);
+			}
+
+			rootElement.add("overrides", overrideElement);
 		}
 
 		return rootElement;

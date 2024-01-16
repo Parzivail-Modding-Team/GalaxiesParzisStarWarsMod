@@ -10,6 +10,7 @@ import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.character.SpeciesVariable;
+import com.parzivail.pswg.client.container.SwgModelPredicateProviders;
 import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.compat.rei.categories.MoistureVaporatorCategory;
@@ -728,6 +729,11 @@ public class PswgTarkin
 
 		for (var entry : SwgItems.Door.DoorInsert.entrySet())
 			ItemGenerator.basic(entry.getValue()).build(assets);
+
+		ItemGenerator.itemNoModelLangEntry(SwgItems.Explosives.ThermalDetonator)
+		             .model(item -> ModelFile.item(item)
+		                                     .predicate(SwgModelPredicateProviders.ThermalDetonatorPrimed, 1, Resources.id("item/thermal_detonator_primed")))
+		             .build(assets);
 
 		ItemGenerator.armor(SwgItems.Armor.EliteSquadTrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);

@@ -4,6 +4,7 @@ import com.parzivail.nem.NemManager;
 import com.parzivail.p3d.P3dBlockRendererRegistry;
 import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.api.PswgClientAddon;
+import com.parzivail.pswg.client.container.SwgModelPredicateProviders;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
@@ -40,7 +41,6 @@ import com.parzivail.pswg.features.debug.DebugUtil;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.client.forge.LightsaberForgeScreen;
-import com.parzivail.pswg.item.ThermalDetonatorTag;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
@@ -85,14 +85,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.ClickEvent;
@@ -154,43 +151,12 @@ public class Client implements ClientModInitializer
 		return Client.tintedTextureProvider.tint(textureId, texture, color);
 	}
 
-	private static void registerThermalDetonatorPredicate()
-	{
-		ModelPredicateProviderRegistry.register(SwgItems.Explosives.ThermalDetonator, new Identifier("primed"), (stack, world, livingEntity, seed) -> {
-
-			Entity entity = livingEntity != null ? livingEntity : stack.getHolder();
-			if (entity == null)
-			{
-				return 0.0f;
-			}
-
-			if (world == null && ((Entity)entity).getWorld() instanceof ClientWorld)
-			{
-				world = (ClientWorld)((Entity)entity).getWorld();
-			}
-
-			if (world == null)
-			{
-				return 0.0f;
-			}
-			else if (new ThermalDetonatorTag(stack.getOrCreateNbt()).primed)
-			{
-				return 1f;
-			}
-			else if (!new ThermalDetonatorTag(stack.getOrCreateNbt()).primed)
-			{
-				return 0f;
-			}
-			return 0f;
-		});
-	}
-
 	@Override
 	public void onInitializeClient()
 	{
 		Galaxies.LOG.debug("onInitializeClient");
 
-		registerThermalDetonatorPredicate();
+		SwgModelPredicateProviders.register();
 
 		KeyBindingHelper.registerKeyBinding(KEY_PRIMARY_ITEM_ACTION);
 		KeyBindingHelper.registerKeyBinding(KEY_SECONDARY_ITEM_ACTION);
