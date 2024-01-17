@@ -732,7 +732,7 @@ public class PswgTarkin
 
 		ItemGenerator.itemNoModelLangEntry(SwgItems.Explosives.ThermalDetonator)
 		             .model(item -> ModelFile.item(item)
-		                                     .predicate(SwgModelPredicateProviders.ThermalDetonatorPrimed, 1, Resources.id("item/thermal_detonator_primed")))
+		                                     .predicate(SwgModelPredicateProviders.ThermalDetonatorPrimed, 1, ModelFile.itemSprite(Resources.id("thermal_detonator_primed"))))
 		             .build(assets);
 
 		ItemGenerator.armor(SwgItems.Armor.EliteSquadTrooper, assets);

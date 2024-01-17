@@ -90,7 +90,13 @@ public class ItemGenerator
 	public void build(List<BuiltAsset> assets)
 	{
 		// models
-		itemModels.forEach(modelFile -> assets.add(BuiltAsset.itemModel(modelFile.getId(), modelFile.build())));
+		itemModels.forEach(modelFile -> {
+			assets.add(BuiltAsset.itemModel(modelFile.getId(), modelFile.build()));
+
+			modelFile.getDependencies().forEach(modelFile1 -> {
+				assets.add(BuiltAsset.itemModel(modelFile1.getId(), modelFile1.build()));
+			});
+		});
 
 		if (languageProvider != null)
 			assets.add(languageProvider.build());
