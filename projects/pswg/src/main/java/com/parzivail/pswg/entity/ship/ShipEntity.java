@@ -7,7 +7,10 @@ import com.parzivail.pswg.client.render.camera.ChaseCam;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.data.PacketByteBufHelper;
-import com.parzivail.util.entity.*;
+import com.parzivail.util.entity.EntityUtil;
+import com.parzivail.util.entity.IFlyingVehicle;
+import com.parzivail.util.entity.IPrecisionVelocityEntity;
+import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import io.netty.buffer.Unpooled;
@@ -46,10 +49,10 @@ import java.util.EnumSet;
 
 public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrecisionVelocityEntity
 {
-	private static final TrackedData<Quaternionf> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
+	private static final TrackedData<Quaternionf> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.QUATERNIONF);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);
-	private static final TrackedData<Short> CONTROL_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
-	private static final TrackedData<Short> SHIELD_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
+	private static final TrackedData<Integer> CONTROL_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Integer> SHIELD_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> FUEL_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	@Environment(EnvType.CLIENT)
@@ -213,8 +216,8 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	{
 		getDataTracker().startTracking(ROTATION, new Quaternionf(QuatUtil.IDENTITY));
 		getDataTracker().startTracking(THROTTLE, 0f);
-		getDataTracker().startTracking(CONTROL_BITS, (short)0);
-		getDataTracker().startTracking(SHIELD_BITS, (short)0);
+		getDataTracker().startTracking(CONTROL_BITS, 0);
+		getDataTracker().startTracking(SHIELD_BITS, 0);
 		getDataTracker().startTracking(FUEL_BITS, 0);
 	}
 

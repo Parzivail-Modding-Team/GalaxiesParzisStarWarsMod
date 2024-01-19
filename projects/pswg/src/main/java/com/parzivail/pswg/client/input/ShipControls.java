@@ -6,19 +6,19 @@ public enum ShipControls
 {
 	NONE(0), THROTTLE_UP(0b1), THROTTLE_DOWN(0b10), BLASTER(0b100), SPECIAL1(0b1000), SPECIAL2(0b10000);
 
-	private final short flag;
+	private final int flag;
 
 	ShipControls(int flag)
 	{
-		this.flag = (short)flag;
+		this.flag = flag;
 	}
 
-	public short getFlag()
+	public int getFlag()
 	{
 		return flag;
 	}
 
-	public static EnumSet<ShipControls> unpack(short controls)
+	public static EnumSet<ShipControls> unpack(int controls)
 	{
 		var allFlags = values();
 		var flags = EnumSet.noneOf(ShipControls.class);
@@ -30,9 +30,9 @@ public enum ShipControls
 		return flags;
 	}
 
-	public static short pack(EnumSet<ShipControls> controls)
+	public static int pack(EnumSet<ShipControls> controls)
 	{
-		short packed = 0;
+		int packed = 0;
 		for (var sc : controls)
 			packed |= sc.getFlag();
 		return packed;

@@ -15,7 +15,6 @@ import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.client.model.compat.FmlCompat;
 import com.parzivail.util.data.pack.ModDataHelper;
-import com.parzivail.util.entity.TrackedDataHandlers;
 import com.parzivail.util.network.PlayerPacketHandler;
 import com.parzivail.util.world.DimensionTeleporter;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -82,8 +81,6 @@ public class Galaxies implements ModInitializer
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
 
 		Resources.checkVersion();
-
-		TrackedDataHandlers.register();
 
 		SwgRecipeType.register();
 		SwgRecipeSerializers.register();
