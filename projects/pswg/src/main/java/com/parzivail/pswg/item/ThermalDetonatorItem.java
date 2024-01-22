@@ -1,9 +1,9 @@
 package com.parzivail.pswg.item;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.container.SwgDamageTypes;
-import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.client.sound.SoundHelper;
+import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
+import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
@@ -13,13 +13,14 @@ import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.RegistryKeys;
@@ -27,23 +28,36 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
+public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
+	public final int baseTicksToExplosion = 150;
+	public ThermalDetonatorItemSoundInstance soundInstance;
 	@TarkinLang
 	public static final String I18N_TOOLTIP_CONTROLS = Resources.tooltip("thermal_detonator.controls");
 
 	public ThermalDetonatorItem(Settings settings)
 	{
-		super(settings);
+		super(SwgBlocks.Misc.ThermalDetonatorBlock, settings);
+	}
+
+	@Override
+	public ActionResult useOnBlock(ItemUsageContext context)
+	{
+		var stack = context.getStack();
+		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
+		if (context.getPlayer().isSneaking() && !tdt.primed)
+		{
+			return super.useOnBlock(context);
+		}
+		use(context.getWorld(), context.getPlayer(), context.getHand());
+		return ActionResult.PASS;
 	}
 
 	public ThermalDetonatorEntity createThermalDetonator(World world, int life, boolean primed, ItemStack stack, PlayerEntity player)
@@ -90,7 +104,7 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 			{
 				stack.decrement(1);
 			}
-			tdt.ticksToExplosion = 150;
+			tdt.ticksToExplosion = baseTicksToExplosion;
 			tdt.shouldRender = true;
 			tdt.primed = false;
 		}
@@ -108,7 +122,12 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 	@Override
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
 	{
+
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
+		if (tdt.primed)
+		{
+			MinecraftClient.getInstance().getSoundManager().stop(soundInstance);
+		}
 		if (user instanceof PlayerEntity playerEntity)
 		{
 			boolean inCreative = playerEntity.getAbilities().creativeMode;
@@ -139,7 +158,7 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
 			}
 		}
-		tdt.ticksToExplosion = 150;
+		tdt.ticksToExplosion = baseTicksToExplosion;
 		tdt.serializeAsSubtag(stack);
 	}
 
@@ -178,11 +197,25 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity user, Hand hand, boolean isRepeatEvent)
 	{
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(user.getMainHandStack().getOrCreateNbt());
+		soundInstance = new ThermalDetonatorItemSoundInstance(user);
 		if (!tdt.primed)
 		{
 			tdt.primed = true;
-			tdt.ticksToExplosion = 150;
+			tdt.ticksToExplosion = baseTicksToExplosion;
+			user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
+
+			if (world instanceof ClientWorld)
+			{
+				user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
+				MinecraftClient.getInstance().getSoundManager().play(soundInstance);
+			}
 		}
+		else
+		{
+			tdt.primed = false;
+			MinecraftClient.getInstance().getSoundManager().stop(soundInstance);
+		}
+
 		tdt.serializeAsSubtag(user.getMainHandStack());
 		return TypedActionResult.success(user.getMainHandStack());
 	}
@@ -205,7 +238,7 @@ public class ThermalDetonatorItem extends Item implements ILeftClickConsumer, ID
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
 		if (tdt.primed)
 		{
-			return (float)(-150 + tdt.ticksToExplosion) / -150;
+			return (float)(-baseTicksToExplosion + tdt.ticksToExplosion) / -baseTicksToExplosion;
 		}
 		else
 		{

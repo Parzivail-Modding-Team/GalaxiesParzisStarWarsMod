@@ -1284,6 +1284,8 @@ public class PswgTarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Workbench.Lightsaber)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Misc.ThermalDetonatorBlock)
+		              .build(assets);
 	}
 
 	public static void build(List<BuiltAsset> assets)

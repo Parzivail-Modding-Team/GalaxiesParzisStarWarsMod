@@ -1,6 +1,7 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
@@ -307,7 +308,10 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 			var state = getWorld().getBlockState(blockPos);
 			if(state.getBlock() instanceof TargetBlock targetBlock){
 				targetBlock.onProjectileHit(getWorld(), state, blockHit, this);
-
+			}
+			else if (state.getBlock() instanceof ThermalDetonatorBlock tdb)
+			{
+				tdb.explode(getWorld(), blockPos);
 			}
 
 			if (state.isIn(SwgTags.Blocks.BLASTER_REFLECT))

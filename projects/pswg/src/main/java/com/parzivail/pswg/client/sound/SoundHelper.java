@@ -4,6 +4,7 @@ import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.lightsabers.client.ThrownLightsaberEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvent;
 
 public class SoundHelper
