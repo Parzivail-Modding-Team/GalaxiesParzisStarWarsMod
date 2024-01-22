@@ -55,7 +55,8 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	public void explode()
 	{
-		getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 1f, 1f);
+		//this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.MASTER, 4.0f, 1f, true);
+		getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
 		MinecraftClient.getInstance().getSoundManager().stop(soundInstance);
 		super.explode();
 	}

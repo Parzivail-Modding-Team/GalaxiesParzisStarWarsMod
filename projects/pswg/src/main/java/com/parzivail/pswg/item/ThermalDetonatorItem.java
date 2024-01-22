@@ -99,6 +99,7 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 			ThermalDetonatorEntity tdEntity = tdi.createThermalDetonator(world, 0, true, stack, player);
 			tdEntity.setVisible(false);
 			world.spawnEntity(tdEntity);
+			MinecraftClient.getInstance().getSoundManager().stop(tdEntity.soundInstance);
 			player.getItemCooldownManager().set(stack.getItem(), 0);
 			if (!player.isCreative())
 			{
