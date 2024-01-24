@@ -49,6 +49,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.parzivail.pswg.block.ThermalDetonatorBlock.CLUSTER_SIZE;
+
 public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocityEntity, IPrecisionSpawnEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -311,7 +313,8 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 			}
 			else if (state.getBlock() instanceof ThermalDetonatorBlock tdb)
 			{
-				tdb.explode(getWorld(), blockPos);
+				float power = getWorld().getBlockState(blockPos).get(CLUSTER_SIZE) * 3f + 2;
+				tdb.explode(getWorld(), blockPos, power);
 			}
 
 			if (state.isIn(SwgTags.Blocks.BLASTER_REFLECT))

@@ -175,7 +175,8 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	{
 		if (projectile instanceof BlasterBoltEntity bbe)
 		{
-			explode(world, hit.getBlockPos());
+			Float power = world.getBlockState(hit.getBlockPos()).get(CLUSTER_SIZE) * 3f + 2;
+			explode(world, hit.getBlockPos(), power);
 		}
 		super.onProjectileHit(world, state, hit, projectile);
 	}
@@ -185,19 +186,20 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	@Override
 	public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion)
 	{
-		explode(world, pos);
+		float power = 8f;
+		explode(world, pos, power);
 		super.onDestroyedByExplosion(world, pos, explosion);
 	}
 
-	public void explode(World world, BlockPos blockPos)
+	public void explode(World world, BlockPos blockPos, float explosionPower)
 	{
 		var tde = new ThermalDetonatorEntity(SwgEntities.Misc.ThermalDetonator, world);
+		tde.setExplosionPower(explosionPower);
 		tde.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-		tde.setExplosionPower(world.getBlockState(blockPos).get(CLUSTER_SIZE) * 4f + 1);
 		tde.setPrimed(true);
 		tde.setLife(0);
 
-		world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+		world.breakBlock(blockPos, false);
 
 		world.spawnEntity(tde);
 	}
