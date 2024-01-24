@@ -16,60 +16,60 @@ public class BaseClientContent implements PswgClientAddon
 	public void onPswgClientReady()
 	{
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_AQUALISH, Resources.id("textures/gui/character/icons.png"), 8);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_AQUALISH, SwgSpeciesRenderer.humanoidBase(Resources.id("species/aqualish")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_AQUALISH, SwgSpeciesRenderer.model(Resources.id("species/aqualish")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_BITH, Resources.id("textures/gui/character/icons.png"), 12);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_BITH, SwgSpeciesRenderer.humanoidBase(Resources.id("species/bith")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_BITH, SwgSpeciesRenderer.model(Resources.id("species/bith")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, Resources.id("textures/gui/character/icons.png"), 9);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/chagrian")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, SwgSpeciesRenderer.model(Resources.id("species/chagrian")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_CHISS, Resources.id("textures/gui/character/icons.png"), 3);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_CHISS, SwgSpeciesRenderer.humanoidBase(Resources.id("species/human")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_CHISS, SwgSpeciesRenderer.model(Resources.id("species/human")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_KAMINOAN, Resources.id("textures/gui/character/icons.png"), 15);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_KAMINOAN, SwgSpeciesRenderer.fullModel(Resources.id("species/kaminoan")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_KAMINOAN, SwgSpeciesRenderer.model(Resources.id("species/kaminoan")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_JAWA, Resources.id("textures/gui/character/icons.png"), 1);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_JAWA, SwgSpeciesRenderer.humanoidBase(Resources.id("species/jawa")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_JAWA, SwgSpeciesRenderer.model(Resources.id("species/jawa")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_TOGRUTA, Resources.id("textures/gui/character/icons.png"), 10);
 		SwgSpeciesRenderer.register(
 				SwgSpeciesRegistry.SPECIES_TOGRUTA,
-				SwgSpeciesRenderer.humanoidBase(Resources.id("species/togruta_m")),
-				SwgSpeciesRenderer.humanoidBase(Resources.id("species/togruta_f")),
+				SwgSpeciesRenderer.model(Resources.id("species/togruta_m")),
+				SwgSpeciesRenderer.model(Resources.id("species/togruta_f")),
 				null
 		);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_TWILEK, Resources.id("textures/gui/character/icons.png"), 6);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_TWILEK, SwgSpeciesRenderer.humanoidBase(Resources.id("species/twilek")), BaseClientContent::animateTwilek);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_TWILEK, SwgSpeciesRenderer.model(Resources.id("species/twilek")), BaseClientContent::animateTwilek);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_HUMAN, Resources.id("textures/gui/character/icons.png"), 2);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_HUMAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/human")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_HUMAN, SwgSpeciesRenderer.model(Resources.id("species/human")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_PANTORAN, Resources.id("textures/gui/character/icons.png"), 4);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_PANTORAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/human")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_PANTORAN, SwgSpeciesRenderer.model(Resources.id("species/human")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_WOOKIEE, Resources.id("textures/gui/character/icons.png"), 13);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_WOOKIEE, SwgSpeciesRenderer.fullModel(Resources.id("species/wookiee")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_WOOKIEE, SwgSpeciesRenderer.model(Resources.id("species/wookiee")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_DEVARONIAN, Resources.id("textures/gui/character/icons.png"), 5);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_DEVARONIAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/devaronian")), BaseClientContent::animateDevaronian);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_DEVARONIAN, SwgSpeciesRenderer.model(Resources.id("species/devaronian")), BaseClientContent::animateDevaronian);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_RODIAN, Resources.id("textures/gui/character/icons.png"), 11);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_RODIAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/rodian")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_RODIAN, SwgSpeciesRenderer.model(Resources.id("species/rodian")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_DUROS, Resources.id("textures/gui/character/icons.png"), 7);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_DUROS, SwgSpeciesRenderer.humanoidBase(Resources.id("species/duros")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_DUROS, SwgSpeciesRenderer.model(Resources.id("species/duros")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_GOTAL, Resources.id("textures/gui/character/icons.png"), 18);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_GOTAL, SwgSpeciesRenderer.humanoidBase(Resources.id("species/gotal")), BaseClientContent::animateGotal);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_GOTAL, SwgSpeciesRenderer.model(Resources.id("species/gotal")), BaseClientContent::animateGotal);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_ONGREE, Resources.id("textures/gui/character/icons.png"), 19);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_ONGREE, SwgSpeciesRenderer.humanoidBase(Resources.id("species/ongree")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_ONGREE, SwgSpeciesRenderer.model(Resources.id("species/ongree")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_GRAN, Resources.id("textures/gui/character/icons.png"), 20);
-		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_GRAN, SwgSpeciesRenderer.humanoidBase(Resources.id("species/gran")), null);
+		SwgSpeciesRenderer.register(SwgSpeciesRegistry.SPECIES_GRAN, SwgSpeciesRenderer.model(Resources.id("species/gran")), null);
 
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_TRANDOSHAN, Resources.id("textures/gui/character/icons.png"), 14);
 		SwgSpeciesIcons.register(SwgSpeciesRegistry.SPECIES_MON_CALAMARI, Resources.id("textures/gui/character/icons.png"), 16);

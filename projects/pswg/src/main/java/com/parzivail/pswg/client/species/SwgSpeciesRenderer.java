@@ -17,8 +17,6 @@ import java.util.function.Supplier;
 
 public class SwgSpeciesRenderer
 {
-	public static final Identifier HUMANOID_BASE_MODEL_ID = Resources.id("species/humanoid_base");
-
 	public static final HashMap<Identifier, SwgSpeciesModel> MODELS = new HashMap<>();
 
 	//		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
@@ -28,17 +26,12 @@ public class SwgSpeciesRenderer
 
 	public static Supplier<BipedEntityModel<LivingEntity>> getHumanModel()
 	{
-		return Client.NEM_MANAGER.getOverridingBipedModel(Resources.id("species/human"), HUMANOID_BASE_MODEL_ID, true);
+		return Client.NEM_MANAGER.getPlayerBipedModel(Resources.id("species/human"), true);
 	}
 
-	public static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> fullModel(Identifier id)
+	public static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> model(Identifier id)
 	{
 		return Client.NEM_MANAGER.getPlayerModel(id, true);
-	}
-
-	public static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> humanoidBase(Identifier id)
-	{
-		return Client.NEM_MANAGER.getOverridingPlayerModel(id, HUMANOID_BASE_MODEL_ID, true);
 	}
 
 	private static void register(SwgSpeciesModel model)

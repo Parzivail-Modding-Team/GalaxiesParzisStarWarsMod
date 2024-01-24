@@ -1,7 +1,7 @@
 package com.parzivail.nem;
 
 import com.google.common.collect.ImmutableList;
-import com.parzivail.nem.mixin.ModelPartAccessor;
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.client.render.ModelAngleAnimator;
 import com.parzivail.util.client.render.MutableAnimatedModel;
 import com.parzivail.util.client.render.armor.BipedEntityArmorModel;
@@ -25,19 +25,26 @@ import org.jetbrains.annotations.NotNull;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 {
+	private static final Identifier HUMANOID_BASE_ID = Resources.id("models/species/humanoid_base.nem");
+	private static final List<String> REQUIRED_BIPED_PARTS = List.of(
+			EntityModelPartNames.HEAD, EntityModelPartNames.HAT, EntityModelPartNames.BODY,
+			EntityModelPartNames.RIGHT_ARM, EntityModelPartNames.LEFT_ARM, EntityModelPartNames.RIGHT_LEG,
+			EntityModelPartNames.LEFT_LEG
+	);
+
 	private final Identifier id;
 	private final Map<Identifier, TexturedModelData> modelData;
 	private final ArrayList<Pair<Identifier, Consumer<ModelPart>>> models;
 	private final HashMap<Identifier, PlayerEntityModel<AbstractClientPlayerEntity>> playerModels;
 	private final HashMap<Identifier, BipedEntityModel<LivingEntity>> bipedModels;
+
+	private NbtCompound humanoidBaseData;
 
 	public NemManager(Identifier id)
 	{
@@ -50,13 +57,62 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	}
 
 	@Override
-	public TexturedModelData readResource(ResourceManager resourceManager, Profiler profiler, InputStream stream) throws IOException
+	protected Set<Identifier> getPrioritizedResources()
 	{
-		return buildModel(NbtIo.readCompound(new DataInputStream(stream)));
+		return Set.of(
+				HUMANOID_BASE_ID
+		);
+	}
+
+	@Override
+	public TexturedModelData readResource(ResourceManager resourceManager, Profiler profiler, Identifier id, InputStream stream) throws IOException
+	{
+		var nbtData = NbtIo.readCompound(new DataInputStream(stream));
+
+		// TODO: proper resource dependency resolution
+		if (id.equals(HUMANOID_BASE_ID))
+			humanoidBaseData = nbtData;
+
+		return buildModel(nbtData);
 	}
 
 	@NotNull
-	public static TexturedModelData buildModel(NbtCompound nbt)
+	public TexturedModelData buildModel(NbtCompound nbt)
+	{
+		var modelData = new ModelData();
+		var root = modelData.getRoot();
+
+		var base = nbt.getString("base");
+		if (!base.isEmpty())
+		{
+			if (!base.equals("pswg:species/humanoid_base"))
+				// TODO: proper resource dependency resolution
+				throw new RuntimeException("NEM model extensions are not supported for base model: " + base);
+			var overrideNbt = humanoidBaseData;
+
+			var baseChildren = nbt.getCompound("parts");
+			var overrideChildren = overrideNbt.getCompound("parts");
+
+			for (var entry : overrideChildren.getKeys())
+				if (!baseChildren.contains(entry))
+					baseChildren.put(entry, overrideChildren.getCompound(entry));
+		}
+
+		addChildren(root, nbt.getCompound("parts"));
+
+		if (nbt.getBoolean("expand_biped"))
+		{
+			for (var part : REQUIRED_BIPED_PARTS)
+				if (modelData.getRoot().getChild(part) == null)
+					modelData.getRoot().addChild(part, ModelPartBuilder.create(), ModelTransform.NONE);
+		}
+
+		var texTag = nbt.getCompound("tex");
+		return TexturedModelData.of(modelData, texTag.getInt("w"), texTag.getInt("h"));
+	}
+
+	@NotNull
+	public static TexturedModelData buildModelWithoutOverrides(NbtCompound nbt)
 	{
 		var modelData = new ModelData();
 		var root = modelData.getRoot();
@@ -65,20 +121,9 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 
 		if (nbt.getBoolean("expand_biped"))
 		{
-			if (modelData.getRoot().getChild(EntityModelPartNames.HEAD) == null)
-				modelData.getRoot().addChild(EntityModelPartNames.HEAD, ModelPartBuilder.create(), ModelTransform.NONE);
-			if (modelData.getRoot().getChild(EntityModelPartNames.HAT) == null)
-				modelData.getRoot().addChild(EntityModelPartNames.HAT, ModelPartBuilder.create(), ModelTransform.NONE);
-			if (modelData.getRoot().getChild(EntityModelPartNames.BODY) == null)
-				modelData.getRoot().addChild(EntityModelPartNames.BODY, ModelPartBuilder.create(), ModelTransform.NONE);
-			if (modelData.getRoot().getChild(EntityModelPartNames.RIGHT_ARM) == null)
-				modelData.getRoot().addChild(EntityModelPartNames.RIGHT_ARM, ModelPartBuilder.create(), ModelTransform.NONE);
-			if (modelData.getRoot().getChild(EntityModelPartNames.LEFT_ARM) == null)
-				modelData.getRoot().addChild(EntityModelPartNames.LEFT_ARM, ModelPartBuilder.create(), ModelTransform.NONE);
-			if (modelData.getRoot().getChild(EntityModelPartNames.RIGHT_LEG) == null)
-				modelData.getRoot().addChild(EntityModelPartNames.RIGHT_LEG, ModelPartBuilder.create(), ModelTransform.NONE);
-			if (modelData.getRoot().getChild(EntityModelPartNames.LEFT_LEG) == null)
-				modelData.getRoot().addChild(EntityModelPartNames.LEFT_LEG, ModelPartBuilder.create(), ModelTransform.NONE);
+			for (var part : REQUIRED_BIPED_PARTS)
+				if (modelData.getRoot().getChild(part) == null)
+					modelData.getRoot().addChild(part, ModelPartBuilder.create(), ModelTransform.NONE);
 		}
 
 		var texTag = nbt.getCompound("tex");
@@ -184,45 +229,15 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 		return () -> playerModels.get(modelId);
 	}
 
-	public Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> getOverridingPlayerModel(Identifier overrideModelId, Identifier baseModelId, boolean thinArms)
-	{
-		models.add(new Pair<>(overrideModelId, modelPart -> playerModels.put(overrideModelId, combinePlayerModels(baseModelId, modelPart, thinArms))));
-		return () -> playerModels.get(overrideModelId);
-	}
-
-	private static ModelPartAccessor mpa(Object o)
-	{
-		return (ModelPartAccessor)o;
-	}
-
-	private <T extends LivingEntity> PlayerEntityModel<T> combinePlayerModels(Identifier baseModelId, ModelPart overrideModel, boolean thinArms)
-	{
-		var baseModelData = modelData.get(baseModelId);
-		var baseModel = baseModelData.createModel();
-
-		var baseChildren = mpa(baseModel).getChildren();
-		var overrideChildren = mpa(overrideModel).getChildren();
-
-		for (var entry : overrideChildren.entrySet())
-		{
-			if (entry.getValue().isEmpty() && mpa(entry.getValue()).getChildren().isEmpty())
-				continue;
-
-			baseChildren.put(entry.getKey(), entry.getValue());
-		}
-
-		return new PlayerEntityModel<>(baseModel, thinArms);
-	}
-
 	public Supplier<BipedEntityModel<LivingEntity>> getBipedModel(Identifier modelId)
 	{
 		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(modelPart))));
 		return () -> bipedModels.get(modelId);
 	}
 
-	public Supplier<BipedEntityModel<LivingEntity>> getOverridingBipedModel(Identifier overrideModelId, Identifier baseModelId, boolean thinArms)
+	public Supplier<BipedEntityModel<LivingEntity>> getPlayerBipedModel(Identifier overrideModelId, boolean thinArms)
 	{
-		models.add(new Pair<>(overrideModelId, modelPart -> bipedModels.put(overrideModelId, combinePlayerModels(baseModelId, modelPart, thinArms))));
+		models.add(new Pair<>(overrideModelId, modelPart -> bipedModels.put(overrideModelId, new PlayerEntityModel<>(modelPart, thinArms))));
 		return () -> bipedModels.get(overrideModelId);
 	}
 
