@@ -177,10 +177,10 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 		switch (action)
 		{
 			case PRIMARY:
+				// TODO: hold button, show radial menu
 				toggle(world, player, stack);
 				break;
 			case SECONDARY:
-				//				throwAsEntity(world, player, stack);
 				break;
 		}
 	}
