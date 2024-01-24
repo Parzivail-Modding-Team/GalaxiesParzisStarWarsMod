@@ -24,6 +24,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -38,7 +39,6 @@ import java.util.List;
 public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
 	public final int baseTicksToExplosion = 150;
-	public ThermalDetonatorItemSoundInstance soundInstance;
 	@TarkinLang
 	public static final String I18N_TOOLTIP_CONTROLS = Resources.tooltip("thermal_detonator.controls");
 
@@ -99,7 +99,6 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 			ThermalDetonatorEntity tdEntity = tdi.createThermalDetonator(world, 0, true, stack, player);
 			tdEntity.setVisible(false);
 			world.spawnEntity(tdEntity);
-			MinecraftClient.getInstance().getSoundManager().stop(tdEntity.soundInstance);
 			player.getItemCooldownManager().set(stack.getItem(), 0);
 			if (!player.isCreative())
 			{
@@ -127,7 +126,6 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
 		if (tdt.primed)
 		{
-			MinecraftClient.getInstance().getSoundManager().stop(soundInstance);
 		}
 		if (user instanceof PlayerEntity playerEntity)
 		{
@@ -198,23 +196,20 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity user, Hand hand, boolean isRepeatEvent)
 	{
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(user.getMainHandStack().getOrCreateNbt());
-		soundInstance = new ThermalDetonatorItemSoundInstance(user);
 		if (!tdt.primed)
 		{
 			tdt.primed = true;
 			tdt.ticksToExplosion = baseTicksToExplosion;
 			user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
 
-			if (world instanceof ClientWorld)
+			if (world instanceof ServerWorld)
 			{
 				user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
-				MinecraftClient.getInstance().getSoundManager().play(soundInstance);
 			}
 		}
 		else
 		{
 			tdt.primed = false;
-			MinecraftClient.getInstance().getSoundManager().stop(soundInstance);
 		}
 
 		tdt.serializeAsSubtag(user.getMainHandStack());

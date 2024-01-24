@@ -1,5 +1,6 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.client.sound.ThermalDetonatorEntitySoundInstance;
 import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
 import com.parzivail.pswg.container.SwgItems;
@@ -40,15 +41,14 @@ import java.util.Objects;
 public class ThermalDetonatorEntity extends ThrowableExplosive implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
 {
 	public int texturePhase = 0;
-	public ThermalDetonatorEntitySoundInstance soundInstance = new ThermalDetonatorEntitySoundInstance(this);
 
 	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
 	{
 		super(type, world);
 		setExplosionPower(5f);
-		if (getWorld() instanceof ClientWorld)
+		if (getWorld() instanceof ServerWorld)
 		{
-			MinecraftClient.getInstance().getSoundManager().play(soundInstance);
+			SoundHelper.playDetonatorEntitySound(this);
 		}
 	}
 
@@ -57,7 +57,7 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	{
 		//this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.MASTER, 4.0f, 1f, true);
 		getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
-		MinecraftClient.getInstance().getSoundManager().stop(soundInstance);
+
 		super.explode();
 	}
 
