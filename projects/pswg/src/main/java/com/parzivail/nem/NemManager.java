@@ -63,6 +63,24 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 
 		addChildren(root, nbt.getCompound("parts"));
 
+		if (nbt.getBoolean("expand_biped"))
+		{
+			if (modelData.getRoot().getChild(EntityModelPartNames.HEAD) == null)
+				modelData.getRoot().addChild(EntityModelPartNames.HEAD, ModelPartBuilder.create(), ModelTransform.NONE);
+			if (modelData.getRoot().getChild(EntityModelPartNames.HAT) == null)
+				modelData.getRoot().addChild(EntityModelPartNames.HAT, ModelPartBuilder.create(), ModelTransform.NONE);
+			if (modelData.getRoot().getChild(EntityModelPartNames.BODY) == null)
+				modelData.getRoot().addChild(EntityModelPartNames.BODY, ModelPartBuilder.create(), ModelTransform.NONE);
+			if (modelData.getRoot().getChild(EntityModelPartNames.RIGHT_ARM) == null)
+				modelData.getRoot().addChild(EntityModelPartNames.RIGHT_ARM, ModelPartBuilder.create(), ModelTransform.NONE);
+			if (modelData.getRoot().getChild(EntityModelPartNames.LEFT_ARM) == null)
+				modelData.getRoot().addChild(EntityModelPartNames.LEFT_ARM, ModelPartBuilder.create(), ModelTransform.NONE);
+			if (modelData.getRoot().getChild(EntityModelPartNames.RIGHT_LEG) == null)
+				modelData.getRoot().addChild(EntityModelPartNames.RIGHT_LEG, ModelPartBuilder.create(), ModelTransform.NONE);
+			if (modelData.getRoot().getChild(EntityModelPartNames.LEFT_LEG) == null)
+				modelData.getRoot().addChild(EntityModelPartNames.LEFT_LEG, ModelPartBuilder.create(), ModelTransform.NONE);
+		}
+
 		var texTag = nbt.getCompound("tex");
 		return TexturedModelData.of(modelData, texTag.getInt("w"), texTag.getInt("h"));
 	}
@@ -198,7 +216,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 
 	public Supplier<BipedEntityModel<LivingEntity>> getBipedModel(Identifier modelId)
 	{
-		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(ensureBipedParts(modelPart)))));
+		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(modelPart))));
 		return () -> bipedModels.get(modelId);
 	}
 
@@ -210,30 +228,8 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 
 	public Supplier<BipedEntityArmorModel<LivingEntity>> getBipedArmorModel(Identifier modelId)
 	{
-		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityArmorModel<>(ensureBipedParts(modelPart)))));
+		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityArmorModel<>(modelPart))));
 		return () -> (BipedEntityArmorModel<LivingEntity>)bipedModels.get(modelId);
-	}
-
-	private static ModelPart ensureBipedParts(ModelPart modelPart)
-	{
-		var mpa = (ModelPartAccessor)(Object)modelPart;
-
-		if (!modelPart.hasChild(EntityModelPartNames.HEAD))
-			mpa.getChildren().put(EntityModelPartNames.HEAD, createEmptyModelPart());
-		if (!modelPart.hasChild(EntityModelPartNames.HAT))
-			mpa.getChildren().put(EntityModelPartNames.HAT, createEmptyModelPart());
-		if (!modelPart.hasChild(EntityModelPartNames.BODY))
-			mpa.getChildren().put(EntityModelPartNames.BODY, createEmptyModelPart());
-		if (!modelPart.hasChild(EntityModelPartNames.RIGHT_ARM))
-			mpa.getChildren().put(EntityModelPartNames.RIGHT_ARM, createEmptyModelPart());
-		if (!modelPart.hasChild(EntityModelPartNames.LEFT_ARM))
-			mpa.getChildren().put(EntityModelPartNames.LEFT_ARM, createEmptyModelPart());
-		if (!modelPart.hasChild(EntityModelPartNames.RIGHT_LEG))
-			mpa.getChildren().put(EntityModelPartNames.RIGHT_LEG, createEmptyModelPart());
-		if (!modelPart.hasChild(EntityModelPartNames.LEFT_LEG))
-			mpa.getChildren().put(EntityModelPartNames.LEFT_LEG, createEmptyModelPart());
-
-		return modelPart;
 	}
 
 	private static ModelPart createEmptyModelPart()
