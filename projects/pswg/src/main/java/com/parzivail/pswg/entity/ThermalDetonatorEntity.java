@@ -1,24 +1,64 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.client.sound.ThermalDetonatorEntitySoundInstance;
+import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
+import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgParticles;
+import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
+import com.parzivail.util.entity.collision.IComplexEntityHitbox;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 public class ThermalDetonatorEntity extends ThrowableExplosive implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
 {
 	public int texturePhase = 0;
+	public ThermalDetonatorEntitySoundInstance soundInstance = new ThermalDetonatorEntitySoundInstance(this);
 
 	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
 	{
 		super(type, world);
 		setExplosionPower(5f);
+		if (getWorld() instanceof ClientWorld)
+		{
+			MinecraftClient.getInstance().getSoundManager().play(soundInstance);
+		}
+	}
+
+	@Override
+	public void explode()
+	{
+		//this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.MASTER, 4.0f, 1f, true);
+		getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
+		MinecraftClient.getInstance().getSoundManager().stop(soundInstance);
+		super.explode();
 	}
 
 	@Override
@@ -77,5 +117,23 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 		}
 
 		super.onCollision(hitResult);
+	}
+
+	@Override
+	public ActionResult interact(PlayerEntity player, Hand hand)
+	{
+		if (!isPrimed() && age > 30)
+		{
+			getWorld().spawnEntity(dropItem(SwgItems.Explosives.ThermalDetonator));
+
+			this.discard();
+		}
+		return super.interact(player, hand);
+	}
+
+	@Override
+	public boolean canHit()
+	{
+		return true;
 	}
 }

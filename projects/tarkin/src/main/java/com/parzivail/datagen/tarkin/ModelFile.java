@@ -1,25 +1,26 @@
 package com.parzivail.datagen.tarkin;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.parzivail.datagen.AssetUtils;
 import com.parzivail.pswg.Resources;
 import net.minecraft.block.Block;
+import net.minecraft.client.render.model.json.ModelOverride;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 public class ModelFile
 {
 	private final Identifier filename;
 	private final Identifier parent;
 	private final HashMap<String, Identifier> textures;
+	private final ArrayList<ModelOverride> overrides;
+	private final ArrayList<ModelFile> dependencies;
 
 	private ModelFile(Identifier filename)
 	{
@@ -31,6 +32,8 @@ public class ModelFile
 		this.filename = filename;
 		this.parent = parent;
 		this.textures = new HashMap<>();
+		this.overrides = new ArrayList<>();
+		this.dependencies = new ArrayList<>();
 	}
 
 	public Identifier getId()
@@ -117,6 +120,13 @@ public class ModelFile
 		return ModelFile
 				.ofModel(AssetUtils.getRegistryName(item), new Identifier("item/generated"))
 				.texture("layer0", AssetUtils.getTextureName(item));
+	}
+
+	public static ModelFile itemSprite(Identifier id)
+	{
+		return ModelFile
+				.ofModel(id, new Identifier("item/generated"))
+				.texture("layer0", new Identifier(id.getNamespace(), "item/" + id.getPath()));
 	}
 
 	public static ModelFile handheld_item(Item item)
@@ -208,43 +218,45 @@ public class ModelFile
 						.texture("side", sideTexture)
 		);
 	}
+
 	public static Collection<ModelFile> verticalSlabs(Block block, Identifier topTexture, Identifier sideTexture, String... suffixes)
 	{
 		var id = AssetUtils.getRegistryName(block);
 		var models = new ArrayList<ModelFile>();
-		 for(var suffix:suffixes){
-				models.add(ModelFile
-						.ofModel(IdentifierUtil.concat(id, suffix), new Identifier("block/slab"))
-						.texture("bottom", topTexture)
-						.texture("top", topTexture)
-						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
-				models.add(ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top"+suffix), new Identifier("block/slab_top"))
-						.texture("bottom", topTexture)
-						.texture("top", topTexture)
-						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
-				models.add(ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_x"+suffix), Resources.id("block/template/slab_x"))
-						.texture("bottom", topTexture)
-						.texture("top", topTexture)
-						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
-				models.add(ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_x"+suffix), Resources.id("block/template/slab_top_x"))
-						.texture("bottom", topTexture)
-						.texture("top", topTexture)
-						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
-				models.add(ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_z"+suffix), Resources.id("block/template/slab_z"))
-						.texture("bottom", topTexture)
-						.texture("top", topTexture)
-						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
-				models.add(ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_z"+suffix), Resources.id("block/template/slab_top_z"))
-						.texture("bottom", topTexture)
-						.texture("top", topTexture)
-						.texture("side", IdentifierUtil.concat(sideTexture, suffix)));
-			 models.addAll(ModelFile
-					     .columns(block,topTexture, "_double"+suffix));
+		for (var suffix : suffixes)
+		{
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(id, suffix), new Identifier("block/slab"))
+					           .texture("bottom", topTexture)
+					           .texture("top", topTexture)
+					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(id, "_top" + suffix), new Identifier("block/slab_top"))
+					           .texture("bottom", topTexture)
+					           .texture("top", topTexture)
+					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(id, "_x" + suffix), Resources.id("block/template/slab_x"))
+					           .texture("bottom", topTexture)
+					           .texture("top", topTexture)
+					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(id, "_top_x" + suffix), Resources.id("block/template/slab_top_x"))
+					           .texture("bottom", topTexture)
+					           .texture("top", topTexture)
+					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(id, "_z" + suffix), Resources.id("block/template/slab_z"))
+					           .texture("bottom", topTexture)
+					           .texture("top", topTexture)
+					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(id, "_top_z" + suffix), Resources.id("block/template/slab_top_z"))
+					           .texture("bottom", topTexture)
+					           .texture("top", topTexture)
+					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+			models.addAll(ModelFile
+					              .columns(block, topTexture, "_double" + suffix));
 		}
 		return models;
 	}
@@ -484,6 +496,7 @@ public class ModelFile
 						.texture("side", sideTexture)
 		);
 	}
+
 	public static Collection<ModelFile> columns(Block block, Identifier topTexture, String... suffixes)
 	{
 		var id = AssetUtils.getRegistryName(block);
@@ -498,6 +511,7 @@ public class ModelFile
 
 		return models;
 	}
+
 	public static Collection<ModelFile> cubes(Block block, String... suffixes)
 	{
 		var id = AssetUtils.getRegistryName(block);
@@ -626,6 +640,19 @@ public class ModelFile
 		return this;
 	}
 
+	public ModelFile predicate(Identifier conditionType, float threshold, Identifier modelId)
+	{
+		this.overrides.add(new ModelOverride(modelId, List.of(new ModelOverride.Condition(conditionType, threshold))));
+		return this;
+	}
+
+	public ModelFile predicate(Identifier conditionType, float threshold, ModelFile other)
+	{
+		this.overrides.add(new ModelOverride(new Identifier(other.filename.getNamespace(), "item/" + other.filename.getPath()), List.of(new ModelOverride.Condition(conditionType, threshold))));
+		this.dependencies.add(other);
+		return this;
+	}
+
 	public JsonElement build()
 	{
 		var rootElement = new JsonObject();
@@ -643,6 +670,31 @@ public class ModelFile
 			rootElement.add("textures", textureElement);
 		}
 
+		if (!overrides.isEmpty())
+		{
+			var overrideElement = new JsonArray();
+
+			for (var override : overrides)
+			{
+				var overrideEntry = new JsonObject();
+				overrideEntry.addProperty("model", override.getModelId().toString());
+
+				var predicateElement = new JsonObject();
+				override.streamConditions().forEach(condition -> predicateElement.addProperty(condition.getType().toString(), condition.getThreshold()));
+
+				overrideEntry.add("predicate", predicateElement);
+
+				overrideElement.add(overrideEntry);
+			}
+
+			rootElement.add("overrides", overrideElement);
+		}
+
 		return rootElement;
+	}
+
+	public ArrayList<ModelFile> getDependencies()
+	{
+		return dependencies;
 	}
 }

@@ -19,7 +19,7 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		scale(7.5f);
 		final int NUM_VARIANTS = 12;
 		setBoundingBoxSpacing(0.25f, 0.25f);
-		maxAge = random.nextInt(120) + 640;
+		maxAge = random.nextInt(120) + 1280;
 		velocityX = vX;
 		velocityY = vY + (double)(random.nextFloat() / 500.0f);
 		velocityZ = vZ;

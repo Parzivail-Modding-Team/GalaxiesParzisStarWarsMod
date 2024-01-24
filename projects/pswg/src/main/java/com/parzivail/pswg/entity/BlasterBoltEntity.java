@@ -1,6 +1,7 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
@@ -47,6 +48,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Function;
+
+import static com.parzivail.pswg.block.ThermalDetonatorBlock.CLUSTER_SIZE;
 
 public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocityEntity, IPrecisionSpawnEntity
 {
@@ -307,7 +310,11 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 			var state = getWorld().getBlockState(blockPos);
 			if(state.getBlock() instanceof TargetBlock targetBlock){
 				targetBlock.onProjectileHit(getWorld(), state, blockHit, this);
-
+			}
+			else if (state.getBlock() instanceof ThermalDetonatorBlock tdb)
+			{
+				float power = getWorld().getBlockState(blockPos).get(CLUSTER_SIZE) * 3f + 2;
+				tdb.explode(getWorld(), blockPos, power);
 			}
 
 			if (state.isIn(SwgTags.Blocks.BLASTER_REFLECT))

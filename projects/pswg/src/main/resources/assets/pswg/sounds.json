@@ -242,5 +242,23 @@
 		"sounds": [
 			"pswg:door/pneumatic"
 		]
-	}
+	},
+	"explosives.thermaldetonator.beep": {
+    		"subtitle": "subtitle.pswg.explosives.thermaldetonator.beep",
+    		"sounds": [
+    			"pswg:explosives/thermal_detonator/beep/beep_loop"
+    		]
+    },
+    "explosives.thermaldetonator.arm": {
+        		"subtitle": "subtitle.pswg.explosives.thermaldetonator.arm",
+        		"sounds": [
+        			"pswg:explosives/thermal_detonator/beep/arm"
+        		]
+    },
+    "explosives.thermaldetonator.explode": {
+            		"subtitle": "subtitle.pswg.explosives.thermaldetonator.explode",
+            		"sounds": [
+            			"pswg:explosives/thermal_detonator/explosion/thermal_detonator_explosion"
+            		]
+        }
 }

@@ -26,6 +26,7 @@ public class SwgSounds
 		Lightsaber.register();
 		Blaster.register();
 		Ship.register();
+		Explosives.register();
 
 		for (var pair : SOUND_EVENTS.entrySet())
 			Registry.register(Registries.SOUND_EVENT, pair.getKey(), pair.getValue());
@@ -114,6 +115,16 @@ public class SwgSounds
 		public static final SoundEvent XWINGT65B_FIRE = of(Resources.id("ship.blaster.fire.xwingt65b"));
 		public static final SoundEvent XWINGT65B_EXTERIOR = of(Resources.id("ship.exterior.xwingt65b"));
 
+		private static void register()
+		{
+		}
+	}
+
+	public static class Explosives
+	{
+		public static final SoundEvent THERMAL_DETONATOR_BEEP = of(Resources.id("explosives.thermaldetonator.beep"));
+		public static final SoundEvent THERMAL_DETONATOR_ARM = of(Resources.id("explosives.thermaldetonator.arm"));
+		public static final SoundEvent THERMAL_DETONATOR_EXPLOSION = of(Resources.id("explosives.thermaldetonator.explode"));
 		private static void register()
 		{
 		}

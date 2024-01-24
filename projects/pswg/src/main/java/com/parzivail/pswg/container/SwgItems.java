@@ -48,7 +48,6 @@ public class SwgItems
 	@RegistryOrder(1)
 	public static class Armor
 	{
-
 		@RegistryName("elite_squad")
 		public static final ArmorItems EliteSquadTrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("stormtrooper")
@@ -717,11 +716,11 @@ public class SwgItems
 		@TarkinItem
 		public static final Item MannequinWizard = new Item(new Item.Settings());
 	}
+
 	@RegistryOrder(13)
 	public static class Explosives
 	{
 		@RegistryName("thermal_detonator")
-		@TarkinItem
 		public static final Item ThermalDetonator = new ThermalDetonatorItem(new FabricItemSettings().maxCount(1));
 	}
 
