@@ -9,6 +9,7 @@ import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.client.model.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -217,20 +218,20 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	{
 		var mpa = (ModelPartAccessor)(Object)modelPart;
 
-		//		if (!modelPart.hasChild(EntityModelPartNames.HEAD))
-		//			mpa.getChildren().put(EntityModelPartNames.HEAD, createEmptyModelPart());
-		//		if (!modelPart.hasChild(EntityModelPartNames.HAT))
-		//			mpa.getChildren().put(EntityModelPartNames.HAT, createEmptyModelPart());
-		//		if (!modelPart.hasChild(EntityModelPartNames.BODY))
-		//			mpa.getChildren().put(EntityModelPartNames.BODY, createEmptyModelPart());
-		//		if (!modelPart.hasChild(EntityModelPartNames.RIGHT_ARM))
-		//			mpa.getChildren().put(EntityModelPartNames.RIGHT_ARM, createEmptyModelPart());
-		//		if (!modelPart.hasChild(EntityModelPartNames.LEFT_ARM))
-		//			mpa.getChildren().put(EntityModelPartNames.LEFT_ARM, createEmptyModelPart());
-		//		if (!modelPart.hasChild(EntityModelPartNames.RIGHT_LEG))
-		//			mpa.getChildren().put(EntityModelPartNames.RIGHT_LEG, createEmptyModelPart());
-		//		if (!modelPart.hasChild(EntityModelPartNames.LEFT_LEG))
-		//			mpa.getChildren().put(EntityModelPartNames.LEFT_LEG, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.HEAD))
+			mpa.getChildren().put(EntityModelPartNames.HEAD, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.HAT))
+			mpa.getChildren().put(EntityModelPartNames.HAT, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.BODY))
+			mpa.getChildren().put(EntityModelPartNames.BODY, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.RIGHT_ARM))
+			mpa.getChildren().put(EntityModelPartNames.RIGHT_ARM, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.LEFT_ARM))
+			mpa.getChildren().put(EntityModelPartNames.LEFT_ARM, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.RIGHT_LEG))
+			mpa.getChildren().put(EntityModelPartNames.RIGHT_LEG, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.LEFT_LEG))
+			mpa.getChildren().put(EntityModelPartNames.LEFT_LEG, createEmptyModelPart());
 
 		return modelPart;
 	}
