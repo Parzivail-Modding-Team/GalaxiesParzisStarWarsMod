@@ -44,7 +44,7 @@ public class NemiModelProject implements TabModel
 		this.id = UUID.randomUUID().toString();
 		this.filename = filename;
 		this.compiledModel = nem;
-		this.modelPart = NemManager.buildModelWithoutOverrides(this.compiledModel).createModel();
+		this.modelPart = NemManager.buildModel(this.compiledModel).createModel();
 
 		var uniqueNames = new HashMap<PartHash<NbtCompound>, String>();
 		var node = new NodeTreeModel.Node<>(AurekIconFont.file_3d, "[root]", NodeType.Root);

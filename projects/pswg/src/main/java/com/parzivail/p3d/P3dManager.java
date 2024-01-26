@@ -1,6 +1,7 @@
 package com.parzivail.p3d;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.util.data.DataResolution;
 import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -25,10 +26,10 @@ public class P3dManager extends KeyedReloadableLoader<P3dModel>
 	}
 
 	@Override
-	public P3dModel readResource(ResourceManager resourceManager, Profiler profiler, Identifier id, InputStream stream) throws IOException
+	public DataResolution<P3dModel> readResource(ResourceManager resourceManager, Profiler profiler, Map<Identifier, P3dModel> loadedResources, Identifier id, InputStream stream) throws IOException
 	{
 		// All client-read models should have vertex data
-		return P3dModel.read(stream, true);
+		return DataResolution.success(P3dModel.read(stream, true));
 	}
 
 	public P3dModel get(Identifier identifier)

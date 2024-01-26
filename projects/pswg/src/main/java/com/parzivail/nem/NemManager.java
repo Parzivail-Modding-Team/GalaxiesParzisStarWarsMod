@@ -1,10 +1,10 @@
 package com.parzivail.nem;
 
-import com.google.common.collect.ImmutableList;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.client.render.ModelAngleAnimator;
 import com.parzivail.util.client.render.MutableAnimatedModel;
 import com.parzivail.util.client.render.armor.BipedEntityArmorModel;
+import com.parzivail.util.data.DataResolution;
 import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.client.model.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -25,11 +25,14 @@ import org.jetbrains.annotations.NotNull;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class NemManager extends KeyedReloadableLoader<TexturedModelData>
+public class NemManager extends KeyedReloadableLoader<NbtCompound>
 {
 	private static final Identifier HUMANOID_BASE_ID = Resources.id("models/species/humanoid_base.nem");
 	private static final List<String> REQUIRED_BIPED_PARTS = List.of(
@@ -57,74 +60,44 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	}
 
 	@Override
-	protected Set<Identifier> getPrioritizedResources()
+	public DataResolution<NbtCompound> readResource(ResourceManager resourceManager, Profiler profiler, Map<Identifier, NbtCompound> loadedResources, Identifier id, InputStream stream) throws IOException
 	{
-		return Set.of(
-				HUMANOID_BASE_ID
-		);
-	}
+		var nbt = NbtIo.readCompound(new DataInputStream(stream));
 
-	@Override
-	public TexturedModelData readResource(ResourceManager resourceManager, Profiler profiler, Identifier id, InputStream stream) throws IOException
-	{
-		var nbtData = NbtIo.readCompound(new DataInputStream(stream));
-
-		// TODO: proper resource dependency resolution
-		if (id.equals(HUMANOID_BASE_ID))
-			humanoidBaseData = nbtData;
-
-		return buildModel(nbtData);
-	}
-
-	@NotNull
-	public TexturedModelData buildModel(NbtCompound nbt)
-	{
-		var modelData = new ModelData();
-		var root = modelData.getRoot();
+		var parts = nbt.getCompound("parts");
 
 		var base = nbt.getString("base");
 		if (!base.isEmpty())
 		{
-			if (!base.equals("pswg:species/humanoid_base"))
-				// TODO: proper resource dependency resolution
-				throw new RuntimeException("NEM model extensions are not supported for base model: " + base);
-			var overrideNbt = humanoidBaseData;
+			var baseId = new Identifier(base);
+			var overrideNbt = loadedResources.get(baseId);
+			if (overrideNbt == null)
+				return DataResolution.missingDependency(List.of(baseId));
 
-			var baseChildren = nbt.getCompound("parts");
-			var overrideChildren = overrideNbt.getCompound("parts");
+			var overrideParts = overrideNbt.getCompound("parts");
 
-			for (var entry : overrideChildren.getKeys())
-				if (!baseChildren.contains(entry))
-					baseChildren.put(entry, overrideChildren.getCompound(entry));
+			for (var entry : overrideParts.getKeys())
+				if (!parts.contains(entry))
+					parts.put(entry, overrideParts.getCompound(entry));
 		}
-
-		addChildren(root, nbt.getCompound("parts"));
 
 		if (nbt.getBoolean("expand_biped"))
 		{
 			for (var part : REQUIRED_BIPED_PARTS)
-				if (modelData.getRoot().getChild(part) == null)
-					modelData.getRoot().addChild(part, ModelPartBuilder.create(), ModelTransform.NONE);
+				if (!parts.contains(part))
+					parts.put(part, new NbtCompound());
 		}
 
-		var texTag = nbt.getCompound("tex");
-		return TexturedModelData.of(modelData, texTag.getInt("w"), texTag.getInt("h"));
+		return DataResolution.success(nbt);
 	}
 
 	@NotNull
-	public static TexturedModelData buildModelWithoutOverrides(NbtCompound nbt)
+	public static TexturedModelData buildModel(NbtCompound nbt)
 	{
 		var modelData = new ModelData();
 		var root = modelData.getRoot();
 
 		addChildren(root, nbt.getCompound("parts"));
-
-		if (nbt.getBoolean("expand_biped"))
-		{
-			for (var part : REQUIRED_BIPED_PARTS)
-				if (modelData.getRoot().getChild(part) == null)
-					modelData.getRoot().addChild(part, ModelPartBuilder.create(), ModelTransform.NONE);
-		}
 
 		var texTag = nbt.getCompound("tex");
 		return TexturedModelData.of(modelData, texTag.getInt("w"), texTag.getInt("h"));
@@ -138,70 +111,75 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 
 	private static void addChild(ModelPartData parent, String partName, NbtCompound part)
 	{
-		var tex = part.getCompound("tex");
-		var partU = tex.getInt("u");
-		var partV = tex.getInt("v");
-		var mirrored = tex.getBoolean("mirrored");
-
-		var pos = part.getCompound("pos");
-		var x = pos.getFloat("x");
-		var y = pos.getFloat("y");
-		var z = pos.getFloat("z");
-
-		var rot = part.getCompound("rot");
-		var pitch = rot.getFloat("pitch");
-		var yaw = rot.getFloat("yaw");
-		var roll = rot.getFloat("roll");
-
-		var transform = ModelTransform.of(x, y, z, pitch, yaw, roll);
-
 		var partBuilder = ModelPartBuilder.create();
 
-		var cuboids = part.getList("cuboids", NbtElement.COMPOUND_TYPE);
-		for (var i = 0; i < cuboids.size(); i++)
+		if (part.isEmpty())
+			parent.addChild(partName, partBuilder, ModelTransform.NONE);
+		else
 		{
-			var cuboid = cuboids.getCompound(i);
+			var tex = part.getCompound("tex");
+			var partU = tex.getInt("u");
+			var partV = tex.getInt("v");
+			var mirrored = tex.getBoolean("mirrored");
 
-			var cPos = cuboid.getCompound("pos");
-			var cX = cPos.getFloat("x");
-			var cY = cPos.getFloat("y");
-			var cZ = cPos.getFloat("z");
+			var pos = part.getCompound("pos");
+			var x = pos.getFloat("x");
+			var y = pos.getFloat("y");
+			var z = pos.getFloat("z");
 
-			var cSize = cuboid.getCompound("size");
-			var cSX = cSize.getInt("x");
-			var cSY = cSize.getInt("y");
-			var cSZ = cSize.getInt("z");
+			var rot = part.getCompound("rot");
+			var pitch = rot.getFloat("pitch");
+			var yaw = rot.getFloat("yaw");
+			var roll = rot.getFloat("roll");
 
-			var cExpand = cuboid.getCompound("expand");
-			var cEX = cExpand.getFloat("x");
-			var cEY = cExpand.getFloat("y");
-			var cEZ = cExpand.getFloat("z");
+			var transform = ModelTransform.of(x, y, z, pitch, yaw, roll);
 
-			var cTex = cuboid.getCompound("tex");
-			var cU = cTex.getInt("u");
-			var cV = cTex.getInt("v");
-			var cMirrored = cTex.getBoolean("mirrored");
+			var cuboids = part.getList("cuboids", NbtElement.COMPOUND_TYPE);
+			for (var i = 0; i < cuboids.size(); i++)
+			{
+				var cuboid = cuboids.getCompound(i);
 
-			partBuilder = partBuilder.mirrored(cMirrored ^ mirrored).cuboid(
-					"",
-					cX, cY, cZ,
-					cSX, cSY, cSZ,
-					new Dilation(cEX, cEY, cEZ),
-					partU + cU, partV + cV
-			);
+				var cPos = cuboid.getCompound("pos");
+				var cX = cPos.getFloat("x");
+				var cY = cPos.getFloat("y");
+				var cZ = cPos.getFloat("z");
+
+				var cSize = cuboid.getCompound("size");
+				var cSX = cSize.getInt("x");
+				var cSY = cSize.getInt("y");
+				var cSZ = cSize.getInt("z");
+
+				var cExpand = cuboid.getCompound("expand");
+				var cEX = cExpand.getFloat("x");
+				var cEY = cExpand.getFloat("y");
+				var cEZ = cExpand.getFloat("z");
+
+				var cTex = cuboid.getCompound("tex");
+				var cU = cTex.getInt("u");
+				var cV = cTex.getInt("v");
+				var cMirrored = cTex.getBoolean("mirrored");
+
+				partBuilder = partBuilder.mirrored(cMirrored ^ mirrored).cuboid(
+						"",
+						cX, cY, cZ,
+						cSX, cSY, cSZ,
+						new Dilation(cEX, cEY, cEZ),
+						partU + cU, partV + cV
+				);
+			}
+
+			var childPart = parent.addChild(partName, partBuilder, transform);
+
+			if (part.contains("children"))
+				addChildren(childPart, part.getCompound("children"));
 		}
-
-		var childPart = parent.addChild(partName, partBuilder, transform);
-
-		if (part.contains("children"))
-			addChildren(childPart, part.getCompound("children"));
 	}
 
 	@Override
-	protected void apply(Map<Identifier, TexturedModelData> prepared, ResourceManager manager, Profiler profiler)
+	protected void apply(Map<Identifier, NbtCompound> prepared, ResourceManager manager, Profiler profiler)
 	{
 		modelData.clear();
-		modelData.putAll(prepared);
+		prepared.forEach((key, value) -> modelData.put(key, buildModel(value)));
 
 		// The model loading sites return before the models are loaded from disk and before
 		// they're actually rendered, so we use a callback system to set the model part
@@ -245,11 +223,6 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	{
 		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityArmorModel<>(modelPart))));
 		return () -> (BipedEntityArmorModel<LivingEntity>)bipedModels.get(modelId);
-	}
-
-	private static ModelPart createEmptyModelPart()
-	{
-		return new ModelPart(ImmutableList.of(), Map.of());
 	}
 
 	@Override
