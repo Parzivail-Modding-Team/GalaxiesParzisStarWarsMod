@@ -1,6 +1,8 @@
 package com.parzivail.aurek.imgui;
 
 import com.parzivail.aurek.ToolkitClient;
+import com.parzivail.aurek.imgui.gl3.ImGuiImplGl3;
+import com.parzivail.aurek.imgui.glfw.ImGuiImplGlfw;
 import com.parzivail.aurek.imgui.toast.ImguiNotify;
 import com.parzivail.aurek.util.DialogUtil;
 import imgui.ImFont;
@@ -10,8 +12,6 @@ import imgui.ImVec2;
 import imgui.extension.imguizmo.ImGuizmo;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.flag.ImGuiDir;
-import imgui.gl3.ImGuiImplGl3;
-import imgui.glfw.ImGuiImplGlfw;
 import imgui.internal.ImGui;
 import imgui.internal.ImGuiContext;
 import imgui.internal.flag.ImGuiAxis;

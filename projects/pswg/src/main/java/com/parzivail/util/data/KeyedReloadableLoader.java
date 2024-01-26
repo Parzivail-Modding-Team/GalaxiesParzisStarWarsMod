@@ -61,7 +61,7 @@ public abstract class KeyedReloadableLoader<T> implements IdentifiableResourceRe
 
 			var resource = resourceEntry.getValue();
 
-			LOGGER.info("Loaded resource {}", resourceIdWithoutExt);
+			LOGGER.debug("Loaded resource {}", resourceIdWithoutExt);
 
 			try (var inputStream = resource.getInputStream())
 			{
@@ -94,7 +94,7 @@ public abstract class KeyedReloadableLoader<T> implements IdentifiableResourceRe
 					if (resolvedDeps)
 					{
 						entryQueue.add(resourceEntry);
-						LOGGER.info("Moving resource {} to the end of the resolution queue to satisfy dependencies on {}", resourceIdWithoutExt, deps.stream().map(Identifier::toString).collect(Collectors.joining(", ")));
+						LOGGER.debug("Moving resource {} to the end of the resolution queue to satisfy dependencies on {}", resourceIdWithoutExt, deps.stream().map(Identifier::toString).collect(Collectors.joining(", ")));
 					}
 				}
 			}
