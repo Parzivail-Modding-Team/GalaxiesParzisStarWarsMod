@@ -153,9 +153,9 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 			tde.setLife(0);
 			world.spawnEntity(tde);
 		}
-		if (entity instanceof ThermalDetonatorEntity)
+		if (entity instanceof ThermalDetonatorEntity tde)
 		{
-			if (state.get(CLUSTER_SIZE) < 5)
+			if (state.get(CLUSTER_SIZE) < 5 && !tde.isPrimed())
 			{
 				world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
 				entity.discard();
@@ -175,7 +175,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	{
 		if (projectile instanceof BlasterBoltEntity bbe)
 		{
-			Float power = world.getBlockState(hit.getBlockPos()).get(CLUSTER_SIZE) * 3f + 2;
+			Float power = world.getBlockState(hit.getBlockPos()).get(CLUSTER_SIZE) * 2f + 3;
 			explode(world, hit.getBlockPos(), power);
 		}
 		super.onProjectileHit(world, state, hit, projectile);

@@ -124,7 +124,11 @@ public class SwgSounds
 	{
 		public static final SoundEvent THERMAL_DETONATOR_BEEP = of(Resources.id("explosives.thermaldetonator.beep"));
 		public static final SoundEvent THERMAL_DETONATOR_ARM = of(Resources.id("explosives.thermaldetonator.arm"));
+		public static final SoundEvent THERMAL_DETONATOR_DISARM = of(Resources.id("explosives.thermaldetonator.disarm"));
+		public static final SoundEvent THERMAL_DETONATOR_THROW = of(Resources.id("explosives.thermaldetonator.throw"));
+		public static final SoundEvent THERMAL_DETONATOR_LAND = of(Resources.id("explosives.thermaldetonator.land"));
 		public static final SoundEvent THERMAL_DETONATOR_EXPLOSION = of(Resources.id("explosives.thermaldetonator.explode"));
+
 		private static void register()
 		{
 		}

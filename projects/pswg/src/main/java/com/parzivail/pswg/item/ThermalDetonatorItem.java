@@ -124,9 +124,6 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 	{
 
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
-		if (tdt.primed)
-		{
-		}
 		if (user instanceof PlayerEntity playerEntity)
 		{
 			boolean inCreative = playerEntity.getAbilities().creativeMode;
@@ -149,7 +146,7 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 					tdt.primed = false;
 				}
 
-				world.playSound((PlayerEntity)null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+				world.playSound((PlayerEntity)null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
 				if (!inCreative)
 				{
 					stack.decrement(1);
@@ -200,16 +197,16 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 		{
 			tdt.primed = true;
 			tdt.ticksToExplosion = baseTicksToExplosion;
-			user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
-
-			if (world instanceof ServerWorld)
+			if (world.isClient())
 			{
 				user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
+				SoundHelper.playDetonatorItemSound(user);
 			}
 		}
 		else
 		{
 			tdt.primed = false;
+			user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_DISARM, 1f, 1f);
 		}
 
 		tdt.serializeAsSubtag(user.getMainHandStack());

@@ -6,6 +6,8 @@ import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -157,7 +159,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 		return isVisible() && super.shouldRender(distance);
 	}
 
-	protected abstract void createParticles(ServerWorld world, double x, double y, double z);
+	protected abstract void createParticles(double x, double y, double z);
 
 	@Override
 	public boolean isInvulnerableTo(DamageSource source)
@@ -186,7 +188,6 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 
 		return super.damage(source, amount);
 	}
-
 	public void explode()
 	{
 		if (!this.getWorld().isClient)
@@ -194,8 +195,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 			this.discard();
 			this.getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY(), this.getZ(), explosionPower, false, World.ExplosionSourceType.TNT, true);
 		}
-		if (this.getWorld() instanceof ServerWorld serverWorld)
-			createParticles(serverWorld, this.getX(), this.getY(), this.getZ());
+		createParticles(this.getX(), this.getY(), this.getZ());
 	}
 
 	@Override
