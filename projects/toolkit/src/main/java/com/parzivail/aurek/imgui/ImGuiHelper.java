@@ -38,18 +38,7 @@ public class ImGuiHelper
 		void consume(Runnable delete, int i, T item);
 	}
 
-	static
-	{
-		final boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
-		if (isMac)
-			glslVersion = "#version 150";
-		else
-			glslVersion = "#version 130";
-	}
-
 	public static final int ImGuiWindowFlags_Tooltip = 1 << 25;
-
-	private static String glslVersion;
 
 	private static ImGuiContext context;
 	private static final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
@@ -102,7 +91,7 @@ public class ImGuiHelper
 		initImgui();
 
 		imGuiGlfw.init(handle, true);
-		imGuiGl3.init(glslVersion);
+		imGuiGl3.init("#version 150");
 	}
 
 	private static void initImgui()
