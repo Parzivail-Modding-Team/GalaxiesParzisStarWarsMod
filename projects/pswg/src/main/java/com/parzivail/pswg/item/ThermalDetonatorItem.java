@@ -1,6 +1,7 @@
 package com.parzivail.pswg.item;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
 import com.parzivail.pswg.container.*;
@@ -36,6 +37,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static com.parzivail.pswg.block.ThermalDetonatorBlock.CLUSTER_SIZE;
+
 public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
 	public final int baseTicksToExplosion = 150;
@@ -54,6 +57,16 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 		ThermalDetonatorTag tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
 		if (context.getPlayer().isSneaking() && !tdt.primed)
 		{
+			var state = context.getWorld().getBlockState(context.getBlockPos());
+			if (state.isOf(SwgBlocks.Misc.ThermalDetonatorBlock) && state.get(CLUSTER_SIZE) < 5)
+			{
+				context.getWorld().setBlockState(context.getBlockPos(), state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
+				if (!context.getPlayer().isCreative())
+				{
+					context.getStack().decrement(1);
+				}
+				return ActionResult.SUCCESS;
+			}
 			return super.useOnBlock(context);
 		}
 		use(context.getWorld(), context.getPlayer(), context.getHand());
@@ -128,23 +141,16 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 		{
 			boolean inCreative = playerEntity.getAbilities().creativeMode;
 			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
-			if (!itemStack.isEmpty() || inCreative)
+			if (!itemStack.isEmpty())
 			{
-				if (itemStack.isEmpty())
-				{
-					itemStack = new ItemStack(SwgItems.Explosives.ThermalDetonator);
-				}
-				if (!world.isClient)
-				{
-					ThermalDetonatorItem thermalDetonatorItem = (ThermalDetonatorItem)(itemStack.getItem() instanceof ThermalDetonatorItem ? itemStack.getItem() : SwgItems.Explosives.ThermalDetonator);
-					ThermalDetonatorEntity thermalDetonatorEntity = thermalDetonatorItem.createThermalDetonator(world, tdt.ticksToExplosion, tdt.primed, itemStack, playerEntity);
-					thermalDetonatorEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 0F);
-					thermalDetonatorEntity.setOwner(playerEntity);
+				ThermalDetonatorItem thermalDetonatorItem = (ThermalDetonatorItem)(itemStack.getItem() instanceof ThermalDetonatorItem ? itemStack.getItem() : SwgItems.Explosives.ThermalDetonator);
+				ThermalDetonatorEntity thermalDetonatorEntity = thermalDetonatorItem.createThermalDetonator(world, tdt.ticksToExplosion, tdt.primed, itemStack, playerEntity);
+				thermalDetonatorEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 0F);
+				thermalDetonatorEntity.setOwner(playerEntity);
 
-					world.spawnEntity(thermalDetonatorEntity);
-					playerEntity.getItemCooldownManager().remove(itemStack.getItem());
-					tdt.primed = false;
-				}
+				world.spawnEntity(thermalDetonatorEntity);
+				playerEntity.getItemCooldownManager().remove(itemStack.getItem());
+				tdt.primed = false;
 
 				world.playSound((PlayerEntity)null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
 				if (!inCreative)

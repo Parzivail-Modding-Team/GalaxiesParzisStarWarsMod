@@ -4,7 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.container.SwgDamageTypes;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.pswg.container.SwgParticles;
+import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.util.data.PacketByteBufHelper;
@@ -18,7 +18,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.TargetBlock;
 import net.minecraft.block.TntBlock;
 import net.minecraft.entity.Entity;
@@ -281,7 +280,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 				var dy = 0.01 * getWorld().random.nextGaussian();
 				var dz = 0.01 * getWorld().random.nextGaussian();
 
-				getWorld().addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
+				getWorld().addParticle(SwgParticleTypes.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
 
 				vec = vec.add(dVel);
 			}
@@ -311,9 +310,9 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 			if(state.getBlock() instanceof TargetBlock targetBlock){
 				targetBlock.onProjectileHit(getWorld(), state, blockHit, this);
 			}
-			else if (state.getBlock() instanceof ThermalDetonatorBlock tdb)
+			else if (state.getBlock() instanceof ThermalDetonatorBlock tdb && !(this instanceof BlasterIonBoltEntity) && !(this instanceof BlasterStunBoltEntity))
 			{
-				float power = getWorld().getBlockState(blockPos).get(CLUSTER_SIZE) * 3f + 2;
+				float power = getWorld().getBlockState(blockPos).get(CLUSTER_SIZE) * 1f + 4;
 				tdb.explode(getWorld(), blockPos, power);
 			}
 

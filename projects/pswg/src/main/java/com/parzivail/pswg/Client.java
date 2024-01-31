@@ -320,7 +320,8 @@ public class Client implements ClientModInitializer
 
 		registerArmor();
 
-		SwgParticles.register();
+		//SwgParticleTypes.register();
+		SwgParticleFactories.register();
 
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (client.player != null)
@@ -361,7 +362,7 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.MannequinConfigure, OpenMannequinConfigureS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.AccumulateRecoil, BlasterRecoilManager::handleAccumulateRecoil);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.BlasterHit, BlasterUtil::handleBoltHit);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSocketPyro, SwgParticles::handlePlayerSocketPyro);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSocketPyro, SwgParticleFactories::handlePlayerSocketPyro);
 
 		blasterZoomInstance = new ZoomInstance(
 				Resources.id("blaster_zoom"),

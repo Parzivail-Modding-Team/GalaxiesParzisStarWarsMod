@@ -2,14 +2,16 @@ package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.SwgParticles;
+import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
@@ -17,8 +19,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
-
-import java.util.Objects;
 
 public class ThermalDetonatorEntity extends ThrowableExplosive implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
 {
@@ -28,25 +28,26 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	{
 		super(type, world);
 		setExplosionPower(5f);
-		//		SoundHelper.playDetonatorEntitySound(this);
 	}
 
 	@Override
 	public void explode()
 	{
-		//this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.MASTER, 4.0f, 1f, true);
 		getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
-
 		super.explode();
 	}
 
 	@Override
 	public void tick()
 	{
-		if (this.age == 1 && getWorld().isClient() && this.isPrimed())
+		if (getWorld().isClient())
 		{
-			SoundHelper.playDetonatorEntitySound(this);
+			if (this.age == 1 && this.isPrimed())
+			{
+				SoundHelper.playDetonatorEntitySound(this);
+			}
 		}
+
 		if (isPrimed())
 		{
 			if (texturePhase < 6)
@@ -60,26 +61,24 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	}
 
 	@Override
-	protected void createParticles(double x, double y, double z)
+	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
 	{
-		int m = (int)(getExplosionPower() / 2);
-		if (getWorld() instanceof ServerWorld world)
-		{
-			/*world.spawnParticles( ParticleTypes.LARGE_SMOKE,  x, y, z, 50 * m, 1, 1, 1, 0);
-			world.spawnParticles( ParticleTypes.SMOKE,  x, y, z, 45 * m, 0.75 * m, 0.75 * m, 0.75 * m, 0);
-			world.spawnParticles(SwgParticles.EXPLOSION_SMOKE,  x, y + 0.5f, z, 15 * m, 0.125 * m, 0.25 * m, 0.125 * m, 0.03);
-			world.spawnParticles(SwgParticles.EXPLOSION_SMOKE,  x, y + 0.5f, z, 15 * m, 0.25 * m, 0.125 * m, 0.125 * m, 0.025);
-			world.spawnParticles(SwgParticles.EXPLOSION_SMOKE,  x, y + 0.5f, z, 15 * m, 0.125 * m, 0.125 * m, 0.25 * m, 0.02);
-			world.spawnParticles(SwgParticles.EXPLOSION_SMOKE , x, y + 0.5f, z, 10 * m, 0.1 * m, 0.2 * m, 0.1 * m, 0.0075);
-			world.spawnParticles(SwgParticles.EXPLOSION_SMOKE,  x, y + 0.5f, z, 10 * m, 0.2 * m, 0.1 * m, 0.25 * m, 0.01);
-			world.spawnParticles(SwgParticles.EXPLOSION_SMOKE,  x, y + 0.5f, z, 10 * m, 0.25 * m, 0.5 * m, 0.3 * m, 0.015);
+		var particlePacket = new ParticleS2CPacket(SwgParticleTypes.EXPLOSION_SMOKE, true, getX(), getY(), getZ(), 1, 1, 1, 0f, 50);
 
-			world.spawnParticles( ParticleTypes.FLAME,  x, y, z, 20 * m, 0.5 * m, 0.5 * m, 0.5 * m, 0.1);
-			world.spawnParticles( ParticleTypes.SMALL_FLAME,  x, y, z, 20 * m, 1.2 * m, 1.2 * m, 1.2 * m, 0.125);
-			world.spawnParticles(ParticleTypes.SMALL_FLAME,  x, y, z, 20 * m, 1.1 * m, 1.3 * m, 1.25 * m, 0.125);*/
+		float m = getExplosionPower() / 4;
+		int m2 = (int)getExplosionPower() * 2;
+		int m3 = (int)(getExplosionPower() / 4);
+		double m4 = m3 * 3f;
+
+		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
+		{
+			//serverWorld.sendToPlayerIfNearby(serverPlayerEntity, true, getX(), getY(), getZ(), particlePacket);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLASH, true, x, y, z, 1, 0, 0, 0, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.EXPLOSION_SMOKE, true, x, y, z, m2 * 10, m, m, m, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME, false, x, y, z, m2 * 4, m3, m3, m3, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, false, x, y, z, m2 * 5, m4, m4, m4, 0);
 		}
 	}
-
 	@Override
 	public boolean canBeHitByProjectile()
 	{
@@ -92,7 +91,13 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
 			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
+			var pos = blockHitResult.getBlockPos();
+			var state = getWorld().getBlockState(pos);
 			this.bounce(blockHitResult);
+			if (getVelocity().length() > 0.01f)
+			{
+				this.playSound(state.getBlock().getSoundGroup(state).getHitSound(), 1f, 1f);
+			}
 		}
 
 		super.onCollision(hitResult);

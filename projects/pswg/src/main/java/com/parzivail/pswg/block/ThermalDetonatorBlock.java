@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.pswg.entity.BlasterIonBoltEntity;
+import com.parzivail.pswg.entity.BlasterStunBoltEntity;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.util.block.IPicklingBlock;
@@ -122,7 +124,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
-		if (player.getInventory().getMainHandStack().isEmpty())
+		if (!player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator))
 		{
 			if (world instanceof ServerWorld)
 			{
@@ -138,21 +140,21 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 			}
 			return ActionResult.SUCCESS;
 		}
+		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator) && state.get(CLUSTER_SIZE) < 5)
+		{
+			if (!player.isCreative())
+			{
+				player.getInventory().getMainHandStack().decrement(1);
+			}
+			world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
+			return ActionResult.SUCCESS;
+		}
 		return ActionResult.PASS;
-		//	return super.onUse(state, world, pos, player, hand, hit);
 	}
 
 	@Override
 	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
-		if (entity instanceof BlasterBoltEntity)
-		{
-			var tde = new ThermalDetonatorEntity(SwgEntities.Misc.ThermalDetonator, world);
-			tde.setPos(pos.getX(), pos.getY(), pos.getZ());
-			tde.setPrimed(true);
-			tde.setLife(0);
-			world.spawnEntity(tde);
-		}
 		if (entity instanceof ThermalDetonatorEntity tde)
 		{
 			if (state.get(CLUSTER_SIZE) < 5 && !tde.isPrimed())
@@ -167,7 +169,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	@Override
 	public boolean canReplace(BlockState state, ItemPlacementContext context)
 	{
-		return !context.shouldCancelInteraction() && context.getStack().isOf(this.asItem()) && state.get(CLUSTER_SIZE) < 5 || super.canReplace(state, context);
+		return false;
 	}
 
 	@Override

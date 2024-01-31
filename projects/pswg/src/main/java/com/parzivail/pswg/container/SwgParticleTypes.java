@@ -25,23 +25,28 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
-public class SwgParticles
+public class SwgParticleTypes
 {
-	public static final PParticleType SLUG_TRAIL = register(Resources.id("slug_trail"), true, SlugTrailParticle.Factory::new);
-	public static final PParticleType SPARK = register(Resources.id("spark"), true, SparkParticle.Factory::new);
-	public static final PParticleType SCORCH = register(Resources.id("scorch"), true, ScorchParticle.Factory::new);
-	public static final PParticleType WATER_WAKE = register(Resources.id("water_wake"), true, WaterWakeParticle.Factory::new);
-	public static final ParticleType<BlockStateParticleEffect> WAKE = registerBlockStateBased(Resources.id("wake"), true, new WakeParticle.Factory());
-	public static final PParticleType EXPLOSION_SMOKE = register(Resources.id("explosion_smoke"), true, ExplosionSmokeParticle.Factory::new);
+	public static final PParticleType SLUG_TRAIL = register(Resources.id("slug_trail"), true);
+	public static final PParticleType SPARK = register(Resources.id("spark"), true);
+	public static final PParticleType SCORCH = register(Resources.id("scorch"), true);
+	public static final PParticleType WATER_WAKE = register(Resources.id("water_wake"), true);
+	public static final ParticleType<BlockStateParticleEffect> WAKE = registerBlockStateBased(Resources.id("wake"), true);
+	public static final PParticleType EXPLOSION_SMOKE = register(Resources.id("explosion_smoke"), true);
+	//public static final PParticleType EXPLOSION_SMOKE = registerWithoutFactory(Resources.id("explosion_smoke"), true);
 
-	private static PParticleType register(Identifier name, boolean alwaysShow, ParticleFactoryRegistry.PendingParticleFactory<PParticleType> factory)
+	/*private static PParticleType register(Identifier name, boolean alwaysShow, ParticleFactoryRegistry.PendingParticleFactory<PParticleType> factory)
 	{
 		var particleType = Registry.register(Registries.PARTICLE_TYPE, name, new PParticleType(alwaysShow));
 		ParticleFactoryRegistry.getInstance().register(particleType, factory);
 		return particleType;
+	}*/
+	private static PParticleType register(Identifier name, boolean alwaysShow)
+	{
+		return Registry.register(Registries.PARTICLE_TYPE, name, new PParticleType(alwaysShow));
 	}
 
-	private static ParticleType<BlockStateParticleEffect> registerBlockStateBased(Identifier name, boolean alwaysShow, ParticleFactory<BlockStateParticleEffect> factory)
+	private static ParticleType<BlockStateParticleEffect> registerBlockStateBased(Identifier name, boolean alwaysShow)
 	{
 		var particleType = Registry.register(Registries.PARTICLE_TYPE, name, new ParticleType<BlockStateParticleEffect>(alwaysShow, BlockStateParticleEffect.PARAMETERS_FACTORY)
 		{
@@ -51,15 +56,13 @@ public class SwgParticles
 				return BlockStateParticleEffect.createCodec(this);
 			}
 		});
-		ParticleFactoryRegistry.getInstance().register(particleType, factory);
 		return particleType;
 	}
-
 	public static void register()
 	{
 	}
 
-	public static void handlePlayerSocketPyro(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	/*public static void handlePlayerSocketPyro(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
 		var playerId = buf.readInt();
 		var playerSocket = buf.readString();
@@ -83,7 +86,7 @@ public class SwgParticles
 
 				var sparkVelocity = socket.normal().mul(0.6f * (client.world.random.nextFloat() * 0.5f + 0.5f), new Vector3f());
 				client.world.addParticle(
-						SwgParticles.SPARK,
+						SwgParticleTypes.SPARK,
 						socket.position().x,
 						socket.position().y,
 						socket.position().z,
@@ -107,5 +110,5 @@ public class SwgParticles
 				}
 			}
 		});
-	}
+	}*/
 }

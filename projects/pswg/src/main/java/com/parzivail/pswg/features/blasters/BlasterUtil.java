@@ -1,7 +1,7 @@
 package com.parzivail.pswg.features.blasters;
 
 import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.container.SwgParticles;
+import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
@@ -93,7 +93,7 @@ public class BlasterUtil
 
 		var offset = 0.005 + 0.0005 * client.world.random.nextDouble();
 		var heatEncodedNormal = normal.multiply(energyScorch ? 1 : 0.3f);
-		client.world.addParticle(SwgParticles.SCORCH, pos.x + normal.x * offset, pos.y + normal.y * offset, pos.z + normal.z * offset, heatEncodedNormal.x, heatEncodedNormal.y, heatEncodedNormal.z);
+		client.world.addParticle(SwgParticleTypes.SCORCH, pos.x + normal.x * offset, pos.y + normal.y * offset, pos.z + normal.z * offset, heatEncodedNormal.x, heatEncodedNormal.y, heatEncodedNormal.z);
 
 		var reflection = MathUtil.reflect(incident, normal);
 
@@ -104,7 +104,7 @@ public class BlasterUtil
 			var vz = client.world.random.nextGaussian() * 0.03;
 
 			var sparkVelocity = reflection.multiply(0.3f * (client.world.random.nextDouble() * 0.5 + 0.5));
-			client.world.addParticle(SwgParticles.SPARK, pos.x, pos.y, pos.z, sparkVelocity.x + vx, sparkVelocity.y + vy, sparkVelocity.z + vz);
+			client.world.addParticle(SwgParticleTypes.SPARK, pos.x, pos.y, pos.z, sparkVelocity.x + vx, sparkVelocity.y + vy, sparkVelocity.z + vz);
 
 			if (i % 3 == 0)
 			{

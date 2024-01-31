@@ -1,6 +1,6 @@
 package com.parzivail.pswg.entity;
 
-import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
@@ -10,18 +10,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
@@ -90,11 +88,10 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 			if (this.delay <= 0)
 				this.explode();
 		}
-
 		if (this.isInLava())
 			this.explode();
 
-		if (!getWorld().isClient && this.age > this.getLife())
+		if (this.age > this.getLife())
 		{
 			if (isPrimed())
 				this.explode();
@@ -159,12 +156,12 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 		return isVisible() && super.shouldRender(distance);
 	}
 
-	protected abstract void createParticles(double x, double y, double z);
+	protected abstract void createParticles(double x, double y, double z, ServerWorld serverWorld);
 
 	@Override
 	public boolean isInvulnerableTo(DamageSource source)
 	{
-		if (source.isIn(SwgTags.DamageTypes.IGNITES_EXPLOSIVE))
+		if (source.isIn(SwgTags.DamageTypes.IGNITES_EXPLOSIVE) || source.isIn(DamageTypeTags.IS_EXPLOSION))
 			return false;
 		return super.isInvulnerableTo(source);
 	}
@@ -179,8 +176,6 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 				this.delay = 2;
 				this.shouldExplode = true;
 			}
-
-			return true;
 		}
 		else if (source.isIn(SwgTags.DamageTypes.IGNITES_EXPLOSIVE))
 			if (!this.shouldExplode)
@@ -190,14 +185,14 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 	}
 	public void explode()
 	{
-		if (!this.getWorld().isClient)
+		if (!this.getWorld().isClient())
 		{
-			this.discard();
-			this.getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY(), this.getZ(), explosionPower, false, World.ExplosionSourceType.TNT, true);
+			getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY(), this.getZ(), explosionPower, false, World.ExplosionSourceType.TNT, false);
+			ServerWorld serverWorld = (ServerWorld)getWorld();
+			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
-		createParticles(this.getX(), this.getY(), this.getZ());
+		discard();
 	}
-
 	@Override
 	public void writeCustomDataToNbt(NbtCompound tag)
 	{
