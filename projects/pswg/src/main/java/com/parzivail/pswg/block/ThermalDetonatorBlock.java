@@ -53,7 +53,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 
 	private static final VoxelShape SHAPE_SINGLE = VoxelShapes.union(
 			VoxelShapes.cuboid(0.40625, 0, 0.40625, 0.59375, 0.1875, 0.59375),
-			VoxelShapes.cuboid(0.46875, 0.15625, 0.421875, 0.53125, 0.21875, 0.546875)
+			VoxelShapes.cuboid(0.46875, 0.15625, 0.453125, 0.53125, 0.21875, 0.578125)
 	);
 	private static final VoxelShape SHAPE_DOUBLE = VoxelShapes.union(
 			VoxelShapes.cuboid(0.296875, 0, 0.40625, 0.484375, 0.1875, 0.59375),
@@ -124,10 +124,19 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
-		if (!player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator))
+		//if (!player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator))
+		//{
+		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator) && state.get(CLUSTER_SIZE) < 5 && player.isSneaking())
 		{
-			if (world instanceof ServerWorld)
+			if (!player.isCreative())
 			{
+				player.getInventory().getMainHandStack().decrement(1);
+			}
+			world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
+			return ActionResult.SUCCESS;
+		}
+		//if (world instanceof ServerWorld)
+		//{
 				player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
 				if (state.get(CLUSTER_SIZE) == 1)
 				{
@@ -137,19 +146,10 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 				{
 					world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) - 1));
 				}
-			}
-			return ActionResult.SUCCESS;
-		}
-		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator) && state.get(CLUSTER_SIZE) < 5)
-		{
-			if (!player.isCreative())
-			{
-				player.getInventory().getMainHandStack().decrement(1);
-			}
-			world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
-			return ActionResult.SUCCESS;
-		}
-		return ActionResult.PASS;
+		return ActionResult.SUCCESS;
+		//}
+		//}
+		//return ActionResult.PASS;
 	}
 
 	@Override

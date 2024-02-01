@@ -63,7 +63,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 
 			var hitState = this.getWorld().getBlockState(blockHit.getBlockPos());
 			var hardness = hitState.getHardness(getWorld(), blockHit.getBlockPos());
-			var restitution = Math.max(0.8 - 0.5 / hardness, 0.1);
+			var restitution = Math.max(0.8 - 0.5 / (hardness / 2), 0.1);
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{

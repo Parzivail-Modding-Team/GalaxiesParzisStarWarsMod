@@ -12,6 +12,7 @@ import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
@@ -55,10 +56,10 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 
 		var foundDetonator = false;
 
-		if (player.getMainHandStack().getItem() instanceof ThermalDetonatorItem)
+		if (player.getMainHandStack().getItem() instanceof ThermalDetonatorItem && isPrimed(player.getMainHandStack()))
 			foundDetonator = true;
 
-		if (!foundDetonator && player.getOffHandStack().getItem() instanceof ThermalDetonatorItem)
+		if (!foundDetonator && player.getOffHandStack().getItem() instanceof ThermalDetonatorItem && isPrimed(player.getOffHandStack()))
 			foundDetonator = true;
 
 		if (!areConditionsMet(player))
@@ -82,12 +83,16 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 
 	public static boolean areConditionsMet(PlayerEntity player)
 	{
-		//return isPrimed(player.getMainHandStack()) || isPrimed(player.getOffHandStack());
 		for (int i = 0; i < player.getInventory().size(); i++)
+		{
 			if (player.getInventory().getStack(i).getItem() instanceof ThermalDetonatorItem)
 			{
-				return isPrimed(player.getInventory().getStack(i));
+				if (isPrimed(player.getInventory().getStack(i)))
+				{
+					return true;
+				}
 			}
+		}
 		return false;
 	}
 
