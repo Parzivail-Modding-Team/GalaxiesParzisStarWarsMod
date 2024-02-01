@@ -63,20 +63,21 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
 	{
-		var particlePacket = new ParticleS2CPacket(SwgParticleTypes.EXPLOSION_SMOKE, true, getX(), getY(), getZ(), 1, 1, 1, 0f, 50);
-
 		float m = getExplosionPower() / 4;
 		int m2 = (int)getExplosionPower() * 2;
 		int m3 = (int)(getExplosionPower() / 4);
-		double m4 = m3 * 3f;
+		double m4 = m3 * 1.5f;
 
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 		{
-			//serverWorld.sendToPlayerIfNearby(serverPlayerEntity, true, getX(), getY(), getZ(), particlePacket);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLASH, true, x, y, z, 1, 0, 0, 0, 0);
-			serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.EXPLOSION_SMOKE, true, x, y, z, m2 * 10, m, m, m, 0);
-			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME, false, x, y, z, m2 * 4, m3, m3, m3, 0);
-			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, false, x, y, z, m2 * 5, m4, m4, m4, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.EXPLOSION_SMOKE, true, x, y, z, m2 * 6, m, m, m, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME, true, x, y, z, m2 * 2, m3, m3, m3, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, true, x, y, z, m2 * 3, m4, m4, m4, 0);
+
+			serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.EXPLOSION_SMOKE, false, x, y, z, m2 * 4, m, m, m, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME, false, x, y, z, m2 * 2, m3, m3, m3, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, false, x, y, z, m2 * 2, m4, m4, m4, 0);
 		}
 	}
 	@Override
