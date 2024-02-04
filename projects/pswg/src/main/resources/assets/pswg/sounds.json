@@ -246,37 +246,37 @@
 	"explosives.thermaldetonator.beep": {
     		"subtitle": "subtitle.pswg.explosives.thermaldetonator.beep",
     		"sounds": [
-    			"pswg:explosives/beep/td_beep_loop"
+    			"pswg:explosives/thermal_detonator/beep/beep_loop"
     		]
     },
     "explosives.thermaldetonator.arm": {
         		"subtitle": "subtitle.pswg.explosives.thermaldetonator.arm",
         		"sounds": [
-        			"pswg:explosives/beep/td_arm"
+        			"pswg:explosives/thermal_detonator/beep/arm"
         		]
     },
     "explosives.thermaldetonator.explode": {
             		"subtitle": "subtitle.pswg.explosives.thermaldetonator.explode",
             		"sounds": [
-            			"pswg:explosives/explosion/td_explosion"
+            			"pswg:explosives/thermal_detonator/explosion/explosion"
             		]
     },
     "explosives.thermaldetonator.disarm": {
                 	"subtitle": "subtitle.pswg.explosives.thermaldetonator.disarm",
                 	"sounds": [
-                		"pswg:explosives/beep/td_disarm"
+                		"pswg:explosives/thermal_detonator/beep/disarm"
                 	]
     },
     "explosives.thermaldetonator.throw": {
                     "subtitle": "subtitle.pswg.explosives.thermaldetonator.throw",
                     "sounds": [
-                    	"pswg:explosives/misc/td_throw"
+                    	"pswg:explosives/thermal_detonator/misc/throw"
                     ]
     },
     "explosives.thermaldetonator.land": {
                     "subtitle": "subtitle.pswg.explosives.thermaldetonator.land",
                     "sounds": [
-                        "pswg:explosives/misc/td_land"
+                        "pswg:explosives/thermal_detonator/misc/land"
                         ]
     }
 }

@@ -320,7 +320,6 @@ public class Client implements ClientModInitializer
 
 		registerArmor();
 
-		//SwgParticleTypes.register();
 		SwgParticleFactories.register();
 
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {

@@ -68,13 +68,9 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 			return;
 		}
 		if (foundDetonator)
-		{
 			volume = 0.75f;
-		}
 		else
-		{
 			volume = 0.25f;
-		}
 
 		this.x = (float)this.player.getX();
 		this.y = (float)this.player.getY();
@@ -84,15 +80,8 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 	public static boolean areConditionsMet(PlayerEntity player)
 	{
 		for (int i = 0; i < player.getInventory().size(); i++)
-		{
-			if (player.getInventory().getStack(i).getItem() instanceof ThermalDetonatorItem)
-			{
-				if (isPrimed(player.getInventory().getStack(i)))
-				{
+			if (player.getInventory().getStack(i).getItem() instanceof ThermalDetonatorItem && isPrimed(player.getInventory().getStack(i)))
 					return true;
-				}
-			}
-		}
 		return false;
 	}
 

@@ -29,22 +29,13 @@ import static com.parzivail.pswg.container.SwgParticleTypes.*;
 
 public class SwgParticleFactories
 {
-	//public static final PParticleType SLUG_TRAIL = register(Resources.id("slug_trail"), true, SlugTrailParticle.Factory::new);
-	//public static final PParticleType SPARK = register(Resources.id("spark"), true, SparkParticle.Factory::new);
-	//	public static final PParticleType SCORCH = register(Resources.id("scorch"), true, ScorchParticle.Factory::new);
-	//public static final PParticleType WATER_WAKE = register(Resources.id("water_wake"), true, WaterWakeParticle.Factory::new);
-	//	public static final ParticleType<BlockStateParticleEffect> WAKE = registerBlockStateBased(Resources.id("wake"), true, new WakeParticle.Factory());
-	//	public static final PParticleType EXPLOSION_SMOKE = register(Resources.id("explosion_smoke"), true, ExplosionSmokeParticle.Factory::new);
-	//public static final PParticleType EXPLOSION_SMOKE = registerWithoutFactory(Resources.id("explosion_smoke"), true);
 	private static void registerFactory(ParticleType particleType, ParticleFactoryRegistry.PendingParticleFactory<PParticleType> factory)
 	{
-
 		ParticleFactoryRegistry.getInstance().register(particleType, factory);
 	}
 
 	private static void registerBlockStateBasedFactory(ParticleType particleType, ParticleFactory<BlockStateParticleEffect> factory)
 	{
-
 		ParticleFactoryRegistry.getInstance().register(particleType, factory);
 	}
 

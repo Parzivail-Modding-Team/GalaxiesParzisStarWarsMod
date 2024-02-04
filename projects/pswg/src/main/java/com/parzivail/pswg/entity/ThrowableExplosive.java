@@ -20,6 +20,7 @@ import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
@@ -63,7 +64,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 
 			var hitState = this.getWorld().getBlockState(blockHit.getBlockPos());
 			var hardness = hitState.getHardness(getWorld(), blockHit.getBlockPos());
-			var restitution = Math.max(0.8 - 0.5 / (hardness / 2), 0.1);
+			var restitution = Math.max(0.8 - 0.5 / hardness, 0.1);
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{
@@ -185,10 +186,9 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 	}
 	public void explode()
 	{
-		if (!this.getWorld().isClient())
+		if (getWorld() instanceof ServerWorld serverWorld)
 		{
 			getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY(), this.getZ(), explosionPower, false, World.ExplosionSourceType.TNT, false);
-			ServerWorld serverWorld = (ServerWorld)getWorld();
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
 		discard();

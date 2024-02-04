@@ -45,6 +45,7 @@ import java.util.function.Function;
 public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements IPicklingBlock
 {
 	public static final IntProperty CLUSTER_SIZE = IntProperty.of("cluster_size", 1, 5);
+	public static final int MAX_CLUSTER_SIZE = 5;
 
 	public ThermalDetonatorBlock(Settings settings)
 	{
@@ -124,9 +125,8 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
-		//if (!player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator))
-		//{
-		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator) && state.get(CLUSTER_SIZE) < 5 && player.isSneaking())
+
+		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator) && state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && player.isSneaking())
 		{
 			if (!player.isCreative())
 			{
@@ -135,8 +135,6 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 			world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
 			return ActionResult.SUCCESS;
 		}
-		//if (world instanceof ServerWorld)
-		//{
 				player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
 				if (state.get(CLUSTER_SIZE) == 1)
 				{
@@ -147,9 +145,6 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 					world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) - 1));
 				}
 		return ActionResult.SUCCESS;
-		//}
-		//}
-		//return ActionResult.PASS;
 	}
 
 	@Override
@@ -157,7 +152,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	{
 		if (entity instanceof ThermalDetonatorEntity tde)
 		{
-			if (state.get(CLUSTER_SIZE) < 5 && !tde.isPrimed())
+			if (state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && !tde.isPrimed())
 			{
 				world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
 				entity.discard();
@@ -177,7 +172,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	{
 		if (projectile instanceof BlasterBoltEntity bbe)
 		{
-			Float power = world.getBlockState(hit.getBlockPos()).get(CLUSTER_SIZE) * 2f + 3;
+			var power = world.getBlockState(hit.getBlockPos()).get(CLUSTER_SIZE) * 2f + 3;
 			explode(world, hit.getBlockPos(), power);
 		}
 		super.onProjectileHit(world, state, hit, projectile);
@@ -188,7 +183,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	@Override
 	public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion)
 	{
-		float power = 8f;
+		float power = 7f;
 		explode(world, pos, power);
 		super.onDestroyedByExplosion(world, pos, explosion);
 	}

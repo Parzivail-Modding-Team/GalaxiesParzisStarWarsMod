@@ -6,6 +6,7 @@ import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
 public class ThermalDetonatorEntity extends ThrowableExplosive implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
 {
 	public int texturePhase = 0;
+	public static final int MIN_PICKUP_AGE = 30;
 
 	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
 	{
@@ -40,14 +42,8 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	public void tick()
 	{
-		if (getWorld().isClient())
-		{
-			if (this.age == 1 && this.isPrimed())
-			{
+		if (getWorld().isClient() && this.age == 1 && this.isPrimed())
 				SoundHelper.playDetonatorEntitySound(this);
-			}
-		}
-
 		if (isPrimed())
 		{
 			if (texturePhase < 6)
@@ -63,9 +59,10 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
 	{
-		float m = getExplosionPower() / 4;
-		int m2 = (int)getExplosionPower() * 2;
-		int m3 = (int)(getExplosionPower() / 4);
+		float power = getExplosionPower();
+		float m = power / 4;
+		int m2 = (int)power * 2;
+		int m3 = (int)(power / 4);
 		double m4 = m3 * 1.5f;
 
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
@@ -107,7 +104,7 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand)
 	{
-		if (!isPrimed() && age > 30 && player.getInventory().getMainHandStack().isEmpty())
+		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getInventory().getMainHandStack().isEmpty())
 		{
 			player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
 

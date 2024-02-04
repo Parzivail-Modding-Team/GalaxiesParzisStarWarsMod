@@ -49,25 +49,6 @@ public abstract class ItemRendererMixin
 			}
 		}
 	}
-
-	@ModifyVariable(method = "renderItem", at = @At(value = "HEAD"), argsOnly = true)
-	public BakedModel useThermalDetonatorModel(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
-	{
-		if (stack.isOf(SwgItems.Explosives.ThermalDetonator) && renderMode != ModelTransformationMode.GUI)
-		{
-			var tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
-			if (tdt.primed)
-			{
-				return ((ItemRendererAccessor)this).mccourse$getModels().getModelManager().getModel(new ModelIdentifier(Resources.MODID, "thermal_detonator_in_hand_primed", "inventory"));
-			}
-			else
-			{
-				return ((ItemRendererAccessor)this).mccourse$getModels().getModelManager().getModel(new ModelIdentifier(Resources.MODID, "thermal_detonator_in_hand", "inventory"));
-			}
-		}
-		return value;
-	}
-
 	// TODO: check if this can be replaced by net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 	@Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V", at = @At("HEAD"), cancellable = true)
 	public void renderItem(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci)
