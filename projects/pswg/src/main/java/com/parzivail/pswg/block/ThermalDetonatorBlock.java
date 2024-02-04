@@ -166,20 +166,6 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	{
 		return false;
 	}
-
-	@Override
-	public void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile)
-	{
-		if (projectile instanceof BlasterBoltEntity bbe)
-		{
-			var power = world.getBlockState(hit.getBlockPos()).get(CLUSTER_SIZE) * 2f + 3;
-			explode(world, hit.getBlockPos(), power);
-		}
-		super.onProjectileHit(world, state, hit, projectile);
-	}
-
-
-
 	@Override
 	public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion)
 	{
