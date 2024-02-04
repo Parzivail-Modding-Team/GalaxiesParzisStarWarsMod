@@ -72,6 +72,7 @@ import io.github.ennuil.libzoomer.api.overlays.SpyglassZoomOverlay;
 import io.github.ennuil.libzoomer.api.transitions.SmoothTransitionMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
@@ -98,6 +99,8 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -170,6 +173,17 @@ public class Client implements ClientModInitializer
 
 		ClientTickEvents.END_CLIENT_TICK.register(BlasterZoomHandler::tick);
 		ClientTickEvents.END_CLIENT_TICK.register(DebugUtil::tick);
+
+		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+			if (FabricLoader.getInstance().isModLoaded("sodium") && !FabricLoader.getInstance().isModLoaded("indium"))
+			{
+				var crashReport = CrashReport.create(
+						new IllegalStateException("Indium is not installed"),
+						"PSWG is not compatible with Sodium unless Indium is also installed. Download Indium here: https://modrinth.com/mod/indium"
+				);
+				throw new CrashException(crashReport);
+			}
+		});
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Tree.SequoiaLeaves);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Tree.SequoiaLeaves);
