@@ -37,8 +37,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static com.parzivail.pswg.block.ThermalDetonatorBlock.CLUSTER_SIZE;
-
 public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
 	public final int baseTicksToExplosion = 150;
@@ -58,9 +56,9 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 		if (context.getPlayer().isSneaking() && !tdt.primed)
 		{
 			var state = context.getWorld().getBlockState(context.getBlockPos());
-			if (state.isOf(SwgBlocks.Misc.ThermalDetonatorBlock) && state.get(CLUSTER_SIZE) < 5)
+			if (state.isOf(SwgBlocks.Misc.ThermalDetonatorBlock) && state.get(ThermalDetonatorBlock.CLUSTER_SIZE) < 5)
 			{
-				context.getWorld().setBlockState(context.getBlockPos(), state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
+				context.getWorld().setBlockState(context.getBlockPos(), state.with(ThermalDetonatorBlock.CLUSTER_SIZE, state.get(ThermalDetonatorBlock.CLUSTER_SIZE) + 1));
 				if (!context.getPlayer().isCreative())
 				{
 					context.getStack().decrement(1);
