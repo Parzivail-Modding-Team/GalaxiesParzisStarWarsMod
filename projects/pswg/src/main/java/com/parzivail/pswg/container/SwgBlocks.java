@@ -934,6 +934,7 @@ public class SwgBlocks
 	public static class Misc
 	{
 		@RegistryName("thermal_detonator_block")
+		@TabIgnore
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final ThermalDetonatorBlock ThermalDetonatorBlock = new ThermalDetonatorBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(0.5F));
 	}

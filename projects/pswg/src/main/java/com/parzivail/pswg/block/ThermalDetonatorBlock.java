@@ -1,44 +1,32 @@
 package com.parzivail.pswg.block;
 
-import com.google.common.collect.ImmutableMap;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
-import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
-import java.util.function.Function;
 
 public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements IPicklingBlock
 {
@@ -165,6 +153,12 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	}
 
 	@Override
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
+	{
+		return new ItemStack(SwgItems.Explosives.ThermalDetonator);
+	}
+
+	@Override
 	public boolean canReplace(BlockState state, ItemPlacementContext context)
 	{
 		return !context.shouldCancelInteraction() && context.getStack().isOf(this.asItem()) && state.get(CLUSTER_SIZE) < 5 || super.canReplace(state, context);
@@ -180,8 +174,6 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 		}
 		super.onProjectileHit(world, state, hit, projectile);
 	}
-
-
 
 	@Override
 	public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion)

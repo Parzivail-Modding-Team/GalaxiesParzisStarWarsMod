@@ -16,7 +16,7 @@ public class EnvironmentSoundManager
 		var pos = mc.player.getEyePos();
 
 		var box = Box.of(pos, 16, 16, 16);
-		for (var entity : mc.world.getEntitiesByClass(BlasterBoltEntity.class, box, e -> true))
+		for (var entity : mc.world.getEntitiesByClass(BlasterBoltEntity.class, box, e -> e.age >= 5))
 		{
 			var entityDirection = entity.getVelocity();
 

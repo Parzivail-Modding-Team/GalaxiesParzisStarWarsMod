@@ -24,3 +24,4 @@
 # Fixes
 
 * Fixed game handing when loading with specific combinations of Sodium and Indium
+* Blaster bolts no longer make the "fly-by" sound immediately when you shoot them
