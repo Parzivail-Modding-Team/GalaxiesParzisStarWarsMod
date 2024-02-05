@@ -1131,7 +1131,7 @@ public class PswgTarkin
 		              .blockTag(SwgTags.Blocks.DESERT_SAND)
 		              .itemTag(SwgTags.Items.DESERT_SAND)
 		              .build(assets);
-		BlockGenerator.accumulatingLayers(SwgBlocks.Sand.LooseDesert)
+		BlockGenerator.accumulatingLayers(SwgBlocks.Sand.LooseDesert, Resources.id("block/desert_sand"))
 		              .blockTag(SwgTags.Blocks.DESERT_SAND)
 		              .itemTag(SwgTags.Items.DESERT_SAND)
 		              .build(assets);

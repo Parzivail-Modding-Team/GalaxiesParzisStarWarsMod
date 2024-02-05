@@ -1,1 +1,1 @@
-{"parent":"minecraft:block/snow_height14","textures":{"texture":"pswg:block/loose_desert_sand","particle":"pswg:block/loose_desert_sand"}}
+{"parent":"minecraft:block/snow_height14","textures":{"texture":"pswg:block/desert_sand","particle":"pswg:block/desert_sand"}}

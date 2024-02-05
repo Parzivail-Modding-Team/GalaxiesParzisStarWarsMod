@@ -408,9 +408,10 @@ public class ModelFile
 		return modelFiles;
 	}
 
-	public static Collection<ModelFile> accumulatingLayers(Block block)
+	public static Collection<ModelFile> accumulatingLayers(Block block, Identifier texture)
 	{
 		var id = AssetUtils.getRegistryName(block);
+
 		var modelFiles = new ArrayList<ModelFile>();
 
 		for (int i : Properties.LAYERS.getValues())
@@ -423,14 +424,20 @@ public class ModelFile
 			modelFiles.add(
 					ModelFile
 							.ofModel(localId, new Identifier("block/snow_height" + i * 2))
-							.texture("particle", IdentifierUtil.concat("block/", id))
-							.texture("texture", IdentifierUtil.concat("block/", id))
+							.texture("particle", texture)
+							.texture("texture", texture)
 			);
 		}
 
 		modelFiles.add(ModelFile.cube(block));
 
 		return modelFiles;
+	}
+
+	public static Collection<ModelFile> accumulatingLayers(Block block)
+	{
+		var id = AssetUtils.getRegistryName(block);
+		return accumulatingLayers(block, IdentifierUtil.concat("block/", id));
 	}
 
 	public static Collection<ModelFile> bushStages(Block block, IntProperty property)

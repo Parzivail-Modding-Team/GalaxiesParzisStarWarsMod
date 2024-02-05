@@ -89,6 +89,14 @@ public class BlockGenerator
 				.itemModel(ModelFile::ofAccumulatingBlock);
 	}
 
+	public static BlockGenerator accumulatingLayers(Block block, Identifier texture)
+	{
+		return blockNoModelLangEntry(block)
+				.state(BlockStateGenerator::accumulatingLayers)
+				.models(b -> ModelFile.accumulatingLayers(b, texture))
+				.itemModel(ModelFile::ofAccumulatingBlock);
+	}
+
 	public static BlockGenerator cropStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
 	{
 		return blockNoModelLangEntry(block)
