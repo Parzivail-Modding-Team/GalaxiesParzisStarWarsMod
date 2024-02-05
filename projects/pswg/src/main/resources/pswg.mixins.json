@@ -44,6 +44,7 @@
 		"PlayerEntityClientMixin",
 		"PlayerEntityRendererMixin",
 		"RenderLayersMixin",
+		"WorldRendererAccessor",
 		"WorldRendererMixin"
 	],
 	"injectors": {

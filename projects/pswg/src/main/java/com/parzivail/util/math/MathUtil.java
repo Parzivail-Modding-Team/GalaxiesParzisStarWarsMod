@@ -1,20 +1,20 @@
 package com.parzivail.util.math;
 
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.*;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
+import org.joml.*;
+
+import java.lang.Math;
 
 public class MathUtil
 {
 	public static final int TICKS_PER_SECOND = 20;
 
 	public static final float fPI = (float)Math.PI;
-
+	public static final float SQRT2DIV2 = (float)(Math.sqrt(2) / 2);
 	public static final double ONE_OVER_GOLDEN_RATIO = 0.61803398875;
 
 	public static final float SPEED_OF_SOUND = 275f / TICKS_PER_SECOND; // m/tick
@@ -119,6 +119,20 @@ public class MathUtil
 		return onto.multiply(v.dotProduct(onto) / onto.dotProduct(onto));
 	}
 
+	public static int lerpLight(float delta, int packedA, int packedB)
+	{
+		return LightmapTextureManager.pack(
+				MathHelper.lerp(delta,
+				                LightmapTextureManager.getBlockLightCoordinates(packedA),
+				                LightmapTextureManager.getBlockLightCoordinates(packedB)
+				),
+				MathHelper.lerp(delta,
+				                LightmapTextureManager.getSkyLightCoordinates(packedA),
+				                LightmapTextureManager.getSkyLightCoordinates(packedB)
+				)
+		);
+	}
+
 	@NotNull
 	public static Vec3d anglesToLook(float pitch, float yaw)
 	{
@@ -162,7 +176,7 @@ public class MathUtil
 		entry.getPositionMatrix().scale(x, y, z);
 	}
 
-	public static Quaternionf getRotation(Direction direction)
+	public static Quaternionf getEastRotation(Direction direction)
 	{
 		return switch (direction)
 		{
@@ -173,6 +187,24 @@ public class MathUtil
 			case WEST -> new Quaternionf().rotationXYZ(0, (float)Math.PI, 0);
 			case EAST -> new Quaternionf().rotationXYZ(0, 0, 0);
 		};
+	}
+
+	public static Quaternionf getNorthRotation(Direction direction)
+	{
+		return switch (direction)
+		{
+			case NORTH -> RotationAxis.POSITIVE_Y.rotationDegrees(0);
+			case EAST -> RotationAxis.POSITIVE_Y.rotationDegrees(270);
+			case SOUTH -> RotationAxis.POSITIVE_Y.rotationDegrees(180);
+			case WEST -> RotationAxis.POSITIVE_Y.rotationDegrees(90);
+			case UP -> RotationAxis.POSITIVE_X.rotationDegrees(90);
+			case DOWN -> RotationAxis.POSITIVE_X.rotationDegrees(270);
+		};
+	}
+
+	public static Vector4f vec3to4(Vector3f in, Vector4f out)
+	{
+		return out.set(in.x(), in.y(), in.z(), 1);
 	}
 
 	public static Vec3d reflect(Vec3d incident, Vec3d normal)

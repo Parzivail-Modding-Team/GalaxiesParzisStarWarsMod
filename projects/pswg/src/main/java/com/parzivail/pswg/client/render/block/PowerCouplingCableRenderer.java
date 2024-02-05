@@ -1,9 +1,15 @@
 package com.parzivail.pswg.client.render.block;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.blockentity.PowerCouplingBlockEntity;
+import com.parzivail.pswg.client.render.cable.CableRenderer;
+import com.parzivail.pswg.client.render.cable.CableSocket;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.mixin.WorldRendererAccessor;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.math.MathUtil;
+import com.parzivail.util.math.Pose3f;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -17,6 +23,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCouplingBlockEntity>
 {
@@ -37,9 +45,52 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 
 		matrices.push();
 
+		//		matrices.translate(offset.x, offset.y, offset.z);
+
+		var immediate = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(Resources.id("textures/block/model/cable.png")));
+
+		var frustum = ((WorldRendererAccessor)MinecraftClient.getInstance().worldRenderer).getFrustum();
+
+		var src = blockEntity.getPos();
+		var start = new CableSocket(src, new Pose3f(new Vector3f(-6 / 16f, 0, 0), new Quaternionf()));
+
+		matrices.translate(-src.getX(), -src.getY(), -src.getZ());
+
+		var i = 0;
+		for (var pos : blockEntity.getTargets())
+		{
+			var targetPos = pos.add(src);
+
+			var targetState = world.getBlockState(targetPos);
+			if (!targetState.isOf(SwgBlocks.Power.Coupling))
+				continue;
+
+			var end = new CableSocket(targetPos, new Pose3f(new Vector3f(-6 / 16f, 0, 0), new Quaternionf()));
+
+			var seed = src.getX() ^ (31L * src.getY()) ^ (63L * src.getZ()) ^ (31L * i);
+			CableRenderer.renderConnection(seed, world, start, end, frustum, matrices, immediate, overlay, tickDelta);
+
+			i++;
+		}
+
+		matrices.pop();
+	}
+
+	public void render2(PowerCouplingBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
+	{
+		var world = blockEntity.getWorld();
+		if (world == null)
+			return;
+
+		var state = world.getBlockState(blockEntity.getPos());
+		if (!state.isOf(SwgBlocks.Power.Coupling))
+			return;
+
+		matrices.push();
+
 		var offsetMatrices = new MatrixStack();
 		var rotation = state.get(WaterloggableRotatingBlock.FACING);
-		offsetMatrices.multiply(MathUtil.getRotation(rotation));
+		offsetMatrices.multiply(MathUtil.getEastRotation(rotation));
 		var offset = MathUtil.transform(new Vec3d(-5 / 16f, 0, 0), offsetMatrices.peek().getPositionMatrix());
 
 		matrices.translate(0.5, 0.5, 0.5);
@@ -60,7 +111,7 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 
 			var destOffsetMatrices = new MatrixStack();
 			var destRotation = targetState.get(WaterloggableRotatingBlock.FACING);
-			destOffsetMatrices.multiply(MathUtil.getRotation(destRotation));
+			destOffsetMatrices.multiply(MathUtil.getEastRotation(destRotation));
 			var destOffset = MathUtil.transform(new Vec3d(-5 / 16f, 0, 0), destOffsetMatrices.peek().getPositionMatrix());
 
 			renderCable(world, i, srcVec3, destVec3.add(destOffset), tickDelta, matrices, vertexConsumers);

@@ -153,7 +153,7 @@ public class P3dBakedBlockModel extends DynamicBakedModel
 		{
 			mat.translate(0.5f, 0.5f, 0.5f);
 
-			mat.rotate(MathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
+			mat.rotate(MathUtil.getEastRotation(state.get(WaterloggableRotatingBlock.FACING)));
 
 			mat.translate(-0.5f, -0.5f, -0.5f);
 		}

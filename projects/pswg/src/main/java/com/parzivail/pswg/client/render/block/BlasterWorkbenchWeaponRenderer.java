@@ -41,7 +41,7 @@ public class BlasterWorkbenchWeaponRenderer implements BlockEntityRenderer<Blast
 		var rotation = state.get(WaterloggableRotatingBlock.FACING);
 
 		matrices.translate(0.5, 0, 0.5);
-		matrices.multiply(MathUtil.getRotation(rotation));
+		matrices.multiply(MathUtil.getEastRotation(rotation));
 
 		var desc = BlasterItem.getBlasterDescriptor(blaster);
 

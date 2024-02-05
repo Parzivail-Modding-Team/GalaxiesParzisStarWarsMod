@@ -141,7 +141,7 @@ public class SlidingDoorRenderer implements IP3dBlockRenderer, BlockEntityRender
 		matrices.push();
 
 		matrices.translate(0.5, 0, 0.5);
-		matrices.multiply(MathUtil.getRotation(rotation));
+		matrices.multiply(MathUtil.getEastRotation(rotation));
 
 		model.render(matrices, vertexConsumers, entity, SlidingDoorRenderer::transformBlockEntity, SlidingDoorRenderer::provideLayer, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();
