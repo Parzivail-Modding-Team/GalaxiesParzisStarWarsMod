@@ -36,7 +36,7 @@ public class InvertedLampSlab extends InvertedLampBlock implements Waterloggable
 	public InvertedLampSlab(AbstractBlock.Settings settings)
 	{
 		super(settings);
-		this.setDefaultState(this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, Boolean.FALSE).with(LIT, Boolean.TRUE));
+		this.setDefaultState(this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, Boolean.FALSE).with(POWERED, Boolean.FALSE));
 	}
 
 	@Override
@@ -48,7 +48,8 @@ public class InvertedLampSlab extends InvertedLampBlock implements Waterloggable
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
-		builder.add(TYPE, AXIS, WATERLOGGED, LIT);
+		super.appendProperties(builder);
+		builder.add(TYPE, AXIS, WATERLOGGED);
 	}
 
 	@Override
@@ -94,12 +95,12 @@ public class InvertedLampSlab extends InvertedLampBlock implements Waterloggable
 		var blockState = ctx.getWorld().getBlockState(blockPos);
 		if (blockState.isOf(this))
 		{
-			return blockState.with(TYPE, SlabType.DOUBLE).with(AXIS, blockState.get(AXIS)).with(WATERLOGGED, Boolean.FALSE).with(LIT, !ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()));
+			return blockState.with(TYPE, SlabType.DOUBLE).with(AXIS, blockState.get(AXIS)).with(WATERLOGGED, Boolean.FALSE).with(POWERED, ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()));
 		}
 		else
 		{
 			var fluidState = ctx.getWorld().getFluidState(blockPos);
-			var blockState2 = this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(LIT, !ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()));
+			var blockState2 = this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(POWERED, ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()));
 
 			var direction = ctx.getSide();
 
@@ -124,7 +125,7 @@ public class InvertedLampSlab extends InvertedLampBlock implements Waterloggable
 						case Z -> half = (ctx.getHitPos().z - (double)blockPos.getZ() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
 					}
 
-					return this.getDefaultState().with(TYPE, half).with(AXIS, axis).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(LIT, !ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()));
+					return this.getDefaultState().with(TYPE, half).with(AXIS, axis).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(POWERED, ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()));
 				}
 			}
 			else

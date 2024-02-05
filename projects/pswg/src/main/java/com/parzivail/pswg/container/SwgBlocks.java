@@ -31,7 +31,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -764,9 +763,8 @@ public class SwgBlocks
 	@RegistryOrder(16)
 	public static class Light
 	{
-
 		@RegistryName("light_fixture")
-		public static final Block Fixture = new LightFixtureBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.GLASS).luminance((b) -> b.get(Properties.LIT) ? LightFixtureBlock.getBrightness(b.get(LightFixtureBlock.BRIGHTNESS)) : 0).strength(0.3F));
+		public static final Block Fixture = new LightFixtureBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.GLASS).luminance((b) -> InvertedLampBlock.isLit(b) ? LightFixtureBlock.getBrightness(b.get(LightFixtureBlock.BRIGHTNESS)) : 0).strength(0.3F));
 
 		@RegistryName("red_hangar_light")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
@@ -1032,7 +1030,7 @@ public class SwgBlocks
 	public static InteractableInvertedLampBlock createLightingPanelBlock(int brightness)
 	{
 		return new InteractableInvertedLampBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
-			if (blockState.get(Properties.LIT))
+			if (InvertedLampBlock.isLit(blockState))
 				return brightness;
 			return 0;
 		}).strength(0.3f));
@@ -1041,7 +1039,7 @@ public class SwgBlocks
 	public static InteractableInvertedLampSlab createLightingPanelSlab(int brightness)
 	{
 		return new InteractableInvertedLampSlab(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
-			if (blockState.get(Properties.LIT))
+			if (InvertedLampBlock.isLit(blockState))
 				return brightness;
 			return 0;
 		}).strength(0.3f));

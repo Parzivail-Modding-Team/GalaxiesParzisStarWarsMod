@@ -108,7 +108,7 @@ public class CableRenderer
 
 		double sqDist = MinecraftClient.getInstance().gameRenderer.getCamera().getPos()
 		                                                          .squaredDistanceTo(cx, cy, cz);
-		double delta = MathHelper.clamp(sqDist / (length * length * 4), 0, 1);
+		double delta = MathHelper.clamp(sqDist / (length * length * 12), 0, 1);
 		detail = MathHelper.lerp(delta, cableLODNearDetail, cableLODFarDetail);
 
 		segments = Math.max((int)Math.ceil(4 * length * detail), Math.min(3, segments));

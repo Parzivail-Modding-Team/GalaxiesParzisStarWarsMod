@@ -1,6 +1,5 @@
 package com.parzivail.util.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -26,7 +25,7 @@ public class InteractableInvertedLampBlock extends InvertedLampBlock
 			return ActionResult.PASS;
 		else
 		{
-			world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS | Block.NOTIFY_NEIGHBORS);
+			updateState(state.cycle(INVERTED), world, pos);
 			return ActionResult.success(world.isClient);
 		}
 	}
