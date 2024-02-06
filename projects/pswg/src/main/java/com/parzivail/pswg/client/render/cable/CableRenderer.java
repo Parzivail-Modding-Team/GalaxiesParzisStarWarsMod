@@ -156,10 +156,12 @@ public class CableRenderer
 
 		transformCableNormal(cableNormal, matrices.peek().getNormalMatrix()::transform);
 
-		var time = world.getTime();
-		time += seed;
-		time %= 100;
-		var timeRads = (time + tickDelta) / 50f * MathHelper.PI;
+		var timeL = world.getTime();
+		timeL += seed;
+		var time = (float)(timeL % 100000);
+		var timeScale = 40 + (seed % 20) + MathHelper.sqrt(length);
+		var timeRads = (time + tickDelta) / timeScale * MathHelper.PI;
+		var sway = 0.2f * MathHelper.sin(timeRads);
 
 		for (int s = 0; s < segments; s++)
 		{
@@ -168,8 +170,8 @@ public class CableRenderer
 			float startYOffset = length * 0.35f * (0.25f - (float)Math.pow(startDelta - 0.5, 2));
 			float endYOffset = length * 0.35f * (0.25f - (float)Math.pow(endDelta - 0.5, 2));
 
-			var startXOffset = 0.2f * MathHelper.sin(timeRads) * (0.25f - (float)Math.pow(startDelta - 0.5, 2));
-			var endXOffset = 0.2f * MathHelper.sin(timeRads) * (0.25f - (float)Math.pow(endDelta - 0.5, 2));
+			var startXOffset = sway * (0.25f - (float)Math.pow(startDelta - 0.5, 2));
+			var endXOffset = sway * (0.25f - (float)Math.pow(endDelta - 0.5, 2));
 
 			int segStartLight = MathUtil.lerpLight(startDelta, startLight, endLight);
 			int segEndLight = MathUtil.lerpLight(endDelta, startLight, endLight);

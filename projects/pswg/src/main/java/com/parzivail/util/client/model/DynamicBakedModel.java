@@ -135,7 +135,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 	@Override
 	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context)
 	{
-		context.meshConsumer().accept(createOrCacheBlockMesh(blockView, state, pos, randomSupplier, context, createTransformation(state)));
+		createOrCacheBlockMesh(blockView, state, pos, randomSupplier, context, createTransformation(state)).outputTo(context.getEmitter());
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 	@Override
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context)
 	{
-		context.meshConsumer().accept(createOrCacheItemMesh(stack, randomSupplier, context, createTransformation(null)));
+		createOrCacheItemMesh(stack, randomSupplier, context, createTransformation(null)).outputTo(context.getEmitter());
 	}
 
 	protected class ItemProxy extends ModelOverrideList
