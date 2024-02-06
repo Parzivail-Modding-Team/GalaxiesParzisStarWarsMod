@@ -20,8 +20,11 @@
 * Updated texture for most imperial blocks
 * Updated texture for scaffolding blocks
 * Updated texture for fuel tank
+* Removed support for Sodium when Indium is not also installed
+* Dramatically improved cable rendering
 
 # Fixes
 
 * Fixed game handing when loading with specific combinations of Sodium and Indium
 * Blaster bolts no longer make the "fly-by" sound immediately when you shoot them
+* Fixed loose sand texture

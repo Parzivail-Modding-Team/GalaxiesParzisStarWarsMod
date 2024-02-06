@@ -33,7 +33,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -57,14 +56,6 @@ public abstract class DynamicBakedModel extends AbstractModel
 		NO_CACHING
 	}
 
-	// These are dirty hacks to at least have some semblance of "working" models when
-	// a rendering mod replaces Indigo without implementing FRAPI. I hate them, and
-	// they only work because AbstractBlockState::getModelOffset is called before each
-	// block is rendered.
-	// TODO: figure out a better way to do this
-	private static final ThreadLocal<BlockView> lastQueriedWorld = new ThreadLocal<>();
-	private static final ThreadLocal<BlockPos> lastQueriedPos = new ThreadLocal<>();
-
 	protected final ItemProxy itemProxy = new ItemProxy();
 	protected final HashMap<ModelCacheId, Mesh> meshes = new HashMap<>();
 	protected WeakReference<List<BakedQuad>[]> quadLists = null;
@@ -72,12 +63,6 @@ public abstract class DynamicBakedModel extends AbstractModel
 	public DynamicBakedModel(Sprite sprite, ModelTransformation transformation)
 	{
 		super(sprite, transformation);
-	}
-
-	public static void cacheBlockPosQuery(BlockView world, BlockPos pos)
-	{
-		lastQueriedWorld.set(world);
-		lastQueriedPos.set(pos);
 	}
 
 	@Override
@@ -140,12 +125,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 		var lists = quadLists == null ? null : quadLists.get();
 		if (lists == null)
 		{
-			var world = lastQueriedWorld.get() instanceof BlockRenderView brv ? brv : null;
-			var pos = lastQueriedPos.get();
-			if (pos == null)
-				pos = BlockPos.ORIGIN;
-
-			lists = ModelHelper.toQuadLists(createOrCacheBlockMesh(world, state, pos, () -> rand, null, createTransformation(state)));
+			lists = ModelHelper.toQuadLists(createOrCacheBlockMesh(null, state, BlockPos.ORIGIN, () -> rand, null, createTransformation(state)));
 			quadLists = new WeakReference<>(lists);
 		}
 		final var result = lists[face == null ? 6 : face.getId()];

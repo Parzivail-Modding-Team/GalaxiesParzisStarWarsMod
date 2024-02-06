@@ -17,7 +17,6 @@
 		"ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
-		"AbstractBlockStateMixin",
 		"AbstractClientPlayerEntityMixin",
 		"ArmorFeatureRendererMixin",
 		"BipedEntityModelMixin",
