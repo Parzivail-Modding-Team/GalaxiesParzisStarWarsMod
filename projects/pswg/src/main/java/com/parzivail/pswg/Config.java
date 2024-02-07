@@ -63,6 +63,10 @@ public class Config implements ConfigData
 		@Comment("Enable complex collision calculation for large entities")
 		@ConfigEntry.Gui.Tooltip
 		public boolean allowComplexCollisions = true;
+
+		@Comment("Allow block destruction (from blasters, explosives, etc.)")
+		@ConfigEntry.Gui.Tooltip
+		public boolean allowDestruction = true;
 	}
 
 	@ConfigEntry.Gui.CollapsibleObject

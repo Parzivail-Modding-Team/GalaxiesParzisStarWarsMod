@@ -1,5 +1,7 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.Config;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
@@ -8,6 +10,7 @@ import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -23,9 +26,12 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
 public abstract class ThrowableExplosive extends ThrownEntity implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
@@ -215,5 +221,13 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 	public void setVisible(boolean visible)
 	{
 		this.isVisible = visible;
+	}
+
+	@Override
+	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
+	{
+		if (!Resources.CONFIG.get().server.allowDestruction)
+			return false;
+		return super.canExplosionDestroyBlock(explosion, world, pos, state, explosionPower);
 	}
 }

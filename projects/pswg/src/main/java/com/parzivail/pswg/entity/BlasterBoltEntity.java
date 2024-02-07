@@ -322,7 +322,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 					return;
 			}
 
-			if (shouldDestroyBlocks())
+			if (shouldDestroyBlocks() && Resources.CONFIG.get().server.allowDestruction)
 			{
 				if (!this.getWorld().isClient)
 				{
