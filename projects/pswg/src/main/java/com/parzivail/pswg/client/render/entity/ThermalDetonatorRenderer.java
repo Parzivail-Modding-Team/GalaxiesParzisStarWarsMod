@@ -14,10 +14,10 @@ import net.minecraft.util.math.RotationAxis;
 
 public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEntity>
 {
-	public final Identifier TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator.png");
-	public final Identifier TEXTURE2 = Resources.id("item/thermal_detonator/thermal_detonator");
-	public final Identifier TEXTURE_PRIMED = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_primed_entity.png");
-	public final Identifier TEXTURE_INBETWEEN = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_inbetween_entity.png");
+	public static final Identifier MODEL = Resources.id("item/thermal_detonator/thermal_detonator");
+	public static final Identifier TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator.png");
+	public static final Identifier TEXTURE_PRIMED = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_primed_entity.png");
+	public static final Identifier TEXTURE_INBETWEEN = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_inbetween_entity.png");
 
 	public P3dModel model;
 
@@ -33,10 +33,12 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(entity.getYaw(tickDelta)));
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getPitch(tickDelta)));
+
 		if (model == null)
 		{
-			model = P3dManager.INSTANCE.get(TEXTURE2);
+			model = P3dManager.INSTANCE.get(MODEL);
 		}
+
 		model.render(matrices, vertexConsumer, entity, null, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();
 		super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);

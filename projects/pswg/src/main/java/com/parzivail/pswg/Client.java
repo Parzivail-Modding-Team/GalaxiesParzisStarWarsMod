@@ -3,6 +3,7 @@ package com.parzivail.pswg;
 import com.parzivail.nem.NemManager;
 import com.parzivail.p3d.P3dBlockRendererRegistry;
 import com.parzivail.p3d.P3dManager;
+import com.parzivail.pswg.api.IDebugBackend;
 import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.pswg.client.container.SwgModelPredicateProviders;
 import com.parzivail.pswg.client.input.KeyHandler;
@@ -41,6 +42,8 @@ import com.parzivail.pswg.features.debug.DebugUtil;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.client.forge.LightsaberForgeScreen;
+import com.parzivail.pswg.features.thermaldetonator.client.ThermalDetonatorItemRenderer;
+import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
@@ -107,6 +110,8 @@ import java.util.List;
 
 public class Client implements ClientModInitializer
 {
+	public static IDebugBackend DEBUG = null;
+
 	public static final KeyBinding KEY_PRIMARY_ITEM_ACTION = new KeyBinding(Resources.keyBinding("primary_item_action"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_Z, "key.category.pswg");
 	public static final KeyBinding KEY_SECONDARY_ITEM_ACTION = new KeyBinding(Resources.keyBinding("secondary_item_action"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.category.pswg");
 	public static final KeyBinding KEY_SHIP_INPUT_MODE_OVERRIDE = new KeyBinding(Resources.keyBinding("ship_input_mode_override"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.pswg");
@@ -330,11 +335,13 @@ public class Client implements ClientModInitializer
 		ICustomPoseItem.register(BlasterItem.class, BlasterItemRenderer.INSTANCE);
 		ICustomHudRenderer.register(BlasterItem.class, BlasterHudRenderer.INSTANCE);
 
+		ICustomItemRenderer.register(ThermalDetonatorItem.class, ThermalDetonatorItemRenderer.INSTANCE);
+
 		//		TODO: ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
 		registerArmor();
 
-		SwgParticles.register();
+		SwgParticleFactories.register();
 
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (client.player != null)
@@ -375,7 +382,7 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.MannequinConfigure, OpenMannequinConfigureS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.AccumulateRecoil, BlasterRecoilManager::handleAccumulateRecoil);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.BlasterHit, BlasterUtil::handleBoltHit);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSocketPyro, SwgParticles::handlePlayerSocketPyro);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSocketPyro, SwgParticleFactories::handlePlayerSocketPyro);
 
 		blasterZoomInstance = new ZoomInstance(
 				Resources.id("blaster_zoom"),

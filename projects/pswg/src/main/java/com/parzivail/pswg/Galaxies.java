@@ -100,6 +100,7 @@ public class Galaxies implements ModInitializer
 		SwgDimensions.register();
 
 		SwgScreenTypes.register();
+		SwgParticleTypes.register();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(CommandManager.literal("cdim")

@@ -1,7 +1,10 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.entity.BlasterBoltEntity;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
@@ -38,6 +41,16 @@ public class SwgTags
 		private static TagKey<Item> register(String id)
 		{
 			return TagKey.of(RegistryKeys.ITEM, Resources.id(id));
+		}
+	}
+
+	public static class EntityTypes
+	{
+		public static final TagKey<EntityType<?>> DETONATES_EXPLOSIVE = register("detonates_explosive");
+
+		private static TagKey<EntityType<?>> register(String id)
+		{
+			return TagKey.of(RegistryKeys.ENTITY_TYPE, Resources.id(id));
 		}
 	}
 

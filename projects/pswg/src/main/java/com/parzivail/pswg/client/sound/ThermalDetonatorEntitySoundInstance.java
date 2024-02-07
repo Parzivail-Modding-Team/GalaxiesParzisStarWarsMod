@@ -7,6 +7,7 @@ import com.parzivail.pswg.item.ThermalDetonatorTag;
 import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,13 +44,17 @@ public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance
 		x = (float)this.detonatorEntity.getX();
 		y = (float)this.detonatorEntity.getY();
 		z = (float)this.detonatorEntity.getZ();
-		float distanceToPlayer32 = 32;
-		if (detonatorEntity.getWorld().getClosestPlayer(detonatorEntity, 32) != null)
+
+		var player = MinecraftClient.getInstance().player;
+		var d = player.distanceTo(detonatorEntity);
+		if (d < 32)
 		{
-			distanceToPlayer32 = detonatorEntity.getWorld().getClosestPlayer(detonatorEntity, 32).distanceTo(detonatorEntity);
+			volume = ((32 - d) / 32);
 		}
-		volume = ((32 - distanceToPlayer32) / 32);
-		//detonatorEntity.getWorld().getClosestPlayer(detonatorEntity, 32).sendMessage(Text.of(""+volume), true);
+		else
+		{
+			volume = 0;
+		}
 
 	}
 
