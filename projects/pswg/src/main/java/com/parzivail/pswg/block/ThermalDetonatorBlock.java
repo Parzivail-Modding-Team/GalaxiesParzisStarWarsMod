@@ -1,46 +1,29 @@
 package com.parzivail.pswg.block;
 
-import com.google.common.collect.ImmutableMap;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.entity.BlasterBoltEntity;
-import com.parzivail.pswg.entity.BlasterIonBoltEntity;
-import com.parzivail.pswg.entity.BlasterStunBoltEntity;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
-import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
-import java.util.function.Function;
 
 public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements IPicklingBlock
 {
@@ -125,25 +108,22 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
-
 		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator) && state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && player.isSneaking())
 		{
 			if (!player.isCreative())
-			{
 				player.getInventory().getMainHandStack().decrement(1);
-			}
+
 			world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
 			return ActionResult.SUCCESS;
 		}
-				player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
-				if (state.get(CLUSTER_SIZE) == 1)
-				{
-					world.breakBlock(pos, false);
-				}
-				else
-				{
-					world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) - 1));
-				}
+
+		player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
+
+		if (state.get(CLUSTER_SIZE) == 1)
+			world.breakBlock(pos, false);
+		else
+			world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) - 1));
+
 		return ActionResult.SUCCESS;
 	}
 
@@ -158,6 +138,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 				entity.discard();
 			}
 		}
+
 		super.onEntityCollision(state, world, pos, entity);
 	}
 

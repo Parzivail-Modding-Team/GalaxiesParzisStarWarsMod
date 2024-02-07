@@ -6,11 +6,9 @@ import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -92,10 +90,9 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 			var pos = blockHitResult.getBlockPos();
 			var state = getWorld().getBlockState(pos);
 			this.bounce(blockHitResult);
+
 			if (getVelocity().length() > 0.01f)
-			{
 				this.playSound(state.getBlock().getSoundGroup(state).getHitSound(), 1f, 1f);
-			}
 		}
 
 		super.onCollision(hitResult);

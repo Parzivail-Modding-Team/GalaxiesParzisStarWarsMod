@@ -1,15 +1,11 @@
 package com.parzivail.pswg.entity;
 
-import com.parzivail.pswg.Config;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
@@ -19,15 +15,13 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -70,7 +64,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 
 			var hitState = this.getWorld().getBlockState(blockHit.getBlockPos());
 			var hardness = hitState.getHardness(getWorld(), blockHit.getBlockPos());
-			var restitution = Math.max(0.8 - 0.5 / hardness, 0.1);
+			var restitution = MathHelper.clamp(0.8 - 0.5 / hardness, 0.1, 1);
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{
@@ -106,6 +100,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 
 		super.tick();
 	}
+
 	public float getExplosionPower()
 	{
 		return explosionPower;
