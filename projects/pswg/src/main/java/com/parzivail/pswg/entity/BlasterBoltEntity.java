@@ -383,7 +383,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 				if (deflect(le))
 					return;
 			}
-			else if(entity instanceof ThrowableExplosive te && !(this instanceof BlasterStunBoltEntity))
+			else if (entity instanceof ThrowableExplosive te && this.getType().isIn(SwgTags.EntityTypes.DETONATES_EXPLOSIVE))
 			{
 				te.explode();
 			}
