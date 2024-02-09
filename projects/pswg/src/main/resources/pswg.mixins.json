@@ -43,6 +43,7 @@
 		"PlayerEntityClientMixin",
 		"PlayerEntityRendererMixin",
 		"RenderLayersMixin",
+		"StaticSoundMixin",
 		"WorldRendererAccessor",
 		"WorldRendererMixin"
 	],
