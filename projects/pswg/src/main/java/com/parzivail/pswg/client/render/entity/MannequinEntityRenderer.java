@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -32,6 +33,20 @@ import java.util.function.Supplier;
 
 public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, BipedEntityModel<LivingEntity>>
 {
+	private static SwgSpecies overrideSpecies = null;
+	private static Identifier overrideTexture = null;
+
+	public static void withOverrides(SwgSpecies species, Identifier texture, Runnable runnable)
+	{
+		overrideSpecies = species;
+		overrideTexture = texture;
+
+		runnable.run();
+
+		overrideSpecies = null;
+		overrideTexture = null;
+	}
+
 	private static class ArmorModel extends BipedEntityModel<LivingEntity>
 	{
 		public ArmorModel(ModelPart modelPart)
@@ -112,8 +127,7 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 			var erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
 			var renderers = erda.getModelRenderers();
 
-			var speciesStr = mannequin.getSpecies();
-			var species = SwgSpeciesRegistry.deserialize(speciesStr);
+			var species = overrideSpecies != null ? overrideSpecies : SwgSpeciesRegistry.deserialize(mannequin.getSpecies());
 			if (species != null)
 			{
 				var renderer = renderers.get(species.getModel().toString());
@@ -234,6 +248,9 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 	@Override
 	public Identifier getTexture(LivingEntity mannequin)
 	{
+		if (overrideTexture != null)
+			return overrideTexture;
+
 		if (mannequin instanceof MannequinEntity mannequinEntity)
 		{
 			var speciesStr = mannequinEntity.getSpecies();

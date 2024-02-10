@@ -1,16 +1,19 @@
 package com.parzivail.pswg.screen;
 
+import com.parzivail.pswg.component.PlayerData;
+import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.entity.MannequinEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 
-public class MannequinScreenHandler extends ScreenHandler
+public class CharacterScreenHandler extends ScreenHandler
 {
-	private final MannequinEntity entity;
+	private final LivingEntity entity;
 
-	public MannequinScreenHandler(int syncId, PlayerInventory playerInventory, MannequinEntity entity)
+	public CharacterScreenHandler(int syncId, PlayerInventory playerInventory, LivingEntity entity)
 	{
 		super(null, syncId);
 		this.entity = entity;
@@ -31,6 +34,12 @@ public class MannequinScreenHandler extends ScreenHandler
 
 	public void setSpecies(String speciesString)
 	{
-		entity.setSpecies(speciesString);
+		if (entity instanceof PlayerEntity player)
+		{
+			var c = PlayerData.getPersistentPublic(player);
+			c.setCharacter(SwgSpeciesRegistry.deserialize(speciesString));
+		}
+		else if (entity instanceof MannequinEntity mannequin)
+			mannequin.setSpecies(speciesString);
 	}
 }

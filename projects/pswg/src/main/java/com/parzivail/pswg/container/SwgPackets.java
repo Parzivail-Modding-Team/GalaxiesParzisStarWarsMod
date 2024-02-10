@@ -9,6 +9,7 @@ public class SwgPackets
 	{
 		public static final Identifier LightsaberForgeApply = Resources.id("lightsaber_forge_apply");
 		public static final Identifier BlasterWorkbenchApply = Resources.id("blaster_workbench_apply");
+		public static final Identifier RequestCustomizeSelf = Resources.id("open_character_customizer");
 		public static final Identifier SetOwnSpecies = Resources.id("set_own_species");
 		public static final Identifier PlayerLeftClickItem = Resources.id("player_use_left");
 		public static final Identifier PlayerItemAction = Resources.id("item_action");
@@ -25,9 +26,9 @@ public class SwgPackets
 		public static final Identifier PreciseEntityVelocityUpdate = Resources.id("pevel");
 		public static final Identifier PreciseEntitySpawn = Resources.id("pesp");
 		public static final Identifier OpenEntityInventory = Resources.id("entity_inventory");
-		public static final Identifier MannequinConfigure = Resources.id("mannequin_configure");
 		public static final Identifier AccumulateRecoil = Resources.id("recoil");
 		public static final Identifier BlasterHit = Resources.id("blaster_hit");
 		public static final Identifier PlayerSocketPyro = Resources.id("player_sparks");
+		public static final Identifier OpenCharacterCustomizer = Resources.id("open_character_customizer");
 	}
 }

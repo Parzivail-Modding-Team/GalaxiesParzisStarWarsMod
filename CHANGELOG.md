@@ -34,3 +34,5 @@
 * Fixed crash when opening and closing the character customizer in a certain order
 * Fixed crash when another mod overrides the player model but a species is still applied
 * Fixed hand rendering when a character was selected
+* Fixed a situation where editing your own character might edit a recently-customized mannequin instead
+* Fixed dragging the character to rotate it in the character customizer

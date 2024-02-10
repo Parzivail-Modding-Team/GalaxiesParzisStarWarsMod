@@ -49,7 +49,6 @@ import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
-import com.parzivail.pswg.network.OpenMannequinConfigureS2CPacket;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -379,10 +378,10 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.MannequinConfigure, OpenMannequinConfigureS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.AccumulateRecoil, BlasterRecoilManager::handleAccumulateRecoil);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.BlasterHit, BlasterUtil::handleBoltHit);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSocketPyro, SwgParticleFactories::handlePlayerSocketPyro);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenCharacterCustomizer, SwgSpeciesRegistry::handleOpenCharacterCustomizer);
 
 		blasterZoomInstance = new ZoomInstance(
 				Resources.id("blaster_zoom"),

@@ -4,9 +4,18 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesFactory;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
+import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.component.PlayerData;
-import com.parzivail.pswg.screen.MannequinScreenHandler;
+import com.parzivail.pswg.entity.MannequinEntity;
+import com.parzivail.pswg.mixin.ServerPlayerEntityAccessor;
+import com.parzivail.pswg.screen.CharacterScreenHandler;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -90,17 +99,70 @@ public class SwgSpeciesRegistry
 		return "species." + species.getNamespace() + "." + species.getPath();
 	}
 
-	public static void handleSetOwnSpecies(MinecraftServer minecraftServer, ServerPlayerEntity serverPlayerEntity, ServerPlayNetworkHandler serverPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
+	public static void handleSetOwnSpecies(MinecraftServer server, ServerPlayerEntity serverPlayerEntity, ServerPlayNetworkHandler serverPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
 	{
 		var speciesString = packetByteBuf.readString();
 
-		// TODO: replace this with some other system
-		if (serverPlayerEntity.currentScreenHandler instanceof MannequinScreenHandler mannequinScreenHandler)
-			mannequinScreenHandler.setSpecies(speciesString);
-		else
-		{
-			var c = PlayerData.getPersistentPublic(serverPlayerEntity);
-			c.setCharacter(deserialize(speciesString));
-		}
+		server.execute(() -> {
+			// TODO: replace this with some other system
+			if (serverPlayerEntity.currentScreenHandler instanceof CharacterScreenHandler characterScreenHandler)
+				characterScreenHandler.setSpecies(speciesString);
+			else
+			{
+				var c = PlayerData.getPersistentPublic(serverPlayerEntity);
+				c.setCharacter(deserialize(speciesString));
+			}
+		});
+	}
+
+	public static void handleRequestCustomizeSelf(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler serverPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
+	{
+		openCharacterCustomizer(player, player);
+	}
+
+	public static void openCharacterCustomizer(ServerPlayerEntity player, LivingEntity targetEntity)
+	{
+		var playera = (ServerPlayerEntityAccessor)player;
+
+		playera.invokeIncrementScreenHandlerSyncId();
+
+		var buf = new PacketByteBuf(Unpooled.buffer());
+
+		buf.writeInt(playera.getScreenHandlerSyncId());
+		buf.writeInt(targetEntity.getId());
+
+		ServerPlayNetworking.send(player, SwgPackets.S2C.OpenCharacterCustomizer, buf);
+		player.currentScreenHandler = new CharacterScreenHandler(playera.getScreenHandlerSyncId(), player.getInventory(), targetEntity);
+
+		playera.invokeOnScreenHandlerOpened(player.currentScreenHandler);
+	}
+
+	public static void handleOpenCharacterCustomizer(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	{
+		var syncId = buf.readInt();
+		var entityId = buf.readInt();
+
+		client.execute(() -> {
+			var entity = client.world.getEntityById(entityId);
+			if (!(entity instanceof LivingEntity livingEntity))
+				return;
+
+			var clientPlayerEntity = client.player;
+			var screenHandler = new CharacterScreenHandler(syncId, clientPlayerEntity.getInventory(), livingEntity);
+			clientPlayerEntity.currentScreenHandler = screenHandler;
+
+			String originalSpecies = SwgSpeciesRegistry.METASPECIES_NONE.toString();
+
+			if (entity instanceof PlayerEntity playerEntity)
+			{
+				var components = PlayerData.getPersistentPublic(playerEntity);
+				if (components.getCharacter() != null)
+					originalSpecies = components.getCharacter().serialize();
+			}
+			else if (entity instanceof MannequinEntity mannequinEntity)
+				originalSpecies = mannequinEntity.getSpecies();
+
+			client.setScreen(new CharacterScreen(new CharacterScreen.Context(true, originalSpecies), screenHandler, clientPlayerEntity.getInventory(), livingEntity));
+		});
 	}
 }

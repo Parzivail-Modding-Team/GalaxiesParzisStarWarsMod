@@ -8,13 +8,16 @@ import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.render.camera.CameraHelper;
+import com.parzivail.pswg.client.render.entity.MannequinEntityRenderer;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesIcons;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import com.parzivail.pswg.entity.MannequinEntity;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
+import com.parzivail.pswg.screen.CharacterScreenHandler;
 import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.screen.blit.*;
@@ -25,10 +28,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -42,7 +47,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-public class CharacterScreen extends Screen
+public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 {
 	public static record Context(boolean canClear, String originalSpecies)
 	{
@@ -244,8 +249,8 @@ public class CharacterScreen extends Screen
 			305, 196, 105
 	);
 
-	private final Screen parent;
 	private final Context context;
+	private final LivingEntity targetEntity;
 
 	@SuppressWarnings("rawtypes")
 	private final ArrayList<BlitRectangle> blitRectangles = new ArrayList<>();
@@ -265,11 +270,11 @@ public class CharacterScreen extends Screen
 	private boolean canDrag = false;
 	private float yaw = 0;
 
-	public CharacterScreen(Screen parent, Context context)
+	public CharacterScreen(Context context, CharacterScreenHandler handler, PlayerInventory inventory, LivingEntity targetEntity)
 	{
-		super(Text.translatable(I18N_TITLE));
-		this.parent = parent;
+		super(handler, inventory, Text.translatable(I18N_TITLE));
 		this.context = context;
+		this.targetEntity = targetEntity;
 
 		blitRectangles.clear();
 		blitRectangles.add(LEFT_ARROW);
@@ -354,6 +359,7 @@ public class CharacterScreen extends Screen
 			return true;
 		}
 
+		canDrag = true;
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
@@ -361,6 +367,8 @@ public class CharacterScreen extends Screen
 	{
 		if (button != GLFW.GLFW_MOUSE_BUTTON_1)
 			return super.mouseClicked(mouseX, mouseY, button);
+
+		canDrag = false;
 
 		if (APPLY_BTN.contains((int)mouseX, (int)mouseY))
 		{
@@ -449,6 +457,7 @@ public class CharacterScreen extends Screen
 			}
 		}
 
+		canDrag = true;
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
@@ -591,12 +600,6 @@ public class CharacterScreen extends Screen
 			case SPECIES -> mouseReleasedPageSpecies(mouseX, mouseY, button);
 			case VARIABLES -> mouseReleasedPageVariables(mouseX, mouseY, button);
 		};
-	}
-
-	@Override
-	public void tick()
-	{
-		super.tick();
 	}
 
 	@Override
@@ -784,6 +787,12 @@ public class CharacterScreen extends Screen
 		}
 	}
 
+	@Override
+	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY)
+	{
+		// Do nothing
+	}
+
 	private static void renderColorPreview(int x, int y, int size, float r, float g, float b, float a)
 	{
 		var bufferBuilder = Tessellator.getInstance().getBuffer();
@@ -911,7 +920,7 @@ public class CharacterScreen extends Screen
 	{
 		matrixStack.push();
 
-		AbstractClientPlayerEntity entity = client.player;
+		var entity = targetEntity;
 		MathUtil.scalePos(matrixStack, size, size, -size);
 		RenderSystem.applyModelViewMatrix();
 
@@ -939,36 +948,47 @@ public class CharacterScreen extends Screen
 		DiffuseLighting.method_34742();
 		var entityRenderDispatcher = client.getEntityRenderDispatcher();
 		entityRenderDispatcher.setRenderShadows(false);
+
 		RenderSystem.runAsFancy(() -> {
-			if (species == null)
+			if (!(entity instanceof AbstractClientPlayerEntity player) || species == null)
 			{
-				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+				if (entity instanceof MannequinEntity && species != null)
+				{
+					var texture = SwgSpeciesRenderer.getTexture(entity, species);
+
+					MannequinEntityRenderer.withOverrides(
+							species, texture,
+							() -> entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE)
+					);
+				}
+				else
+					entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 			}
 			else
 			{
 				CameraHelper.forcePlayerRender = true;
 
+				var texture = SwgSpeciesRenderer.getTexture(entity, species);
+
 				var renderer = renderers.get(species.getModel().toString());
 				if (renderer instanceof PlayerSpeciesModelRenderer perwm)
 				{
-					var texture = SwgSpeciesRenderer.getTexture(entity, species);
-
 					if (texture.equals(Client.TEX_TRANSPARENT))
 					{
 						// Continue rendering previous model while current texture is loading
 						if (previousRenderer != null && previousTexture != null)
-							previousRenderer.renderWithOverrides(species, previousTexture, entity, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+							previousRenderer.renderWithOverrides(species, previousTexture, player, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 					}
 					else
 					{
-						perwm.renderWithOverrides(species, texture, entity, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+						perwm.renderWithOverrides(species, texture, player, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 						previousTexture = texture;
 					}
 
 					previousRenderer = perwm;
 				}
 				else if (renderer != null)
-					renderer.render(entity, 1, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+					renderer.render(player, 1, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 
 				CameraHelper.forcePlayerRender = false;
 			}

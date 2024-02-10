@@ -1,9 +1,7 @@
 package com.parzivail.pswg.client.screen;
 
-import com.parzivail.pswg.entity.MannequinEntity;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.screen.AstromechScreenHandler;
-import com.parzivail.pswg.screen.MannequinScreenHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,11 +13,6 @@ public class ScreenHelper
 	{
 		if (handler instanceof AstromechScreenHandler ash && entity instanceof AstromechEntity astromech)
 			return new AstromechScreen(ash, inventory, astromech);
-
-		if (handler instanceof MannequinScreenHandler mannequinScreenHandler && entity instanceof MannequinEntity mannequin)
-		{
-			return new CharacterScreen(client.currentScreen, new CharacterScreen.Context(true, mannequin.getSpecies()));
-		}
 
 		return null;
 	}

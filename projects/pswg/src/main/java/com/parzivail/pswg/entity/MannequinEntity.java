@@ -1,28 +1,18 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import com.parzivail.pswg.mixin.ServerPlayerEntityAccessor;
-import com.parzivail.pswg.network.OpenMannequinConfigureS2CPacket;
-import com.parzivail.pswg.screen.MannequinScreenHandler;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -60,33 +50,11 @@ public class MannequinEntity extends ArmorStandEntity
 		if (!this.isMarker() && itemStack.isOf(SwgItems.Spawners.MannequinWizard))
 		{
 			if (!this.getWorld().isClient)
-				openScreen(SwgPackets.S2C.MannequinConfigure, (ServerPlayerEntity)player, this);
+				SwgSpeciesRegistry.openCharacterCustomizer((ServerPlayerEntity)player, this);
 			return ActionResult.success(this.getWorld().isClient);
 		}
 
 		return super.interactAt(player, hitPos, hand);
-	}
-
-	protected static <T extends ScreenHandler> void openScreen(Identifier packetId, ServerPlayerEntity player, MannequinEntity entity)
-	{
-		if (player.currentScreenHandler != player.playerScreenHandler)
-			player.closeHandledScreen();
-
-		var playera = (ServerPlayerEntityAccessor)player;
-
-		playera.invokeIncrementScreenHandlerSyncId();
-
-		var buf = new PacketByteBuf(Unpooled.buffer());
-		new OpenMannequinConfigureS2CPacket(playera.getScreenHandlerSyncId(), entity.getId()).write(buf);
-		ServerPlayNetworking.send(player, packetId, buf);
-		player.currentScreenHandler = entity.createScreenHandler(playera.getScreenHandlerSyncId(), player.getInventory());
-
-		playera.invokeOnScreenHandlerOpened(player.currentScreenHandler);
-	}
-
-	public MannequinScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory)
-	{
-		return new MannequinScreenHandler(syncId, playerInventory, this);
 	}
 
 	@Override

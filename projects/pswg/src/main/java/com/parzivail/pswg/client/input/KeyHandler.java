@@ -1,10 +1,7 @@
 package com.parzivail.pswg.client.input;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.client.screen.CharacterScreen;
-import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.util.item.ItemAction;
@@ -23,16 +20,7 @@ public class KeyHandler
 			return;
 
 		if (Client.KEY_SPECIES_SELECT.wasPressed())
-		{
-			var components = PlayerData.getPersistentPublic(mc.player);
-
-			var originalSpecies = SwgSpeciesRegistry.METASPECIES_NONE.toString();
-			if (components.getCharacter() != null)
-				originalSpecies = components.getCharacter().serialize();
-
-			var ctx = new CharacterScreen.Context(components.getCharacter() != null, originalSpecies);
-			mc.setScreen(new CharacterScreen(mc.currentScreen, ctx));
-		}
+			ClientPlayNetworking.send(SwgPackets.C2S.RequestCustomizeSelf, new PacketByteBuf(Unpooled.buffer()));
 
 		if (Client.KEY_PRIMARY_ITEM_ACTION.wasPressed())
 			sendItemAction(ItemAction.PRIMARY);
