@@ -120,6 +120,8 @@ public class PswgTarkin
 		TagGenerator.addBlocksToTag(
 				SwgTags.Blocks.BLASTER_DESTROY,
 				assets,
+				Blocks.ICE,
+				Blocks.PACKED_ICE,
 				Blocks.GLASS,
 				Blocks.WHITE_STAINED_GLASS,
 				Blocks.ORANGE_STAINED_GLASS,
@@ -159,7 +161,8 @@ public class PswgTarkin
 		TagGenerator.addBlocksToTag(
 				SwgTags.Blocks.BLASTER_EXPLODE,
 				assets,
-				Blocks.TNT
+				Blocks.TNT,
+				SwgBlocks.Misc.ThermalDetonatorBlock
 		);
 	}
 

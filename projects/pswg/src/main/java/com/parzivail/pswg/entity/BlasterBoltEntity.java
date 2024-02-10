@@ -310,12 +310,6 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 			if(state.getBlock() instanceof TargetBlock targetBlock){
 				targetBlock.onProjectileHit(getWorld(), state, blockHit, this);
 			}
-			else if (state.getBlock() instanceof ThermalDetonatorBlock tdb && this.getType().isIn(SwgTags.EntityTypes.DETONATES_EXPLOSIVE))
-			{
-				float power = getWorld().getBlockState(blockPos).get(CLUSTER_SIZE) * 1f + 4;
-				tdb.explode(getWorld(), blockPos, power);
-			}
-
 			if (state.isIn(SwgTags.Blocks.BLASTER_REFLECT))
 			{
 				if (deflect(blockHit, state))
@@ -339,6 +333,11 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 							TntEntity tntEntity = new TntEntity(getWorld(), (double)blockPos.getX() + 0.5, (double)blockPos.getY(), (double)blockPos.getZ() + 0.5, null);
 							tntEntity.setFuse(0);
 							getWorld().spawnEntity(tntEntity);
+						}
+						else if (state.getBlock() instanceof ThermalDetonatorBlock tdb)
+						{
+							float power = getWorld().getBlockState(blockPos).get(CLUSTER_SIZE) * 1f + 4;
+							tdb.explode(getWorld(), blockPos, power);
 						}
 						else
 						{
