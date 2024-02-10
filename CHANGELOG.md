@@ -36,3 +36,5 @@
 * Fixed hand rendering when a character was selected
 * Fixed a situation where editing your own character might edit a recently-customized mannequin instead
 * Fixed dragging the character to rotate it in the character customizer
+* Mannequins now are properly previewed in the character customizer when using the wizard
+* Fixed player models rotating at odd angles when mannequins are rendering nearby

@@ -29,6 +29,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 	}
 
 	private Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> modelSupplier;
+	private PlayerEntityModel<AbstractClientPlayerEntity> previousModel;
 	private final Animator animator;
 
 	private SwgSpecies overrideSpecies;
@@ -49,6 +50,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		// used directly
 		if (modelSupplier != null)
 		{
+			previousModel = this.model;
 			this.model = modelSupplier.get();
 			this.modelSupplier = null;
 		}
@@ -68,6 +70,9 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 	public void render(AbstractClientPlayerEntity player, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light)
 	{
 		var species = getSpecies(player);
+
+		if (previousModel != null)
+			previousModel.copyBipedStateTo(model);
 
 		if (animator != null)
 			animator.animateModel(species, player, model, this, tickDelta);
