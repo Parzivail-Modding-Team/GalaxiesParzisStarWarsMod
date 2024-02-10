@@ -109,55 +109,34 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 		var direction = ctx.getSide();
 		var sneaking = ctx.getPlayer() != null && ctx.getPlayer().isSneaking();
 
-		var existingState = ctx.getWorld().getBlockState(blockPos.offset(ctx.getSide().getOpposite()));
-		if (sneaking && existingState.isOf(this) && existingState.get(TYPE) != SlabType.DOUBLE)
-			return placingState.with(TYPE, existingState.get(TYPE)).with(AXIS, existingState.get(AXIS));
+		var playerLookDir = ctx.getPlayerLookDirection();
+		var playerLookAxis = playerLookDir.getAxis();
 
-		switch (direction)
+		if (sneaking)
 		{
-			case UP:
-			case DOWN:
+			// Place vertical slab above or below block
+			var half = SlabType.BOTTOM;
+
+			switch (playerLookAxis)
 			{
-				if (sneaking)
-				{
-					// Place vertical slab above or below block
-					var playerLookDir = Direction.fromRotation(ctx.getPlayerYaw());
+				case X -> half = (ctx.getHitPos().x - (double)blockPos.getX() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
+				case Z -> half = (ctx.getHitPos().z - (double)blockPos.getZ() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
+			}
 
-					var axis = playerLookDir.getAxis();
-					var half = SlabType.BOTTOM;
-
-					switch (axis)
-					{
-						case X -> half = (ctx.getHitPos().x - (double)blockPos.getX() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
-						case Z -> half = (ctx.getHitPos().z - (double)blockPos.getZ() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
-					}
-
-					return placingState.with(TYPE, half).with(AXIS, axis);
-				}
-				else
+			return placingState.with(TYPE, half).with(AXIS, playerLookAxis);
+		}
+		else
+		{
+			return switch (direction)
+			{
+				case UP, DOWN ->
 				{
 					if (direction == Direction.DOWN)
-						return placingState.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.Y);
-					return placingState;
+						yield placingState.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.Y);
+					yield placingState;
 				}
-			}
-			case NORTH:
-			case SOUTH:
-			case EAST:
-			case WEST:
-			{
-				if (sneaking)
-					return switch (direction)
-					{
-						case NORTH, WEST -> placingState.with(TYPE, SlabType.TOP).with(AXIS, direction.getAxis());
-						case SOUTH, EAST -> placingState.with(TYPE, SlabType.BOTTOM).with(AXIS, direction.getAxis());
-						default -> throw new RuntimeException("Impossible state");
-					};
-				else
-					return ctx.getHitPos().y - (double)blockPos.getY() > 0.5 ? placingState.with(TYPE, SlabType.TOP) : placingState;
-			}
-			default:
-				throw new RuntimeException("Impossible state");
+				case NORTH, SOUTH, EAST, WEST -> ctx.getHitPos().y - (double)blockPos.getY() > 0.5 ? placingState.with(TYPE, SlabType.TOP) : placingState;
+			};
 		}
 	}
 
