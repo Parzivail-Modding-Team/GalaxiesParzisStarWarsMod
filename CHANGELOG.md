@@ -31,3 +31,4 @@
 * Fixed game hanging when loading with specific combinations of Sodium and Indium
 * Fixed loose sand texture
 * Fixed crash when opening and closing the character customizer in a certain order
+* Fixed crash when another mod overrides the player model but a species is still applied
