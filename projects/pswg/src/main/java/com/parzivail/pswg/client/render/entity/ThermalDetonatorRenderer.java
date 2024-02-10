@@ -3,6 +3,9 @@ package com.parzivail.pswg.client.render.entity;
 import com.parzivail.p3d.P3dManager;
 import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.sound.ThermalDetonatorEntitySoundInstance;
+import com.parzivail.pswg.client.sound.timeline.SoundTimelineManager;
+import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -12,18 +15,32 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
+import java.util.HashSet;
+
 public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEntity>
 {
 	public static final Identifier MODEL = Resources.id("item/thermal_detonator/thermal_detonator");
-	public static final Identifier TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator.png");
-	public static final Identifier TEXTURE_PRIMED = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_primed_entity.png");
-	public static final Identifier TEXTURE_INBETWEEN = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_inbetween_entity.png");
+	public static final Identifier TEXTURE_OFF = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_off.png");
+	public static final Identifier TEXTURE_PRIMED = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_primed.png");
+	public static final Identifier TEXTURE_BEEPING = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_beeping.png");
 
 	public P3dModel model;
+
+	private static final HashSet<ThermalDetonatorEntity> BEEPING_ENTITIES = new HashSet<>();
 
 	public ThermalDetonatorRenderer(EntityRendererFactory.Context context)
 	{
 		super(context);
+
+		SoundTimelineManager.SOUND_EVENT_ENTERED.register((instance, timelineEvent) -> {
+			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorEntitySoundInstance tdesi)
+				BEEPING_ENTITIES.add(tdesi.getDetonator());
+		});
+
+		SoundTimelineManager.SOUND_EVENT_LEFT.register((instance, timelineEvent) -> {
+			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorEntitySoundInstance tdesi)
+				BEEPING_ENTITIES.remove(tdesi.getDetonator());
+		});
 	}
 
 	@Override
@@ -35,9 +52,7 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getPitch(tickDelta)));
 
 		if (model == null)
-		{
 			model = P3dManager.INSTANCE.get(MODEL);
-		}
 
 		model.render(matrices, vertexConsumer, entity, null, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();
@@ -49,16 +64,11 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 	{
 		if (entity.isPrimed())
 		{
-			int phase = entity.texturePhase / 2;
-			if (phase == 0)
-			{
-				return TEXTURE_PRIMED;
-			}
-			else if (phase == 1)
-			{
-				return TEXTURE_INBETWEEN;
-			}
+			if (BEEPING_ENTITIES.contains(entity))
+				return TEXTURE_BEEPING;
+
+			return TEXTURE_PRIMED;
 		}
-		return TEXTURE;
+		return TEXTURE_OFF;
 	}
 }

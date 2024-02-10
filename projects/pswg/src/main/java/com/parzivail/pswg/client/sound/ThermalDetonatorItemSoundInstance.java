@@ -1,8 +1,6 @@
 package com.parzivail.pswg.client.sound;
 
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.features.lightsabers.LightsaberItem;
-import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.pswg.item.ThermalDetonatorTag;
 import com.parzivail.util.sound.DopplerSoundInstance;
@@ -12,10 +10,9 @@ import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
-public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
+public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance implements ISoftRepeatSound
 {
 	private final PlayerEntity player;
 
@@ -41,6 +38,11 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 	public boolean shouldAlwaysPlay()
 	{
 		return true;
+	}
+
+	public PlayerEntity getPlayer()
+	{
+		return player;
 	}
 
 	@Override

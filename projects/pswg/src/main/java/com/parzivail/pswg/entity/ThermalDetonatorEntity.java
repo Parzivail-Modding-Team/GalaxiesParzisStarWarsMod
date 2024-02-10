@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 
 public class ThermalDetonatorEntity extends ThrowableExplosive implements IPrecisionSpawnEntity, IPrecisionVelocityEntity
 {
-	public int texturePhase = 0;
 	public static final int MIN_PICKUP_AGE = 30;
 
 	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
@@ -42,13 +41,6 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	{
 		if (getWorld().isClient() && this.age == 1 && this.isPrimed())
 				SoundHelper.playDetonatorEntitySound(this);
-		if (isPrimed())
-		{
-			if (texturePhase < 6)
-				texturePhase++;
-			else
-				texturePhase = 0;
-		}
 
 		this.speed = this.speed * 0.95f;
 		super.tick();

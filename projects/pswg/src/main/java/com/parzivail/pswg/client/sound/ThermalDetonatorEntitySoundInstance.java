@@ -2,21 +2,15 @@ package com.parzivail.pswg.client.sound;
 
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
-import com.parzivail.pswg.item.ThermalDetonatorItem;
-import com.parzivail.pswg.item.ThermalDetonatorTag;
-import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
-public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance
+public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance implements ISoftRepeatSound
 {
 	private final ThermalDetonatorEntity detonatorEntity;
 
@@ -32,10 +26,14 @@ public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance
 		this.z = (float)detonatorEntity.getZ();
 	}
 
+	public ThermalDetonatorEntity getDetonator()
+	{
+		return detonatorEntity;
+	}
+
 	@Override
 	public void tick()
 	{
-
 		if (detonatorEntity.isRemoved() || !areConditionsMet(detonatorEntity))
 		{
 			setDone();
@@ -55,15 +53,10 @@ public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance
 		{
 			volume = 0;
 		}
-
 	}
 
 	public static boolean areConditionsMet(ThermalDetonatorEntity tde)
 	{
-		if (tde.isPrimed())
-		{
-			return true;
-		}
-		return false;
+		return tde.isPrimed();
 	}
 }

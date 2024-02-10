@@ -1,8 +1,10 @@
 package com.parzivail.pswg.features.thermaldetonator.client;
 
 import com.parzivail.p3d.P3dManager;
-import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.entity.ThermalDetonatorRenderer;
+import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
+import com.parzivail.pswg.client.sound.timeline.SoundTimelineManager;
+import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.pswg.item.ThermalDetonatorTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
@@ -15,20 +17,29 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import org.joml.Quaternionf;
+
+import java.util.HashSet;
 
 public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 {
 	public static final ThermalDetonatorItemRenderer INSTANCE = new ThermalDetonatorItemRenderer();
 
-	private static final Identifier TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator.png");
-	private static final Identifier PRIMED_TEXTURE = Resources.id("textures/item/model/thermal_detonator/thermal_detonator_primed.png");
+	private static final HashSet<LivingEntity> BEEPING_PLAYERS = new HashSet<>();
 
 	private ThermalDetonatorItemRenderer()
 	{
+		SoundTimelineManager.SOUND_EVENT_ENTERED.register((instance, timelineEvent) -> {
+			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
+				BEEPING_PLAYERS.add(tdisi.getPlayer());
+		});
+
+		SoundTimelineManager.SOUND_EVENT_LEFT.register((instance, timelineEvent) -> {
+			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
+				BEEPING_PLAYERS.remove(tdisi.getPlayer());
+		});
 	}
 
 	@Override
@@ -90,14 +101,15 @@ public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 		}
 
 		var primed = tdt.primed;
+		var beeping = false;
 
 		if (entity == null)
 			entity = MinecraftClient.getInstance().player;
 
 		if (entity != null)
-			primed &= (entity.age / 7) % 2 == 0;
+			beeping = BEEPING_PLAYERS.contains(entity);
 
-		final var renderedTexture = primed ? ThermalDetonatorRenderer.TEXTURE_PRIMED : ThermalDetonatorRenderer.TEXTURE;
+		final var renderedTexture = primed ? (beeping ? ThermalDetonatorRenderer.TEXTURE_BEEPING : ThermalDetonatorRenderer.TEXTURE_PRIMED) : ThermalDetonatorRenderer.TEXTURE_OFF;
 		m.render(matrices, vertexConsumers, tdt, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(renderedTexture)), light, 0, 255, 255, 255, 255);
 
 		matrices.pop();

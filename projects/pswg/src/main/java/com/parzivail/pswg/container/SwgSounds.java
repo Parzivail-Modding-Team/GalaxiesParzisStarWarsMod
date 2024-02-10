@@ -1,6 +1,9 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.sound.SoundTimelineEvent;
+import com.parzivail.pswg.client.sound.SoundTimelineEvents;
+import com.parzivail.pswg.client.sound.timeline.SoundTimelineManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
@@ -8,6 +11,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class SwgSounds
 {
@@ -126,11 +130,19 @@ public class SwgSounds
 		public static final SoundEvent THERMAL_DETONATOR_ARM = of(Resources.id("explosives.thermaldetonator.arm"));
 		public static final SoundEvent THERMAL_DETONATOR_DISARM = of(Resources.id("explosives.thermaldetonator.disarm"));
 		public static final SoundEvent THERMAL_DETONATOR_THROW = of(Resources.id("explosives.thermaldetonator.throw"));
-		public static final SoundEvent THERMAL_DETONATOR_LAND = of(Resources.id("explosives.thermaldetonator.land"));
 		public static final SoundEvent THERMAL_DETONATOR_EXPLOSION = of(Resources.id("explosives.thermaldetonator.explode"));
+
+		public static final Identifier THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID = Resources.id("beep");
+
+		public static final SoundTimelineEvents THERMAL_DETONATOR_BEEP_TIMELINE = new SoundTimelineEvents(THERMAL_DETONATOR_BEEP, List.of(
+				new SoundTimelineEvent(THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID, 0.072891f, 0.417551f),
+				new SoundTimelineEvent(THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID, 0.815305f, 1.159964f),
+				new SoundTimelineEvent(THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID, 1.579315f, 1.923975f)
+		));
 
 		private static void register()
 		{
+			SoundTimelineManager.register(THERMAL_DETONATOR_BEEP_TIMELINE);
 		}
 	}
 }
