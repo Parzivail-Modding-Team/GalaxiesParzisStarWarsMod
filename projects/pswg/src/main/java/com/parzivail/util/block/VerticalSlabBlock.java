@@ -109,6 +109,10 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 		var direction = ctx.getSide();
 		var sneaking = ctx.getPlayer() != null && ctx.getPlayer().isSneaking();
 
+		var existingState = ctx.getWorld().getBlockState(blockPos.offset(ctx.getSide().getOpposite()));
+		if (sneaking && existingState.isOf(this) && existingState.get(TYPE) != SlabType.DOUBLE)
+			return placingState.with(TYPE, existingState.get(TYPE)).with(AXIS, existingState.get(AXIS));
+
 		switch (direction)
 		{
 			case UP:
@@ -160,21 +164,50 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	@Override
 	public boolean canReplace(BlockState state, ItemPlacementContext context)
 	{
+		var itemStack = context.getStack();
+		var slabType = state.get(TYPE);
+
 		var axis = state.get(AXIS);
+		var direction = context.getSide();
 
-		var existingState = context.getWorld().getBlockState(context.getBlockPos());
-		if (!existingState.isOf(this) || state.get(TYPE) == SlabType.DOUBLE)
+		if (slabType == SlabType.DOUBLE || !itemStack.isOf(this.asItem()))
 			return false;
 
-		var possiblePlacement = getEmptyPlacementState(context);
-
-		if (axis == Direction.Axis.Y && axis != possiblePlacement.get(AXIS))
-			return false;
-
-		if (state.get(TYPE) != possiblePlacement.get(TYPE))
+		if (!context.canReplaceExisting())
 			return true;
 
-		return context.getSide().getAxis() == axis;
+		switch (axis)
+		{
+			case X:
+			{
+				boolean isUpperHalf = context.getHitPos().x - context.getBlockPos().getX() > 0.5;
+
+				if (slabType == SlabType.BOTTOM)
+					return direction == Direction.EAST || (isUpperHalf && direction.getAxis().isVertical());
+				else
+					return direction == Direction.WEST || (!isUpperHalf && direction.getAxis().isVertical());
+			}
+			case Y:
+			{
+				boolean isUpperHalf = context.getHitPos().y - context.getBlockPos().getY() > 0.5;
+
+				if (slabType == SlabType.BOTTOM)
+					return direction == Direction.UP || (isUpperHalf && direction.getAxis().isHorizontal());
+				else
+					return direction == Direction.DOWN || (!isUpperHalf && direction.getAxis().isHorizontal());
+			}
+			case Z:
+			{
+				boolean isUpperHalf = context.getHitPos().z - context.getBlockPos().getZ() > 0.5;
+
+				if (slabType == SlabType.BOTTOM)
+					return direction == Direction.SOUTH || (isUpperHalf && direction.getAxis().isVertical());
+				else
+					return direction == Direction.NORTH || (!isUpperHalf && direction.getAxis().isVertical());
+			}
+			default:
+				throw new RuntimeException("Impossible state");
+		}
 	}
 
 	@Override
