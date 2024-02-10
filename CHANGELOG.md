@@ -25,6 +25,7 @@
 * Dramatically improved cable rendering
 * Improved vertical slab placement interactions
 * Blasters now destroy some ice blocks
+* Improved lightsaber blade and blaster bolt rendering, especially with some stylized shaders
 
 # Fixes
 
