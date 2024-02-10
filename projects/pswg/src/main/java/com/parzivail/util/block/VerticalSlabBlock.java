@@ -91,26 +91,34 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		var blockPos = ctx.getBlockPos();
-		var blockState = ctx.getWorld().getBlockState(blockPos);
-		if (blockState.isOf(this))
-		{
-			return blockState.with(TYPE, SlabType.DOUBLE).with(AXIS, blockState.get(AXIS)).with(WATERLOGGED, Boolean.FALSE);
-		}
+		var existingState = ctx.getWorld().getBlockState(blockPos);
+
+		if (existingState.isOf(this))
+			return existingState.with(TYPE, SlabType.DOUBLE).with(AXIS, existingState.get(AXIS)).with(WATERLOGGED, Boolean.FALSE);
 		else
+			return getEmptyPlacementState(ctx);
+	}
+
+	private BlockState getEmptyPlacementState(ItemPlacementContext ctx)
+	{
+		var blockPos = ctx.getBlockPos();
+
+		var fluidState = ctx.getWorld().getFluidState(blockPos);
+		var placingState = this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+
+		var direction = ctx.getSide();
+		var sneaking = ctx.getPlayer() != null && ctx.getPlayer().isSneaking();
+
+		var existingState = ctx.getWorld().getBlockState(blockPos.offset(ctx.getSide().getOpposite()));
+		if (sneaking && existingState.isOf(this) && existingState.get(TYPE) != SlabType.DOUBLE)
+			return placingState.with(TYPE, existingState.get(TYPE)).with(AXIS, existingState.get(AXIS));
+
+		switch (direction)
 		{
-			var fluidState = ctx.getWorld().getFluidState(blockPos);
-			var blockState2 = this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
-
-			var direction = ctx.getSide();
-
-			if (ctx.getPlayer() != null && ctx.getPlayer().isSneaking())
+			case UP:
+			case DOWN:
 			{
-				if (direction != Direction.DOWN && direction != Direction.UP)
-				{
-					// Place horizontal slab adjacent to a block
-					return ctx.getHitPos().y - (double)blockPos.getY() > 0.5 ? blockState2.with(TYPE, SlabType.TOP) : blockState2;
-				}
-				else
+				if (sneaking)
 				{
 					// Place vertical slab above or below block
 					var playerLookDir = Direction.fromRotation(ctx.getPlayerYaw());
@@ -124,21 +132,32 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 						case Z -> half = (ctx.getHitPos().z - (double)blockPos.getZ() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
 					}
 
-					return this.getDefaultState().with(TYPE, half).with(AXIS, axis).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+					return placingState.with(TYPE, half).with(AXIS, axis);
+				}
+				else
+				{
+					if (direction == Direction.DOWN)
+						return placingState.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.Y);
+					return placingState;
 				}
 			}
-			else
+			case NORTH:
+			case SOUTH:
+			case EAST:
+			case WEST:
 			{
-				return switch (direction)
-						{
-							case NORTH -> blockState2.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.Z);
-							case SOUTH -> blockState2.with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Z);
-							case EAST -> blockState2.with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.X);
-							case WEST -> blockState2.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.X);
-							case DOWN -> blockState2.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.Y);
-							default -> blockState2;
-						};
+				if (sneaking)
+					return switch (direction)
+					{
+						case NORTH, WEST -> placingState.with(TYPE, SlabType.TOP).with(AXIS, direction.getAxis());
+						case SOUTH, EAST -> placingState.with(TYPE, SlabType.BOTTOM).with(AXIS, direction.getAxis());
+						default -> throw new RuntimeException("Impossible state");
+					};
+				else
+					return ctx.getHitPos().y - (double)blockPos.getY() > 0.5 ? placingState.with(TYPE, SlabType.TOP) : placingState;
 			}
+			default:
+				throw new RuntimeException("Impossible state");
 		}
 	}
 
@@ -147,46 +166,47 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	{
 		var itemStack = context.getStack();
 		var slabType = state.get(TYPE);
-		var axis = state.get(AXIS);
-		if (itemStack.getItem() == (this).asItem())
-		{
-			var direction = context.getSide();
 
-			if (axis == Direction.Axis.Y)
-			{
-				return switch (slabType)
-						{
-							case BOTTOM -> direction == Direction.UP;
-							case TOP -> direction == Direction.DOWN;
-							default -> false;
-						};
-			}
-			if (axis == Direction.Axis.X)
-			{
-				return switch (slabType)
-						{
-							case BOTTOM -> direction == Direction.EAST;
-							case TOP -> direction == Direction.WEST;
-							default -> false;
-						};
-			}
-			if (axis == Direction.Axis.Z)
-			{
-				return switch (slabType)
-						{
-							case BOTTOM -> direction == Direction.SOUTH;
-							case TOP -> direction == Direction.NORTH;
-							default -> false;
-						};
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
+		var axis = state.get(AXIS);
+		var direction = context.getSide();
+
+		if (slabType == SlabType.DOUBLE || !itemStack.isOf(this.asItem()))
 			return false;
+
+		if (!context.canReplaceExisting())
+			return true;
+
+		switch (axis)
+		{
+			case X:
+			{
+				boolean isUpperHalf = context.getHitPos().x - context.getBlockPos().getX() > 0.5;
+
+				if (slabType == SlabType.BOTTOM)
+					return direction == Direction.EAST || (isUpperHalf && direction.getAxis().isVertical());
+				else
+					return direction == Direction.WEST || (!isUpperHalf && direction.getAxis().isVertical());
+			}
+			case Y:
+			{
+				boolean isUpperHalf = context.getHitPos().y - context.getBlockPos().getY() > 0.5;
+
+				if (slabType == SlabType.BOTTOM)
+					return direction == Direction.UP || (isUpperHalf && direction.getAxis().isHorizontal());
+				else
+					return direction == Direction.DOWN || (!isUpperHalf && direction.getAxis().isHorizontal());
+			}
+			case Z:
+			{
+				boolean isUpperHalf = context.getHitPos().z - context.getBlockPos().getZ() > 0.5;
+
+				if (slabType == SlabType.BOTTOM)
+					return direction == Direction.SOUTH || (isUpperHalf && direction.getAxis().isVertical());
+				else
+					return direction == Direction.NORTH || (!isUpperHalf && direction.getAxis().isVertical());
+			}
+			default:
+				throw new RuntimeException("Impossible state");
 		}
 	}
 

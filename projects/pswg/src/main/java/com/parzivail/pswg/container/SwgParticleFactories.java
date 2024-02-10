@@ -25,38 +25,28 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
-public class SwgParticles
-{
-	public static final PParticleType SLUG_TRAIL = register(Resources.id("slug_trail"), true, SlugTrailParticle.Factory::new);
-	public static final PParticleType SPARK = register(Resources.id("spark"), true, SparkParticle.Factory::new);
-	public static final PParticleType SCORCH = register(Resources.id("scorch"), true, ScorchParticle.Factory::new);
-	public static final PParticleType WATER_WAKE = register(Resources.id("water_wake"), true, WaterWakeParticle.Factory::new);
-	public static final ParticleType<BlockStateParticleEffect> WAKE = registerBlockStateBased(Resources.id("wake"), true, new WakeParticle.Factory());
-	public static final PParticleType EXPLOSION_SMOKE = register(Resources.id("explosion_smoke"), true, ExplosionSmokeParticle.Factory::new);
+import static com.parzivail.pswg.container.SwgParticleTypes.*;
 
-	private static PParticleType register(Identifier name, boolean alwaysShow, ParticleFactoryRegistry.PendingParticleFactory<PParticleType> factory)
+public class SwgParticleFactories
+{
+	private static void registerFactory(ParticleType particleType, ParticleFactoryRegistry.PendingParticleFactory<PParticleType> factory)
 	{
-		var particleType = Registry.register(Registries.PARTICLE_TYPE, name, new PParticleType(alwaysShow));
 		ParticleFactoryRegistry.getInstance().register(particleType, factory);
-		return particleType;
 	}
 
-	private static ParticleType<BlockStateParticleEffect> registerBlockStateBased(Identifier name, boolean alwaysShow, ParticleFactory<BlockStateParticleEffect> factory)
+	private static void registerBlockStateBasedFactory(ParticleType particleType, ParticleFactory<BlockStateParticleEffect> factory)
 	{
-		var particleType = Registry.register(Registries.PARTICLE_TYPE, name, new ParticleType<BlockStateParticleEffect>(alwaysShow, BlockStateParticleEffect.PARAMETERS_FACTORY)
-		{
-			@Override
-			public Codec<BlockStateParticleEffect> getCodec()
-			{
-				return BlockStateParticleEffect.createCodec(this);
-			}
-		});
 		ParticleFactoryRegistry.getInstance().register(particleType, factory);
-		return particleType;
 	}
 
 	public static void register()
 	{
+		registerFactory(EXPLOSION_SMOKE, ExplosionSmokeParticle.Factory::new);
+		registerFactory(WATER_WAKE, WaterWakeParticle.Factory::new);
+		registerFactory(SCORCH, ScorchParticle.Factory::new);
+		registerFactory(SPARK, SparkParticle.Factory::new);
+		registerFactory(SLUG_TRAIL, SlugTrailParticle.Factory::new);
+		registerBlockStateBasedFactory(WAKE, new WakeParticle.Factory());
 	}
 
 	public static void handlePlayerSocketPyro(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
@@ -83,7 +73,7 @@ public class SwgParticles
 
 				var sparkVelocity = socket.normal().mul(0.6f * (client.world.random.nextFloat() * 0.5f + 0.5f), new Vector3f());
 				client.world.addParticle(
-						SwgParticles.SPARK,
+						SwgParticleTypes.SPARK,
 						socket.position().x,
 						socket.position().y,
 						socket.position().z,

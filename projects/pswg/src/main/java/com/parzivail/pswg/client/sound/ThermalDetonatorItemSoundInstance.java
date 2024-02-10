@@ -1,8 +1,6 @@
 package com.parzivail.pswg.client.sound;
 
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.features.lightsabers.LightsaberItem;
-import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.pswg.item.ThermalDetonatorTag;
 import com.parzivail.util.sound.DopplerSoundInstance;
@@ -14,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 
 @Environment(EnvType.CLIENT)
-public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
+public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance implements ISoftRepeatSound
 {
 	private final PlayerEntity player;
 
@@ -42,6 +40,11 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 		return true;
 	}
 
+	public PlayerEntity getPlayer()
+	{
+		return player;
+	}
+
 	@Override
 	public void tick()
 	{
@@ -55,10 +58,10 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 
 		var foundDetonator = false;
 
-		if (player.getMainHandStack().getItem() instanceof ThermalDetonatorItem)
+		if (player.getMainHandStack().getItem() instanceof ThermalDetonatorItem && isPrimed(player.getMainHandStack()))
 			foundDetonator = true;
 
-		if (!foundDetonator && player.getOffHandStack().getItem() instanceof ThermalDetonatorItem)
+		if (!foundDetonator && player.getOffHandStack().getItem() instanceof ThermalDetonatorItem && isPrimed(player.getOffHandStack()))
 			foundDetonator = true;
 
 		if (!areConditionsMet(player))
@@ -67,13 +70,9 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 			return;
 		}
 		if (foundDetonator)
-		{
 			volume = 0.75f;
-		}
 		else
-		{
 			volume = 0.25f;
-		}
 
 		this.x = (float)this.player.getX();
 		this.y = (float)this.player.getY();
@@ -82,12 +81,9 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance
 
 	public static boolean areConditionsMet(PlayerEntity player)
 	{
-		//return isPrimed(player.getMainHandStack()) || isPrimed(player.getOffHandStack());
 		for (int i = 0; i < player.getInventory().size(); i++)
-			if (player.getInventory().getStack(i).getItem() instanceof ThermalDetonatorItem)
-			{
-				return isPrimed(player.getInventory().getStack(i));
-			}
+			if (player.getInventory().getStack(i).getItem() instanceof ThermalDetonatorItem && isPrimed(player.getInventory().getStack(i)))
+					return true;
 		return false;
 	}
 

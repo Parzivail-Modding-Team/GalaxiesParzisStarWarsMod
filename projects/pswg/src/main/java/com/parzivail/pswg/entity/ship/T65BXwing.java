@@ -1,7 +1,7 @@
 package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.client.input.ShipControls;
-import com.parzivail.pswg.container.SwgParticles;
+import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.features.blasters.BlasterUtil;
@@ -188,7 +188,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 			if (blockHit.getType() != HitResult.Type.MISS)
 			{
 				var state = getWorld().getBlockState(blockHit.getBlockPos());
-				var particle = state.getFluidState().isIn(FluidTags.WATER) ? SwgParticles.WATER_WAKE : new BlockStateParticleEffect(SwgParticles.WAKE, state);
+				var particle = state.getFluidState().isIn(FluidTags.WATER) ? SwgParticleTypes.WATER_WAKE : new BlockStateParticleEffect(SwgParticleTypes.WAKE, state);
 
 				var hitPos = blockHit.getPos();
 				var dist = Math.max(hitPos.distanceTo(sourcePos), 0.5f);

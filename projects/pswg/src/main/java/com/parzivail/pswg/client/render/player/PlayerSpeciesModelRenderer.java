@@ -136,6 +136,9 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 	{
 		var model = getModel();
 
+		if (model == null || model.body == null)
+			return;
+
 		if (!model.body.hasChild("chest"))
 			return;
 

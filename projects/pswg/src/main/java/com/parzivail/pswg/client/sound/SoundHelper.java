@@ -22,10 +22,10 @@ public class SoundHelper
 		minecraft.getSoundManager().play(new ShipExteriorSoundInstance(entity, sound, SoundInstance.createRandom()));
 	}
 
-	public static void playDetonatorItemSound(PlayerEntity entity)
+	public static void playDetonatorItemSound(PlayerEntity player)
 	{
 		var minecraft = MinecraftClient.getInstance();
-		minecraft.getSoundManager().play(new ThermalDetonatorItemSoundInstance(entity));
+		minecraft.getSoundManager().play(new ThermalDetonatorItemSoundInstance(player));
 	}
 
 	public static void playDetonatorEntitySound(ThermalDetonatorEntity entity)

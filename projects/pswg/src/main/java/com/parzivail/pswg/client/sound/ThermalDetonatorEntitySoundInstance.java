@@ -2,20 +2,15 @@ package com.parzivail.pswg.client.sound;
 
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
-import com.parzivail.pswg.item.ThermalDetonatorItem;
-import com.parzivail.pswg.item.ThermalDetonatorTag;
-import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
-public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance
+public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance implements ISoftRepeatSound
 {
 	private final ThermalDetonatorEntity detonatorEntity;
 
@@ -31,10 +26,14 @@ public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance
 		this.z = (float)detonatorEntity.getZ();
 	}
 
+	public ThermalDetonatorEntity getDetonator()
+	{
+		return detonatorEntity;
+	}
+
 	@Override
 	public void tick()
 	{
-
 		if (detonatorEntity.isRemoved() || !areConditionsMet(detonatorEntity))
 		{
 			setDone();
@@ -43,22 +42,21 @@ public class ThermalDetonatorEntitySoundInstance extends MovingSoundInstance
 		x = (float)this.detonatorEntity.getX();
 		y = (float)this.detonatorEntity.getY();
 		z = (float)this.detonatorEntity.getZ();
-		float distanceToPlayer32 = 32;
-		if (detonatorEntity.getWorld().getClosestPlayer(detonatorEntity, 32) != null)
-		{
-			distanceToPlayer32 = detonatorEntity.getWorld().getClosestPlayer(detonatorEntity, 32).distanceTo(detonatorEntity);
-		}
-		volume = ((32 - distanceToPlayer32) / 32);
-		//detonatorEntity.getWorld().getClosestPlayer(detonatorEntity, 32).sendMessage(Text.of(""+volume), true);
 
+		var player = MinecraftClient.getInstance().player;
+		var d = player.distanceTo(detonatorEntity);
+		if (d < 32)
+		{
+			volume = ((32 - d) / 32);
+		}
+		else
+		{
+			volume = 0;
+		}
 	}
 
 	public static boolean areConditionsMet(ThermalDetonatorEntity tde)
 	{
-		if (tde.isPrimed())
-		{
-			return true;
-		}
-		return false;
+		return tde.isPrimed();
 	}
 }

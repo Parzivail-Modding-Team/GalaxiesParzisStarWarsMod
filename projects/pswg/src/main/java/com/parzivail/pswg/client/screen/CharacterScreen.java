@@ -330,6 +330,7 @@ public class CharacterScreen extends Screen
 		if (CLEAR_BTN.contains((int)mouseX, (int)mouseY) && this.context.canClear)
 		{
 			previewSpecies = null;
+			previewVariable = null;
 			applySpecies();
 			close();
 		}
@@ -404,14 +405,14 @@ public class CharacterScreen extends Screen
 		{
 			var variables = previewSpecies.getVariables();
 
-			var listOverflowSize = Math.max(0, LIST_ROW_HEIGHT * variables.length - LEFT_LIST_CUTOUT.height);
-			var scrollOffset = -(int)(listOverflowSize * LEFT_SCROLL_THUMB.getScroll());
+			var leftListOverflowSize = Math.max(0, LIST_ROW_HEIGHT * variables.length - LEFT_LIST_CUTOUT.height);
+			var leftScrollOffset = -(int)(leftListOverflowSize * LEFT_SCROLL_THUMB.getScroll());
 
 			for (int i = 0, allVariablesSize = variables.length; i < allVariablesSize; i++)
 			{
-				if (scrollOffset + LIST_ROW_HEIGHT * i < -LIST_ROW_HEIGHT
-				    || scrollOffset + LIST_ROW_HEIGHT * i > LEFT_LIST_CUTOUT.height
-				    || !listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, (int)mouseX, (int)mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width))
+				if (leftScrollOffset + LIST_ROW_HEIGHT * i < -LIST_ROW_HEIGHT
+				    || leftScrollOffset + LIST_ROW_HEIGHT * i > LEFT_LIST_CUTOUT.height
+				    || !listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, (int)mouseX, (int)mouseY, leftScrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width))
 					continue;
 
 				previewVariable = variables[i];
@@ -426,25 +427,25 @@ public class CharacterScreen extends Screen
 					setSliderColor(0);
 				return true;
 			}
-		}
 
-		if (previewVariable != null)
-		{
-			var options = previewVariable.getPossibleValues();
-
-			var listOverflowSize = Math.max(0, LIST_ROW_HEIGHT * options.size() - RIGHT_LIST_CUTOUT.height);
-			var scrollOffset = -(int)(listOverflowSize * RIGHT_SCROLL_THUMB.getScroll());
-
-			for (int i = 0, allOptionsSize = options.size(); i < allOptionsSize; i++)
+			if (previewVariable != null)
 			{
-				if (scrollOffset + LIST_ROW_HEIGHT * i < -LIST_ROW_HEIGHT
-				    || scrollOffset + LIST_ROW_HEIGHT * i > RIGHT_LIST_CUTOUT.height
-				    || !listItemContains(OPTION_LIST_PANEL_X, OPTION_LIST_PANEL_Y, (int)mouseX, (int)mouseY, scrollOffset + LIST_ROW_HEIGHT * i, RIGHT_LIST_CUTOUT.width))
-					continue;
+				var options = previewVariable.getPossibleValues();
 
-				previewVariableValue = options.get(i);
-				previewSpecies.setVariable(previewVariable, previewVariableValue);
-				return true;
+				var rightListOverflowSize = Math.max(0, LIST_ROW_HEIGHT * options.size() - RIGHT_LIST_CUTOUT.height);
+				var rightScrollOffset = -(int)(rightListOverflowSize * RIGHT_SCROLL_THUMB.getScroll());
+
+				for (int i = 0, allOptionsSize = options.size(); i < allOptionsSize; i++)
+				{
+					if (rightScrollOffset + LIST_ROW_HEIGHT * i < -LIST_ROW_HEIGHT
+					    || rightScrollOffset + LIST_ROW_HEIGHT * i > RIGHT_LIST_CUTOUT.height
+					    || !listItemContains(OPTION_LIST_PANEL_X, OPTION_LIST_PANEL_Y, (int)mouseX, (int)mouseY, rightScrollOffset + LIST_ROW_HEIGHT * i, RIGHT_LIST_CUTOUT.width))
+						continue;
+
+					previewVariableValue = options.get(i);
+					previewSpecies.setVariable(previewVariable, previewVariableValue);
+					return true;
+				}
 			}
 		}
 
