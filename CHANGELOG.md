@@ -12,6 +12,7 @@
 * Added 12 new imperial flooring blocks
 * Added 5 new imperial lighting panels
 * Added a medical corrugated crate
+* Added a new config option for servers that can disable destruction from PSWG sources, `allowDestruction`
 
 # Changes
 
@@ -22,9 +23,11 @@
 * Updated texture for fuel tank
 * Removed support for Sodium when Indium is not also installed
 * Dramatically improved cable rendering
+* Improved vertical slab placement interactions
 
 # Fixes
 
-* Fixed game handing when loading with specific combinations of Sodium and Indium
 * Blaster bolts no longer make the "fly-by" sound immediately when you shoot them
+* Fixed game hanging when loading with specific combinations of Sodium and Indium
 * Fixed loose sand texture
+* Fixed crash when opening and closing the character customizer in a certain order
