@@ -91,26 +91,30 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		var blockPos = ctx.getBlockPos();
-		var blockState = ctx.getWorld().getBlockState(blockPos);
-		if (blockState.isOf(this))
-		{
-			return blockState.with(TYPE, SlabType.DOUBLE).with(AXIS, blockState.get(AXIS)).with(WATERLOGGED, Boolean.FALSE);
-		}
+		var existingState = ctx.getWorld().getBlockState(blockPos);
+
+		if (existingState.isOf(this))
+			return existingState.with(TYPE, SlabType.DOUBLE).with(AXIS, existingState.get(AXIS)).with(WATERLOGGED, Boolean.FALSE);
 		else
+			return getEmptyPlacementState(ctx);
+	}
+
+	private BlockState getEmptyPlacementState(ItemPlacementContext ctx)
+	{
+		var blockPos = ctx.getBlockPos();
+
+		var fluidState = ctx.getWorld().getFluidState(blockPos);
+		var placingState = this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+
+		var direction = ctx.getSide();
+		var sneaking = ctx.getPlayer() != null && ctx.getPlayer().isSneaking();
+
+		switch (direction)
 		{
-			var fluidState = ctx.getWorld().getFluidState(blockPos);
-			var blockState2 = this.getDefaultState().with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Y).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
-
-			var direction = ctx.getSide();
-
-			if (ctx.getPlayer() != null && ctx.getPlayer().isSneaking())
+			case UP:
+			case DOWN:
 			{
-				if (direction != Direction.DOWN && direction != Direction.UP)
-				{
-					// Place horizontal slab adjacent to a block
-					return ctx.getHitPos().y - (double)blockPos.getY() > 0.5 ? blockState2.with(TYPE, SlabType.TOP) : blockState2;
-				}
-				else
+				if (sneaking)
 				{
 					// Place vertical slab above or below block
 					var playerLookDir = Direction.fromRotation(ctx.getPlayerYaw());
@@ -124,70 +128,53 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 						case Z -> half = (ctx.getHitPos().z - (double)blockPos.getZ() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
 					}
 
-					return this.getDefaultState().with(TYPE, half).with(AXIS, axis).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+					return placingState.with(TYPE, half).with(AXIS, axis);
+				}
+				else
+				{
+					if (direction == Direction.DOWN)
+						return placingState.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.Y);
+					return placingState;
 				}
 			}
-			else
+			case NORTH:
+			case SOUTH:
+			case EAST:
+			case WEST:
 			{
-				return switch (direction)
-						{
-							case NORTH -> blockState2.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.Z);
-							case SOUTH -> blockState2.with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.Z);
-							case EAST -> blockState2.with(TYPE, SlabType.BOTTOM).with(AXIS, Direction.Axis.X);
-							case WEST -> blockState2.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.X);
-							case DOWN -> blockState2.with(TYPE, SlabType.TOP).with(AXIS, Direction.Axis.Y);
-							default -> blockState2;
-						};
+				if (sneaking)
+					return switch (direction)
+					{
+						case NORTH, WEST -> placingState.with(TYPE, SlabType.TOP).with(AXIS, direction.getAxis());
+						case SOUTH, EAST -> placingState.with(TYPE, SlabType.BOTTOM).with(AXIS, direction.getAxis());
+						default -> throw new RuntimeException("Impossible state");
+					};
+				else
+					return ctx.getHitPos().y - (double)blockPos.getY() > 0.5 ? placingState.with(TYPE, SlabType.TOP) : placingState;
 			}
+			default:
+				throw new RuntimeException("Impossible state");
 		}
 	}
 
 	@Override
 	public boolean canReplace(BlockState state, ItemPlacementContext context)
 	{
-		var itemStack = context.getStack();
-		var slabType = state.get(TYPE);
 		var axis = state.get(AXIS);
-		if (itemStack.getItem() == (this).asItem())
-		{
-			var direction = context.getSide();
 
-			if (axis == Direction.Axis.Y)
-			{
-				return switch (slabType)
-						{
-							case BOTTOM -> direction == Direction.UP;
-							case TOP -> direction == Direction.DOWN;
-							default -> false;
-						};
-			}
-			if (axis == Direction.Axis.X)
-			{
-				return switch (slabType)
-						{
-							case BOTTOM -> direction == Direction.EAST;
-							case TOP -> direction == Direction.WEST;
-							default -> false;
-						};
-			}
-			if (axis == Direction.Axis.Z)
-			{
-				return switch (slabType)
-						{
-							case BOTTOM -> direction == Direction.SOUTH;
-							case TOP -> direction == Direction.NORTH;
-							default -> false;
-						};
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
+		var existingState = context.getWorld().getBlockState(context.getBlockPos());
+		if (!existingState.isOf(this) || state.get(TYPE) == SlabType.DOUBLE)
 			return false;
-		}
+
+		var possiblePlacement = getEmptyPlacementState(context);
+
+		if (axis == Direction.Axis.Y && axis != possiblePlacement.get(AXIS))
+			return false;
+
+		if (state.get(TYPE) != possiblePlacement.get(TYPE))
+			return true;
+
+		return context.getSide().getAxis() == axis;
 	}
 
 	@Override

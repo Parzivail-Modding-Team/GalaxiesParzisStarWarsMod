@@ -32,12 +32,12 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 	{
 		super(context);
 
-		SoundTimelineManager.SOUND_EVENT_ENTERED.register((instance, timelineEvent) -> {
+		SoundTimelineManager.SOUND_EVENT_ENTERED.register((instance, timelineEvent, delta) -> {
 			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorEntitySoundInstance tdesi)
 				BEEPING_ENTITIES.add(tdesi.getDetonator());
 		});
 
-		SoundTimelineManager.SOUND_EVENT_LEFT.register((instance, timelineEvent) -> {
+		SoundTimelineManager.SOUND_EVENT_LEFT.register((instance, timelineEvent, delta) -> {
 			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorEntitySoundInstance tdesi)
 				BEEPING_ENTITIES.remove(tdesi.getDetonator());
 		});

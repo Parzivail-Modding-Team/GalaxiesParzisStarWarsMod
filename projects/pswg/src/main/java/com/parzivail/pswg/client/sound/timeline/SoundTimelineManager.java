@@ -19,7 +19,7 @@ public final class SoundTimelineManager
 	@FunctionalInterface
 	public interface SoundTimelineEvent
 	{
-		void soundTimelineEvent(SoundInstance instance, Identifier timelineEvent);
+		void soundTimelineEvent(SoundInstance instance, Identifier timelineEvent, float delta);
 	}
 
 	private static final Map<SoundInstance, Integer> FIRST_TICKS = new HashMap<>();
@@ -27,21 +27,21 @@ public final class SoundTimelineManager
 
 	public static final Event<SoundTimelineEvent> SOUND_EVENT_ENTERED = EventFactory.createArrayBacked(
 			SoundTimelineEvent.class,
-			(instance, timelineEvent) -> {
+			(instance, timelineEvent, delta) -> {
 			},
-			callbacks -> (instance, timelineEvent) -> {
+			callbacks -> (instance, timelineEvent, delta) -> {
 				for (final var callback : callbacks)
-					callback.soundTimelineEvent(instance, timelineEvent);
+					callback.soundTimelineEvent(instance, timelineEvent, delta);
 			}
 	);
 
 	public static final Event<SoundTimelineEvent> SOUND_EVENT_LEFT = EventFactory.createArrayBacked(
 			SoundTimelineEvent.class,
-			(instance, timelineEvent) -> {
+			(instance, timelineEvent, delta) -> {
 			},
-			callbacks -> (instance, timelineEvent) -> {
+			callbacks -> (instance, timelineEvent, delta) -> {
 				for (final var callback : callbacks)
-					callback.soundTimelineEvent(instance, timelineEvent);
+					callback.soundTimelineEvent(instance, timelineEvent, delta);
 			}
 	);
 
@@ -90,12 +90,15 @@ public final class SoundTimelineManager
 				for (var event : events.events())
 				{
 					var start = event.start();
-					if (prevSecond < start && currentSecond >= start)
-						SOUND_EVENT_ENTERED.invoker().soundTimelineEvent(instance, event.id());
-
 					var end = event.end();
+
+					var delta = (end == start) ? 1 : (currentSecond - start) / (end - start);
+
+					if (prevSecond < start && currentSecond >= start)
+						SOUND_EVENT_ENTERED.invoker().soundTimelineEvent(instance, event.id(), delta);
+
 					if (prevSecond < end && currentSecond >= end)
-						SOUND_EVENT_LEFT.invoker().soundTimelineEvent(instance, event.id());
+						SOUND_EVENT_LEFT.invoker().soundTimelineEvent(instance, event.id(), delta);
 
 					lastEnd = Math.max(lastEnd, end);
 				}
