@@ -1,33 +1,45 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.Client;
-import com.parzivail.pswg.mixinaccessor.AbstractClientPlayerEntityAccessor;
+import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
+import com.parzivail.pswg.component.PlayerData;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.util.DefaultSkinHelper;
+import net.minecraft.client.util.SkinTextures;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public class AbstractClientPlayerEntityMixin implements AbstractClientPlayerEntityAccessor
+public abstract class AbstractClientPlayerEntityMixin
 {
-	@Unique
-	private Identifier lastKnownSpeciesTexture;
+	@Shadow
+	protected abstract PlayerListEntry getPlayerListEntry();
 
-	@Override
-	public Identifier pswg$getSpeciesTexture(Identifier current)
+	@Inject(method = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getSkinTextures()Lnet/minecraft/client/util/SkinTextures;", at = @At("HEAD"), cancellable = true)
+	private void getSkinTextures(CallbackInfoReturnable<SkinTextures> cir)
 	{
-		if (current.equals(Client.TEX_TRANSPARENT))
-		{
-			// Current species texture isn't ready, use the last one if it isn't null
-			if (lastKnownSpeciesTexture != null)
-			{
-				return lastKnownSpeciesTexture;
-			}
+		var abstractClientPlayerEntity = (AbstractClientPlayerEntity)(Object)this;
+		var pc = PlayerData.getPersistentPublic(abstractClientPlayerEntity);
 
-			// If the last texture is null, allow the current one to use the fallback
-		}
+		var species = pc.getCharacter();
+		if (species == null)
+			return;
 
-		lastKnownSpeciesTexture = current;
-		return current;
+		PlayerListEntry playerListEntry = getPlayerListEntry();
+		var originalSkinTextures = playerListEntry == null ? DefaultSkinHelper.getTexture(abstractClientPlayerEntity.getUuid()) : playerListEntry.getSkinTextures();
+
+		var current = SwgSpeciesRenderer.getTexture(abstractClientPlayerEntity, species);
+
+		cir.setReturnValue(new SkinTextures(
+				current,
+				originalSkinTextures.textureUrl(),
+				originalSkinTextures.capeTexture(),
+				originalSkinTextures.elytraTexture(),
+				originalSkinTextures.model(),
+				originalSkinTextures.secure()
+		));
 	}
 }

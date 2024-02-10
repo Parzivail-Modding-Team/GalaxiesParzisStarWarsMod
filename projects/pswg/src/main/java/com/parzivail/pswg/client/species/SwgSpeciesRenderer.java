@@ -19,11 +19,6 @@ public class SwgSpeciesRenderer
 {
 	public static final HashMap<Identifier, SwgSpeciesModel> MODELS = new HashMap<>();
 
-	//		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
-	//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
-	//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
-	//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
-
 	public static Supplier<BipedEntityModel<LivingEntity>> getHumanModel()
 	{
 		return Client.NEM_MANAGER.getPlayerBipedModel(Resources.id("species/human"), true);

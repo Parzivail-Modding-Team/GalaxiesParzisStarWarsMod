@@ -24,6 +24,7 @@
 * Removed support for Sodium when Indium is not also installed
 * Dramatically improved cable rendering
 * Improved vertical slab placement interactions
+* Blasters now destroy some ice blocks
 
 # Fixes
 
@@ -32,3 +33,4 @@
 * Fixed loose sand texture
 * Fixed crash when opening and closing the character customizer in a certain order
 * Fixed crash when another mod overrides the player model but a species is still applied
+* Fixed hand rendering when a character was selected
