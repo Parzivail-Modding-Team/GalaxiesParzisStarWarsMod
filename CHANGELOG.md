@@ -39,3 +39,4 @@
 * Mannequins now are properly previewed in the character customizer when using the wizard
 * Fixed player models rotating at odd angles when mannequins are rendering nearby
 * Fixed some cubes being shown or hidden on mannequins at the wrong time due to gender or armor
+* Fix blaster bolts, muzzle flashes, and lightsabers when using Iris

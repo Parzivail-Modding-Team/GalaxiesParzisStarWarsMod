@@ -87,7 +87,21 @@ public class EnergyRenderer
 		double dY = (float)Resources.RANDOM.nextGaussian() * shake;
 		matrices.translate(dX, 0, dY);
 
-		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
+		vc = vertexConsumers.getBuffer(RenderLayer.of(
+				"pswg:energy",
+				VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+				VertexFormat.DrawMode.QUADS,
+				256,
+				false,
+				true,
+				RenderLayer.MultiPhaseParameters
+						.builder()
+						.program(RenderPhase.EYES_PROGRAM)
+						.texture(new RenderPhase.Texture(Resources.id("textures/effect/white.png"), false, false))
+						.transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
+						.layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
+						.build(true)
+		));
 
 		ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		renderGlow(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap);
@@ -205,7 +219,7 @@ public class EnergyRenderer
 					getSaturation(x, glowSat),
 					getValue(x, glowVal)
 			);
-			ImmediateBuffer.A.setColor(color, (int)(255 * alpha));
+			ImmediateBuffer.A.setColor(color, (int)(128 * alpha));
 			var layerThickness = deltaThickness * layer;
 
 			if (layer > 0)
