@@ -1,5 +1,6 @@
 package com.parzivail.aurek.mixin;
 
+import com.parzivail.aurek.ToolkitClient;
 import com.parzivail.aurek.imgui.ImGuiHelper;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +20,7 @@ public class MinecraftClientMixin
 	@Inject(method = "render(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;render(FJZ)V", shift = At.Shift.BEFORE))
 	private void preRender(CallbackInfo ci)
 	{
+		ToolkitClient.DEBUG_BACKEND.startFrame();
 		ImGuiHelper.startFrame();
 	}
 

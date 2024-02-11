@@ -1,6 +1,7 @@
 package com.parzivail.aurek;
 
 import com.google.common.collect.ImmutableList;
+import com.parzivail.aurek.debug.DebugBackend;
 import com.parzivail.aurek.editor.BlasterEditor;
 import com.parzivail.aurek.imgui.Notifier;
 import com.parzivail.aurek.ui.view.*;
@@ -9,13 +10,8 @@ import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.BlasterTransformer;
-import com.parzivail.pswg.api.IDebugBackend;
 import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.util.Lumberjack;
-import com.parzivail.util.data.NamedBufferUtil;
-import imgui.ImGui;
-import imgui.type.ImFloat;
-import imgui.type.ImInt;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
@@ -24,15 +20,16 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
-public class ToolkitClient implements PswgClientAddon, IDebugBackend
+public class ToolkitClient implements PswgClientAddon
 {
+	public static final DebugBackend DEBUG_BACKEND = new DebugBackend();
+
 	public static class Tool
 	{
 		private final String id;
@@ -139,38 +136,6 @@ public class ToolkitClient implements PswgClientAddon, IDebugBackend
 
 		BlasterEditor.register();
 
-		Client.DEBUG = this;
-	}
-
-	@Override
-	public int getInt(String key, int init)
-	{
-		var b = NamedBufferUtil.getI(key, init);
-
-		var i = new ImInt(b[0]);
-		ImGui.inputInt(key, i);
-		b[0] = i.get();
-
-		return b[0];
-	}
-
-	@Override
-	public float getFloat(String key, float init)
-	{
-		var b = NamedBufferUtil.getF(key, init);
-
-		var i = new ImFloat(b[0]);
-		ImGui.inputFloat(key, i);
-		b[0] = i.get();
-
-		return b[0];
-	}
-
-	@Override
-	public Vector3f getVector(String key, Vector3f init)
-	{
-		var b = NamedBufferUtil.getF(key, init.x, init.y, init.z);
-		ImGui.inputFloat3(key, b);
-		return new Vector3f(b[0], b[1], b[2]);
+		Client.DEBUG = DEBUG_BACKEND;
 	}
 }

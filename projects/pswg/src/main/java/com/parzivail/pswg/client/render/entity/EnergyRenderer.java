@@ -14,8 +14,35 @@ import net.minecraft.util.math.Vec3d;
 
 public class EnergyRenderer
 {
-	public static final RenderLayer LAYER_ENERGY = RenderLayer.of("pswg:energy", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().program(RenderPhase.LIGHTNING_PROGRAM).transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY).layering(RenderPhase.VIEW_OFFSET_Z_LAYERING).build(true));
-	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of("pswg:energy_add", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().program(RenderPhase.LIGHTNING_PROGRAM).transparency(RenderPhase.LIGHTNING_TRANSPARENCY).layering(RenderPhase.VIEW_OFFSET_Z_LAYERING).build(true));
+	public static final RenderLayer LAYER_ENERGY = RenderLayer.of(
+			"pswg:energy",
+			VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+			VertexFormat.DrawMode.QUADS,
+			256,
+			false,
+			true,
+			RenderLayer.MultiPhaseParameters
+					.builder()
+					.program(RenderPhase.EYES_PROGRAM)
+					.texture(new RenderPhase.Texture(Resources.id("textures/effect/white.png"), false, false))
+					.transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
+					.layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
+					.build(true)
+	);
+
+	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of(
+			"pswg:energy_add",
+			VertexFormats.POSITION_COLOR,
+			VertexFormat.DrawMode.QUADS,
+			256,
+			false,
+			true,
+			RenderLayer.MultiPhaseParameters
+					.builder().program(RenderPhase.LIGHTNING_PROGRAM)
+					.transparency(RenderPhase.LIGHTNING_TRANSPARENCY)
+					.layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
+					.build(true)
+	);
 
 	public static void renderDarksaber(ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, int glowHsv)
 	{
@@ -88,32 +115,25 @@ public class EnergyRenderer
 		double dY = (float)Resources.RANDOM.nextGaussian() * shake;
 		matrices.translate(dX, 0, dY);
 
-		vc = vertexConsumers.getBuffer(RenderLayer.of(
-				"pswg:energy",
-				VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
-				VertexFormat.DrawMode.QUADS,
-				256,
-				false,
-				true,
-				RenderLayer.MultiPhaseParameters
-						.builder()
-						.program(RenderPhase.EYES_PROGRAM)
-						.texture(new RenderPhase.Texture(Resources.id("textures/effect/white.png"), false, false))
-						.transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
-						.layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
-						.build(true)
-		));
+		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
 		ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderGlowOrBloom(unstable, radiusCoefficient, cap, glowHsv, totalLength);
-	}
 
-	private static void renderGlowOrBloom(boolean unstable, float radiusCoefficient, boolean cap, int glowHsv, float totalLength)
-	{
-		if (IrisCompat.isShaderPackInUse())
-			renderBloom(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap);
-		else
-			renderGlow(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap);
+		var minLayer = 0;
+		var maxLayer = 14;
+		var deltaGradient = 0f;
+		var deltaThickness = 1f;
+
+		var config = Resources.CONFIG.getConfig();
+		if (config.view.improvedShaderEnergy && IrisCompat.isShaderPackInUse())
+		{
+			minLayer = config.viewAdvanced.energyMinGlowLayer;
+			maxLayer = config.viewAdvanced.energyMaxGlowLayer;
+			deltaGradient = config.viewAdvanced.energyGradientOffset;
+			deltaThickness = config.viewAdvanced.energyLayerThicknessScalar;
+		}
+
+		renderGlow(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap, minLayer, maxLayer, deltaGradient, deltaThickness);
 	}
 
 	public static void renderStunEnergy(ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float size, Vec3d normal, float glowHue)
@@ -194,12 +214,7 @@ public class EnergyRenderer
 		return (float)MathHelper.clamp(-0.06 * Math.exp(-0.011 * Math.pow(x - 6, 2)) + h, 0, 1);
 	}
 
-	public static void renderBloom(float bladeLength, float radiusCoefficient, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
-	{
-		// TODO: render one core layer and ONE glow layer (both on different VCs)?
-	}
-
-	public static void renderGlow(float bladeLength, float radiusCoefficient, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
+	public static void renderGlow(float bladeLength, float radiusCoefficient, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap, int minLayer, int maxLayer, float gradientOffset, float deltaThicknessScalar)
 	{
 		if (bladeLength == 0)
 			return;
@@ -207,23 +222,23 @@ public class EnergyRenderer
 		var thicknessBottom = radiusCoefficient * 0.018f;
 		var thicknessTop = radiusCoefficient * (cap ? 0.012f : thicknessBottom);
 
-		var mL = 0;
-		var xL = 14;
-
 		var deltaThickness = radiusCoefficient * 0.0028f;
 
-		var minOutputLayer = mL * thicknessBottom / deltaThickness;
+		var minOutputLayer = minLayer * thicknessBottom / deltaThickness;
+		minOutputLayer += gradientOffset;
+
+		deltaThickness *= deltaThicknessScalar;
 
 		var globalTime = ((System.currentTimeMillis()) % Integer.MAX_VALUE) / 4f;
 
-		for (var layer = mL; layer <= xL; layer++)
+		for (var layer = minLayer; layer <= maxLayer; layer++)
 		{
 			var time = ((System.currentTimeMillis() - layer * 10) % Integer.MAX_VALUE) / 200f;
 			var noise = (float)Resources.SIMPLEX_0.noise2(0, time);
 
 			var hueOffset = unstable ? (noise * 0.02f) : 0;
 
-			var x = MathUtil.remap(layer, mL, xL, minOutputLayer, 60);
+			var x = MathUtil.remap(layer, minLayer, maxLayer, minOutputLayer, 60);
 			var alpha = getAlpha(x);
 			if (alpha < 16 / 255f)
 				continue;
@@ -233,7 +248,7 @@ public class EnergyRenderer
 					getSaturation(x, glowSat),
 					getValue(x, glowVal)
 			);
-			ImmediateBuffer.A.setColor(color, (int)(128 * alpha));
+			ImmediateBuffer.A.setColor(color, (int)(255 * alpha));
 			var layerThickness = deltaThickness * layer;
 
 			if (layer > 0)
@@ -271,7 +286,7 @@ public class EnergyRenderer
 							(unstable ? (0.07f - noise * 0.07f) : 0) * glowSat,
 							getValue(x, glowVal)
 					);
-					ImmediateBuffer.A.setColor(color, (int)(255 * getAlpha(x)));
+					ImmediateBuffer.A.setColor(color, (int)(255 * alpha));
 
 					ImmediateBuffer.A.drawSolidBoxSkewTaper(topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
 				}

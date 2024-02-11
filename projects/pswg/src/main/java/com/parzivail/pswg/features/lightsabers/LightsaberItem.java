@@ -89,13 +89,6 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateNbt()).active;
 	}
 
-	@ImplicitOverride("IrisItemLightProvider::getLightColor")
-	public Vector3f getLightColor(PlayerEntity player, ItemStack stack)
-	{
-		var lt = new LightsaberTag(stack.getOrCreateNbt());
-		return ColorUtil.hsvToRgb(ColorUtil.hsvGetH(lt.bladeColor), ColorUtil.hsvGetS(lt.bladeColor), ColorUtil.hsvGetV(lt.bladeColor));
-	}
-
 	@Override
 	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
 	{
@@ -114,6 +107,13 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 		var config = Resources.CONFIG.getConfig();
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
 		return (int)Math.ceil(config.view.lightsaberShaderBrightness * Ease.outCubic(lt.getLinearSize(1)));
+	}
+
+	@ImplicitOverride("IrisItemLightProvider::getLightColor")
+	public Vector3f getLightColor(PlayerEntity player, ItemStack stack)
+	{
+		var lt = new LightsaberTag(stack.getOrCreateNbt());
+		return ColorUtil.hsvToRgb(ColorUtil.hsvGetH(lt.bladeColor), ColorUtil.hsvGetS(lt.bladeColor), ColorUtil.hsvGetV(lt.bladeColor));
 	}
 
 	public static void toggle(World world, PlayerEntity player, ItemStack stack)

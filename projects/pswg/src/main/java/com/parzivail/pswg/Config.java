@@ -37,10 +37,35 @@ public class Config implements ConfigData
 		@ConfigEntry.Gui.Tooltip
 		public boolean forceFirstPersonAds = true;
 
-		@Comment("The ambient brightness of an ignited lightsaber when shaders are installed and active")
+		@Comment("[Requires Iris] The ambient brightness of an ignited lightsaber when shaders are installed and active")
 		@ConfigEntry.BoundedDiscrete(min = 0, max = 15)
 		@ConfigEntry.Gui.Tooltip
 		public int lightsaberShaderBrightness = 11;
+
+		@Comment("[Requires Iris] Whether to render lightsabers, blaster bolts, etc. in a way that makes them look better with most shaders. Disable if they look bad.")
+		@ConfigEntry.Gui.Tooltip
+		public boolean improvedShaderEnergy = true;
+	}
+
+	public static class ViewAdvanced
+	{
+		@Comment("[Requires Iris] The minimum core size for energy rendering")
+		@ConfigEntry.BoundedDiscrete(min = 0, max = 14)
+		@ConfigEntry.Gui.Tooltip
+		public int energyMinGlowLayer = 1;
+
+		@Comment("[Requires Iris] The maximum glow size for energy rendering")
+		@ConfigEntry.BoundedDiscrete(min = 0, max = 14)
+		@ConfigEntry.Gui.Tooltip
+		public int energyMaxGlowLayer = 6;
+
+		@Comment("[Requires Iris] The starting offset into the color gradient for energy rendering")
+		@ConfigEntry.Gui.Tooltip
+		public float energyGradientOffset = 3;
+
+		@Comment("[Requires Iris] The glow layer thickness multiplier for energy rendering")
+		@ConfigEntry.Gui.Tooltip
+		public float energyLayerThicknessScalar = 0;
 	}
 
 	public static class Client
@@ -75,9 +100,14 @@ public class Config implements ConfigData
 	public Input input = new Input();
 
 	@ConfigEntry.Gui.CollapsibleObject
-	@Comment("Here you can change your rendering preferences.")
+	@Comment("Here you can change general rendering preferences.")
 	@ConfigEntry.Gui.Tooltip
 	public View view = new View();
+
+	@ConfigEntry.Gui.CollapsibleObject
+	@Comment("Here you can change advanced rendering preferences.")
+	@ConfigEntry.Gui.Tooltip
+	public ViewAdvanced viewAdvanced = new ViewAdvanced();
 
 	@ConfigEntry.Gui.CollapsibleObject
 	@Comment("Here you can change general client options.")
