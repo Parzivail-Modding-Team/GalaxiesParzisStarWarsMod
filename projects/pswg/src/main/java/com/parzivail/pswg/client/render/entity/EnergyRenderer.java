@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.compat.iris.IrisCompat;
 import com.parzivail.util.client.ImmediateBuffer;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
@@ -104,7 +105,15 @@ public class EnergyRenderer
 		));
 
 		ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderGlow(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap);
+		renderGlowOrBloom(unstable, radiusCoefficient, cap, glowHsv, totalLength);
+	}
+
+	private static void renderGlowOrBloom(boolean unstable, float radiusCoefficient, boolean cap, int glowHsv, float totalLength)
+	{
+		if (IrisCompat.isShaderPackInUse())
+			renderBloom(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap);
+		else
+			renderGlow(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap);
 	}
 
 	public static void renderStunEnergy(ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float size, Vec3d normal, float glowHue)
@@ -183,6 +192,11 @@ public class EnergyRenderer
 	private static float getHue(double h, double x)
 	{
 		return (float)MathHelper.clamp(-0.06 * Math.exp(-0.011 * Math.pow(x - 6, 2)) + h, 0, 1);
+	}
+
+	public static void renderBloom(float bladeLength, float radiusCoefficient, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
+	{
+		// TODO: render one core layer and ONE glow layer (both on different VCs)?
 	}
 
 	public static void renderGlow(float bladeLength, float radiusCoefficient, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)

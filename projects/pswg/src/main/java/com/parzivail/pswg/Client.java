@@ -23,6 +23,7 @@ import com.parzivail.pswg.client.render.entity.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.entity.ship.ZephyrJRenderer;
 import com.parzivail.pswg.client.render.sky.SpaceSkyRenderer;
+import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.client.screen.CrateGenericSmallScreen;
 import com.parzivail.pswg.client.screen.CrateOctagonScreen;
 import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
@@ -381,7 +382,7 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.AccumulateRecoil, BlasterRecoilManager::handleAccumulateRecoil);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.BlasterHit, BlasterUtil::handleBoltHit);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSocketPyro, SwgParticleFactories::handlePlayerSocketPyro);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenCharacterCustomizer, SwgSpeciesRegistry::handleOpenCharacterCustomizer);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenCharacterCustomizer, CharacterScreen::handleOpenCharacterCustomizer);
 
 		blasterZoomInstance = new ZoomInstance(
 				Resources.id("blaster_zoom"),

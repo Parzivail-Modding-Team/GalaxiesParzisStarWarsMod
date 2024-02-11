@@ -38,4 +38,7 @@ dependencies {
 
 	// Gravity Changer
 	modCompileOnly("maven.modrinth:gravity-api:${gravity_changer_version}")
+
+	// Iris
+	modCompileOnly("maven.modrinth:iris:${iris_version}")
 }

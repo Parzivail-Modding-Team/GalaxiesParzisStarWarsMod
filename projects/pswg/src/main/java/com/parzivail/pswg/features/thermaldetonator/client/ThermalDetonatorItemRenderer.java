@@ -1,10 +1,10 @@
 package com.parzivail.pswg.features.thermaldetonator.client;
 
 import com.parzivail.p3d.P3dManager;
+import com.parzivail.pswg.client.container.SwgSoundTimelines;
 import com.parzivail.pswg.client.render.entity.ThermalDetonatorRenderer;
 import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
 import com.parzivail.pswg.client.sound.timeline.SoundTimelineManager;
-import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.pswg.item.ThermalDetonatorTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
@@ -32,12 +32,12 @@ public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 	private ThermalDetonatorItemRenderer()
 	{
 		SoundTimelineManager.SOUND_EVENT_ENTERED.register((instance, timelineEvent, delta) -> {
-			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
+			if (timelineEvent.equals(SwgSoundTimelines.THERMAL_DETONATOR_BEEP_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
 				BEEPING_PLAYERS.add(tdisi.getPlayer());
 		});
 
 		SoundTimelineManager.SOUND_EVENT_LEFT.register((instance, timelineEvent, delta) -> {
-			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
+			if (timelineEvent.equals(SwgSoundTimelines.THERMAL_DETONATOR_BEEP_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
 				BEEPING_PLAYERS.remove(tdisi.getPlayer());
 		});
 	}

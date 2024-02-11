@@ -4,18 +4,13 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesFactory;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
-import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.component.PlayerData;
-import com.parzivail.pswg.entity.MannequinEntity;
 import com.parzivail.pswg.mixin.ServerPlayerEntityAccessor;
 import com.parzivail.pswg.screen.CharacterScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -135,34 +130,5 @@ public class SwgSpeciesRegistry
 		player.currentScreenHandler = new CharacterScreenHandler(playera.getScreenHandlerSyncId(), player.getInventory(), targetEntity);
 
 		playera.invokeOnScreenHandlerOpened(player.currentScreenHandler);
-	}
-
-	public static void handleOpenCharacterCustomizer(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
-	{
-		var syncId = buf.readInt();
-		var entityId = buf.readInt();
-
-		client.execute(() -> {
-			var entity = client.world.getEntityById(entityId);
-			if (!(entity instanceof LivingEntity livingEntity))
-				return;
-
-			var clientPlayerEntity = client.player;
-			var screenHandler = new CharacterScreenHandler(syncId, clientPlayerEntity.getInventory(), livingEntity);
-			clientPlayerEntity.currentScreenHandler = screenHandler;
-
-			String originalSpecies = SwgSpeciesRegistry.METASPECIES_NONE.toString();
-
-			if (entity instanceof PlayerEntity playerEntity)
-			{
-				var components = PlayerData.getPersistentPublic(playerEntity);
-				if (components.getCharacter() != null)
-					originalSpecies = components.getCharacter().serialize();
-			}
-			else if (entity instanceof MannequinEntity mannequinEntity)
-				originalSpecies = mannequinEntity.getSpecies();
-
-			client.setScreen(new CharacterScreen(new CharacterScreen.Context(true, originalSpecies), screenHandler, clientPlayerEntity.getInventory(), livingEntity));
-		});
 	}
 }

@@ -3,8 +3,10 @@ package com.parzivail.pswg.compat.gravitychanger;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
-public class GravityChangerCompat {
-	public static Vec3d vecPlayerToWorld(Entity entity, Vec3d vec) {
+public class GravityChangerCompat
+{
+	public static Vec3d vecPlayerToWorld(Entity entity, Vec3d vec)
+	{
 		return IGravityChangerCompat.INSTANCE.vecPlayerToWorld(entity, vec);
 	}
 }
@@ -13,10 +15,14 @@ public class GravityChangerCompat {
 interface IGravityChangerCompat
 {
 	IGravityChangerCompat INSTANCE = getInstance();
+
 	Vec3d vecPlayerToWorld(Entity entity, Vec3d vec);
-	private static IGravityChangerCompat getInstance() {
+
+	private static IGravityChangerCompat getInstance()
+	{
 		IGravityChangerCompat instance;
-		try {
+		try
+		{
 			Class.forName("com.fusionflux.gravity_api.util.RotationUtil", false, IGravityChangerCompat.class.getClassLoader());
 			throw new LinkageError(); // TODO
 			/*instance = new IGravityChangerCompat()
@@ -27,7 +33,9 @@ interface IGravityChangerCompat
 					return RotationUtil.vecPlayerToWorld(vec, GravityChangerAPI.getGravityDirection(entity));
 				}
 			};*/
-		} catch (LinkageError | ClassNotFoundException e) {
+		}
+		catch (LinkageError | ClassNotFoundException e)
+		{
 			instance = new IGravityChangerCompat()
 			{
 				@Override

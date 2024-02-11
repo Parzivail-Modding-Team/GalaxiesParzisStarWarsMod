@@ -3,9 +3,9 @@ package com.parzivail.pswg.client.render.entity;
 import com.parzivail.p3d.P3dManager;
 import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.container.SwgSoundTimelines;
 import com.parzivail.pswg.client.sound.ThermalDetonatorEntitySoundInstance;
 import com.parzivail.pswg.client.sound.timeline.SoundTimelineManager;
-import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -33,12 +33,12 @@ public class ThermalDetonatorRenderer extends EntityRenderer<ThermalDetonatorEnt
 		super(context);
 
 		SoundTimelineManager.SOUND_EVENT_ENTERED.register((instance, timelineEvent, delta) -> {
-			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorEntitySoundInstance tdesi)
+			if (timelineEvent.equals(SwgSoundTimelines.THERMAL_DETONATOR_BEEP_ID) && instance instanceof ThermalDetonatorEntitySoundInstance tdesi)
 				BEEPING_ENTITIES.add(tdesi.getDetonator());
 		});
 
 		SoundTimelineManager.SOUND_EVENT_LEFT.register((instance, timelineEvent, delta) -> {
-			if (timelineEvent.equals(SwgSounds.Explosives.THERMAL_DETONATOR_BEEP_TIMELINE_EVENT_ID) && instance instanceof ThermalDetonatorEntitySoundInstance tdesi)
+			if (timelineEvent.equals(SwgSoundTimelines.THERMAL_DETONATOR_BEEP_ID) && instance instanceof ThermalDetonatorEntitySoundInstance tdesi)
 				BEEPING_ENTITIES.remove(tdesi.getDetonator());
 		});
 	}

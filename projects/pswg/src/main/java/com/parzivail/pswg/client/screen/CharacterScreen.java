@@ -13,6 +13,7 @@ import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesIcons;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
+import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.entity.MannequinEntity;
@@ -27,12 +28,16 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
@@ -49,6 +54,35 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 {
+	public static void handleOpenCharacterCustomizer(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	{
+		var syncId = buf.readInt();
+		var entityId = buf.readInt();
+
+		client.execute(() -> {
+			var entity = client.world.getEntityById(entityId);
+			if (!(entity instanceof LivingEntity livingEntity))
+				return;
+
+			var clientPlayerEntity = client.player;
+			var screenHandler = new CharacterScreenHandler(syncId, clientPlayerEntity.getInventory(), livingEntity);
+			clientPlayerEntity.currentScreenHandler = screenHandler;
+
+			String originalSpecies = SwgSpeciesRegistry.METASPECIES_NONE.toString();
+
+			if (entity instanceof PlayerEntity playerEntity)
+			{
+				var components = PlayerData.getPersistentPublic(playerEntity);
+				if (components.getCharacter() != null)
+					originalSpecies = components.getCharacter().serialize();
+			}
+			else if (entity instanceof MannequinEntity mannequinEntity)
+				originalSpecies = mannequinEntity.getSpecies();
+
+			client.setScreen(new CharacterScreen(new CharacterScreen.Context(true, originalSpecies), screenHandler, clientPlayerEntity.getInventory(), livingEntity));
+		});
+	}
+
 	public static record Context(boolean canClear, String originalSpecies)
 	{
 	}
