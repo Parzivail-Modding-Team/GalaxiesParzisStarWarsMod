@@ -13,39 +13,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class EnergyRenderer
 {
-	public static final RenderLayer LAYER_ENERGY = RenderLayer.of(
-			"pswg:energy",
-			VertexFormats.POSITION_COLOR,
-			VertexFormat.DrawMode.QUADS,
-			256,
-			false,
-			true,
-			RenderLayer.MultiPhaseParameters
-					.builder()
-					.program(RenderPhase.LIGHTNING_PROGRAM)
-					.transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
-					.depthTest(RenderPhase.ALWAYS_DEPTH_TEST)
-					.target(RenderPhase.TRANSLUCENT_TARGET)
-					.layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
-					.build(true)
-	);
-
-	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of(
-			"pswg:energy_add",
-			VertexFormats.POSITION_COLOR,
-			VertexFormat.DrawMode.QUADS,
-			256,
-			false,
-			true,
-			RenderLayer.MultiPhaseParameters
-					.builder()
-					.program(RenderPhase.LIGHTNING_PROGRAM)
-					.transparency(RenderPhase.LIGHTNING_TRANSPARENCY)
-					.depthTest(RenderPhase.ALWAYS_DEPTH_TEST)
-					.target(RenderPhase.TRANSLUCENT_TARGET)
-					.layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
-					.build(true)
-	);
+	public static final RenderLayer LAYER_ENERGY = RenderLayer.of("pswg:energy", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().program(RenderPhase.LIGHTNING_PROGRAM).transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY).layering(RenderPhase.VIEW_OFFSET_Z_LAYERING).build(true));
+	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of("pswg:energy_add", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().program(RenderPhase.LIGHTNING_PROGRAM).transparency(RenderPhase.LIGHTNING_TRANSPARENCY).layering(RenderPhase.VIEW_OFFSET_Z_LAYERING).build(true));
 
 	public static void renderDarksaber(ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, int glowHsv)
 	{
