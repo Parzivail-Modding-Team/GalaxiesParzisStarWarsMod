@@ -11,9 +11,11 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,10 +79,16 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		if (animator != null)
 			animator.animateModel(species, player, model, this, tickDelta);
 
-		transformChestCube(player);
-		transformHairCube(species, player);
+		if (species != null)
+			transformModel(model, player, species);
 
 		super.render(player, yaw, tickDelta, matrices, vertexConsumerProvider, light);
+	}
+
+	public static void transformModel(BipedEntityModel<?> model, LivingEntity entity, SwgSpecies species)
+	{
+		transformChestCube(model, entity, species);
+		transformHairCube(model, entity, species);
 	}
 
 	@Nullable
@@ -107,16 +115,11 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		return species;
 	}
 
-	private void transformHairCube(SwgSpecies species, AbstractClientPlayerEntity player)
+	private static void transformHairCube(BipedEntityModel<?> model, LivingEntity target, SwgSpecies species)
 	{
-		if (species == null)
-			return;
-
-		var model = getModel();
-
 		var cubeVisible = true;
 
-		var armorPair = ArmorRenderer.getModArmor(player, EquipmentSlot.HEAD);
+		var armorPair = ArmorRenderer.getModArmor(target, EquipmentSlot.HEAD);
 		if (armorPair != null)
 		{
 			var metadata = ArmorRenderer.getMetadata(armorPair.getLeft());
@@ -124,7 +127,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		}
 		else
 		{
-			var vanillaArmor = ArmorRenderer.getVanillaArmor(player, EquipmentSlot.HEAD);
+			var vanillaArmor = ArmorRenderer.getVanillaArmor(target, EquipmentSlot.HEAD);
 			if (vanillaArmor != null)
 			{
 				// TODO: How should vanilla armor be handled?
@@ -137,24 +140,13 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 			model.head.getChild("hair").visible = cubeVisible;
 	}
 
-	private void transformChestCube(AbstractClientPlayerEntity player)
+	private static void transformChestCube(BipedEntityModel<?> model, LivingEntity target, SwgSpecies species)
 	{
-		var model = getModel();
-
 		if (model == null || model.body == null)
 			return;
 
 		if (!model.body.hasChild("chest"))
 			return;
-
-		var species = overrideSpecies;
-		if (species == null)
-		{
-			var components = PlayerData.getPersistentPublic(player);
-			species = components.getCharacter();
-			if (species == null)
-				return;
-		}
 
 		var chest = model.body.getChild("chest");
 		if (chest == null)
@@ -163,7 +155,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		var isFemale = species.getGender() == SpeciesGender.FEMALE;
 		var armorHidesCube = false;
 
-		var armorPair = ArmorRenderer.getModArmor(player, EquipmentSlot.CHEST);
+		var armorPair = ArmorRenderer.getModArmor(target, EquipmentSlot.CHEST);
 		if (armorPair != null)
 		{
 			var metadata = ArmorRenderer.getMetadata(armorPair.getLeft());
@@ -171,7 +163,7 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		}
 		else
 		{
-			var vanillaArmor = ArmorRenderer.getVanillaArmor(player, EquipmentSlot.CHEST);
+			var vanillaArmor = ArmorRenderer.getVanillaArmor(target, EquipmentSlot.CHEST);
 			if (vanillaArmor != null)
 				armorHidesCube = true;
 		}

@@ -85,9 +85,6 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 		if (!(livingEntity instanceof MannequinEntity mannequin))
 			return;
 
-		if (model.body.hasChild("chest"))
-			model.body.getChild("chest").visible = false;
-
 		model.head.pitch = (float)(Math.PI / 180.0) * mannequin.getHeadRotation().getPitch();
 		model.head.yaw = (float)(Math.PI / 180.0) * mannequin.getHeadRotation().getYaw();
 		model.head.roll = (float)(Math.PI / 180.0) * mannequin.getHeadRotation().getRoll();
@@ -135,6 +132,9 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 				if (renderer instanceof PlayerSpeciesModelRenderer perwm)
 				{
 					model = (BipedEntityModel)perwm.getModel();
+
+					if (model != null)
+						PlayerSpeciesModelRenderer.transformModel(model, mannequin, species);
 				}
 			}
 		}
