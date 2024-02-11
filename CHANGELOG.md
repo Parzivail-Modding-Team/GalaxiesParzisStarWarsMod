@@ -23,6 +23,7 @@
 * Updated texture for fuel tank
 * Removed support for Sodium when Indium is not also installed
 * Dramatically improved cable rendering
+* Dramatically improved lightsaber and blaster bolt rendering when Iris is installed
 * Improved vertical slab placement interactions
 * Blasters now destroy some ice blocks
 
@@ -39,4 +40,4 @@
 * Mannequins now are properly previewed in the character customizer when using the wizard
 * Fixed player models rotating at odd angles when mannequins are rendering nearby
 * Fixed some cubes being shown or hidden on mannequins at the wrong time due to gender or armor
-* Fix blaster bolts, muzzle flashes, and lightsabers when using Iris
+* Fixed left-handed lightsaber blocking
