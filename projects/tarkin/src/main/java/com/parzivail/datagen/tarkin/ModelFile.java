@@ -163,6 +163,15 @@ public class ModelFile
 				.texture("side", sideTexture);
 	}
 
+	public static ModelFile columnTop(Block block)
+	{
+		var tex = AssetUtils.getTextureName(block);
+		return ModelFile
+				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_column"))
+				.texture("end", IdentifierUtil.concat(tex, "_top"))
+				.texture("side", tex);
+	}
+
 	public static ModelFile columnTopBottom(Block block, Identifier topTexture, Identifier sideTexture, Identifier bottomTexture)
 	{
 		return ModelFile
@@ -429,7 +438,7 @@ public class ModelFile
 			);
 		}
 
-		modelFiles.add(ModelFile.cube(block));
+		modelFiles.add(ModelFile.cube(block, texture));
 
 		return modelFiles;
 	}

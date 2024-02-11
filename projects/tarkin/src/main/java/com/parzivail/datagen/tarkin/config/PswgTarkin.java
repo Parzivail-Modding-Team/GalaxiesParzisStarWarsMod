@@ -101,19 +101,6 @@ public class PswgTarkin
 
 	public static void generateTags(List<BuiltAsset> assets)
 	{
-		TagGenerator.forBlock(BlockTags.LOGS_THAT_BURN, SwgTags.Blocks.SEQUOIA_LOG).build(assets);
-		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Blocks.SEQUOIA_LOG).build(assets);
-
-		TagGenerator.forBlock(BlockTags.LOGS_THAT_BURN, SwgTags.Blocks.JAPOR_LOG).build(assets);
-		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Blocks.JAPOR_LOG).build(assets);
-
-		TagGenerator.forBlock(BlockTags.LOGS_THAT_BURN, SwgTags.Blocks.TATOOINE_LOG).build(assets);
-		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Blocks.TATOOINE_LOG).build(assets);
-
-		TagGenerator.forBlock(BlockTags.SAND, SwgTags.Blocks.DESERT_SAND).build(assets);
-		TagGenerator.forBlock(BlockTags.SHOVEL_MINEABLE, SwgTags.Blocks.DESERT_SAND).build(assets);
-		TagGenerator.forItemTag(ItemTags.SAND, SwgTags.Blocks.DESERT_SAND).build(assets);
-
 		TagGenerator.forBlock(BlockTags.WALLS, SwgTags.Blocks.SLIDING_DOORS).build(assets);
 
 		// Why is there no block tag for glass?
@@ -785,46 +772,14 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Tree.SequoiaLog, Resources.id("block/sequoia_log_top"))
-		              .blockTag(SwgTags.Blocks.SEQUOIA_LOG)
-		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Items.SEQUOIA_LOG)
-		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Tree.StrippedSequoiaLog, Resources.id("block/stripped_sequoia_log_top"))
-		              .blockTag(SwgTags.Blocks.SEQUOIA_LOG)
-		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Items.SEQUOIA_LOG)
-		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Tree.MossySequoiaLog, Resources.id("block/mossy_sequoia_log_top"))
-		              .blockTag(SwgTags.Blocks.SEQUOIA_LOG)
-		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Items.SEQUOIA_LOG)
-		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Tree.JaporLog, Resources.id("block/japor_log_top"))
-		              .blockTag(SwgTags.Blocks.JAPOR_LOG)
-		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Items.JAPOR_LOG)
-		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Tree.TatooineLog, Resources.id("block/tatooine_log_top"))
-		              .blockTag(SwgTags.Blocks.TATOOINE_LOG)
-		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Items.TATOOINE_LOG)
-		              .build(assets);
-
 		BlockGenerator.basic(SwgBlocks.Tree.SequoiaWood, Resources.id("block/sequoia_log"))
-		              .blockTag(SwgTags.Blocks.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Items.SEQUOIA_LOG)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Tree.JaporWood, Resources.id("block/japor_log"))
-		              .blockTag(SwgTags.Blocks.JAPOR_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Items.JAPOR_LOG)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Tree.TatooineWood, Resources.id("block/tatooine_log"))
-		              .blockTag(SwgTags.Blocks.TATOOINE_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .itemTag(SwgTags.Items.TATOOINE_LOG)
 		              .build(assets);
 
 		BlockGenerator.basicWoodProducts(SwgBlocks.Tree.JaporProducts, BlockTags.AXE_MINEABLE, assets);
@@ -840,14 +795,6 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.verticalSlab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Power.Coupling)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
@@ -926,13 +873,6 @@ public class PswgTarkin
 			BlockGenerator.basic(e)
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
 			              .build(assets);
-
-		//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutout)
-		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		//		              .build(assets);
-		//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutoutPipes)
-		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		//		              .build(assets);
 
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
@@ -1040,67 +980,6 @@ public class PswgTarkin
 		BlockGenerator.staticColumn(SwgBlocks.Panel.MossyGrayImperialPanelPattern5, Resources.id("block/mossy_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.ImperialFlooringPattern1)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.ImperialFlooringPattern2)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialFlooring0)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialFlooring3)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialFlooring4)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialFlooring0)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialFlooring3)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialFlooring4)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialFlooring3)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialFlooring4)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.WhiteImperialFlooring3)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.WhiteImperialFlooring4)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialPanelTall1)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialPanelTall2)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall1)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall2)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Pipe.Large)
-		              .itemModel(ModelFile::blockSeparateItem)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.cross(SwgBlocks.Plant.FunnelFlower).build(assets);
-		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);
-		BlockGenerator.cross(SwgBlocks.Plant.PoontenGrass).build(assets);
-		BlockGenerator.cross(SwgBlocks.Plant.DriedPoontenGrass).build(assets);
-		BlockGenerator.cross(SwgBlocks.Plant.Tuber).build(assets);
 
 		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetUtils.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2"))
 		              .lootTable(block1 -> LootTableFile.seedCrop(block1, SwgItems.Seeds.ChasukaSeeds, SwgItems.Food.ChasukaLeaf, 2, 3, 0.5714286))
@@ -1115,53 +994,47 @@ public class PswgTarkin
 		              .model(ModelFile::cross)
 		              .itemModel(ModelFile::item)
 		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Food.VaporatorMushroom, new LootTableFile.Pool.CountFunction.Range(1, 3, new Identifier("uniform"))))
+		              .itemTag(ItemTags.SAND)
 		              .build(assets);
 
 		BlockGenerator.block(SwgBlocks.Sand.Desert)
 		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
 		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.1f, 2))
-		              .blockTag(SwgTags.Blocks.DESERT_SAND)
-		              .itemTag(SwgTags.Items.DESERT_SAND)
+		              .blockTag(BlockTags.SAND)
+		              .itemTag(ItemTags.SAND)
+		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .build(assets);
 		BlockGenerator.block(SwgBlocks.Sand.Pit)
 		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
 		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.24f, 2))
-		              .blockTag(SwgTags.Blocks.DESERT_SAND)
-		              .itemTag(SwgTags.Items.DESERT_SAND)
+		              .blockTag(BlockTags.SAND)
+		              .itemTag(ItemTags.SAND)
+		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .build(assets);
 		BlockGenerator.block(SwgBlocks.Sand.Fine)
 		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.18f, 2))
-		              .blockTag(SwgTags.Blocks.DESERT_SAND)
-		              .itemTag(SwgTags.Items.DESERT_SAND)
+		              .blockTag(BlockTags.SAND)
+		              .itemTag(ItemTags.SAND)
+		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .build(assets);
 		BlockGenerator.accumulatingLayers(SwgBlocks.Sand.LooseDesert, Resources.id("block/desert_sand"))
-		              .blockTag(SwgTags.Blocks.DESERT_SAND)
-		              .itemTag(SwgTags.Items.DESERT_SAND)
+		              .blockTag(BlockTags.SAND)
+		              .itemTag(ItemTags.SAND)
+		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .build(assets);
 		BlockGenerator.block(SwgBlocks.Sand.Canyon)
 		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
 		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.04f, 2))
-		              .blockTag(SwgTags.Blocks.DESERT_SAND)
-		              .itemTag(SwgTags.Items.DESERT_SAND)
+		              .blockTag(BlockTags.SAND)
+		              .itemTag(ItemTags.SAND)
+		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.Canyon, SwgTags.Blocks.DESERT_SANDSTONE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.Canyon, BlockTags.PICKAXE_MINEABLE, assets);
 
-		BlockGenerator.stoneProducts(SwgBlocks.Sandstone.Desert, b -> BlockGenerator.staticColumn(b, Resources.id("block/smooth_desert_sandstone")), SwgTags.Blocks.DESERT_SANDSTONE, assets);
-
-		BlockGenerator.staticColumnTopBottom(SwgBlocks.Sandstone.Dunestone)
-		              .blockTag(SwgTags.Blocks.DESERT_SANDSTONE)
-		              .itemTag(SwgTags.Items.DESERT_SANDSTONE)
-		              .build(assets);
-
-		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)
-		              .build(assets);
+		BlockGenerator.stoneProducts(SwgBlocks.Sandstone.Desert, b -> BlockGenerator.staticColumn(b, Resources.id("block/smooth_desert_sandstone")), BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.CanyonCobble, BlockTags.PICKAXE_MINEABLE, assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Stone.DurasteelConnectedPourstone)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1179,51 +1052,15 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.MassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
-		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
 		BlockGenerator.verticalSlabUniqueDouble(SwgBlocks.Stone.MossyMassassiSmoothSlab, Resources.id("block/mossy_smooth_massassi_stone_slab_double"), Resources.id("block/mossy_smooth_massassi_stone"), Resources.id("block/mossy_smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.MossyMassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
 
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone.block)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.Pourstone.stairs, Resources.id("block/pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.verticalSlab(SwgBlocks.Stone.Pourstone.slab, Resources.id("block/pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.wall(SwgBlocks.Stone.Pourstone.wall, Resources.id("block/pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.CrackedPourstone.block)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.CrackedPourstone.stairs, Resources.id("block/cracked_pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.verticalSlab(SwgBlocks.Stone.CrackedPourstone.slab, Resources.id("block/cracked_pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.wall(SwgBlocks.Stone.CrackedPourstone.wall, Resources.id("block/cracked_pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.SmoothPourstone.block)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.SmoothPourstone.stairs, Resources.id("block/smooth_pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.verticalSlab(SwgBlocks.Stone.SmoothPourstone.slab, Resources.id("block/smooth_pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.wall(SwgBlocks.Stone.SmoothPourstone.wall, Resources.id("block/smooth_pourstone"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
+		BlockGenerator.stoneProducts(SwgBlocks.Stone.Pourstone, BlockGenerator::basicRandomMirror, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.stoneProducts(SwgBlocks.Stone.CrackedPourstone, BlockGenerator::basicRandomMirror, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.stoneProducts(SwgBlocks.Stone.SmoothPourstone, BlockGenerator::basicRandomMirror, BlockTags.PICKAXE_MINEABLE, assets);
 
 		for (var pair : SwgBlocks.Stone.DyedPourstone.entrySet())
 			BlockGenerator.basicStoneProducts(pair.getValue(), BlockTags.PICKAXE_MINEABLE, assets);
@@ -1245,26 +1082,6 @@ public class PswgTarkin
 		              .build(assets);
 		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.IlumBricks, BlockTags.PICKAXE_MINEABLE, assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.FusionFuel)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.StarshipFuel)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Scaffold.Scaffold)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Scaffold.ScaffoldStairs)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .blockTag(BlockTags.STAIRS)
-		              .build(assets);
-
-		BlockGenerator.staticColumn(SwgBlocks.Vent.Air, Resources.id("block/air_vent_top"), Resources.id("block/air_vent_side"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
 		BlockGenerator.trapdoor(SwgBlocks.Vent.Imperial)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
@@ -1280,15 +1097,6 @@ public class PswgTarkin
 			BlockGenerator.trapdoor(e)
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
 			              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Workbench.Blaster)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Workbench.Lightsaber)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelPicklingDrops(SwgBlocks.Misc.ThermalDetonatorBlock)
-		              .build(assets);
 	}
 
 	public static void build(List<BuiltAsset> assets)

@@ -4,12 +4,18 @@ public enum TrModel
 {
 	None,
 	Empty,
-	Item,
-	Block,
+	Sprite,
+	SeparateSprite,
+	BlockItem,
 	Cube,
 	SpawnEgg,
 	HandheldItem,
 	CubeNoCull,
 	Leaves,
-	Fan
+	Fan,
+	Cross,
+	RandomMirror,
+	ColumnTop,
+	ColumnTopBottom,
+	Trapdoor,
 }

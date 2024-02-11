@@ -1,5 +1,6 @@
 package com.parzivail.datagen.tarkin;
 
+import com.parzivail.datagen.AssetUtils;
 import com.parzivail.datagen.FilesystemUtils;
 import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
@@ -197,13 +198,14 @@ public class Tarkin
 	private static TagKey<Item> getTagKey(TrItemTag preset)
 	{
 		return switch (preset)
-				{
-					case TrinketsChestBack -> TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
-					case Leaves -> ItemTags.LEAVES;
-					case DesertSand -> SwgTags.Items.DESERT_SAND;
-					case DesertSandstone -> SwgTags.Items.DESERT_SANDSTONE;
-					default -> throw new RuntimeException("Unsupported value " + preset);
-				};
+		{
+			case TrinketsChestBack -> TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
+			case Leaves -> ItemTags.LEAVES;
+			case Logs -> ItemTags.LOGS;
+			case LogsThatBurn -> ItemTags.LOGS_THAT_BURN;
+			case Sand -> ItemTags.SAND;
+			default -> throw new RuntimeException("Unsupported value " + preset);
+		};
 	}
 
 	private static TagKey<Block> getTagKey(TrBlockTag preset)
@@ -212,14 +214,18 @@ public class Tarkin
 		{
 			case PickaxeMineable -> BlockTags.PICKAXE_MINEABLE;
 			case ShearsMineable -> FabricMineableTags.SHEARS_MINEABLE;
+			case ShovelMineable -> BlockTags.SHOVEL_MINEABLE;
+			case AxeMineable -> BlockTags.AXE_MINEABLE;
 			case SlidingDoor -> SwgTags.Blocks.SLIDING_DOORS;
-			case DesertSand -> SwgTags.Blocks.DESERT_SAND;
-			case DesertSandstone -> SwgTags.Blocks.DESERT_SANDSTONE;
 			case Leaves -> BlockTags.LEAVES;
 			case DeadBushSubstrate -> BlockTags.DEAD_BUSH_MAY_PLACE_ON;
 			case BlasterDestroy -> SwgTags.Blocks.BLASTER_DESTROY;
 			case BlasterExplode -> SwgTags.Blocks.BLASTER_EXPLODE;
 			case BlasterReflect -> SwgTags.Blocks.BLASTER_REFLECT;
+			case Logs -> BlockTags.LOGS;
+			case LogsThatBurn -> BlockTags.LOGS_THAT_BURN;
+			case Sand -> BlockTags.SAND;
+			case Stairs -> BlockTags.STAIRS;
 			default -> throw new RuntimeException("Unsupported value " + preset);
 		};
 	}
@@ -241,7 +247,7 @@ public class Tarkin
 			switch (a.model())
 			{
 				case Empty -> gen.model(ModelFile::empty);
-				case Item -> gen.model(ModelFile::item);
+				case Sprite -> gen.model(ModelFile::item);
 				case SpawnEgg -> gen.model(ModelFile::spawn_egg);
 				case HandheldItem -> gen.model(ModelFile::handheld_item);
 				default -> throw new RuntimeException("Unsupported value " + a.model());
@@ -267,9 +273,16 @@ public class Tarkin
 				case None ->
 				{
 				}
+				case AxisRotated -> gen.state(BlockStateModelGenerator::createAxisRotatedBlockState);
 				case Singleton -> gen.state(BlockStateModelGenerator::createSingletonBlockState);
 				case TangentRotating -> gen.state(BlockStateGenerator::tangentRotating);
 				case RandomRotation -> gen.state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations);
+				case RandomMirror ->
+				{
+					var id = AssetUtils.getTextureName(block);
+					var mirrored = IdentifierUtil.concat(id, "_mirrored");
+					gen.state((b, modelId) -> BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(b, id, mirrored));
+				}
 				default -> throw new RuntimeException("Unsupported value " + a.state());
 			}
 
@@ -282,6 +295,10 @@ public class Tarkin
 				case CubeNoCull -> gen.model(ModelFile::cube_no_cull);
 				case Leaves -> gen.model(ModelFile::leaves);
 				case Fan -> gen.model(ModelFile::fan);
+				case ColumnTop -> gen.model(ModelFile::columnTop);
+				case ColumnTopBottom -> gen.model(ModelFile::columnTopBottom);
+				case Cross -> gen.model(ModelFile::cross);
+				case RandomMirror -> gen.models(ModelFile::randomMirror);
 				default -> throw new RuntimeException("Unsupported value " + a.model());
 			}
 
@@ -290,8 +307,13 @@ public class Tarkin
 				case None ->
 				{
 				}
-				case Block -> gen.itemModel(ModelFile::ofBlock);
-				case Item -> gen.itemModel(ModelFile::item);
+				case BlockItem ->
+				{
+					if (a.model() != TrModel.None)
+						gen.itemModel(ModelFile::ofBlock);
+				}
+				case Sprite -> gen.itemModel(ModelFile::item);
+				case SeparateSprite -> gen.itemModel(ModelFile::blockSeparateItem);
 				default -> throw new RuntimeException("Unsupported value " + a.itemModel());
 			}
 

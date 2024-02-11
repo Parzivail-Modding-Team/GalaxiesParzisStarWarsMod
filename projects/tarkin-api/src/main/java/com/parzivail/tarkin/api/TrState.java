@@ -4,6 +4,8 @@ public enum TrState
 {
 	None,
 	Singleton,
+	AxisRotated,
 	TangentRotating,
-	RandomRotation
+	RandomRotation,
+	RandomMirror
 }

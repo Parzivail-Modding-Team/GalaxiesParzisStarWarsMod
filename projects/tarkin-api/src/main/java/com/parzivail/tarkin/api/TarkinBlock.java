@@ -15,7 +15,7 @@ public @interface TarkinBlock
 
 	TrModel model() default TrModel.Cube;
 
-	TrModel itemModel() default TrModel.Block;
+	TrModel itemModel() default TrModel.BlockItem;
 
 	TrLoot loot() default TrLoot.SingleSelf;
 

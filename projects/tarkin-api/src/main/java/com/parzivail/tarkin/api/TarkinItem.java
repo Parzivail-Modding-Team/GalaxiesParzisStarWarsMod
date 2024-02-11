@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TarkinItem
 {
-	TrModel model() default TrModel.Item;
+	TrModel model() default TrModel.Sprite;
 
 	TrLang lang() default TrLang.Item;
 

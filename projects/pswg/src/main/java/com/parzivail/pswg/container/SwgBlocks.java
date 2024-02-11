@@ -45,12 +45,14 @@ public class SwgBlocks
 	{
 		@RegistryName("blaster_workbench")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.create().mapColor(MapColor.GRAY).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("blaster_workbench")
 		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = FabricBlockEntityTypeBuilder.create(BlasterWorkbenchBlockEntity::new, Blaster).build();
 
 		@RegistryName("lightsaber_forge")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block Lightsaber = new LightsaberForgeBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.WOOD).strength(2.5F));
 		@RegistryName("lightsaber_forge")
 		public static final BlockEntityType<LightsaberForgeBlockEntity> LightsaberBlockEntityType = FabricBlockEntityTypeBuilder.create(LightsaberForgeBlockEntity::new, Lightsaber).build();
@@ -62,13 +64,13 @@ public class SwgBlocks
 		@RegistryName("canyon_stone")
 		public static final StoneProducts Canyon = new StoneProducts(new Block(FabricBlockSettings.create().strength(0.5F)));
 		@RegistryName("canyon_stone_bricks")
-		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
+		@TarkinBlock
 		public static final Block CanyonBricks = new Block(FabricBlockSettings.create().strength(0.5F));
 		@RegistryName("polished_canyon_stone")
-		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
+		@TarkinBlock
 		public static final Block PolishedCanyon = new Block(FabricBlockSettings.create().strength(0.5F));
 		@RegistryName("chiseled_canyon_stone")
-		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
+		@TarkinBlock()
 		public static final Block ChiseledCanyon = new Block(FabricBlockSettings.create().strength(0.5F));
 
 		@RegistryName("canyon_cobblestone")
@@ -83,6 +85,7 @@ public class SwgBlocks
 
 		@RegistryName("durasteel_bordered_pourstone")
 		@ClientBlockRegistryData(isConnected = true)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingBlock DurasteelConnectedPourstone = new SelfConnectingBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 
 		@RegistryName("pourstone")
@@ -128,15 +131,16 @@ public class SwgBlocks
 		@RegistryName("desert_sandstone")
 		public static final StoneProducts Desert = new StoneProducts(new Block(FabricBlockSettings.create().strength(1.25F).requiresTool()));
 		@RegistryName("dunestone")
+		@TarkinBlock(model = TrModel.ColumnTopBottom)
 		public static final Block Dunestone = new Block(FabricBlockSettings.create().strength(1.25F).requiresTool());
 		@RegistryName("smooth_desert_sandstone")
-		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
+		@TarkinBlock
 		public static final Block SmoothDesert = new Block(FabricBlockSettings.create().strength(0.5F));
 		@RegistryName("polished_desert_sandstone")
-		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
+		@TarkinBlock
 		public static final Block PolishedDesert = new Block(FabricBlockSettings.create().strength(0.5F));
 		@RegistryName("chiseled_desert_sandstone")
-		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
+		@TarkinBlock
 		public static final Block ChiseledDesert = new Block(FabricBlockSettings.create().strength(0.5F));
 	}
 
@@ -159,6 +163,7 @@ public class SwgBlocks
 	public static class Salt
 	{
 		@RegistryName("caked_salt")
+		@TarkinBlock(state = TrState.RandomRotation)
 		public static final Block Caked = new Block(FabricBlockSettings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	}
 
@@ -198,22 +203,27 @@ public class SwgBlocks
 		@RegistryName("funnel_flower")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
 		public static final Block FunnelFlower = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
 		public static final Block BlossomingFunnelFlower = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("poonten_grass")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
 		public static final Block PoontenGrass = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
 		public static final Block DriedPoontenGrass = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber_stalk")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
 		public static final Block Tuber = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
@@ -246,12 +256,15 @@ public class SwgBlocks
 		public static final Block SequoiaWood = new Block(FabricBlockSettings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("sequoia_log")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+		@TarkinBlock(state = TrState.AxisRotated, model = TrModel.ColumnTop, tags = { TrBlockTag.Logs }, itemTags = { TrItemTag.Logs })
 		public static final PillarBlock SequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("stripped_sequoia_log")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+		@TarkinBlock(state = TrState.AxisRotated, model = TrModel.ColumnTop, tags = { TrBlockTag.Logs }, itemTags = { TrItemTag.Logs })
 		public static final PillarBlock StrippedSequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("mossy_sequoia_log")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+		@TarkinBlock(state = TrState.AxisRotated, model = TrModel.ColumnTop, tags = { TrBlockTag.Logs }, itemTags = { TrItemTag.Logs })
 		public static final PillarBlock MossySequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("sequoia")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
@@ -260,13 +273,14 @@ public class SwgBlocks
 		@RegistryName("japor_leaves")
 		@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.TangentRotating, model = TrModel.Fan, itemModel = TrModel.Item, tags = { TrBlockTag.Leaves, TrBlockTag.ShearsMineable }, itemTags = { TrItemTag.Leaves })
+		@TarkinBlock(state = TrState.TangentRotating, model = TrModel.Fan, itemModel = TrModel.Sprite, tags = { TrBlockTag.Leaves, TrBlockTag.ShearsMineable }, itemTags = { TrItemTag.Leaves })
 		public static final BushLeavesBlock JaporLeaves = createBushLeavesBlock();
 		@RegistryName("japor_wood")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final Block JaporWood = new Block(FabricBlockSettings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("japor_log")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+		@TarkinBlock(state = TrState.AxisRotated, model = TrModel.ColumnTop, tags = { TrBlockTag.Logs }, itemTags = { TrItemTag.Logs })
 		public static final PillarBlock JaporLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("japor")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
@@ -277,6 +291,7 @@ public class SwgBlocks
 		public static final Block TatooineWood = new Block(FabricBlockSettings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("tatooine_log")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+		@TarkinBlock(state = TrState.AxisRotated, model = TrModel.ColumnTop, tags = { TrBlockTag.Logs }, itemTags = { TrItemTag.Logs })
 		public static final PillarBlock TatooineLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 
 		private static LeavesBlock createLeavesBlock()
@@ -382,71 +397,71 @@ public class SwgBlocks
 	{
 		@RegistryName("imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.CUTOUT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingGlassBlock Imperial = createSelfConnectingGlass();
 		@RegistryName("white_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock WhiteStainedImperial = createSelfConnectingStainedGlass(DyeColor.WHITE);
 		@RegistryName("orange_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock OrangeStainedImperial = createSelfConnectingStainedGlass(DyeColor.ORANGE);
 		@RegistryName("magenta_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock MagentaStainedImperial = createSelfConnectingStainedGlass(DyeColor.MAGENTA);
 		@RegistryName("light_blue_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock LightBlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_BLUE);
 		@RegistryName("yellow_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock YellowStainedImperial = createSelfConnectingStainedGlass(DyeColor.YELLOW);
 		@RegistryName("lime_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock LimeStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIME);
 		@RegistryName("pink_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock PinkStainedImperial = createSelfConnectingStainedGlass(DyeColor.PINK);
 		@RegistryName("gray_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock GrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.GRAY);
 		@RegistryName("light_gray_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock LightGrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_GRAY);
 		@RegistryName("cyan_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock CyanStainedImperial = createSelfConnectingStainedGlass(DyeColor.CYAN);
 		@RegistryName("purple_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock PurpleStainedImperial = createSelfConnectingStainedGlass(DyeColor.PURPLE);
 		@RegistryName("blue_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock BlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLUE);
 		@RegistryName("brown_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock BrownStainedImperial = createSelfConnectingStainedGlass(DyeColor.BROWN);
 		@RegistryName("green_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock GreenStainedImperial = createSelfConnectingStainedGlass(DyeColor.GREEN);
 		@RegistryName("red_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock RedStainedImperial = createSelfConnectingStainedGlass(DyeColor.RED);
 		@RegistryName("black_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock BlackStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLACK);
 
 		private static SelfConnectingGlassBlock createSelfConnectingGlass()
@@ -675,13 +690,17 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialPanelPattern2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 
 		@RegistryName("gray_imperial_tall_panel_1")
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("gray_imperial_tall_panel_2")
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingBlock ImperialPanelTall2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 
 		@RegistryName("gray_imperial_tall_light_1")
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_tall_light_2")
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final SelfConnectingBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_light_panel_1")
 		public static final Block GrayImperialLightPanel1 = createLightingPanelBlock(11);
@@ -740,9 +759,11 @@ public class SwgBlocks
 	{
 		@RegistryName("scaffold")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block Scaffold = new ScaffoldBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("scaffold_stairs")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, tags = { TrBlockTag.PickaxeMineable, TrBlockTag.Stairs })
 		public static final Block ScaffoldStairs = new LimitedStairsBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
@@ -750,6 +771,7 @@ public class SwgBlocks
 	public static class Vent
 	{
 		@RegistryName("air_vent")
+		@TarkinBlock(model = TrModel.ColumnTop)
 		public static final Block Air = new Block(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 
 		@RegistryName("imperial_vent")
@@ -768,18 +790,18 @@ public class SwgBlocks
 
 		@RegistryName("red_hangar_light")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block RedHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("blue_hangar_light")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block BlueHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("wall_cluster_light")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.Pickling)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.Pickling)
 		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("tall_lamp")
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final Block TallLamp = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(6, 6, 24), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 	}
@@ -788,7 +810,7 @@ public class SwgBlocks
 	public static class Door
 	{
 		@RegistryName("sliding_door")
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.Door, tags = { TrBlockTag.PickaxeMineable, TrBlockTag.SlidingDoor })
+		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.Door, tags = { TrBlockTag.PickaxeMineable, TrBlockTag.SlidingDoor })
 		public static final Block Sliding1x2 = new Sliding1x2DoorBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("sliding_door")
 		public static final BlockEntityType<SlidingDoorBlockEntity> SlidingBlockEntityType = FabricBlockEntityTypeBuilder.create(SlidingDoorBlockEntity::new, Sliding1x2).build();
@@ -802,48 +824,48 @@ public class SwgBlocks
 		public static final DyedBlocks CorrugatedCrate = new DyedBlocks(color -> new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new));
 		@RegistryName("imperial_corrugated_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block ImperialCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
 		@RegistryName("medical_corrugated_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block MedicalCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
 		@RegistryName("corrugated_crate")
 		public static final BlockEntityType<CrateCorrugatedBlockEntity> CorrugatedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateCorrugatedBlockEntity::new, BlockUtil.concat(CorrugatedCrate, ImperialCorrugatedCrate, MedicalCorrugatedCrate)).build();
 
 		@RegistryName("orange_kyber_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.MultiOnlyCenter)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.MultiOnlyCenter)
 		public static final WaterloggableRotating3BlockWithGuiEntity OrangeKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("gray_kyber_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.MultiOnlyCenter)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.MultiOnlyCenter)
 		public static final WaterloggableRotating3BlockWithGuiEntity GrayKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("black_kyber_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.MultiOnlyCenter)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.MultiOnlyCenter)
 		public static final WaterloggableRotating3BlockWithGuiEntity BlackKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("kyber_crate")
 		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build();
 
 		@RegistryName("toolbox")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final WaterloggableRotatingBlockWithGuiEntity Toolbox = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateMosEisleyBlockEntity::new);
 		@RegistryName("toolbox")
 		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateMosEisleyBlockEntity::new, Toolbox).build();
 
 		@RegistryName("segmented_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final WaterloggableRotatingBlockWithBoundsGuiEntity BrownSegmented = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
 		@RegistryName("gray_segmented_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final WaterloggableRotatingBlockWithBoundsGuiEntity GraySegmented = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
 		@RegistryName("gray_panel_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final WaterloggableRotatingBlockWithBoundsGuiEntity GrayPanel = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
 		@RegistryName("segmented_crate")
 		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, BrownSegmented, GraySegmented, GrayPanel).build();
@@ -854,7 +876,7 @@ public class SwgBlocks
 	{
 		@RegistryName("desh_barrel")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block Desh = new DeshBarrelBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
 	}
 
@@ -863,11 +885,11 @@ public class SwgBlocks
 	{
 		@RegistryName("spoked_machine")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final WaterloggableRotatingBlock Spoked = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 		@RegistryName("electrostatic_repeller")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final WaterloggableRotatingBlock ElectrostaticRepeller = new RepellerBlock(VoxelShapes.cuboid(0, 5.5f / 16, 5.5f / 16, 4 / 16f, 10.5f / 16, 10.5f / 16), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 	}
 
@@ -876,6 +898,7 @@ public class SwgBlocks
 	{
 		@RegistryName("gx8_moisture_vaporator")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final MoistureVaporatorBlock Gx8 = new MoistureVaporatorBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(10.0F).requiresTool());
 		@RegistryName("gx8_moisture_vaporator")
 		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
@@ -886,6 +909,7 @@ public class SwgBlocks
 	{
 		@RegistryName("power_coupling")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block Coupling = new PowerCouplingBlock(WaterloggableRotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("power_coupling")
 		public static final BlockEntityType<PowerCouplingBlockEntity> CouplingBlockEntityType = FabricBlockEntityTypeBuilder.create(PowerCouplingBlockEntity::new, Coupling).build();
@@ -896,6 +920,7 @@ public class SwgBlocks
 	{
 		@RegistryName("large_pipe")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.SeparateSprite)
 		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
 	}
 
@@ -904,9 +929,11 @@ public class SwgBlocks
 	{
 		@RegistryName("fusion_fuel_tank")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block FusionFuel = new WaterloggableRotatingBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("starship_fuel_tank")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final Block StarshipFuel = new WaterloggableRotatingBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
@@ -934,6 +961,7 @@ public class SwgBlocks
 		@RegistryName("thermal_detonator_block")
 		@TabIgnore
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.Pickling)
 		public static final ThermalDetonatorBlock ThermalDetonatorBlock = new ThermalDetonatorBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(0.5F));
 	}
 

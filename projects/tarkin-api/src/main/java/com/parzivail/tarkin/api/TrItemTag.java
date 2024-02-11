@@ -4,6 +4,7 @@ public enum TrItemTag
 {
 	TrinketsChestBack,
 	Leaves,
-	DesertSandstone,
-	DesertSand
+	Logs,
+	LogsThatBurn,
+	Sand
 }

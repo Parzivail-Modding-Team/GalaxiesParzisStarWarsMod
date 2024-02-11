@@ -4,13 +4,16 @@ public enum TrBlockTag
 {
 	PickaxeMineable,
 	ShearsMineable,
+	ShovelMineable,
+	AxeMineable,
 	SlidingDoor,
-	DesertSand,
-	DesertSandstone,
 	Leaves,
 	DeadBushSubstrate,
 	BlasterDestroy,
 	BlasterExplode,
 	BlasterReflect,
-	DetonatorExplode
+	Logs,
+	LogsThatBurn,
+	Sand,
+	Stairs,
 }

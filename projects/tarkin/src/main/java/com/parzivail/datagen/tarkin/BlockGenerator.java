@@ -157,6 +157,13 @@ public class BlockGenerator
 				.blockTag(BlockTags.DOORS);
 	}
 
+	public static BlockGenerator column(Block block)
+	{
+		return basic(block)
+				.state(BlockStateModelGenerator::createAxisRotatedBlockState)
+				.model(ModelFile::columnTop);
+	}
+
 	public static BlockGenerator column(Block block, Identifier topTexture)
 	{
 		return basic(block)
@@ -369,25 +376,31 @@ public class BlockGenerator
 	{
 		var id = AssetUtils.getTextureName(variants.plank);
 		generatorFunction.apply(variants.plank)
+		                 .blockTag(BlockTags.PLANKS)
 		                 .blockTag(miningTag)
 		                 .build(assets);
 		BlockGenerator.verticalSlab(variants.slab, id)
 		              .blockTag(miningTag)
+		              .blockTag(BlockTags.WOODEN_SLABS)
 		              .build(assets);
 		BlockGenerator.stairs(variants.stairs, id)
+		              .blockTag(BlockTags.WOODEN_STAIRS)
 		              .blockTag(miningTag)
 		              .build(assets);
 		BlockGenerator.fence(variants.fence, id)
 		              .blockTag(miningTag)
+		              .blockTag(BlockTags.WOODEN_FENCES)
 		              .build(assets);
 		BlockGenerator.fenceGate(variants.gate, id)
 		              .blockTag(miningTag)
 		              .build(assets);
 		BlockGenerator.trapdoor(variants.trapdoor)
 		              .blockTag(miningTag)
+		              .blockTag(BlockTags.WOODEN_TRAPDOORS)
 		              .build(assets);
 		BlockGenerator.door(variants.door, AssetUtils.getTextureName(variants.door.asItem()))
 		              .blockTag(miningTag)
+		              .blockTag(BlockTags.WOODEN_DOORS)
 		              .build(assets);
 	}
 
