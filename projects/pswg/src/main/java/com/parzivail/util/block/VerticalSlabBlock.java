@@ -55,35 +55,23 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		var slabType = state.get(TYPE);
-		switch (state.get(AXIS))
+		var axis = state.get(AXIS);
+		return switch (slabType)
 		{
-			case X:
-				switch (slabType)
-				{
-					case TOP:
-						return EAST_SHAPE;
-					case BOTTOM:
-						return WEST_SHAPE;
-				}
-			case Y:
-				switch (slabType)
-				{
-					case TOP:
-						return TOP_SHAPE;
-					case BOTTOM:
-						return BOTTOM_SHAPE;
-				}
-			case Z:
-				switch (slabType)
-				{
-					case TOP:
-						return SOUTH_SHAPE;
-					case BOTTOM:
-						return NORTH_SHAPE;
-				}
-			default:
-				return VoxelShapes.fullCube();
-		}
+			case DOUBLE -> VoxelShapes.fullCube();
+			case TOP -> switch (axis)
+			{
+				case X -> EAST_SHAPE;
+				case Y -> TOP_SHAPE;
+				case Z -> SOUTH_SHAPE;
+			};
+			default -> switch (axis)
+			{
+				case X -> WEST_SHAPE;
+				case Y -> BOTTOM_SHAPE;
+				case Z -> NORTH_SHAPE;
+			};
+		};
 	}
 
 	@Nullable
@@ -228,4 +216,3 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 		}
 	}
 }
-
