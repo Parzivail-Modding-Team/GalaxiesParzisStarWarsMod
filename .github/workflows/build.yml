@@ -1,5 +1,5 @@
 name: build
-on: 
+on:
   pull_request:
   push:
     paths-ignore:
@@ -62,6 +62,6 @@ jobs:
           mkdir -p projects/pswg/build/libs
           cd projects/pswg/build/libs
           pip install -r ../../../../scripts/requirements.txt
-          python ../../../../scripts/upload_dev.py --token ${{ steps.idtoken.outputs.id_token }} --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
+          python ../../../../scripts/upload_dev.py --token ${{ steps.idtoken.outputs.id_token }} --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --webhook ${{ secrets.DISCORD_RCOE_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
         env:
           BUILD_NUMBER: ${{ github.run_number }}
