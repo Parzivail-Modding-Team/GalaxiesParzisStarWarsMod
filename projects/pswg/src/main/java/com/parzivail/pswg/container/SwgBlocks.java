@@ -585,6 +585,12 @@ public class SwgBlocks
 
 		@RegistryName("gray_imperial_panel_pattern_3")
 		public static final Block GrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
+		@RegistryName("light_gray_imperial_panel_pattern_3")
+		public static final Block LightGrayImperialPanelPattern3 = createPanel(MapColor.LIGHT_GRAY);
+		@RegistryName("light_gray_imperial_panel_pattern_4")
+		public static final Block LightGrayImperialPanelPattern4 = createPanel(MapColor.LIGHT_GRAY);
+		@RegistryName("light_gray_imperial_panel_pattern_5")
+		public static final Block LightGrayImperialPanelPattern5 = createPanel(MapColor.LIGHT_GRAY);
 		@RegistryName("rusted_gray_imperial_panel_pattern_3")
 		public static final Block RustedGrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
 		@RegistryName("rusted_gray_imperial_panel_pattern_3_stairs")
@@ -635,6 +641,10 @@ public class SwgBlocks
 		@RegistryName("gray_imperial_panel_pattern_11")
 		@TarkinBlock
 		public static final Block GrayImperialPanelPattern11 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_12")
+		public static final Block GrayImperialPanelPattern12 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_13")
+		public static final Block GrayImperialPanelPattern13 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_flooring_0")
 		@TarkinBlock
 		public static final Block GrayImperialFlooring0 = createPanel(MapColor.GRAY);
