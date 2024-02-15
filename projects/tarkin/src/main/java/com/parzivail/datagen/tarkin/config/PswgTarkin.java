@@ -950,6 +950,21 @@ public class PswgTarkin
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialPanelPattern3, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialPanelPattern12, Resources.id("block/gray_imperial_panel_pattern_3"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialPanelPattern13, Resources.id("block/gray_imperial_panel_pattern_3"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.LightGrayImperialPanelPattern3, Resources.id("block/light_gray_imperial_panel_pattern_3"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.LightGrayImperialPanelPattern4, Resources.id("block/light_gray_imperial_panel_pattern_3"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Panel.LightGrayImperialPanelPattern5, Resources.id("block/light_gray_imperial_panel_pattern_3"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.RustedGrayImperialPanelPattern3, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
