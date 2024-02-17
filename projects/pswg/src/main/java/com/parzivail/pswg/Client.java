@@ -250,9 +250,8 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), Resources.id("block/model/crate/kyber_black"), Resources.id("block/model/crate/kyber_black_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/stool"), Resources.id("block/model/stool"), Resources.id("block/model/stool_particle")));
 
-		ModelRegistry.register(SwgBlocks.Crate.BrownSegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("block/model/segmented_crate/brown"), Resources.id("block/model/segmented_crate/brown_particle")));
-		ModelRegistry.register(SwgBlocks.Crate.GraySegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("block/model/segmented_crate/gray"), Resources.id("block/model/segmented_crate/gray_particle")));
-		ModelRegistry.register(SwgBlocks.Crate.GrayPanel, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("block/model/segmented_crate/gray_panel"), Resources.id("block/model/segmented_crate/gray_panel_particle")));
+		for (var color : DyeColor.values())
+			ModelRegistry.register(SwgBlocks.Crate.Segmented.get(color), true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("block/model/%s_segmented_crate".formatted(color.getName())), Resources.id("block/model/%s_corrugated_crate_particle".formatted(color.getName()))));
 
 		ModelRegistry.register(
 				SwgBlocks.Misc.ThermalDetonatorBlock,

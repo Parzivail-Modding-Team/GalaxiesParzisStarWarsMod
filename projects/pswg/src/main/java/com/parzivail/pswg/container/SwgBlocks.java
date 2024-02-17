@@ -867,18 +867,9 @@ public class SwgBlocks
 
 		@RegistryName("segmented_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None)
-		public static final WaterloggableRotatingBlockWithBoundsGuiEntity BrownSegmented = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
-		@RegistryName("gray_segmented_crate")
-		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None)
-		public static final WaterloggableRotatingBlockWithBoundsGuiEntity GraySegmented = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
-		@RegistryName("gray_panel_crate")
-		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TrState.None, model = TrModel.None)
-		public static final WaterloggableRotatingBlockWithBoundsGuiEntity GrayPanel = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
+		public static final DyedBlocks Segmented = new DyedBlocks(color -> new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new));
 		@RegistryName("segmented_crate")
-		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, BrownSegmented, GraySegmented, GrayPanel).build();
+		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, BlockUtil.concat(Segmented)).build();
 	}
 
 	@RegistryOrder(19)

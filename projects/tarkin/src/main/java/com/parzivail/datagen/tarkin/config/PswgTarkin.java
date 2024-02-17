@@ -757,6 +757,11 @@ public class PswgTarkin
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
 			              .build(assets);
 
+		for (var block : SwgBlocks.Crate.Segmented.values())
+			BlockGenerator.blockNoModelDefaultDrops(block)
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
+
 		for (var b : SwgBlocks.Cage.DyedCreatureTerrarium.values())
 			BlockGenerator.blockNoModelDefaultDrops(b)
 			              .state(BlockStateModelGenerator::createSingletonBlockState)
