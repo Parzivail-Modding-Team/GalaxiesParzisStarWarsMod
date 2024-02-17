@@ -11,7 +11,7 @@
     {
       "type": "paletted_permutations",
       "textures": ["pswg:trims/blocks/model/segmented_crate"],
-      "palette_key": "pswg:trims/color_palettes/segmented_crate/seg_gray",
+      "palette_key": "pswg:trims/color_palettes/segmented_crate/seg_key",
       "permutations": {
         "black": "pswg:trims/color_palettes/segmented_crate/seg_black",
         "blue": "pswg:trims/color_palettes/segmented_crate/seg_blue",

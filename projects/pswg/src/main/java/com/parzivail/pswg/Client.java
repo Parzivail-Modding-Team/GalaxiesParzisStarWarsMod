@@ -251,7 +251,7 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/stool"), Resources.id("block/model/stool"), Resources.id("block/model/stool_particle")));
 
 		for (var color : DyeColor.values())
-			ModelRegistry.register(SwgBlocks.Crate.Segmented.get(color), true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("block/model/%s_segmented_crate".formatted(color.getName())), Resources.id("block/model/%s_corrugated_crate_particle".formatted(color.getName()))));
+			ModelRegistry.register(SwgBlocks.Crate.Segmented.get(color), true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("trims/blocks/model/segmented_crate_%s".formatted(color.getName())), Resources.id("trims/blocks/model/segmented_crate_particle_%s".formatted(color.getName()))));
 
 		ModelRegistry.register(
 				SwgBlocks.Misc.ThermalDetonatorBlock,
