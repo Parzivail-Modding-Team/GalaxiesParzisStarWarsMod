@@ -59,12 +59,12 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	private ChaseCam camera;
 
 	@Environment(EnvType.CLIENT)
-	protected Quaternionf clientInstRotation = new Quaternionf(QuatUtil.IDENTITY);
+	protected Quaternionf clientInstRotation;
 	@Environment(EnvType.CLIENT)
-	private Quaternionf clientRotation = new Quaternionf(QuatUtil.IDENTITY);
+	private Quaternionf clientRotation;
 	@Environment(EnvType.CLIENT)
-	private Quaternionf clientPrevRotation = new Quaternionf(QuatUtil.IDENTITY);
-	@Environment(EnvType.CLIENT)
+	private Quaternionf clientPrevRotation;
+
 	private boolean firstRotationUpdate = true;
 
 	private Quaternionf viewRotation = new Quaternionf(QuatUtil.IDENTITY);
@@ -241,7 +241,13 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	public ChaseCam getCamera()
 	{
 		if (camera == null)
+		{
 			camera = new ChaseCam();
+
+			clientInstRotation = new Quaternionf(QuatUtil.IDENTITY);
+			clientRotation = new Quaternionf(QuatUtil.IDENTITY);
+			clientPrevRotation = new Quaternionf(QuatUtil.IDENTITY);
+		}
 
 		return camera;
 	}
