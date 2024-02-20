@@ -12,6 +12,7 @@ import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.math.MathUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -218,14 +219,19 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	@Override
 	public void modifyPose(LivingEntity entity, Hand hand, ItemStack stack, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		var mc = MinecraftClient.getInstance();
+		if (mc.player == entity && mc.options.getPerspective().isFirstPerson() && hand == Hand.OFF_HAND)
+			// Prevent the first-person hand from being animated if this is in the offhand with nothing
+			// in the main hand
+			return;
+
 		if (entity.isUsingItem())
 		{
 			var delta = getBlockAnimationDelta(entity, tickDelta);
 
-			// TODO: fix with lightsaber in offhand
-
 			ModelUtil.smartLerpArmsRadians(
 					entity,
+					hand,
 					model,
 					delta,
 					-1.164f,

@@ -37,7 +37,10 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 				@Nullable
 				final ICustomPoseItem pose = ICustomPoseItem.REGISTRY.get(stack.getItem().getClass());
 				if (pose != null)
+				{
 					pose.modifyPose(livingEntity, hand, stack, model, limbAngle, limbDistance, animationProgress, headYaw, headPitch, Client.getTickDelta());
+					break;
+				}
 			}
 		}
 	}

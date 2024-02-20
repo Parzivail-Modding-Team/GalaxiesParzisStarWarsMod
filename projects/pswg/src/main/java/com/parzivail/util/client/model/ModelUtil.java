@@ -4,6 +4,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -21,12 +22,12 @@ public class ModelUtil
 		return Optional.empty();
 	}
 
-	public static <T extends LivingEntity> void smartLerpArmsRadians(T entity, BipedEntityModel<?> model, float delta, float leftPitch, float leftYaw, float leftRoll, float rightPitch, float rightYaw, float rightRoll)
+	public static <T extends LivingEntity> void smartLerpArmsRadians(T entity, Hand mainHand, BipedEntityModel<?> model, float delta, float leftPitch, float leftYaw, float leftRoll, float rightPitch, float rightYaw, float rightRoll)
 	{
 		ModelPart leftArm = model.leftArm;
 		ModelPart rightArm = model.rightArm;
 
-		if (entity.getMainArm() == Arm.LEFT)
+		if ((entity.getMainArm() == Arm.LEFT) ^ (mainHand == Hand.OFF_HAND))
 		{
 			rightYaw = -rightYaw;
 			rightRoll = -rightRoll;
