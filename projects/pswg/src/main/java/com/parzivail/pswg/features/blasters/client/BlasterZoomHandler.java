@@ -13,6 +13,7 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class BlasterZoomHandler
 {
@@ -26,34 +27,46 @@ public class BlasterZoomHandler
 		if (mc.player == null)
 			return;
 
-		var stack = mc.player.getMainHandStack();
+		var mainHandStack = mc.player.getMainHandStack();
+		var offHandStack = mc.player.getOffHandStack();
 
 		var blasterZoomInstance = Client.blasterZoomInstance;
 		var forceFirstPersonAds = Resources.CONFIG.get().view.forceFirstPersonAds;
 		var isFirstPerson = mc.options.getPerspective().isFirstPerson();
 
-		if (stack.getItem() instanceof BlasterItem b)
-		{
-			var bt = new BlasterTag(stack.getOrCreateNbt());
-			var bd = BlasterItem.getBlasterDescriptor(stack);
+		var stacks = List.of(mainHandStack, offHandStack);
+		var isAds = false;
 
-			if (bt.isAimingDownSights && !isFirstPerson && forceFirstPersonAds)
+		for (var stack : stacks)
+			if (stack.getItem() instanceof BlasterItem b)
 			{
-				mc.options.setPerspective(Perspective.FIRST_PERSON);
-				isFirstPerson = true;
+				var bt = new BlasterTag(stack.getOrCreateNbt());
+				var bd = BlasterItem.getBlasterDescriptor(stack);
+
+				if (bt.isAimingDownSights && !isFirstPerson && forceFirstPersonAds)
+				{
+					mc.options.setPerspective(Perspective.FIRST_PERSON);
+					isFirstPerson = true;
+				}
+
+				if (!bt.isAimingDownSights)
+					continue;
+
+				blasterZoomInstance.setZoom(isFirstPerson);
+				blasterZoomInstance.setZoomDivisor(b.getFovMultiplier(stack, mc.world, mc.player));
+
+				ZoomOverlay overlay = null;
+
+				if (isFirstPerson)
+					overlay = getZoomOverlay(bd, bt.attachmentBitmask);
+
+				blasterZoomInstance.setZoomOverlay(overlay);
+
+				isAds = true;
+				break;
 			}
 
-			blasterZoomInstance.setZoom(bt.isAimingDownSights && isFirstPerson);
-			blasterZoomInstance.setZoomDivisor(b.getFovMultiplier(stack, mc.world, mc.player));
-
-			ZoomOverlay overlay = null;
-
-			if (isFirstPerson)
-				overlay = getZoomOverlay(bd, bt.attachmentBitmask);
-
-			blasterZoomInstance.setZoomOverlay(overlay);
-		}
-		else
+		if (!isAds)
 			blasterZoomInstance.setZoom(false);
 	}
 
