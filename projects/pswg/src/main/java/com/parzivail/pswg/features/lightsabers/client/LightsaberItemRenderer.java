@@ -222,6 +222,8 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		{
 			var delta = getBlockAnimationDelta(entity, tickDelta);
 
+			// TODO: fix with lightsaber in offhand
+
 			ModelUtil.smartLerpArmsRadians(
 					entity,
 					model,

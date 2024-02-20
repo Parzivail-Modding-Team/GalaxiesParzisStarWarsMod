@@ -212,11 +212,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
 	{
-		var wield = getWield(player);
-
 		final var stack = player.getStackInHand(hand);
 
-		if (wield == BlasterWield.Dual)
+		if (getWield(player) == BlasterWield.Dual)
 		{
 			var isRepeatEvent = player.getItemUseTime() > 0;
 			if (!isRepeatEvent || allowRepeatedLeftHold(world, player, hand))
@@ -232,7 +230,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				player.setCurrentHand(hand);
 		}
 
-		return TypedActionResult.pass(stack);
+		return TypedActionResult.fail(stack);
 	}
 
 	private void tryToggleAds(BlasterTag blasterTag, World world, PlayerEntity player, Hand hand)
@@ -896,7 +894,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			if (bt.isAimingDownSights)
 			{
-				Galaxies.LOG.debug("try");
 				var bd = getBlasterDescriptor(stack);
 				return ATTRIB_MODS_ADS.get(bd.adsSpeedModifier);
 			}

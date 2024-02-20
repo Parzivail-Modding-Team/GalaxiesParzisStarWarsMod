@@ -145,11 +145,8 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	{
 		final var stack = player.getStackInHand(hand);
 
-		if (hand != Hand.MAIN_HAND)
-			return TypedActionResult.pass(stack);
-
 		player.setCurrentHand(hand);
-		return TypedActionResult.consume(stack);
+		return TypedActionResult.fail(stack);
 	}
 
 	public static void playSound(World world, PlayerEntity player, LightsaberTag lightsaberTag)
