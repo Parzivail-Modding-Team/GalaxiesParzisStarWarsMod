@@ -33,6 +33,7 @@ public class SwgParticleTypes
 	public static final PParticleType WATER_WAKE = register(Resources.id("water_wake"), true);
 	public static final ParticleType<BlockStateParticleEffect> WAKE = registerBlockStateBased(Resources.id("wake"), true);
 	public static final PParticleType EXPLOSION_SMOKE = register(Resources.id("explosion_smoke"), true);
+	public static final PParticleType FRAGMENTATION_GRENADE = register(Resources.id("fragmentation_grenade"), true);
 	private static PParticleType register(Identifier name, boolean alwaysShow)
 	{
 		return Registry.register(Registries.PARTICLE_TYPE, name, new PParticleType(alwaysShow));

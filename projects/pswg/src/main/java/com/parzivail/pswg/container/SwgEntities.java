@@ -248,6 +248,11 @@ public class SwgEntities
 				.dimensions(EntityDimensions.fixed(0.2F, 0.2F))
 				.trackRangeBlocks(120)
 				.build());
+		public static final EntityType<FragmentationGrenadeEntity> FragmentationGrenade = Registry.register(Registries.ENTITY_TYPE, Resources.id("fragmentation_grenade"), FabricEntityTypeBuilder
+				.<FragmentationGrenadeEntity>create(SpawnGroup.MISC, FragmentationGrenadeEntity::new)
+				.dimensions(EntityDimensions.fixed(0.3F, 0.2F))
+				.trackRangeBlocks(120)
+				.build());
 
 		static void register()
 		{

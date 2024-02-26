@@ -722,6 +722,9 @@ public class SwgItems
 	{
 		@RegistryName("thermal_detonator")
 		public static final Item ThermalDetonator = new ThermalDetonatorItem(new FabricItemSettings().maxCount(1));
+
+		@RegistryName("fragmentation_grenade")
+		public static final Item FragmentationGrenade = new FragmentationGrenadeItem(new FabricItemSettings().maxCount(1));
 	}
 
 	static HashMap<RegistryKey<ItemGroup>, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();

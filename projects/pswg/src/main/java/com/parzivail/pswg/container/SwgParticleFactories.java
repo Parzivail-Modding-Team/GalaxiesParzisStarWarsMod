@@ -3,6 +3,7 @@ package com.parzivail.pswg.container;
 import com.mojang.serialization.Codec;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.particle.ExplosionSmokeParticle;
+import com.parzivail.pswg.client.particle.FragmentationGrenadeParticle;
 import com.parzivail.pswg.client.particle.WakeParticle;
 import com.parzivail.pswg.client.particle.WaterWakeParticle;
 import com.parzivail.pswg.client.render.player.PlayerSocket;
@@ -41,6 +42,7 @@ public class SwgParticleFactories
 
 	public static void register()
 	{
+		registerFactory(FRAGMENTATION_GRENADE, FragmentationGrenadeParticle.Factory::new);
 		registerFactory(EXPLOSION_SMOKE, ExplosionSmokeParticle.Factory::new);
 		registerFactory(WATER_WAKE, WaterWakeParticle.Factory::new);
 		registerFactory(SCORCH, ScorchParticle.Factory::new);
