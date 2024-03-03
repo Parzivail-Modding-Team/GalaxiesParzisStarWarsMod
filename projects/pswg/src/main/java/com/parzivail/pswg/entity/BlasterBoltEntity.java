@@ -2,10 +2,7 @@ package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.ThermalDetonatorBlock;
-import com.parzivail.pswg.container.SwgDamageTypes;
-import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.pswg.container.SwgParticleTypes;
-import com.parzivail.pswg.container.SwgTags;
+import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.IPrecisionSpawnEntity;
@@ -336,8 +333,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 						}
 						else if (state.getBlock() instanceof ThermalDetonatorBlock tdb)
 						{
-							float power = getWorld().getBlockState(blockPos).get(CLUSTER_SIZE) * 1f + 4;
-							tdb.explode(getWorld(), blockPos, power);
+							tdb.explode(getWorld(), blockPos, 6f);
 						}
 						else
 						{

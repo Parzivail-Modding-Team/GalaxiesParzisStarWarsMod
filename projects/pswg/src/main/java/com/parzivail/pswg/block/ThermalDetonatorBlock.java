@@ -173,7 +173,6 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 
 		world.spawnEntity(tde);
 	}
-
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
