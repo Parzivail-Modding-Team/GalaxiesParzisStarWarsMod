@@ -461,9 +461,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	@Environment(EnvType.CLIENT)
 	public Quaternionf getViewRotation(float t)
 	{
-		var start = clientPrevRotation;
-		var end = clientRotation;
-		return QuatUtil.slerp(start, end, t);
+		if (clientPrevRotation == null || clientRotation == null)
+			return new Quaternionf();
+		return QuatUtil.slerp(clientPrevRotation, clientRotation, t);
 	}
 
 	public void acceptControlInput(EnumSet<ShipControls> controls)
