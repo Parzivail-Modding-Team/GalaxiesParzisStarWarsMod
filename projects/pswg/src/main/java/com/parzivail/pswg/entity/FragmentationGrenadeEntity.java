@@ -21,11 +21,13 @@ import net.minecraft.world.explosion.Explosion;
 public class FragmentationGrenadeEntity extends ThrowableExplosive
 {
 	public static final int MIN_PICKUP_AGE = 30;
+	public boolean IS_EXPLODING = false;
+	public int EXPLOSION_TICK = 0;
 
 	public FragmentationGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
 		super(entityType, world);
-		setExplosionPower(4f);
+		setExplosionPower(5f);
 	}
 
 	@Override
@@ -48,11 +50,35 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	{
 		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getInventory().getMainHandStack().isEmpty())
 		{
-			player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
+			player.giveItemStack(new ItemStack(SwgItems.Explosives.FragmentationGrenade));
 
 			this.discard();
 		}
 		return super.interact(player, hand);
+	}
+
+	@Override
+	public void explode()
+	{
+		if (!IS_EXPLODING)
+		{
+			IS_EXPLODING = true;
+		}
+		if (getWorld() instanceof ServerWorld serverWorld)
+		{
+			for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
+			{
+				serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.FRAGMENTATION_GRENADE, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
+			}
+		}
+		super.explode();
+	}
+
+	@Override
+	public void tick()
+	{
+		super.tick();
+		EXPLOSION_TICK++;
 	}
 
 	@Override

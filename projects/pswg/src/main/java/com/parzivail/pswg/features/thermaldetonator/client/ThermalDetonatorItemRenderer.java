@@ -6,7 +6,7 @@ import com.parzivail.pswg.client.render.entity.ThermalDetonatorRenderer;
 import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
 import com.parzivail.pswg.client.sound.timeline.SoundTimelineManager;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
-import com.parzivail.pswg.item.ThermalDetonatorTag;
+import com.parzivail.pswg.item.ThrowableExplosiveTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.MinecraftClient;
@@ -91,7 +91,7 @@ public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 
 		matrices.push();
 
-		var tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
+		var tdt = new ThrowableExplosiveTag(stack.getOrCreateNbt());
 
 		var m = P3dManager.INSTANCE.get(ThermalDetonatorRenderer.MODEL);
 		if (m == null)

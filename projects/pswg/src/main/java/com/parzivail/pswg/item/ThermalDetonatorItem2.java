@@ -1,11 +1,10 @@
 package com.parzivail.pswg.item;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.block.FragmentationGrenadeBlock;
 import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.entity.FragmentationGrenadeEntity;
+import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.ICooldownItem;
@@ -38,28 +37,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FragmentationGrenadeItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
+public class ThermalDetonatorItem2 extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
 	public final int baseTicksToExplosion = 150;
 	@TarkinLang
-	public static final String I18N_TOOLTIP_CONTROLS = Resources.tooltip("fragmentation_grenade.controls");
+	public static final String I18N_TOOLTIP_CONTROLS = Resources.tooltip("thermal_detonator.controls");
 
-	public FragmentationGrenadeItem(Settings settings)
+	public ThermalDetonatorItem2(Settings settings)
 	{
-		super(SwgBlocks.Misc.FragmentationGrenadeBlock, settings);
+		super(SwgBlocks.Misc.ThermalDetonatorBlock, settings);
 	}
 
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context)
 	{
 		var stack = context.getStack();
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(stack.getOrCreateNbt());
-		if (context.getPlayer().isSneaking() && !tag.primed)
+		ThrowableExplosiveTag tdt = new ThrowableExplosiveTag(stack.getOrCreateNbt());
+		if (context.getPlayer().isSneaking() && !tdt.primed)
 		{
 			var state = context.getWorld().getBlockState(context.getBlockPos());
-			if (state.isOf(SwgBlocks.Misc.FragmentationGrenadeBlock) && state.get(FragmentationGrenadeBlock.CLUSTER_SIZE) < 5)
+			if (state.isOf(SwgBlocks.Misc.ThermalDetonatorBlock) && state.get(ThermalDetonatorBlock.CLUSTER_SIZE) < 5)
 			{
-				context.getWorld().setBlockState(context.getBlockPos(), state.with(FragmentationGrenadeBlock.CLUSTER_SIZE, state.get(FragmentationGrenadeBlock.CLUSTER_SIZE) + 1));
+				context.getWorld().setBlockState(context.getBlockPos(), state.with(ThermalDetonatorBlock.CLUSTER_SIZE, state.get(ThermalDetonatorBlock.CLUSTER_SIZE) + 1));
 				if (!context.getPlayer().isCreative())
 				{
 					context.getStack().decrement(1);
@@ -72,13 +71,13 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 		return ActionResult.PASS;
 	}
 
-	public FragmentationGrenadeEntity createFragmentationGrenade(World world, int life, boolean primed, ItemStack stack, PlayerEntity player)
+	public ThermalDetonatorEntity createThermalDetonator(World world, int life, boolean primed, ItemStack stack, PlayerEntity player)
 	{
-		FragmentationGrenadeEntity td = new FragmentationGrenadeEntity(SwgEntities.Misc.FragmentationGrenade, world);
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(stack.getOrCreateNbt());
+		ThermalDetonatorEntity td = new ThermalDetonatorEntity(SwgEntities.Misc.ThermalDetonator, world);
+		ThrowableExplosiveTag tdt = new ThrowableExplosiveTag(stack.getOrCreateNbt());
 		td.setLife(life);
 		td.setPrimed(primed);
-		td.setVisible(tag.shouldRender);
+		td.setVisible(tdt.shouldRender);
 		td.onSpawnPacket(new EntitySpawnS2CPacket(td.getId(), td.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), td.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
 		return td;
 	}
@@ -86,29 +85,29 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(stack.getOrCreateNbt());
-		tag.tick();
+		ThrowableExplosiveTag tdt = new ThrowableExplosiveTag(stack.getOrCreateNbt());
+		tdt.tick();
 		if (entity.isOnFire())
 		{
 			PlayerEntity player = (PlayerEntity)entity;
-			var tdItem = (FragmentationGrenadeItem)stack.getItem();
-			FragmentationGrenadeEntity fgEnt = tdItem.createFragmentationGrenade(world, 0, true, stack, player);
-			fgEnt.setVisible(false);
+			var tdItem = (ThermalDetonatorItem2)stack.getItem();
+			ThermalDetonatorEntity tdEnt = tdItem.createThermalDetonator(world, 0, true, stack, player);
+			tdEnt.setVisible(false);
 			int power = player.getInventory().count(this);
 			for (int i = power; i >= 0; i--)
 			{
 				player.getInventory().removeOne(stack);
 			}
-			fgEnt.setExplosionPower(power * 2f);
-			world.spawnEntity(fgEnt);
+			tdEnt.setExplosionPower(power * 2f);
+			world.spawnEntity(tdEnt);
 		}
 
-		if ((tag.primed && tag.ticksToExplosion <= 0))
+		if ((tdt.primed && tdt.ticksToExplosion <= 0))
 		{
 			PlayerEntity player = (PlayerEntity)entity;
 			player.damage(new DamageSource(player.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(SwgDamageTypes.SELF_EXPLODE), player), 100f);
-			FragmentationGrenadeItem tdi = (FragmentationGrenadeItem)(stack.getItem() instanceof FragmentationGrenadeItem ? stack.getItem() : SwgItems.Explosives.FragmentationGrenade);
-			FragmentationGrenadeEntity tdEntity = tdi.createFragmentationGrenade(world, 0, true, stack, player);
+			ThermalDetonatorItem2 tdi = (ThermalDetonatorItem2)(stack.getItem() instanceof ThermalDetonatorItem2 ? stack.getItem() : SwgItems.Explosives.ThermalDetonator);
+			ThermalDetonatorEntity tdEntity = tdi.createThermalDetonator(world, 0, true, stack, player);
 			tdEntity.setVisible(false);
 			world.spawnEntity(tdEntity);
 			player.getItemCooldownManager().set(stack.getItem(), 0);
@@ -116,12 +115,12 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 			{
 				stack.decrement(1);
 			}
-			tag.ticksToExplosion = baseTicksToExplosion;
-			tag.shouldRender = true;
-			tag.primed = false;
+			tdt.ticksToExplosion = baseTicksToExplosion;
+			tdt.shouldRender = true;
+			tdt.primed = false;
 		}
 
-		tag.serializeAsSubtag(stack);
+		tdt.serializeAsSubtag(stack);
 		super.inventoryTick(stack, world, entity, slot, selected);
 	}
 
@@ -135,21 +134,21 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
 	{
 
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(stack.getOrCreateNbt());
+		ThrowableExplosiveTag tdt = new ThrowableExplosiveTag(stack.getOrCreateNbt());
 		if (user instanceof PlayerEntity playerEntity)
 		{
 			boolean inCreative = playerEntity.getAbilities().creativeMode;
 			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
 			if (!itemStack.isEmpty())
 			{
-				FragmentationGrenadeItem fragmentationGrenadeItem = (FragmentationGrenadeItem)(itemStack.getItem() instanceof FragmentationGrenadeItem ? itemStack.getItem() : SwgItems.Explosives.FragmentationGrenade);
-				FragmentationGrenadeEntity fragmentationGrenadeEntity = fragmentationGrenadeItem.createFragmentationGrenade(world, tag.ticksToExplosion, tag.primed, itemStack, playerEntity);
-				fragmentationGrenadeEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 0F);
-				fragmentationGrenadeEntity.setOwner(playerEntity);
+				ThermalDetonatorItem2 thermalDetonatorItem = (ThermalDetonatorItem2)(itemStack.getItem() instanceof ThermalDetonatorItem2 ? itemStack.getItem() : SwgItems.Explosives.ThermalDetonator);
+				ThermalDetonatorEntity thermalDetonatorEntity = thermalDetonatorItem.createThermalDetonator(world, tdt.ticksToExplosion, tdt.primed, itemStack, playerEntity);
+				thermalDetonatorEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 0F);
+				thermalDetonatorEntity.setOwner(playerEntity);
 
-				world.spawnEntity(fragmentationGrenadeEntity);
+				world.spawnEntity(thermalDetonatorEntity);
 				playerEntity.getItemCooldownManager().remove(itemStack.getItem());
-				tag.primed = false;
+				tdt.primed = false;
 
 				world.playSound((PlayerEntity)null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
 				if (!inCreative)
@@ -159,8 +158,8 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
 			}
 		}
-		tag.ticksToExplosion = baseTicksToExplosion;
-		tag.serializeAsSubtag(stack);
+		tdt.ticksToExplosion = baseTicksToExplosion;
+		tdt.serializeAsSubtag(stack);
 	}
 
 	@Override
@@ -197,11 +196,11 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 	@Override
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity user, Hand hand, boolean isRepeatEvent)
 	{
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(user.getMainHandStack().getOrCreateNbt());
-		if (!tag.primed)
+		ThrowableExplosiveTag tdt = new ThrowableExplosiveTag(user.getMainHandStack().getOrCreateNbt());
+		if (!tdt.primed)
 		{
-			tag.primed = true;
-			tag.ticksToExplosion = baseTicksToExplosion;
+			tdt.primed = true;
+			tdt.ticksToExplosion = baseTicksToExplosion;
 			if (world.isClient())
 			{
 				user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
@@ -210,11 +209,11 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 		}
 		else
 		{
-			tag.primed = false;
+			tdt.primed = false;
 			user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_DISARM, 1f, 1f);
 		}
 
-		tag.serializeAsSubtag(user.getMainHandStack());
+		tdt.serializeAsSubtag(user.getMainHandStack());
 		return TypedActionResult.success(user.getMainHandStack());
 	}
 
@@ -233,10 +232,10 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 	@Override
 	public float getCooldownProgress(PlayerEntity player, World world, ItemStack stack, float tickDelta)
 	{
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(stack.getOrCreateNbt());
-		if (tag.primed)
+		ThrowableExplosiveTag tdt = new ThrowableExplosiveTag(stack.getOrCreateNbt());
+		if (tdt.primed)
 		{
-			return (float)(-baseTicksToExplosion + tag.ticksToExplosion) / -baseTicksToExplosion;
+			return (float)(-baseTicksToExplosion + tdt.ticksToExplosion) / -baseTicksToExplosion;
 		}
 		else
 		{

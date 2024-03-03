@@ -3,6 +3,8 @@ package com.parzivail.pswg.client.particle;
 import com.parzivail.util.client.particle.PParticleType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.Text;
@@ -11,16 +13,18 @@ import org.jetbrains.annotations.Nullable;
 @Environment(value = EnvType.CLIENT)
 public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 {
+	int phase;
 	protected FragmentationGrenadeParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z);
 		scale(1f);
 		setBoundingBoxSpacing(0.25f, 0.25f);
 		this.collidesWithWorld = false;
-		this.setAlpha(1f);
+		this.setAlpha(0.6f);
 		velocityX = vX;
 		velocityY = vY + (double)(random.nextFloat() / 500.0f);
 		velocityZ = vZ;
+		phase = 1;
 	}
 
 	@Override
@@ -32,17 +36,47 @@ public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 	@Override
 	public void tick()
 	{
+
 		age++;
-		if (alpha <= 0.0f)
+		if (phase == 1)
 		{
-			markDead();
-			return;
+			scale += 0.02f;
+			alpha += 0.01f;
+			if (alpha >= 1f)
+			{
+
+				phase = 2;
+			}
 		}
-		if (age >= 40)
+		else if (phase == 2)
 		{
-			alpha -= 0.05f;
+			scale -= 0.075f;
+			alpha -= 0.025f;
+
+			if (alpha <= 0.6f)
+			{
+
+				phase = 3;
+			}
 		}
-		scale += 0.15f;
+		else if (phase == 3)
+		{
+			scale += 0.45f;
+			alpha += 0.04f;
+			if (alpha >= 0.9f)
+			{
+				phase = 4;
+			}
+		}
+		else if (phase == 4)
+		{
+			scale += 0.65f;
+			alpha -= 0.075f;
+			if (alpha <= 0f)
+			{
+				markDead();
+			}
+		}
 	}
 
 	@Override

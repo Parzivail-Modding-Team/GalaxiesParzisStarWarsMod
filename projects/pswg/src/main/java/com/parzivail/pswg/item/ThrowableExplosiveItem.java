@@ -1,52 +1,39 @@
 package com.parzivail.pswg.item;
 
-import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.block.FragmentationGrenadeBlock;
-import com.parzivail.pswg.block.ThermalDetonatorBlock;
-import com.parzivail.pswg.client.sound.SoundHelper;
+import com.parzivail.pswg.block.ThrowableExplosiveBlock;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.entity.FragmentationGrenadeEntity;
-import com.parzivail.tarkin.api.TarkinLang;
-import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.ICooldownItem;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class FragmentationGrenadeItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
+public abstract class ThrowableExplosiveItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
 	public final int baseTicksToExplosion = 150;
-	@TarkinLang
-	public static final String I18N_TOOLTIP_CONTROLS = Resources.tooltip("fragmentation_grenade.controls");
+	public final Block block;
+	public final Item item;
+	public final ExplosionSoundGroup sounds;
 
-	public FragmentationGrenadeItem(Settings settings)
+	public ThrowableExplosiveItem(Settings settings, Block block, Item item, ExplosionSoundGroup sounds)
 	{
-		super(SwgBlocks.Misc.FragmentationGrenadeBlock, settings);
+		super(block, settings);
+		this.block = block;
+		this.item = item;
+		this.sounds = sounds;
 	}
 
 	@Override
@@ -57,9 +44,9 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 		if (context.getPlayer().isSneaking() && !tag.primed)
 		{
 			var state = context.getWorld().getBlockState(context.getBlockPos());
-			if (state.isOf(SwgBlocks.Misc.FragmentationGrenadeBlock) && state.get(FragmentationGrenadeBlock.CLUSTER_SIZE) < 5)
+			if (state.isOf(block) && state.get(ThrowableExplosiveBlock.CLUSTER_SIZE) < 5)
 			{
-				context.getWorld().setBlockState(context.getBlockPos(), state.with(FragmentationGrenadeBlock.CLUSTER_SIZE, state.get(FragmentationGrenadeBlock.CLUSTER_SIZE) + 1));
+				context.getWorld().setBlockState(context.getBlockPos(), state.with(ThrowableExplosiveBlock.CLUSTER_SIZE, state.get(ThrowableExplosiveBlock.CLUSTER_SIZE) + 1));
 				if (!context.getPlayer().isCreative())
 				{
 					context.getStack().decrement(1);
@@ -72,15 +59,20 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 		return ActionResult.PASS;
 	}
 
-	public FragmentationGrenadeEntity createFragmentationGrenade(World world, int life, boolean primed, ItemStack stack, PlayerEntity player)
+	public abstract void throwEntity(World world, ThrowableExplosiveTag tag, ItemStack stack, PlayerEntity player);
+
+	public abstract void spawnEntity(World world, int power, int life, boolean primed, PlayerEntity player);
+
+	public void createExplosion(World world, int power, PlayerEntity player)
 	{
-		FragmentationGrenadeEntity td = new FragmentationGrenadeEntity(SwgEntities.Misc.FragmentationGrenade, world);
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(stack.getOrCreateNbt());
-		td.setLife(life);
-		td.setPrimed(primed);
-		td.setVisible(tag.shouldRender);
-		td.onSpawnPacket(new EntitySpawnS2CPacket(td.getId(), td.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), td.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
-		return td;
+		spawnEntity(world, power, 0, true, player);
+	}
+
+	;
+
+	public void createExplosion(World world, PlayerEntity player)
+	{
+		createExplosion(world, 4, player);
 	}
 
 	@Override
@@ -91,26 +83,21 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 		if (entity.isOnFire())
 		{
 			PlayerEntity player = (PlayerEntity)entity;
-			var tdItem = (FragmentationGrenadeItem)stack.getItem();
-			FragmentationGrenadeEntity fgEnt = tdItem.createFragmentationGrenade(world, 0, true, stack, player);
-			fgEnt.setVisible(false);
+			var teItem = (ThrowableExplosiveItem)stack.getItem();
 			int power = player.getInventory().count(this);
 			for (int i = power; i >= 0; i--)
 			{
 				player.getInventory().removeOne(stack);
 			}
-			fgEnt.setExplosionPower(power * 2f);
-			world.spawnEntity(fgEnt);
+			teItem.createExplosion(world, power * 2, player);
 		}
 
 		if ((tag.primed && tag.ticksToExplosion <= 0))
 		{
 			PlayerEntity player = (PlayerEntity)entity;
 			player.damage(new DamageSource(player.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(SwgDamageTypes.SELF_EXPLODE), player), 100f);
-			FragmentationGrenadeItem tdi = (FragmentationGrenadeItem)(stack.getItem() instanceof FragmentationGrenadeItem ? stack.getItem() : SwgItems.Explosives.FragmentationGrenade);
-			FragmentationGrenadeEntity tdEntity = tdi.createFragmentationGrenade(world, 0, true, stack, player);
-			tdEntity.setVisible(false);
-			world.spawnEntity(tdEntity);
+			ThrowableExplosiveItem tei = (ThrowableExplosiveItem)(stack.getItem() instanceof ThrowableExplosiveItem ? stack.getItem() : item);
+			createExplosion(world, player);
 			player.getItemCooldownManager().set(stack.getItem(), 0);
 			if (!player.isCreative())
 			{
@@ -142,16 +129,13 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
 			if (!itemStack.isEmpty())
 			{
-				FragmentationGrenadeItem fragmentationGrenadeItem = (FragmentationGrenadeItem)(itemStack.getItem() instanceof FragmentationGrenadeItem ? itemStack.getItem() : SwgItems.Explosives.FragmentationGrenade);
-				FragmentationGrenadeEntity fragmentationGrenadeEntity = fragmentationGrenadeItem.createFragmentationGrenade(world, tag.ticksToExplosion, tag.primed, itemStack, playerEntity);
-				fragmentationGrenadeEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), playerEntity.getRoll(), 1.0F, 0F);
-				fragmentationGrenadeEntity.setOwner(playerEntity);
+				ThrowableExplosiveItem throwableExplosiveItem = (ThrowableExplosiveItem)(itemStack.getItem() instanceof ThrowableExplosiveItem ? itemStack.getItem() : item);
+				throwEntity(world, tag, itemStack, playerEntity);
 
-				world.spawnEntity(fragmentationGrenadeEntity);
 				playerEntity.getItemCooldownManager().remove(itemStack.getItem());
 				tag.primed = false;
 
-				world.playSound((PlayerEntity)null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+				sounds.playThrowSound(playerEntity);
 				if (!inCreative)
 				{
 					stack.decrement(1);
@@ -161,16 +145,6 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 		}
 		tag.ticksToExplosion = baseTicksToExplosion;
 		tag.serializeAsSubtag(stack);
-	}
-
-	@Override
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
-	{
-		super.appendTooltip(stack, world, tooltip, context);
-
-		var mc = MinecraftClient.getInstance();
-		var opt = mc.options;
-		tooltip.add(Text.translatable(I18N_TOOLTIP_CONTROLS, TextUtil.stylizeKeybind(opt.attackKey.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(opt.useKey.getBoundKeyLocalizedText())));
 	}
 
 	@Override
@@ -204,14 +178,14 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 			tag.ticksToExplosion = baseTicksToExplosion;
 			if (world.isClient())
 			{
-				user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
-				SoundHelper.playDetonatorItemSound(user);
+				sounds.playArmSound(user);
+				sounds.playBeepingSound(user);
 			}
 		}
 		else
 		{
 			tag.primed = false;
-			user.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_DISARM, 1f, 1f);
+			sounds.playDisarmSound(user);
 		}
 
 		tag.serializeAsSubtag(user.getMainHandStack());

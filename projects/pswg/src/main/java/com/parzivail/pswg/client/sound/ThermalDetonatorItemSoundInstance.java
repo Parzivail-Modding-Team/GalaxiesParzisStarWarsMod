@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.sound;
 
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
-import com.parzivail.pswg.item.ThermalDetonatorTag;
+import com.parzivail.pswg.item.ThrowableExplosiveTag;
 import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -92,7 +92,7 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance impl
 		if (!(stack.getItem() instanceof ThermalDetonatorItem))
 			return false;
 
-		var tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
+		var tdt = new ThrowableExplosiveTag(stack.getOrCreateNbt());
 		return tdt.primed;
 	}
 }

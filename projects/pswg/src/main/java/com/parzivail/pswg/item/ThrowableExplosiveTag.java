@@ -5,28 +5,28 @@ import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
-public class FragmentationGrenadeTag extends TagSerializer
+public class ThrowableExplosiveTag extends TagSerializer
 {
-	public static final Identifier SLUG = Resources.id("fragmentation_grenade");
+	public static final Identifier SLUG = Resources.id("throwable_explosive");
 	public boolean primed;
 	public int ticksToExplosion;
 	public boolean shouldRender;
 
-	public FragmentationGrenadeTag(NbtCompound source)
+	public ThrowableExplosiveTag(NbtCompound source)
 	{
 		super(SLUG, source);
 	}
 
-	public FragmentationGrenadeTag()
+	public ThrowableExplosiveTag()
 	{
 		super(SLUG, new NbtCompound());
 	}
 
-	public static FragmentationGrenadeTag fromRootTag(NbtCompound tag)
+	public static ThrowableExplosiveTag fromRootTag(NbtCompound tag)
 	{
 		var parent = new NbtCompound();
 		parent.put(SLUG.toString(), tag);
-		return new FragmentationGrenadeTag();
+		return new ThrowableExplosiveTag();
 	}
 
 	public void tick()

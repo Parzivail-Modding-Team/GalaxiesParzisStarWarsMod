@@ -964,6 +964,11 @@ public class SwgBlocks
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.Pickling)
 		public static final ThermalDetonatorBlock ThermalDetonatorBlock = new ThermalDetonatorBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(0.5F));
+		@RegistryName("fragmentation_grenade_block")
+		@TabIgnore
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.Pickling)
+		public static final FragmentationGrenadeBlock FragmentationGrenadeBlock = new FragmentationGrenadeBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(0.5F));
 	}
 
 	public static void register()
