@@ -2,6 +2,7 @@ package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.entity.FragmentationGrenadeEntity;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
@@ -153,6 +154,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	{
 		return false;
 	}
+
 	@Override
 	public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion)
 	{
@@ -163,16 +165,17 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 
 	public void explode(World world, BlockPos blockPos, float explosionPower)
 	{
-		var tde = new ThermalDetonatorEntity(SwgEntities.Misc.ThermalDetonator, world);
-		tde.setExplosionPower(explosionPower);
-		tde.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-		tde.setPrimed(true);
-		tde.setLife(0);
+		var fge = new ThermalDetonatorEntity(SwgEntities.Misc.ThermalDetonator, world);
+		fge.setExplosionPower(explosionPower);
+		fge.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+		fge.setPrimed(true);
+		fge.setLife(0);
 
 		world.breakBlock(blockPos, false);
 
-		world.spawnEntity(tde);
+		world.spawnEntity(fge);
 	}
+
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{

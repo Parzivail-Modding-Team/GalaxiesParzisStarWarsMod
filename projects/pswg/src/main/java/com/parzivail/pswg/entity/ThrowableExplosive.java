@@ -192,7 +192,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 			getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY(), this.getZ(), explosionPower, false, World.ExplosionSourceType.TNT, false);
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
-		discard();
+		this.discard();
 	}
 	@Override
 	public void writeCustomDataToNbt(NbtCompound tag)

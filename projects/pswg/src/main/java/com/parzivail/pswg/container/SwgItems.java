@@ -721,7 +721,7 @@ public class SwgItems
 	public static class Explosives
 	{
 		@RegistryName("thermal_detonator")
-		public static final Item ThermalDetonator = new ThermalDetonatorItem(new FabricItemSettings().maxCount(1));
+		public static final Item ThermalDetonator = new ThermalDetonatorItem(new FabricItemSettings().maxCount(1), SwgBlocks.Misc.ThermalDetonatorBlock);
 
 		@RegistryName("fragmentation_grenade")
 		public static final Item FragmentationGrenade = new FragmentationGrenadeItem(new FabricItemSettings().maxCount(1));

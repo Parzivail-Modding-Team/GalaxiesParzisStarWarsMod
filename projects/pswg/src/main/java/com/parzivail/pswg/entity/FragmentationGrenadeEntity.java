@@ -4,19 +4,24 @@ import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgParticleTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+
+import java.util.List;
 
 public class FragmentationGrenadeEntity extends ThrowableExplosive
 {
@@ -29,16 +34,6 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 		super(entityType, world);
 		setExplosionPower(5f);
 	}
-
-	@Override
-	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
-	{
-		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
-		{
-			serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.FRAGMENTATION_GRENADE, true, x, y, z, 1, 0, 0, 0, 0);
-		}
-	}
-
 	@Override
 	public boolean canBeHitByProjectile()
 	{
@@ -58,27 +53,64 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	}
 
 	@Override
+	public boolean shouldRender(double distance)
+	{
+		if (super.shouldRender(distance) && !IS_EXPLODING)
+			return true;
+		return false;
+	}
+
+	@Override
+	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
+	{
+	}
+
+	@Override
 	public void explode()
 	{
 		if (!IS_EXPLODING)
 		{
+
+			if (getWorld() instanceof ServerWorld serverWorld)
+			{
+				for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
+				{
+					serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.FRAGMENTATION_GRENADE, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
+				}
+			}
 			IS_EXPLODING = true;
 		}
-		if (getWorld() instanceof ServerWorld serverWorld)
-		{
-			for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
-			{
-				serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.FRAGMENTATION_GRENADE, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
-			}
-		}
-		super.explode();
 	}
 
 	@Override
 	public void tick()
 	{
 		super.tick();
-		EXPLOSION_TICK++;
+		if (getOwner() != null)
+			if (getWorld().isClient())
+				getOwner().sendMessage(Text.of(String.valueOf(EXPLOSION_TICK + "C")));
+			else
+			{
+				getOwner().sendMessage(Text.of(String.valueOf(EXPLOSION_TICK + "S")));
+			}
+		if (EXPLOSION_TICK == 10)
+		{
+			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(1, 1, 1), entity -> {
+				return true;
+			});
+			for (LivingEntity entity : entities)
+			{
+				float x = (float)(entity.getX() - getX()) / 2f;
+				float z = (float)(entity.getZ() - getZ()) / 2f;
+				entity.addVelocity(-x, 0, -z);
+			}
+		}
+		if (EXPLOSION_TICK >= 20)
+		{
+			super.explode();
+		}
+		if (IS_EXPLODING)
+			EXPLOSION_TICK++;
 	}
 
 	@Override

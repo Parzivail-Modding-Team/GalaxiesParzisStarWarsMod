@@ -2,7 +2,6 @@ package com.parzivail.pswg.item;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.FragmentationGrenadeBlock;
-import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.entity.FragmentationGrenadeEntity;
@@ -18,7 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -38,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FragmentationGrenadeItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
+public class FragmentationGrenadeItem extends ThrowableExplosiveItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
 	public final int baseTicksToExplosion = 150;
 	@TarkinLang
@@ -46,7 +44,7 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 
 	public FragmentationGrenadeItem(Settings settings)
 	{
-		super(SwgBlocks.Misc.FragmentationGrenadeBlock, settings);
+		super(settings, SwgBlocks.Misc.FragmentationGrenadeBlock, SwgItems.Explosives.FragmentationGrenade, new SonicImploderSoundGroup());
 	}
 
 	@Override
@@ -70,6 +68,18 @@ public class FragmentationGrenadeItem extends BlockItem implements ILeftClickCon
 		}
 		use(context.getWorld(), context.getPlayer(), context.getHand());
 		return ActionResult.PASS;
+	}
+
+	@Override
+	public void throwEntity(World world, ThrowableExplosiveTag tag, ItemStack stack, PlayerEntity player)
+	{
+
+	}
+
+	@Override
+	public void spawnEntity(World world, int power, int life, boolean primed, PlayerEntity player)
+	{
+
 	}
 
 	public FragmentationGrenadeEntity createFragmentationGrenade(World world, int life, boolean primed, ItemStack stack, PlayerEntity player)

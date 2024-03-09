@@ -1,6 +1,6 @@
 package com.parzivail.pswg.item;
 
-import com.parzivail.pswg.block.ThrowableExplosiveBlock;
+import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.container.*;
 import com.parzivail.util.item.ICooldownItem;
 import com.parzivail.util.item.ICustomVisualItemEquality;
@@ -15,11 +15,14 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ThrowableExplosiveItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
@@ -44,9 +47,9 @@ public abstract class ThrowableExplosiveItem extends BlockItem implements ILeftC
 		if (context.getPlayer().isSneaking() && !tag.primed)
 		{
 			var state = context.getWorld().getBlockState(context.getBlockPos());
-			if (state.isOf(block) && state.get(ThrowableExplosiveBlock.CLUSTER_SIZE) < 5)
+			if (state.isOf(block) && state.get(ThermalDetonatorBlock.CLUSTER_SIZE) < 5)
 			{
-				context.getWorld().setBlockState(context.getBlockPos(), state.with(ThrowableExplosiveBlock.CLUSTER_SIZE, state.get(ThrowableExplosiveBlock.CLUSTER_SIZE) + 1));
+				context.getWorld().setBlockState(context.getBlockPos(), state.with(ThermalDetonatorBlock.CLUSTER_SIZE, state.get(ThermalDetonatorBlock.CLUSTER_SIZE) + 1));
 				if (!context.getPlayer().isCreative())
 				{
 					context.getStack().decrement(1);

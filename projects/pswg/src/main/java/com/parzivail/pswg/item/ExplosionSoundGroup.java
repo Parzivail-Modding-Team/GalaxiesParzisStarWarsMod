@@ -52,3 +52,71 @@ class ThermalDetonatorSoundGroup extends ExplosionSoundGroup
 		SoundHelper.playDetonatorItemSound(player);
 	}
 }
+
+class FragmentationGrenadeSoundGroup extends ExplosionSoundGroup
+{
+
+	@Override
+	public void playArmSound(PlayerEntity player)
+	{
+		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
+	}
+
+	@Override
+	public void playDisarmSound(PlayerEntity player)
+	{
+		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_DISARM, 1f, 1f);
+	}
+
+	@Override
+	public void playExplosionSound(PlayerEntity player)
+	{
+		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, 1f, 1f);
+	}
+
+	@Override
+	public void playThrowSound(PlayerEntity player)
+	{
+		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_THROW, 1f, 1f);
+	}
+
+	@Override
+	public void playBeepingSound(PlayerEntity player)
+	{
+		SoundHelper.playDetonatorItemSound(player);
+	}
+}
+
+class SonicImploderSoundGroup extends ExplosionSoundGroup
+{
+
+	@Override
+	public void playArmSound(PlayerEntity player)
+	{
+		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_ARM, 1f, 1f);
+	}
+
+	@Override
+	public void playDisarmSound(PlayerEntity player)
+	{
+		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_DISARM, 1f, 1f);
+	}
+
+	@Override
+	public void playExplosionSound(PlayerEntity player)
+	{
+		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, 1f, 1f);
+	}
+
+	@Override
+	public void playThrowSound(PlayerEntity player)
+	{
+		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_THROW, 1f, 1f);
+	}
+
+	@Override
+	public void playBeepingSound(PlayerEntity player)
+	{
+		SoundHelper.playDetonatorItemSound(player);
+	}
+}

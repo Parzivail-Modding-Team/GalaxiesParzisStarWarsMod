@@ -40,8 +40,8 @@ public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 		age++;
 		if (phase == 1)
 		{
-			scale += 0.02f;
-			alpha += 0.01f;
+			scale += 0.08f;
+			alpha += 0.04f;
 			if (alpha >= 1f)
 			{
 
@@ -50,8 +50,8 @@ public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 		}
 		else if (phase == 2)
 		{
-			scale -= 0.075f;
-			alpha -= 0.025f;
+			scale -= 0.3f;
+			alpha -= 0.1f;
 
 			if (alpha <= 0.6f)
 			{

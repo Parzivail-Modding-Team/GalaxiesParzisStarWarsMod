@@ -9,6 +9,7 @@ import com.parzivail.util.item.ICooldownItem;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
+import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +29,12 @@ public class ThermalDetonatorItem extends ThrowableExplosiveItem implements ILef
 
 	public ThermalDetonatorItem(Settings settings)
 	{
-		super(settings, SwgBlocks.Misc.ThermalDetonatorBlock, SwgItems.Explosives.ThermalDetonator, new ThermalDetonatorSoundGroup());
+		this(settings, SwgBlocks.Misc.ThermalDetonatorBlock);
+	}
+
+	public ThermalDetonatorItem(Settings settings, Block block)
+	{
+		super(settings, block, SwgItems.Explosives.ThermalDetonator, new ThermalDetonatorSoundGroup());
 	}
 
 	@Override
