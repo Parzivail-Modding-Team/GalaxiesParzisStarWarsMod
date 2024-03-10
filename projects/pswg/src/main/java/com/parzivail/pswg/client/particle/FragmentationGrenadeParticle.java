@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.particle;
 
 import com.parzivail.util.client.particle.PParticleType;
+import com.parzivail.util.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -40,7 +41,7 @@ public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 		age++;
 		if (phase == 1)
 		{
-			scale += 0.08f;
+			scale += 0.25f;
 			alpha += 0.04f;
 			if (alpha >= 1f)
 			{
@@ -50,27 +51,28 @@ public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 		}
 		else if (phase == 2)
 		{
-			scale -= 0.3f;
-			alpha -= 0.1f;
+			scale -= 0.25f;
+			alpha -= 0.05f;
 
-			if (alpha <= 0.6f)
+			if (alpha <= 0.8f)
 			{
 
 				phase = 3;
 			}
 		}
-		else if (phase == 3)
+
+		/*else if (phase == 3)
 		{
-			scale += 0.45f;
+			scale+=Ease.inCubic(0.5f);
 			alpha += 0.04f;
 			if (alpha >= 0.9f)
 			{
 				phase = 4;
 			}
-		}
-		else if (phase == 4)
+		}*/
+		else if (phase == 3)
 		{
-			scale += 0.65f;
+			scale += Ease.outCubic(0.65f);
 			alpha -= 0.075f;
 			if (alpha <= 0f)
 			{
