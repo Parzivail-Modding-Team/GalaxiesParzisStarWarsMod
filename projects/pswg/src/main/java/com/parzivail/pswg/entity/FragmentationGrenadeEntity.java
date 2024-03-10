@@ -8,15 +8,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -70,11 +69,11 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	{
 		if (!IS_EXPLODING)
 		{
-
 			if (getWorld() instanceof ServerWorld serverWorld)
 			{
 				for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 				{
+					serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLASH, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
 					serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.FRAGMENTATION_GRENADE, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
 				}
 			}
@@ -86,13 +85,7 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	public void tick()
 	{
 		super.tick();
-		if (getOwner() != null)
-			if (getWorld().isClient())
-				getOwner().sendMessage(Text.of(String.valueOf(EXPLOSION_TICK + "C")));
-			else
-			{
-				getOwner().sendMessage(Text.of(String.valueOf(EXPLOSION_TICK + "S")));
-			}
+
 		if (EXPLOSION_TICK == 10)
 		{
 			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(1, 1, 1), entity -> {

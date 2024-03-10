@@ -1,31 +1,34 @@
 package com.parzivail.pswg.client.particle;
 
 import com.parzivail.util.client.particle.PParticleType;
-import com.parzivail.util.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 @Environment(value = EnvType.CLIENT)
 public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 {
-	int phase;
+	private float scaleX = 1;
+	private float scaleY = 1;
+
 	protected FragmentationGrenadeParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z);
-		scale(1f);
 		setBoundingBoxSpacing(0.25f, 0.25f);
 		this.collidesWithWorld = false;
-		this.setAlpha(0.6f);
 		velocityX = vX;
 		velocityY = vY + (double)(random.nextFloat() / 500.0f);
 		velocityZ = vZ;
-		phase = 1;
+		this.maxAge = 20;
+		this.scale = 1;
 	}
 
 	@Override
@@ -35,49 +38,80 @@ public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 	}
 
 	@Override
-	public void tick()
+	public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta)
 	{
+		updateShape(this.age + tickDelta);
 
-		age++;
-		if (phase == 1)
+		Vec3d vec3d = camera.getPos();
+		float f = (float)(MathHelper.lerp((double)tickDelta, this.prevPosX, this.x) - vec3d.getX());
+		float g = (float)(MathHelper.lerp((double)tickDelta, this.prevPosY, this.y) - vec3d.getY());
+		float h = (float)(MathHelper.lerp((double)tickDelta, this.prevPosZ, this.z) - vec3d.getZ());
+		Quaternionf quaternionf;
+		if (this.angle == 0.0F)
 		{
-			scale += 0.25f;
-			alpha += 0.04f;
-			if (alpha >= 1f)
-			{
-
-				phase = 2;
-			}
+			quaternionf = camera.getRotation();
 		}
-		else if (phase == 2)
+		else
 		{
-			scale -= 0.25f;
-			alpha -= 0.05f;
-
-			if (alpha <= 0.8f)
-			{
-
-				phase = 3;
-			}
+			quaternionf = new Quaternionf(camera.getRotation());
+			quaternionf.rotateZ(MathHelper.lerp(tickDelta, this.prevAngle, this.angle));
 		}
 
-		/*else if (phase == 3)
+		Vector3f[] corners = new Vector3f[] {
+				new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)
+		};
+		float size = this.getSize(tickDelta);
+
+		for (int j = 0; j < 4; ++j)
 		{
-			scale+=Ease.inCubic(0.5f);
-			alpha += 0.04f;
-			if (alpha >= 0.9f)
-			{
-				phase = 4;
-			}
-		}*/
-		else if (phase == 3)
+			Vector3f vector3f = corners[j];
+			vector3f.mul(scaleX, scaleY, 1);
+			vector3f.rotate(quaternionf);
+			vector3f.mul(size);
+			vector3f.add(f, g, h);
+		}
+
+		float k = this.getMinU();
+		float l = this.getMaxU();
+		float m = this.getMinV();
+		float n = this.getMaxV();
+		int o = this.getBrightness(tickDelta);
+		vertexConsumer.vertex((double)corners[0].x(), (double)corners[0].y(), (double)corners[0].z())
+		              .texture(l, n)
+		              .color(this.red, this.green, this.blue, this.alpha)
+		              .light(o)
+		              .next();
+		vertexConsumer.vertex((double)corners[1].x(), (double)corners[1].y(), (double)corners[1].z())
+		              .texture(l, m)
+		              .color(this.red, this.green, this.blue, this.alpha)
+		              .light(o)
+		              .next();
+		vertexConsumer.vertex((double)corners[2].x(), (double)corners[2].y(), (double)corners[2].z())
+		              .texture(k, m)
+		              .color(this.red, this.green, this.blue, this.alpha)
+		              .light(o)
+		              .next();
+		vertexConsumer.vertex((double)corners[3].x(), (double)corners[3].y(), (double)corners[3].z())
+		              .texture(k, n)
+		              .color(this.red, this.green, this.blue, this.alpha)
+		              .light(o)
+		              .next();
+	}
+
+	private void updateShape(float age)
+	{
+		if (age <= 10)
 		{
-			scale += Ease.outCubic(0.65f);
-			alpha -= 0.075f;
-			if (alpha <= 0f)
-			{
-				markDead();
-			}
+			this.alpha = 1;
+
+			this.scaleX = 2 * (1 + 2 * (float)Math.max(4 * Math.pow(age / 10 - 0.5f, 3), 0));
+			this.scaleY = 2 * (1 - (float)Math.pow((age - 4) / 6, 2));
+		}
+		else
+		{
+			this.scaleX = this.scaleY = 1;
+			this.scale = (float)Math.pow(age / 10, 6);
+			this.alpha = (float)(Math.max(1 - Math.pow(age / 20, 3), 0.001f));
 		}
 	}
 
