@@ -16,6 +16,7 @@ public class SwgTags
 		public static final TagKey<Block> BLASTER_DESTROY = register("blaster_destroy");
 		public static final TagKey<Block> BLASTER_EXPLODE = register("blaster_explode");
 		public static final TagKey<Block> BLASTER_REFLECT = register("blaster_reflect");
+		public static final TagKey<Block> SAND_SKITTER_CAN_DIG = register("sand_skitter_can_dig");
 
 		private static TagKey<Block> register(String id)
 		{
@@ -25,6 +26,8 @@ public class SwgTags
 
 	public static class Items
 	{
+		public static final TagKey<Item> BANTHA_TEMPT_ITEMS = register("bantha_tempt_items");
+
 		private static TagKey<Item> register(String id)
 		{
 			return TagKey.of(RegistryKeys.ITEM, Resources.id(id));
@@ -34,6 +37,7 @@ public class SwgTags
 	public static class EntityTypes
 	{
 		public static final TagKey<EntityType<?>> DETONATES_EXPLOSIVE = register("detonates_explosive");
+		public static final TagKey<EntityType<?>> WORRT_FOOD = register("worrt_food");
 
 		private static TagKey<EntityType<?>> register(String id)
 		{

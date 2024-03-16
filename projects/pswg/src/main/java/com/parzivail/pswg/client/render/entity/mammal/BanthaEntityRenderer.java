@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.render.entity.mammal;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.mammal.BanthaEntity;
+import com.parzivail.pswg.mixin.SinglePartEntityModelAccessor;
 import com.parzivail.util.client.render.MutableAnimatedModel;
 import com.parzivail.util.math.TwoJointIk;
 import net.minecraft.client.model.ModelPart;
@@ -25,11 +26,10 @@ public class BanthaEntityRenderer extends MobEntityRenderer<BanthaEntity, Single
 
 	private static void setAngles(MutableAnimatedModel<BanthaEntity> model, BanthaEntity entity, float v, float v1, float v2, float v3, float v4, float tickDelta)
 	{
-		var body = model.getPart().getChild("body");
-		setLegIk(entity, body, "leftFrontLeg", "leftFrontLeg2", new Vec3d(0.45f, 1.125f, 1.08f));
-		setLegIk(entity, body, "rightFrontLeg", "rightFrontLeg2", new Vec3d(-0.45f, 1.125f, 1.08f));
-		setLegIk(entity, body, "leftBackLeg", "leftBackLeg2", new Vec3d(0.45f, 1.125f, -1.08f));
-		setLegIk(entity, body, "rightBackLeg", "rightBackLeg2", new Vec3d(-0.45f, 1.125f, -1.08f));
+		model.getPart().traverse().forEach(ModelPart::resetTransform);
+		SinglePartEntityModelAccessor accessor = (SinglePartEntityModelAccessor)model;
+		accessor.callUpdateAnimation(entity.callingAnimationState, BanthaAnimations.bantha_call, v2, 1.0F);
+		accessor.callUpdateAnimation(entity.forageAnimationState, BanthaAnimations.bantha_forage, v2, 1.0F);
 	}
 
 	private static void setLegIk(Entity entity, ModelPart body, String upperLegName, String lowerLegName, Vec3d legPosition)

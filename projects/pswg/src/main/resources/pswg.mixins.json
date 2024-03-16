@@ -3,17 +3,24 @@
 	"package": "com.parzivail.pswg.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"BreedTaskAccessor",
+		"CatEntityMixin",
 		"EntityMixin",
 		"EntityTrackerEntryMixin",
 		"FarmlandBlockMixin",
+		"FoxEntityMixin",
 		"ItemEntityMixin",
 		"ItemStackMixin",
 		"LivingEntityJetpackMixin",
 		"LivingEntityMixin",
+		"MobEntityAccessor",
 		"PlayerEntityMixin",
 		"ServerPlayerEntityAccessor",
 		"ServerPlayerEntityMixin",
-		"ServerPlayNetworkHandlerMixin"
+		"ServerPlayNetworkHandlerMixin",
+		"SinglePartEntityModelAccessor",
+		"WolfEntityMixin",
+		"WorriableEntityFilterMixin"
 	],
 	"client": [
 		"AbstractClientPlayerEntityMixin",

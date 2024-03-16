@@ -79,8 +79,8 @@ public class SwgEntities
 	public static class Mammal
 	{
 		public static final EntityType<BanthaEntity> Bantha = Registry.register(Registries.ENTITY_TYPE, Resources.id("bantha"), FabricEntityTypeBuilder
-				.create(SpawnGroup.MISC, BanthaEntity::new)
-				.dimensions(EntityDimensions.fixed(3, 3))
+				.create(SpawnGroup.CREATURE, BanthaEntity::new)
+				.dimensions(EntityDimensions.changing(2.0F, 2.9F))
 				.build());
 
 		static void register()
