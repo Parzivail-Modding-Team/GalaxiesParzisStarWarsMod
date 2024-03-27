@@ -16,6 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -73,7 +74,6 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 			{
 				for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 				{
-					serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLASH, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
 					serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.FRAGMENTATION_GRENADE, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
 				}
 			}
@@ -85,20 +85,24 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	public void tick()
 	{
 		super.tick();
-
-		if (EXPLOSION_TICK == 10)
+		if (IS_EXPLODING)
 		{
-			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(1, 1, 1), entity -> {
+			this.setVelocity(Vec3d.ZERO);
+		}
+
+		if (EXPLOSION_TICK == 7)
+		{
+			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(3, 3, 3), entity -> {
 				return true;
 			});
 			for (LivingEntity entity : entities)
 			{
-				float x = (float)(entity.getX() - getX()) / 2f;
-				float z = (float)(entity.getZ() - getZ()) / 2f;
+				float x = (float)(entity.getX() - getX()) / 4f;
+				float z = (float)(entity.getZ() - getZ()) / 4f;
 				entity.addVelocity(-x, 0, -z);
 			}
 		}
-		if (EXPLOSION_TICK >= 20)
+		if (EXPLOSION_TICK >= 15)
 		{
 			super.explode();
 		}

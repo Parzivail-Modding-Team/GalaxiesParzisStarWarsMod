@@ -268,6 +268,19 @@ public class Client implements ClientModInitializer
 						Resources.id("block/thermal_detonator/thermal_detonator_block_5")
 				)
 		);
+		ModelRegistry.register(
+				SwgBlocks.Misc.FragmentationGrenadeBlock,
+				true,
+				ModelLoader.loadPicklingP3D(
+						Resources.id("block/model/fragmentation_grenade_block"),
+						Resources.id("block/model/fragmentation_grenade_block"),
+						Resources.id("block/fragmentation_grenade/fragmentation_grenade_block"),
+						Resources.id("block/fragmentation_grenade/fragmentation_grenade_block_2"),
+						Resources.id("block/fragmentation_grenade/fragmentation_grenade_block_3"),
+						Resources.id("block/fragmentation_grenade/fragmentation_grenade_block_4"),
+						Resources.id("block/fragmentation_grenade/fragmentation_grenade_block_5")
+				)
+		);
 
 		ModelRegistry.register(SwgBlocks.Crate.ImperialCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/imperial"), Resources.id("block/model/corrugated_crate/imperial_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.MedicalCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/medical"), Resources.id("block/model/corrugated_crate/medical_particle")));

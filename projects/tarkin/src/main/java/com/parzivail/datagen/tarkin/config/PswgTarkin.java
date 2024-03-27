@@ -149,7 +149,8 @@ public class PswgTarkin
 				SwgTags.Blocks.BLASTER_EXPLODE,
 				assets,
 				Blocks.TNT,
-				SwgBlocks.Misc.ThermalDetonatorBlock
+				SwgBlocks.Misc.ThermalDetonatorBlock,
+				SwgBlocks.Misc.FragmentationGrenadeBlock
 		);
 	}
 

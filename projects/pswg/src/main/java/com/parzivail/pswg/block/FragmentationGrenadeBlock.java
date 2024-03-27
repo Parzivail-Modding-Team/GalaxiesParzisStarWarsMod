@@ -109,7 +109,7 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
-		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator) && state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && player.isSneaking())
+		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.FragmentationGrenade) && state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && player.isSneaking())
 		{
 			if (!player.isCreative())
 				player.getInventory().getMainHandStack().decrement(1);
@@ -118,7 +118,7 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 			return ActionResult.SUCCESS;
 		}
 
-		player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
+		player.giveItemStack(new ItemStack(SwgItems.Explosives.FragmentationGrenade));
 
 		if (state.get(CLUSTER_SIZE) == 1)
 			world.breakBlock(pos, false);
@@ -146,7 +146,7 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 	@Override
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
 	{
-		return new ItemStack(SwgItems.Explosives.ThermalDetonator);
+		return new ItemStack(SwgItems.Explosives.FragmentationGrenade);
 	}
 
 	@Override
@@ -171,9 +171,8 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 		fge.setPrimed(true);
 		fge.setLife(0);
 
-		world.breakBlock(blockPos, false);
-
 		world.spawnEntity(fge);
+		world.breakBlock(blockPos, false);
 	}
 
 	@Override
