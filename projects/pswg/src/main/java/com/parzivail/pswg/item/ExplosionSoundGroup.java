@@ -83,7 +83,7 @@ class FragmentationGrenadeSoundGroup extends ExplosionSoundGroup
 	@Override
 	public void playBeepingSound(PlayerEntity player)
 	{
-		SoundHelper.playDetonatorItemSound(player);
+		SoundHelper.playFragmentationGrenadeItemSound(player);
 	}
 }
 

@@ -1,4 +1,4 @@
-package com.parzivail.pswg.features.thermaldetonator.client;
+package com.parzivail.pswg.features.grenades.client;
 
 import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.client.container.SwgSoundTimelines;
@@ -23,16 +23,16 @@ import org.joml.Quaternionf;
 
 import java.util.HashSet;
 
-public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
+public class FragmentationGrenadeItemRenderer implements ICustomItemRenderer
 {
-	public static final ThermalDetonatorItemRenderer INSTANCE = new ThermalDetonatorItemRenderer();
+	public static final FragmentationGrenadeItemRenderer INSTANCE = new FragmentationGrenadeItemRenderer();
 
 	private static final HashSet<LivingEntity> BEEPING_PLAYERS = new HashSet<>();
 
-	private ThermalDetonatorItemRenderer()
+	private FragmentationGrenadeItemRenderer()
 	{
 		SoundTimelineManager.SOUND_EVENT_ENTERED.register((instance, timelineEvent, delta) -> {
-			if (timelineEvent.equals(SwgSoundTimelines.THERMAL_DETONATOR_BEEP_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
+			if (timelineEvent.equals(SwgSoundTimelines.FRAGMENTATION_GRENADE_BEEP_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
 				BEEPING_PLAYERS.add(tdisi.getPlayer());
 		});
 

@@ -1314,5 +1314,6 @@
 	"tooltip.pswg.lightsaber.controls": "Toggle: %s",
 	"tooltip.pswg.lightsaber.info": "§bLightsaber",
 	"tooltip.pswg.status.insulated_desh_cable": "Connected to: (%s, %s, %s)",
-	"tooltip.pswg.thermal_detonator.controls": "Prime: %s, Throw: %s"
+	"tooltip.pswg.thermal_detonator.controls": "Prime: %s, Throw: %s",
+	"tooltip.pswg.fragmentation_grenade.controls": "Prime: %s, Throw: %s"
 }

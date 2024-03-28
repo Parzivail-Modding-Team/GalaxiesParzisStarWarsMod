@@ -28,6 +28,12 @@ public class SoundHelper
 		minecraft.getSoundManager().play(new ThermalDetonatorItemSoundInstance(player));
 	}
 
+	public static void playFragmentationGrenadeItemSound(PlayerEntity player)
+	{
+		var minecraft = MinecraftClient.getInstance();
+		minecraft.getSoundManager().play(new FragmentationGrenadeItemSoundInstance(player));
+	}
+
 	public static void playDetonatorEntitySound(ThermalDetonatorEntity entity)
 	{
 		var minecraft = MinecraftClient.getInstance();

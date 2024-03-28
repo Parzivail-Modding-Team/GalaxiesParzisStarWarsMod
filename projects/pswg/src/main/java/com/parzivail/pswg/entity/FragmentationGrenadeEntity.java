@@ -97,8 +97,8 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 			});
 			for (LivingEntity entity : entities)
 			{
-				float x = (float)(entity.getX() - getX()) / 4f;
-				float z = (float)(entity.getZ() - getZ()) / 4f;
+				float x = (float)(entity.getX() - getX()) / 3f;
+				float z = (float)(entity.getZ() - getZ()) / 3f;
 				entity.addVelocity(-x, 0, -z);
 			}
 		}

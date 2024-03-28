@@ -1,0 +1,1 @@
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/fragmentation_grenade"},"overrides":[{"model":"pswg:item/fragmentation_grenade_primed","predicate":{"pswg:fragmentation_grenade_primed":1.0}}]}

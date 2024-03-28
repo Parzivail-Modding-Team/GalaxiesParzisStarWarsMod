@@ -1,6 +1,7 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.block.FragmentationGrenadeBlock;
 import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
@@ -334,6 +335,10 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 						else if (state.getBlock() instanceof ThermalDetonatorBlock tdb)
 						{
 							tdb.explode(getWorld(), blockPos, 6f);
+						}
+						else if (state.getBlock() instanceof FragmentationGrenadeBlock fgb)
+						{
+							fgb.explode(getWorld(), blockPos, 6f);
 						}
 						else
 						{

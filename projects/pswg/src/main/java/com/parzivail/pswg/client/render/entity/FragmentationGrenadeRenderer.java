@@ -4,6 +4,7 @@ import com.parzivail.p3d.P3dManager;
 import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.FragmentationGrenadeEntity;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -16,6 +17,7 @@ public class FragmentationGrenadeRenderer extends EntityRenderer<FragmentationGr
 {
 	public static final Identifier MODEL = Resources.id("item/fragmentation_grenade/fragmentation_grenade");
 	public static final Identifier TEXTURE = Resources.id("textures/item/model/fragmentation_grenade/fragmentation_grenade.png");
+	public static final Identifier TEXTURE_OFF = Resources.id("textures/item/model/fragmentation_grenade/fragmentation_grenade_off.png");
 
 	public P3dModel model;
 
@@ -27,7 +29,11 @@ public class FragmentationGrenadeRenderer extends EntityRenderer<FragmentationGr
 	@Override
 	public Identifier getTexture(FragmentationGrenadeEntity entity)
 	{
-		return TEXTURE;
+		if (entity.isPrimed())
+		{
+			return TEXTURE;
+		}
+		return TEXTURE_OFF;
 	}
 
 	@Override
@@ -44,5 +50,15 @@ public class FragmentationGrenadeRenderer extends EntityRenderer<FragmentationGr
 		model.render(matrices, vertexConsumer, entity, null, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();
 		super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+	}
+
+	@Override
+	public boolean shouldRender(FragmentationGrenadeEntity entity, Frustum frustum, double x, double y, double z)
+	{
+		if (entity.IS_EXPLODING)
+		{
+			return false;
+		}
+		return super.shouldRender(entity, frustum, x, y, z);
 	}
 }
