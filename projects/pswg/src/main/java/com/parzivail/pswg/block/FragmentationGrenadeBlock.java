@@ -20,6 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -41,11 +42,13 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 			VoxelShapes.cuboid(0.46875, 0.15625, 0.453125, 0.53125, 0.21875, 0.578125)
 	);
 	private static final VoxelShape SHAPE_DOUBLE = VoxelShapes.union(
-			VoxelShapes.cuboid(0.296875, 0, 0.40625, 0.484375, 0.1875, 0.59375),
-			VoxelShapes.cuboid(0.359375, 0.15625, 0.453125, 0.421875, 0.21875, 0.578125),
+			VoxelShapes.cuboid(0.53125, 0, 0.4375, 0.65625, 0.4375, 0.5625),
+			VoxelShapes.cuboid(0.53125, 0.28125, 0.4375, 0.65625, 0.34375, 0.5625),
+			VoxelShapes.cuboid(0.53125, 0.09375, 0.4375, 0.65625, 0.15625, 0.5625),
 
-			VoxelShapes.cuboid(0.515625, 0, 0.40625, 0.703125, 0.1875, 0.59375),
-			VoxelShapes.cuboid(0.578125, 0.15625, 0.453125, 0.640625, 0.21875, 0.578125)
+			VoxelShapes.cuboid(0.34375, 0, 0.4375, 0.46875, 0.4375, 0.5625),
+			VoxelShapes.cuboid(0.34375, 0.28125, 0.4375, 0.46875, 0.34375, 0.5625),
+			VoxelShapes.cuboid(0.34375, 0.09375, 0.4375, 0.46875, 0.15625, 0.5625)
 	);
 	private static final VoxelShape SHAPE_TRIPLE = VoxelShapes.union(
 			VoxelShapes.cuboid(0.296875, 0, 0.296875, 0.484375, 0.1875, 0.484375),
@@ -103,7 +106,18 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 			case 4 -> SHAPE_QUADRUPLE;
 			case 5 -> SHAPE_QUINTUPLE;
 		};
-		return VoxelShapeUtil.rotateToFace(shape, state.get(FACING));
+		shape = VoxelShapeUtil.rotateToFace(shape, state.get(FACING));
+		if (state.get(FACING) == Direction.EAST || state.get(FACING) == Direction.WEST)
+		{
+			shape = VoxelShapeUtil.rotate(shape, Direction.Axis.Y, 1, 0.29f, 0f, 0.29f);
+			shape = VoxelShapeUtil.rotate(shape, Direction.Axis.Z, 3, 0.36f, 0.36f, 0f);
+		}
+		else
+		{
+			shape = VoxelShapeUtil.rotate(shape, Direction.Axis.X, 1, 0f, 0.36f, 0.36f);
+			shape = VoxelShapeUtil.rotate(shape, Direction.Axis.Z, 1, 0.29f, 0.29f, 0f);
+		}
+		return shape;
 	}
 
 	@Override

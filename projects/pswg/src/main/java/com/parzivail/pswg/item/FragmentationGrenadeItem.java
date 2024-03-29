@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FragmentationGrenadeItem extends ThrowableExplosiveItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
+public class FragmentationGrenadeItem extends ThrowableExplosiveItem
 {
 	@TarkinLang
 	public static final String I18N_TOOLTIP_CONTROLS = Resources.tooltip("fragmentation_grenade.controls");

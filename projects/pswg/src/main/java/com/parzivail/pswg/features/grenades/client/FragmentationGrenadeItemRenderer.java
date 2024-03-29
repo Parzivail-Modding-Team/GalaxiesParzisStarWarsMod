@@ -2,10 +2,10 @@ package com.parzivail.pswg.features.grenades.client;
 
 import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.client.container.SwgSoundTimelines;
-import com.parzivail.pswg.client.render.entity.ThermalDetonatorRenderer;
-import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
+import com.parzivail.pswg.client.render.entity.FragmentationGrenadeRenderer;
+import com.parzivail.pswg.client.sound.FragmentationGrenadeItemSoundInstance;
 import com.parzivail.pswg.client.sound.timeline.SoundTimelineManager;
-import com.parzivail.pswg.item.ThermalDetonatorItem;
+import com.parzivail.pswg.item.FragmentationGrenadeItem;
 import com.parzivail.pswg.item.ThrowableExplosiveTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.math.MathUtil;
@@ -32,13 +32,13 @@ public class FragmentationGrenadeItemRenderer implements ICustomItemRenderer
 	private FragmentationGrenadeItemRenderer()
 	{
 		SoundTimelineManager.SOUND_EVENT_ENTERED.register((instance, timelineEvent, delta) -> {
-			if (timelineEvent.equals(SwgSoundTimelines.FRAGMENTATION_GRENADE_BEEP_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
-				BEEPING_PLAYERS.add(tdisi.getPlayer());
+			if (timelineEvent.equals(SwgSoundTimelines.FRAGMENTATION_GRENADE_BEEP_ID) && instance instanceof FragmentationGrenadeItemSoundInstance fgisi)
+				BEEPING_PLAYERS.add(fgisi.getPlayer());
 		});
 
 		SoundTimelineManager.SOUND_EVENT_LEFT.register((instance, timelineEvent, delta) -> {
-			if (timelineEvent.equals(SwgSoundTimelines.THERMAL_DETONATOR_BEEP_ID) && instance instanceof ThermalDetonatorItemSoundInstance tdisi)
-				BEEPING_PLAYERS.remove(tdisi.getPlayer());
+			if (timelineEvent.equals(SwgSoundTimelines.THERMAL_DETONATOR_BEEP_ID) && instance instanceof FragmentationGrenadeItemSoundInstance fgisi)
+				BEEPING_PLAYERS.remove(fgisi.getPlayer());
 		});
 	}
 
@@ -58,7 +58,7 @@ public class FragmentationGrenadeItemRenderer implements ICustomItemRenderer
 			case HEAD:
 			case FIRST_PERSON_LEFT_HAND:
 			case FIRST_PERSON_RIGHT_HAND:
-				matrices.translate(0.4, -0.1, 0);
+				matrices.translate(0.4, -0.3, 0);
 				break;
 			case THIRD_PERSON_LEFT_HAND:
 			case THIRD_PERSON_RIGHT_HAND:
@@ -72,7 +72,7 @@ public class FragmentationGrenadeItemRenderer implements ICustomItemRenderer
 				MathUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 			case GUI:
-				matrices.translate(0, -0.15, 0.1);
+				matrices.translate(0, -0.3, 0);
 				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / -4)));
 				matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / -4)));
 				MathUtil.scalePos(matrices, 2.5f, 2.5f, 2.5f);
@@ -86,21 +86,21 @@ public class FragmentationGrenadeItemRenderer implements ICustomItemRenderer
 
 	public void renderDirect(LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade, boolean useHandPos)
 	{
-		if (!(stack.getItem() instanceof ThermalDetonatorItem td))
+		if (!(stack.getItem() instanceof FragmentationGrenadeItem fg))
 			return;
 
 		matrices.push();
 
-		var tdt = new ThrowableExplosiveTag(stack.getOrCreateNbt());
+		var tet = new ThrowableExplosiveTag(stack.getOrCreateNbt());
 
-		var m = P3dManager.INSTANCE.get(ThermalDetonatorRenderer.MODEL);
+		var m = P3dManager.INSTANCE.get(FragmentationGrenadeRenderer.MODEL);
 		if (m == null)
 		{
-			var crashReport = CrashReport.create(new IllegalStateException("Thermal detonator model is null"), String.format("Unable to load thermal detonator model: %s", ThermalDetonatorRenderer.MODEL));
+			var crashReport = CrashReport.create(new IllegalStateException("Fragmentation Grenade model is null"), String.format("Unable to load fragmentation grenade model: %s", FragmentationGrenadeRenderer.MODEL));
 			throw new CrashException(crashReport);
 		}
 
-		var primed = tdt.primed;
+		var primed = tet.primed;
 		var beeping = false;
 
 		if (entity == null)
@@ -109,8 +109,8 @@ public class FragmentationGrenadeItemRenderer implements ICustomItemRenderer
 		if (entity != null)
 			beeping = BEEPING_PLAYERS.contains(entity);
 
-		final var renderedTexture = primed ? (beeping ? ThermalDetonatorRenderer.TEXTURE_BEEPING : ThermalDetonatorRenderer.TEXTURE_PRIMED) : ThermalDetonatorRenderer.TEXTURE_OFF;
-		m.render(matrices, vertexConsumers, tdt, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(renderedTexture)), light, 0, 255, 255, 255, 255);
+		final var renderedTexture = primed ? (beeping ? FragmentationGrenadeRenderer.TEXTURE_BEEPING : FragmentationGrenadeRenderer.TEXTURE_PRIMED) : FragmentationGrenadeRenderer.TEXTURE_OFF;
+		m.render(matrices, vertexConsumers, tet, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(renderedTexture)), light, 0, 255, 255, 255, 255);
 
 		matrices.pop();
 	}

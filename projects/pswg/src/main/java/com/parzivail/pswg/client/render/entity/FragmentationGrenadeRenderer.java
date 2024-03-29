@@ -16,7 +16,8 @@ import net.minecraft.util.math.RotationAxis;
 public class FragmentationGrenadeRenderer extends EntityRenderer<FragmentationGrenadeEntity>
 {
 	public static final Identifier MODEL = Resources.id("item/fragmentation_grenade/fragmentation_grenade");
-	public static final Identifier TEXTURE = Resources.id("textures/item/model/fragmentation_grenade/fragmentation_grenade.png");
+	public static final Identifier TEXTURE_BEEPING = Resources.id("textures/item/model/fragmentation_grenade/fragmentation_grenade.png");
+	public static final Identifier TEXTURE_PRIMED = Resources.id("textures/item/model/fragmentation_grenade/fragmentation_grenade.png");
 	public static final Identifier TEXTURE_OFF = Resources.id("textures/item/model/fragmentation_grenade/fragmentation_grenade_off.png");
 
 	public P3dModel model;
@@ -31,7 +32,7 @@ public class FragmentationGrenadeRenderer extends EntityRenderer<FragmentationGr
 	{
 		if (entity.isPrimed())
 		{
-			return TEXTURE;
+			return TEXTURE_PRIMED;
 		}
 		return TEXTURE_OFF;
 	}

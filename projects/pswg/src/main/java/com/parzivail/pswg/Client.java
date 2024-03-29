@@ -41,10 +41,12 @@ import com.parzivail.pswg.features.blasters.client.entity.BlasterBoltRenderer;
 import com.parzivail.pswg.features.blasters.client.entity.BlasterStunBoltRenderer;
 import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
 import com.parzivail.pswg.features.debug.DebugUtil;
+import com.parzivail.pswg.features.grenades.client.FragmentationGrenadeItemRenderer;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.client.forge.LightsaberForgeScreen;
 import com.parzivail.pswg.features.grenades.client.ThermalDetonatorItemRenderer;
+import com.parzivail.pswg.item.FragmentationGrenadeItem;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
@@ -359,6 +361,7 @@ public class Client implements ClientModInitializer
 		ICustomHudRenderer.register(BlasterItem.class, BlasterHudRenderer.INSTANCE);
 
 		ICustomItemRenderer.register(ThermalDetonatorItem.class, ThermalDetonatorItemRenderer.INSTANCE);
+		ICustomItemRenderer.register(FragmentationGrenadeItem.class, FragmentationGrenadeItemRenderer.INSTANCE);
 
 		//		TODO: ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
