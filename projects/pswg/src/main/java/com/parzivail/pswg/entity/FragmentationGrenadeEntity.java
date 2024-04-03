@@ -66,6 +66,16 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	}
 
 	@Override
+	public Vec3d getVelocity()
+	{
+		if (IS_EXPLODING)
+		{
+			return Vec3d.ZERO;
+		}
+		return super.getVelocity();
+	}
+
+	@Override
 	public void explode()
 	{
 		if (!IS_EXPLODING)

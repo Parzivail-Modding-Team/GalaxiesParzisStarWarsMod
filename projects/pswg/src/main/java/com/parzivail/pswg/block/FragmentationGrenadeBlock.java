@@ -38,59 +38,30 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 	}
 
 	private static final VoxelShape SHAPE_SINGLE = VoxelShapes.union(
-			VoxelShapes.cuboid(0.40625, 0, 0.40625, 0.59375, 0.1875, 0.59375),
-			VoxelShapes.cuboid(0.46875, 0.15625, 0.453125, 0.53125, 0.21875, 0.578125)
+			VoxelShapes.cuboid(0.28125, 0.015625, 0.4375, 0.71875, 0.140625, 0.5625)
+
 	);
 	private static final VoxelShape SHAPE_DOUBLE = VoxelShapes.union(
-			VoxelShapes.cuboid(0.53125, 0, 0.4375, 0.65625, 0.4375, 0.5625),
-			VoxelShapes.cuboid(0.53125, 0.28125, 0.4375, 0.65625, 0.34375, 0.5625),
-			VoxelShapes.cuboid(0.53125, 0.09375, 0.4375, 0.65625, 0.15625, 0.5625),
-
-			VoxelShapes.cuboid(0.34375, 0, 0.4375, 0.46875, 0.4375, 0.5625),
-			VoxelShapes.cuboid(0.34375, 0.28125, 0.4375, 0.46875, 0.34375, 0.5625),
-			VoxelShapes.cuboid(0.34375, 0.09375, 0.4375, 0.46875, 0.15625, 0.5625)
+			VoxelShapes.cuboid(0.28125, 0.015625, 0.34375, 0.71875, 0.140625, 0.46875),
+			VoxelShapes.cuboid(0.281255, 0.015625, 0.53125, 0.71875, 0.140625, 0.65625)
 	);
 	private static final VoxelShape SHAPE_TRIPLE = VoxelShapes.union(
-			VoxelShapes.cuboid(0.296875, 0, 0.296875, 0.484375, 0.1875, 0.484375),
-			VoxelShapes.cuboid(0.359375, 0.15625, 0.34375, 0.421875, 0.21875, 0.46875),
-
-			VoxelShapes.cuboid(0.515625, 0, 0.296875, 0.703125, 0.1875, 0.484375),
-			VoxelShapes.cuboid(0.578125, 0.15625, 0.34375, 0.640625, 0.21875, 0.46875),
-
-			VoxelShapes.cuboid(0.40625, 0, 0.515625, 0.59375, 0.1875, 0.703125),
-			VoxelShapes.cuboid(0.46875, 0.15625, 0.5625, 0.53125, 0.21875, 0.6875)
+			VoxelShapes.cuboid(0.28125, 0.015625, 0.53125, 0.71875, 0.140625, 0.65625),
+			VoxelShapes.cuboid(0.28125, 0.015625, 0.34375, 0.71875, 0.140625, 0.46875),
+			VoxelShapes.cuboid(0.28125, 0.165625, 0.4375, 0.71875, 0.290625, 0.5625)
 	);
 	private static final VoxelShape SHAPE_QUADRUPLE = VoxelShapes.union(
-			VoxelShapes.cuboid(0.296875, 0, 0.296875, 0.484375, 0.1875, 0.484375),
-			VoxelShapes.cuboid(0.359375, 0.15625, 0.34375, 0.421875, 0.21875, 0.46875),
-
-			VoxelShapes.cuboid(0.515625, 0, 0.296875, 0.703125, 0.1875, 0.484375),
-			VoxelShapes.cuboid(0.578125, 0.15625, 0.34375, 0.640625, 0.21875, 0.46875),
-
-			VoxelShapes.cuboid(0.296875, 0, 0.515625, 0.484375, 0.1875, 0.703125),
-			VoxelShapes.cuboid(0.359375, 0.15625, 0.5625, 0.421875, 0.21875, 0.6875),
-
-			VoxelShapes.cuboid(0.515625, 0, 0.515625, 0.703125, 0.1875, 0.703125),
-			VoxelShapes.cuboid(0.578125, 0.15625, 0.5625, 0.640625, 0.21875, 0.6875)
+			VoxelShapes.cuboid(0.28125, 0.015625, 0.3625, 0.71875, 0.140625, 0.4875),
+			VoxelShapes.cuboid(0.28125, 0.165625, 0.3625, 0.71875, 0.290625, 0.4875),
+			VoxelShapes.cuboid(0.28125, 0.015625, 0.5125, 0.71875, 0.140625, 0.6375),
+			VoxelShapes.cuboid(0.28125, 0.165625, 0.5125, 0.71875, 0.290625, 0.6375)
 	);
 	private static final VoxelShape SHAPE_QUINTUPLE = VoxelShapes.union(
-			VoxelShapes.cuboid(0.296875, 0, 0.296875, 0.484375, 0.1875, 0.484375),
-			VoxelShapes.cuboid(0.359375, 0.15625, 0.34375, 0.421875, 0.21875, 0.46875),
-
-			VoxelShapes.cuboid(0.515625, 0, 0.296875, 0.703125, 0.1875, 0.484375),
-			VoxelShapes.cuboid(0.578125, 0.15625, 0.34375, 0.640625, 0.21875, 0.46875),
-
-			VoxelShapes.cuboid(0.296875, 0, 0.515625, 0.484375, 0.1875, 0.703125),
-			VoxelShapes.cuboid(0.359375, 0.15625, 0.5625, 0.421875, 0.21875, 0.6875),
-
-			VoxelShapes.cuboid(0.40625, 0, 0.40625, 0.59375, 0.1875, 0.59375),
-			VoxelShapes.cuboid(0.46875, 0.15625, 0.421875, 0.53125, 0.21875, 0.546875),
-
-			VoxelShapes.cuboid(0.515625, 0, 0.515625, 0.703125, 0.1875, 0.703125),
-			VoxelShapes.cuboid(0.578125, 0.15625, 0.5625, 0.640625, 0.21875, 0.6875),
-
-			VoxelShapes.cuboid(0.40625, 0.1875, 0.40625, 0.59375, 0.375, 0.59375),
-			VoxelShapes.cuboid(0.46875, 0.34375, 0.453125, 0.53125, 0.40625, 0.578125)
+			VoxelShapes.cuboid(0.28125, 0.015625, 0.3625, 0.71875, 0.140625, 0.4875),
+			VoxelShapes.cuboid(0.28125, 0.165625, 0.3625, 0.71875, 0.290625, 0.4875),
+			VoxelShapes.cuboid(0.28125, 0.0156258, 0.5125, 0.71875, 0.140625, 0.6375),
+			VoxelShapes.cuboid(0.28125, 0.165625, 0.5125, 0.71875, 0.290625, 0.6375),
+			VoxelShapes.cuboid(0.28125, 0.315625, 0.4375, 0.71875, 0.440625, 0.5625)
 	);
 
 	@Override
@@ -106,18 +77,7 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 			case 4 -> SHAPE_QUADRUPLE;
 			case 5 -> SHAPE_QUINTUPLE;
 		};
-		shape = VoxelShapeUtil.rotateToFace(shape, state.get(FACING));
-		if (state.get(FACING) == Direction.EAST || state.get(FACING) == Direction.WEST)
-		{
-			shape = VoxelShapeUtil.rotate(shape, Direction.Axis.Y, 1, 0.29f, 0f, 0.29f);
-			shape = VoxelShapeUtil.rotate(shape, Direction.Axis.Z, 3, 0.36f, 0.36f, 0f);
-		}
-		else
-		{
-			shape = VoxelShapeUtil.rotate(shape, Direction.Axis.X, 1, 0f, 0.36f, 0.36f);
-			shape = VoxelShapeUtil.rotate(shape, Direction.Axis.Z, 1, 0.29f, 0.29f, 0f);
-		}
-		return shape;
+		return VoxelShapeUtil.rotateToFace(shape, state.get(FACING));
 	}
 
 	@Override
