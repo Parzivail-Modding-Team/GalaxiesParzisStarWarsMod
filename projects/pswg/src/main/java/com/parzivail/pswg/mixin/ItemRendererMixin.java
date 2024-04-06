@@ -1,5 +1,6 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.item.ThrowableExplosiveItem;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,7 +36,7 @@ public abstract class ItemRendererMixin
 
 			@Nullable
 			final ICustomItemRenderer itemRenderer = ICustomItemRenderer.REGISTRY.get(stack.getItem().getClass());
-			if (itemRenderer != null)
+			if (itemRenderer != null && !(stack.getItem() instanceof ThrowableExplosiveItem && renderMode == ModelTransformationMode.GUI))
 			{
 				itemRenderer.render(entity, stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, bakedModel);
 				ci.cancel();
@@ -51,7 +52,7 @@ public abstract class ItemRendererMixin
 		{
 			@Nullable
 			final ICustomItemRenderer itemRenderer = ICustomItemRenderer.REGISTRY.get(stack.getItem().getClass());
-			if (itemRenderer != null)
+			if (itemRenderer != null && !(stack.getItem() instanceof ThrowableExplosiveItem && renderMode == ModelTransformationMode.GUI))
 			{
 				itemRenderer.render(null, stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model);
 				ci.cancel();
