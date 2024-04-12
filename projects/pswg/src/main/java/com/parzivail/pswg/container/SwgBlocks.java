@@ -708,9 +708,10 @@ public class SwgBlocks
 		public static final SelfConnectingBlock ImperialPanelTall2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 
 		@RegistryName("gray_imperial_tall_light_1")
-		//@TarkinBlock(state = TrState.None, model = TrModel.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final InteractableConnectingInvertedLampBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY, 14);
 		@RegistryName("gray_imperial_tall_light_2")
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
 		public static final InteractableConnectingInvertedLampBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY, 14);
 		@RegistryName("gray_imperial_light_panel_1")
 		public static final Block GrayImperialLightPanel1 = createLightingPanelBlock(11);
