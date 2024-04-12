@@ -39,6 +39,18 @@ public class UnbakedConnectedLampModel extends ConnectedTextureModel.Unbaked
 		this.capSprite = capSprite;
 	}
 
+	@Nullable
+	@Override
+	public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId)
+	{
+		if (cachedBakedModel != null)
+			return cachedBakedModel;
+
+		var result = this.baker.apply(textureGetter);
+		cachedBakedModel = result;
+		return result;
+	}
+
 	@Override
 	public ClonableUnbakedModel copy()
 	{

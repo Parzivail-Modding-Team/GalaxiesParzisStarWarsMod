@@ -107,6 +107,10 @@ public class ConnectedLampModel extends ConnectedTextureModel
 			Vector3f dU = DELTAU[faceDirection.getId()];
 			Vector3f dV = DELTAV[faceDirection.getId()];
 
+			if (MinecraftClient.getInstance().player != null)
+			{
+				MinecraftClient.getInstance().player.sendMessage(Text.of("No"));
+			}
 			emitTopQuad(quadEmitter, sprite, borderSprite, blockView, state, pos, faceDirection, min, dU, dV);
 			if (state != null)
 			{
@@ -117,13 +121,6 @@ public class ConnectedLampModel extends ConnectedTextureModel
 					{
 						MinecraftClient.getInstance().player.sendMessage(Text.of("Something!"));
 					}
-				}
-			}
-			else
-			{
-				if (MinecraftClient.getInstance().player != null)
-				{
-					MinecraftClient.getInstance().player.sendMessage(Text.of("No"));
 				}
 			}
 		}
