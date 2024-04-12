@@ -65,7 +65,7 @@ public enum ModelRegistry implements ModelVariantProvider
 		var centerTexture = new Identifier(id.getNamespace(), "block/" + id.getPath());
 		var borderTexture = new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border");
 		var borderLitTexture = new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border_on");
-		register(block, true, new UnbakedConnectedLampModel(
+		register(block, true, new ConnectedTextureModel.Unbaked(
 				hConnect, vConnect, lConnect, EnumSet.of(Direction.UP, Direction.DOWN),
 				new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, centerTexture),
 				new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, borderTexture),
