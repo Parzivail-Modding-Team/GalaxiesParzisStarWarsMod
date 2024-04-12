@@ -1,5 +1,6 @@
-package com.parzivail.util.block;
+package com.parzivail.pswg.block;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -8,9 +9,9 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class InteractableInvertedLampBlock extends InvertedLampBlock
+public class InteractableInvertedLampSlab extends InvertedLampSlab
 {
-	public InteractableInvertedLampBlock(Settings settings)
+	public InteractableInvertedLampSlab(AbstractBlock.Settings settings)
 	{
 		super(settings);
 	}

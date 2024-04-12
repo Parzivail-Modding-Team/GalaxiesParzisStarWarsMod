@@ -1,14 +1,11 @@
 package com.parzivail.datagen.tarkin;
 
-import com.parzivail.util.block.InvertedLampBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.RedstoneLampBlock;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.data.client.*;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 

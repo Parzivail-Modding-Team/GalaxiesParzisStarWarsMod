@@ -1,6 +1,7 @@
 package com.parzivail.util.client.model;
 
 import com.mojang.datafixers.util.Pair;
+import com.parzivail.pswg.block.InteractableConnectingInvertedLampBlock;
 import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
 import com.parzivail.util.math.MathUtil;
@@ -20,6 +21,8 @@ import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -134,6 +137,13 @@ public class ConnectedTextureModel extends DynamicBakedModel
 			Vector3f dU = DELTAU[faceDirection.getId()];
 			Vector3f dV = DELTAV[faceDirection.getId()];
 
+			if (state != null)
+			{
+				if (state.getBlock() instanceof InteractableConnectingInvertedLampBlock && state.get(InteractableConnectingInvertedLampBlock.LIT))
+				{
+					emitTopQuad(quadEmitter, sprite, borderSprite, blockView, state, pos, faceDirection, min, dU, dV);
+				}
+			}
 			emitTopQuad(quadEmitter, sprite, borderSprite, blockView, state, pos, faceDirection, min, dU, dV);
 		}
 
@@ -149,7 +159,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		);
 	}
 
-	private void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos, Direction direction, Vector3f min, Vector3f dU, Vector3f dV)
+	void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos, Direction direction, Vector3f min, Vector3f dU, Vector3f dV)
 	{
 		var subSpriteEntry = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, direction, hConnect, vConnect, lConnect);
 		var normal = direction.getUnitVector();
