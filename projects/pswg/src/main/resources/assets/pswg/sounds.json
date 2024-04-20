@@ -272,5 +272,17 @@
 		"sounds":[
 			"pswg:explosives/thermal_detonator/misc/throw"
 		]
+	},
+	"explosives.fragmentationgrenade.explode":{
+    	"subtitle":"subtitle.pswg.explosives.fragmentationgrenade.explode",
+    	"sounds":[
+    		"pswg:explosives/fragmentation_grenade/explosion/explosion"
+    	]
+   	},
+	"explosives.fragmentationgrenade.beep":{
+		"subtitle":"subtitle.pswg.explosives.fragmentationgrenade.beep",
+		"sounds":[
+			"pswg:explosives/fragmentation_grenade/beep/beep_loop"
+		]
 	}
 }

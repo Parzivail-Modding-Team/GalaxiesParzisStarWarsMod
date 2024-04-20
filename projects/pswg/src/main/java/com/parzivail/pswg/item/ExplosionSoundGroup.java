@@ -12,8 +12,6 @@ public abstract class ExplosionSoundGroup
 
 	public abstract void playDisarmSound(PlayerEntity player);
 
-	public abstract void playExplosionSound(PlayerEntity player);
-
 	public abstract void playThrowSound(PlayerEntity player);
 
 	public abstract void playBeepingSound(PlayerEntity player);
@@ -32,12 +30,6 @@ class ThermalDetonatorSoundGroup extends ExplosionSoundGroup
 	public void playDisarmSound(PlayerEntity player)
 	{
 		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_DISARM, 1f, 1f);
-	}
-
-	@Override
-	public void playExplosionSound(PlayerEntity player)
-	{
-		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, 1f, 1f);
 	}
 
 	@Override
@@ -69,12 +61,6 @@ class FragmentationGrenadeSoundGroup extends ExplosionSoundGroup
 	}
 
 	@Override
-	public void playExplosionSound(PlayerEntity player)
-	{
-		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, 1f, 1f);
-	}
-
-	@Override
 	public void playThrowSound(PlayerEntity player)
 	{
 		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_THROW, 1f, 1f);
@@ -100,12 +86,6 @@ class SonicImploderSoundGroup extends ExplosionSoundGroup
 	public void playDisarmSound(PlayerEntity player)
 	{
 		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_DISARM, 1f, 1f);
-	}
-
-	@Override
-	public void playExplosionSound(PlayerEntity player)
-	{
-		player.playSound(SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, 1f, 1f);
 	}
 
 	@Override

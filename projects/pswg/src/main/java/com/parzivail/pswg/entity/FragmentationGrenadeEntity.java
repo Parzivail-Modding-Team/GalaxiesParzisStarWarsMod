@@ -1,7 +1,10 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgParticleTypes;
+import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.item.ExplosionSoundGroup;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -11,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -88,6 +92,7 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 				}
 			}
 			IS_EXPLODING = true;
+			getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.FRAGMENTATION_GRENADE_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
 		}
 	}
 
@@ -95,6 +100,8 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	public void tick()
 	{
 		super.tick();
+		if (getWorld().isClient() && this.age == 1 && this.isPrimed())
+			SoundHelper.playFragmentationEntitySound(this);
 		if (IS_EXPLODING)
 		{
 			this.setVelocity(Vec3d.ZERO);

@@ -12,7 +12,7 @@ public class FragmentationGrenadeItemSoundInstance extends GrenadeItemSoundInsta
 {
 	public FragmentationGrenadeItemSoundInstance(PlayerEntity player)
 	{
-		super(player, SwgSounds.Explosives.THERMAL_DETONATOR_BEEP);
+		super(player, SwgSounds.Explosives.FRAGMENTATION_GRENADE_BEEP);
 	}
 
 	@Override
@@ -23,6 +23,19 @@ public class FragmentationGrenadeItemSoundInstance extends GrenadeItemSoundInsta
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void adjustVolume(boolean foundItem)
+	{
+		if (foundItem)
+		{
+			volume = 0.3f;
+		}
+		else
+		{
+			volume = 0.1f;
+		}
 	}
 
 	;

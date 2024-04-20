@@ -63,15 +63,14 @@ public class GrenadeItemSoundInstance extends DopplerSoundInstance implements IS
 		if (isItem(player.getOffHandStack()) && isPrimed(player.getOffHandStack()))
 			foundItem = true;
 
+		adjustVolume(foundItem);
+
 		if (!areConditionsMet(player))
 		{
 			this.setDone();
 			return;
 		}
-		if (foundItem)
-			volume = 0.75f;
-		else
-			volume = 0.25f;
+
 
 		this.x = (float)this.player.getX();
 		this.y = (float)this.player.getY();
@@ -84,6 +83,14 @@ public class GrenadeItemSoundInstance extends DopplerSoundInstance implements IS
 			if (isItem(player.getInventory().getStack(i)) && isPrimed(player.getInventory().getStack(i)))
 				return true;
 		return false;
+	}
+
+	public void adjustVolume(boolean foundItem)
+	{
+		if (foundItem)
+			volume = 0.75f;
+		else
+			volume = 0.25f;
 	}
 
 	public boolean isItem(ItemStack stack)

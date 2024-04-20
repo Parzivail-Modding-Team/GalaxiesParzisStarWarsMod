@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.sound;
 
+import com.parzivail.pswg.entity.FragmentationGrenadeEntity;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.lightsabers.client.ThrownLightsaberEntity;
@@ -38,5 +39,11 @@ public class SoundHelper
 	{
 		var minecraft = MinecraftClient.getInstance();
 		minecraft.getSoundManager().play(new ThermalDetonatorEntitySoundInstance(entity));
+	}
+
+	public static void playFragmentationEntitySound(FragmentationGrenadeEntity entity)
+	{
+		var minecraft = MinecraftClient.getInstance();
+		minecraft.getSoundManager().play(new FragmentationGrenadeEntitySoundInstance(entity));
 	}
 }
