@@ -23,6 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
@@ -37,6 +38,7 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	public static final int MIN_PICKUP_AGE = 30;
 	public boolean IS_EXPLODING = false;
 	public int EXPLOSION_TICK = 0;
+	private boolean COLLISION_BELOW;
 
 	public FragmentationGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
@@ -111,6 +113,27 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 		}
 	}
 
+	public void createSparkParticles()
+	{
+		if (getWorld().isClient())
+		{
+			var client = MinecraftClient.getInstance();
+			for (int i = 0; i < Random.create().nextBetween(50, 80); i++)
+			{
+				double vx = client.world.random.nextGaussian() * 0.4;
+				double vz = client.world.random.nextGaussian() * 0.4;
+				double vy;
+				if (COLLISION_BELOW)
+				{
+					vy = Math.abs(client.world.random.nextGaussian() * 0.4);
+				}
+				else
+					vy = client.world.random.nextGaussian() * 0.4;
+				client.world.addParticle(SwgParticleTypes.FRAGMENTATION_GRENADE_SPARK, getX(), getY(), getZ(), vx, vy, vz);
+			}
+		}
+	}
+
 	@Override
 	public void tick()
 	{
@@ -124,6 +147,7 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 
 		if (EXPLOSION_TICK == 7)
 		{
+			createSparkParticles();
 			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(3, 3, 3), entity -> {
 				return true;
 			});
@@ -151,7 +175,14 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 			var pos = blockHitResult.getBlockPos();
 			var state = getWorld().getBlockState(pos);
 			this.bounce(blockHitResult);
-
+			if (blockHitResult.getSide() == Direction.UP)
+			{
+				COLLISION_BELOW = true;
+			}
+			else
+			{
+				COLLISION_BELOW = false;
+			}
 			if (getVelocity().length() > 0.01f)
 				this.playSound(state.getBlock().getSoundGroup(state).getHitSound(), 1f, 1f);
 		}

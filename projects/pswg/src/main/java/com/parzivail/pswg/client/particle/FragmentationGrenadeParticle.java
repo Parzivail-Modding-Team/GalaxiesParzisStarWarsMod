@@ -111,7 +111,7 @@ public class FragmentationGrenadeParticle extends SpriteBillboardParticle
 		{
 			this.scaleX = this.scaleY = 1;
 			this.scale = (float)Math.pow(age / 10, 6);
-			this.alpha = (float)(Math.max(1 - Math.pow(age / 20, 3), 0.001f));
+			this.alpha = (float)(Math.max(1 - (Math.pow(age / 20, 3) * 2), 0.001f));
 		}
 	}
 

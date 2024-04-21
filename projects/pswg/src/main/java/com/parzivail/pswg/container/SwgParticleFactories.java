@@ -2,10 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.mojang.serialization.Codec;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.particle.ExplosionSmokeParticle;
-import com.parzivail.pswg.client.particle.FragmentationGrenadeParticle;
-import com.parzivail.pswg.client.particle.WakeParticle;
-import com.parzivail.pswg.client.particle.WaterWakeParticle;
+import com.parzivail.pswg.client.particle.*;
 import com.parzivail.pswg.client.render.player.PlayerSocket;
 import com.parzivail.pswg.features.blasters.client.particle.ScorchParticle;
 import com.parzivail.pswg.features.blasters.client.particle.SlugTrailParticle;
@@ -47,6 +44,7 @@ public class SwgParticleFactories
 		registerFactory(WATER_WAKE, WaterWakeParticle.Factory::new);
 		registerFactory(SCORCH, ScorchParticle.Factory::new);
 		registerFactory(SPARK, SparkParticle.Factory::new);
+		registerFactory(FRAGMENTATION_GRENADE_SPARK, FragmentationGrenadeSparkParticle.Factory::new);
 		registerFactory(SLUG_TRAIL, SlugTrailParticle.Factory::new);
 		registerBlockStateBasedFactory(WAKE, new WakeParticle.Factory());
 	}
