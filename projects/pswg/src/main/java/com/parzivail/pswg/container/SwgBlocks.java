@@ -964,6 +964,14 @@ public class SwgBlocks
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		@TarkinBlock(state = TrState.None, model = TrModel.None, loot = TrLoot.Pickling)
 		public static final ThermalDetonatorBlock ThermalDetonatorBlock = new ThermalDetonatorBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(0.5F));
+
+		@RegistryName("plate")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None)
+		public static final Block Plate = new PlateBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).strength(1F));
+		
+		@RegistryName("plate")
+		public static final BlockEntityType<PlateBlockEntity> PlateBlockEntityType = FabricBlockEntityTypeBuilder.create(PlateBlockEntity::new, Plate).build();
 	}
 
 	public static void register()
