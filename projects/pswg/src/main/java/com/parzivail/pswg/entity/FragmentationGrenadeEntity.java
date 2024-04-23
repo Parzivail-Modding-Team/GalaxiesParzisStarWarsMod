@@ -1,9 +1,11 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.pswg.item.ExplosionSoundGroup;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -187,7 +189,7 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	@Override
 	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
 	{
-		return false;
+		return state.isIn(SwgTags.Blocks.FRAGMENTATION_GRENADE_DESTROY) && Resources.CONFIG.get().server.allowDestruction;
 	}
 
 	@Override

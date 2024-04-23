@@ -12,6 +12,7 @@ public class SwgTags
 {
 	public static class Blocks
 	{
+		public static final TagKey<Block> FRAGMENTATION_GRENADE_DESTROY = register("fragmentation_grenade_destroy");
 		public static final TagKey<Block> SLIDING_DOORS = register("sliding_doors");
 		public static final TagKey<Block> BLASTER_DESTROY = register("blaster_destroy");
 		public static final TagKey<Block> BLASTER_EXPLODE = register("blaster_explode");
