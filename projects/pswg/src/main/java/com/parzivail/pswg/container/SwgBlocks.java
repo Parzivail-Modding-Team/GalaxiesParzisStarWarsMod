@@ -968,8 +968,7 @@ public class SwgBlocks
 		@RegistryName("plate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		@TarkinBlock(state = TrState.None, model = TrModel.None)
-		public static final Block Plate = new PlateBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).strength(1F));
-		
+		public static final Block Plate = new PlateBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.METAL).strength(1F).nonOpaque());
 		@RegistryName("plate")
 		public static final BlockEntityType<PlateBlockEntity> PlateBlockEntityType = FabricBlockEntityTypeBuilder.create(PlateBlockEntity::new, Plate).build();
 	}

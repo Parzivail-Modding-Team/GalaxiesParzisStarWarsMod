@@ -267,6 +267,8 @@ public class Client implements ClientModInitializer
 				)
 		);
 
+		ModelRegistry.register(SwgBlocks.Misc.Plate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/food/plate"), Resources.id("block/model/food/plate"), new Identifier("block/stone")));
+
 		ModelRegistry.register(SwgBlocks.Crate.ImperialCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/imperial"), Resources.id("block/model/corrugated_crate/imperial_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.MedicalCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/medical"), Resources.id("block/model/corrugated_crate/medical_particle")));
 		for (var color : DyeColor.values())
