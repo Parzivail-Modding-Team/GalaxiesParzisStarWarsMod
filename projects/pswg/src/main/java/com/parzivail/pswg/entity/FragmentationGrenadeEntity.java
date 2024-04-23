@@ -117,13 +117,13 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	{
 		for (int i = 0; i < Random.create().nextBetween(50, 80); i++)
 		{
-			double vx = getWorld().random.nextGaussian() * 0.4;
-			double vz = getWorld().random.nextGaussian() * 0.4;
+			double vx = getWorld().random.nextGaussian() * 0.5;
+			double vz = getWorld().random.nextGaussian() * 0.5;
 			double vy;
 			if (COLLISION_BELOW)
-				vy = Math.abs(getWorld().random.nextGaussian() * 0.4);
+				vy = Math.abs(getWorld().random.nextGaussian() * 0.8);
 			else
-				vy = getWorld().random.nextGaussian() * 0.4;
+				vy = getWorld().random.nextGaussian() * 0.5;
 			getWorld().addParticle(SwgParticleTypes.FRAGMENTATION_GRENADE_SPARK, getX(), getY(), getZ(), vx, vy, vz);
 		}
 	}

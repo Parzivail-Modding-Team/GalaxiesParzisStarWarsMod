@@ -26,17 +26,18 @@ import org.slf4j.LoggerFactory;
 
 public abstract class ThrowableExplosiveItem extends BlockItem implements ILeftClickConsumer, IDefaultNbtProvider, ICooldownItem, ICustomVisualItemEquality
 {
-	public final int baseTicksToExplosion = 150;
+	public final int baseTicksToExplosion;
 	public final Block block;
 	public final Item item;
 	public final ExplosionSoundGroup sounds;
 
-	public ThrowableExplosiveItem(Settings settings, Block block, Item item, ExplosionSoundGroup sounds)
+	public ThrowableExplosiveItem(Settings settings, Block block, Item item, ExplosionSoundGroup sounds, int baseTicksToExplosion)
 	{
 		super(block, settings);
 		this.block = block;
 		this.item = item;
 		this.sounds = sounds;
+		this.baseTicksToExplosion = baseTicksToExplosion;
 	}
 
 	@Override

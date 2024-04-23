@@ -37,7 +37,7 @@ public class FragmentationGrenadeItem extends ThrowableExplosiveItem
 
 	public FragmentationGrenadeItem(Settings settings, Block block)
 	{
-		super(settings, block, SwgItems.Explosives.FragmentationGrenade, new FragmentationGrenadeSoundGroup());
+		super(settings, block, SwgItems.Explosives.FragmentationGrenade, new FragmentationGrenadeSoundGroup(), 50);
 	}
 
 	@Override

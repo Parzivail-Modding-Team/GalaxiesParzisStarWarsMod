@@ -34,7 +34,7 @@ public class ThermalDetonatorItem extends ThrowableExplosiveItem implements ILef
 
 	public ThermalDetonatorItem(Settings settings, Block block)
 	{
-		super(settings, block, SwgItems.Explosives.ThermalDetonator, new ThermalDetonatorSoundGroup());
+		super(settings, block, SwgItems.Explosives.ThermalDetonator, new ThermalDetonatorSoundGroup(), 150);
 	}
 
 	@Override

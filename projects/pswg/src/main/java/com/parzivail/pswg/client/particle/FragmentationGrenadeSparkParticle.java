@@ -17,6 +17,7 @@ public class FragmentationGrenadeSparkParticle extends SparkParticle
 	{
 		super(clientWorld, x, y, z, vX, vY, vZ, spriteProvider);
 		this.setColor(0, 0, 1);
+		this.maxAge = (int)(this.random.nextFloat() * 20 + 10);
 		this.scale = (float)(this.random.nextFloat() * 0.25 + 0.15);
 	}
 
@@ -25,6 +26,7 @@ public class FragmentationGrenadeSparkParticle extends SparkParticle
 	{
 		super.tick();
 		var a = (this.age / (float)this.maxAge) / 4f;
+		this.velocityY -= 0.0145;
 		this.setColor(MathHelper.clamp(Ease.outCubic(1.5f * a), 0, 1), MathHelper.clamp(Ease.outCubic(3 * a), 0, 1), 1);
 	}
 
