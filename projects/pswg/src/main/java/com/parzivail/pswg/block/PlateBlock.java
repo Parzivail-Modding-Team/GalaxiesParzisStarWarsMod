@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.parzivail.pswg.blockentity.PlateBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class PlateBlock extends BlockWithEntity
 {
 	public final static IntProperty FOOD_AMOUNT = IntProperty.of("food_amount", 0, 5);
+	public final static int MAX_FOOD_AMOUNT = 5;
 
 	public PlateBlock(Settings settings)
 	{
@@ -41,7 +43,7 @@ public class PlateBlock extends BlockWithEntity
 	{
 		BlockEntity blockEntity = world.getBlockEntity(pos);
 		int foodAmount = state.get(FOOD_AMOUNT);
-		if (stack.isFood() && blockEntity instanceof PlateBlockEntity plateBlockEntity && foodAmount < 5)
+		if (stack.isFood() && blockEntity instanceof PlateBlockEntity plateBlockEntity && foodAmount < MAX_FOOD_AMOUNT)
 			plateBlockEntity.addFood(stack);
 	}
 
@@ -65,9 +67,10 @@ public class PlateBlock extends BlockWithEntity
 			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) - 1));
 			return ActionResult.SUCCESS;
 		}
-		else if (!stack.isEmpty() && state.get(FOOD_AMOUNT) < 5)
+		else if (!stack.isEmpty() && state.get(FOOD_AMOUNT) < MAX_FOOD_AMOUNT && stack.isFood())
 		{
 			var newStack = new ItemStack(stack.getItem(), 1);
+			newStack.setNbt(stack.getNbt());
 			addFood(world, pos, state, newStack);
 			if (player.isCreative())
 				stack.decrement(1);
