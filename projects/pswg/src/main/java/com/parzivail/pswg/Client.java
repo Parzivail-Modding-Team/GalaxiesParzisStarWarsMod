@@ -206,6 +206,7 @@ public class Client implements ClientModInitializer
 		BlockEntityRendererFactories.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);
 		BlockEntityRendererFactories.register(SwgBlocks.Power.CouplingBlockEntityType, PowerCouplingCableRenderer::new);
 		BlockEntityRendererFactories.register(SwgBlocks.Cage.CreatureCageBlockEntityType, TerrariumRenderer::new);
+		BlockEntityRendererFactories.register(SwgBlocks.Misc.PlateBlockEntityType, PlateRenderer::new);
 
 		ModelRegistry.register(
 				SwgBlocks.Door.Sliding1x2,
@@ -267,7 +268,8 @@ public class Client implements ClientModInitializer
 				)
 		);
 
-		ModelRegistry.register(SwgBlocks.Misc.Plate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/food/plate"), Resources.id("block/model/food/plate"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Misc.Plate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/food/plate"), Resources.id("block/model/food/plate"), Resources.id("block/model/food/plate")));
+
 
 		ModelRegistry.register(SwgBlocks.Crate.ImperialCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/imperial"), Resources.id("block/model/corrugated_crate/imperial_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.MedicalCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/medical"), Resources.id("block/model/corrugated_crate/medical_particle")));

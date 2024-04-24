@@ -2,6 +2,7 @@ package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.blockentity.PlateBlockEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -45,6 +46,12 @@ public class PlateBlock extends BlockWithEntity
 		int foodAmount = state.get(FOOD_AMOUNT);
 		if (stack.isFood() && blockEntity instanceof PlateBlockEntity plateBlockEntity && foodAmount < MAX_FOOD_AMOUNT)
 			plateBlockEntity.addFood(stack);
+	}
+
+	@Override
+	public BlockRenderType getRenderType(BlockState state)
+	{
+		return BlockRenderType.MODEL;
 	}
 
 	private void takeFood(World world, BlockPos pos, BlockState state, PlayerEntity player)
