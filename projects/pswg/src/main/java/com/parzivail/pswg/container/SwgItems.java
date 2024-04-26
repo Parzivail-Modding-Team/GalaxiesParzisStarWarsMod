@@ -439,7 +439,7 @@ public class SwgItems
 	public static class Food
 	{
 		@RegistryName("jogan_fruit")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item JoganFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
 		@RegistryName("chasuka_leaf")
 		@TarkinItem
