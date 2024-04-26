@@ -29,7 +29,7 @@ public class PlateRenderer implements BlockEntityRenderer<PlateBlockEntity>
 	private static final Identifier MODEL = Resources.id("block/food/plate");
 	private static final P3dModel FALLBACK_MODEL = P3dManager.INSTANCE.get(Resources.id("block/food/haroun_bread"));
 	private static final Identifier FALLBACK_TEXTURE = Resources.id("textures/block/model/food/haroun_bread.png");
-	private static final Identifier TEXTURE = Resources.id("textures/block/model/food/plate");
+	private static final Identifier TEXTURE = Resources.id("textures/block/model/food/plate.png");
 
 	public PlateRenderer(BlockEntityRendererFactory.Context ctx)
 	{
@@ -47,16 +47,13 @@ public class PlateRenderer implements BlockEntityRenderer<PlateBlockEntity>
 		var state = world.getBlockState(entity.getPos());
 		if (!state.isOf(SwgBlocks.Misc.Plate))
 			return;
-		//matrices.pop();
+		matrices.push();
 		matrices.translate(0.325f, 0.05f, 0.325f);
 		matrices.scale(0.5f, 0.5f, 0.5f);
-		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
 		for (int i = 0; i < foodList.size(); i += 1)
 		{
 			var registryKey = foodList.get(i).getItem().getRegistryEntry().getKey().get().getValue().getPath();
 			var id = Resources.id("block/food/" + registryKey);
-			//matrices.translate(0, 0.25f, 0);
-
 			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(145), 0.35f, 0, 0.35f);
 
 			var foodModel = P3dManager.INSTANCE.get(id);
@@ -68,10 +65,9 @@ public class PlateRenderer implements BlockEntityRenderer<PlateBlockEntity>
 			}
 
 			Identifier finalFoodTexture = foodTexture;
-			var m = matrices;
 
 			foodModel.render(matrices, vertexConsumers, entity, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
 		}
-		//matrices.push();
+		matrices.pop();
 	}
 }

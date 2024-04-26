@@ -445,7 +445,7 @@ public class SwgItems
 		@TarkinItem
 		public static final Item ChasukaLeaf = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
 		@RegistryName("meiloorun")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item Meiloorun = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
 
 		@RegistryName("mynock_wing")
@@ -458,24 +458,24 @@ public class SwgItems
 		@TarkinItem
 		public static final Item BanthaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("cooked_bantha_chop")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item BanthaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()));
 		@RegistryName("nerf_chop")
 		@TarkinItem
 		public static final Item NerfChop = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("cooked_nerf_chop")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item NerfSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()));
 		@RegistryName("gizka_chop")
 		@TarkinItem
 		public static final Item GizkaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("cooked_gizka_chop")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item GizkaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()));
 
 		// TODO: are these meat?
 		@RegistryName("flangth_takeout")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item FlangthTakeout = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("flangth_plate")
 		@TarkinItem
@@ -527,21 +527,21 @@ public class SwgItems
 		@TarkinItem
 		public static final Item BlueYogurt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
 		@RegistryName("bantha_cookie")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item BanthaCookie = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.6F).build()));
 
 		@RegistryName("qrikki_bread")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item QrikkiBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.6F).build()));
 		@RegistryName("qrikki_waffle")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.7F).build()));
 
 		@RegistryName("ahrisa_bowl")
 		@TarkinItem
 		public static final Item AhrisaBowl = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
 		@RegistryName("black_melon")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item BlackMelon = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("desert_plums")
 		@TarkinItem
@@ -550,22 +550,22 @@ public class SwgItems
 		@TarkinItem
 		public static final Item DriedPoontenGrass = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("haroun_bread")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item HarounBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.3F).build()));
 		@RegistryName("hkak_bean")
 		@TarkinItem
 		public static final Item HkakBean = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("pallie_fruit")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item PallieFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("pika_fruit")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item PikaFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("tuber")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("cooked_eopie_loin")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item CookedEopieLoin = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()));
 		@RegistryName("crispy_gorg")
 		@TarkinItem
@@ -577,13 +577,13 @@ public class SwgItems
 		@TarkinItem
 		public static final Item DewbackOmelette = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()));
 		@RegistryName("jerba_rack")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item JerbaRack = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
 		@RegistryName("jerba_rib")
 		@TarkinItem
 		public static final Item JerbaRib = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()));
 		@RegistryName("krayt_meat")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item KraytMeat = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()));
 		@RegistryName("raw_sketto_nugget")
 		@TarkinItem
@@ -598,10 +598,10 @@ public class SwgItems
 		@TarkinItem
 		public static final Item TuberMash = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
 		@RegistryName("vaporator_mushroom")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item VaporatorMushroom = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("worrt_egg")
-		@TarkinItem
+		@TarkinItem(tags = TrItemTag.Plate)
 		public static final Item WorrtEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("deb_deb")
 		@TarkinItem

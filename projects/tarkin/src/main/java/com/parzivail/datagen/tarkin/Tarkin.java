@@ -204,6 +204,7 @@ public class Tarkin
 			case Logs -> ItemTags.LOGS;
 			case LogsThatBurn -> ItemTags.LOGS_THAT_BURN;
 			case Sand -> ItemTags.SAND;
+			case Plate -> SwgTags.Items.PLATE_ITEMS;
 			default -> throw new RuntimeException("Unsupported value " + preset);
 		};
 	}

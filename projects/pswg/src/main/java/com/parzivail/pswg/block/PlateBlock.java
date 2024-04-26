@@ -1,6 +1,7 @@
 package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.blockentity.PlateBlockEntity;
+import com.parzivail.pswg.container.SwgTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -74,13 +75,7 @@ public class PlateBlock extends BlockWithEntity
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		var stack = player.getStackInHand(hand);
-		if (player.isSneaking() && state.get(FOOD_AMOUNT) > 0)
-		{
-			takeFood(world, pos, state, player);
-			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) - 1));
-			return ActionResult.SUCCESS;
-		}
-		else if (!stack.isEmpty() && state.get(FOOD_AMOUNT) < MAX_FOOD_AMOUNT && stack.isFood())
+		if (!stack.isEmpty() && state.get(FOOD_AMOUNT) < MAX_FOOD_AMOUNT && stack.isIn(SwgTags.Items.PLATE_ITEMS) && !player.isSneaking())
 		{
 			var newStack = new ItemStack(stack.getItem(), 1);
 			newStack.setNbt(stack.getNbt());
@@ -90,6 +85,13 @@ public class PlateBlock extends BlockWithEntity
 			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) + 1));
 			return ActionResult.SUCCESS;
 		}
+		else if (state.get(FOOD_AMOUNT) > 0)
+		{
+			takeFood(world, pos, state, player);
+			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) - 1));
+			return ActionResult.SUCCESS;
+		}
+
 		return ActionResult.PASS;
 	}
 }
