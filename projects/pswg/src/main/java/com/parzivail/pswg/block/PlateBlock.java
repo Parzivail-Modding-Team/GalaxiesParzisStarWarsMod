@@ -85,7 +85,7 @@ public class PlateBlock extends BlockWithEntity
 			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) + 1));
 			return ActionResult.SUCCESS;
 		}
-		else if (state.get(FOOD_AMOUNT) > 0)
+		else if (state.get(FOOD_AMOUNT) > 0 && !(state.get(FOOD_AMOUNT) > 0 && stack.isIn(SwgTags.Items.PLATE_ITEMS) && !player.isSneaking()))
 		{
 			takeFood(world, pos, state, player);
 			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) - 1));
