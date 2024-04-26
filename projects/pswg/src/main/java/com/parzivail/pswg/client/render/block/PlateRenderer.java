@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.render.block;
 
 import com.parzivail.p3d.P3dManager;
+import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.blockentity.PlateBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
@@ -14,6 +15,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.random.Random;
 import org.joml.Matrix4f;
 
@@ -25,6 +27,8 @@ import java.util.function.Supplier;
 public class PlateRenderer implements BlockEntityRenderer<PlateBlockEntity>
 {
 	private static final Identifier MODEL = Resources.id("block/food/plate");
+	private static final P3dModel FALLBACK_MODEL = P3dManager.INSTANCE.get(Resources.id("block/food/haroun_bread"));
+	private static final Identifier FALLBACK_TEXTURE = Resources.id("textures/block/model/food/haroun_bread.png");
 	private static final Identifier TEXTURE = Resources.id("textures/block/model/food/plate");
 
 	public PlateRenderer(BlockEntityRendererFactory.Context ctx)
@@ -43,19 +47,31 @@ public class PlateRenderer implements BlockEntityRenderer<PlateBlockEntity>
 		var state = world.getBlockState(entity.getPos());
 		if (!state.isOf(SwgBlocks.Misc.Plate))
 			return;
-		matrices.push();
-
+		//matrices.pop();
+		matrices.translate(0.325f, 0.05f, 0.325f);
+		matrices.scale(0.5f, 0.5f, 0.5f);
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
 		for (int i = 0; i < foodList.size(); i += 1)
 		{
 			var registryKey = foodList.get(i).getItem().getRegistryEntry().getKey().get().getValue().getPath();
 			var id = Resources.id("block/food/" + registryKey);
-			matrices.translate((float)(i + 1) / 10f, (float)(i + 1) / 10f, (float)(i + 1) / 10f);
+			//matrices.translate(0, 0.25f, 0);
+
+			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(145), 0.35f, 0, 0.35f);
+
 			var foodModel = P3dManager.INSTANCE.get(id);
 			var foodTexture = new Identifier(id.getNamespace(), "textures/block/model/food/" + registryKey + ".png");
-			//
-			foodModel.render(matrices, vertexConsumers, entity, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(foodTexture)), light, 0, 255, 255, 255, 255);
+			if (foodModel == null)
+			{
+				foodModel = FALLBACK_MODEL;
+				foodTexture = FALLBACK_TEXTURE;
+			}
+
+			Identifier finalFoodTexture = foodTexture;
+			var m = matrices;
+
+			foodModel.render(matrices, vertexConsumers, entity, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
 		}
-		matrices.pop();
+		//matrices.push();
 	}
 }
