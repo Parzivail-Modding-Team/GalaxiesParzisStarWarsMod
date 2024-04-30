@@ -15,6 +15,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.random.Random;
 import org.joml.Matrix4f;
@@ -48,13 +49,14 @@ public class PlateRenderer implements BlockEntityRenderer<PlateBlockEntity>
 		if (!state.isOf(SwgBlocks.Misc.Plate))
 			return;
 		matrices.push();
-		matrices.translate(0.325f, 0.05f, 0.325f);
-		matrices.scale(0.5f, 0.5f, 0.5f);
+		matrices.translate(0.5f, 0.05f, 0.5f);
+		//matrices.scale(0.5f, 0.5f, 0.5f);
+		P3dModel lastModel = null;
 		for (int i = 0; i < foodList.size(); i += 1)
 		{
 			var registryKey = foodList.get(i).getItem().getRegistryEntry().getKey().get().getValue().getPath();
 			var id = Resources.id("block/food/" + registryKey);
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(145), 0.35f, 0, 0.35f);
+			//matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(145), 0.35f, 0, 0.35f);
 
 			var foodModel = P3dManager.INSTANCE.get(id);
 			var foodTexture = new Identifier(id.getNamespace(), "textures/block/model/food/" + registryKey + ".png");
@@ -64,8 +66,15 @@ public class PlateRenderer implements BlockEntityRenderer<PlateBlockEntity>
 				foodTexture = FALLBACK_TEXTURE;
 			}
 
-			Identifier finalFoodTexture = foodTexture;
 
+			Identifier finalFoodTexture = foodTexture;
+			if (i > 0)
+			{
+				//var tY = lastModel.bounds().getMax(Direction.Axis.Y)-lastModel.bounds().getMin(Direction.Axis.Y);
+				var tY = lastModel.bounds().getLengthY();
+				matrices.translate(0, tY, 0);
+			}
+			lastModel = foodModel;
 			foodModel.render(matrices, vertexConsumers, entity, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
 		}
 		matrices.pop();
