@@ -28,6 +28,7 @@ public class SwgTags
 	{
 		public static final TagKey<Item> BANTHA_TEMPT_ITEMS = register("bantha_tempt_items");
 		public static final TagKey<Item> PLATE_ITEMS = register("plate_items");
+		public static final TagKey<Item> MAIN_COURSE = register("main_course");
 
 		private static TagKey<Item> register(String id)
 		{

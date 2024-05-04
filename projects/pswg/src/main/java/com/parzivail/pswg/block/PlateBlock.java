@@ -77,6 +77,10 @@ public class PlateBlock extends BlockWithEntity
 		var stack = player.getStackInHand(hand);
 		if (!stack.isEmpty() && state.get(FOOD_AMOUNT) < MAX_FOOD_AMOUNT && stack.isIn(SwgTags.Items.PLATE_ITEMS) && !player.isSneaking())
 		{
+			if (stack.isIn(SwgTags.Items.MAIN_COURSE) && state.get(FOOD_AMOUNT) != 0)
+			{
+				return ActionResult.PASS;
+			}
 			var newStack = new ItemStack(stack.getItem(), 1);
 			newStack.setNbt(stack.getNbt());
 			addFood(world, pos, state, newStack);

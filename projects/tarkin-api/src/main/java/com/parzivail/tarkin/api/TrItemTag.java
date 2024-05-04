@@ -7,5 +7,6 @@ public enum TrItemTag
 	Logs,
 	LogsThatBurn,
 	Sand,
-	Plate
+	Plate,
+	MainCourse
 }
