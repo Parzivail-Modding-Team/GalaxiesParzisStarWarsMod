@@ -22,7 +22,7 @@ import com.parzivail.pswg.features.blasters.data.BlasterFiringMode;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
-import com.parzivail.util.block.InvertedLampBlock;
+import com.parzivail.pswg.block.InvertedLampBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.ItemStack;

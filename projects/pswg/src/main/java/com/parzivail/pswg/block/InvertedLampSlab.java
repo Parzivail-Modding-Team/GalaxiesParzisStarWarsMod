@@ -1,5 +1,6 @@
-package com.parzivail.util.block;
+package com.parzivail.pswg.block;
 
+import com.parzivail.util.block.VerticalSlabBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

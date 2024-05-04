@@ -1,6 +1,7 @@
 package com.parzivail.util.client.model;
 
 import com.mojang.datafixers.util.Pair;
+import com.parzivail.pswg.block.InteractableConnectingInvertedLampBlock;
 import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
 import com.parzivail.util.math.MathUtil;
@@ -13,6 +14,7 @@ import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.Baker;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -20,6 +22,9 @@ import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -74,6 +79,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	private final EnumSet<Direction> capDirections;
 	private final Sprite borderSprite;
 	private final Sprite capSprite;
+	private Sprite litBorderSprite;
 
 	public ConnectedTextureModel(boolean hConnect, boolean vConnect, boolean lConnect, EnumSet<Direction> capDirections, Sprite blankSprite, Sprite borderSprite, Sprite capSprite)
 	{
@@ -84,6 +90,18 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		this.capDirections = capDirections;
 		this.borderSprite = borderSprite;
 		this.capSprite = capSprite;
+	}
+
+	public ConnectedTextureModel(boolean hConnect, boolean vConnect, boolean lConnect, EnumSet<Direction> capDirections, Sprite blankSprite, Sprite borderSprite, Sprite capSprite, Sprite litBorderSprite)
+	{
+		super(blankSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
+		this.hConnect = hConnect;
+		this.vConnect = vConnect;
+		this.lConnect = lConnect;
+		this.capDirections = capDirections;
+		this.borderSprite = borderSprite;
+		this.capSprite = capSprite;
+		this.litBorderSprite = litBorderSprite;
 	}
 
 	@Override
@@ -135,6 +153,14 @@ public class ConnectedTextureModel extends DynamicBakedModel
 			Vector3f dV = DELTAV[faceDirection.getId()];
 
 			emitTopQuad(quadEmitter, sprite, borderSprite, blockView, state, pos, faceDirection, min, dU, dV);
+			if (state != null && litBorderSprite != null)
+			{
+				if (state.getBlock() instanceof InteractableConnectingInvertedLampBlock && state.get(InteractableConnectingInvertedLampBlock.LIT))
+				{
+					emitTopQuad(quadEmitter, sprite, litBorderSprite, blockView, state, pos, faceDirection, min, dU, dV);
+				}
+			}
+
 		}
 
 		return meshBuilder.build();
@@ -149,7 +175,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		);
 	}
 
-	private void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos, Direction direction, Vector3f min, Vector3f dU, Vector3f dV)
+	void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos, Direction direction, Vector3f min, Vector3f dU, Vector3f dV)
 	{
 		var subSpriteEntry = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, direction, hConnect, vConnect, lConnect);
 		var normal = direction.getUnitVector();
@@ -313,6 +339,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		private final SpriteIdentifier sprite;
 		private final SpriteIdentifier borderSprite;
 		private final SpriteIdentifier capSprite;
+		private SpriteIdentifier litBorderSprite;
 
 		public Unbaked(boolean hConnect, boolean vConnect, boolean lConnect, EnumSet<Direction> capDirections, SpriteIdentifier sprite, SpriteIdentifier borderSprite, SpriteIdentifier capSprite)
 		{
@@ -324,6 +351,19 @@ public class ConnectedTextureModel extends DynamicBakedModel
 			this.borderSprite = borderSprite;
 			this.capSprite = capSprite;
 			this.baker = spriteLoader -> new ConnectedTextureModel(hConnect, vConnect, lConnect, capDirections, spriteLoader.apply(sprite), spriteLoader.apply(borderSprite), capSprite == null ? null : spriteLoader.apply(capSprite));
+		}
+
+		public Unbaked(boolean hConnect, boolean vConnect, boolean lConnect, EnumSet<Direction> capDirections, SpriteIdentifier sprite, SpriteIdentifier borderSprite, SpriteIdentifier capSprite, SpriteIdentifier litBorderSprite)
+		{
+			this.hConnect = hConnect;
+			this.vConnect = vConnect;
+			this.lConnect = lConnect;
+			this.capDirections = capDirections;
+			this.sprite = sprite;
+			this.borderSprite = borderSprite;
+			this.capSprite = capSprite;
+			this.litBorderSprite = litBorderSprite;
+			this.baker = spriteLoader -> new ConnectedTextureModel(hConnect, vConnect, lConnect, capDirections, spriteLoader.apply(sprite), spriteLoader.apply(borderSprite), capSprite == null ? null : spriteLoader.apply(capSprite), spriteLoader.apply(litBorderSprite));
 		}
 
 		@Override
@@ -368,6 +408,10 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		@Override
 		public ClonableUnbakedModel copy()
 		{
+			if (litBorderSprite != null)
+			{
+				return new Unbaked(hConnect, vConnect, lConnect, capDirections.clone(), sprite, borderSprite, capSprite, litBorderSprite);
+			}
 			return new Unbaked(hConnect, vConnect, lConnect, capDirections.clone(), sprite, borderSprite, capSprite);
 		}
 	}

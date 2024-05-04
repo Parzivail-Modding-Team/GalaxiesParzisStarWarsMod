@@ -1,4 +1,4 @@
-package com.parzivail.util.block;
+package com.parzivail.pswg.block;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;

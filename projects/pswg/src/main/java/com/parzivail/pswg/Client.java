@@ -280,8 +280,8 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialPanelTall1, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialPanelTall2, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialLightTall1, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialLightTall2, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
+		ModelRegistry.registerConnectedLamp(SwgBlocks.Panel.ImperialLightTall1, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
+		ModelRegistry.registerConnectedLamp(SwgBlocks.Panel.ImperialLightTall2, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
 
 		//		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialCutout, true, false, true, Resources.id("block/imperial_cutout_face"), Resources.id("block/imperial_cutout_face"), Resources.id("block/imperial_cutout_border"), EnumSet.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
 		//		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialCutoutPipes, true, false, true, Resources.id("block/imperial_cutout_pipes_face"), Resources.id("block/imperial_cutout_pipes_face"), Resources.id("block/imperial_cutout_pipes_border"), EnumSet.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));

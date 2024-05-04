@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -693,7 +694,7 @@ public class SwgBlocks
 		@RegistryName("gray_imperial_light_half_5")
 		public static final Block GrayImperialLightHalf5 = createLightingPanelBlock(13);
 		@RegistryName("gray_imperial_lighting_panel_slab")
-		public static final InvertedLampSlab GrayImperialLightingSlab = createLightingPanelSlab(12);
+		public static final InvertedLampSlab GrayImperialLightingSlab = createLightingPanelSlab(12, 15);
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -708,10 +709,10 @@ public class SwgBlocks
 
 		@RegistryName("gray_imperial_tall_light_1")
 		@TarkinBlock(state = TrState.None, model = TrModel.None)
-		public static final SelfConnectingBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY);
+		public static final InteractableConnectingInvertedLampBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY, 14);
 		@RegistryName("gray_imperial_tall_light_2")
 		@TarkinBlock(state = TrState.None, model = TrModel.None)
-		public static final SelfConnectingBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY);
+		public static final InteractableConnectingInvertedLampBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY, 14);
 		@RegistryName("gray_imperial_light_panel_1")
 		public static final Block GrayImperialLightPanel1 = createLightingPanelBlock(11);
 		@RegistryName("gray_imperial_light_panel_2")
@@ -738,9 +739,13 @@ public class SwgBlocks
 			return createLitPanel(topMapColor, 15);
 		}
 
-		private static SelfConnectingBlock createLitConnectingPanel(MapColor mapColor)
+		private static InteractableConnectingInvertedLampBlock createLitConnectingPanel(MapColor mapColor, int brightness)
 		{
-			return new SelfConnectingBlock(FabricBlockSettings.create().strength(2.0F).requiresTool().sounds(BlockSoundGroup.COPPER).luminance(value -> 15));
+			return new InteractableConnectingInvertedLampBlock(FabricBlockSettings.create().strength(2.0F).requiresTool().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
+				if (InteractableConnectingInvertedLampBlock.isLit(blockState))
+					return brightness;
+				return 0;
+			}));
 		}
 
 		private static Block createPanel(MapColor topMapColor)
@@ -1065,11 +1070,17 @@ public class SwgBlocks
 		}).strength(0.3f));
 	}
 
-	public static InteractableInvertedLampSlab createLightingPanelSlab(int brightness)
+	public static InteractableInvertedLampSlab createLightingPanelSlab(int brightnessSingle, int brightnessDouble)
 	{
 		return new InteractableInvertedLampSlab(FabricBlockSettings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
 			if (InvertedLampBlock.isLit(blockState))
-				return brightness;
+			{
+				if (blockState.get(VerticalSlabBlock.TYPE) == SlabType.DOUBLE)
+				{
+					return brightnessDouble;
+				}
+				return brightnessSingle;
+			}
 			return 0;
 		}).strength(0.3f));
 	}

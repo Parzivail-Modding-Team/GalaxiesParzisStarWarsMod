@@ -16,6 +16,7 @@
 
 package com.parzivail.util.client.model;
 
+import com.parzivail.pswg.block.InteractableConnectingInvertedLampBlock;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.minecraft.block.Block;
@@ -51,6 +52,26 @@ public enum ModelRegistry implements ModelVariantProvider
 				new Identifier(id.getNamespace(), "block/" + id.getPath()),
 				new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border")
 		);
+	}
+
+	public static void registerConnectedLamp(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture)
+	{
+		var id = Registries.BLOCK.getId(block);
+			/*registerConnected(
+					block, hConnect, vConnect, lConnect, capTexture,
+					new Identifier(id.getNamespace(), "block/" + id.getPath()),
+					new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border")
+				);*/
+		var centerTexture = new Identifier(id.getNamespace(), "block/" + id.getPath());
+		var borderTexture = new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border");
+		var borderLitTexture = new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border_on");
+		register(block, true, new ConnectedTextureModel.Unbaked(
+				hConnect, vConnect, lConnect, EnumSet.of(Direction.UP, Direction.DOWN),
+				new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, centerTexture),
+				new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, borderTexture),
+				capTexture == null ? null : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, capTexture),
+				new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, borderLitTexture)
+		));
 	}
 
 	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture, Identifier centerTexture)
