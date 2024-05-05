@@ -206,7 +206,7 @@ public class Client implements ClientModInitializer
 		BlockEntityRendererFactories.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);
 		BlockEntityRendererFactories.register(SwgBlocks.Power.CouplingBlockEntityType, PowerCouplingCableRenderer::new);
 		BlockEntityRendererFactories.register(SwgBlocks.Cage.CreatureCageBlockEntityType, TerrariumRenderer::new);
-		BlockEntityRendererFactories.register(SwgBlocks.Misc.PlateBlockEntityType, PlateRenderer::new);
+		BlockEntityRendererFactories.register(SwgBlocks.Misc.PlateBlockEntityType, PlateBlockRenderer::new);
 
 		ModelRegistry.register(
 				SwgBlocks.Door.Sliding1x2,

@@ -1,12 +1,11 @@
 package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.util.blockentity.InventoryBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -14,13 +13,13 @@ import net.minecraft.util.math.BlockPos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlateBlockEntity extends InventoryBlockEntity
+public class PlateBlockEntity extends BlockEntity
 {
 	public List<ItemStack> FOODS = new ArrayList<>();
 
 	public PlateBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.Misc.PlateBlockEntityType, pos, state, 5);
+		super(SwgBlocks.Misc.PlateBlockEntityType, pos, state);
 	}
 
 	@Override
