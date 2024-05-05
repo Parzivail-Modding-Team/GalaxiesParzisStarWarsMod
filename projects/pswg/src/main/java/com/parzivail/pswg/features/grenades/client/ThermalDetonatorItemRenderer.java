@@ -67,8 +67,8 @@ public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 				matrices.multiply(new Quaternionf().rotationX((float)(Math.PI / 4)));
 				break;
 			case FIXED:
-				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / 4)));
-				matrices.multiply(new Quaternionf().rotationY((float)(135 * Math.PI / 180)));
+				matrices.translate(0.05f, -0.15f, 0.05f);
+				matrices.multiply(new Quaternionf().rotationY((float)(270 * Math.PI / 180)));
 				MathUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 			case GUI:
