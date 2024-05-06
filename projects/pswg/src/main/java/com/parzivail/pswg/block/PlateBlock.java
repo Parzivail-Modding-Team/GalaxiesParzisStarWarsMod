@@ -6,6 +6,8 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
@@ -67,7 +69,7 @@ public class PlateBlock extends BlockWithEntity
 		{
 			var blockEntity = world.getBlockEntity(pos);
 			if (blockEntity instanceof PlateBlockEntity plateBlockEntity)
-				plateBlockEntity.removeFood(player);
+				plateBlockEntity.takeFood(player);
 		}
 	}
 
@@ -84,15 +86,26 @@ public class PlateBlock extends BlockWithEntity
 			var newStack = new ItemStack(stack.getItem(), 1);
 			newStack.setNbt(stack.getNbt());
 			addFood(world, pos, state, newStack);
-			if (player.isCreative())
+			if (!player.isCreative())
 				stack.decrement(1);
 			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) + 1));
 			return ActionResult.SUCCESS;
 		}
-		else if (state.get(FOOD_AMOUNT) > 0 && !(state.get(FOOD_AMOUNT) > 0 && stack.isIn(SwgTags.Items.PLATE_ITEMS) && !player.isSneaking()))
+		else if (player.isSneaking() &&state.get(FOOD_AMOUNT) > 0)
 		{
 			takeFood(world, pos, state, player);
 			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) - 1));
+			return ActionResult.SUCCESS;
+		}else if(state.get(FOOD_AMOUNT)>0 && !stack.isIn(SwgTags.Items.PLATE_ITEMS)){
+			var blockEntity = world.getBlockEntity(pos);
+			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) - 1));
+			if (blockEntity instanceof PlateBlockEntity plateBlockEntity)
+			{
+				plateBlockEntity.eatFood(player);
+			}
+			if(world.isClient){
+				world.playSound(null, pos, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS);
+			}
 			return ActionResult.SUCCESS;
 		}
 

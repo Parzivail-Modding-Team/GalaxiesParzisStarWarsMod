@@ -41,7 +41,6 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 
 		//matrices.scale(0.5f, 0.5f, 0.5f);
 		P3dModel lastModel = null;
-		ItemStack lastItem = null;
 		for (int i = 0; i < foodList.size(); i += 1)
 		{
 			var registryKey = foodList.get(i).getItem().getRegistryEntry().getKey().get().getValue().getPath();
@@ -93,7 +92,12 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 
 			lastModel = foodModel;
 
-			foodModel.render(matrices, vertexConsumers, null, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
+			if(foodModel==null){
+				throw new RuntimeException("ERROR: food model is null, cannot render plate");
+			}else{
+				foodModel.render(matrices, vertexConsumers, null, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
+			}
+
 		}
 
 		matrices.pop();
@@ -185,7 +189,8 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 	@Override
 	public void render(PlateBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
 	{
-
-		renderPlate(entity.FOODS, matrices, vertexConsumers, light);
+		if(entity.getWorld()!=null&&entity.getWorld().isClient){
+			renderPlate(entity.FOODS, matrices, vertexConsumers, light);
+		}
 	}
 }
