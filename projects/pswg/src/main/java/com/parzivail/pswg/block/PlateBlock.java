@@ -103,9 +103,8 @@ public class PlateBlock extends BlockWithEntity
 			{
 				plateBlockEntity.eatFood(player);
 			}
-			if(world.isClient){
-				world.playSound(null, pos, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS);
-			}
+			world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1.0f, 1.0f);
+
 			return ActionResult.SUCCESS;
 		}
 
