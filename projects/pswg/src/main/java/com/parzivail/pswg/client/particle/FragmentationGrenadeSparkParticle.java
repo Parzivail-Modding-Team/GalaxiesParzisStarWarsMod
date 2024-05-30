@@ -9,6 +9,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 public class FragmentationGrenadeSparkParticle extends SparkParticle
@@ -26,7 +27,8 @@ public class FragmentationGrenadeSparkParticle extends SparkParticle
 	{
 		super.tick();
 		var a = (this.age / (float)this.maxAge) / 4f;
-		this.velocityY -= 0.0145;
+		if (this.world.getBlockState(new BlockPos(MathHelper.floor(this.x), MathHelper.floor(this.y), MathHelper.floor(this.z))).isAir())
+			this.velocityY -= 0.0145;
 		this.setColor(MathHelper.clamp(Ease.outCubic(1.5f * a), 0, 1), MathHelper.clamp(Ease.outCubic(3 * a), 0, 1), 1);
 	}
 

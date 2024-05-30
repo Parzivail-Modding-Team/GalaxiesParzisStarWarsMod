@@ -2,18 +2,26 @@ package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.sound.SoundHelper;
-import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.SwgParticleTypes;
-import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.container.SwgTags;
+import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.item.ExplosionSoundGroup;
+import com.parzivail.util.data.PacketByteBufHelper;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.S2CPlayChannelEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.EntityAttributesS2CPacket;
+import net.minecraft.network.packet.s2c.play.EntityS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -41,6 +49,7 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	public boolean IS_EXPLODING = false;
 	public int EXPLOSION_TICK = 0;
 	private boolean COLLISION_BELOW;
+	public boolean SHOULD_RENDER = true;
 
 	public FragmentationGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
@@ -89,6 +98,14 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	}
 
 	@Override
+	public boolean shouldRender(double cameraX, double cameraY, double cameraZ)
+	{
+		if (!SHOULD_RENDER)
+			return false;
+		return super.shouldRender(cameraX, cameraY, cameraZ);
+	}
+
+	@Override
 	public void explode()
 	{
 		if (!IS_EXPLODING)
@@ -96,9 +113,14 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 			if (getWorld() instanceof ServerWorld serverWorld)
 			{
 				for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
-				{
 					serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.FRAGMENTATION_GRENADE, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
-				}
+				var passedData = new PacketByteBuf(Unpooled.buffer());
+				passedData.writeBoolean(true);
+				passedData.writeInt(getId());
+				for (var player : PlayerLookup.tracking((ServerWorld)getWorld(), this.getBlockPos()))
+					ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
+
+
 			}
 			IS_EXPLODING = true;
 
@@ -115,18 +137,40 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 		}
 	}
 
-	public void createSparkParticles()
+	public static void createSparkParticles(World world, Vec3d pos, Entity entity, boolean yCollision)
 	{
 		for (int i = 0; i < Random.create().nextBetween(50, 80); i++)
 		{
-			double vx = getWorld().random.nextGaussian() * 0.5;
-			double vz = getWorld().random.nextGaussian() * 0.5;
+			double vx = world.random.nextGaussian() * 0.5;
+			double vz = world.random.nextGaussian() * 0.5;
 			double vy;
-			if (COLLISION_BELOW)
-				vy = Math.abs(getWorld().random.nextGaussian() * 0.8);
+
+			if (yCollision)
+				vy = Math.abs(world.random.nextGaussian() * 0.8);
 			else
-				vy = getWorld().random.nextGaussian() * 0.5;
-			getWorld().addParticle(SwgParticleTypes.FRAGMENTATION_GRENADE_SPARK, getX(), getY(), getZ(), vx, vy, vz);
+				vy = world.random.nextGaussian() * 0.4;
+			world.addParticle(SwgParticleTypes.FRAGMENTATION_GRENADE_SPARK, pos.x, pos.y, pos.z, vx, vy, vz);
+		}
+	}
+
+	public static void handleExplosion(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	{
+		boolean isStart = buf.readBoolean();
+		if (isStart)
+		{
+			var entityId = buf.readInt();
+			var world = client.world;
+			var entity = world.getEntityById(entityId);
+			if (entity instanceof FragmentationGrenadeEntity fragmentationGrenade)
+				fragmentationGrenade.SHOULD_RENDER = false;
+		}
+		else
+		{
+			var world = client.world;
+			var pos = PacketByteBufHelper.readVec3d(buf);
+			var entityId = buf.readInt();
+			var yCollision = buf.readBoolean();
+			client.execute(() -> createSparkParticles(world, pos, world.getEntityById(entityId), yCollision));
 		}
 	}
 
@@ -143,7 +187,17 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 
 		if (EXPLOSION_TICK == 7)
 		{
-			createSparkParticles();
+			//createSparkParticles(getWorld(), getX(), getY(), getZ(), COLLISION_BELOW);
+			if (!getWorld().isClient)
+			{
+				var passedData = new PacketByteBuf(Unpooled.buffer());
+				passedData.writeBoolean(false);
+				PacketByteBufHelper.writeVec3d(passedData, getPos());
+				passedData.writeInt(getId());
+				passedData.writeBoolean(COLLISION_BELOW);
+				for (var player : PlayerLookup.tracking((ServerWorld)getWorld(), this.getBlockPos()))
+					ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
+			}
 			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(3, 3, 3), entity -> {
 				return true;
 			});

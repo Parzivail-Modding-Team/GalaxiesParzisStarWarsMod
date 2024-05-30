@@ -30,6 +30,7 @@ import com.parzivail.pswg.client.screen.CrateOctagonScreen;
 import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
 import com.parzivail.pswg.client.sound.EnvironmentSoundManager;
 import com.parzivail.pswg.container.*;
+import com.parzivail.pswg.entity.FragmentationGrenadeEntity;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.BlasterUtil;
@@ -407,6 +408,7 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.AccumulateRecoil, BlasterRecoilManager::handleAccumulateRecoil);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.BlasterHit, BlasterUtil::handleBoltHit);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.FragmentationGrenadeExplode, FragmentationGrenadeEntity::handleExplosion);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerSocketPyro, SwgParticleFactories::handlePlayerSocketPyro);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenCharacterCustomizer, CharacterScreen::handleOpenCharacterCustomizer);
 
