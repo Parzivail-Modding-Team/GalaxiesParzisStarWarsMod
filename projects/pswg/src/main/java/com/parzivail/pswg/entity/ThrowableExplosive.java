@@ -7,6 +7,7 @@ import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -64,7 +65,11 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 
 			var hitState = this.getWorld().getBlockState(blockHit.getBlockPos());
 			var hardness = hitState.getHardness(getWorld(), blockHit.getBlockPos());
-			var restitution = MathHelper.clamp(0.8 - 0.5 / hardness, 0.1, 1);
+			var restitution = MathHelper.clamp(0.4 - 0.25 / hardness, 0.1, 1);
+			var blockMultiplier = 1;
+
+			if (getWorld().getBlockState(blockHit.getBlockPos()).getBlock() == Blocks.SLIME_BLOCK)
+				blockMultiplier = 5;
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{
@@ -76,7 +81,7 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 
 			var normal = new Vec3d(blockHit.getSide().getUnitVector());
 			var newDir = MathUtil.reflect(dir, normal);
-			this.setVelocity(newDir.multiply(velocity.length() * restitution));
+			this.setVelocity(newDir.multiply(velocity.length() * restitution * blockMultiplier));
 		}
 	}
 
