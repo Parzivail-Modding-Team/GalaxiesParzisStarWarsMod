@@ -65,10 +65,10 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 				}
 				if (i > 0)
 				{
-					var tY = lastModel.bounds().getMax(Direction.Axis.Y) - 0.f;
+					var tY = lastModel.bounds().getLengthZ();
 					//var tY = lastModel.bounds().getLengthY();
 					if (foodList.get(i - 1).isIn(SwgTags.Items.MAIN_COURSE))
-						matrices.translate(0, tY - (1f / 16f), 0);
+						matrices.translate(0, tY, 0);
 					else
 					{
 						matrices.translate(0.2, 0, 0.2);
