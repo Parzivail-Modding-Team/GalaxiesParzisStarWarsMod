@@ -37,11 +37,9 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
 	@Override
 	public void readNbt(NbtCompound nbt)
 	{
-		if(this.world != null&&this.world.isClient)
-				fromClientTag(nbt);
 		for (int i = 0; i < nbt.getInt("food_amount"); i++)
 			this.FOODS.add(i, ItemStack.fromNbt(nbt.getCompound("food" + i)));
-	super.readNbt(nbt);
+		super.readNbt(nbt);
 	}
 
 	public void addFood(ItemStack stack)
@@ -80,9 +78,7 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
 	public void fromClientTag(NbtCompound nbt)
 	{
 		for (int i = 0; i < nbt.getInt("food_amount"); i++)
-		{
 			this.FOODS.add(i, ItemStack.fromNbt(nbt.getCompound("food" + i)));
-		}
 	}
 
 	@Override
