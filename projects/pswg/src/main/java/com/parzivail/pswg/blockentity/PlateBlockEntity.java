@@ -19,6 +19,7 @@ import java.util.List;
 public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSerializable
 {
 	public List<ItemStack> FOODS = new ArrayList<>();
+	int foodCount = 0;
 
 	public PlateBlockEntity(BlockPos pos, BlockState state)
 	{
@@ -70,8 +71,6 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
 			}
 			FOODS.remove(FOODS.size()-1);
 		}
-
-
 	}
 
 	@Override

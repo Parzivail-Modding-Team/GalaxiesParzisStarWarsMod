@@ -6,12 +6,14 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.blockentity.PlateBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgTags;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
@@ -34,18 +36,18 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 		matrices.push();
 		if (!foodList.isEmpty())
 		{
-			if (foodList.get(0).isIn(SwgTags.Items.MAIN_COURSE) || foodList.size() <= 1)
-				matrices.translate(0.2f, 0f, 0.2f);
 			matrices.translate(0.3f, 1f / 16f, 0.3f);
 		}
+		int foodCount = calculateFood(foodList);
+		int layer = calculateLayer(foodCount);
 
-		//matrices.scale(0.5f, 0.5f, 0.5f);
-		P3dModel lastModel = null;
-		for (int i = 0; i < foodList.size(); i += 1)
+		double addedHeight = 0;
+		boolean adjustedMiddle = false;
+		for (int i = 0; i < foodList.size(); i++)
 		{
+			boolean changeLayer = false;
 			var registryKey = foodList.get(i).getItem().getRegistryEntry().getKey().get().getValue().getPath();
 			var id = Resources.id("block/food/" + registryKey);
-			//matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(145), 0.35f, 0, 0.35f);
 
 			var foodModel = P3dManager.INSTANCE.get(id);
 			var foodTexture = new Identifier(id.getNamespace(), "textures/block/model/food/" + registryKey + ".png");
@@ -54,137 +56,139 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 				foodModel = FALLBACK_MODEL;
 				foodTexture = FALLBACK_TEXTURE;
 			}
-
 			Identifier finalFoodTexture = foodTexture;
-			if (foodList.get(0).isIn(SwgTags.Items.MAIN_COURSE))
+			int currentFoodCount = calculateCurrentFood(foodList, i);
+			int currentLayer = calculateLayer(currentFoodCount);
+			if (currentFoodCount == getLayerMaxPosition(currentLayer))
+				changeLayer = true;
+			matrices.translate(0.2, 0, 0.2);
+			int layerFoodCount = calculateLayerFood(foodList, currentLayer);
+			float currentLayerSize = calculateLayerSize(currentLayer, layerFoodCount, foodList, i);
+			if (currentLayerSize == 1)
 			{
-				if (i == 1 && foodList.size() != i + 1)
-				{
-					matrices.translate(-0.2f, 0f, -0.2f);
-					//matrices.translate(0, 0, 0.2);
-				}
-				if (i > 0)
-				{
-					var tY = lastModel.bounds().getLengthZ();
-					//var tY = lastModel.bounds().getLengthY();
-					if (foodList.get(i - 1).isIn(SwgTags.Items.MAIN_COURSE))
-						matrices.translate(0, tY, 0);
-					else
-					{
-						matrices.translate(0.2, 0, 0.2);
-						matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(360f / (foodList.size() - 1)), 0f, 0, 0f);
-						matrices.translate(-0.2, 0, -0.2);
-						//matrices.translate((0.5f * RotationAxis.POSITIVE_Y.rotationDegrees(90).y) - 0.15, 0, 0.25);
-						//matrices.translate(-0.25, 0, -0.25);
-
-					}
-				}
-			}
-			else
-			{
-
 				matrices.translate(0.2, 0, 0.2);
-				var f = (float)foodList.size();
-				//matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(360f/foodList.size()), 0f, 0, 0f);
-				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(360f / f), 0f, 0, 0f);
+				adjustedMiddle = true;
+			}
+			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(360f / currentLayerSize), 0f, 0, 0f);
+			matrices.translate(-0.2, 0, -0.2);
+
+			if (addedHeight < foodModel.bounds().getLengthZ())
+				addedHeight = foodModel.bounds().getLengthZ();
+			MinecraftClient.getInstance().player.sendMessage(Text.of("layer: " + layer));
+			MinecraftClient.getInstance().player.sendMessage(Text.of("foodCount: " + foodCount));
+			MinecraftClient.getInstance().player.sendMessage(Text.of("max layer position: " + getLayerMaxPosition(layer)));
+			foodModel.render(matrices, vertexConsumers, null, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
+			if (changeLayer)
+			{
+				matrices.translate(0, addedHeight, 0);
+				addedHeight = 0;
+			}
+			if (adjustedMiddle)
+			{
 				matrices.translate(-0.2, 0, -0.2);
+				adjustedMiddle = false;
 			}
-
-			lastModel = foodModel;
-
-			if(foodModel==null){
-				throw new RuntimeException("ERROR: food model is null, cannot render plate");
-			}else{
-				foodModel.render(matrices, vertexConsumers, null, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
-			}
-
 		}
-
 		matrices.pop();
 	}
 
-
-	/*@Override
-	public void render(PlateBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
+	private int getLayerMaxPosition(int layer)
 	{
-		List<ItemStack> foodList = entity.FOODS;
-		var world = entity.getWorld();
-		if (world == null)
-			return;
-
-		var state = world.getBlockState(entity.getPos());
-		if (!state.isOf(SwgBlocks.Misc.Plate))
-			return;
-		matrices.push();
-		if (!foodList.isEmpty())
+		int s = 0;
+		for (int i = 0; i <= layer; i++)
 		{
-			if (foodList.get(0).isIn(SwgTags.Items.MAIN_COURSE) || foodList.size() <= 1)
-				matrices.translate(0.2f, 0f, 0.2f);
-			matrices.translate(0.3f, 1f / 16f, 0.3f);
+			s += (5 - i);
 		}
+		return s;
+	}
 
-
-		//matrices.scale(0.5f, 0.5f, 0.5f);
-		P3dModel lastModel = null;
-		ItemStack lastItem = null;
-		for (int i = 0; i < foodList.size(); i += 1)
+	private int calculateLayerSize(int layer, int foodCount, List<ItemStack> foodList, int i)
+	{
+		if (foodList.get(i).isIn(SwgTags.Items.MAIN_COURSE))
 		{
-			var registryKey = foodList.get(i).getItem().getRegistryEntry().getKey().get().getValue().getPath();
-			var id = Resources.id("block/food/" + registryKey);
-			//matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(145), 0.35f, 0, 0.35f);
+			return 1;
+		}
+		for (int j = 0; j < layer; j++)
+		{
+			foodCount -= (5 - j);
+		}
+		if (foodCount != 0)
+			return foodCount;
 
-			var foodModel = P3dManager.INSTANCE.get(id);
-			var foodTexture = new Identifier(id.getNamespace(), "textures/block/model/food/" + registryKey + ".png");
-			if (foodModel == null)
+		return 1;
+	}
+
+	private int calculateCurrentFood(List<ItemStack> foodList, int i)
+	{
+		int sT = 0;
+		int layerT = 0;
+		for (int j = 0; j <= i; j++)
+		{
+			if (sT == getLayerMaxPosition(layerT))
+				layerT++;
+			if (foodList.get(j).isIn(SwgTags.Items.MAIN_COURSE))
 			{
-				foodModel = FALLBACK_MODEL;
-				foodTexture = FALLBACK_TEXTURE;
-			}
-
-
-			Identifier finalFoodTexture = foodTexture;
-			if (foodList.get(0).isIn(SwgTags.Items.MAIN_COURSE))
-			{
-				if (i == 1 &&foodList.size()!=i+1)
-				{
-					matrices.translate(-0.2f, 0f, -0.2f);
-					//matrices.translate(0, 0, 0.2);
-				}
-				if (i > 0)
-				{
-					var tY = lastModel.bounds().getMax(Direction.Axis.Y) - 0.f;
-					//var tY = lastModel.bounds().getLengthY();
-					if (foodList.get(i - 1).isIn(SwgTags.Items.MAIN_COURSE))
-						matrices.translate(0, tY-(1f/16f), 0);
-					else
-					{
-						matrices.translate(0.2, 0, 0.2);
-						matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(360f / (foodList.size() - 1)), 0f, 0, 0f);
-						matrices.translate(-0.2, 0, -0.2);
-						//matrices.translate((0.5f * RotationAxis.POSITIVE_Y.rotationDegrees(90).y) - 0.15, 0, 0.25);
-						//matrices.translate(-0.25, 0, -0.25);
-
-					}
-				}
+				sT += (5 - layerT);
 			}
 			else
 			{
-
-				matrices.translate(0.2, 0, 0.2);
-				var f = (float)foodList.size();
-				//matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(360f/foodList.size()), 0f, 0, 0f);
-				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(360f / f), 0f, 0, 0f);
-				matrices.translate(-0.2, 0, -0.2);
+				sT++;
 			}
-
-
-			lastModel = foodModel;
-
-			foodModel.render(matrices, vertexConsumers, entity, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
 		}
+		return sT;
+	}
 
-		matrices.pop();
-	}*/
+	private int calculateLayerFood(List<ItemStack> foodList, int layer)
+	{
+		for (int i = 0; i < foodList.size(); i++)
+		{
+			if (calculateCurrentFood(foodList, i) == getLayerMaxPosition(layer))
+			{
+				return calculateCurrentFood(foodList, i);
+			}
+			else if (i == foodList.size() - 1)
+			{
+				return calculateCurrentFood(foodList, i);
+			}
+		}
+		return 0;
+	}
+
+	private int calculateFood(List<ItemStack> foodList)
+	{
+		int sT = 0;
+		int layerT = 0;
+		for (int i = 0; i < foodList.size(); i++)
+		{
+			if (foodList.get(i).isIn(SwgTags.Items.MAIN_COURSE))
+			{
+				sT += (5 - layerT);
+			}
+			else
+			{
+				sT++;
+			}
+			if (sT == getLayerMaxPosition(layerT))
+			{
+				layerT++;
+			}
+		}
+		return sT;
+	}
+
+	private int calculateLayer(int foodCount)
+	{
+		for (int l = 0; l < 5; l++)
+		{
+			if (foodCount > 5 - l)
+			{
+				foodCount -= (5 - l);
+			}
+			else
+				return l;
+		}
+		return 0;
+	}
 
 	@Override
 	public void render(PlateBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)

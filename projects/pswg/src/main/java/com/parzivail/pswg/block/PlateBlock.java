@@ -22,8 +22,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class PlateBlock extends BlockWithEntity
 {
-	public final static IntProperty FOOD_AMOUNT = IntProperty.of("food_amount", 0, 5);
-	public final static int MAX_FOOD_AMOUNT = 5;
+	public final static IntProperty FOOD_AMOUNT = IntProperty.of("food_amount", 0, 15);
+	public final static int MAX_FOOD_AMOUNT = 15;
 
 	public PlateBlock(Settings settings)
 	{
@@ -79,10 +79,6 @@ public class PlateBlock extends BlockWithEntity
 		var stack = player.getStackInHand(hand);
 		if (!stack.isEmpty() && state.get(FOOD_AMOUNT) < MAX_FOOD_AMOUNT && stack.isIn(SwgTags.Items.PLATE_ITEMS) && !player.isSneaking())
 		{
-			if (stack.isIn(SwgTags.Items.MAIN_COURSE) && state.get(FOOD_AMOUNT) != 0)
-			{
-				return ActionResult.PASS;
-			}
 			var newStack = new ItemStack(stack.getItem(), 1);
 			newStack.setNbt(stack.getNbt());
 			addFood(world, pos, state, newStack);
@@ -100,9 +96,7 @@ public class PlateBlock extends BlockWithEntity
 			var blockEntity = world.getBlockEntity(pos);
 			world.setBlockState(pos, state.with(FOOD_AMOUNT, state.get(FOOD_AMOUNT) - 1));
 			if (blockEntity instanceof PlateBlockEntity plateBlockEntity)
-			{
 				plateBlockEntity.eatFood(player);
-			}
 			world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 1.0f, 1.0f);
 
 			return ActionResult.SUCCESS;

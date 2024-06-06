@@ -583,13 +583,12 @@ public class SwgItems
 		@TarkinItem
 		public static final Item JerbaRib = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()));
 		@RegistryName("krayt_meat")
-		@TarkinItem(tags = { TrItemTag.Plate, TrItemTag.MainCourse })
 		public static final Item KraytMeat = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()));
 		@RegistryName("raw_sketto_nugget")
 		@TarkinItem
 		public static final Item RawSkettoNugget = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
 		@RegistryName("roast_krayt")
-		@TarkinItem
+		@TarkinItem(tags = { TrItemTag.Plate, TrItemTag.MainCourse })
 		public static final Item RoastKrayt = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()));
 		@RegistryName("ronto_chuck")
 		@TarkinItem
