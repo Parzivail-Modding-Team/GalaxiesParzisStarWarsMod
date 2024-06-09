@@ -21,7 +21,7 @@ import java.util.Stack;
 
 public class ErrorManager
 {
-	public static final Lumberjack LOG = new Lumberjack("errorman");
+	public static final Lumberjack LOG = new Lumberjack("pswg:errorman");
 
 	private static final Gson GSON = new Gson();
 	private static final URI ROLLBAR_API_ENDPOINT = URI.create("https://api.rollbar.com/api/1/item/");

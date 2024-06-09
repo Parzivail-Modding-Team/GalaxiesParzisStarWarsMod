@@ -110,8 +110,7 @@ public abstract class KeyedReloadableLoader<T> implements IdentifiableResourceRe
 	@NotNull
 	private Identifier getIdWithoutExt(Identifier resourceId, int pathStart)
 	{
-		var resourcePath = resourceId.getPath();
-		return new Identifier(resourceId.getNamespace(), resourcePath.substring(pathStart, resourcePath.length() - fileSuffixLength));
+		return resourceId.withPath(path -> path.substring(pathStart, path.length() - fileSuffixLength));
 	}
 
 	protected abstract void apply(Map<Identifier, T> prepared, ResourceManager manager, Profiler profiler);

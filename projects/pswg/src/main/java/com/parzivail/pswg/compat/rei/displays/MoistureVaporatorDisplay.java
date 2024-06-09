@@ -10,7 +10,6 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +21,7 @@ public class MoistureVaporatorDisplay extends BasicDisplay implements SimpleGrid
 
 	public MoistureVaporatorDisplay(RecipeEntry<VaporatorRecipe> recipeEntry) {
 		this(EntryIngredients.ofIngredients(recipeEntry.value().getIngredients()), Collections.singletonList(EntryIngredients.of(recipeEntry.value().getResult(BasicDisplay.registryAccess()))),
-		     Optional.ofNullable(recipeEntry.id()), recipeEntry.value().getDuration());
+		     Optional.ofNullable(recipeEntry.id()), recipeEntry.value().duration());
 	}
 
 	public MoistureVaporatorDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<Identifier> location, NbtCompound tag) {

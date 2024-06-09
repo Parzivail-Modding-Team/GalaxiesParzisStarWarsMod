@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,12 +15,20 @@ import net.minecraft.world.World;
 
 public class LightFixtureBlock extends InvertedLampBlock
 {
+	private static final MapCodec<LightFixtureBlock> CODEC = createCodec(LightFixtureBlock::new);
+
 	public static final IntProperty BRIGHTNESS = Properties.LEVEL_3;
 
 	public LightFixtureBlock(Settings settings)
 	{
 		super(settings);
 		this.setDefaultState(this.getDefaultState().with(BRIGHTNESS, 3));
+	}
+
+	@Override
+	protected MapCodec<LightFixtureBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	@Override

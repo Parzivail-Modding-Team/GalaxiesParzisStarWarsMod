@@ -1,29 +1,15 @@
 package com.parzivail.pswg.container;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.particle.ExplosionSmokeParticle;
-import com.parzivail.pswg.client.particle.WakeParticle;
-import com.parzivail.pswg.client.particle.WaterWakeParticle;
-import com.parzivail.pswg.client.render.player.PlayerSocket;
-import com.parzivail.pswg.features.blasters.client.particle.ScorchParticle;
-import com.parzivail.pswg.features.blasters.client.particle.SlugTrailParticle;
-import com.parzivail.pswg.features.blasters.client.particle.SparkParticle;
 import com.parzivail.util.client.particle.PParticleType;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import org.joml.Vector3f;
 
 public class SwgParticleTypes
 {
@@ -40,12 +26,22 @@ public class SwgParticleTypes
 
 	private static ParticleType<BlockStateParticleEffect> registerBlockStateBased(Identifier name, boolean alwaysShow)
 	{
-		var particleType = Registry.register(Registries.PARTICLE_TYPE, name, new ParticleType<BlockStateParticleEffect>(alwaysShow, BlockStateParticleEffect.PARAMETERS_FACTORY)
+		var particleType = Registry.register(Registries.PARTICLE_TYPE, name, new ParticleType<BlockStateParticleEffect>(alwaysShow)
 		{
+
+			private final PacketCodec<? super RegistryByteBuf, BlockStateParticleEffect> PACKET_CODEC = BlockStateParticleEffect.createPacketCodec(this);
+			private final MapCodec<BlockStateParticleEffect> CODEC = BlockStateParticleEffect.createCodec(this);
+
 			@Override
-			public Codec<BlockStateParticleEffect> getCodec()
+			public MapCodec<BlockStateParticleEffect> getCodec()
 			{
-				return BlockStateParticleEffect.createCodec(this);
+				return CODEC;
+			}
+
+			@Override
+			public PacketCodec<? super RegistryByteBuf, BlockStateParticleEffect> getPacketCodec()
+			{
+				return PACKET_CODEC;
 			}
 		});
 		return particleType;

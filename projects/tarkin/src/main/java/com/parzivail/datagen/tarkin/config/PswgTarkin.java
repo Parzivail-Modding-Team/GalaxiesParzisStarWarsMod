@@ -771,9 +771,12 @@ public class PswgTarkin
 			              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Light.Fixture)
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.cubes(block, "", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
@@ -880,69 +883,102 @@ public class PswgTarkin
 			              .build(assets);
 
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.verticalSlabLit(SwgBlocks.Panel.GrayImperialLightingSlab, Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"))
 		              .state((block, modelId) -> BlockStateGenerator.createVerticalSlabBlockStateLit(block, Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab"), Resources.id("block/gray_imperial_lighting_panel_slab")))
 		              .models(block -> (ModelFile.verticalSlabs(block, Resources.id("block/gray_imperial_panel_pattern_3"), Resources.id("block/gray_imperial_lighting_panel_slab"), "_off", "_on")))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightPanel1, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightPanel2, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLightPanel3, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLight1, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.staticColumn(SwgBlocks.Panel.GrayImperialLight2, Resources.id("block/gray_imperial_panel_pattern_3"))
-		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, modelId.withSuffixedPath("_on"), modelId))
 		              .models(block -> ModelFile.columns(block, Resources.id("block/gray_imperial_panel_pattern_3"), "_off", "_on"))
-		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block), "_on")))
+		              .itemModel(block -> {
+			              Identifier identifier = AssetUtils.getTextureName(block);
+			              return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_on"));
+		              })
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
@@ -1001,19 +1037,22 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetUtils.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2"))
+		Identifier identifier2 = AssetUtils.getTextureName(SwgBlocks.Plant.Chasuka);
+		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, identifier2.withSuffixedPath("_stage2"))
 		              .lootTable(block1 -> LootTableFile.seedCrop(block1, SwgItems.Seeds.ChasukaSeeds, SwgItems.Food.ChasukaLeaf, 2, 3, 0.5714286))
 		              .build(assets);
 
-		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, IdentifierUtil.concat(AssetUtils.getTextureName(SwgBlocks.Plant.HkakBush), "_stage3")).build(assets);
-		BlockGenerator.bloomingBushStages(SwgBlocks.Plant.MoloShrub, () -> MoloShrubBlock.AGE, () -> MoloShrubBlock.BLOOMING, IdentifierUtil.concat(AssetUtils.getTextureName(SwgBlocks.Plant.MoloShrub), "_stage3_blooming"))
-		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Natural.MoloFlower, new LootTableFile.Pool.CountFunction.Range(0, 2, new Identifier("uniform"))))
+		Identifier identifier1 = AssetUtils.getTextureName(SwgBlocks.Plant.HkakBush);
+		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, identifier1.withSuffixedPath("_stage3")).build(assets);
+		Identifier identifier = AssetUtils.getTextureName(SwgBlocks.Plant.MoloShrub);
+		BlockGenerator.bloomingBushStages(SwgBlocks.Plant.MoloShrub, () -> MoloShrubBlock.AGE, () -> MoloShrubBlock.BLOOMING, identifier.withSuffixedPath("_stage3_blooming"))
+		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Natural.MoloFlower, new LootTableFile.Pool.CountFunction.Range(0, 2, Identifier.ofVanilla("uniform"))))
 		              .build(assets);
 
 		BlockGenerator.block(SwgBlocks.Plant.VaporatorMushroom)
 		              .model(ModelFile::cross)
 		              .itemModel(ModelFile::item)
-		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Food.VaporatorMushroom, new LootTableFile.Pool.CountFunction.Range(1, 3, new Identifier("uniform"))))
+		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Food.VaporatorMushroom, new LootTableFile.Pool.CountFunction.Range(1, 3, Identifier.ofVanilla("uniform"))))
 		              .itemTag(ItemTags.SAND)
 		              .build(assets);
 

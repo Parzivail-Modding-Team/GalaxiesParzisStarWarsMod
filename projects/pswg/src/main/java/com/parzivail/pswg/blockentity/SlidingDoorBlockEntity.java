@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -32,23 +33,23 @@ public class SlidingDoorBlockEntity extends BlockEntity implements BlockEntityCl
 	}
 
 	@Override
-	public void writeNbt(NbtCompound tag)
+	protected void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		super.writeNbt(tag);
+		super.writeNbt(tag, registryLookup);
 
 		tag.putByte("timer", timer);
 	}
 
 	@Override
-	public NbtCompound toInitialChunkDataNbt()
+	public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup)
 	{
-		return toClientTag(super.toInitialChunkDataNbt());
+		return toClientTag(super.toInitialChunkDataNbt(registryLookup));
 	}
 
 	@Override
-	public void readNbt(NbtCompound tag)
+	public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		super.readNbt(tag);
+		super.readNbt(tag, registryLookup);
 
 		timer = tag.getByte("timer");
 	}

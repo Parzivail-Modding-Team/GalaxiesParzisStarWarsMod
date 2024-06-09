@@ -38,18 +38,12 @@ public class TooltipUtil
 
 	public static Text getLore(Item item, Object... args)
 	{
-		var reg = Registries.ITEM.getId(item);
-		return aside(Text.translatable(getLoreKey("item", reg), args));
+		return aside(Text.translatable(getItemLoreKey(item), args));
 	}
 
-	public static String getLoreKey(Item item)
+	public static String getItemLoreKey(Item item)
 	{
 		var reg = Registries.ITEM.getId(item);
-		return getLoreKey("item", reg);
-	}
-
-	public static String getLoreKey(String domain, Identifier registryId)
-	{
-		return "lore." + domain + "." + registryId.getNamespace() + "." + registryId.getPath();
+		return reg.toTranslationKey("lore.item");
 	}
 }

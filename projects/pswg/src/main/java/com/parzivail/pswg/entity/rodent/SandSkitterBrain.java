@@ -37,7 +37,7 @@ public class SandSkitterBrain
 				0,
 				ImmutableList.of(
 						new StayAboveWaterTask(0.8F),
-						new FleeTask(2.5F),
+						new FleeTask<>(2.5F),
 						new AvoidEntityTask(2.5F),
 						new LookAroundTask(45, 90),
 						new WanderAroundTask(),

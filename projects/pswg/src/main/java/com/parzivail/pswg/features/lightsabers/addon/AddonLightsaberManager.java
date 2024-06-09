@@ -35,7 +35,7 @@ public class AddonLightsaberManager extends ByteBufResourceReloader<AddonLightsa
 	{
 		public static Schema deserialize(PacketByteBuf buf)
 		{
-			var domain = buf.readString();
+			var namespace = buf.readString();
 			var id = buf.readString();
 			var owner = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
 
@@ -52,7 +52,7 @@ public class AddonLightsaberManager extends ByteBufResourceReloader<AddonLightsa
 				bladeCoefs.put(socketName, bladeCoef);
 			}
 
-			return new Version1Schema(new Identifier(domain, id), owner, unstable, bladeType, bladeColor, bladeCoefs);
+			return new Version1Schema(Identifier.of(namespace, id), owner, unstable, bladeType, bladeColor, bladeCoefs);
 		}
 	}
 

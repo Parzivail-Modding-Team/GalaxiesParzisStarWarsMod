@@ -2,12 +2,13 @@ package com.parzivail.pswg.component;
 
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.ladysnake.cca.api.v3.component.ComponentV3;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedComponent
 {
@@ -40,7 +41,7 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag)
+	public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
 		character = tag.getString("character");
 		onCharacterChange();
@@ -52,7 +53,7 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag)
+	public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
 		tag.putString("character", character);
 	}
@@ -70,12 +71,12 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 	}
 
 	@Override
-	public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient)
+	public void writeSyncPacket(RegistryByteBuf buf, ServerPlayerEntity recipient)
 	{
 		writeSyncPacket(buf, recipient, 0);
 	}
 
-	private void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient, int syncOp)
+	private void writeSyncPacket(RegistryByteBuf buf, ServerPlayerEntity recipient, int syncOp)
 	{
 		buf.writeInt(syncOp);
 
@@ -84,7 +85,7 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 			case 0 ->
 			{ // Full sync
 				var tag = new NbtCompound();
-				writeToNbt(tag);
+				writeToNbt(tag, buf.getRegistryManager());
 				buf.writeNbt(tag);
 			}
 			case CHARACTER_SYNCOP -> buf.writeString(character);
@@ -92,7 +93,7 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 	}
 
 	@Override
-	public void applySyncPacket(PacketByteBuf buf)
+	public void applySyncPacket(RegistryByteBuf buf)
 	{
 		var syncOp = buf.readInt();
 
@@ -109,7 +110,7 @@ public class PersistentPublicPlayerData implements ComponentV3, AutoSyncedCompon
 			{ // Full sync
 				var tag = buf.readNbt();
 				if (tag != null)
-					this.readFromNbt(tag);
+					this.readFromNbt(tag, buf.getRegistryManager());
 			}
 			case CHARACTER_SYNCOP ->
 			{

@@ -1,9 +1,10 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.pswg.blockentity.CreatureCageBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.entity.EntityUtil;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -26,12 +27,24 @@ import org.jetbrains.annotations.Nullable;
 
 public class CreatureCageBlock extends Block implements BlockEntityProvider
 {
+	private static final MapCodec<CreatureCageBlock> CODEC = RecordCodecBuilder.mapCodec(
+			instance -> instance.group(
+					createSettingsCodec(),
+					DyeColor.CODEC.fieldOf("color").forGetter(CreatureCageBlock::getColor)
+			).apply(instance, CreatureCageBlock::new));
+
 	private final DyeColor color;
 
-	public CreatureCageBlock(DyeColor color, AbstractBlock.Settings settings)
+	public CreatureCageBlock(Settings settings, DyeColor color)
 	{
 		super(settings);
 		this.color = color;
+	}
+
+	@Override
+	protected MapCodec<? extends Block> getCodec()
+	{
+		return CODEC;
 	}
 
 	public DyeColor getColor()

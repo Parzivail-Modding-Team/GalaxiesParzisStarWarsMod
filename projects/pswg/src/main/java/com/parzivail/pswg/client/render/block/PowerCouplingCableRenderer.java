@@ -141,8 +141,8 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 		int dstSkyLight = world.getLightLevel(LightType.SKY, dstPos);
 
 		// insert degenerate triangle into strip
-		vertexConsumer.vertex(matrix4f, 0, 0, 0).color(0).light(0).next();
-		vertexConsumer.vertex(matrix4f, 0, 0, 0).color(0).light(0).next();
+		vertexConsumer.vertex(matrix4f, 0, 0, 0).color(0).light(0);
+		vertexConsumer.vertex(matrix4f, 0, 0, 0).color(0).light(0);
 
 		for (var u = 0; u <= 24; ++u)
 			renderCableSegment(world, idx, tickDelta, vertexConsumer, matrix4f, dX, dY, dZ, srcBlockLight, dstBlockLight, srcSkyLight, dstSkyLight, size, size, o, p, u, false);
@@ -151,8 +151,8 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 			renderCableSegment(world, idx, tickDelta, vertexConsumer, matrix4f, dX, dY, dZ, srcBlockLight, dstBlockLight, srcSkyLight, dstSkyLight, size, 0.0F, o, p, u, true);
 
 		// insert degenerate triangle into strip
-		vertexConsumer.vertex(matrix4f, 0, 0, 0).color(0).light(0).next();
-		vertexConsumer.vertex(matrix4f, 0, 0, 0).color(0).light(0).next();
+		vertexConsumer.vertex(matrix4f, 0, 0, 0).color(0).light(0);
+		vertexConsumer.vertex(matrix4f, 0, 0, 0).color(0).light(0);
 
 		matrices.pop();
 	}
@@ -188,7 +188,7 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 		var y = (float)B.y;
 		var z = (float)B.z;
 
-		vertexConsumer.vertex(positionMatrix, x - k, y + j, z + l).color(0xFF202020).light(packedLight).next();
-		vertexConsumer.vertex(positionMatrix, x + k, y + i - j, z - l).color(0xFF202020).light(packedLight).next();
+		vertexConsumer.vertex(positionMatrix, x - k, y + j, z + l).color(0xFF202020).light(packedLight);
+		vertexConsumer.vertex(positionMatrix, x + k, y + i - j, z - l).color(0xFF202020).light(packedLight);
 	}
 }

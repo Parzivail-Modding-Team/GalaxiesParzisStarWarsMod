@@ -38,7 +38,7 @@ public abstract class TextureProvider<TData>
 	@NotNull
 	protected Identifier createCacheId(String requestName)
 	{
-		return new Identifier(root.getNamespace(), root.getPath() + "/" + requestName);
+		return root.withSuffixedPath("/" + requestName);
 	}
 
 	public boolean isProviderFor(Identifier cacheId)

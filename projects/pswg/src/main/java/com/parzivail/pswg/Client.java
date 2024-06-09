@@ -213,7 +213,7 @@ public class Client implements ClientModInitializer
 								DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY,
 								Resources.id("block/tatooine_home_door"),
 								Resources.id("block/model/door/sliding_1x2/frame"),
-								new Identifier("block/stone")
+								Identifier.ofVanilla("block/stone")
 						),
 						(model, color) -> model.withTexture("door_" + color.getName(), Resources.id("block/model/door/sliding_1x2/door_" + color.getName()))
 				)
@@ -270,10 +270,10 @@ public class Client implements ClientModInitializer
 		for (var color : DyeColor.values())
 			ModelRegistry.register(SwgBlocks.Crate.CorrugatedCrate.get(color), true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/" + color.getName()), Resources.id("block/model/corrugated_crate/" + color.getName() + "_particle")));
 
-		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/spoked_machine"), Resources.id("block/model/spoked_machine"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/spoked_machine"), Resources.id("block/model/spoked_machine"), Identifier.ofVanilla("block/stone")));
 		ModelRegistry.register(SwgBlocks.Machine.ElectrostaticRepeller, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/electrostatic_repeller"), Resources.id("block/model/electrostatic_repeller"), Resources.id("block/model/electrostatic_repeller_particle")));
 
-		ModelRegistry.register(SwgBlocks.Pipe.Large, false, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/pipe_thick"), Resources.id("block/model/pipe_thick"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Pipe.Large, false, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/pipe_thick"), Resources.id("block/model/pipe_thick"), Identifier.ofVanilla("block/stone")));
 		P3dBlockRendererRegistry.register(SwgBlocks.Pipe.Large, new LargePipeRenderer());
 
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialPanelTall1, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));

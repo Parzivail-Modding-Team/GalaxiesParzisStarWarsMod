@@ -1,5 +1,6 @@
 package com.parzivail.util.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Waterloggable;
@@ -12,13 +13,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.WorldAccess;
 
-public class WaterloggableBlock extends Block implements Waterloggable
+public abstract class WaterloggableBlock extends Block implements Waterloggable
 {
 	public WaterloggableBlock(Settings settings)
 	{
 		super(settings);
 		this.setDefaultState(this.stateManager.getDefaultState().with(Properties.WATERLOGGED, false));
 	}
+
+	@Override
+	protected abstract MapCodec<? extends WaterloggableBlock> getCodec();
 
 	@Override
 	public FluidState getFluidState(BlockState state)

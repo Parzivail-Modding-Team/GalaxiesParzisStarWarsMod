@@ -28,8 +28,8 @@ public class SpaceSkyRenderer
 
 	public static void clientWorld$getSkyColor(ClientWorld self, Vec3d cameraPos, float tickDelta, CallbackInfoReturnable<Vec3d> cir)
 	{
-		var id = self.getDimensionKey();
-		if (id.equals(SwgDimensions.TATOOINE))
+		var id = self.getDimensionEntry();
+		if (id.matchesKey(SwgDimensions.TATOOINE))
 		{
 			var dimTopY = self.getBottomY() + self.getHeight();
 			if (cameraPos.y > dimTopY + SPACE_START)
@@ -41,9 +41,9 @@ public class SpaceSkyRenderer
 	{
 		var mc = MinecraftClient.getInstance();
 		var cameraPos = mc.gameRenderer.getCamera().getPos();
-		var id = self.getDimensionKey();
+		var id = self.getDimensionEntry();
 
-		if (id.equals(SwgDimensions.TATOOINE))
+		if (id.matchesKey(SwgDimensions.TATOOINE))
 		{
 			var rainAttenuation = 1.0F - self.getRainGradient(tickDelta);
 			if (rainAttenuation == 0)

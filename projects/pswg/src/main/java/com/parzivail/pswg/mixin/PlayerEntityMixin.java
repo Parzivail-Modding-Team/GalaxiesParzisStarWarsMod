@@ -3,9 +3,9 @@ package com.parzivail.pswg.mixin;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.util.item.IItemHotbarListener;
 import com.parzivail.util.world.InventoryUtil;
-import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerModelPart;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,7 +46,7 @@ public abstract class PlayerEntityMixin
 		previousStackRef = self.getMainHandStack();
 	}
 
-	@Inject(method = "isPartVisible(Lnet/minecraft/client/render/entity/PlayerModelPart;)Z", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "isPartVisible(Lnet/minecraft/entity/player/PlayerModelPart;)Z", at = @At("HEAD"), cancellable = true)
 	public void isPartVisible(PlayerModelPart modelPart, CallbackInfoReturnable<Boolean> cir)
 	{
 		var self = (PlayerEntity)(Object)this;

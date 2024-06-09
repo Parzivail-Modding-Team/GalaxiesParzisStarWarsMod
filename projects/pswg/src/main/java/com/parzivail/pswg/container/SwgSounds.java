@@ -6,8 +6,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class SwgSounds
 {
@@ -83,8 +83,9 @@ public class SwgSounds
 
 		private static void register()
 		{
+			// TODO: this doesn't look right
 			// register dynamic events
-			Arrays.stream(new Identifier[] {
+			List.of(
 					Resources.id("blaster.fire.a280"),
 					Resources.id("blaster.fire.bike"),
 					Resources.id("blaster.fire.bowcaster"),
@@ -106,7 +107,7 @@ public class SwgSounds
 					Resources.id("blaster.fire.se14c"),
 					Resources.id("blaster.fire.t21b"),
 					Resources.id("blaster.fire.t21")
-			}).forEach(SwgSounds::of);
+			).forEach(SwgSounds::of);
 		}
 	}
 

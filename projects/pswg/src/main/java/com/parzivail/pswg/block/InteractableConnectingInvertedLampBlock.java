@@ -1,8 +1,10 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.connecting.SelfConnectingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ConnectingBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
@@ -19,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class InteractableConnectingInvertedLampBlock extends SelfConnectingBlock
 {
+	private static final MapCodec<InteractableConnectingInvertedLampBlock> CODEC = createCodec(InteractableConnectingInvertedLampBlock::new);
 	public static final BooleanProperty LIT = Properties.LIT;
 	public static final BooleanProperty POWERED = Properties.POWERED;
 	public static final BooleanProperty INVERTED = Properties.INVERTED;
@@ -32,6 +35,12 @@ public class InteractableConnectingInvertedLampBlock extends SelfConnectingBlock
 	{
 		super(settings);
 		this.setDefaultState(this.getDefaultState().with(POWERED, false).with(INVERTED, true).with(LIT, true));
+	}
+
+	@Override
+	protected MapCodec<InteractableConnectingInvertedLampBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	@Override

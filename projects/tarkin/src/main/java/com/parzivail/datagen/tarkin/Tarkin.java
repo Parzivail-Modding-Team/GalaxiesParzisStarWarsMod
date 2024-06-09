@@ -74,7 +74,7 @@ public class Tarkin
 		LOG.log("Wrote %s assets", assets.size());
 
 		// Synchronize the keys of the en_us locale
-		BuiltAsset.mergeLanguageKeys(new Identifier(tarkinModid, LanguageProvider.OUTPUT_LOCALE), new Identifier(tarkinModid, LanguageProvider.TARGET_LOCALE));
+		BuiltAsset.mergeLanguageKeys(Identifier.of(tarkinModid, LanguageProvider.OUTPUT_LOCALE), Identifier.of(tarkinModid, LanguageProvider.TARGET_LOCALE));
 		LOG.log("Merged language keys");
 
 		LOG.log("Done");
@@ -199,7 +199,7 @@ public class Tarkin
 	{
 		return switch (preset)
 		{
-			case TrinketsChestBack -> TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
+			case TrinketsChestBack -> TagKey.of(RegistryKeys.ITEM, Identifier.of("trinkets", "chest/back"));
 			case Leaves -> ItemTags.LEAVES;
 			case Logs -> ItemTags.LOGS;
 			case LogsThatBurn -> ItemTags.LOGS_THAT_BURN;
@@ -280,7 +280,7 @@ public class Tarkin
 				case RandomMirror ->
 				{
 					var id = AssetUtils.getTextureName(block);
-					var mirrored = IdentifierUtil.concat(id, "_mirrored");
+					var mirrored = id.withSuffixedPath("_mirrored");
 					gen.state((b, modelId) -> BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(b, id, mirrored));
 				}
 				default -> throw new RuntimeException("Unsupported value " + a.state());

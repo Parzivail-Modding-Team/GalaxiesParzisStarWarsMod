@@ -30,6 +30,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
@@ -343,11 +344,11 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
-		super.initDataTracker();
-		this.dataTracker.startTracking(LEG_ANIM, (byte)0);
-		this.dataTracker.startTracking(PARAMETERS, new AstromechParameters("missingno").toTag());
+		super.initDataTracker(builder);
+		builder.add(LEG_ANIM, (byte)0);
+		builder.add(PARAMETERS, new AstromechParameters("missingno").toTag());
 	}
 
 	public float getLegDeltaExtension(float tickDelta)
@@ -426,11 +427,5 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	public Arm getMainArm()
 	{
 		return Arm.RIGHT;
-	}
-
-	@Override
-	public Packet<ClientPlayPacketListener> createSpawnPacket()
-	{
-		return new EntitySpawnS2CPacket(this);
 	}
 }

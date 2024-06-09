@@ -6,11 +6,11 @@ dependencies {
 	compileOnly(project(":projects:tarkin-api"))
 
 	// CCA Base
-	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
-	include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
+	modImplementation("org.ladysnake.cardinal-components-api:cardinal-components-base:${cca_version}")
+	include("org.ladysnake.cardinal-components-api:cardinal-components-base:${cca_version}")
 	// CCA Entity
-	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}")
-	include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}")
+	modImplementation("org.ladysnake.cardinal-components-api:cardinal-components-entity:${cca_version}")
+	include("org.ladysnake.cardinal-components-api:cardinal-components-entity:${cca_version}")
 
 	// Cloth Config
 	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {

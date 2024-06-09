@@ -81,12 +81,12 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
-		super.initDataTracker();
-		getDataTracker().startTracking(WING_ANIM, (byte)0);
-		getDataTracker().startTracking(COCKPIT_ANIM, (byte)0);
-		getDataTracker().startTracking(CANNON_BITS, (byte)0);
+		super.initDataTracker(builder);
+		builder.add(WING_ANIM, (byte)0);
+		builder.add(COCKPIT_ANIM, (byte)0);
+		builder.add(CANNON_BITS, (byte)0);
 	}
 
 	@Override
@@ -135,13 +135,6 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 
 		cannonState++;
 		setCannonState(cannonState);
-	}
-
-	@Override
-	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
-	{
-		return 0f;
-		//		return super.getEyeHeight(pose, dimensions);
 	}
 
 	@Override

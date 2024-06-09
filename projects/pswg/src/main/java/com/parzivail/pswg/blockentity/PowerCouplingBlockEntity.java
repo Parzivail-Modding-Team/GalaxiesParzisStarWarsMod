@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLong;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,30 +30,30 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 	}
 
 	@Override
-	public void writeNbt(NbtCompound tag)
+	protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup)
 	{
+		super.writeNbt(nbt, registryLookup);
+
 		var targets = new NbtList();
 		for (var pos : this.targetPositions)
 			targets.add(NbtLong.of(pos.asLong()));
 
-		tag.put("targets", targets);
-
-		super.writeNbt(tag);
+		nbt.put("targets", targets);
 	}
 
 	@Override
-	public void readNbt(NbtCompound tag)
+	protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup)
 	{
+		super.readNbt(nbt, registryLookup);
+
 		targetPositions.clear();
 
-		var targets = tag.getList("targets", NbtElement.LONG_TYPE);
+		var targets = nbt.getList("targets", NbtElement.LONG_TYPE);
 		for (var target : targets)
 			targetPositions.add(BlockPos.fromLong(((NbtLong)target).longValue()));
 
 		if (world != null && !world.isClient)
 			syncTimer = 10;
-
-		super.readNbt(tag);
 	}
 
 	private void removeFrom(BlockPos pos)
@@ -73,7 +74,7 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 	}
 
 	@Override
-	public NbtCompound toInitialChunkDataNbt()
+	public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup)
 	{
 		return toClientTag(super.toInitialChunkDataNbt());
 	}

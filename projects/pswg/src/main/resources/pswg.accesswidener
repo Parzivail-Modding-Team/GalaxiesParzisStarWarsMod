@@ -7,3 +7,5 @@ accessible	class	net/minecraft/client/render/RenderPhase$Texture
 accessible	class	net/minecraft/client/render/RenderPhase$Cull
 accessible	class	net/minecraft/client/render/RenderLayer$MultiPhaseParameters
 accessible	method	net/minecraft/client/render/RenderLayer	of	(Ljava/lang/String;Lnet/minecraft/client/render/VertexFormat;Lnet/minecraft/client/render/VertexFormat$DrawMode;IZZLnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+extendable	method	net/minecraft/network/packet/s2c/play/EntityVelocityUpdateS2CPacket	write	(Lnet/minecraft/network/PacketByteBuf;)V
+extendable	method	net/minecraft/network/packet/s2c/play/EntityVelocityUpdateS2CPacket	<init>	(Lnet/minecraft/network/PacketByteBuf;)V

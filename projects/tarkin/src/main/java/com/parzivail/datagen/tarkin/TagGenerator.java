@@ -49,6 +49,6 @@ public class TagGenerator
 
 	public void build(List<BuiltAsset> assets)
 	{
-		assets.add(BuiltAsset.tag(IdentifierUtil.concat(tagDataType + "/", tag.id()), entry));
+		assets.add(BuiltAsset.tag(tag.id().withPrefixedPath(tagDataType + "/"), entry));
 	}
 }

@@ -1,6 +1,5 @@
 package com.parzivail.datagen;
 
-import com.parzivail.datagen.tarkin.IdentifierUtil;
 import com.parzivail.datagen.tarkin.Tarkin;
 import com.parzivail.pswg.Resources;
 import net.minecraft.util.Identifier;
@@ -48,32 +47,32 @@ public class FilesystemUtils
 
 	public static Path getBlockstatePath(Identifier identifier)
 	{
-		return getAssetPath(IdentifierUtil.concat("blockstates/", identifier, ".json"));
+		return getAssetPath(identifier.withPath(path -> "blockstates/" + path + ".json"));
 	}
 
 	public static Path getBlockModelPath(Identifier identifier)
 	{
-		return getAssetPath(IdentifierUtil.concat("models/block/", identifier, ".json"));
+		return getAssetPath(identifier.withPath(path -> "models/block/" + path + ".json"));
 	}
 
 	public static Path getItemModelPath(Identifier identifier)
 	{
-		return getAssetPath(IdentifierUtil.concat("models/item/", identifier, ".json"));
+		return getAssetPath(identifier.withPath(path -> "models/item/" + path + ".json"));
 	}
 
 	public static Path getTagPath(Identifier identifier)
 	{
-		return getDataPath(IdentifierUtil.concat(identifier, ".json"));
+		return getDataPath(identifier.withSuffixedPath(".json"));
 	}
 
 	public static Path getLootTablePath(Identifier identifier)
 	{
-		return getDataPath(IdentifierUtil.concat("loot_tables/", identifier, ".json"));
+		return getDataPath(identifier.withPath(path -> "loot_tables/" + path + ".json"));
 	}
 
 	public static Path getRecipePath(Identifier identifier)
 	{
-		return getDataPath(IdentifierUtil.concat("recipes/tarkin/", identifier, ".json"));
+		return getDataPath(identifier.withPath(path -> "recipes/tarkin/" + path + ".json"));
 	}
 
 	public static void nukeRecipeDir() throws IOException
@@ -97,7 +96,7 @@ public class FilesystemUtils
 		if (!Files.exists(parentDir))
 			return;
 
-		cleanDirectoryOf(parentDir.toFile(), "json");
+		cleanDirectoryOf(parentDir, "json");
 	}
 
 	public static void nukeItemModelJsons() throws IOException
@@ -109,7 +108,7 @@ public class FilesystemUtils
 		if (!Files.exists(parentDir))
 			return;
 
-		cleanDirectoryOf(parentDir.toFile(), "json");
+		cleanDirectoryOf(parentDir, "json");
 	}
 
 	public static void nukeBlockLootTables() throws IOException
@@ -121,7 +120,7 @@ public class FilesystemUtils
 		if (!Files.exists(parentDir))
 			return;
 
-		cleanDirectoryOf(parentDir.toFile(), "json");
+		cleanDirectoryOf(parentDir, "json");
 	}
 
 	public static void nukeTags() throws IOException
@@ -129,12 +128,12 @@ public class FilesystemUtils
 		var namespaces = new String[] { "minecraft", "fabric", Resources.MODID };
 		for (var namespace : namespaces)
 		{
-			nukeTags(new Identifier(namespace, "tags/blocks/dummy"));
-			nukeTags(new Identifier(namespace, "tags/blocks/mineable/dummy"));
-			nukeTags(new Identifier(namespace, "tags/items/dummy"));
+			nukeTags(Identifier.of(namespace, "tags/blocks/dummy"));
+			nukeTags(Identifier.of(namespace, "tags/blocks/mineable/dummy"));
+			nukeTags(Identifier.of(namespace, "tags/items/dummy"));
 		}
 
-		nukeTags(new Identifier("trinkets", "tags/items/chest/dummy"));
+		nukeTags(Identifier.of("trinkets", "tags/items/chest/dummy"));
 	}
 
 	public static void nukeTags(Identifier dummyAssetId) throws IOException
@@ -146,7 +145,7 @@ public class FilesystemUtils
 		if (!Files.exists(parentDir))
 			return;
 
-		cleanDirectoryOf(parentDir.toFile(), "json");
+		cleanDirectoryOf(parentDir, "json");
 	}
 
 	public static void nukeBlockstateDir() throws IOException
@@ -161,9 +160,9 @@ public class FilesystemUtils
 		FileUtils.cleanDirectory(parentDir.toFile());
 	}
 
-	public static void cleanDirectoryOf(final File directory, String extension) throws IOException
+	public static void cleanDirectoryOf(final Path directory, String extension) throws IOException
 	{
-		final File[] files = directory.listFiles();
+		final File[] files = directory.toFile().listFiles();
 
 		for (final File file : files)
 		{

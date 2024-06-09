@@ -20,6 +20,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
@@ -153,6 +154,12 @@ public class WorrtEntity extends AnimalEntity
 		{
 			super.handleStatus(status);
 		}
+	}
+
+	@Override
+	public boolean isBreedingItem(ItemStack stack)
+	{
+		return false;
 	}
 
 	public static boolean isValidWorrtFood(LivingEntity entity) {

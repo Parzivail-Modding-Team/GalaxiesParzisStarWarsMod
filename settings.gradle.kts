@@ -23,7 +23,7 @@ include(":projects:addon-test")
 // The PSWG Team's official Clone Wars-Era addon
 include(":projects:addon-clonewars")
 
-// The Aurek Tooklkit, a suite of ingame editors to add and edit base and addon features
+// The Aurek Toolkit, a suite of ingame editors to add and edit base and addon features
 include(":projects:toolkit")
 
 // Lexer, parser, and API for the Mara programming language

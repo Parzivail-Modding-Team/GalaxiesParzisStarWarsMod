@@ -1,6 +1,6 @@
 package com.parzivail.util.gen.mc;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.util.gen.TerrainGenerator;
 import net.minecraft.block.BlockState;
@@ -25,11 +25,10 @@ import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 public class GalaxiesChunkGenerator extends ChunkGenerator
 {
-	public static final Codec<GalaxiesChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<GalaxiesChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			BiomeSource.CODEC.fieldOf("biome_source").forGetter(c -> c.biomeSource)	).apply(instance, GalaxiesChunkGenerator::new));
 
 	private final TerrainGenerator backing;
@@ -47,7 +46,7 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	protected Codec<? extends ChunkGenerator> getCodec()
+	protected MapCodec<? extends ChunkGenerator> getCodec()
 	{
 		return CODEC;
 	}
@@ -77,7 +76,7 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk)
+	public CompletableFuture<Chunk> populateNoise(Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk)
 	{
 		this.backing.buildNoise(new MinecraftChunkView(chunk));
 

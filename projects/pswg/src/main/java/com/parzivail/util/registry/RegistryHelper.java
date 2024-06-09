@@ -21,7 +21,7 @@ public class RegistryHelper
 			try
 			{
 				var tabInclude = field.getAnnotation(TabInclude.class);
-				registryFunction.accept((T)field.get(null), new Identifier(namespace, annotation.value()), field.getAnnotation(TabIgnore.class) != null, tabInclude == null ? null : tabInclude.value());
+				registryFunction.accept((T)field.get(null), Identifier.of(namespace, annotation.value()), field.getAnnotation(TabIgnore.class) != null, tabInclude == null ? null : tabInclude.value());
 			}
 			catch (IllegalAccessException e)
 			{

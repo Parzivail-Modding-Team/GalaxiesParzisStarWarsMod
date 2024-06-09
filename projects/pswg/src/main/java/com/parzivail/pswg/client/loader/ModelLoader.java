@@ -14,7 +14,7 @@ public class ModelLoader
 {
 	public static P3dUnbakedBlockModel loadP3D(DynamicBakedModel.CacheMethod cacheMethod, Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
-		if (particleTexture.equals(new Identifier("block/stone")))
+		if (particleTexture.equals(Identifier.ofVanilla("block/stone")))
 			Galaxies.LOG.warn("Model[%s]+Texture[%s] does not have a particle texture", modelFile, baseTexture);
 
 		return new P3dUnbakedBlockModel(

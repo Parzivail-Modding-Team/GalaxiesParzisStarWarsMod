@@ -18,7 +18,7 @@ public abstract class AbstractClientPlayerEntityMixin
 	@Shadow
 	protected abstract PlayerListEntry getPlayerListEntry();
 
-	@Inject(method = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getSkinTextures()Lnet/minecraft/client/util/SkinTextures;", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "getSkinTextures()Lnet/minecraft/client/util/SkinTextures;", at = @At("HEAD"), cancellable = true)
 	private void getSkinTextures(CallbackInfoReturnable<SkinTextures> cir)
 	{
 		var abstractClientPlayerEntity = (AbstractClientPlayerEntity)(Object)this;
@@ -29,7 +29,7 @@ public abstract class AbstractClientPlayerEntityMixin
 			return;
 
 		PlayerListEntry playerListEntry = getPlayerListEntry();
-		var originalSkinTextures = playerListEntry == null ? DefaultSkinHelper.getTexture(abstractClientPlayerEntity.getUuid()) : playerListEntry.getSkinTextures();
+		var originalSkinTextures = playerListEntry == null ? DefaultSkinHelper.getSkinTextures(abstractClientPlayerEntity.getUuid()) : playerListEntry.getSkinTextures();
 
 		var current = SwgSpeciesRenderer.getTexture(abstractClientPlayerEntity, species);
 

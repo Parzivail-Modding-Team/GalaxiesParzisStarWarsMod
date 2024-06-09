@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -24,9 +25,9 @@ public class CreatureCageBlockEntity extends BlockEntity implements BlockEntityC
 	}
 
 	@Override
-	public void writeNbt(NbtCompound tag)
+	public void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		super.writeNbt(tag);
+		super.writeNbt(tag, registryLookup);
 		if (containedEntity != null)
 			tag.put("containedEntity", EntityUtil.serializeEntity(containedEntity));
 		else if (containedEntityData != null)
@@ -34,18 +35,18 @@ public class CreatureCageBlockEntity extends BlockEntity implements BlockEntityC
 	}
 
 	@Override
-	public void readNbt(NbtCompound tag)
+	public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		super.readNbt(tag);
+		super.readNbt(tag, registryLookup);
 
 		if (tag.contains("containedEntity"))
 			containedEntityData = tag.getCompound("containedEntity");
 	}
 
 	@Override
-	public NbtCompound toInitialChunkDataNbt()
+	public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup)
 	{
-		return toClientTag(super.toInitialChunkDataNbt());
+		return toClientTag(super.toInitialChunkDataNbt(registryLookup));
 	}
 
 	@Override

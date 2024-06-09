@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block.crop;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.world.WorldUtil;
@@ -20,23 +21,23 @@ import net.minecraft.world.WorldView;
 
 public class MoloShrubBlock extends PlantBlock implements Fertilizable
 {
-	static
-	{
-		AGE = Properties.AGE_3;
-		BLOOMING = BooleanProperty.of("blooming");
-		SMALL_SHAPE = Block.createCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
-		LARGE_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
-	}
+	private static final MapCodec<MoloShrubBlock> CODEC = createCodec(MoloShrubBlock::new);
 
-	public static final IntProperty AGE;
-	public static final BooleanProperty BLOOMING;
-	private static final VoxelShape SMALL_SHAPE;
-	private static final VoxelShape LARGE_SHAPE;
+	public static final IntProperty AGE = Properties.AGE_3;
+	public static final BooleanProperty BLOOMING = BooleanProperty.of("blooming");
+	private static final VoxelShape SMALL_SHAPE = Block.createCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
+	private static final VoxelShape LARGE_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 
 	public MoloShrubBlock(Settings settings)
 	{
 		super(settings.ticksRandomly());
 		this.setDefaultState(this.stateManager.getDefaultState().with(AGE, 0).with(BLOOMING, false));
+	}
+
+	@Override
+	protected MapCodec<MoloShrubBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	@Override

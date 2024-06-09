@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ScaffoldingBlock;
 import net.minecraft.block.ShapeContext;
@@ -12,6 +13,7 @@ import net.minecraft.world.WorldView;
 
 public class ScaffoldBlock extends ScaffoldingBlock
 {
+	private static final MapCodec<ScaffoldBlock> CODEC = createCodec(ScaffoldBlock::new);
 	private static final VoxelShape SHAPE = getShape();
 
 	public ScaffoldBlock(Settings settings)
@@ -53,6 +55,14 @@ public class ScaffoldBlock extends ScaffoldingBlock
 		}
 
 		return i;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public MapCodec<ScaffoldingBlock> getCodec()
+	{
+		// TODO
+		return (MapCodec<ScaffoldingBlock>)(MapCodec<?>)CODEC;
 	}
 
 	private static VoxelShape getShape()

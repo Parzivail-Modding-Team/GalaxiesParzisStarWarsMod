@@ -38,7 +38,7 @@ public class Resources
 
 	public static Identifier id(@NotNull String path)
 	{
-		return new Identifier(MODID, path);
+		return Identifier.of(MODID, path);
 	}
 
 	public static String dotModId(String category, String str)

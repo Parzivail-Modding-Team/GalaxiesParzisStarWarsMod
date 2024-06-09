@@ -69,7 +69,7 @@ public class NemManager extends KeyedReloadableLoader<NbtCompound>
 		var base = nbt.getString("base");
 		if (!base.isEmpty())
 		{
-			var baseId = new Identifier(base);
+			var baseId = Identifier.of(base);
 			var overrideNbt = loadedResources.get(baseId);
 			if (overrideNbt == null)
 				return DataResolution.missingDependency(List.of(baseId));

@@ -3,6 +3,7 @@ package com.parzivail.util.entity.ai;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
+import net.minecraft.entity.ai.pathing.PathContext;
 import net.minecraft.entity.ai.pathing.PathNodeMaker;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -31,7 +32,7 @@ public class SlowTurningMoveControl extends MoveControl
 			PathNodeMaker pathNodeMaker = entityNavigation.getNodeMaker();
 			return pathNodeMaker == null
 			       || pathNodeMaker.getDefaultNodeType(
-					this.entity.getWorld(),
+					new PathContext(this.entity.getWorld(), this.entity),
 					MathHelper.floor(this.entity.getX() + (double)dX),
 					this.entity.getBlockY(),
 					MathHelper.floor(this.entity.getZ() + (double)dZ)

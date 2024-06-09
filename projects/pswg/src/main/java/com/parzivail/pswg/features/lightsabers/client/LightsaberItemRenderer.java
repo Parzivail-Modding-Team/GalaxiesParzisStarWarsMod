@@ -55,8 +55,8 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			return MODEL_CACHE.get(id);
 
 		var entry = new ModelEntry(
-				new Identifier(id.getNamespace(), "item/lightsaber/" + id.getPath()),
-				new Identifier(id.getNamespace(), "textures/item/model/lightsaber/" + id.getPath() + ".png")
+				id.withPrefixedPath("item/lightsaber/"),
+				id.withPath(path -> "textures/item/model/lightsaber/" + path + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
 

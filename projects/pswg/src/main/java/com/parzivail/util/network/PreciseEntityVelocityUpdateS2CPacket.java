@@ -6,11 +6,17 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.util.math.Vec3d;
 
 public class PreciseEntityVelocityUpdateS2CPacket extends EntityVelocityUpdateS2CPacket
 {
+	public static final PacketCodec<PacketByteBuf, PreciseEntityVelocityUpdateS2CPacket> CODEC = Packet.createCodec(
+			PreciseEntityVelocityUpdateS2CPacket::write, PreciseEntityVelocityUpdateS2CPacket::new
+	);
+
 	private final Vec3d position;
 	private final Vec3d velocity;
 

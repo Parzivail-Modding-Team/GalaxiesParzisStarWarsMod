@@ -1,5 +1,6 @@
 package com.parzivail.util.block.connecting;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,6 +27,9 @@ public abstract class DelegatedConnectingBlock extends ConnectingBlock
 				                 .with(DOWN, false)
 		);
 	}
+
+	@Override
+	protected abstract MapCodec<? extends DelegatedConnectingBlock> getCodec();
 
 	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx)

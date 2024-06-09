@@ -31,10 +31,10 @@ public class MannequinEntity extends ArmorStandEntity
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
-		super.initDataTracker();
-		getDataTracker().startTracking(SPECIES, SwgSpeciesRegistry.METASPECIES_NONE.toString());
+		super.initDataTracker(builder);
+		builder.add(SPECIES, SwgSpeciesRegistry.METASPECIES_NONE.toString());
 	}
 
 	@Override

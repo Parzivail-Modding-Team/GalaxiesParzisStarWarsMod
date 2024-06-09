@@ -127,10 +127,10 @@ public abstract class ThrowableExplosive extends ThrownEntity implements IPrecis
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
-		dataTracker.startTracking(LIFE, 75);
-		dataTracker.startTracking(PRIMED, false);
+		builder.add(LIFE, 75);
+		builder.add(PRIMED, false);
 	}
 
 	public void setExplosionPower(float explosionPower)

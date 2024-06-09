@@ -23,7 +23,7 @@ public class LootTableFile
 	public static LootTableFile empty(Block block)
 	{
 		var reg = AssetUtils.getRegistryName(block);
-		return new LootTableFile(IdentifierUtil.concat("blocks/", reg), new Identifier("block"));
+		return new LootTableFile(reg.withPrefixedPath("blocks/"), Identifier.ofVanilla("block"));
 	}
 
 	public static LootTableFile ofPool(Block block, Pool pool)
@@ -36,8 +36,8 @@ public class LootTableFile
 		var reg = AssetUtils.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
-				              .condition(new Identifier("survives_explosion"))
-				              .entry(new Pool.Entry(new Identifier("item"), reg))
+				              .condition(Identifier.ofVanilla("survives_explosion"))
+				              .entry(new Pool.Entry(Identifier.ofVanilla("item"), reg))
 		);
 	}
 
@@ -53,15 +53,15 @@ public class LootTableFile
 			var regBonus = AssetUtils.getRegistryName(bonus);
 			return ofPool(block,
 			              new Pool(1)
-					              .condition(new Identifier("survives_explosion"))
-					              .entry(new Pool.Entry(new Identifier("item"), regSelf))
-					              .entry(new Pool.Entry(new Identifier("item"), regBonus)
-							                     .condition(new Pool.Condition(new Identifier("random_chance"))
+					              .condition(Identifier.ofVanilla("survives_explosion"))
+					              .entry(new Pool.Entry(Identifier.ofVanilla("item"), regSelf))
+					              .entry(new Pool.Entry(Identifier.ofVanilla("item"), regBonus)
+							                     .condition(new Pool.Condition(Identifier.ofVanilla("random_chance"))
 									                                .chance(chance))
-							                     .function(new Pool.Function(new Identifier("explosion_decay")))
-							                     .function(new Pool.Function(new Identifier("apply_bonus"))
-									                               .enchantment(new Identifier("fortune"))
-									                               .formula(new Identifier("uniform_bonus_count"))
+							                     .function(new Pool.Function(Identifier.ofVanilla("explosion_decay")))
+							                     .function(new Pool.Function(Identifier.ofVanilla("apply_bonus"))
+									                               .enchantment(Identifier.ofVanilla("fortune"))
+									                               .formula(Identifier.ofVanilla("uniform_bonus_count"))
 									                               .parameter("bonusMultiplier", fortuneBonusMultiplier)
 							                     )
 					              )
@@ -73,7 +73,7 @@ public class LootTableFile
 	{
 		var reg = AssetUtils.getRegistryName(block);
 
-		var entry = new Pool.Entry(new Identifier("item"), reg);
+		var entry = new Pool.Entry(Identifier.ofVanilla("item"), reg);
 
 		var pickleProp = block.getPickleProperty();
 		pickleProp.getValues().stream().sorted().forEachOrdered(i -> {
@@ -82,13 +82,13 @@ public class LootTableFile
 
 			entry.function(new Pool.CountFunction(i)
 					               .add(false)
-					               .condition(new Pool.Condition(new Identifier("block_state_property"))
+					               .condition(new Pool.Condition(Identifier.ofVanilla("block_state_property"))
 							                          .block(reg)
 							                          .property(pickleProp.getName(), String.valueOf(i)))
 			);
 		});
 
-		entry.function(new Pool.Function(new Identifier("explosion_decay")));
+		entry.function(new Pool.Function(Identifier.ofVanilla("explosion_decay")));
 
 		return ofPool(block, new Pool(1).entry(entry));
 	}
@@ -98,10 +98,10 @@ public class LootTableFile
 		var reg = AssetUtils.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
-				              .entry(new Pool.Entry(new Identifier("alternatives"))
-						                     .child(new Pool.Entry(new Identifier("item"), reg)
+				              .entry(new Pool.Entry(Identifier.ofVanilla("alternatives"))
+						                     .child(new Pool.Entry(Identifier.ofVanilla("item"), reg)
 								                            .function(count)
-								                            .function(new Pool.Function(new Identifier("explosion_decay")))
+								                            .function(new Pool.Function(Identifier.ofVanilla("explosion_decay")))
 						                     )
 				              )
 		);
@@ -123,22 +123,22 @@ public class LootTableFile
 		var seedReg = AssetUtils.getRegistryName(seeds);
 		var cropReg = AssetUtils.getRegistryName(crop);
 		return empty(block)
-				.function(new Pool.Function(new Identifier("explosion_decay")))
+				.function(new Pool.Function(Identifier.ofVanilla("explosion_decay")))
 				.pool(new Pool(1)
-						      .entry(new Pool.Entry(new Identifier("alternatives"))
-								             .child(new Pool.Entry(new Identifier("item"), cropReg)
-										                    .condition(new Pool.Condition(new Identifier("block_state_property"))
+						      .entry(new Pool.Entry(Identifier.ofVanilla("alternatives"))
+								             .child(new Pool.Entry(Identifier.ofVanilla("item"), cropReg)
+										                    .condition(new Pool.Condition(Identifier.ofVanilla("block_state_property"))
 												                               .block(blockReg)
 												                               .property("age", String.valueOf(cropAge))))
-								             .child(new Pool.Entry(new Identifier("item"), seedReg))))
+								             .child(new Pool.Entry(Identifier.ofVanilla("item"), seedReg))))
 				.pool(new Pool(1)
-						      .condition(new Pool.Condition(new Identifier("block_state_property"))
+						      .condition(new Pool.Condition(Identifier.ofVanilla("block_state_property"))
 								                 .block(blockReg)
 								                 .property("age", String.valueOf(cropAge)))
-						      .entry(new Pool.Entry(new Identifier("item"), seedReg)
-								             .function(new Pool.Function(new Identifier("apply_bonus"))
-										                       .enchantment(new Identifier("fortune"))
-										                       .formula(new Identifier("binomial_with_bonus_count"))
+						      .entry(new Pool.Entry(Identifier.ofVanilla("item"), seedReg)
+								             .function(new Pool.Function(Identifier.ofVanilla("apply_bonus"))
+										                       .enchantment(Identifier.ofVanilla("fortune"))
+										                       .formula(Identifier.ofVanilla("binomial_with_bonus_count"))
 										                       .parameter("extra", extra)
 										                       .parameter("probability", probability))));
 	}
@@ -148,13 +148,13 @@ public class LootTableFile
 		var reg = AssetUtils.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
-				              .entry(new Pool.Entry(new Identifier("alternatives"))
-						                     .child(new Pool.Entry(new Identifier("item"), reg)
-								                            .function(new Pool.Function(new Identifier("apply_bonus"))
-										                                      .enchantment(new Identifier("fortune"))
-										                                      .formula(new Identifier("ore_drops"))
+				              .entry(new Pool.Entry(Identifier.ofVanilla("alternatives"))
+						                     .child(new Pool.Entry(Identifier.ofVanilla("item"), reg)
+								                            .function(new Pool.Function(Identifier.ofVanilla("apply_bonus"))
+										                                      .enchantment(Identifier.ofVanilla("fortune"))
+										                                      .formula(Identifier.ofVanilla("ore_drops"))
 								                            )
-								                            .function(new Pool.Function(new Identifier("explosion_decay")))
+								                            .function(new Pool.Function(Identifier.ofVanilla("explosion_decay")))
 						                     )
 				              )
 		);
@@ -165,12 +165,12 @@ public class LootTableFile
 		var reg = AssetUtils.getRegistryName(block);
 		return empty(block)
 				.pool(new Pool(1)
-						      .entry(new Pool.Entry(new Identifier("item"), reg)
-								             .condition(new Pool.Condition(new Identifier("block_state_property"))
+						      .entry(new Pool.Entry(Identifier.ofVanilla("item"), reg)
+								             .condition(new Pool.Condition(Identifier.ofVanilla("block_state_property"))
 										                        .block(reg)
 										                        .property(DoorBlock.HALF, DoubleBlockHalf.LOWER))
 						      )
-						      .condition(new Identifier("survives_explosion"))
+						      .condition(Identifier.ofVanilla("survives_explosion"))
 				);
 	}
 
@@ -179,12 +179,12 @@ public class LootTableFile
 		var reg = AssetUtils.getRegistryName(block);
 		return empty(block)
 				.pool(new Pool(1)
-						      .entry(new Pool.Entry(new Identifier("item"), reg)
-								             .condition(new Pool.Condition(new Identifier("block_state_property"))
+						      .entry(new Pool.Entry(Identifier.ofVanilla("item"), reg)
+								             .condition(new Pool.Condition(Identifier.ofVanilla("block_state_property"))
 										                        .block(reg)
 										                        .property(WaterloggableRotating3BlockWithGuiEntity.SIDE, WaterloggableRotating3BlockWithGuiEntity.Side.MIDDLE))
 						      )
-						      .condition(new Identifier("survives_explosion"))
+						      .condition(Identifier.ofVanilla("survives_explosion"))
 				);
 	}
 
@@ -379,18 +379,8 @@ public class LootTableFile
 
 		public static class CountFunction extends Function
 		{
-			public static class Range
+			public record Range(float min, float max, Identifier type)
 			{
-				float min;
-				float max;
-				Identifier type;
-
-				public Range(float min, float max, Identifier type)
-				{
-					this.min = min;
-					this.max = max;
-					this.type = type;
-				}
 			}
 
 			public Integer count = null;
@@ -398,13 +388,13 @@ public class LootTableFile
 
 			public CountFunction(int count)
 			{
-				super(new Identifier("set_count"));
+				super(Identifier.ofVanilla("set_count"));
 				this.count = count;
 			}
 
 			public CountFunction(Range count)
 			{
-				super(new Identifier("set_count"));
+				super(Identifier.ofVanilla("set_count"));
 				this.range = count;
 			}
 

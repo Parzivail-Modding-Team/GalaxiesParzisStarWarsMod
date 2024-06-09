@@ -35,7 +35,7 @@ public class WorrtBrain
 				0,
 				ImmutableList.of(
 						new StayAboveWaterTask(0.8F),
-						new FleeTask(2.0F),
+						new FleeTask<>(2.0F),
 						new AvoidEntityTask(2.0F),
 						new LookAroundTask(45, 90),
 						new WanderAroundTask()

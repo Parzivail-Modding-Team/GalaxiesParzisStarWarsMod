@@ -128,31 +128,31 @@ public abstract class RecipeGenerator
 		if (sourceName != null)
 			source = "_from_" + sourceName;
 
-		assets.add(BuiltAsset.recipe(Resources.id(IdentifierUtil.concat(output, source).getPath()), root));
+		assets.add(BuiltAsset.recipe(Resources.id(output.withSuffixedPath(source).getPath()), root));
 	}
 
 	public static class Cooking extends RecipeGenerator
 	{
 		public static Cooking smelting(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("smelting"), AssetUtils.getRegistryName(output), input, sourceName);
+			return new Cooking(Identifier.ofVanilla("smelting"), AssetUtils.getRegistryName(output), input, sourceName);
 		}
 
 		public static Cooking blasting(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("blasting"), AssetUtils.getRegistryName(output), input, sourceName)
+			return new Cooking(Identifier.ofVanilla("blasting"), AssetUtils.getRegistryName(output), input, sourceName)
 					.cookTime(100);
 		}
 
 		public static Cooking campfire(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("campfire_cooking"), AssetUtils.getRegistryName(output), input, sourceName)
+			return new Cooking(Identifier.ofVanilla("campfire_cooking"), AssetUtils.getRegistryName(output), input, sourceName)
 					.cookTime(600);
 		}
 
 		public static Cooking smoking(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("smoking"), AssetUtils.getRegistryName(output), input, sourceName)
+			return new Cooking(Identifier.ofVanilla("smoking"), AssetUtils.getRegistryName(output), input, sourceName)
 					.cookTime(100);
 		}
 
@@ -201,7 +201,7 @@ public abstract class RecipeGenerator
 
 		private Shapeless(ItemStack output, String sourceName)
 		{
-			super(new Identifier("crafting_shapeless"), AssetUtils.getRegistryName(output.getItem()), sourceName);
+			super(Identifier.ofVanilla("crafting_shapeless"), AssetUtils.getRegistryName(output.getItem()), sourceName);
 			this.outputCount = output.getCount();
 			this.inputs = new ArrayList<>();
 		}
@@ -252,7 +252,7 @@ public abstract class RecipeGenerator
 
 		private Shaped(ItemStack output)
 		{
-			super(new Identifier("crafting_shaped"), AssetUtils.getRegistryName(output.getItem()), null);
+			super(Identifier.ofVanilla("crafting_shaped"), AssetUtils.getRegistryName(output.getItem()), null);
 			this.outputCount = output.getCount();
 			this.shapes = new ArrayList<>();
 		}
@@ -431,7 +431,7 @@ public abstract class RecipeGenerator
 				if (shape.sourceName != null)
 					source = "_from_" + shape.sourceName;
 
-				assets.add(BuiltAsset.recipe(Resources.id(IdentifierUtil.concat(output, source).getPath()), root));
+				assets.add(BuiltAsset.recipe(Resources.id(output.withSuffixedPath(source).getPath()), root));
 			}
 		}
 

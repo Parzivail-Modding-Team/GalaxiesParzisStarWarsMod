@@ -179,7 +179,7 @@ public abstract class SwgSpecies
 
 	protected static Identifier getTexture(Identifier slug, String texture)
 	{
-		return new Identifier(slug.getNamespace(), "textures/species/" + slug.getPath() + "/" + texture + ".png");
+		return slug.withPath(path -> "textures/species/" + path + "/" + texture + ".png");
 	}
 
 	protected static Identifier tint(Identifier texture, SwgSpecies species, SpeciesColorVariable variable)
@@ -204,7 +204,7 @@ public abstract class SwgSpecies
 
 		var parts = serialized.split(MODEL_SEPARATOR);
 
-		this.model = new Identifier(parts[0]);
+		this.model = Identifier.of(parts[0]);
 		this.gender = fromModel(parts[0]);
 
 		if (parts.length > 1)
@@ -238,7 +238,7 @@ public abstract class SwgSpecies
 
 	public static Identifier toModel(Identifier species, SpeciesGender gender)
 	{
-		return new Identifier(species.getNamespace(), species.getPath() + SpeciesGender.GENDER_SEPARATOR + gender.getSlug());
+		return species.withSuffixedPath(SpeciesGender.GENDER_SEPARATOR + gender.getSlug());
 	}
 
 	public abstract Identifier getSlug();

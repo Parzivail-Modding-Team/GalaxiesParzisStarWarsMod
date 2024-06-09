@@ -205,12 +205,12 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	}
 
 	@Override
-	public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type)
+	protected boolean canPathfindThrough(BlockState state, NavigationType type)
 	{
 		switch (type)
 		{
 			case WATER:
-				return world.getFluidState(pos).isIn(FluidTags.WATER);
+				return state.getFluidState().isIn(FluidTags.WATER);
 			default:
 				return false;
 		}

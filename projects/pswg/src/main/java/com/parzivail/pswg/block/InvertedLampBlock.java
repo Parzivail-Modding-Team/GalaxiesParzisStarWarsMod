@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,7 +14,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class InvertedLampBlock extends Block
+public abstract class InvertedLampBlock extends Block
 {
 	public static final BooleanProperty LIT = Properties.LIT;
 	public static final BooleanProperty POWERED = Properties.POWERED;
@@ -29,6 +30,9 @@ public class InvertedLampBlock extends Block
 		super(settings);
 		this.setDefaultState(this.getDefaultState().with(POWERED, false).with(INVERTED, true).with(LIT, true));
 	}
+
+	@Override
+	protected abstract MapCodec<? extends InvertedLampBlock> getCodec();
 
 	@Override
 	@Nullable

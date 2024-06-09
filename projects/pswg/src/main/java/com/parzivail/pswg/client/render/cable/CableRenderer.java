@@ -192,13 +192,13 @@ public class CableRenderer
 				var nml = cableNormal[i];
 
 				buffer.vertex(currCableStart[i].x, currCableStart[i].y, currCableStart[i].z).color(r, g, b, 1)
-				      .texture(texUWid, 0.4375f + vOffset2).overlay(overlay).light(segStartLight).normal(nml.x, nml.y, nml.z).next();
+				      .texture(texUWid, 0.4375f + vOffset2).overlay(overlay).light(segStartLight).normal(nml.x, nml.y, nml.z);
 				buffer.vertex(currCableEnd[i].x, currCableEnd[i].y, currCableEnd[i].z).color(r, g, b, 1)
-				      .texture(0, 0.4375f + vOffset2).overlay(overlay).light(segEndLight).normal(nml.x, nml.y, nml.z).next();
+				      .texture(0, 0.4375f + vOffset2).overlay(overlay).light(segEndLight).normal(nml.x, nml.y, nml.z);
 				buffer.vertex(currCableEnd[next].x, currCableEnd[next].y, currCableEnd[next].z).color(r, g, b, 1)
-				      .texture(0, 0.5f + vOffset2).overlay(overlay).light(segEndLight).normal(nml.x, nml.y, nml.z).next();
+				      .texture(0, 0.5f + vOffset2).overlay(overlay).light(segEndLight).normal(nml.x, nml.y, nml.z);
 				buffer.vertex(currCableStart[next].x, currCableStart[next].y, currCableStart[next].z).color(r, g, b, 1)
-				      .texture(texUWid, 0.5f + vOffset2).overlay(overlay).light(segStartLight).normal(nml.x, nml.y, nml.z).next();
+				      .texture(texUWid, 0.5f + vOffset2).overlay(overlay).light(segStartLight).normal(nml.x, nml.y, nml.z);
 			}
 		}
 
