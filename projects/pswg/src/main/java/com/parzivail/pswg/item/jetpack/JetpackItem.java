@@ -51,7 +51,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		if (item.isEmpty())
 			return ItemStack.EMPTY;
 
-		return item.get(0).getRight();
+		return item.getFirst().getRight();
 	}
 
 	@Override

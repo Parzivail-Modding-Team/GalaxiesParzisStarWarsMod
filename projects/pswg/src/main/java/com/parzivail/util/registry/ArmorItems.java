@@ -3,6 +3,7 @@ package com.parzivail.util.registry;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
+import net.minecraft.registry.entry.RegistryEntry;
 
 public class ArmorItems
 {
@@ -11,7 +12,7 @@ public class ArmorItems
 	public final ArmorItem leggings;
 	public final ArmorItem boots;
 
-	public ArmorItems(ArmorMaterial material, Item.Settings settings)
+	public ArmorItems(RegistryEntry<ArmorMaterial> material, Item.Settings settings)
 	{
 		helmet = new ArmorItem(material, ArmorItem.Type.HELMET, settings);
 		chestplate = new ArmorItem(material, ArmorItem.Type.CHESTPLATE, settings);

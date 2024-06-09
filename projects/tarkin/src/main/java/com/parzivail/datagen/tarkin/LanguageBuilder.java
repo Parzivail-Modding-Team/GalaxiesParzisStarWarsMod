@@ -81,7 +81,7 @@ public class LanguageBuilder
 
 	public LanguageBuilder lore(Item item)
 	{
-		return entry(TooltipUtil.getLoreKey(item));
+		return entry(TooltipUtil.getItemLoreKey(item));
 	}
 
 	public LanguageBuilder status(Item item)

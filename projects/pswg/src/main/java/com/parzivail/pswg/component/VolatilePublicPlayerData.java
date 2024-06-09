@@ -1,11 +1,12 @@
 package com.parzivail.pswg.component;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.ladysnake.cca.api.v3.component.ComponentV3;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 public class VolatilePublicPlayerData implements ComponentV3, AutoSyncedComponent
 {
@@ -30,13 +31,13 @@ public class VolatilePublicPlayerData implements ComponentV3, AutoSyncedComponen
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag)
+	public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
 		patrolPosture = tag.getBoolean("patrol_posture");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag)
+	public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
 		tag.putBoolean("patrol_posture", patrolPosture);
 	}
@@ -50,12 +51,12 @@ public class VolatilePublicPlayerData implements ComponentV3, AutoSyncedComponen
 	}
 
 	@Override
-	public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient)
+	public void writeSyncPacket(RegistryByteBuf buf, ServerPlayerEntity recipient)
 	{
 		writeSyncPacket(buf, recipient, 0);
 	}
 
-	private void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient, int syncOp)
+	private void writeSyncPacket(RegistryByteBuf buf, ServerPlayerEntity recipient, int syncOp)
 	{
 		buf.writeInt(syncOp);
 
@@ -64,7 +65,7 @@ public class VolatilePublicPlayerData implements ComponentV3, AutoSyncedComponen
 			case 0 ->
 			{ // Full sync
 				var tag = new NbtCompound();
-				writeToNbt(tag);
+				writeToNbt(tag, buf.getRegistryManager());
 				buf.writeNbt(tag);
 			}
 			case PATROL_POSTURE_SYNCOP -> buf.writeBoolean(patrolPosture);
@@ -72,7 +73,7 @@ public class VolatilePublicPlayerData implements ComponentV3, AutoSyncedComponen
 	}
 
 	@Override
-	public void applySyncPacket(PacketByteBuf buf)
+	public void applySyncPacket(RegistryByteBuf buf)
 	{
 		var syncOp = buf.readInt();
 
@@ -82,7 +83,7 @@ public class VolatilePublicPlayerData implements ComponentV3, AutoSyncedComponen
 			{ // Full sync
 				var tag = buf.readNbt();
 				if (tag != null)
-					this.readFromNbt(tag);
+					this.readFromNbt(tag, buf.getRegistryManager());
 			}
 			case PATROL_POSTURE_SYNCOP ->
 			{

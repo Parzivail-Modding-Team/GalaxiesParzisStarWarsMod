@@ -1,6 +1,7 @@
 package com.parzivail.pswg.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgRecipeSerializers;
@@ -9,32 +10,32 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-import java.util.Optional;
-
-public record VaporatorRecipe(Ingredient base, int duration, ItemStack result) implements Recipe<Inventory>
+public record VaporatorRecipe(Ingredient base, int duration, ItemStack result) implements Recipe<SingleStackRecipeInput>
 {
 
 	@Override
-	public boolean matches(Inventory inv, World world)
+	public boolean matches(SingleStackRecipeInput input, World world)
 	{
-		return this.base.test(inv.getStack(0));
+		return this.base.test(input.item());
 	}
 
 	@Override
-	public ItemStack craft(Inventory inv, DynamicRegistryManager registryManager)
+	public ItemStack craft(SingleStackRecipeInput input, RegistryWrapper.WrapperLookup lookup)
 	{
-		return this.getResult(registryManager).copy();
+		return this.getResult(lookup).copy();
 	}
 
 	@Override
@@ -45,14 +46,9 @@ public record VaporatorRecipe(Ingredient base, int duration, ItemStack result) i
 	}
 
 	@Override
-	public ItemStack getResult(DynamicRegistryManager registryManager)
+	public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup)
 	{
 		return this.result;
-	}
-
-	public int getDuration()
-	{
-		return duration;
 	}
 
 	@Override
@@ -84,43 +80,31 @@ public record VaporatorRecipe(Ingredient base, int duration, ItemStack result) i
 
 	public static class Serializer implements RecipeSerializer<VaporatorRecipe>
 	{
-		private static final Codec<VaporatorRecipe> CODEC = RecordCodecBuilder.create(
+		private static final MapCodec<VaporatorRecipe> CODEC = RecordCodecBuilder.mapCodec(
 				builder -> builder.group(
 						Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter(VaporatorRecipe::base),
 						Codec.INT.fieldOf("duration").forGetter(VaporatorRecipe::duration),
-						RecordCodecBuilder.<ItemStack>create(instance -> instance.group(
-								Registries.ITEM.getCodec().fieldOf("item").forGetter(ItemStack::getItem),
-								Codec.INT.optionalFieldOf("count", 1).forGetter(ItemStack::getCount),
-								NbtCompound.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getNbt()))
-						).apply(instance, (item, integer, nbtCompound) -> {
-							var stack = new ItemStack(item, integer);
-							nbtCompound.ifPresent(stack::setNbt);
-							return stack;
-						})).fieldOf("result").forGetter(VaporatorRecipe::result)
+						ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(VaporatorRecipe::result)
 				).apply(builder, VaporatorRecipe::new)
 		);
 
+		private static final PacketCodec<RegistryByteBuf, VaporatorRecipe> PACKET_CODEC = PacketCodec.tuple(
+				Ingredient.PACKET_CODEC, VaporatorRecipe::base,
+				PacketCodecs.INTEGER, VaporatorRecipe::duration,
+				ItemStack.PACKET_CODEC, VaporatorRecipe::result,
+				VaporatorRecipe::new
+		);
+
 		@Override
-		public Codec<VaporatorRecipe> codec()
+		public MapCodec<VaporatorRecipe> codec()
 		{
 			return CODEC;
 		}
 
 		@Override
-		public VaporatorRecipe read(PacketByteBuf packetByteBuf)
+		public PacketCodec<RegistryByteBuf, VaporatorRecipe> packetCodec()
 		{
-			var ingredient = Ingredient.fromPacket(packetByteBuf);
-			var duration = packetByteBuf.readInt();
-			var itemStack = packetByteBuf.readItemStack();
-			return new VaporatorRecipe(ingredient, duration, itemStack);
-		}
-
-		@Override
-		public void write(PacketByteBuf packetByteBuf, VaporatorRecipe recipe)
-		{
-			recipe.base.write(packetByteBuf);
-			packetByteBuf.writeInt(recipe.duration);
-			packetByteBuf.writeItemStack(recipe.result);
+			return PACKET_CODEC;
 		}
 	}
 }

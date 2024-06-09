@@ -35,12 +35,12 @@ public class AssetUtils
 	public static Identifier getTextureName(Block block)
 	{
 		var id = Registries.BLOCK.getId(block);
-		return new Identifier(id.getNamespace(), "block/" + id.getPath());
+		return id.withPrefixedPath("block/");
 	}
 
 	public static Identifier getTextureName(Item item)
 	{
 		var id = Registries.ITEM.getId(item);
-		return new Identifier(id.getNamespace(), "item/" + id.getPath());
+		return id.withPrefixedPath("item/");
 	}
 }

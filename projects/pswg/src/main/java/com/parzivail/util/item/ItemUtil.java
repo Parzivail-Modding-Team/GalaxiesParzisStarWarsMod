@@ -7,11 +7,7 @@ public class ItemUtil
 {
 	public static boolean isInventoryEmpty(DefaultedList<ItemStack> inventory)
 	{
-		for (var itemStack : inventory)
-			if (!ItemStack.EMPTY.equals(itemStack))
-				return false;
-
-		return true;
+		return inventory.stream().allMatch(ItemStack::isEmpty);
 	}
 
 	public static boolean areStacksEqualIgnoreCount(ItemStack left, ItemStack right)

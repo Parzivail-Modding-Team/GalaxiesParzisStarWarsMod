@@ -16,6 +16,6 @@ public enum SwgSpeciesLore
 
 	public String createLanguageKey(Identifier slug)
 	{
-		return TooltipUtil.getLoreKey("species", new Identifier(slug.getNamespace(), slug.getPath() + "." + langKey));
+		return slug.toTranslationKey("lore.species", "." + langKey);
 	}
 }

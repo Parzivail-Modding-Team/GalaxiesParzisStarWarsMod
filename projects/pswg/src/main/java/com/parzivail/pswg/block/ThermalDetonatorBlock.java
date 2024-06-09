@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
@@ -23,16 +24,24 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import net.minecraft.world.explosion.Explosion;
 
 public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements IPicklingBlock
 {
+	public static final MapCodec<ThermalDetonatorBlock> CODEC = createCodec(ThermalDetonatorBlock::new);
 	public static final IntProperty CLUSTER_SIZE = IntProperty.of("cluster_size", 1, 5);
 	public static final int MAX_CLUSTER_SIZE = 5;
 
 	public ThermalDetonatorBlock(Settings settings)
 	{
 		super(settings);
+	}
+
+	@Override
+	protected MapCodec<ThermalDetonatorBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	private static final VoxelShape SHAPE_SINGLE = VoxelShapes.union(
@@ -143,7 +152,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	}
 
 	@Override
-	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
+	public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state)
 	{
 		return new ItemStack(SwgItems.Explosives.ThermalDetonator);
 	}

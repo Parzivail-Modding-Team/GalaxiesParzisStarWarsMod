@@ -35,6 +35,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Arm;
 import net.minecraft.util.hit.BlockHitResult;
@@ -116,10 +117,10 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 	}
 
 	@Override
-	public Packet<ClientPlayPacketListener> createSpawnPacket()
+	public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entityTrackerEntry)
 	{
 		var entity = this.getOwner();
-		return PreciseEntitySpawnS2CPacket.createPacket(SwgPackets.S2C.PreciseEntitySpawn, this, entity == null ? 0 : entity.getId());
+		return PreciseEntitySpawnS2CPacket.createPacket(SwgPackets.S2C.PreciseEntitySpawn, this, entityTrackerEntry, entity == null ? 0 : entity.getId());
 	}
 
 	@Override
@@ -187,15 +188,15 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
-		dataTracker.startTracking(LIFE, 100);
-		dataTracker.startTracking(COLOR, 0);
-		dataTracker.startTracking(LENGTH, 1f);
-		dataTracker.startTracking(ODOMETER, 0f);
-		dataTracker.startTracking(RADIUS, 1f);
-		dataTracker.startTracking(SMOLDERING, false);
-		dataTracker.startTracking(ARM, (byte)255);
+		builder.add(LIFE, 100);
+		builder.add(COLOR, 0);
+		builder.add(LENGTH, 1f);
+		builder.add(ODOMETER, 0f);
+		builder.add(RADIUS, 1f);
+		builder.add(SMOLDERING, false);
+		builder.add(ARM, (byte)255);
 	}
 
 	private int getLife()

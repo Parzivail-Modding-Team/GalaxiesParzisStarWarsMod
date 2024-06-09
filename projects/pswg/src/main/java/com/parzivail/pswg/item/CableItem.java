@@ -3,16 +3,14 @@ package com.parzivail.pswg.item;
 import com.parzivail.pswg.blockentity.PowerCouplingBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.client.TooltipUtil;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -31,9 +29,9 @@ public class CableItem extends Item
 	}
 
 	@Override
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
+	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type)
 	{
-		super.appendTooltip(stack, world, tooltip, context);
+		super.appendTooltip(stack, context, tooltip, type);
 
 		var nbt = stack.getOrCreateNbt();
 		if (nbt.contains("source"))

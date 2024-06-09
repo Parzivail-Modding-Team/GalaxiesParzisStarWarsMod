@@ -32,6 +32,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -183,12 +184,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	}
 
 	@Override
-	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
-	{
-		return getHeight() / 2f;
-	}
-
-	@Override
 	public boolean isPushable()
 	{
 		return true;
@@ -212,13 +207,13 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
-		getDataTracker().startTracking(ROTATION, new Quaternionf(QuatUtil.IDENTITY));
-		getDataTracker().startTracking(THROTTLE, 0f);
-		getDataTracker().startTracking(CONTROL_BITS, 0);
-		getDataTracker().startTracking(SHIELD_BITS, 0);
-		getDataTracker().startTracking(FUEL_BITS, 0);
+		builder.add(ROTATION, new Quaternionf(QuatUtil.IDENTITY));
+		builder.add(THROTTLE, 0f);
+		builder.add(CONTROL_BITS, 0);
+		builder.add(SHIELD_BITS, 0);
+		builder.add(FUEL_BITS, 0);
 	}
 
 	@Override
@@ -418,12 +413,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		}
 
 		dataTracker.set(data, anim);
-	}
-
-	@Override
-	public Packet<ClientPlayPacketListener> createSpawnPacket()
-	{
-		return new EntitySpawnS2CPacket(this);
 	}
 
 	public EnumSet<ShipControls> getControls()

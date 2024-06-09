@@ -138,7 +138,10 @@ public class BlockGenerator
 		return basic(block)
 				.state(BlockStateGenerator::trapdoor)
 				.models(block1 -> ModelFile.trapdoor(block, texture))
-				.itemModel(block1 -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetUtils.getTextureName(block1), "_bottom")))
+				.itemModel(block1 -> {
+					Identifier identifier = AssetUtils.getTextureName(block1);
+					return ModelFile.ofBlockDifferentParent(block, identifier.withSuffixedPath("_bottom"));
+				})
 				.blockTag(BlockTags.TRAPDOORS);
 	}
 
@@ -202,8 +205,8 @@ public class BlockGenerator
 	public static BlockGenerator stairs(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		var id = AssetUtils.getTextureName(block);
-		var inner = IdentifierUtil.concat(id, "_inner");
-		var outer = IdentifierUtil.concat(id, "_outer");
+		var inner = id.withSuffixedPath("_inner");
+		var outer = id.withSuffixedPath("_outer");
 		return basic(block)
 				.state((b, modelId) -> BlockStateModelGenerator.createStairsBlockState(b, inner, AssetUtils.getTextureName(block), outer))
 				.models(b -> ModelFile.stairs(b, topTexture, sideTexture))
@@ -213,7 +216,7 @@ public class BlockGenerator
 	public static BlockGenerator basicRandomMirror(Block block)
 	{
 		var id = AssetUtils.getTextureName(block);
-		var mirrored = IdentifierUtil.concat(id, "_mirrored");
+		var mirrored = id.withSuffixedPath("_mirrored");
 		return basic(block)
 				.state((b, modelId) -> BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(b, id, mirrored))
 				.models(ModelFile::randomMirror);
@@ -226,7 +229,8 @@ public class BlockGenerator
 
 	public static BlockGenerator verticalSlab(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
-		var top = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_top");
+		Identifier identifier = AssetUtils.getTextureName(block);
+		var top = identifier.withSuffixedPath("_top");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.createVerticalSlabBlockState(block, AssetUtils.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.verticalSlab(b, topTexture, sideTexture))
@@ -235,7 +239,8 @@ public class BlockGenerator
 
 	public static BlockGenerator verticalSlabLit(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
-		var top = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_top");
+		Identifier identifier = AssetUtils.getTextureName(block);
+		var top = identifier.withSuffixedPath("_top");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.createVerticalSlabBlockStateLit(block, AssetUtils.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.verticalSlabs(b, topTexture, sideTexture, "_on", "_off"))
@@ -246,7 +251,7 @@ public class BlockGenerator
 	{
 		var id = AssetUtils.getTextureName(block);
 		return blockNoModelDefaultDrops(block)
-				.state((b, modelId) -> BlockStateModelGenerator.createWallBlockState(block, IdentifierUtil.concat(id, "_post"), IdentifierUtil.concat(id, "_side"), IdentifierUtil.concat(id, "_side_tall")))
+				.state((b, modelId) -> BlockStateModelGenerator.createWallBlockState(block, id.withSuffixedPath("_post"), id.withSuffixedPath("_side"), id.withSuffixedPath("_side_tall")))
 				.itemModel(b -> ModelFile.wallInventory(b, texture))
 				.models(b -> ModelFile.wall(b, texture))
 				.blockTag(BlockTags.WALLS);
@@ -254,7 +259,8 @@ public class BlockGenerator
 
 	public static BlockGenerator slabUniqueDouble(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
-		var top = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_top");
+		Identifier identifier = AssetUtils.getTextureName(block);
+		var top = identifier.withSuffixedPath("_top");
 		return basic(block)
 				.state((b, modelId) -> BlockStateModelGenerator.createSlabBlockState(block, AssetUtils.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.slabUniqueDouble(b, topTexture, sideTexture))
@@ -263,7 +269,8 @@ public class BlockGenerator
 
 	public static BlockGenerator verticalSlabUniqueDouble(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
-		var top = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_top");
+		Identifier identifier = AssetUtils.getTextureName(block);
+		var top = identifier.withSuffixedPath("_top");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.createVerticalSlabBlockState(block, AssetUtils.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.verticalSlabUniqueDouble(b, topTexture, sideTexture))
@@ -277,8 +284,10 @@ public class BlockGenerator
 
 	public static BlockGenerator fence(Block block, Identifier texture)
 	{
-		var post = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_post");
-		var side = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_side");
+		Identifier identifier1 = AssetUtils.getTextureName(block);
+		var post = identifier1.withSuffixedPath("_post");
+		Identifier identifier = AssetUtils.getTextureName(block);
+		var side = identifier.withSuffixedPath("_side");
 		return basic(block)
 				.state((b, modelId) -> BlockStateModelGenerator.createFenceBlockState(block, post, side))
 				.models(b -> ModelFile.fence(b, texture))
@@ -287,9 +296,12 @@ public class BlockGenerator
 
 	public static BlockGenerator fenceGate(Block block, Identifier texture)
 	{
-		var open = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_open");
-		var wallClosed = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_wall");
-		var wallOpen = IdentifierUtil.concat(AssetUtils.getTextureName(block), "_wall_open");
+		Identifier identifier2 = AssetUtils.getTextureName(block);
+		var open = identifier2.withSuffixedPath("_open");
+		Identifier identifier1 = AssetUtils.getTextureName(block);
+		var wallClosed = identifier1.withSuffixedPath("_wall");
+		Identifier identifier = AssetUtils.getTextureName(block);
+		var wallOpen = identifier.withSuffixedPath("_wall_open");
 		return basic(block)
 				.state((b, modelId) -> BlockStateModelGenerator.createFenceGateBlockState(block, open, AssetUtils.getTextureName(block), wallOpen, wallClosed, true))
 				.models(b -> ModelFile.fenceGate(b, texture))
@@ -307,7 +319,7 @@ public class BlockGenerator
 	public static BlockGenerator tangentFans(Block block)
 	{
 		return basic(block)
-				.state((block1, model) -> BlockStateGenerator.tangentRotating(block1, IdentifierUtil.concat(model, "_wall"), model))
+				.state((block1, model) -> BlockStateGenerator.tangentRotating(block1, model.withSuffixedPath("_wall"), model))
 				.models(ModelFile::fans)
 				.itemModel(ModelFile::item);
 	}
@@ -337,7 +349,7 @@ public class BlockGenerator
 	public static BlockGenerator basicDropMany(Block block, Item item, int min, int max)
 	{
 		return BlockGenerator.basic(block)
-		                     .lootTable(block1 -> LootTableFile.many(block1, item, new LootTableFile.Pool.CountFunction.Range(min, max, new Identifier("uniform"))));
+		                     .lootTable(block1 -> LootTableFile.many(block1, item, new LootTableFile.Pool.CountFunction.Range(min, max, Identifier.ofVanilla("uniform"))));
 	}
 
 	public static BlockGenerator basicDropFortuneBonus(Block block, Item item)

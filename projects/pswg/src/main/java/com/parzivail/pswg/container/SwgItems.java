@@ -8,17 +8,15 @@ import com.parzivail.pswg.features.blasters.BlasterPowerPackItem;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.item.*;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
-import com.parzivail.pswg.item.material.BeskarToolMaterial;
-import com.parzivail.pswg.item.material.DurasteelToolMaterial;
-import com.parzivail.pswg.item.material.TitaniumToolMaterial;
+import com.parzivail.pswg.item.material.PswgToolMaterials;
 import com.parzivail.tarkin.api.TarkinItem;
 import com.parzivail.tarkin.api.TrItemTag;
 import com.parzivail.tarkin.api.TrModel;
 import com.parzivail.util.item.*;
 import com.parzivail.util.registry.*;
 import dev.emi.trinkets.api.TrinketItem;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.Fluids;
@@ -237,16 +235,16 @@ public class SwgItems
 		public static final Item BeskarIngot = new Item(new Item.Settings());
 		@RegistryName("beskar_shovel")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem BeskarShovel = new ShovelItem(BeskarToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings());
+		public static final ToolItem BeskarShovel = new ShovelItem(PswgToolMaterials.BESKAR, new Item.Settings().attributeModifiers(ShovelItem.createAttributeModifiers(PswgToolMaterials.BESKAR, 1.5F, -3.0F)));
 		@RegistryName("beskar_pickaxe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem BeskarPickaxe = new PPickaxeItem(BeskarToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings());
+		public static final ToolItem BeskarPickaxe = new PickaxeItem(PswgToolMaterials.BESKAR, new Item.Settings().attributeModifiers(PickaxeItem.createAttributeModifiers(PswgToolMaterials.BESKAR, 1.0F, -2.8F)));
 		@RegistryName("beskar_axe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem BeskarAxe = new PAxeItem(BeskarToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings());
+		public static final ToolItem BeskarAxe = new AxeItem(PswgToolMaterials.BESKAR, new Item.Settings().attributeModifiers(AxeItem.createAttributeModifiers(PswgToolMaterials.BESKAR, 5.0F, -3.0F)));
 		@RegistryName("beskar_hoe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem BeskarHoe = new PHoeItem(BeskarToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings());
+		public static final ToolItem BeskarHoe = new HoeItem(PswgToolMaterials.BESKAR, new Item.Settings().attributeModifiers(HoeItem.createAttributeModifiers(PswgToolMaterials.BESKAR, -5.0F, 0.0F)));
 
 		@RegistryName("raw_chromium")
 		@TarkinItem
@@ -293,16 +291,16 @@ public class SwgItems
 		public static final Item DurasteelNugget = new Item(new Item.Settings());
 		@RegistryName("durasteel_shovel")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem DurasteelShovel = new ShovelItem(DurasteelToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings());
+		public static final ToolItem DurasteelShovel = new ShovelItem(PswgToolMaterials.DURASTEEL, new Item.Settings().attributeModifiers(ShovelItem.createAttributeModifiers(PswgToolMaterials.DURASTEEL, 1.5F, -3.0F)));
 		@RegistryName("durasteel_axe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem DurasteelAxe = new PAxeItem(DurasteelToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings());
+		public static final ToolItem DurasteelAxe = new AxeItem(PswgToolMaterials.DURASTEEL, new Item.Settings().attributeModifiers(AxeItem.createAttributeModifiers(PswgToolMaterials.DURASTEEL, 5.0F, -3.0F)));
 		@RegistryName("durasteel_hoe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem DurasteelHoe = new PHoeItem(DurasteelToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings());
+		public static final ToolItem DurasteelHoe = new HoeItem(PswgToolMaterials.DURASTEEL, new Item.Settings().attributeModifiers(HoeItem.createAttributeModifiers(PswgToolMaterials.DURASTEEL, -2.5F, 0.0F)));
 		@RegistryName("durasteel_pickaxe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem DurasteelPickaxe = new PPickaxeItem(DurasteelToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings());
+		public static final ToolItem DurasteelPickaxe = new PickaxeItem(PswgToolMaterials.DURASTEEL, new Item.Settings().attributeModifiers(PickaxeItem.createAttributeModifiers(PswgToolMaterials.DURASTEEL, 1.0F, -2.8F)));
 
 		@RegistryName("exonium")
 		@TarkinItem
@@ -371,16 +369,16 @@ public class SwgItems
 		public static final Item TitaniumNugget = new Item(new Item.Settings());
 		@RegistryName("titanium_shovel")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem TitaniumShovel = new ShovelItem(TitaniumToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings());
+		public static final ToolItem TitaniumShovel = new ShovelItem(PswgToolMaterials.TITANIUM, new Item.Settings().attributeModifiers(ShovelItem.createAttributeModifiers(PswgToolMaterials.TITANIUM, 1.5F, -3.0F)));
 		@RegistryName("titanium_pickaxe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem TitaniumPickaxe = new PPickaxeItem(TitaniumToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings());
+		public static final ToolItem TitaniumPickaxe = new PickaxeItem(PswgToolMaterials.TITANIUM, new Item.Settings().attributeModifiers(PickaxeItem.createAttributeModifiers(PswgToolMaterials.TITANIUM, 1.0F, -2.8F)));
 		@RegistryName("titanium_axe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem TitaniumAxe = new PAxeItem(TitaniumToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings());
+		public static final ToolItem TitaniumAxe = new AxeItem(PswgToolMaterials.TITANIUM, new Item.Settings().attributeModifiers(AxeItem.createAttributeModifiers(PswgToolMaterials.TITANIUM, 5.0F, -3.0F)));
 		@RegistryName("titanium_hoe")
 		@TarkinItem(model = TrModel.HandheldItem)
-		public static final ToolItem TitaniumHoe = new PHoeItem(TitaniumToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings());
+		public static final ToolItem TitaniumHoe = new HoeItem(PswgToolMaterials.TITANIUM, new Item.Settings().attributeModifiers(HoeItem.createAttributeModifiers(PswgToolMaterials.TITANIUM, -3.5F, 0.0F)));
 
 		@RegistryName("transparisteel_ingot")
 		@TarkinItem
@@ -440,178 +438,178 @@ public class SwgItems
 	{
 		@RegistryName("jogan_fruit")
 		@TarkinItem
-		public static final Item JoganFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
+		public static final Item JoganFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 		@RegistryName("chasuka_leaf")
 		@TarkinItem
-		public static final Item ChasukaLeaf = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
+		public static final Item ChasukaLeaf = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 		@RegistryName("meiloorun")
 		@TarkinItem
-		public static final Item Meiloorun = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
+		public static final Item Meiloorun = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 
 		@RegistryName("mynock_wing")
 		@TarkinItem
-		public static final Item MynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
+		public static final Item MynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("cooked_mynock_wing")
 		@TarkinItem
-		public static final Item FriedMynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()));
+		public static final Item FriedMynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
 		@RegistryName("bantha_chop")
 		@TarkinItem
-		public static final Item BanthaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
+		public static final Item BanthaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("cooked_bantha_chop")
 		@TarkinItem
-		public static final Item BanthaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()));
+		public static final Item BanthaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
 		@RegistryName("nerf_chop")
 		@TarkinItem
-		public static final Item NerfChop = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
+		public static final Item NerfChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("cooked_nerf_chop")
 		@TarkinItem
-		public static final Item NerfSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()));
+		public static final Item NerfSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
 		@RegistryName("gizka_chop")
 		@TarkinItem
-		public static final Item GizkaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
+		public static final Item GizkaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("cooked_gizka_chop")
 		@TarkinItem
-		public static final Item GizkaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()));
+		public static final Item GizkaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
 
 		// TODO: are these meat?
 		@RegistryName("flangth_takeout")
 		@TarkinItem
-		public static final Item FlangthTakeout = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()));
+		public static final Item FlangthTakeout = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
 		@RegistryName("flangth_plate")
 		@TarkinItem
-		public static final Item FlangthPlate = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()));
+		public static final Item FlangthPlate = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
 
 		@RegistryName("death_stick_red")
 		@TarkinItem
-		public static final Item DeathStickRed = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200), 1).build()));
+		public static final Item DeathStickRed = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200), 1).build()));
 		@RegistryName("death_stick_yellow")
 		@TarkinItem
-		public static final Item DeathStickYellow = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()));
+		public static final Item DeathStickYellow = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()));
 
 		@RegistryName("mysterious_smoothie")
 		@TarkinItem
-		public static final Item MysteriousSmoothie = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()));
+		public static final Item MysteriousSmoothie = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()));
 		@RegistryName("kreetlejuice")
 		@TarkinItem
-		public static final Item Kreetlejuice = new LoreLiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 200), 1).build()));
+		public static final Item Kreetlejuice = new LoreLiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 200), 1).build()));
 
 		@RegistryName("absynthesized_malt")
 		@TarkinItem
-		public static final Item AbsynthesizedMalt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.LUCK, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()));
+		public static final Item AbsynthesizedMalt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.LUCK, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()));
 		@RegistryName("coronet_cocktail")
 		@TarkinItem
-		public static final Item CoronetCocktail = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()));
+		public static final Item CoronetCocktail = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()));
 
 		@RegistryName("classic_soda")
 		@TarkinItem
-		public static final Item ClassicSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()));
+		public static final Item ClassicSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()));
 		@RegistryName("diet_soda")
 		@TarkinItem
-		public static final Item DietSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()));
+		public static final Item DietSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()));
 		@RegistryName("citrus_soda")
 		@TarkinItem
-		public static final Item CitrusSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()));
+		public static final Item CitrusSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()));
 
 		@RegistryName("bottled_water")
 		@TarkinItem
-		public static final Item BottledWater = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 200), 1).build()));
+		public static final Item BottledWater = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 200), 1).build()));
 
 		// TODO: consider turning this into a Fluid
 		@RegistryName("blue_milk")
 		@TarkinItem
-		public static final Item BlueMilk = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).snack().saturationModifier(0.3F).build()));
+		public static final Item BlueMilk = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).snack().saturationModifier(0.3F).build()));
 		@RegistryName("blue_milk_glass")
 		@TarkinItem
-		public static final Item BlueMilkGlass = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).snack().saturationModifier(0.3F).build()));
+		public static final Item BlueMilkGlass = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).snack().saturationModifier(0.3F).build()));
 		@RegistryName("blue_yogurt")
 		@TarkinItem
-		public static final Item BlueYogurt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
+		public static final Item BlueYogurt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 		@RegistryName("bantha_cookie")
 		@TarkinItem
-		public static final Item BanthaCookie = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.6F).build()));
+		public static final Item BanthaCookie = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.6F).build()));
 
 		@RegistryName("qrikki_bread")
 		@TarkinItem
-		public static final Item QrikkiBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.6F).build()));
+		public static final Item QrikkiBread = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.6F).build()));
 		@RegistryName("qrikki_waffle")
 		@TarkinItem
-		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.7F).build()));
+		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.7F).build()));
 
 		@RegistryName("ahrisa_bowl")
 		@TarkinItem
-		public static final Item AhrisaBowl = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
+		public static final Item AhrisaBowl = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 		@RegistryName("black_melon")
 		@TarkinItem
-		public static final Item BlackMelon = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item BlackMelon = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("desert_plums")
 		@TarkinItem
-		public static final Item DesertPlums = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item DesertPlums = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("dried_poonten_grass_bushel")
 		@TarkinItem
-		public static final Item DriedPoontenGrass = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item DriedPoontenGrass = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("haroun_bread")
 		@TarkinItem
-		public static final Item HarounBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.3F).build()));
+		public static final Item HarounBread = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.3F).build()));
 		@RegistryName("hkak_bean")
 		@TarkinItem
-		public static final Item HkakBean = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item HkakBean = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("pallie_fruit")
 		@TarkinItem
-		public static final Item PallieFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item PallieFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("pika_fruit")
 		@TarkinItem
-		public static final Item PikaFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item PikaFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("tuber")
 		@TarkinItem
-		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("cooked_eopie_loin")
 		@TarkinItem
-		public static final Item CookedEopieLoin = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()));
+		public static final Item CookedEopieLoin = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.3F).build()));
 		@RegistryName("crispy_gorg")
 		@TarkinItem
-		public static final Item CrispyGorg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()));
+		public static final Item CrispyGorg = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(6).saturationModifier(0.3F).build()));
 		@RegistryName("dewback_egg")
 		@TarkinItem
-		public static final Item DewbackEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
+		public static final Item DewbackEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 		@RegistryName("dewback_omelette")
 		@TarkinItem
-		public static final Item DewbackOmelette = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()));
+		public static final Item DewbackOmelette = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(6).saturationModifier(0.3F).build()));
 		@RegistryName("jerba_rack")
 		@TarkinItem
-		public static final Item JerbaRack = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
+		public static final Item JerbaRack = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 		@RegistryName("jerba_rib")
 		@TarkinItem
-		public static final Item JerbaRib = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()));
+		public static final Item JerbaRib = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.3F).build()));
 		@RegistryName("krayt_meat")
 		@TarkinItem
-		public static final Item KraytMeat = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()));
+		public static final Item KraytMeat = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(6).saturationModifier(0.3F).build()));
 		@RegistryName("raw_sketto_nugget")
 		@TarkinItem
-		public static final Item RawSkettoNugget = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item RawSkettoNugget = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("roast_krayt")
 		@TarkinItem
-		public static final Item RoastKrayt = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()));
+		public static final Item RoastKrayt = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.3F).build()));
 		@RegistryName("ronto_chuck")
 		@TarkinItem
-		public static final Item RontoChuck = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).build()));
+		public static final Item RontoChuck = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
 		@RegistryName("tuber_mash")
 		@TarkinItem
-		public static final Item TuberMash = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()));
+		public static final Item TuberMash = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 		@RegistryName("vaporator_mushroom")
 		@TarkinItem
-		public static final Item VaporatorMushroom = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item VaporatorMushroom = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("worrt_egg")
 		@TarkinItem
-		public static final Item WorrtEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item WorrtEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("deb_deb")
 		@TarkinItem
-		public static final Item DebDeb = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item DebDeb = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 		@RegistryName("eopie_loin")
 		@TarkinItem
-		public static final Item EopieLoin = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).build()));
+		public static final Item EopieLoin = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
 		@RegistryName("hubba_gourd")
 		@TarkinItem
-		public static final Item HubbaGourd = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()));
+		public static final Item HubbaGourd = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	}
 
 	@RegistryOrder(10)
@@ -721,7 +719,7 @@ public class SwgItems
 	public static class Explosives
 	{
 		@RegistryName("thermal_detonator")
-		public static final Item ThermalDetonator = new ThermalDetonatorItem(new FabricItemSettings().maxCount(1));
+		public static final Item ThermalDetonator = new ThermalDetonatorItem(new Item.Settings().maxCount(1));
 	}
 
 	static HashMap<RegistryKey<ItemGroup>, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();
@@ -758,24 +756,24 @@ public class SwgItems
 			registerWithTab(identifier, item, ignoreTab, tabOverride);
 		else if (o instanceof ArmorItems armorItems)
 		{
-			registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_helmet"), armorItems.helmet, ignoreTab, tabOverride);
-			registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_chestplate"), armorItems.chestplate, ignoreTab, tabOverride);
-			registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_leggings"), armorItems.leggings, ignoreTab, tabOverride);
-			registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_boots"), armorItems.boots, ignoreTab, tabOverride);
+			registerWithTab(identifier.withSuffixedPath("_helmet"), armorItems.helmet, ignoreTab, tabOverride);
+			registerWithTab(identifier.withSuffixedPath("_chestplate"), armorItems.chestplate, ignoreTab, tabOverride);
+			registerWithTab(identifier.withSuffixedPath("_leggings"), armorItems.leggings, ignoreTab, tabOverride);
+			registerWithTab(identifier.withSuffixedPath("_boots"), armorItems.boots, ignoreTab, tabOverride);
 		}
 		else if (o instanceof DyedItems items)
 			for (var entry : items.entrySet())
-				registerWithTab(new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue(), ignoreTab, tabOverride);
+				registerWithTab(identifier.withPrefixedPath(entry.getKey().getName() + "_"), entry.getValue(), ignoreTab, tabOverride);
 		else if (o instanceof NumberedItems items)
 			for (var i = 0; i < items.size(); i++)
-				registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + (i + 1)), items.get(i), ignoreTab, tabOverride);
+				registerWithTab(identifier.withSuffixedPath("_" + (i + 1)), items.get(i), ignoreTab, tabOverride);
 	}
 
 	private static void registerWithTab(Identifier identifier, Item item, boolean ignoreTab, String tabOverride)
 	{
 		if (!ignoreTab)
 		{
-			var tab = tabOverride == null ? Galaxies.TabItemsKey : RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(tabOverride));
+			var tab = tabOverride == null ? Galaxies.TabItemsKey : RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.of(tabOverride));
 			if (!ITEM_GROUPS.containsKey(tab))
 				ITEM_GROUPS.put(tab, new ArrayList<>());
 
@@ -816,12 +814,12 @@ public class SwgItems
 	@NotNull
 	public static Identifier getBlasterRegistrationId(Identifier id)
 	{
-		return new Identifier(id.getNamespace(), "blaster_" + id.getPath());
+		return id.withPrefixedPath("blaster_");
 	}
 
 	@NotNull
 	public static Identifier getLightsaberRegistrationId(Identifier id)
 	{
-		return new Identifier(id.getNamespace(), "lightsaber_" + id.getPath());
+		return id.withPrefixedPath("lightsaber_");
 	}
 }

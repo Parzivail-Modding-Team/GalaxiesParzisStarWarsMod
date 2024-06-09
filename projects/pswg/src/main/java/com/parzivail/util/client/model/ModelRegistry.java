@@ -16,7 +16,6 @@
 
 package com.parzivail.util.client.model;
 
-import com.parzivail.pswg.block.InteractableConnectingInvertedLampBlock;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.minecraft.block.Block;
@@ -49,22 +48,17 @@ public enum ModelRegistry implements ModelVariantProvider
 		var id = Registries.BLOCK.getId(block);
 		registerConnected(
 				block, hConnect, vConnect, lConnect, capTexture,
-				new Identifier(id.getNamespace(), "block/" + id.getPath()),
-				new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border")
+				id.withPrefixedPath("block/"),
+				id.withPath(path -> "block/" + path + "_border")
 		);
 	}
 
 	public static void registerConnectedLamp(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture)
 	{
 		var id = Registries.BLOCK.getId(block);
-			/*registerConnected(
-					block, hConnect, vConnect, lConnect, capTexture,
-					new Identifier(id.getNamespace(), "block/" + id.getPath()),
-					new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border")
-				);*/
-		var centerTexture = new Identifier(id.getNamespace(), "block/" + id.getPath());
-		var borderTexture = new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border");
-		var borderLitTexture = new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border_on");
+		var centerTexture = id.withPrefixedPath("block/");
+		var borderTexture = id.withPath(path -> "block/" + path + "_border");
+		var borderLitTexture = id.withPath(path -> "block/" + path + "_border_on");
 		register(block, true, new ConnectedTextureModel.Unbaked(
 				hConnect, vConnect, lConnect, EnumSet.of(Direction.UP, Direction.DOWN),
 				new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, centerTexture),
@@ -80,7 +74,7 @@ public enum ModelRegistry implements ModelVariantProvider
 		registerConnected(
 				block, hConnect, vConnect, lConnect, capTexture,
 				centerTexture,
-				new Identifier(id.getNamespace(), "block/" + id.getPath())
+				id.withPrefixedPath("block/")
 		);
 	}
 

@@ -116,11 +116,11 @@ public class BanthaEntity extends AnimalEntity implements Saddleable
 	}
 
 	@Override
-	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt)
+	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData)
 	{
 		this.getBrain().remember(SwgMemoryModuleTypes.FORAGE_COOLDOWN, 10);
 		this.getBrain().remember(SwgMemoryModuleTypes.CALL_COOLDOWN, 1200);
-		return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+		return super.initialize(world, difficulty, spawnReason, entityData);
 	}
 
 	@Nullable
@@ -257,10 +257,10 @@ public class BanthaEntity extends AnimalEntity implements Saddleable
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
-		super.initDataTracker();
-		this.dataTracker.startTracking(PLAYER_BRED, false);
+		super.initDataTracker(builder);
+		builder.add(PLAYER_BRED, false);
 	}
 
 	@Override
@@ -317,7 +317,7 @@ public class BanthaEntity extends AnimalEntity implements Saddleable
 	}
 
 	@Override
-	public void saddle(@Nullable SoundCategory sound)
+	public void saddle(ItemStack stack, @Nullable SoundCategory soundCategory)
 	{
 	}
 

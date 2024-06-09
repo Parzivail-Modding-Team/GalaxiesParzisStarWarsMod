@@ -103,7 +103,7 @@ public class ToolkitClient implements PswgClientAddon
 
 	public static Identifier id(String path)
 	{
-		return new Identifier(MODID, path);
+		return Identifier.of(MODID, path);
 	}
 
 	public static String toolLang(String tool)

@@ -123,11 +123,11 @@ public class LightsaberAddonFeature implements IAddonFeature
 	}
 
 	@Override
-	public void serialize(String domain, ZipOutputStream zip)
+	public void serialize(String namespace, ZipOutputStream zip)
 	{
 		var buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeInt(SCHEMA_VERSION);
-		buf.writeString(domain);
+		buf.writeString(namespace);
 		buf.writeString(getId());
 
 		var hasOwner = getNameType() == NameType.Owner;
@@ -145,29 +145,29 @@ public class LightsaberAddonFeature implements IAddonFeature
 			buf.writeFloat(entry.getValue().get());
 		}
 
-		FileUtil.zip(zip, buf, "data/pswg/lightsabers/%s.%s.pswg_lightsaber".formatted(this.id.get(), domain));
+		FileUtil.zip(zip, buf, "data/pswg/lightsabers/%s.%s.pswg_lightsaber".formatted(this.id.get(), namespace));
 
 		if (hiltModelFilename != null)
 			FileUtil.zip(
 					zip,
 					hiltModelFilename,
-					"assets/%s/models/item/lightsaber/%s.p3d".formatted(domain, this.id.get())
+					"assets/%s/models/item/lightsaber/%s.p3d".formatted(namespace, this.id.get())
 			);
 
 		if (hiltTextureFilename != null)
 			FileUtil.zip(
 					zip,
 					hiltTextureFilename,
-					"assets/%s/textures/item/model/lightsaber/%s.png".formatted(domain, this.id.get())
+					"assets/%s/textures/item/model/lightsaber/%s.png".formatted(namespace, this.id.get())
 			);
 	}
 
 	@Override
-	public void appendLanguageKeys(String domain, Map<String, String> languageKeys)
+	public void appendLanguageKeys(String namespace, Map<String, String> languageKeys)
 	{
 		var hasTitle = getNameType() == NameType.Title;
 		if (hasTitle)
-			languageKeys.put(LightsaberItem.getTranslationKey(new Identifier(domain, getId())), getName());
+			languageKeys.put(LightsaberItem.getTranslationKey(Identifier.of(namespace, getId())), getName());
 	}
 
 	public static void renderForm(AddonBuilder context, IAddonFeature feature)

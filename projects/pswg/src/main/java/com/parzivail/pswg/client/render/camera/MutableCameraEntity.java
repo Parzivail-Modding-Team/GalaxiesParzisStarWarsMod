@@ -5,9 +5,11 @@ import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.entity.EntityUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Quaternionf;
@@ -22,7 +24,7 @@ public class MutableCameraEntity extends Entity
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
 
 	}
@@ -40,7 +42,7 @@ public class MutableCameraEntity extends Entity
 	}
 
 	@Override
-	public Packet<ClientPlayPacketListener> createSpawnPacket()
+	public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entityTrackerEntry)
 	{
 		return null;
 	}

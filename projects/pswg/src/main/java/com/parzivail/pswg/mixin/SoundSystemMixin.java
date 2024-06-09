@@ -43,7 +43,7 @@ public class SoundSystemMixin
 			cir.setReturnValue(true);
 	}
 
-	@Inject(method = "play(Lnet/minecraft/client/sound/SoundInstance;)V", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Multimap;put(Ljava/lang/Object;Ljava/lang/Object;)Z", shift = At.Shift.AFTER))
+	@Inject(method = "play(Lnet/minecraft/client/sound/SoundInstance;)V", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Multimap;put(Ljava/lang/Object;Ljava/lang/Object;)Z", shift = At.Shift.AFTER, remap = false))
 	public void play(SoundInstance sound, CallbackInfo ci)
 	{
 		SoundTimelineManager.track(ticks, sound);

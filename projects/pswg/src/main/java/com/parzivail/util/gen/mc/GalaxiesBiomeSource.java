@@ -1,6 +1,6 @@
 package com.parzivail.util.gen.mc;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.util.gen.BiomeGenerator;
 import net.minecraft.registry.RegistryEntryLookup;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class GalaxiesBiomeSource extends BiomeSource
 {
-	public static final Codec<GalaxiesBiomeSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<GalaxiesBiomeSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			RegistryOps.getEntryLookupCodec(RegistryKeys.BIOME)
 	).apply(instance, GalaxiesBiomeSource::new));
 
@@ -31,7 +31,7 @@ public class GalaxiesBiomeSource extends BiomeSource
 	}
 
 	@Override
-	protected Codec<? extends BiomeSource> getCodec()
+	protected MapCodec<? extends BiomeSource> getCodec()
 	{
 		return CODEC;
 	}

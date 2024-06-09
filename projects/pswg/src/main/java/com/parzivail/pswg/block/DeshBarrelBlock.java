@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.DisplacingBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -12,6 +13,7 @@ import java.util.Random;
 
 public class DeshBarrelBlock extends DisplacingBlock
 {
+	private static final MapCodec<DeshBarrelBlock> CODEC = createCodec(DeshBarrelBlock::new);
 	private static final VoxelShape SHAPE;
 
 	static
@@ -27,6 +29,12 @@ public class DeshBarrelBlock extends DisplacingBlock
 	public DeshBarrelBlock(Settings settings)
 	{
 		super(DeshBarrelBlock::displaceShape, settings);
+	}
+
+	@Override
+	protected MapCodec<DeshBarrelBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	private static VoxelShape displaceShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext shapeContext)

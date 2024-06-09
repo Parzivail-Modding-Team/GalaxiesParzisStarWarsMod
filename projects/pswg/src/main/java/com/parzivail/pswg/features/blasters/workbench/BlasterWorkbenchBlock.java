@@ -1,6 +1,8 @@
 package com.parzivail.pswg.features.blasters.workbench;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.VoxelShapeUtil;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithGuiEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -11,6 +13,7 @@ import net.minecraft.world.BlockView;
 
 public class BlasterWorkbenchBlock extends WaterloggableRotatingBlockWithGuiEntity
 {
+	private static final MapCodec<BlasterWorkbenchBlock> CODEC = createCodec(BlasterWorkbenchBlock::new);
 	private static final VoxelShape SHAPE = VoxelShapes.union(
 			VoxelShapes.cuboid(0, 10 / 16f, 0, 1, 13 / 16f, 1),
 			VoxelShapes.cuboid(1 / 16f, 5 / 16f, 0, 15 / 16f, 7 / 16f, 10 / 16f),
@@ -29,6 +32,12 @@ public class BlasterWorkbenchBlock extends WaterloggableRotatingBlockWithGuiEnti
 	public BlasterWorkbenchBlock(Settings settings)
 	{
 		super(settings, BlasterWorkbenchBlockEntity::new);
+	}
+
+	@Override
+	protected MapCodec<BlasterWorkbenchBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	@Override

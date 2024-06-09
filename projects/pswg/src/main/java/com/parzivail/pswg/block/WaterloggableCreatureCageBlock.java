@@ -17,7 +17,7 @@ public class WaterloggableCreatureCageBlock extends CreatureCageBlock implements
 {
 	public WaterloggableCreatureCageBlock(DyeColor color, Settings settings)
 	{
-		super(color, settings);
+		super(settings, color);
 		this.setDefaultState(this.stateManager.getDefaultState().with(Properties.WATERLOGGED, false));
 	}
 

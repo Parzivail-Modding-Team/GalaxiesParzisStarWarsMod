@@ -178,7 +178,7 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlockWithEntity
 	}
 
 	@Override
-	public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type)
+	protected boolean canPathfindThrough(BlockState state, NavigationType type)
 	{
 		return switch (type)
 				{

@@ -2,11 +2,11 @@ package com.parzivail.pswg.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
 import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -28,7 +28,7 @@ public class TerrariumBlock extends CreatureCageBlock
 
 	public TerrariumBlock(DyeColor color, Settings settings)
 	{
-		super(color, settings);
+		super(settings, color);
 		this.setDefaultState(this.stateManager.getDefaultState().with(WATER_LEVEL, 0));
 	}
 
@@ -53,7 +53,7 @@ public class TerrariumBlock extends CreatureCageBlock
 		if (item == Items.POTION && waterLevel <= 6)
 			return interact(world, pos, player, hand, stack, new ItemStack(Items.GLASS_BOTTLE), state.with(WATER_LEVEL, waterLevel + 3), SoundEvents.ITEM_BOTTLE_EMPTY);
 		else if (item == Items.GLASS_BOTTLE && waterLevel >= 3)
-			return interact(world, pos, player, hand, stack, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER), state.with(WATER_LEVEL, waterLevel - 3), SoundEvents.ITEM_BOTTLE_FILL);
+			return interact(world, pos, player, hand, stack, PotionContentsComponent.createStack(Items.POTION, Potions.WATER), state.with(WATER_LEVEL, waterLevel - 3), SoundEvents.ITEM_BOTTLE_FILL);
 
 		return super.onUse(state, world, pos, player, hand, hit);
 	}

@@ -25,13 +25,13 @@ public class LanguageProvider
 	public static LanguageProvider block(Block block)
 	{
 		var reg = AssetUtils.getRegistryName(block);
-		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "block." + reg.getNamespace() + "." + reg.getPath(), generateDefaultLang(reg));
+		return new LanguageProvider(reg.withPath(OUTPUT_LOCALE), reg.toTranslationKey("block"), generateDefaultLang(reg));
 	}
 
 	public static LanguageProvider item(Item item)
 	{
 		var reg = AssetUtils.getRegistryName(item);
-		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "item." + reg.getNamespace() + "." + reg.getPath(), generateDefaultLang(reg));
+		return new LanguageProvider(reg.withPath(OUTPUT_LOCALE), reg.toTranslationKey("item"), generateDefaultLang(reg));
 	}
 
 	public static LanguageProvider empty(Item item)

@@ -24,6 +24,6 @@ public enum SpeciesGender
 	public static Identifier stripGender(String genderedSlug)
 	{
 		var parts = genderedSlug.split(GENDER_SEPARATOR, 2);
-		return new Identifier(parts[0]);
+		return Identifier.of(parts[0]);
 	}
 }

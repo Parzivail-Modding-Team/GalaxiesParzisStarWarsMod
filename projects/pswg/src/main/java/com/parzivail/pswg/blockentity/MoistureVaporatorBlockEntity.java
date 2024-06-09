@@ -18,6 +18,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeMatcher;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -80,25 +81,25 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	}
 
 	@Override
-	public void writeNbt(NbtCompound tag)
+	public void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
+		super.writeNbt(tag, registryLookup);
 		tag.putInt("collectionTimer", collectionTimer);
 		tag.putInt("collectionTimerLength", collectionTimerLength);
-		super.writeNbt(tag);
 	}
 
 	@Override
-	public void readNbt(NbtCompound tag)
+	public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
+		super.readNbt(tag, registryLookup);
 		collectionTimer = tag.getInt("collectionTimer");
 		collectionTimerLength = tag.getInt("collectionTimerLength");
-		super.readNbt(tag);
 	}
 
 	protected int getHydrateTime()
 	{
 		assert this.world != null;
-		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, this, this.world).map(RecipeEntry::value).map(VaporatorRecipe::getDuration).orElse(200);
+		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, this, this.world).map(RecipeEntry::value).map(VaporatorRecipe::duration).orElse(200);
 	}
 
 	private boolean isHydratable(ItemStack stack)
@@ -140,7 +141,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 
 			if (t.collectionTimerLength == -1)
 			{
-				t.collectionTimer = t.collectionTimerLength = recipe.getDuration();
+				t.collectionTimer = t.collectionTimerLength = recipe.duration();
 			}
 			else if (t.collectionTimer <= 0)
 			{

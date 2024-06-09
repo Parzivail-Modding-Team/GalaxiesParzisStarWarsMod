@@ -3,12 +3,10 @@ package com.parzivail.aurek.ui.view;
 import com.parzivail.aurek.ui.ImguiScreen;
 import com.parzivail.aurek.util.DialogUtil;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.render.camera.RenderTarget;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
 import imgui.type.ImBoolean;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
@@ -42,8 +40,6 @@ public class GlobalControlsImguiScreen extends ImguiScreen
 					client.takePanorama(path, 4096, 4096);
 				}
 			}
-
-			ImGui.image(RenderTarget.FRAMEBUFFER.getColorAttachment(), 512, 512, 0, 1, 1, 0);
 		}
 		ImGui.end();
 

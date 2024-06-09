@@ -3,7 +3,6 @@ package com.parzivail.pswg.item;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.ThermalDetonatorBlock;
 import com.parzivail.pswg.client.sound.SoundHelper;
-import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.tarkin.api.TarkinLang;
@@ -13,27 +12,21 @@ import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -150,7 +143,7 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 				playerEntity.getItemCooldownManager().remove(itemStack.getItem());
 				tdt.primed = false;
 
-				world.playSound((PlayerEntity)null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+				world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SwgSounds.Explosives.THERMAL_DETONATOR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
 				if (!inCreative)
 				{
 					stack.decrement(1);
@@ -163,9 +156,9 @@ public class ThermalDetonatorItem extends BlockItem implements ILeftClickConsume
 	}
 
 	@Override
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
+	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type)
 	{
-		super.appendTooltip(stack, world, tooltip, context);
+		super.appendTooltip(stack, context, tooltip, type);
 
 		var mc = MinecraftClient.getInstance();
 		var opt = mc.options;

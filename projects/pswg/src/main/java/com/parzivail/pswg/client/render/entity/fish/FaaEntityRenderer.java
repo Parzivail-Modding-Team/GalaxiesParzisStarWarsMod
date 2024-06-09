@@ -54,14 +54,14 @@ public class FaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 	}
 
 	@Override
-	protected void setupTransforms(FishEntity entity, MatrixStack matrixStack, float f, float g, float h)
+	protected void setupTransforms(FishEntity entity, MatrixStack matrixStack, float animationProgress, float bodyYaw, float tickDelta, float scale)
 	{
-		super.setupTransforms(entity, matrixStack, f, g, h);
+		super.setupTransforms(entity, matrixStack, animationProgress, bodyYaw, tickDelta, scale);
 
 		if (entity.isAiDisabled())
 			return;
 
-		var i = 4.3F * MathHelper.sin(0.6F * f);
+		var i = 4.3F * MathHelper.sin(0.6F * animationProgress);
 		matrixStack.multiply(new Quaternionf().rotationY(MathUtil.toRadians(i)));
 		if (!entity.isTouchingWater())
 		{

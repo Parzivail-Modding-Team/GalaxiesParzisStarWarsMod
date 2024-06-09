@@ -21,7 +21,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
@@ -32,6 +32,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -45,7 +46,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 import java.util.HashMap;
@@ -124,7 +124,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				continue;
 
 			var modifierId = UUID.nameUUIDFromBytes(String.format("pswg:ads_speed_penalty/%f", d.adsSpeedModifier).getBytes());
-			var modifier = new EntityAttributeModifier(modifierId, "pswg:ads_speed_penalty", d.adsSpeedModifier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+			var modifier = new EntityAttributeModifier(modifierId, "pswg:ads_speed_penalty", d.adsSpeedModifier, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 			ATTRIB_MODS_ADS.put(d.adsSpeedModifier, ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
 			                                                         .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, modifier)
 			                                                         .build());
@@ -710,7 +710,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static Identifier modelIdToSoundId(Identifier id)
 	{
-		return new Identifier(id.getNamespace(), "blaster.fire." + id.getPath());
+		return id.withPrefixedPath("blaster.fire.");
 	}
 
 	@Override
@@ -749,9 +749,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
+	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type)
 	{
-		super.appendTooltip(stack, world, tooltip, context);
+		super.appendTooltip(stack, context, tooltip, type);
 		tooltip.add(Text.translatable(I18N_TOOLTIP_BLASTER_CONTROLS, TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 
 		var bd = getBlasterDescriptor(stack, true);
@@ -900,6 +900,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		}
 
 		return ImmutableMultimap.of();
+	}
+
+	@Override
+	public AttributeModifiersComponent getAttributeModifiers(ItemStack stack)
+	{
+		return super.getAttributeModifiers(stack);
 	}
 
 	@Override

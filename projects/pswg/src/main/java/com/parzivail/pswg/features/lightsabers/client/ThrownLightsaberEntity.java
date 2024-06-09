@@ -64,10 +64,10 @@ public class ThrownLightsaberEntity extends ThrownEntity implements IPrecisionVe
 	}
 
 	@Override
-	protected void initDataTracker()
+	protected void initDataTracker(DataTracker.Builder builder)
 	{
-		dataTracker.startTracking(LIFE, (byte)0);
-		dataTracker.startTracking(LIGHTSABER_DATA, new LightsaberTag().toTag());
+		builder.add(LIFE, (byte)0);
+		builder.add(LIGHTSABER_DATA, new LightsaberTag().toTag());
 	}
 
 	private byte getLife()

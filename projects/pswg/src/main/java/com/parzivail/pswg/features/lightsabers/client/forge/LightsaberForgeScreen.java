@@ -7,7 +7,6 @@ import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
-import com.parzivail.util.client.screen.EventCheckboxWidget;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.MathUtil;
 import io.netty.buffer.Unpooled;
@@ -18,6 +17,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
@@ -85,7 +85,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	private MutableSlider sliderHue;
 	private MutableSlider sliderSat;
 	private MutableSlider sliderVal;
-	private EventCheckboxWidget cbUnstable;
+	private CheckboxWidget cbUnstable;
 
 	private float hue;
 	private float sat;
@@ -134,7 +134,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			ClientPlayNetworking.send(SwgPackets.C2S.LightsaberForgeApply, passedData);
 		}).dimensions(x + 173, y + 90, 40, 20).build());
 
-		this.addDrawableChild(cbUnstable = new EventCheckboxWidget(x + 173, y + 65, 20, 20, Text.translatable("Unstable"), false, true, mutableCheckbox -> commitChanges()));
+		this.addDrawableChild(cbUnstable = CheckboxWidget.builder(Text.translatable("Unstable"), this.textRenderer).pos(x + 173, y + 65).checked(true).callback((checkboxWidget, b) -> commitChanges()).build());
 
 		this.handler.addListener(this);
 	}
@@ -167,6 +167,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 	private void onLightsaberChanged()
 	{
+		boolean unstable;
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{
 			var lt = getLightsaberTag();
@@ -175,19 +176,21 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			sat = ColorUtil.hsvGetS(lt.bladeColor);
 			val = ColorUtil.hsvGetV(lt.bladeColor);
 
-			cbUnstable.setChecked(lt.unstable);
+			unstable = lt.unstable;
 		}
 		else
 		{
 			hue = 0;
 			sat = 0;
 			val = 0;
-			cbUnstable.setChecked(false);
+			unstable = false;
 		}
 
 		sliderHue.setValue(hue);
 		sliderSat.setValue(sat);
 		sliderVal.setValue(val);
+		if (unstable != cbUnstable.isChecked())
+			cbUnstable.onPress();
 	}
 
 	private LightsaberTag getLightsaberTag()

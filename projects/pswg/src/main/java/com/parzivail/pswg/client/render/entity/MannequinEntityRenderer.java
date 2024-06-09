@@ -195,8 +195,11 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 			}
 		}
 
+		float scale = livingEntity.getScale();
+		matrixStack.scale(scale, scale, scale);
+
 		float animationProgress = this.getAnimationProgress(livingEntity, tickDelta);
-		this.setupTransforms(livingEntity, matrixStack, animationProgress, bodyYaw, tickDelta);
+		this.setupTransforms(livingEntity, matrixStack, animationProgress, bodyYaw, tickDelta, scale);
 		matrixStack.scale(-1.0F, -1.0F, 1.0F);
 		this.scale(livingEntity, matrixStack, tickDelta);
 		matrixStack.translate(0.0F, -1.501F, 0.0F);
@@ -235,7 +238,7 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 
 		if (this.hasLabel(livingEntity))
 		{
-			this.renderLabelIfPresent(livingEntity, livingEntity.getDisplayName(), matrixStack, vertexConsumerProvider, light);
+			this.renderLabelIfPresent(livingEntity, livingEntity.getDisplayName(), matrixStack, vertexConsumerProvider, light, tickDelta);
 		}
 	}
 
@@ -262,9 +265,9 @@ public class MannequinEntityRenderer extends LivingEntityRenderer<LivingEntity, 
 	}
 
 	@Override
-	protected void setupTransforms(LivingEntity livingEntity, MatrixStack matrixStack, float animationProgress, float bodyYaw, float tickDelta)
+	protected void setupTransforms(LivingEntity entity, MatrixStack matrixStack, float animationProgress, float bodyYaw, float tickDelta, float scale)
 	{
-		if (!(livingEntity instanceof MannequinEntity mannequin))
+		if (!(entity instanceof MannequinEntity mannequin))
 			return;
 
 		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - bodyYaw));

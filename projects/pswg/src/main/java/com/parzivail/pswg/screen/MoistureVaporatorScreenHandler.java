@@ -2,6 +2,7 @@ package com.parzivail.pswg.screen;
 
 import com.parzivail.pswg.container.SwgRecipeType;
 import com.parzivail.pswg.container.SwgScreenTypes;
+import com.parzivail.pswg.recipe.VaporatorRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,18 +10,18 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.recipe.book.RecipeBookCategory;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
 
-public class MoistureVaporatorScreenHandler extends AbstractRecipeScreenHandler<Inventory>
+public class MoistureVaporatorScreenHandler extends AbstractRecipeScreenHandler<SingleStackRecipeInput, VaporatorRecipe>
 {
 	private final PropertyDelegate propertyDelegate;
 	private final World world;
@@ -70,7 +71,7 @@ public class MoistureVaporatorScreenHandler extends AbstractRecipeScreenHandler<
 
 	protected boolean isHydratable(ItemStack itemStack)
 	{
-		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(itemStack), this.world).isPresent();
+		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SingleStackRecipeInput(itemStack), this.world).isPresent();
 	}
 
 	@Override
@@ -133,9 +134,9 @@ public class MoistureVaporatorScreenHandler extends AbstractRecipeScreenHandler<
 	}
 
 	@Override
-	public boolean matches(RecipeEntry<? extends Recipe<Inventory>> recipe)
+	public boolean matches(RecipeEntry<VaporatorRecipe> recipe)
 	{
-		return recipe.value().matches(this.inventory, this.world);
+		return recipe.value().matches(new SingleStackRecipeInput(this.inventory.getStack(0)), this.world);
 	}
 
 	@Override

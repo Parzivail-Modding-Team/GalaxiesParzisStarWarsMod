@@ -180,15 +180,12 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 
 	private void emitFaces(int light, P3dObject o, MatrixStack.Entry entry, VertexConsumer vertexConsumer, int r, int g, int b, int a)
 	{
-		var modelMat = entry.getPositionMatrix();
-		var normalMat = entry.getNormalMatrix();
-
 		for (var face : o.faces)
 		{
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], face.normal, face.texture[0], r, g, b, a);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], face.normal, face.texture[1], r, g, b, a);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal, face.texture[2], r, g, b, a);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], face.normal, face.texture[3], r, g, b, a);
+			emitVertex(light, vertexConsumer, entry, face.positions[0], face.normal, face.texture[0], r, g, b, a);
+			emitVertex(light, vertexConsumer, entry, face.positions[1], face.normal, face.texture[1], r, g, b, a);
+			emitVertex(light, vertexConsumer, entry, face.positions[2], face.normal, face.texture[2], r, g, b, a);
+			emitVertex(light, vertexConsumer, entry, face.positions[3], face.normal, face.texture[3], r, g, b, a);
 		}
 	}
 
@@ -237,16 +234,15 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		};
 	}
 
-	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vector3f vertex, Vector3f normal, Vector3f texCoord, int r, int g, int b, int a)
+	private void emitVertex(int light, VertexConsumer vertexConsumer, MatrixStack.Entry entry, Vector3f vertex, Vector3f normal, Vector3f texCoord, int r, int g, int b, int a)
 	{
 		vertexConsumer
-				.vertex(modelMatrix, vertex.x, vertex.y, vertex.z)
+				.vertex(entry, vertex.x, vertex.y, vertex.z)
 				.color(r, g, b, a)
 				.texture(texCoord.x, 1 - texCoord.y)
 				.overlay(OverlayTexture.DEFAULT_UV)
 				.light(light)
-				.normal(normalMatrix, normal.x, normal.y, normal.z)
-				.next();
+				.normal(entry, normal.x, normal.y, normal.z);
 	}
 
 	public static InputStream getStream(String domain, Identifier resourceLocation)

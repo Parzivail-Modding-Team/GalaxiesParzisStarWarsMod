@@ -1,5 +1,6 @@
 package com.parzivail.util.block.rotating;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.WaterloggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,11 +13,18 @@ import net.minecraft.util.BlockRotation;
 
 public class WaterloggableRotatingBlock extends WaterloggableBlock
 {
+	private static final MapCodec<WaterloggableRotatingBlock> CODEC = createCodec(WaterloggableRotatingBlock::new);
 	public static final DirectionProperty FACING = Properties.FACING;
 
 	public WaterloggableRotatingBlock(Settings settings)
 	{
 		super(settings);
+	}
+
+	@Override
+	protected MapCodec<? extends WaterloggableRotatingBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	@Override

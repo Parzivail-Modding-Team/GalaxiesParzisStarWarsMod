@@ -9,6 +9,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
@@ -23,17 +24,17 @@ public abstract class InventoryBlockEntity extends BlockEntity implements Invent
 	}
 
 	@Override
-	public void writeNbt(NbtCompound tag)
+	public void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		Inventories.writeNbt(tag, this.inventory);
-		super.writeNbt(tag);
+		super.writeNbt(tag, registryLookup);
+		Inventories.writeNbt(tag, this.inventory, registryLookup);
 	}
 
 	@Override
-	public void readNbt(NbtCompound tag)
+	public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		Inventories.readNbt(tag, inventory);
-		super.readNbt(tag);
+		super.readNbt(tag, registryLookup);
+		Inventories.readNbt(tag, inventory, registryLookup);
 	}
 
 	@Override

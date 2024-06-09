@@ -2,7 +2,7 @@ import java.io.ByteArrayOutputStream
 
 plugins {
 	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.1"
-	id("fabric-loom") version "1.4-SNAPSHOT"
+	id("fabric-loom") version "1.6-SNAPSHOT"
 	`maven-publish`
 }
 
@@ -82,8 +82,8 @@ allprojects {
 	}
 
 	java {
-		sourceCompatibility = JavaVersion.VERSION_17
-		targetCompatibility = JavaVersion.VERSION_17
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
 
 		// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 		// if it is present.

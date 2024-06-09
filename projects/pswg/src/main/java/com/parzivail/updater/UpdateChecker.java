@@ -13,7 +13,7 @@ public class UpdateChecker
 {
 	public static GithubReleaseEntry getRemoteVersion(String modid, String repository)
 	{
-		var logger = new Lumberjack("updater/" + modid);
+		var logger = new Lumberjack(modid + ":updater");
 
 		try
 		{

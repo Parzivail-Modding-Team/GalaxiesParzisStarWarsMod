@@ -48,7 +48,8 @@ public class ModelFile
 
 	public static ModelFile ofAccumulatingBlock(Block block)
 	{
-		return new ModelFile(AssetUtils.getRegistryName(block), IdentifierUtil.concat(AssetUtils.getTextureName(block), "_height2"));
+		Identifier identifier = AssetUtils.getTextureName(block);
+		return new ModelFile(AssetUtils.getRegistryName(block), identifier.withSuffixedPath("_height2"));
 	}
 
 	public static ModelFile ofBlockDifferentParent(Block block, Identifier parent)
@@ -69,14 +70,14 @@ public class ModelFile
 	public static ModelFile cube(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_all"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/cube_all"))
 				.texture("all", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile cube(Block block, Identifier texture)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_all"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/cube_all"))
 				.texture("all", texture);
 	}
 
@@ -90,21 +91,21 @@ public class ModelFile
 	public static ModelFile item(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("item/generated"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("item/generated"))
 				.texture("layer0", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile blockSeparateItem(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("item/generated"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("item/generated"))
 				.texture("layer0", AssetUtils.getTextureName(block.asItem()));
 	}
 
 	public static ModelFile item(Block block, Identifier textureName)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("item/generated"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("item/generated"))
 				.texture("layer0", textureName);
 	}
 
@@ -118,47 +119,47 @@ public class ModelFile
 	public static ModelFile item(Item item)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(item), new Identifier("item/generated"))
+				.ofModel(AssetUtils.getRegistryName(item), Identifier.ofVanilla("item/generated"))
 				.texture("layer0", AssetUtils.getTextureName(item));
 	}
 
 	public static ModelFile itemSprite(Identifier id)
 	{
 		return ModelFile
-				.ofModel(id, new Identifier("item/generated"))
-				.texture("layer0", new Identifier(id.getNamespace(), "item/" + id.getPath()));
+				.ofModel(id, Identifier.ofVanilla("item/generated"))
+				.texture("layer0", id.withPrefixedPath("item/"));
 	}
 
 	public static ModelFile handheld_item(Item item)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(item), new Identifier("item/handheld"))
+				.ofModel(AssetUtils.getRegistryName(item), Identifier.ofVanilla("item/handheld"))
 				.texture("layer0", AssetUtils.getTextureName(item));
 	}
 
 	public static ModelFile spawn_egg(Item item)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(item), new Identifier("item/template_spawn_egg"));
+				.ofModel(AssetUtils.getRegistryName(item), Identifier.ofVanilla("item/template_spawn_egg"));
 	}
 
 	public static ModelFile empty(Item item)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(item), new Identifier("builtin/generated"));
+				.ofModel(AssetUtils.getRegistryName(item), Identifier.ofVanilla("builtin/generated"));
 	}
 
 	public static ModelFile leaves(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/leaves"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/leaves"))
 				.texture("all", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile column(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_column"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/cube_column"))
 				.texture("end", topTexture)
 				.texture("side", sideTexture);
 	}
@@ -167,15 +168,15 @@ public class ModelFile
 	{
 		var tex = AssetUtils.getTextureName(block);
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_column"))
-				.texture("end", IdentifierUtil.concat(tex, "_top"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/cube_column"))
+				.texture("end", tex.withSuffixedPath("_top"))
 				.texture("side", tex);
 	}
 
 	public static ModelFile columnTopBottom(Block block, Identifier topTexture, Identifier sideTexture, Identifier bottomTexture)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_bottom_top"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/cube_bottom_top"))
 				.texture("top", topTexture)
 				.texture("bottom", bottomTexture)
 				.texture("side", sideTexture);
@@ -185,9 +186,9 @@ public class ModelFile
 	{
 		var tex = AssetUtils.getTextureName(block);
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cube_bottom_top"))
-				.texture("top", IdentifierUtil.concat(tex, "_top"))
-				.texture("bottom", IdentifierUtil.concat(tex, "_bottom"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/cube_bottom_top"))
+				.texture("top", tex.withSuffixedPath("_top"))
+				.texture("bottom", tex.withSuffixedPath("_bottom"))
 				.texture("side", tex);
 	}
 
@@ -196,32 +197,32 @@ public class ModelFile
 		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
-						.ofModel(id, new Identifier("block/slab"))
+						.ofModel(id, Identifier.ofVanilla("block/slab"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/slab_top"))
+						.ofModel(id.withSuffixedPath("_top"), Identifier.ofVanilla("block/slab_top"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_x"), Resources.id("block/template/slab_x"))
+						.ofModel(id.withSuffixedPath("_x"), Resources.id("block/template/slab_x"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_x"), Resources.id("block/template/slab_top_x"))
+						.ofModel(id.withSuffixedPath("_top_x"), Resources.id("block/template/slab_top_x"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_z"), Resources.id("block/template/slab_z"))
+						.ofModel(id.withSuffixedPath("_z"), Resources.id("block/template/slab_z"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_z"), Resources.id("block/template/slab_top_z"))
+						.ofModel(id.withSuffixedPath("_top_z"), Resources.id("block/template/slab_top_z"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture)
@@ -235,35 +236,35 @@ public class ModelFile
 		for (var suffix : suffixes)
 		{
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(id, suffix), new Identifier("block/slab"))
+					           .ofModel(id.withSuffixedPath(suffix), Identifier.ofVanilla("block/slab"))
 					           .texture("bottom", topTexture)
 					           .texture("top", topTexture)
-					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+					           .texture("side", sideTexture.withSuffixedPath(suffix)));
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(id, "_top" + suffix), new Identifier("block/slab_top"))
+					           .ofModel(id.withSuffixedPath("_top" + suffix), Identifier.ofVanilla("block/slab_top"))
 					           .texture("bottom", topTexture)
 					           .texture("top", topTexture)
-					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+					           .texture("side", sideTexture.withSuffixedPath(suffix)));
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(id, "_x" + suffix), Resources.id("block/template/slab_x"))
+					           .ofModel(id.withSuffixedPath("_x" + suffix), Resources.id("block/template/slab_x"))
 					           .texture("bottom", topTexture)
 					           .texture("top", topTexture)
-					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+					           .texture("side", sideTexture.withSuffixedPath(suffix)));
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(id, "_top_x" + suffix), Resources.id("block/template/slab_top_x"))
+					           .ofModel(id.withSuffixedPath("_top_x" + suffix), Resources.id("block/template/slab_top_x"))
 					           .texture("bottom", topTexture)
 					           .texture("top", topTexture)
-					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+					           .texture("side", sideTexture.withSuffixedPath(suffix)));
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(id, "_z" + suffix), Resources.id("block/template/slab_z"))
+					           .ofModel(id.withSuffixedPath("_z" + suffix), Resources.id("block/template/slab_z"))
 					           .texture("bottom", topTexture)
 					           .texture("top", topTexture)
-					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+					           .texture("side", sideTexture.withSuffixedPath(suffix)));
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(id, "_top_z" + suffix), Resources.id("block/template/slab_top_z"))
+					           .ofModel(id.withSuffixedPath("_top_z" + suffix), Resources.id("block/template/slab_top_z"))
 					           .texture("bottom", topTexture)
 					           .texture("top", topTexture)
-					           .texture("side", IdentifierUtil.concat(sideTexture, suffix)));
+					           .texture("side", sideTexture.withSuffixedPath(suffix)));
 			models.addAll(ModelFile
 					              .columns(block, topTexture, "_double" + suffix));
 		}
@@ -275,13 +276,13 @@ public class ModelFile
 		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_bottom"), new Identifier("block/template_orientable_trapdoor_bottom"))
+						.ofModel(id.withSuffixedPath("_bottom"), Identifier.ofVanilla("block/template_orientable_trapdoor_bottom"))
 						.texture("texture", texture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_open"), new Identifier("block/template_orientable_trapdoor_open"))
+						.ofModel(id.withSuffixedPath("_open"), Identifier.ofVanilla("block/template_orientable_trapdoor_open"))
 						.texture("texture", texture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/template_orientable_trapdoor_top"))
+						.ofModel(id.withSuffixedPath("_top"), Identifier.ofVanilla("block/template_orientable_trapdoor_top"))
 						.texture("texture", texture)
 		);
 	}
@@ -289,39 +290,39 @@ public class ModelFile
 	public static Collection<ModelFile> door(Block block, Identifier texture)
 	{
 		var id = AssetUtils.getRegistryName(block);
-		var textureTop = IdentifierUtil.concat(texture, "_top");
-		var textureBottom = IdentifierUtil.concat(texture, "_bottom");
+		var textureTop = texture.withSuffixedPath("_top");
+		var textureBottom = texture.withSuffixedPath("_bottom");
 		return Arrays.asList(
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_bottom_left"), new Identifier("block/door_bottom_left"))
+						.ofModel(id.withSuffixedPath("_bottom_left"), Identifier.ofVanilla("block/door_bottom_left"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_bottom_left_open"), new Identifier("block/door_bottom_left_open"))
+						.ofModel(id.withSuffixedPath("_bottom_left_open"), Identifier.ofVanilla("block/door_bottom_left_open"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_bottom_right"), new Identifier("block/door_bottom_right"))
+						.ofModel(id.withSuffixedPath("_bottom_right"), Identifier.ofVanilla("block/door_bottom_right"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_bottom_right_open"), new Identifier("block/door_bottom_right_open"))
+						.ofModel(id.withSuffixedPath("_bottom_right_open"), Identifier.ofVanilla("block/door_bottom_right_open"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_left"), new Identifier("block/door_top_left"))
+						.ofModel(id.withSuffixedPath("_top_left"), Identifier.ofVanilla("block/door_top_left"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_left_open"), new Identifier("block/door_top_left_open"))
+						.ofModel(id.withSuffixedPath("_top_left_open"), Identifier.ofVanilla("block/door_top_left_open"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_right"), new Identifier("block/door_top_right"))
+						.ofModel(id.withSuffixedPath("_top_right"), Identifier.ofVanilla("block/door_top_right"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_right_open"), new Identifier("block/door_top_right_open"))
+						.ofModel(id.withSuffixedPath("_top_right_open"), Identifier.ofVanilla("block/door_top_right_open"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom)
 		);
@@ -332,45 +333,45 @@ public class ModelFile
 		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
-						.ofModel(id, new Identifier("block/slab"))
+						.ofModel(id, Identifier.ofVanilla("block/slab"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/slab_top"))
+						.ofModel(id.withSuffixedPath("_top"), Identifier.ofVanilla("block/slab_top"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_double"), new Identifier("block/cube_column"))
+						.ofModel(id.withSuffixedPath("_double"), Identifier.ofVanilla("block/cube_column"))
 						.texture("end", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_x"), Resources.id("block/template/slab_x"))
+						.ofModel(id.withSuffixedPath("_x"), Resources.id("block/template/slab_x"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_x"), Resources.id("block/template/slab_top_x"))
+						.ofModel(id.withSuffixedPath("_top_x"), Resources.id("block/template/slab_top_x"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_double_x"), new Identifier("block/cube_column"))
+						.ofModel(id.withSuffixedPath("_double_x"), Identifier.ofVanilla("block/cube_column"))
 						.texture("end", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_z"), Resources.id("block/template/slab_z"))
+						.ofModel(id.withSuffixedPath("_z"), Resources.id("block/template/slab_z"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_z"), Resources.id("block/template/slab_top_z"))
+						.ofModel(id.withSuffixedPath("_top_z"), Resources.id("block/template/slab_top_z"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_double_z"), new Identifier("block/cube_column"))
+						.ofModel(id.withSuffixedPath("_double_z"), Identifier.ofVanilla("block/cube_column"))
 						.texture("end", topTexture)
 						.texture("side", sideTexture)
 		);
@@ -379,7 +380,7 @@ public class ModelFile
 	public static ModelFile wallInventory(Block block, Identifier texture)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/wall_inventory"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/wall_inventory"))
 				.texture("wall", texture);
 	}
 
@@ -388,13 +389,13 @@ public class ModelFile
 		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_post"), new Identifier("block/template_wall_post"))
+						.ofModel(id.withSuffixedPath("_post"), Identifier.ofVanilla("block/template_wall_post"))
 						.texture("wall", texture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_side"), new Identifier("block/template_wall_side"))
+						.ofModel(id.withSuffixedPath("_side"), Identifier.ofVanilla("block/template_wall_side"))
 						.texture("wall", texture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_side_tall"), new Identifier("block/template_wall_side_tall"))
+						.ofModel(id.withSuffixedPath("_side_tall"), Identifier.ofVanilla("block/template_wall_side_tall"))
 						.texture("wall", texture)
 		);
 	}
@@ -406,11 +407,11 @@ public class ModelFile
 
 		for (int i : property.getValues())
 		{
-			var localId = IdentifierUtil.concat(id, "_stage" + i);
+			var localId = id.withSuffixedPath("_stage" + i);
 			modelFiles.add(
 					ModelFile
-							.ofModel(localId, new Identifier("block/crop"))
-							.texture("crop", IdentifierUtil.concat("block/", localId))
+							.ofModel(localId, Identifier.ofVanilla("block/crop"))
+							.texture("crop", localId.withPrefixedPath("block/"))
 			);
 		}
 
@@ -428,11 +429,11 @@ public class ModelFile
 			if (i >= 8)
 				continue;
 
-			var localId = IdentifierUtil.concat(id, "_height" + i * 2);
+			var localId = id.withSuffixedPath("_height" + i * 2);
 			// TODO: remove dependency on block/snow_heightN?
 			modelFiles.add(
 					ModelFile
-							.ofModel(localId, new Identifier("block/snow_height" + i * 2))
+							.ofModel(localId, Identifier.ofVanilla("block/snow_height" + i * 2))
 							.texture("particle", texture)
 							.texture("texture", texture)
 			);
@@ -446,7 +447,7 @@ public class ModelFile
 	public static Collection<ModelFile> accumulatingLayers(Block block)
 	{
 		var id = AssetUtils.getRegistryName(block);
-		return accumulatingLayers(block, IdentifierUtil.concat("block/", id));
+		return accumulatingLayers(block, id.withPrefixedPath("block/"));
 	}
 
 	public static Collection<ModelFile> bushStages(Block block, IntProperty property)
@@ -456,11 +457,11 @@ public class ModelFile
 
 		for (int i : property.getValues())
 		{
-			var localId = IdentifierUtil.concat(id, "_stage" + i);
+			var localId = id.withSuffixedPath("_stage" + i);
 			modelFiles.add(
 					ModelFile
-							.ofModel(localId, new Identifier("block/cross"))
-							.texture("cross", IdentifierUtil.concat("block/", localId))
+							.ofModel(localId, Identifier.ofVanilla("block/cross"))
+							.texture("cross", localId.withPrefixedPath("block/"))
 			);
 		}
 
@@ -474,18 +475,18 @@ public class ModelFile
 
 		for (int i : property.getValues())
 		{
-			var localId = IdentifierUtil.concat(id, "_stage" + i);
+			var localId = id.withSuffixedPath("_stage" + i);
 			modelFiles.add(
 					ModelFile
-							.ofModel(localId, new Identifier("block/cross"))
-							.texture("cross", IdentifierUtil.concat("block/", localId))
+							.ofModel(localId, Identifier.ofVanilla("block/cross"))
+							.texture("cross", localId.withPrefixedPath("block/"))
 			);
 
-			localId = IdentifierUtil.concat(id, "_stage" + i + "_blooming");
+			localId = id.withSuffixedPath("_stage" + i + "_blooming");
 			modelFiles.add(
 					ModelFile
-							.ofModel(localId, new Identifier("block/cross"))
-							.texture("cross", IdentifierUtil.concat("block/", localId))
+							.ofModel(localId, Identifier.ofVanilla("block/cross"))
+							.texture("cross", localId.withPrefixedPath("block/"))
 			);
 		}
 
@@ -497,17 +498,17 @@ public class ModelFile
 		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
-						.ofModel(id, new Identifier("block/slab"))
+						.ofModel(id, Identifier.ofVanilla("block/slab"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/slab_top"))
+						.ofModel(id.withSuffixedPath("_top"), Identifier.ofVanilla("block/slab_top"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_double"), new Identifier("block/cube_column"))
+						.ofModel(id.withSuffixedPath("_double"), Identifier.ofVanilla("block/cube_column"))
 						.texture("end", topTexture)
 						.texture("side", sideTexture)
 		);
@@ -519,9 +520,11 @@ public class ModelFile
 		var models = new ArrayList<ModelFile>();
 		for (var suffix : suffixes)
 		{
+			Identifier identifier = AssetUtils.getTextureName(block);
+			Identifier identifier1 = AssetUtils.getRegistryName(block);
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(AssetUtils.getRegistryName(block), suffix), new Identifier("block/cube_column"))
-					           .texture("side", IdentifierUtil.concat(AssetUtils.getTextureName(block), suffix))
+					           .ofModel(identifier1.withSuffixedPath(suffix), Identifier.ofVanilla("block/cube_column"))
+					           .texture("side", identifier.withSuffixedPath(suffix))
 					           .texture("end", topTexture));
 		}
 
@@ -535,9 +538,11 @@ public class ModelFile
 
 		for (var suffix : suffixes)
 		{
+			Identifier identifier = AssetUtils.getTextureName(block);
+			Identifier identifier1 = AssetUtils.getRegistryName(block);
 			models.add(ModelFile
-					           .ofModel(IdentifierUtil.concat(AssetUtils.getRegistryName(block), suffix), new Identifier("block/cube_all"))
-					           .texture("all", IdentifierUtil.concat(AssetUtils.getTextureName(block), suffix)));
+					           .ofModel(identifier1.withSuffixedPath(suffix), Identifier.ofVanilla("block/cube_all"))
+					           .texture("all", identifier.withSuffixedPath(suffix)));
 		}
 
 		return models;
@@ -548,17 +553,17 @@ public class ModelFile
 		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
-						.ofModel(id, new Identifier("block/stairs"))
+						.ofModel(id, Identifier.ofVanilla("block/stairs"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_inner"), new Identifier("block/inner_stairs"))
+						.ofModel(id.withSuffixedPath("_inner"), Identifier.ofVanilla("block/inner_stairs"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_outer"), new Identifier("block/outer_stairs"))
+						.ofModel(id.withSuffixedPath("_outer"), Identifier.ofVanilla("block/outer_stairs"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture)
@@ -570,13 +575,13 @@ public class ModelFile
 		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_post"), new Identifier("block/fence_post"))
+						.ofModel(id.withSuffixedPath("_post"), Identifier.ofVanilla("block/fence_post"))
 						.texture("texture", texture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_side"), new Identifier("block/fence_side"))
+						.ofModel(id.withSuffixedPath("_side"), Identifier.ofVanilla("block/fence_side"))
 						.texture("texture", texture),
 				ModelFile
-						.ofModel(id, new Identifier("block/fence_inventory"))
+						.ofModel(id, Identifier.ofVanilla("block/fence_inventory"))
 						.texture("texture", texture)
 		);
 	}
@@ -586,38 +591,40 @@ public class ModelFile
 		var id = AssetUtils.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
-						.ofModel(id, new Identifier("block/template_fence_gate"))
+						.ofModel(id, Identifier.ofVanilla("block/template_fence_gate"))
 						.texture("texture", texture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_open"), new Identifier("block/template_fence_gate_open"))
+						.ofModel(id.withSuffixedPath("_open"), Identifier.ofVanilla("block/template_fence_gate_open"))
 						.texture("texture", texture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_wall"), new Identifier("block/template_fence_gate_wall"))
+						.ofModel(id.withSuffixedPath("_wall"), Identifier.ofVanilla("block/template_fence_gate_wall"))
 						.texture("texture", texture),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_wall_open"), new Identifier("block/template_fence_gate_wall_open"))
+						.ofModel(id.withSuffixedPath("_wall_open"), Identifier.ofVanilla("block/template_fence_gate_wall_open"))
 						.texture("texture", texture)
 		);
 	}
 
 	public static Collection<ModelFile> randomMirror(Block block)
 	{
-		var mirroredId = IdentifierUtil.concat(AssetUtils.getRegistryName(block), "_mirrored");
+		Identifier identifier = AssetUtils.getRegistryName(block);
+		var mirroredId = identifier.withSuffixedPath("_mirrored");
 		return Arrays.asList(
 				ModelFile.cube(block),
 				ModelFile
-						.ofModel(mirroredId, new Identifier("block/cube_mirrored_all"))
+						.ofModel(mirroredId, Identifier.ofVanilla("block/cube_mirrored_all"))
 						.texture("all", AssetUtils.getTextureName(block))
 		);
 	}
 
 	public static Collection<ModelFile> fans(Block block)
 	{
-		var wallId = IdentifierUtil.concat(AssetUtils.getRegistryName(block), "_wall");
+		Identifier identifier = AssetUtils.getRegistryName(block);
+		var wallId = identifier.withSuffixedPath("_wall");
 		return Arrays.asList(
 				fan(block),
 				ModelFile
-						.ofModel(wallId, new Identifier("block/coral_wall_fan"))
+						.ofModel(wallId, Identifier.ofVanilla("block/coral_wall_fan"))
 						.texture("fan", AssetUtils.getTextureName(block))
 		);
 	}
@@ -625,28 +632,28 @@ public class ModelFile
 	public static ModelFile fan(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/coral_fan"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/coral_fan"))
 				.texture("fan", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile wallFan(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/coral_wall_fan"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/coral_wall_fan"))
 				.texture("fan", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile cross(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/cross"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/cross"))
 				.texture("cross", AssetUtils.getTextureName(block));
 	}
 
 	public static ModelFile tintedCross(Block block)
 	{
 		return ModelFile
-				.ofModel(AssetUtils.getRegistryName(block), new Identifier("block/tinted_cross"))
+				.ofModel(AssetUtils.getRegistryName(block), Identifier.ofVanilla("block/tinted_cross"))
 				.texture("cross", AssetUtils.getTextureName(block));
 	}
 
@@ -664,7 +671,7 @@ public class ModelFile
 
 	public ModelFile predicate(Identifier conditionType, float threshold, ModelFile other)
 	{
-		this.overrides.add(new ModelOverride(new Identifier(other.filename.getNamespace(), "item/" + other.filename.getPath()), List.of(new ModelOverride.Condition(conditionType, threshold))));
+		this.overrides.add(new ModelOverride(other.filename.withPrefixedPath("item/"), List.of(new ModelOverride.Condition(conditionType, threshold))));
 		this.dependencies.add(other);
 		return this;
 	}

@@ -43,6 +43,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.joml.Matrix4fStack;
 import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
@@ -123,7 +124,6 @@ public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 	@TarkinLang
 	public static final String I18N_CLEAR_SPECIES = "screen.pswg.character.clear_species";
 
-	private static final Identifier OPTIONS_BACKGROUND = new Identifier("textures/gui/options_background.png");
 	private static final Identifier BACKGROUND = Resources.id("textures/gui/character/background.png");
 
 	private static final int HALF_WIDTH = 213;
@@ -752,13 +752,13 @@ public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 		}
 		blitRectangles.forEach(blitRectangle -> blitRectangle.blit(context));
 
-		var rsm = RenderSystem.getModelViewStack();
-		rsm.push();
+		Matrix4fStack rsm = RenderSystem.getModelViewStack();
+		rsm.pushMatrix();
 		rsm.translate(x + 182, y + 190, 50);
-		rsm.multiply(new Quaternionf().rotationX(MathUtil.toRadians(-22)));
-		rsm.multiply(new Quaternionf().rotationY(MathUtil.toRadians(-45)));
+		rsm.rotate(new Quaternionf().rotationX(MathUtil.toRadians(-22)));
+		rsm.rotate(new Quaternionf().rotationY(MathUtil.toRadians(-45)));
 		drawEntity(rsm, previewSpecies, 0, 0, 80);
-		rsm.pop();
+		rsm.popMatrix();
 		RenderSystem.applyModelViewMatrix();
 
 		context.drawText(this.textRenderer, this.title, x + 9, y + 9, 0x404040, false);
@@ -829,12 +829,11 @@ public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 
 	private static void renderColorPreview(int x, int y, int size, float r, float g, float b, float a)
 	{
-		var bufferBuilder = Tessellator.getInstance().getBuffer();
-		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-		bufferBuilder.vertex(x, y + size, 0).color(r, g, b, a).texture(0, 1).next();
-		bufferBuilder.vertex(x + size, y + size, 0).color(r, g, b, a).texture(1, 1).next();
-		bufferBuilder.vertex(x + size, y, 0).color(r, g, b, a).texture(1, 0).next();
-		bufferBuilder.vertex(x, y, 0).color(r, g, b, a).texture(0, 0).next();
+		var bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex(x, y + size, 0).color(r, g, b, a).texture(0, 1);
+		bufferBuilder.vertex(x + size, y + size, 0).color(r, g, b, a).texture(1, 1);
+		bufferBuilder.vertex(x + size, y, 0).color(r, g, b, a).texture(1, 0);
+		bufferBuilder.vertex(x, y, 0).color(r, g, b, a).texture(0, 0);
 
 		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 		RenderSystem.enableBlend();
@@ -950,12 +949,12 @@ public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 		);
 	}
 
-	public void drawEntity(MatrixStack matrixStack, SwgSpecies species, int x, int y, int size)
+	public void drawEntity(Matrix4fStack matrixStack, SwgSpecies species, int x, int y, int size)
 	{
-		matrixStack.push();
+		matrixStack.pushMatrix();
 
 		var entity = targetEntity;
-		MathUtil.scalePos(matrixStack, size, size, -size);
+		matrixStack.scale(size, size, -size);
 		RenderSystem.applyModelViewMatrix();
 
 		var matrixStack2 = new MatrixStack();
@@ -1037,7 +1036,7 @@ public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 		entity.prevHeadYaw = k;
 		entity.headYaw = l;
 
-		matrixStack.pop();
+		matrixStack.popMatrix();
 
 		RenderSystem.applyModelViewMatrix();
 		DiffuseLighting.enableGuiDepthLighting();

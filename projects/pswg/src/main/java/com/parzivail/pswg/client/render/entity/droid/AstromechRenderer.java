@@ -38,7 +38,7 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 	public void render(T entity, float yaw, float tickDelta, MatrixStack matrix, VertexConsumerProvider vertexConsumers, int light)
 	{
 		if (entity.hasCustomName())
-			this.renderLabelIfPresent(entity, entity.getDisplayName(), matrix, vertexConsumers, light);
+			this.renderLabelIfPresent(entity, entity.getDisplayName(), matrix, vertexConsumers, light, tickDelta);
 
 		matrix.push();
 

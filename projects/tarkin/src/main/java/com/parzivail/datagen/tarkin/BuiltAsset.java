@@ -32,7 +32,7 @@ public class BuiltAsset
 	private static Path getLangPath(Identifier identifier)
 	{
 		// /assets/minecraft/lang/en_us.json
-		return FilesystemUtils.getAssetPath(IdentifierUtil.concat("lang/", identifier, ".json"));
+		return FilesystemUtils.getAssetPath(identifier.withPath(path -> "lang/" + path + ".json"));
 	}
 
 	public static BuiltAsset blockstate(Identifier identifier, JsonElement contents)

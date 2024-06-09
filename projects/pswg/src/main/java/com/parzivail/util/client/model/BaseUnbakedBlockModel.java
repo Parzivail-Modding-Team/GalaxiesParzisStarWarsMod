@@ -9,6 +9,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,9 +65,9 @@ public abstract class BaseUnbakedBlockModel<T extends AbstractModel> extends Clo
 		return ids;
 	}
 
-	@org.jetbrains.annotations.Nullable
+	@Nullable
 	@Override
-	public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId)
+	public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer)
 	{
 		if (cachedBakedModel != null)
 			return cachedBakedModel;

@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -44,9 +45,9 @@ public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements
 	}
 
 	@Override
-	public NbtCompound toInitialChunkDataNbt()
+	public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup)
 	{
-		return toClientTag(super.toInitialChunkDataNbt());
+		return toClientTag(super.toInitialChunkDataNbt(registryLookup));
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -10,9 +12,17 @@ import net.minecraft.world.World;
 
 public class InteractableInvertedLampBlock extends InvertedLampBlock
 {
+	private static final MapCodec<InteractableInvertedLampBlock> CODEC = createCodec(InteractableInvertedLampBlock::new);
+
 	public InteractableInvertedLampBlock(Settings settings)
 	{
 		super(settings);
+	}
+
+	@Override
+	protected MapCodec<InteractableInvertedLampBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	@Override

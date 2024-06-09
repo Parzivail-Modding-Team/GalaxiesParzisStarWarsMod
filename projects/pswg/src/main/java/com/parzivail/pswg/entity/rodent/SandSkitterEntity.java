@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
 import com.parzivail.pswg.container.SwgMemoryModuleTypes;
 import com.parzivail.pswg.container.SwgSensorTypes;
-import dev.architectury.event.events.common.TickEvent;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
@@ -14,18 +13,12 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.passive.AxolotlBrain;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class SandSkitterEntity extends PathAwareEntity
 {
@@ -84,18 +77,6 @@ public class SandSkitterEntity extends PathAwareEntity
 	}
 
 	@Override
-	protected void initDataTracker()
-	{
-		super.initDataTracker();
-	}
-
-	@Override
-	protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions)
-	{
-		return dimensions.height * 0.6F;
-	}
-
-	@Override
 	protected void mobTick()
 	{
 		this.getWorld().getProfiler().push("sandskitterBrain");
@@ -116,10 +97,10 @@ public class SandSkitterEntity extends PathAwareEntity
 
 	@Nullable
 	@Override
-	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt)
+	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData)
 	{
 		this.getBrain().remember(SwgMemoryModuleTypes.FORAGE_COOLDOWN, 1000);
-		return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+		return super.initialize(world, difficulty, spawnReason, entityData);
 	}
 
 	@Override

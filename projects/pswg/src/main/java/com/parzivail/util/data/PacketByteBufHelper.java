@@ -1,7 +1,6 @@
 package com.parzivail.util.data;
 
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
@@ -84,16 +83,6 @@ public class PacketByteBufHelper
 		}
 
 		return map;
-	}
-
-	public static void writeIdentifier(PacketByteBuf buf, Identifier i)
-	{
-		buf.writeString(i.toString());
-	}
-
-	public static Identifier readIdentifier(PacketByteBuf buf)
-	{
-		return new Identifier(buf.readString());
 	}
 
 	public static void writeQuaternion(PacketByteBuf buf, Quaternionf q)

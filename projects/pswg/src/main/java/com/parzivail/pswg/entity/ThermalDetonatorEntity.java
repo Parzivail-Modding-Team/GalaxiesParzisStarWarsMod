@@ -84,7 +84,7 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 			this.bounce(blockHitResult);
 
 			if (getVelocity().length() > 0.01f)
-				this.playSound(state.getBlock().getSoundGroup(state).getHitSound(), 1f, 1f);
+				this.playSound(state.getSoundGroup().getHitSound(), 1f, 1f);
 		}
 
 		super.onCollision(hitResult);
