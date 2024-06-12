@@ -6,5 +6,6 @@ public enum TrItemTag
 	Leaves,
 	Logs,
 	LogsThatBurn,
-	Sand
+	Sand,
+	Meat,
 }

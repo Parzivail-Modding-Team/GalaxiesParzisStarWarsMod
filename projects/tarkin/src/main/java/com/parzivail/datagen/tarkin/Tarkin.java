@@ -204,6 +204,7 @@ public class Tarkin
 			case Logs -> ItemTags.LOGS;
 			case LogsThatBurn -> ItemTags.LOGS_THAT_BURN;
 			case Sand -> ItemTags.SAND;
+			case Meat -> ItemTags.MEAT;
 			default -> throw new RuntimeException("Unsupported value " + preset);
 		};
 	}

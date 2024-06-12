@@ -447,37 +447,37 @@ public class SwgItems
 		public static final Item Meiloorun = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 
 		@RegistryName("mynock_wing")
-		@TarkinItem
-		public static final Item MynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item MynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
 		@RegistryName("cooked_mynock_wing")
-		@TarkinItem
-		public static final Item FriedMynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item FriedMynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
 		@RegistryName("bantha_chop")
-		@TarkinItem
-		public static final Item BanthaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item BanthaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
 		@RegistryName("cooked_bantha_chop")
-		@TarkinItem
-		public static final Item BanthaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item BanthaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
 		@RegistryName("nerf_chop")
-		@TarkinItem
-		public static final Item NerfChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item NerfChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
 		@RegistryName("cooked_nerf_chop")
-		@TarkinItem
-		public static final Item NerfSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item NerfSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
 		@RegistryName("gizka_chop")
-		@TarkinItem
-		public static final Item GizkaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item GizkaChop = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
 		@RegistryName("cooked_gizka_chop")
-		@TarkinItem
-		public static final Item GizkaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item GizkaSteak = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
 
 		// TODO: are these meat?
 		@RegistryName("flangth_takeout")
-		@TarkinItem
-		public static final Item FlangthTakeout = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item FlangthTakeout = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
 		@RegistryName("flangth_plate")
-		@TarkinItem
-		public static final Item FlangthPlate = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).meat().build()));
+		@TarkinItem(tags = TrItemTag.Meat)
+		public static final Item FlangthPlate = new Item(new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
 
 		@RegistryName("death_stick_red")
 		@TarkinItem
