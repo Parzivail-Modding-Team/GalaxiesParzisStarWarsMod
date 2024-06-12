@@ -52,7 +52,7 @@ public abstract class DelegatedConnectingBlock extends ConnectingBlock
 	protected abstract boolean shouldConnectTo(BlockState self, BlockState other);
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom)
 	{
 		if (!state.canPlaceAt(world, pos))
 		{

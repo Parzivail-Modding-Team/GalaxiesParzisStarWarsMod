@@ -19,7 +19,7 @@ public class VaporatorMushroomBlock extends PlantBlock
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPE;
 	}
@@ -37,7 +37,7 @@ public class VaporatorMushroomBlock extends PlantBlock
 	}
 
 	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
+	protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
 		BlockPos blockPos = pos.down();
 		BlockState blockState = world.getBlockState(blockPos);

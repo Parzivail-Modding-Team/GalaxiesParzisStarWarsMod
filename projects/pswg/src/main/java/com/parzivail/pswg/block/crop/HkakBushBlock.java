@@ -62,7 +62,7 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		if (state.get(AGE) == 0)
 		{
@@ -75,13 +75,13 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 	}
 
 	@Override
-	public boolean hasRandomTicks(BlockState state)
+	protected boolean hasRandomTicks(BlockState state)
 	{
 		return state.get(AGE) < 3;
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		int i = state.get(AGE);
 		if (i < 3 && random.nextInt(5) == 0 && world.getBaseLightLevel(pos.up(), 0) >= 9)
@@ -91,7 +91,7 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		int i = state.get(AGE);
 		var isMature = i == 3;

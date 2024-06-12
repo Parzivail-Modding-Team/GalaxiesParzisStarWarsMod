@@ -1,5 +1,6 @@
 package com.parzivail.util.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.item.ItemPlacementContext;
@@ -50,6 +51,12 @@ public class AccumulatingBlock extends Block
 	}
 
 	@Override
+	protected MapCodec<? extends AccumulatingBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
 	protected boolean canPathfindThrough(BlockState state, NavigationType type)
 	{
 		if (type == NavigationType.LAND)
@@ -59,44 +66,44 @@ public class AccumulatingBlock extends Block
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return LAYERS_TO_SHAPE[state.get(LAYERS)];
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return LAYERS_TO_SHAPE[state.get(LAYERS) - 1];
 	}
 
 	@Override
-	public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos)
+	protected VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos)
 	{
 		return LAYERS_TO_SHAPE[state.get(LAYERS)];
 	}
 
 	@Override
-	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return LAYERS_TO_SHAPE[state.get(LAYERS)];
 	}
 
 	@Override
-	public boolean hasSidedTransparency(BlockState state)
+	protected boolean hasSidedTransparency(BlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
+	protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
 		var blockState = world.getBlockState(pos.down());
 		return Block.isFaceFullSquare(blockState.getCollisionShape(world, pos.down()), Direction.UP) || blockState.isOf(this) && blockState.get(LAYERS) == maxTotalLayers;
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		return !state.canPlaceAt(world, pos)
 		       ? Blocks.AIR.getDefaultState()
@@ -104,7 +111,7 @@ public class AccumulatingBlock extends Block
 	}
 
 	@Override
-	public boolean canReplace(BlockState state, ItemPlacementContext context)
+	protected boolean canReplace(BlockState state, ItemPlacementContext context)
 	{
 		int i = state.get(LAYERS);
 		if (context.getStack().isOf(this.asItem()) && i < maxTotalLayers)

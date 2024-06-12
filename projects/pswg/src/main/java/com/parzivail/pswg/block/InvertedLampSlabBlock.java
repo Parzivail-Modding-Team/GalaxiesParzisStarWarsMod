@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.VerticalSlabBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -15,7 +16,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class InvertedLampSlab extends VerticalSlabBlock implements Waterloggable
+public abstract class InvertedLampSlabBlock extends VerticalSlabBlock implements Waterloggable
 {
 	public static final BooleanProperty LIT = Properties.LIT;
 	public static final BooleanProperty POWERED = Properties.POWERED;
@@ -26,11 +27,14 @@ public class InvertedLampSlab extends VerticalSlabBlock implements Waterloggable
 		return state.get(POWERED) ^ state.get(INVERTED);
 	}
 
-	public InvertedLampSlab(AbstractBlock.Settings settings)
+	public InvertedLampSlabBlock(AbstractBlock.Settings settings)
 	{
 		super(settings);
 		this.setDefaultState(this.getDefaultState().with(POWERED, false).with(INVERTED, true).with(LIT, true));
 	}
+
+	@Override
+	protected abstract MapCodec<? extends InvertedLampSlabBlock> getCodec();
 
 	@Override
 	@Nullable
@@ -40,14 +44,14 @@ public class InvertedLampSlab extends VerticalSlabBlock implements Waterloggable
 	}
 
 	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify)
+	protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify)
 	{
 		if (!world.isClient)
 			updateState(state.with(POWERED, world.isReceivingRedstonePower(pos)), world, pos);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		if (state.get(POWERED) && !world.isReceivingRedstonePower(pos))
 			updateState(state.cycle(POWERED), world, pos);

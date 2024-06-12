@@ -1,5 +1,6 @@
 package com.parzivail.util.block.rotating;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -18,7 +19,10 @@ public abstract class WaterloggableRotatingBlockWithEntity extends Waterloggable
 	}
 
 	@Override
-	public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data)
+	protected abstract MapCodec<? extends WaterloggableRotatingBlockWithEntity> getCodec();
+
+	@Override
+	protected boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data)
 	{
 		super.onSyncedBlockEvent(state, world, pos, type, data);
 		var blockEntity = world.getBlockEntity(pos);
@@ -27,14 +31,14 @@ public abstract class WaterloggableRotatingBlockWithEntity extends Waterloggable
 
 	@Override
 	@Nullable
-	public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos)
+	protected NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos)
 	{
 		var blockEntity = world.getBlockEntity(pos);
 		return blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory)blockEntity : null;
 	}
 
 	@Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved)
+	protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved)
 	{
 		if (!state.isOf(newState.getBlock()))
 		{

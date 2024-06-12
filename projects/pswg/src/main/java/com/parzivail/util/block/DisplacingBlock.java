@@ -33,7 +33,7 @@ public abstract class DisplacingBlock extends WaterloggableBlock
 	protected abstract MapCodec<? extends DisplacingBlock> getCodec();
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return shapeFunction.apply(state, world, pos, context);
 	}

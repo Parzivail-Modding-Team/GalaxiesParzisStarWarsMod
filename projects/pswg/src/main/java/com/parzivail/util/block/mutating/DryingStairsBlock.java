@@ -24,7 +24,7 @@ public class DryingStairsBlock extends MutatingStairsBlock
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
 		entity.slowMovement(state, new Vec3d(0.25, 1.5, 0.25));
 		super.onEntityCollision(state, world, pos, entity);

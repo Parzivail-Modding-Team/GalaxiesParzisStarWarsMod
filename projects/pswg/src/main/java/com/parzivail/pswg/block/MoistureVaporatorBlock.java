@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.pswg.blockentity.MoistureVaporatorBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.IMoistureProvider;
@@ -12,7 +13,6 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -23,13 +23,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class MoistureVaporatorBlock extends WaterloggableRotatingBlockWithEntity implements IMoistureProvider
 {
-	private final VoxelShape shape;
+	private static final MapCodec<MoistureVaporatorBlock> CODEC = createCodec(MoistureVaporatorBlock::new);
+	private final VoxelShape shape = VoxelShapeUtil.getCenteredCube(10, 40);
 
 	public MoistureVaporatorBlock(Settings settings)
 	{
 		super(settings);
+	}
 
-		shape = VoxelShapeUtil.getCenteredCube(10, 40);
+	@Override
+	protected MapCodec<MoistureVaporatorBlock> getCodec()
+	{
+		return CODEC;
 	}
 
 	@Override
@@ -39,7 +44,7 @@ public class MoistureVaporatorBlock extends WaterloggableRotatingBlockWithEntity
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return shape;
 	}
@@ -60,7 +65,7 @@ public class MoistureVaporatorBlock extends WaterloggableRotatingBlockWithEntity
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
 	{
 		if (world.isClient)
 			return ActionResult.SUCCESS;

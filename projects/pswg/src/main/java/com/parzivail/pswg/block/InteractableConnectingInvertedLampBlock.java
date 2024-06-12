@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.connecting.SelfConnectingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ConnectingBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
@@ -44,7 +43,7 @@ public class InteractableConnectingInvertedLampBlock extends SelfConnectingBlock
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (!player.getStackInHand(hand).isEmpty())
 			return super.onUse(state, world, pos, player, hand, hit);
@@ -66,14 +65,14 @@ public class InteractableConnectingInvertedLampBlock extends SelfConnectingBlock
 	}
 
 	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify)
+	protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify)
 	{
 		if (!world.isClient)
 			updateState(state.with(POWERED, world.isReceivingRedstonePower(pos)), world, pos);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		if (state.get(POWERED) && !world.isReceivingRedstonePower(pos))
 			updateState(state.cycle(POWERED), world, pos);

@@ -2,7 +2,6 @@ package com.parzivail.pswg.features.blasters.workbench;
 
 import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.VoxelShapeUtil;
-import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithGuiEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -41,7 +40,7 @@ public class BlasterWorkbenchBlock extends WaterloggableRotatingBlockWithGuiEnti
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPE_ROTATIONS[(state.get(FACING).getHorizontal() + 1) % 4];
 	}

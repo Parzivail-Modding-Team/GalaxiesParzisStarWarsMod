@@ -1,10 +1,7 @@
 package com.parzivail.util.block.connecting;
 
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ConnectingBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -27,20 +24,19 @@ public class SelfConnectingGlassBlock extends SelfConnectingBlock
 	}
 
 	@Override
-	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return VoxelShapes.empty();
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
-	public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos)
+	protected float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos)
 	{
 		return 1.0F;
 	}
 
 	@Override
-	public boolean isTransparent(BlockState state, BlockView world, BlockPos pos)
+	protected boolean isTransparent(BlockState state, BlockView world, BlockPos pos)
 	{
 		return true;
 	}

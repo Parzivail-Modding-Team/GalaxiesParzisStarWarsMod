@@ -1,5 +1,6 @@
 package com.parzivail.util.block.mutating;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
@@ -19,7 +20,13 @@ public class MutatingBlock extends Block
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected MapCodec<MutatingBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
+	protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		if (!canTransition(state, world, pos, random))
 			return;

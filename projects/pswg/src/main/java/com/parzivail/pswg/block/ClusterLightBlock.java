@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBounds;
@@ -37,7 +38,13 @@ public class ClusterLightBlock extends WaterloggableRotatingBlockWithBounds impl
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected MapCodec<ClusterLightBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		var size = state.get(CLUSTER_SIZE);
 
@@ -53,7 +60,7 @@ public class ClusterLightBlock extends WaterloggableRotatingBlockWithBounds impl
 
 	@Nullable
 	@Override
-	public BlockState getPlacementState(ItemPlacementContext ctx)
+	protected BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		var blockState = ctx.getWorld().getBlockState(ctx.getBlockPos());
 
@@ -71,13 +78,13 @@ public class ClusterLightBlock extends WaterloggableRotatingBlockWithBounds impl
 	}
 
 	@Override
-	public boolean canReplace(BlockState state, ItemPlacementContext context)
+	protected boolean canReplace(BlockState state, ItemPlacementContext context)
 	{
 		return !context.shouldCancelInteraction() && context.getStack().isOf(this.asItem()) && state.get(CLUSTER_SIZE) < 3 || super.canReplace(state, context);
 	}
 
 	@Override
-	public IntProperty getPickleProperty()
+	protected IntProperty getPickleProperty()
 	{
 		return CLUSTER_SIZE;
 	}
