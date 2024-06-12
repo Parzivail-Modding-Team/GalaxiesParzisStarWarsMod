@@ -1,7 +1,6 @@
 package com.parzivail.pswg.block;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -26,7 +25,7 @@ public class InteractableInvertedLampBlock extends InvertedLampBlock
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (!player.getStackInHand(hand).isEmpty())
 			return super.onUse(state, world, pos, player, hand, hit);

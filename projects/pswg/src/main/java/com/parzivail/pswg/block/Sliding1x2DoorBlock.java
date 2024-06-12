@@ -152,13 +152,13 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlockWithEntity
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPES.get(new ShapeKey(state.get(HALF), ShapeKeyType.OUTLINE, state.get(OPEN), getRotationKey(state.get(FACING))));
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPES.get(new ShapeKey(state.get(HALF), ShapeKeyType.COLLISION, state.get(OPEN), getRotationKey(state.get(FACING))));
 	}
@@ -188,7 +188,7 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlockWithEntity
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (getDoorColor(state).isEmpty() && player.getStackInHand(hand).getItem() instanceof DoorInsertItem dii)
 		{
@@ -218,7 +218,7 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlockWithEntity
 	}
 
 	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify)
+	protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify)
 	{
 		boolean bl = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
 		if (!this.getDefaultState().isOf(sourceBlock) && bl != state.get(POWERED))
@@ -234,7 +234,7 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlockWithEntity
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		DoubleBlockHalf doubleBlockHalf = state.get(HALF);
 		if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP))
@@ -264,19 +264,19 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlockWithEntity
 	}
 
 	@Override
-	public BlockState rotate(BlockState state, BlockRotation rotation)
+	protected BlockState rotate(BlockState state, BlockRotation rotation)
 	{
 		return state.with(FACING, rotation.rotate(state.get(FACING)));
 	}
 
 	@Override
-	public BlockState mirror(BlockState state, BlockMirror mirror)
+	protected BlockState mirror(BlockState state, BlockMirror mirror)
 	{
 		return mirror == BlockMirror.NONE ? state : state.rotate(mirror.getRotation(state.get(FACING)));
 	}
 
 	@Override
-	public long getRenderingSeed(BlockState state, BlockPos pos)
+	protected long getRenderingSeed(BlockState state, BlockPos pos)
 	{
 		return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());
 	}

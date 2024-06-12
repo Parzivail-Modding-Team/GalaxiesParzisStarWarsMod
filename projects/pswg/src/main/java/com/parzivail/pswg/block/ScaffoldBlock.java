@@ -21,14 +21,22 @@ public class ScaffoldBlock extends ScaffoldingBlock
 		super(settings);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	public MapCodec<ScaffoldingBlock> getCodec()
+	{
+		// TODO
+		return (MapCodec<ScaffoldingBlock>)(MapCodec<?>)CODEC;
+	}
+
+	@Override
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPE;
 	}
 
 	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
+	protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
 		return calculateOverriddenDistance(world, pos) < 7;
 	}
@@ -55,14 +63,6 @@ public class ScaffoldBlock extends ScaffoldingBlock
 		}
 
 		return i;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public MapCodec<ScaffoldingBlock> getCodec()
-	{
-		// TODO
-		return (MapCodec<ScaffoldingBlock>)(MapCodec<?>)CODEC;
 	}
 
 	private static VoxelShape getShape()

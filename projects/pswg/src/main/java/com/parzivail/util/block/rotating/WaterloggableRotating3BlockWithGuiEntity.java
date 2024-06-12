@@ -1,5 +1,6 @@
 package com.parzivail.util.block.rotating;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.ParziUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -50,6 +51,12 @@ public class WaterloggableRotating3BlockWithGuiEntity extends WaterloggableRotat
 	}
 
 	@Override
+	protected MapCodec<WaterloggableRotating3BlockWithGuiEntity> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		super.appendProperties(builder);
@@ -65,7 +72,7 @@ public class WaterloggableRotating3BlockWithGuiEntity extends WaterloggableRotat
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		if (!neighborState.isOf(this))
 		{
@@ -123,7 +130,7 @@ public class WaterloggableRotating3BlockWithGuiEntity extends WaterloggableRotat
 	}
 
 	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
+	protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
 		var peripheral = getPeripheralPos(pos, state);
 		return world.isAir(peripheral.getLeft()) && world.isAir(peripheral.getRight());

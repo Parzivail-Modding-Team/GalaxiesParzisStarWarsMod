@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.pswg.blockentity.PowerCouplingBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.VoxelShapeUtil;
@@ -28,6 +29,12 @@ public class PowerCouplingBlock extends WaterloggableRotatingBlockWithBounds imp
 	}
 
 	@Override
+	protected MapCodec<PowerCouplingBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		return super.getPlacementStateBlockBased(ctx);
@@ -50,7 +57,7 @@ public class PowerCouplingBlock extends WaterloggableRotatingBlockWithBounds imp
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return VoxelShapeUtil.rotateToFace(SHAPE_SINGLE, state.get(FACING));
 	}

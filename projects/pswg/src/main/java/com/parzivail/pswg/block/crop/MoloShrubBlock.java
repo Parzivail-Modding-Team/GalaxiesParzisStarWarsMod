@@ -60,7 +60,7 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		if (state.get(AGE) == 0)
 			return SMALL_SHAPE;
@@ -69,7 +69,7 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		int i = state.get(AGE);
 		var finalState = state;

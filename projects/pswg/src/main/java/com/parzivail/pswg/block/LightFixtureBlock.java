@@ -50,7 +50,7 @@ public class LightFixtureBlock extends InvertedLampBlock
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (!player.getAbilities().allowModifyWorld)
 			return ActionResult.PASS;

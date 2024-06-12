@@ -25,7 +25,7 @@ public abstract class WaterloggableBlock extends Block implements Waterloggable
 	protected abstract MapCodec<? extends WaterloggableBlock> getCodec();
 
 	@Override
-	public FluidState getFluidState(BlockState state)
+	protected FluidState getFluidState(BlockState state)
 	{
 		return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
@@ -37,7 +37,7 @@ public abstract class WaterloggableBlock extends Block implements Waterloggable
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		if (state.get(Properties.WATERLOGGED))
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));

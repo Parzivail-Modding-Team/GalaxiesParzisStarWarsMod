@@ -1,7 +1,6 @@
 package com.parzivail.pswg.block;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.pswg.blockentity.CreatureCageBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.entity.EntityUtil;
@@ -25,13 +24,13 @@ import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class CreatureCageBlock extends Block implements BlockEntityProvider
+public abstract class CreatureCageBlock extends Block implements BlockEntityProvider
 {
-	private static final MapCodec<CreatureCageBlock> CODEC = RecordCodecBuilder.mapCodec(
+	/*private static final MapCodec<CreatureCageBlock> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
 					createSettingsCodec(),
 					DyeColor.CODEC.fieldOf("color").forGetter(CreatureCageBlock::getColor)
-			).apply(instance, CreatureCageBlock::new));
+			).apply(instance, CreatureCageBlock::new));*/
 
 	private final DyeColor color;
 
@@ -42,10 +41,7 @@ public class CreatureCageBlock extends Block implements BlockEntityProvider
 	}
 
 	@Override
-	protected MapCodec<? extends Block> getCodec()
-	{
-		return CODEC;
-	}
+	protected abstract MapCodec<? extends CreatureCageBlock> getCodec();
 
 	public DyeColor getColor()
 	{
@@ -85,7 +81,7 @@ public class CreatureCageBlock extends Block implements BlockEntityProvider
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		var stack = player.getStackInHand(hand);
 		var item = stack.getItem();

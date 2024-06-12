@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.AccumulatingBlock;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBounds;
@@ -24,7 +25,13 @@ public class RepellerBlock extends WaterloggableRotatingBlockWithBounds
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected MapCodec<RepellerBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
+	protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		var targets = new ArrayList<BlockPos>();
 

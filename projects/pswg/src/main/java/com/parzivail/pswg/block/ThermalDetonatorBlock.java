@@ -99,7 +99,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	);
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		var size = state.get(CLUSTER_SIZE);
 
@@ -115,7 +115,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (player.getInventory().getMainHandStack().isOf(SwgItems.Explosives.ThermalDetonator) && state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && player.isSneaking())
 		{
@@ -137,7 +137,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
 		if (entity instanceof ThermalDetonatorEntity tde)
 		{
@@ -158,7 +158,7 @@ public class ThermalDetonatorBlock extends WaterloggableRotatingBlock implements
 	}
 
 	@Override
-	public boolean canReplace(BlockState state, ItemPlacementContext context)
+	protected boolean canReplace(BlockState state, ItemPlacementContext context)
 	{
 		return false;
 	}

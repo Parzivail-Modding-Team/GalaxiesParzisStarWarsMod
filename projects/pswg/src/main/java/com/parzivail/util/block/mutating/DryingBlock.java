@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ColorCode;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -12,9 +13,9 @@ import net.minecraft.world.World;
 
 public class DryingBlock extends FallingMutatingBlock
 {
-	public DryingBlock(Block target, int meanTransitionTime, Settings settings, int dustColor)
+	public DryingBlock(Block target, int meanTransitionTime, ColorCode dustColor, Settings settings)
 	{
-		super(target, meanTransitionTime, settings, dustColor);
+		super(target, meanTransitionTime, dustColor, settings);
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class DryingBlock extends FallingMutatingBlock
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
 		entity.slowMovement(state, new Vec3d(0.25, 1.5, 0.25));
 		super.onEntityCollision(state, world, pos, entity);

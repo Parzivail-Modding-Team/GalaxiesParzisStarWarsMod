@@ -1,12 +1,12 @@
 package com.parzivail.util.block.rotating;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.VoxelShapeUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -34,13 +34,19 @@ public class WaterloggableRotatingBlockWithBounds extends WaterloggableRotatingB
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected MapCodec<? extends WaterloggableRotatingBlockWithBounds> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return VoxelShapeUtil.rotateToFace(shape, state.get(FACING));
 	}
 
 	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
+	protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
 		if (requiresSubstrate == Substrate.NONE)
 			return super.canPlaceAt(state, world, pos);
@@ -62,7 +68,7 @@ public class WaterloggableRotatingBlockWithBounds extends WaterloggableRotatingB
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom)
 	{
 		if (state.get(Properties.WATERLOGGED))
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));

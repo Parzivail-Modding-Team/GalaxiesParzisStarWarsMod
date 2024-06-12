@@ -1,5 +1,6 @@
 package com.parzivail.util.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -43,7 +44,13 @@ public class BushLeavesBlock extends LeavesBlock
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	public MapCodec<BushLeavesBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		var direction = state.get(FACING);
 		return switch (direction)
@@ -58,7 +65,7 @@ public class BushLeavesBlock extends LeavesBlock
 	}
 
 	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
+	protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
 		var direction = state.get(FACING);
 		var blockPos = pos.offset(direction.getOpposite());
@@ -66,7 +73,7 @@ public class BushLeavesBlock extends LeavesBlock
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		return direction == state.get(FACING).getOpposite() && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
@@ -79,13 +86,13 @@ public class BushLeavesBlock extends LeavesBlock
 	}
 
 	@Override
-	public BlockState rotate(BlockState state, BlockRotation rotation)
+	protected BlockState rotate(BlockState state, BlockRotation rotation)
 	{
 		return state.with(FACING, rotation.rotate(state.get(FACING)));
 	}
 
 	@Override
-	public BlockState mirror(BlockState state, BlockMirror mirror)
+	protected BlockState mirror(BlockState state, BlockMirror mirror)
 	{
 		return state.rotate(mirror.getRotation(state.get(FACING)));
 	}

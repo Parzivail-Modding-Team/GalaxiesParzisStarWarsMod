@@ -1,5 +1,6 @@
 package com.parzivail.pswg.features.lightsabers.forge;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithGuiEntity;
 import net.minecraft.block.BlockState;
@@ -33,7 +34,13 @@ public class LightsaberForgeBlock extends WaterloggableRotatingBlockWithGuiEntit
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected MapCodec<LightsaberForgeBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPE_ROTATIONS[(state.get(FACING).getHorizontal() + 1) % 4];
 	}

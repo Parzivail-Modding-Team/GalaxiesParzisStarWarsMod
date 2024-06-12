@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ColorCode;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameRules;
@@ -19,9 +20,9 @@ public class RuiningDryingBlock extends FallingMutatingBlock
 {
 	private final Supplier<Block> ruinedBlock;
 
-	public RuiningDryingBlock(Block target, int meanTransitionTime, Supplier<Block> ruinedBlock, Settings settings, int dustColor)
+	public RuiningDryingBlock(Block target, int meanTransitionTime, Supplier<Block> ruinedBlock, ColorCode dustColor, Settings settings)
 	{
-		super(target, meanTransitionTime, settings, dustColor);
+		super(target, meanTransitionTime, dustColor, settings);
 		this.ruinedBlock = Suppliers.memoize(ruinedBlock::get);
 	}
 
@@ -32,7 +33,7 @@ public class RuiningDryingBlock extends FallingMutatingBlock
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
 		if (!world.isClient && entity instanceof LivingEntity && (entity instanceof PlayerEntity || world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F)
 			world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getStateWithProperties(state), world, pos));

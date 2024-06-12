@@ -22,7 +22,7 @@ public class WaterloggableCreatureCageBlock extends CreatureCageBlock implements
 	}
 
 	@Override
-	public FluidState getFluidState(BlockState state)
+	protected FluidState getFluidState(BlockState state)
 	{
 		return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
@@ -34,7 +34,7 @@ public class WaterloggableCreatureCageBlock extends CreatureCageBlock implements
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		if (state.get(Properties.WATERLOGGED))
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));

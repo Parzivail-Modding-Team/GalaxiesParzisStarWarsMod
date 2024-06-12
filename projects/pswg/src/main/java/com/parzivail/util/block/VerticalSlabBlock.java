@@ -1,5 +1,6 @@
 package com.parzivail.util.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -40,7 +41,13 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	}
 
 	@Override
-	public boolean hasSidedTransparency(BlockState state)
+	protected MapCodec<? extends VerticalSlabBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
+	protected boolean hasSidedTransparency(BlockState state)
 	{
 		return state.get(TYPE) != SlabType.DOUBLE;
 	}
@@ -52,7 +59,7 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		var slabType = state.get(TYPE);
 		var axis = state.get(AXIS);
@@ -129,7 +136,7 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	}
 
 	@Override
-	public boolean canReplace(BlockState state, ItemPlacementContext context)
+	protected boolean canReplace(BlockState state, ItemPlacementContext context)
 	{
 		var itemStack = context.getStack();
 		var slabType = state.get(TYPE);
@@ -178,7 +185,7 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	}
 
 	@Override
-	public FluidState getFluidState(BlockState state)
+	protected FluidState getFluidState(BlockState state)
 	{
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
@@ -196,7 +203,7 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		if (state.get(WATERLOGGED))
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));

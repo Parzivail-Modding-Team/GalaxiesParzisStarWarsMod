@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block.crop;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.pswg.container.SwgItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,7 +16,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class ChasukaCrop extends CropBlock
+public class ChasukaBlock extends CropBlock
 {
 	static
 	{
@@ -26,13 +27,19 @@ public class ChasukaCrop extends CropBlock
 	public static final IntProperty AGE;
 	private static final VoxelShape[] AGE_TO_SHAPE;
 
-	public ChasukaCrop(AbstractBlock.Settings settings)
+	public ChasukaBlock(AbstractBlock.Settings settings)
 	{
 		super(settings);
 	}
 
 	@Override
-	public IntProperty getAgeProperty()
+	public MapCodec<ChasukaBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
+	protected IntProperty getAgeProperty()
 	{
 		return AGE;
 	}
@@ -51,7 +58,7 @@ public class ChasukaCrop extends CropBlock
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		if (random.nextInt(3) != 0)
 		{
@@ -72,7 +79,7 @@ public class ChasukaCrop extends CropBlock
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return AGE_TO_SHAPE[state.get(this.getAgeProperty())];
 	}

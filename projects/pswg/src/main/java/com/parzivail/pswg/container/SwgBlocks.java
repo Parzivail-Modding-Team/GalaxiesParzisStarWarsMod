@@ -204,32 +204,32 @@ public class SwgBlocks
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
-		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+		public static final Block FunnelFlower = new AridPlantBlock(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
-		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+		public static final Block BlossomingFunnelFlower = new AridPlantBlock(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("poonten_grass")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
-		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+		public static final Block PoontenGrass = new AridPlantBlock(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
-		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+		public static final Block DriedPoontenGrass = new AridPlantBlock(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber_stalk")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
-		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+		public static final Block Tuber = new AridPlantBlock(AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final ChasukaCrop Chasuka = new ChasukaCrop(AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+		public static final ChasukaBlock Chasuka = new ChasukaBlock(AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("hkak_bush")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
@@ -693,7 +693,7 @@ public class SwgBlocks
 		@RegistryName("gray_imperial_light_half_5")
 		public static final Block GrayImperialLightHalf5 = createLightingPanelBlock(13);
 		@RegistryName("gray_imperial_lighting_panel_slab")
-		public static final InvertedLampSlab GrayImperialLightingSlab = createLightingPanelSlab(12, 15);
+		public static final InvertedLampSlabBlock GrayImperialLightingSlab = createLightingPanelSlab(12, 15);
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -1069,9 +1069,9 @@ public class SwgBlocks
 		}).strength(0.3f));
 	}
 
-	public static InteractableInvertedLampSlab createLightingPanelSlab(int brightnessSingle, int brightnessDouble)
+	public static InteractableInvertedLampSlabBlock createLightingPanelSlab(int brightnessSingle, int brightnessDouble)
 	{
-		return new InteractableInvertedLampSlab(AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
+		return new InteractableInvertedLampSlabBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).luminance((blockState) -> {
 			if (InvertedLampBlock.isLit(blockState))
 			{
 				if (blockState.get(VerticalSlabBlock.TYPE) == SlabType.DOUBLE)

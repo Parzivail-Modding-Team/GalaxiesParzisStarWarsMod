@@ -1,12 +1,13 @@
 package com.parzivail.util.block.mutating;
 
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.VerticalSlabBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 
-public class MutatingSlabBlock extends VerticalSlabBlock
+public abstract class MutatingSlabBlock extends VerticalSlabBlock
 {
 	private final VerticalSlabBlock target;
 	private final int meanTransitionTime;
@@ -19,7 +20,10 @@ public class MutatingSlabBlock extends VerticalSlabBlock
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected abstract MapCodec<? extends MutatingSlabBlock> getCodec();
+
+	@Override
+	protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		if (!canTransition(state, world, pos, random))
 			return;

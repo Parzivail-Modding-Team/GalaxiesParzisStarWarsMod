@@ -1,6 +1,7 @@
 package com.parzivail.util.block.connecting;
 
 import com.google.common.collect.Maps;
+import com.mojang.serialization.MapCodec;
 import com.parzivail.util.block.WaterloggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -56,6 +57,9 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 		super(settings);
 		setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
 	}
+
+	@Override
+	protected abstract MapCodec<? extends ConnectingNodeBlock> getCodec();
 
 	abstract boolean canConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction);
 
@@ -135,7 +139,7 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState otherState, WorldAccess world, BlockPos pos, BlockPos otherPos)
+	protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState otherState, WorldAccess world, BlockPos pos, BlockPos otherPos)
 	{
 		if (state.get(Properties.WATERLOGGED))
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
@@ -152,7 +156,7 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (!player.getAbilities().allowModifyWorld || !player.getStackInHand(hand).isEmpty())
 		{

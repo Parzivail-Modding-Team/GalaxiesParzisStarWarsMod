@@ -33,19 +33,19 @@ public class WaterloggableRotatingBlock extends WaterloggableBlock
 		return super.getPlacementState(ctx).with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
 	}
 
-	public BlockState getPlacementStateBlockBased(ItemPlacementContext ctx)
+	protected BlockState getPlacementStateBlockBased(ItemPlacementContext ctx)
 	{
 		return super.getPlacementState(ctx).with(FACING, ctx.getSide());
 	}
 
 	@Override
-	public BlockState rotate(BlockState state, BlockRotation rotation)
+	protected BlockState rotate(BlockState state, BlockRotation rotation)
 	{
 		return state.with(FACING, rotation.rotate(state.get(FACING)));
 	}
 
 	@Override
-	public BlockState mirror(BlockState state, BlockMirror mirror)
+	protected BlockState mirror(BlockState state, BlockMirror mirror)
 	{
 		return state.rotate(mirror.getRotation(state.get(FACING)));
 	}

@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.type.PotionContentsComponent;
@@ -33,13 +34,19 @@ public class TerrariumBlock extends CreatureCageBlock
 	}
 
 	@Override
+	protected MapCodec<TerrariumBlock> getCodec()
+	{
+		return super.getCodec();
+	}
+
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(WATER_LEVEL);
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		var stack = player.getStackInHand(hand);
 		var item = stack.getItem();

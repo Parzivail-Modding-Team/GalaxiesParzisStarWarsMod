@@ -1,5 +1,6 @@
 package com.parzivail.util.block.connecting;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -11,6 +12,7 @@ import net.minecraft.world.WorldAccess;
 
 public class SelfConnectingNodeBlock extends ConnectingNodeBlock
 {
+	private static final MapCodec<SelfConnectingNodeBlock> CODEC = createCodec(SelfConnectingNodeBlock::new);
 	protected static final VoxelShape SHAPE = Block.createCuboidShape(2, 2, 2, 14, 14, 14);
 
 	public SelfConnectingNodeBlock(Settings settings)
@@ -19,19 +21,25 @@ public class SelfConnectingNodeBlock extends ConnectingNodeBlock
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	protected MapCodec<SelfConnectingNodeBlock> getCodec()
+	{
+		return CODEC;
+	}
+
+	@Override
+	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPE;
 	}
 
 	@Override
-	public boolean canConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction)
+	protected boolean canConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction)
 	{
 		return otherState.getBlock() == this;
 	}
 
 	@Override
-	public boolean isConnectedTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction)
+	protected boolean isConnectedTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction)
 	{
 		if (!canConnectTo(world, state, otherState, otherPos, direction))
 			return false;
