@@ -30,6 +30,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.ColorCode;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -147,15 +148,15 @@ public class SwgBlocks
 	public static class Sand
 	{
 		@RegistryName("desert_sand")
-		public static final Block Desert = new PFallingBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), 0xFFEDBB8A);
+		public static final Block Desert = new ColoredFallingBlock(new ColorCode(0xFFEDBB8A), AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 		@RegistryName("pit_sand")
-		public static final Block Pit = new PFallingBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), 0xFFEAC795);
+		public static final Block Pit =  new ColoredFallingBlock(new ColorCode(0xFFEAC795), AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 		@RegistryName("fine_sand")
-		public static final Block Fine = new PFallingBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), 0xFFE9C490);
+		public static final Block Fine =  new ColoredFallingBlock(new ColorCode(0xFFE9C490), AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 		@RegistryName("loose_desert_sand")
 		public static final Block LooseDesert = new AccumulatingBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), Desert::getPlacementState);
 		@RegistryName("canyon_sand")
-		public static final Block Canyon = new PFallingBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), 0xFFC59572);
+		public static final Block Canyon = new ColoredFallingBlock(new ColorCode(0xFFC59572), AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	}
 
 	@RegistryOrder(4)
@@ -171,7 +172,7 @@ public class SwgBlocks
 	{
 		@RegistryName("jundland_gravel")
 		@TarkinBlock(state = TrState.RandomRotation)
-		public static final FallingBlock Jundland = new PFallingBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F), 0xFF7A5346);
+		public static final FallingBlock Jundland = new ColoredFallingBlock(new ColorCode(0xFF7A5346), AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
 
 	@RegistryOrder(6)
@@ -179,14 +180,14 @@ public class SwgBlocks
 	{
 		@RegistryName("wet_pourstone")
 		@TarkinBlock
-		public static final Block WetPourstone = new RuiningDryingBlock(Stone.Pourstone.block, 10, () -> Dirt.RuinedWetPourstone, AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), 0xFF9E6E3B);
+		public static final Block WetPourstone = new RuiningDryingBlock(Stone.Pourstone.block, 10, () -> Dirt.RuinedWetPourstone, new ColorCode(0xFF9E6E3B), AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision());
 		@RegistryName("wet_pourstone_stairs")
 		public static final Block WetPourstoneStairs = new RuiningDryingStairsBlock(WetPourstone.getDefaultState(), Stone.Pourstone.stairs, 10, () -> Dirt.RuinedWetPourstoneStairs, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("wet_pourstone_slab")
 		public static final Block WetPourstoneSlab = new RuiningDryingSlabBlock(Stone.Pourstone.slab, 10, () -> Dirt.RuinedWetPourstoneSlab, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("ruined_wet_pourstone")
 		@TarkinBlock
-		public static final Block RuinedWetPourstone = new DryingBlock(Stone.CrackedPourstone.block, 10, AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), 0xFF986A39);
+		public static final Block RuinedWetPourstone = new DryingBlock(Stone.CrackedPourstone.block, 10, new ColorCode(0xFF986A39), AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F));
 		@RegistryName("ruined_wet_pourstone_stairs")
 		public static final StairsBlock RuinedWetPourstoneStairs = new DryingStairsBlock(RuinedWetPourstone.getDefaultState(), Stone.CrackedPourstone.stairs, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
 		@RegistryName("ruined_wet_pourstone_slab")
