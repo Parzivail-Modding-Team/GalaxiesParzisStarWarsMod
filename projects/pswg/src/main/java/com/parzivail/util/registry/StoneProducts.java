@@ -1,6 +1,5 @@
 package com.parzivail.util.registry;
 
-import com.parzivail.util.block.PStairsBlock;
 import com.parzivail.util.block.VerticalSlabBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -17,7 +16,7 @@ public class StoneProducts
 	public StoneProducts(Block block)
 	{
 		this.block = block;
-		this.stairs = new PStairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));
+		this.stairs = new StairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));
 		this.slab = new VerticalSlabBlock(AbstractBlock.Settings.copy(block));
 		this.wall = new WallBlock(AbstractBlock.Settings.copy(block));
 	}
