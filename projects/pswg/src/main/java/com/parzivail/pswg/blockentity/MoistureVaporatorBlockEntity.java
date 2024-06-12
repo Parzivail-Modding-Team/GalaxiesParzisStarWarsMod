@@ -12,12 +12,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeMatcher;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
@@ -96,16 +96,10 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		collectionTimerLength = tag.getInt("collectionTimerLength");
 	}
 
-	protected int getHydrateTime()
-	{
-		assert this.world != null;
-		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, this, this.world).map(RecipeEntry::value).map(VaporatorRecipe::duration).orElse(200);
-	}
-
 	private boolean isHydratable(ItemStack stack)
 	{
 		assert this.world != null;
-		var recipeOptional = this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world);
+		var recipeOptional = this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SingleStackRecipeInput(stack), this.world);
 		return recipeOptional.map(RecipeEntry::value).filter(this::canAcceptOutput).isPresent();
 	}
 
@@ -126,7 +120,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	private VaporatorRecipe hydrate(ItemStack stack)
 	{
 		assert this.world != null;
-		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world).orElseThrow(RuntimeException::new).value();
+		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SingleStackRecipeInput(stack), this.world).orElseThrow(RuntimeException::new).value();
 	}
 
 	public static <T extends BlockEntity> void serverTick(World world, BlockPos blockPos, BlockState blockState, T be)
