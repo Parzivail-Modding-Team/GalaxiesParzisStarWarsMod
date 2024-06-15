@@ -5,7 +5,9 @@ import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -48,18 +50,17 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
 		FOODS.add(stack);
 	}
 
-	public void takeFood(PlayerEntity player)
+	public ItemStack takeFood(PlayerEntity player)
 	{
 		if (!this.FOODS.isEmpty())
 		{
+			ItemStack stack = FOODS.get(FOODS.size() - 1);
 			if (getWorld() instanceof ServerWorld)
-			{
-				ServerPlayerEntity serverPlayer = (ServerPlayerEntity)player;
-				serverPlayer.getInventory().insertStack(FOODS.get(FOODS.size() - 1));
-			}
+				getWorld().spawnEntity(new ItemEntity(getWorld(), getPos().getX(), getPos().getY(), getPos().getZ(), stack));
 			FOODS.remove(FOODS.size() - 1);
+			return stack;
 		}
-
+		return ItemStack.EMPTY;
 	}
 	public void eatFood(PlayerEntity player){
 		if (!this.FOODS.isEmpty())

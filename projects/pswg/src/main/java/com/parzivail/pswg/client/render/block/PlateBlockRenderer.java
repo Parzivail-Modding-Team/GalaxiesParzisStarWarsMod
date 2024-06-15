@@ -35,9 +35,7 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 	{
 		matrices.push();
 		if (!foodList.isEmpty())
-		{
 			matrices.translate(0.3f, 1f / 16f, 0.3f);
-		}
 		int foodCount = calculateFood(foodList);
 		int layer = calculateLayer(foodCount);
 
@@ -74,9 +72,6 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 
 			if (addedHeight < foodModel.bounds().getLengthZ())
 				addedHeight = foodModel.bounds().getLengthZ();
-			MinecraftClient.getInstance().player.sendMessage(Text.of("layer: " + layer));
-			MinecraftClient.getInstance().player.sendMessage(Text.of("foodCount: " + foodCount));
-			MinecraftClient.getInstance().player.sendMessage(Text.of("max layer position: " + getLayerMaxPosition(layer)));
 			foodModel.render(matrices, vertexConsumers, null, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
 			if (changeLayer)
 			{
@@ -96,22 +91,16 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 	{
 		int s = 0;
 		for (int i = 0; i <= layer; i++)
-		{
 			s += (5 - i);
-		}
 		return s;
 	}
 
 	private int calculateLayerSize(int layer, int foodCount, List<ItemStack> foodList, int i)
 	{
 		if (foodList.get(i).isIn(SwgTags.Items.MAIN_COURSE))
-		{
 			return 1;
-		}
 		for (int j = 0; j < layer; j++)
-		{
 			foodCount -= (5 - j);
-		}
 		if (foodCount != 0)
 			return foodCount;
 
@@ -127,13 +116,9 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 			if (sT == getLayerMaxPosition(layerT))
 				layerT++;
 			if (foodList.get(j).isIn(SwgTags.Items.MAIN_COURSE))
-			{
 				sT += (5 - layerT);
-			}
 			else
-			{
 				sT++;
-			}
 		}
 		return sT;
 	}
@@ -143,13 +128,9 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 		for (int i = 0; i < foodList.size(); i++)
 		{
 			if (calculateCurrentFood(foodList, i) == getLayerMaxPosition(layer))
-			{
 				return calculateCurrentFood(foodList, i);
-			}
 			else if (i == foodList.size() - 1)
-			{
 				return calculateCurrentFood(foodList, i);
-			}
 		}
 		return 0;
 	}
@@ -161,17 +142,11 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 		for (int i = 0; i < foodList.size(); i++)
 		{
 			if (foodList.get(i).isIn(SwgTags.Items.MAIN_COURSE))
-			{
 				sT += (5 - layerT);
-			}
 			else
-			{
 				sT++;
-			}
 			if (sT == getLayerMaxPosition(layerT))
-			{
 				layerT++;
-			}
 		}
 		return sT;
 	}
@@ -181,9 +156,7 @@ public class PlateBlockRenderer implements BlockEntityRenderer<PlateBlockEntity>
 		for (int l = 0; l < 5; l++)
 		{
 			if (foodCount > 5 - l)
-			{
 				foodCount -= (5 - l);
-			}
 			else
 				return l;
 		}
