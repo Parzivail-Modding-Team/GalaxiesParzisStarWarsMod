@@ -77,8 +77,6 @@ public class PlateBlock extends BlockWithEntity
 			return 5;
 		for (int l = 0; l < 6; l++)
 		{
-			//(l0)15-5=10  (l1)10-4=6 (l2)6-3=3 (l3)3-2=1 (l4)1-1=0;
-
 			if (foodCount >= 5 - l)
 				foodCount -= (5 - l);
 			else
@@ -114,13 +112,6 @@ public class PlateBlock extends BlockWithEntity
 		else if (player.isSneaking() && state.get(FOOD_VALUE) > 0)
 		{
 			var takenStack = takeFood(world, pos, state, player);
-			/*for(PlayerEntity players: world.getPlayers())
-			{
-				//if(world.isClient)
-				//	players.sendMessage(Text.of("C stack is: " + takenStack.getName().getString()));
-				//else
-				//	players.sendMessage(Text.of("S stack is: " + takenStack.getName().getString()));
-			}*/
 			if (takenStack.isIn(SwgTags.Items.MAIN_COURSE))
 			{
 				world.setBlockState(pos, state.with(FOOD_VALUE, state.get(FOOD_VALUE) - (5 - calculateLayer(state.get(FOOD_VALUE)) + 1)));

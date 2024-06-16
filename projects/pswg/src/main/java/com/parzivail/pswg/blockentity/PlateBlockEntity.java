@@ -45,6 +45,17 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
 		super.readNbt(nbt);
 	}
 
+	@Override
+	public void markRemoved()
+	{
+		if (world != null)
+		{
+			for (ItemStack food : FOODS)
+				world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), food));
+		}
+		super.markRemoved();
+	}
+
 	public void addFood(ItemStack stack)
 	{
 		FOODS.add(stack);
