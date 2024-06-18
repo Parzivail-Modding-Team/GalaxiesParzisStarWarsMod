@@ -1,22 +1,26 @@
 package com.parzivail.pswg.features.plate;
 
 import com.parzivail.p3d.P3dManager;
-import com.parzivail.p3d.P3dModel;
+import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.client.render.ICustomItemRenderer;
+import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.MathHelper;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlateItemRenderer implements ICustomItemRenderer
+public class PlateItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
 	public static final PlateItemRenderer INSTANCE = new PlateItemRenderer();
 	@Override
@@ -65,5 +69,39 @@ public class PlateItemRenderer implements ICustomItemRenderer
 		PlateUtil.renderPlate(foodList, matrices, vertexConsumers, light, true);
 
 		matrices.pop();
+	}
+
+	@Override
+	public void modifyPose(LivingEntity entity, Hand hand, ItemStack stack, BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
+		if (entity.getStackInHand(Hand.MAIN_HAND).isOf(SwgItems.Plate.PlateItem) && entity.getStackInHand(Hand.OFF_HAND).isOf(SwgItems.Plate.PlateItem))
+			poseDual(model, limbAngle, limbDistance);
+		else if (entity.getStackInHand(Hand.MAIN_HAND).isOf(SwgItems.Plate.PlateItem))
+			poseRight(model, limbAngle, limbDistance);
+		else if (entity.getStackInHand(Hand.OFF_HAND).isOf(SwgItems.Plate.PlateItem))
+			poseLeft(model, limbAngle, limbDistance);
+	}
+
+	private void poseLeft(BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance)
+	{
+		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
+		model.leftArm.pitch = -1.35F + model.head.pitch + limbBounce;
+		model.leftArm.yaw = 0.1F + model.head.yaw;
+	}
+
+	private void poseRight(BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance)
+	{
+		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
+		model.rightArm.pitch = -1.35F + model.head.pitch + limbBounce;
+		model.rightArm.yaw = 0.1F + model.head.yaw;
+	}
+
+	private void poseDual(BipedEntityModel<? extends LivingEntity> model, float limbAngle, float limbDistance)
+	{
+		var limbBounce = limbDistance * MathHelper.sin(limbAngle / 2f) * 0.05f;
+		model.rightArm.pitch = -1.35F + model.head.pitch + limbBounce;
+		model.rightArm.yaw = 0.1F + model.head.yaw;
+		model.leftArm.pitch = -1.35F + model.head.pitch + limbBounce;
+		model.leftArm.yaw = 0.1F + model.head.yaw;
 	}
 }

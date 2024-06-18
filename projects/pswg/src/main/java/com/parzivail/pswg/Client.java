@@ -353,6 +353,7 @@ public class Client implements ClientModInitializer
 		ICustomItemRenderer.register(ThermalDetonatorItem.class, ThermalDetonatorItemRenderer.INSTANCE);
 
 		ICustomItemRenderer.register(PlateItem.class, PlateItemRenderer.INSTANCE);
+		ICustomPoseItem.register(PlateItem.class, PlateItemRenderer.INSTANCE);
 
 		//		TODO: ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
