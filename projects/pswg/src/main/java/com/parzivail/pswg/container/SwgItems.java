@@ -729,6 +729,7 @@ public class SwgItems
 	public static class Plate
 	{
 		@RegistryName("plate_item")
+		@TabIgnore
 		public static final Item PlateItem = new PlateItem(new FabricItemSettings().maxCount(1));
 	}
 

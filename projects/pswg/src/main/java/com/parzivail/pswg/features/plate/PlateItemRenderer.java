@@ -59,8 +59,9 @@ public class PlateItemRenderer implements ICustomItemRenderer
 		matrices.scale(1.6f, 1.6f, 1.6f);
 		List<ItemStack> foodList = new ArrayList<>();
 		var nbt = stack.getNbt();
-		for (int i = 0; i < nbt.getInt("food_amount"); i++)
-			foodList.add(i, ItemStack.fromNbt(nbt.getCompound("food" + i)));
+		if (nbt != null)
+			for (int i = 0; i < nbt.getInt("food_amount"); i++)
+				foodList.add(i, ItemStack.fromNbt(nbt.getCompound("food" + i)));
 		PlateUtil.renderPlate(foodList, matrices, vertexConsumers, light, true);
 
 		matrices.pop();
