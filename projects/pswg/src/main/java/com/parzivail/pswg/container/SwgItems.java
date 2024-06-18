@@ -6,6 +6,7 @@ import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.BlasterPowerPackItem;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
+import com.parzivail.pswg.features.plate.PlateItem;
 import com.parzivail.pswg.item.*;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.item.material.BeskarToolMaterial;
@@ -583,6 +584,7 @@ public class SwgItems
 		@TarkinItem
 		public static final Item JerbaRib = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()));
 		@RegistryName("krayt_meat")
+		@TarkinItem
 		public static final Item KraytMeat = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()));
 		@RegistryName("raw_sketto_nugget")
 		@TarkinItem
@@ -721,6 +723,13 @@ public class SwgItems
 	{
 		@RegistryName("thermal_detonator")
 		public static final Item ThermalDetonator = new ThermalDetonatorItem(new FabricItemSettings().maxCount(1));
+	}
+
+	@RegistryOrder(14)
+	public static class Plate
+	{
+		@RegistryName("plate_item")
+		public static final Item PlateItem = new PlateItem(new FabricItemSettings().maxCount(1));
 	}
 
 	static HashMap<RegistryKey<ItemGroup>, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();

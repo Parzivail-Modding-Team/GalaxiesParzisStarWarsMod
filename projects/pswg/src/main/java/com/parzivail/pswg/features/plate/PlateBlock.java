@@ -1,6 +1,5 @@
-package com.parzivail.pswg.block;
+package com.parzivail.pswg.features.plate;
 
-import com.parzivail.pswg.blockentity.PlateBlockEntity;
 import com.parzivail.pswg.container.SwgTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;

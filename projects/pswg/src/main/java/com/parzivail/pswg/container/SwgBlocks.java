@@ -9,6 +9,8 @@ import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlock;
 import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlockEntity;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeBlock;
 import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeBlockEntity;
+import com.parzivail.pswg.features.plate.PlateBlock;
+import com.parzivail.pswg.features.plate.PlateBlockEntity;
 import com.parzivail.tarkin.api.*;
 import com.parzivail.util.block.*;
 import com.parzivail.util.block.connecting.SelfConnectingBlock;

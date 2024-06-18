@@ -43,6 +43,9 @@ import com.parzivail.pswg.features.debug.DebugUtil;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.client.forge.LightsaberForgeScreen;
+import com.parzivail.pswg.features.plate.PlateBlockRenderer;
+import com.parzivail.pswg.features.plate.PlateItem;
+import com.parzivail.pswg.features.plate.PlateItemRenderer;
 import com.parzivail.pswg.features.thermaldetonator.client.ThermalDetonatorItemRenderer;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
@@ -348,6 +351,8 @@ public class Client implements ClientModInitializer
 		ICustomHudRenderer.register(BlasterItem.class, BlasterHudRenderer.INSTANCE);
 
 		ICustomItemRenderer.register(ThermalDetonatorItem.class, ThermalDetonatorItemRenderer.INSTANCE);
+
+		ICustomItemRenderer.register(PlateItem.class, PlateItemRenderer.INSTANCE);
 
 		//		TODO: ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 

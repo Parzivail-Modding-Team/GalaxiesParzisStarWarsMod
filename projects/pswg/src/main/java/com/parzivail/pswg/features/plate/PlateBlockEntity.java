@@ -1,16 +1,15 @@
-package com.parzivail.pswg.blockentity;
+package com.parzivail.pswg.features.plate;
 
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -52,6 +51,12 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
 		{
 			for (ItemStack food : FOODS)
 				world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), food));
+			ItemStack plateItem = new ItemStack(SwgItems.Plate.PlateItem);
+			var nbt = plateItem.getNbt();
+			nbt.putInt("food_amount", FOODS.size());
+			for (int i = 0; i < FOODS.size(); i++)
+				nbt.put("food" + i, this.FOODS.get(i).writeNbt(new NbtCompound()));
+			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), plateItem));
 		}
 		super.markRemoved();
 	}

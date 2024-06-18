@@ -1,4 +1,4 @@
-package com.parzivail.pswg.item;
+package com.parzivail.pswg.features.plate;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.nbt.TagSerializer;
@@ -12,7 +12,7 @@ import java.util.List;
 public class PlateItemTag extends TagSerializer
 {
 	public List<ItemStack> FOODS = new ArrayList<>();
-	public static final Identifier SLUG = Resources.id("plate");
+	public static final Identifier SLUG = Resources.id("plate_item");
 
 	public PlateItemTag(NbtCompound source)
 	{
