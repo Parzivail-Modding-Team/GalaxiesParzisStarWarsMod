@@ -683,7 +683,32 @@ public class Client implements ClientModInitializer
 
 			model.body.getChild("jetpack").visible = renderPack;
 		});
-
+		var aWingPilotId = Resources.id("a_wing_pilot");
+		ArmorRenderer.register(
+				SwgItems.Armor.AWingPilotHelmet,
+				SwgItems.Armor.AWingPilotKit,
+				aWingPilotId,
+				new ArmorRenderer.Assets(
+						Resources.id("armor/a_wing_pilot"),
+						Resources.id("textures/armor/a_wing_pilot.png")
+				),
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
+		);
+		var bWingPilotId = Resources.id("b_wing_pilot");
+		ArmorRenderer.register(
+				SwgItems.Armor.BWingPilotHelmet,
+				SwgItems.Armor.BWingPilotKit,
+				bWingPilotId,
+				new ArmorRenderer.Assets(
+						Resources.id("armor/b_wing_pilot"),
+						Resources.id("textures/armor/b_wing_pilot.png")
+				),
+				ArmorRenderer.Metadata.HIDE_CHEST_HIDE_HAIR
+		);
+		ArmorRenderer.registerTransformer(bWingPilotId, (entity, slim, model, opt) -> {
+			model.leftLeg.visible = model.body.visible;
+			model.rightLeg.visible = model.body.visible;
+		});
 		var rebelPilotId = Resources.id("rebel_pilot");
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelPilotHelmet,

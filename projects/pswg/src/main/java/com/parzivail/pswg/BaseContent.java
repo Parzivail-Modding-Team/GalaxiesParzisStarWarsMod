@@ -525,6 +525,18 @@ public class BaseContent implements PswgAddon
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 55, 20, 54, 14, 5, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.07f, 0.3f, 0.03f)),
+				new BlasterDescriptor(Resources.id("e11d"), BlasterArchetype.RIFLE)
+						.firingBehavior(List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
+						.mechanicalProperties(2.7f, -0.5f, 10, 400)
+						.damage(6, 188f, Falloff.cliff(5))
+						.bolt(ColorUtil.packHsv(0.98f, 1, 1), 1, 1)
+						.autoParameters(4)
+						.recoil(new BlasterAxialInfo(1.5f, 3))
+						.spread(new BlasterAxialInfo(0, 0))
+						.heat(new BlasterHeatInfo(1008, 55, 20, 54, 14, 5, 80))
+						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.07f, 0.3f, 0.03f))
+						.attachments(b -> b.attachment(1, "stock", BlasterAttachmentFunction.REDUCE_RECOIL, BlasterAttachmentCategory.STOCK, "stock", null)
+						                   .attachment(2, "range", BlasterAttachmentFunction.INCREASE_RANGE, BlasterAttachmentCategory.INTERNAL_TARGETING)),
 				new BlasterDescriptor(Resources.id("ee3"), BlasterArchetype.RIFLE)
 						.firingBehavior(List.of(BlasterFiringMode.BURST, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
 						.mechanicalProperties(2.9f, -0.5f, 10, 400)
