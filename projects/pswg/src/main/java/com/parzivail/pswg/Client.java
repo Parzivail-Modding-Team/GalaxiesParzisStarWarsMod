@@ -19,6 +19,7 @@ import com.parzivail.pswg.client.render.entity.fish.FaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.fish.LaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.mammal.BanthaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.rodent.SandSkitterEntityRenderer;
+import com.parzivail.pswg.client.render.entity.ship.RZ1AwingRenderer;
 import com.parzivail.pswg.client.render.entity.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.entity.ship.ZephyrJRenderer;
@@ -316,6 +317,7 @@ public class Client implements ClientModInitializer
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 
 		EntityRendererRegistry.register(SwgEntities.Ship.T65bXwing, T65BXwingRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Ship.RZ1Awing, RZ1AwingRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Speeder.X34, X34LandspeederRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Speeder.ZephyrJ, ZephyrJRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.BlasterBolt, BlasterBoltRenderer::new);

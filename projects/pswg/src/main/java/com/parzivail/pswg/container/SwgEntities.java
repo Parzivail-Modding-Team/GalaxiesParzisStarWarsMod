@@ -6,6 +6,7 @@ import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.mammal.BanthaEntity;
 import com.parzivail.pswg.entity.rodent.SandSkitterEntity;
+import com.parzivail.pswg.entity.ship.RZ1Awing;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.pswg.entity.ship.X34LandspeederEntity;
 import com.parzivail.pswg.entity.ship.ZephyrJEntity;
@@ -33,10 +34,16 @@ public class SwgEntities
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackRangeBlocks(128)
 				.build());
+		public static final EntityType<RZ1Awing> RZ1Awing = Registry.register(Registries.ENTITY_TYPE, Resources.id("awing_rz1"), FabricEntityTypeBuilder
+				.create(SpawnGroup.MISC, RZ1Awing::new)
+				.dimensions(EntityDimensions.fixed(1, 1))
+				.trackRangeBlocks(128)
+				.build());
 
 		static void register()
 		{
 			entityTypes.add(T65bXwing);
+			entityTypes.add(RZ1Awing);
 		}
 	}
 
