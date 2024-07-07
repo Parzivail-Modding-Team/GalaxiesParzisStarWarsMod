@@ -1,11 +1,23 @@
 package com.parzivail.pswg.entity.ship;
 
+import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.entity.rigs.RigRZ1;
 import com.parzivail.pswg.entity.rigs.RigT65B;
+import com.parzivail.pswg.features.blasters.BlasterUtil;
 import com.parzivail.util.entity.collision.CapsuleVolume;
 import com.parzivail.util.entity.collision.ICollisionVolume;
 import com.parzivail.util.entity.collision.IComplexEntityHitbox;
 import com.parzivail.util.entity.collision.SweptTriangleVolume;
+import com.parzivail.util.math.ColorUtil;
+import com.parzivail.util.math.MathUtil;
+import com.parzivail.util.math.QuatUtil;
+import com.parzivail.util.math.Transform;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
@@ -87,10 +99,67 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	private static final SweptTriangleVolume VOL_BODY_BOTTOM_MID_FRONTB = new SweptTriangleVolume(new Vec3d(-1.125, -0.827873, -5.4674), new Vec3d(1.125, -0.827873, -5.4674), new Vec3d(1.25, -1.45287, -2.3424), 0.2);
 	private static final SweptTriangleVolume VOL_BODY_BOTTOM_MID_MIDA = new SweptTriangleVolume(new Vec3d(-1.25, -1.45287, -2.3424), new Vec3d(-1.875, -1.70287, 0.5326), new Vec3d(1.25, -1.45287, -2.3424), 0.2);
 	private static final SweptTriangleVolume VOL_BODY_BOTTOM_MID_MIDB = new SweptTriangleVolume(new Vec3d(1.875, -1.70287, 0.532598), new Vec3d(-1.875, -1.70287, 0.5326), new Vec3d(1.25, -1.45287, -2.3424), 0.2);
+	private static final TrackedData<Byte> CANNON_BITS = DataTracker.registerData(RZ1Awing.class, TrackedDataHandlerRegistry.BYTE);
+	private static final int CANNON_STATE_MASK = 0b00000001;
+	private static final String[] CANNON_ORDER = { RigRZ1.CANNON_LEFT, RigRZ1.CANNON_RIGHT };
 
 	public RZ1Awing(EntityType<?> type, World world)
 	{
 		super(type, world);
+	}
+
+	@Override
+	protected void initDataTracker()
+	{
+		super.initDataTracker();
+		getDataTracker().startTracking(CANNON_BITS, (byte)0);
+	}
+
+	@Override
+	public void acceptFireInput()
+	{
+		var passenger = getControllingPassenger();
+		if (!(passenger instanceof PlayerEntity player))
+			return;
+
+		var pos = this.getPos();
+		var rotation = getRotation();
+		var stack = new Transform();
+
+		var cannonState = getCannonState();
+		var p = RigRZ1.INSTANCE.getWorldPosition(stack, this, rotation, CANNON_ORDER[cannonState], 0).add(pos);
+
+		var convergenceDistance = 40;
+		var forward = QuatUtil.rotate(MathUtil.V3D_NEG_Z.multiply(convergenceDistance), rotation);
+		var boltRotation = QuatUtil.lookAt(p, pos.add(forward));
+
+		var pDir = QuatUtil.rotate(MathUtil.V3D_POS_Z.multiply(5f), boltRotation);
+
+		BlasterUtil.fireBolt(getWorld(), player, pDir.normalize(), 100, distance -> (double)50, true, blasterBoltEntity -> {
+			blasterBoltEntity.setVelocity(pDir);
+			blasterBoltEntity.setPos(p.x, p.y, p.z);
+			blasterBoltEntity.setColor(ColorUtil.packHsv(0.98f, 1, 1));
+		});
+
+		getWorld().playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)getWorld().random.nextGaussian() / 10);
+
+		cannonState++;
+		setCannonState(cannonState);
+	}
+
+	public byte getCannonState()
+	{
+		return (byte)(getDataTracker().get(CANNON_BITS) & CANNON_STATE_MASK);
+	}
+
+	public void setCannonState(byte cannonState)
+	{
+		byte cannons = getDataTracker().get(CANNON_BITS);
+
+		cannons &= ~CANNON_STATE_MASK;
+		cannons |= cannonState & CANNON_STATE_MASK;
+
+		getDataTracker().set(CANNON_BITS, cannons);
 	}
 
 	@Override

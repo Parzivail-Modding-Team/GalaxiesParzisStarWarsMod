@@ -2,11 +2,17 @@ package com.parzivail.pswg.entity.rigs;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.ship.RZ1Awing;
+import com.parzivail.util.generics.Make;
 import org.joml.Matrix4f;
+
+import java.util.HashSet;
 
 public class RigRZ1 extends ModelRig<RZ1Awing>
 {
 	public static final RigRZ1 INSTANCE = new RigRZ1();
+	public static final String CANNON_LEFT = "CannonLeft";
+	public static final String CANNON_RIGHT = "CannonRight";
+	public static final HashSet<String> CANNONS = Make.hashSet(CANNON_LEFT, CANNON_RIGHT);
 
 	protected RigRZ1()
 	{
