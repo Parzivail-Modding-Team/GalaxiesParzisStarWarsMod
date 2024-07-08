@@ -1,8 +1,10 @@
 package com.parzivail.pswg.entity.ship;
 
+import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.rigs.RigRZ1;
 import com.parzivail.pswg.features.blasters.BlasterUtil;
+import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.collision.CapsuleVolume;
 import com.parzivail.util.entity.collision.ICollisionVolume;
 import com.parzivail.util.entity.collision.IComplexEntityHitbox;
@@ -17,10 +19,17 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
+
+import java.util.function.Function;
 
 public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 {
@@ -72,6 +81,60 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 		super.writeCustomDataToNbt(tag);
 
 		tag.putByte("cannonState", getCannonState());
+	}
+
+	@Override
+	public void tick()
+	{
+		super.tick();
+
+		if (getWorld().isClient)
+		{
+
+			var stack = new Transform();
+
+			float maxDistance = 10;
+			var velocityLength = getVelocity().length();
+			var rayDir = MathUtil.V3D_NEG_Y;
+			int maxParticles = (int)(15 * velocityLength * velocityLength);
+			var steps = (5 * velocityLength + 1);
+
+			for (var cannon : RigRZ1.CANNONS)
+				spawnWakeParticles(maxDistance, (dt) -> RigRZ1.INSTANCE.getWorldPosition(stack, this, getViewRotation(dt), cannon, dt).add(this.getLerpedPos(dt)), velocityLength, rayDir, maxParticles, steps);
+			for (var engine : RigRZ1.ENGINES)
+				spawnWakeParticles(maxDistance, (dt) -> RigRZ1.INSTANCE.getWorldPosition(stack, this, getViewRotation(dt), engine, dt).add(this.getLerpedPos(dt)), velocityLength, rayDir, maxParticles, steps);
+		}
+	}
+
+	private void spawnWakeParticles(float maxDistance, Function<Float, Vec3d> sourcePosSupplier, double velocityLength, Vec3d rayDir, int maxParticles, double steps)
+	{
+		var velSquared = velocityLength * velocityLength;
+
+		var ddt = 1 / steps;
+		for (var dt = 0f; dt <= 1; dt += ddt)
+		{
+			var sourcePos = sourcePosSupplier.apply(dt);
+			var blockHit = EntityUtil.raycastBlocks(sourcePos, rayDir, maxDistance, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.ANY);
+			if (blockHit.getType() != HitResult.Type.MISS)
+			{
+				var state = getWorld().getBlockState(blockHit.getBlockPos());
+				var particle = state.getFluidState().isIn(FluidTags.WATER) ? SwgParticleTypes.WATER_WAKE : new BlockStateParticleEffect(SwgParticleTypes.WAKE, state);
+
+				var hitPos = blockHit.getPos();
+				var dist = Math.max(hitPos.distanceTo(sourcePos), 0.5f);
+				var count = (MathHelper.clamp(15 / dist, 0, maxParticles)) / steps;
+
+				var lateralVelocity = velSquared / (3.24 * dist);
+				var verticalVelocity = velSquared / (6.25 * dist);
+
+				for (int i = 0; i < count; i++)
+				{
+					if (this.random.nextFloat() * 2 > velocityLength)
+						continue;
+					this.getWorld().addParticle(particle, hitPos.x + this.random.nextGaussian() / 4, hitPos.y, hitPos.z + this.random.nextGaussian() / 4, lateralVelocity, verticalVelocity, lateralVelocity);
+				}
+			}
+		}
 	}
 
 	@Override
