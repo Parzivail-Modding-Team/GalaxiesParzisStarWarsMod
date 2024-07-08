@@ -76,6 +76,14 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	}
 
 	@Override
+	protected void readCustomDataFromNbt(NbtCompound tag)
+	{
+		super.readCustomDataFromNbt(tag);
+
+		setCannonState(tag.getByte("cannonState"));
+	}
+
+	@Override
 	protected void writeCustomDataToNbt(NbtCompound tag)
 	{
 		super.writeCustomDataToNbt(tag);
