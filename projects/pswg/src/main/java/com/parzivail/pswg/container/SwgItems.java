@@ -679,7 +679,9 @@ public class SwgItems
 		@RegistryName("spawn_xwing_t65b")
 		@TarkinItem
 		public static final Item XwingT65b = new SpawnEntityItem(SwgEntities.Ship.T65bXwing, new Item.Settings(), 3);
-
+		@RegistryName("spawn_awing_rz1")
+		@TarkinItem
+		public static final Item AwingRZ1 = new SpawnEntityItem(SwgEntities.Ship.RZ1Awing, new Item.Settings(), 3);
 		@RegistryName("spawn_landspeeder_x34")
 		@TarkinItem
 		public static final Item LandspeederX34 = new SpawnEntityItem(SwgEntities.Speeder.X34, new Item.Settings(), 0);

@@ -13,6 +13,8 @@ import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import com.parzivail.util.math.Transform;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -92,13 +94,18 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	}
 
 	@Override
+	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
+	{
+		return 0f;
+	}
+
+	@Override
 	public void tick()
 	{
 		super.tick();
 
 		if (getWorld().isClient)
 		{
-
 			var stack = new Transform();
 
 			float maxDistance = 10;
