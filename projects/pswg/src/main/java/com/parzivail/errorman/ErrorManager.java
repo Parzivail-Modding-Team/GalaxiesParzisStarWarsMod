@@ -8,16 +8,13 @@ import com.parzivail.util.client.model.compat.FmlCompat;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.util.crash.CrashReport;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
@@ -27,7 +24,7 @@ public class ErrorManager
 	public static final Lumberjack LOG = new Lumberjack("errorman");
 
 	private static final Gson GSON = new Gson();
-	private static final String ROLLBAR_API_ENDPOINT = "https://api.rollbar.com/api/1/item/";
+	private static final URI ROLLBAR_API_ENDPOINT = URI.create("https://api.rollbar.com/api/1/item/");
 	private static final String ROLLBAR_CLIENT_TOKEN = "d9b378407e67416bad536678502410d1";
 
 	public static void onCrash(CrashReport report)
@@ -140,7 +137,7 @@ public class ErrorManager
 				continue;
 
 			var filename = paths.get(0).getFileName().toString();
-			modSet.put(meta.getId(), String.format("%s!%s", meta.getVersion().getFriendlyString(), filename));
+			modSet.put(meta.getId(), meta.getVersion().getFriendlyString() + '!' + filename);
 		}
 
 		LOG.warn("Found %s mods (pswg: %s)", modSet.size(), pswgVersion);
@@ -200,40 +197,38 @@ public class ErrorManager
 
 		LOG.warn("Posting error to Rollbar");
 
-		try (var httpclient = HttpClients.createDefault())
+		try
 		{
-			HttpPost httppost = new HttpPost(ROLLBAR_API_ENDPOINT);
-			httppost.addHeader("X-Rollbar-Access-Token", ROLLBAR_CLIENT_TOKEN);
-			httppost.addHeader("Accept", "application/json");
-			httppost.setEntity(new StringEntity(requestJson, ContentType.APPLICATION_JSON));
+			var httpclient = HttpClient.newBuilder().connectTimeout(Duration.ofMinutes(1)).build();
 
 			LOG.warn("Executing request to Rollbar");
 
-			HttpResponse response = httpclient.execute(httppost);
+			var response = httpclient.send(HttpRequest.newBuilder()
+			                                          .uri(ROLLBAR_API_ENDPOINT)
+			                                          .POST(HttpRequest.BodyPublishers.ofString(requestJson))
+			                                          .setHeader("X-Rollbar-Access-Token", ROLLBAR_CLIENT_TOKEN)
+			                                          .setHeader("Accept", "application/json")
+			                                          .setHeader("Content-Type", "application/json")
+			                                          .build(), HttpResponse.BodyHandlers.ofString());
 
 			LOG.warn("Executed post");
 
-			HttpEntity entity = response.getEntity();
+			LOG.warn("Response entity: %s", response);
 
-			LOG.warn("Response entity: %s", entity);
-
-			if (entity != null)
+			if (response.body() != null)
 			{
 				LOG.warn("Reading entity stream");
 
-				try (InputStream instream = entity.getContent())
-				{
-					var rollbarResponse = GSON.fromJson(new InputStreamReader(instream), RollbarResponse.class);
+				var rollbarResponse = GSON.fromJson(response.body(), RollbarResponse.class);
 
-					LOG.warn("Response: %s", rollbarResponse);
+				LOG.warn("Response: %s", rollbarResponse);
 
-					var section = report.addElement("PSWG Crash Submission Details");
-					section.add("Status", rollbarResponse.err());
-					if (rollbarResponse.result() != null)
-						section.add("Report ID", rollbarResponse.result().uuid());
-					else if (rollbarResponse.message() != null)
-						section.add("Error Message", rollbarResponse.message());
-				}
+				var section = report.addElement("PSWG Crash Submission Details");
+				section.add("Status", rollbarResponse.err());
+				if (rollbarResponse.result() != null)
+					section.add("Report ID", rollbarResponse.result().uuid());
+				else if (rollbarResponse.message() != null)
+					section.add("Error Message", rollbarResponse.message());
 			}
 		}
 		catch (Throwable t)
