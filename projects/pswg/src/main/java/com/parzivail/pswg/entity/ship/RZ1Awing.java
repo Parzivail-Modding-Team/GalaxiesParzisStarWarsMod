@@ -1,5 +1,6 @@
 package com.parzivail.pswg.entity.ship;
 
+import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.rigs.RigRZ1;
@@ -64,6 +65,8 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	private static final int CANNON_STATE_MASK = 0b00000001;
 	private static final String[] CANNON_ORDER = { RigRZ1.CANNON_LEFT, RigRZ1.CANNON_RIGHT };
 	private static final TrackedData<Byte> LANDING_GEAR_ANIM = DataTracker.registerData(RZ1Awing.class, TrackedDataHandlerRegistry.BYTE);
+	public static final int GEAR_ANIM_LENGTH = 30;
+	public byte prevGearAnim;
 
 	public RZ1Awing(EntityType<?> type, World world)
 	{
@@ -75,12 +78,15 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	{
 		super.initDataTracker();
 		getDataTracker().startTracking(CANNON_BITS, (byte)0);
+		getDataTracker().startTracking(LANDING_GEAR_ANIM, (byte)0);
 	}
 
 	@Override
 	protected void readCustomDataFromNbt(NbtCompound tag)
 	{
 		super.readCustomDataFromNbt(tag);
+
+		dataTracker.set(LANDING_GEAR_ANIM, tag.getByte("wingAnim"));
 
 		setCannonState(tag.getByte("cannonState"));
 	}
@@ -90,7 +96,14 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	{
 		super.writeCustomDataToNbt(tag);
 
+		tag.putByte("gearAnim", dataTracker.get(LANDING_GEAR_ANIM));
+
 		tag.putByte("cannonState", getCannonState());
+	}
+
+	public byte getGearAnim()
+	{
+		return dataTracker.get(LANDING_GEAR_ANIM);
 	}
 
 	@Override
@@ -104,7 +117,13 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	{
 		super.tick();
 
-		if (getWorld().isClient)
+		if (!getWorld().isClient)
+		{
+			var controls = getControls();
+
+			tickControlledAnim(LANDING_GEAR_ANIM, (byte)GEAR_ANIM_LENGTH, controls.contains(ShipControls.SPECIAL1));
+		}
+		else
 		{
 			var stack = new Transform();
 
