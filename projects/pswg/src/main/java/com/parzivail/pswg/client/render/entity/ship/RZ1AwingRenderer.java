@@ -28,7 +28,6 @@ public class RZ1AwingRenderer extends ShipRenderer<RZ1Awing>
 
 		modelRef.render(matrix, vertexConsumer, entity, RigRZ1.INSTANCE::getPartTransformation, light, tickDelta, 255, 255, 255, 255);
 	}
-
 	@Override
 	public Identifier getTexture(RZ1Awing entity)
 	{

@@ -3,6 +3,7 @@ package com.parzivail.pswg.mixin;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.client.render.camera.CameraHelper;
 import com.parzivail.pswg.client.render.player.features.ForceFeatureRenderer;
+import com.parzivail.pswg.entity.ship.RZ1Awing;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
@@ -44,5 +45,14 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	private void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci, PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel)
 	{
 		ArmorRenderer.renderArm(matrices, vertexConsumers, light, player, arm, sleeve, ci, playerEntityModel);
+	}
+
+	@Inject(method = "setupTransforms(Lnet/minecraft/client/network/AbstractClientPlayerEntity;Lnet/minecraft/client/util/math/MatrixStack;FFF)V", at = @At("HEAD"))
+	private void setupTransforms(AbstractClientPlayerEntity abstractClientPlayerEntity, MatrixStack matrixStack, float f, float g, float h, CallbackInfo ci)
+	{
+		if (abstractClientPlayerEntity.getRootVehicle() instanceof RZ1Awing awing)
+		{
+			matrixStack.multiply(awing.getRotation());
+		}
 	}
 }

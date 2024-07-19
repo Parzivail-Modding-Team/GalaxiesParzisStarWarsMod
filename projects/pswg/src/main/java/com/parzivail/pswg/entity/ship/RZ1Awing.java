@@ -14,6 +14,7 @@ import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import com.parzivail.util.math.Transform;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -26,11 +27,13 @@ import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.function.Function;
 
@@ -65,7 +68,7 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	private static final int CANNON_STATE_MASK = 0b00000001;
 	private static final String[] CANNON_ORDER = { RigRZ1.CANNON_LEFT, RigRZ1.CANNON_RIGHT };
 	private static final TrackedData<Byte> LANDING_GEAR_ANIM = DataTracker.registerData(RZ1Awing.class, TrackedDataHandlerRegistry.BYTE);
-	public static final int GEAR_ANIM_LENGTH = 30;
+	public static final int GEAR_ANIM_LENGTH = 40;
 	public byte prevGearAnim;
 
 	public RZ1Awing(EntityType<?> type, World world)
@@ -86,7 +89,7 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	{
 		super.readCustomDataFromNbt(tag);
 
-		dataTracker.set(LANDING_GEAR_ANIM, tag.getByte("wingAnim"));
+		dataTracker.set(LANDING_GEAR_ANIM, tag.getByte("gearAnim"));
 
 		setCannonState(tag.getByte("cannonState"));
 	}
@@ -107,15 +110,29 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	}
 
 	@Override
-	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
+	public boolean usePlayerPerspective()
 	{
-		return 0f;
+		return true;
+	}
+
+	@Override
+	public Vec3d getPassengerSocket(int passengerIndex)
+	{
+		return new Vec3d(0, -1, 0);
+	}
+
+	@Override
+	protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater)
+	{
+		//passenger.setHeadYaw(getHeadYaw());
+		super.updatePassengerPosition(passenger, positionUpdater);
 	}
 
 	@Override
 	public void tick()
 	{
 		super.tick();
+		prevGearAnim = dataTracker.get(LANDING_GEAR_ANIM);
 
 		if (!getWorld().isClient)
 		{

@@ -31,7 +31,11 @@ public class RigRZ1 extends ModelRig<RZ1Awing>
 	public static final String LEG_FRONT_BOTTOM = "FrontLegBottom";
 	public static final String LEG_RIGHT_BOTTOM = "RightLegBottom";
 	public static final String LEG_LEFT_BOTTOM = "LeftLegBottom";
-	public static final HashSet<String> LEG_BOTTOM = Make.hashSet(LEG_FRONT_BOTTOM, LEG_RIGHT_BOTTOM, LEG_LEFT_BOTTOM, LEG_FRONT_MID, LEG_RIGHT_MID, LEG_LEFT_MID, LEG_FRONT_TOP, LEG_RIGHT_TOP, LEG_LEFT_TOP);
+	public static final HashSet<String> LEG_BOTTOM = Make.hashSet(LEG_FRONT_BOTTOM, LEG_RIGHT_BOTTOM, LEG_LEFT_BOTTOM);
+	public static final String TRAPDOOR_FRONT = "FrontTrapdoor";
+	public static final String TRAPDOOR_RIGHT = "RightTrapdoor";
+	public static final String TRAPDOOR_LEFT = "LeftTrapdoor";
+	public static final HashSet<String> TRAPDOOR = Make.hashSet(TRAPDOOR_FRONT, TRAPDOOR_RIGHT, TRAPDOOR_LEFT);
 
 	protected RigRZ1()
 	{
@@ -42,7 +46,7 @@ public class RigRZ1 extends ModelRig<RZ1Awing>
 	public Matrix4f getPartTransformation(RZ1Awing target, String part, float tickDelta)
 	{
 		Matrix4f matrix4f = new Matrix4f();
-		if (LEG_BOTTOM.contains(part))
+		if (LEG_BOTTOM.contains(part) || LEG_MID.contains(part) || LEG_TOP.contains(part) || TRAPDOOR.contains(part))
 		{
 			var gearAnim = target.getGearAnim();
 			var gearTimer = TrackedAnimationValue.getTimer(gearAnim, target.prevGearAnim, tickDelta);
@@ -52,13 +56,16 @@ public class RigRZ1 extends ModelRig<RZ1Awing>
 			if (TrackedAnimationValue.isPositiveDirection(gearAnim))
 				timer = 1 - timer;
 
-			var legAngle = 1 * timer;
-
 			switch (part)
 			{
-				case LEG_FRONT_MID, LEG_RIGHT_MID, LEG_LEFT_MID, LEG_FRONT_TOP, LEG_FRONT_BOTTOM, LEG_RIGHT_BOTTOM, LEG_LEFT_BOTTOM ->
-						matrix4f.rotateX(MathUtil.toRadians(-legAngle));
-				case LEG_LEFT_TOP, LEG_RIGHT_TOP -> matrix4f.rotateX(MathUtil.toRadians(legAngle));
+				case LEG_FRONT_BOTTOM -> matrix4f.rotateX(MathUtil.toRadians(-5.5f * timer));
+				case LEG_RIGHT_BOTTOM, LEG_LEFT_BOTTOM -> matrix4f.rotateX(MathUtil.toRadians(45f * timer));
+				case LEG_FRONT_MID -> matrix4f.rotateX(MathUtil.toRadians(115 * timer));
+				case LEG_RIGHT_MID, LEG_LEFT_MID -> matrix4f.rotateX(MathUtil.toRadians(-115 * timer));
+				case LEG_FRONT_TOP -> matrix4f.rotateX(MathUtil.toRadians(-100 * timer));
+				case LEG_LEFT_TOP, LEG_RIGHT_TOP -> matrix4f.rotateX(MathUtil.toRadians(70 * timer));
+				case TRAPDOOR_FRONT -> matrix4f.rotateX(MathUtil.toRadians(119 * timer));
+				case TRAPDOOR_RIGHT, TRAPDOOR_LEFT -> matrix4f.rotateX(MathUtil.toRadians(-110.1f * timer));
 				default -> throw new IndexOutOfBoundsException();
 			}
 		}
