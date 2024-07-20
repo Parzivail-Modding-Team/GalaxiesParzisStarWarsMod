@@ -197,10 +197,8 @@ public class ErrorManager
 
 		LOG.warn("Posting error to Rollbar");
 
-		try
+		try (var httpclient = HttpClient.newBuilder().connectTimeout(Duration.ofMinutes(1)).build())
 		{
-			var httpclient = HttpClient.newBuilder().connectTimeout(Duration.ofMinutes(1)).build();
-
 			LOG.warn("Executing request to Rollbar");
 
 			var response = httpclient.send(HttpRequest.newBuilder()
