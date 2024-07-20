@@ -23,7 +23,6 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 		}
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	public void compile(OutputStream f, boolean writeVertexData) throws IOException, P3diCompileException
 	{
 		try (var bw = new LittleEndianDataOutputStream(f))
@@ -53,7 +52,6 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 		}
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	private void writeSocketTransform(LittleEndianDataOutputStream bw, float[][] t) throws IOException
 	{
 		var mat = new Matrix4f(
@@ -92,7 +90,6 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 		bw.writeFloat(mat.m33());
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	private void writeMesh(LittleEndianDataOutputStream bw, P3diMesh mesh, boolean writeVertexData) throws IOException, P3diCompileException
 	{
 		bw.write(mesh.name().getBytes(StandardCharsets.US_ASCII));
@@ -132,7 +129,6 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 			writeMesh(bw, child, writeVertexData);
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	private void writeVertex(LittleEndianDataOutputStream bw, P3diVertex vertex) throws IOException
 	{
 		writeVec3(bw, vertex.v());
@@ -142,7 +138,6 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 			bw.writeFloat(vertex.t()[i]);
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	private void writeVec3(LittleEndianDataOutputStream bw, float[] v) throws IOException
 	{
 		bw.writeFloat(v[0]); // X
@@ -172,7 +167,6 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 		}
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	private void writeMeshTransform(LittleEndianDataOutputStream bw, float[][] t) throws IOException
 	{
 		var mat = new Matrix4f(
