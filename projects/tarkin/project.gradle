@@ -10,6 +10,8 @@ dependencies {
 	include("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}")
 
 	// Trinkets
-	modImplementation("dev.emi:trinkets:${trinkets_version}")
+	modImplementation("dev.emi:trinkets:${trinkets_version}") {
+		exclude(group: "org.ladysnake.cardinal-components-api") // pswg already pulls in CCA, this would pull in an older version otherwise
+	}
 	include("dev.emi:trinkets:${trinkets_version}")
 }
