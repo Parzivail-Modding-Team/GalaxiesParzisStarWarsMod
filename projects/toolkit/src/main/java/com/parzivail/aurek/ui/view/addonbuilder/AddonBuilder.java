@@ -141,10 +141,10 @@ public class AddonBuilder extends ImguiScreen
 						ImGui.tableNextColumn();
 						ImGui.textDisabled(feature.getId().toString());
 						ImGui.tableNextColumn();
-						if (ImGui.button("%s##edit%s".formatted(AurekIconFont.greasepencil, i), frameSize, frameSize))
+						if (ImGui.button(AurekIconFont.greasepencil + "##edit" + i, frameSize, frameSize))
 							currentEditingFeature = feature;
 						ImGui.sameLine();
-						if (ImGui.button("%s##delete%s".formatted(AurekIconFont.panel_close, i), frameSize, frameSize))
+						if (ImGui.button(AurekIconFont.panel_close + "##delete" + i, frameSize, frameSize))
 						{
 							// TODO: ask first
 							delete.run();
@@ -228,7 +228,7 @@ public class AddonBuilder extends ImguiScreen
 				{
 					ImGuiHelper.loopWithDelete(project.addonAuthors, (delete, i, author) ->
 					{
-						if (ImGui.button("-##removeAuthor%s".formatted(i), buttonSize, buttonSize))
+						if (ImGui.button("-##removeAuthor" + i, buttonSize, buttonSize))
 							delete.run();
 
 						ImGui.sameLine();
@@ -304,7 +304,7 @@ public class AddonBuilder extends ImguiScreen
 				}
 
 				// TODO: allow selection of default localization ID
-				FileUtil.zip(zip, gson, lang, "assets/%s/lang/en_us.json".formatted(domain));
+				FileUtil.zip(zip, gson, lang, "assets/" + domain + "/lang/en_us.json");
 			}
 		}
 		catch (Exception e)

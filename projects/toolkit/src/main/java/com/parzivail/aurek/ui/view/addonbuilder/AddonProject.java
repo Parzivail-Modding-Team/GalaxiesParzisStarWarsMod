@@ -19,13 +19,13 @@ public class AddonProject
 	public AddonProject()
 	{
 		var username = MinecraftClient.getInstance().getSession().getUsername();
-		addonId = new ImString("%s-pswg-addon".formatted(username), 32);
+		addonId = new ImString(username + "-pswg-addon", 32);
 
 		addonAuthors.add(username);
 	}
 
 	public String getId(String path)
 	{
-		return "%s:%s".formatted(addonId.get(), path);
+		return addonId.get() + ':' + path;
 	}
 }

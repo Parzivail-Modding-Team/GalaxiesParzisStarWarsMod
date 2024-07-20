@@ -21,8 +21,8 @@ public class TypeExpression extends Expression
 	public String toString()
 	{
 		if (typeArgs.isEmpty())
-			return String.format("(%s%s)", typeName.value, nullable ? "?" : "");
+			return "(" + typeName.value + (nullable ? "?" : "") + ")";
 
-		return String.format("(%s<%s>%s)", typeName.value, typeArgs.stream().map(TypeExpression::toString).collect(Collectors.joining(", ")), nullable ? "?" : "");
+		return "(" + typeName.value + "<" + typeArgs.stream().map(TypeExpression::toString).collect(Collectors.joining(", ")) + ">" + (nullable ? "?" : "") + ")";
 	}
 }

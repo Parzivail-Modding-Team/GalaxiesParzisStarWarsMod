@@ -13,6 +13,6 @@ public class NullConditionalExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("((%s)?)", value);
+		return "((" + value + ")?)";
 	}
 }

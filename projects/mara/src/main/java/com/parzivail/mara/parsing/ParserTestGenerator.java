@@ -29,120 +29,122 @@ public class ParserTestGenerator
 
 	private static void printExpression(StringBuilder s, Expression e, int tabLevel)
 	{
-		s.append("\t".repeat(tabLevel));
+		s.repeat('\t', tabLevel);
 
-		if (e instanceof NumericExpression ne)
-			switch (ne.value.type)
+		switch (e)
+		{
+			case NumericExpression ne ->
 			{
-				case DecimalLiteral -> s.append(String.format("decimal(\"%s\")", ne.value.value));
-				case HexLiteral -> s.append(String.format("hex(\"%s\")", ne.value.value));
-				default -> s.append(String.format("number(TokenType.%s, \"%s\")", ne.value.type, ne.value.value));
+				switch (ne.value.type)
+				{
+					case DecimalLiteral -> s.append("decimal(\"").append(ne.value.value).append("\")");
+					case HexLiteral -> s.append("hex(\"").append(ne.value.value).append("\")");
+					default -> s.append("number(TokenType.").append(ne.value.type).append(", \"").append(ne.value.value).append("\")");
+				}
 			}
-		else if (e instanceof BooleanLiteralExpression ble)
-			s.append(String.format("bool(TokenType.%s)", ble.value.type));
-		else if (e instanceof IdentifierExpression ie)
-			s.append(String.format("id(\"%s\")", ie.value.value));
-		else if (e instanceof AssignmentExpression ae)
-		{
-			s.append("assignment(\n");
-			printExpression(s, ae.left, tabLevel + 1);
-			s.append(",\n");
-			printExpression(s, ae.right, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof ConditionalExpression ce)
-		{
-			s.append("ternary(\n");
-			printExpression(s, ce.conditional, tabLevel + 1);
-			s.append(",\n");
-			printExpression(s, ce.truthy, tabLevel + 1);
-			s.append(",\n");
-			printExpression(s, ce.falsy, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof IndexerExpression ie)
-		{
-			s.append("indexer(\n");
-			printExpression(s, ie.expression, tabLevel + 1);
-			s.append(",\n");
-			printExpression(s, ie.indexer, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof UnaryExpression ue)
-		{
-			s.append("unary(\n");
-			s.append("\t".repeat(tabLevel + 1)).append(String.format("TokenType.%s,\n", ue.operator.type));
-			printExpression(s, ue.expression, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof PreArithmeticExpression pae)
-		{
-			s.append("pre(\n");
-			s.append("\t".repeat(tabLevel + 1)).append(String.format("TokenType.%s,\n", pae.operator.type));
-			printExpression(s, pae.root, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof PostArithmeticExpression pae)
-		{
-			s.append("post(\n");
-			s.append("\t".repeat(tabLevel + 1)).append(String.format("TokenType.%s,\n", pae.operator.type));
-			printExpression(s, pae.root, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof BinaryExpression be)
-		{
-			s.append("binary(\n");
-			printExpression(s, be.left, tabLevel + 1);
-			s.append(",\n");
-			s.append("\t".repeat(tabLevel + 1)).append(String.format("TokenType.%s,\n", be.operator.type));
-			printExpression(s, be.right, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof MemberAccessExpression mae)
-		{
-			s.append("member(\n");
-			printExpression(s, mae.root, tabLevel + 1);
-			s.append(",\n");
-			printExpression(s, mae.member, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof InvocationExpression ie)
-		{
-			s.append("invoke(\n");
-			printExpression(s, ie.identifier, tabLevel + 1);
-			for (var param : ie.parameters)
+			case BooleanLiteralExpression ble -> s.append("bool(TokenType.").append(ble.value.type).append(')');
+			case IdentifierExpression ie -> s.append("id(\"").append(ie.value.value).append("\")");
+			case AssignmentExpression ae ->
 			{
+				s.append("assignment(\n");
+				printExpression(s, ae.left, tabLevel + 1);
 				s.append(",\n");
-				printExpression(s, param, tabLevel + 1);
+				printExpression(s, ae.right, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
 			}
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof TypeExpression te)
-		{
-			s.append("type(\n");
-			printExpression(s, te.typeName, tabLevel + 1);
-			for (var param : te.typeArgs)
+			case ConditionalExpression ce ->
 			{
+				s.append("ternary(\n");
+				printExpression(s, ce.conditional, tabLevel + 1);
 				s.append(",\n");
-				printExpression(s, param, tabLevel + 1);
+				printExpression(s, ce.truthy, tabLevel + 1);
+				s.append(",\n");
+				printExpression(s, ce.falsy, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
 			}
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
+			case IndexerExpression ie ->
+			{
+				s.append("indexer(\n");
+				printExpression(s, ie.expression, tabLevel + 1);
+				s.append(",\n");
+				printExpression(s, ie.indexer, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case UnaryExpression ue ->
+			{
+				s.append("unary(\n");
+				s.repeat('\t', tabLevel + 1).append("TokenType.").append(ue.operator.type).append(",\n");
+				printExpression(s, ue.expression, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case PreArithmeticExpression pae ->
+			{
+				s.append("pre(\n");
+				s.repeat('\t', tabLevel + 1).append("TokenType.").append(pae.operator.type).append(",\n");
+				printExpression(s, pae.root, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case PostArithmeticExpression pae ->
+			{
+				s.append("post(\n");
+				s.repeat('\t', tabLevel + 1).append("TokenType.").append(pae.operator.type).append(",\n");
+				printExpression(s, pae.root, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case BinaryExpression be ->
+			{
+				s.append("binary(\n");
+				printExpression(s, be.left, tabLevel + 1);
+				s.append(",\n");
+				s.repeat('\t', tabLevel + 1).append("TokenType.").append(be.operator.type).append(",\n");
+				printExpression(s, be.right, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case MemberAccessExpression mae ->
+			{
+				s.append("member(\n");
+				printExpression(s, mae.root, tabLevel + 1);
+				s.append(",\n");
+				printExpression(s, mae.member, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case InvocationExpression ie ->
+			{
+				s.append("invoke(\n");
+				printExpression(s, ie.identifier, tabLevel + 1);
+				for (var param : ie.parameters)
+				{
+					s.append(",\n");
+					printExpression(s, param, tabLevel + 1);
+				}
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case TypeExpression te ->
+			{
+				s.append("type(\n");
+				printExpression(s, te.typeName, tabLevel + 1);
+				for (var param : te.typeArgs)
+				{
+					s.append(",\n");
+					printExpression(s, param, tabLevel + 1);
+				}
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case CastExpression ce ->
+			{
+				s.append("cast(\n");
+				printExpression(s, ce.type, tabLevel + 1);
+				s.append(",\n");
+				printExpression(s, ce.value, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			case NullConditionalExpression ce ->
+			{
+				s.append("nullCond(\n");
+				printExpression(s, ce.value, tabLevel + 1);
+				s.append('\n').repeat('\t', tabLevel).append(')');
+			}
+			default -> throw new RuntimeException();
 		}
-		else if (e instanceof CastExpression ce)
-		{
-			s.append("cast(\n");
-			printExpression(s, ce.type, tabLevel + 1);
-			s.append(",\n");
-			printExpression(s, ce.value, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else if (e instanceof NullConditionalExpression ce)
-		{
-			s.append("nullCond(\n");
-			printExpression(s, ce.value, tabLevel + 1);
-			s.append("\n").append("\t".repeat(tabLevel)).append(")");
-		}
-		else
-			throw new RuntimeException();
 	}
 }

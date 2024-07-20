@@ -60,7 +60,7 @@ public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stre
 		}
 		catch (IOException e)
 		{
-			var crashReport = CrashReport.create(e, String.format("Could not load structure: %s", filename));
+			var crashReport = CrashReport.create(e, "Could not load structure: " + filename);
 			throw new CrashException(crashReport);
 		}
 	}

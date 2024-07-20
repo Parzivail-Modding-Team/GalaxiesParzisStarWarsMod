@@ -15,6 +15,6 @@ public class IndexerExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("(%s)[(%s)]", expression, indexer);
+		return "(" + expression + ")[(" + indexer + ")]";
 	}
 }

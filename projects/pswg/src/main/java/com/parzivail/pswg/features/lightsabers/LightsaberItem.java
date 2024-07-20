@@ -217,7 +217,7 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 
 	public static String getTranslationKey(Identifier hiltId)
 	{
-		return "item.%s.lightsaber.%s".formatted(hiltId.getNamespace(), hiltId.getPath());
+		return "item." + hiltId.getNamespace() + ".lightsaber." + hiltId.getPath();
 	}
 
 	@Override

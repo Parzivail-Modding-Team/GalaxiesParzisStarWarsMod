@@ -17,6 +17,6 @@ public class UnaryExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("([%s]%s)", operator.type, expression);
+		return "([" + operator.type + "]" + expression + ")";
 	}
 }

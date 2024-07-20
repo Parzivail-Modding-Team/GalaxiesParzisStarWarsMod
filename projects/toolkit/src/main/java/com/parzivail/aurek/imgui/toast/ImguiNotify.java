@@ -72,7 +72,7 @@ public class ImguiNotify
 			ImGui.pushStyleColor(ImGuiCol.Separator, 0.43f, 0.43f, 0.5f, 0.5f * opacity);
 
 			// Generate new unique name for this toast
-			var window_name = String.format("##TOAST%d", i);
+			var window_name = "##TOAST" + i;
 
 			//PushStyleColor(ImGuiCol_Text, text_color);
 			ImGui.setNextWindowBgAlpha(opacity);

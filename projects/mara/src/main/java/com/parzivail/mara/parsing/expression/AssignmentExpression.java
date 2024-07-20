@@ -15,6 +15,6 @@ public class AssignmentExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("(%s = %s)", left, right);
+		return "(" + left + " = " + right + ")";
 	}
 }

@@ -22,7 +22,7 @@ public record FabricModJson(int schemaVersion, String id, String version, String
 
 		var pswgContainer = FabricLoader.getInstance().getModContainer(Resources.MODID).orElseThrow(() -> new RuntimeException("Could not get PSWG mod container"));
 		if (!FabricLoader.getInstance().isDevelopmentEnvironment() && pswgContainer.getMetadata().getVersion() instanceof SemanticVersion pswgVersion)
-			depends.put(Resources.MODID, String.format(">=%s", pswgVersion));
+			depends.put(Resources.MODID, ">=" + pswgVersion);
 		else
 			depends.put(Resources.MODID, "*");
 

@@ -7,14 +7,14 @@ public class TokenizeException extends RuntimeException
 
 	public TokenizeException(String message, char token, int location)
 	{
-		super(String.format("['%s' @ %s] %s", token, location, message));
+		super("['" + token + "' @ " + location + "] " + message);
 		this.message = message;
 		this.location = location;
 	}
 
 	public TokenizeException(String message, int location)
 	{
-		super(String.format("[@ %s] %s", location, message));
+		super("[@ " + location + "] " + message);
 		this.message = message;
 		this.location = location;
 	}

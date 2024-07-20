@@ -14,7 +14,7 @@ public class PlayerSocket
 
 	private static String getSocketId(PlayerEntity player, String socketName)
 	{
-		return "%s/%s".formatted(player.getId(), socketName);
+		return player.getId() + "/" + socketName;
 	}
 
 	public static void save(PlayerEntity player, String socketName, MatrixStack matrices, Vector3f normal)

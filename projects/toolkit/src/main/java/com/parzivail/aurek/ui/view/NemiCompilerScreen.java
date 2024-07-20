@@ -108,7 +108,7 @@ public class NemiCompilerScreen extends ImguiScreen
 			var file = Path.of(path);
 			Files.deleteIfExists(file);
 			NbtIo.write(nem, file);
-			ToolkitClient.NOTIFIER.success("NEM Compiler", String.format("Exported NEM model as \"%s\"", path));
+			ToolkitClient.NOTIFIER.success("NEM Compiler", "Exported NEM model as \"" + path + "\"");
 		}
 		catch (Exception e)
 		{
@@ -130,19 +130,19 @@ public class NemiCompilerScreen extends ImguiScreen
 
 			try (var pw = new PrintWriter(Files.newBufferedWriter(file)))
 			{
-				pw.println(String.format("public class %s", project.getTitle()));
-				pw.println(String.format("public %s", project.getTitle()));
+				pw.println("public class " + project.getTitle());
+				pw.println("public " + project.getTitle());
 
 				var tex = nem.getCompound("tex");
-				pw.println(String.format("texWidth = %s;", tex.getInt("w")));
-				pw.println(String.format("texHeight = %s;", tex.getInt("h")));
+				pw.println("texWidth = " + tex.getInt("w") + ";");
+				pw.println("texHeight = " + tex.getInt("h") + ";");
 
 				var parts = nem.getCompound("parts");
 				for (var key : parts.getKeys())
 					printParts(pw, null, key, parts.getCompound(key));
 			}
 
-			ToolkitClient.NOTIFIER.success("NEM Compiler", String.format("Exported Blockbench Java model as \"%s\"", path));
+			ToolkitClient.NOTIFIER.success("NEM Compiler", "Exported Blockbench Java model as \"" + path + "\"");
 		}
 		catch (Exception e)
 		{
@@ -153,22 +153,16 @@ public class NemiCompilerScreen extends ImguiScreen
 
 	private void printParts(PrintWriter pw, String parent, String name, NbtCompound part)
 	{
-		pw.println(String.format("%s = new ModelRenderer(this);", name));
+		pw.println(name + " = new ModelRenderer(this);");
 
 		var pos = part.getCompound("pos");
-		pw.println(String.format("%s.setPos(%sF, %sF, %sF);", name, pos.getFloat("x"), pos.getFloat("y"), pos.getFloat("z")));
+		pw.println(name + ".setPos(" + pos.getFloat("x") + "F, " + pos.getFloat("y") + "F, " + pos.getFloat("z") + "F);");
 
 		if (parent != null)
-			pw.println(String.format("%s.addChild(%s);", parent, name));
+			pw.println(parent + ".addChild(" + name + ");");
 
 		var rot = part.getCompound("rot");
-		pw.println(String.format(
-				"setRotationAngle(%s, %sF, %sF, %sF);",
-				name,
-				rot.getFloat("pitch"),
-				rot.getFloat("yaw"),
-				rot.getFloat("roll")
-		));
+		pw.println("setRotationAngle(" + name + ", " + rot.getFloat("pitch") + "F, " + rot.getFloat("yaw") + "F, " + rot.getFloat("roll") + "F);");
 
 		var groupTex = part.getCompound("tex");
 

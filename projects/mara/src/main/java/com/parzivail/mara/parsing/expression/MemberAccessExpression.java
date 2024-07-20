@@ -15,6 +15,6 @@ public class MemberAccessExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("(%s).%s", root, member);
+		return "(" + root + ")." + member;
 	}
 }

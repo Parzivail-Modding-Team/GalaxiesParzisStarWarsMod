@@ -22,7 +22,7 @@ public class StateMachine
 			if (sah != null)
 			{
 				if (_states.put(sah.value(), method) != null)
-					throw new RuntimeException(String.format("Multiple handlers registered for state arrival %s", sah.value()));
+					throw new RuntimeException("Multiple handlers registered for state arrival " + sah.value());
 				method.setAccessible(true);
 			}
 		}

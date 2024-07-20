@@ -34,7 +34,8 @@ class DocGen
 		public void beginSection(String header)
 		{
 			this.level++;
-			out.printf("%s %s%n%n", "#".repeat(baseLevel + level), header);
+			out.println("#".repeat(baseLevel + level) + " " + header);
+			out.println();
 		}
 
 		public void endSection()
@@ -47,9 +48,10 @@ class DocGen
 
 		public void printCodeBlock(String language, String body)
 		{
-			out.printf("```%s%n", language);
+			out.println("```" + language);
 			out.println(body);
-			out.printf("```%n%n");
+			out.println("```");
+			out.println();
 		}
 
 		public void printTableHeader(String... headers)
@@ -108,7 +110,7 @@ class DocGen
 		if (node.isAnnotationPresent("Internal"))
 			return;
 
-		context.beginSection(String.format("Method: `%s`", node.getName()));
+		context.beginSection("Method: `" + node.getName() + "`");
 
 		context.out.println(trimCommentWrappedLines(doc.getDescription().toText()));
 		context.out.println();
@@ -126,7 +128,7 @@ class DocGen
 			for (var tag : doc.getBlockTags())
 			{
 				if (tag.getType() == JavadocBlockTag.Type.RETURN)
-					context.out.printf("* %s%n", tag.getContent().toText());
+					context.out.println("* " + tag.getContent().toText());
 			}
 
 			context.endSection();
@@ -142,7 +144,7 @@ class DocGen
 			context.printTableHeader("Parameter", "Description");
 
 		for (var tag : params)
-			context.printTableRow(String.format("`%s`", tag.getName().get()), trimCommentWrappedLines(tag.getContent().toText()));
+			context.printTableRow("`" + tag.getName().get() + "`", trimCommentWrappedLines(tag.getContent().toText()));
 	}
 
 	private static List<JavadocBlockTag> getJavadocParams(Javadoc doc)

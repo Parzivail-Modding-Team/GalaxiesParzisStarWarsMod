@@ -54,7 +54,7 @@ public class Resources
 	public static String container(ScreenHandlerType<?> handler)
 	{
 		var id = Registries.SCREEN_HANDLER.getId(handler);
-		return String.format("container.%s.%s", id.getNamespace(), id.getPath());
+		return id.toTranslationKey("container");
 	}
 
 	public static String command(String str)

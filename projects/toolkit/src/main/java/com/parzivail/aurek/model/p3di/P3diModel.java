@@ -120,7 +120,7 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 						writeVertex(bw, vertices[i]);
 				}
 				else
-					throw new P3diCompileException(String.format("Only triangles and quads supported, found %s-gon in object \"%s\"", vertices.length, mesh.name()));
+					throw new P3diCompileException("Only triangles and quads supported, found " + vertices.length + "-gon in object \"" + mesh.name() + '"');
 			}
 		}
 
@@ -151,20 +151,18 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 
 	private int getMaterial(String objectName, String materialName)
 	{
-		switch (materialName)
+		return switch (materialName)
 		{
-			case "MAT_DIFFUSE_OPAQUE":
-				return P3dModel.MAT_ID_DIFFUSE_OPAQUE;
-			case "MAT_DIFFUSE_CUTOUT":
-				return P3dModel.MAT_ID_DIFFUSE_CUTOUT;
-			case "MAT_DIFFUSE_TRANSLUCENT":
-				return P3dModel.MAT_ID_DIFFUSE_TRANSLUCENT;
-			case "MAT_EMISSIVE":
-				return P3dModel.MAT_ID_EMISSIVE;
-			default:
-				ToolkitClient.NOTIFIER.warn("P3Di Compiler", String.format("Unsupported material \"%s\" for object \"%s\", defaulting to DIFFUSE_CUTOUT", materialName, objectName));
-				return P3dModel.MAT_ID_DIFFUSE_CUTOUT;
-		}
+			case "MAT_DIFFUSE_OPAQUE" -> P3dModel.MAT_ID_DIFFUSE_OPAQUE;
+			case "MAT_DIFFUSE_CUTOUT" -> P3dModel.MAT_ID_DIFFUSE_CUTOUT;
+			case "MAT_DIFFUSE_TRANSLUCENT" -> P3dModel.MAT_ID_DIFFUSE_TRANSLUCENT;
+			case "MAT_EMISSIVE" -> P3dModel.MAT_ID_EMISSIVE;
+			default ->
+			{
+				ToolkitClient.NOTIFIER.warn("P3Di Compiler", "Unsupported material \"" + materialName + "\" for object \"" + objectName + "\", defaulting to DIFFUSE_CUTOUT");
+				yield P3dModel.MAT_ID_DIFFUSE_CUTOUT;
+			}
+		};
 	}
 
 	private void writeMeshTransform(LittleEndianDataOutputStream bw, float[][] t) throws IOException

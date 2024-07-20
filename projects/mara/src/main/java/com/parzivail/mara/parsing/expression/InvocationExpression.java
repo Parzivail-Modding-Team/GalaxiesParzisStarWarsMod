@@ -18,6 +18,6 @@ public class InvocationExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("(%s(%s))", identifier, parameters.stream().map(Expression::toString).collect(Collectors.joining(", ")));
+		return "(" + identifier + "(" + parameters.stream().map(Expression::toString).collect(Collectors.joining(", ")) + "))";
 	}
 }

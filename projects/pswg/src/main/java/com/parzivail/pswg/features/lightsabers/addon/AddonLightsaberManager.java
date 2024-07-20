@@ -70,7 +70,7 @@ public class AddonLightsaberManager extends ByteBufResourceReloader<AddonLightsa
 		return switch (schemaVersion)
 		{
 			case 1 -> Version1Schema.deserialize(buf);
-			default -> throw new RuntimeException("Unsupported lightsaber schema version: %s".formatted(schemaVersion));
+			default -> throw new RuntimeException("Unsupported lightsaber schema version: " + schemaVersion);
 		};
 	}
 }

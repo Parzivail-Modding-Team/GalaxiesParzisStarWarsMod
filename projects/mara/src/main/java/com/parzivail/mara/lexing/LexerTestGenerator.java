@@ -19,18 +19,15 @@ public class LexerTestGenerator
 			var tokens = t.getTokens();
 			var token = tokens.getLast();
 
-			if (token instanceof NumericToken nt)
-				System.out.printf("assertInt(tokenizer, \"%s\", TokenType.%s);%n", nt.value, nt.type);
-			else if (token instanceof FloatingPointToken fpt)
-				System.out.printf("assertFloat(tokenizer, \"%s\");%n", fpt.value);
-			else if (token instanceof IdentifierToken it)
-				System.out.printf("assertIdentifier(tokenizer, \"%s\");%n", it.value);
-			else if (token instanceof StringToken st)
-				System.out.printf("assertString(tokenizer, \"%s\");%n", StringEscapeUtils.escapeJava(st.value));
-			else if (token instanceof CharacterToken ct)
-				System.out.printf("assertCharacter(tokenizer, '%s');%n", StringEscapeUtils.escapeJava(String.valueOf(ct.value)).replace("'", "\\'"));
-			else
-				System.out.printf("assertToken(tokenizer, TokenType.%s);%n", token.type);
+			switch (token)
+			{
+				case NumericToken nt -> System.out.println("assertInt(tokenizer, \"" + nt.value + "\", TokenType." + nt.type + ");");
+				case FloatingPointToken fpt -> System.out.println("assertFloat(tokenizer, \"" + fpt.value + "\");");
+				case IdentifierToken it -> System.out.println("assertIdentifier(tokenizer, \"" + it.value + "\");");
+				case StringToken st -> System.out.println("assertString(tokenizer, \"" + StringEscapeUtils.escapeJava(st.value) + "\");");
+				case CharacterToken ct -> System.out.println("assertCharacter(tokenizer, '" + StringEscapeUtils.escapeJava(String.valueOf(ct.value)).replace("'", "\\'") + "');");
+				default -> System.out.println("assertToken(tokenizer, TokenType." + token.type + ");");
+			}
 		}
 
 		System.out.println("assertEof(tokenizer);");

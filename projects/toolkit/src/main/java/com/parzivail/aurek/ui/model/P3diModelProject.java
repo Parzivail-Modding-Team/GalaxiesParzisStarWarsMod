@@ -59,7 +59,7 @@ public class P3diModelProject implements TabModel
 				}
 				catch (P3diCompileException e)
 				{
-					ToolkitClient.NOTIFIER.error("P3Di Compiler", String.format("Invalid P3Di file: %s", e.getMessage()));
+					ToolkitClient.NOTIFIER.error("P3Di Compiler", "Invalid P3Di file: " + e.getMessage());
 				}
 			}).start();
 			compiledModel = P3dModel.read(in, true);

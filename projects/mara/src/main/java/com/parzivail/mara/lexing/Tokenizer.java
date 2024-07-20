@@ -689,7 +689,7 @@ public class Tokenizer extends StateMachine
 				continue;
 			}
 
-			throw new TokenizeException(String.format("Unexpected %stoken", requireTerminatingToken ? "non-terminating " : ""), text.charAt(0), cursor);
+			throw new TokenizeException("Unexpected " + (requireTerminatingToken ? "non-terminating " : "") + "token", text.charAt(0), cursor);
 		}
 		while (getState() == TokenizeState.Begin);
 	}

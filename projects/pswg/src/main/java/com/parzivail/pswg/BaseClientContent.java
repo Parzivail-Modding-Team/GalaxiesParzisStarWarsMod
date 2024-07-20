@@ -116,7 +116,7 @@ public class BaseClientContent implements PswgClientAddon
 		for (var i = 0; i < 6; i++)
 		{
 			var hornId = String.valueOf(i + 1);
-			var childId = "horns%s".formatted(hornId);
+			var childId = "horns" + hornId;
 			if (!model.head.hasChild(childId))
 				continue;
 
@@ -137,7 +137,7 @@ public class BaseClientContent implements PswgClientAddon
 		for (var i = 0; i < 6; i++)
 		{
 			var hornId = String.valueOf(i + 1);
-			var childId = "horns%s".formatted(hornId);
+			var childId = "horns" + hornId;
 			if (!model.head.hasChild(childId))
 				continue;
 
@@ -146,12 +146,12 @@ public class BaseClientContent implements PswgClientAddon
 
 		for (var i = 0; i < 7; i++)
 		{
-			var hornId = String.valueOf(i + 1);
-			var childId = "beard%s".formatted(hornId);
+			var beardId = String.valueOf(i + 1);
+			var childId = "beard" + beardId;
 			if (!model.head.hasChild(childId))
 				continue;
 
-			model.head.getChild(childId).visible = beard.equals(hornId);
+			model.head.getChild(childId).visible = beard.equals(beardId);
 		}
 	}
 }

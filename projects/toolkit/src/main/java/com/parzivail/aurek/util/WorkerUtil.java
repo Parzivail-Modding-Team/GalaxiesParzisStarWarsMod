@@ -57,7 +57,7 @@ public class WorkerUtil
 			System.exit(-1);
 		}
 
-		ToolkitClient.LOG.getLogger().error(String.format(Locale.ROOT, "Caught exception in thread %s", thread), t);
+		ToolkitClient.LOG.getLogger().error("Caught exception in thread {}", thread, t);
 	}
 
 	public static ExecutorService createThreadPool(int nThreads, String name)

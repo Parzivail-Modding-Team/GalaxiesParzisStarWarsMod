@@ -61,7 +61,7 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 		var stack = new ArrayList<Identifier>();
 
 		if (parameters.usingPaintPreset)
-			stack.add(Resources.id(String.format("textures/droid/r/preset/%s.png", parameters.paintPreset)));
+			stack.add(Resources.id("textures/droid/r/preset/" + parameters.paintPreset + ".png"));
 		else
 		{
 			stack.add(Client.tintTexture(PARAMETRIC_R_BASE_TEXTURE, parameters.baseTint));

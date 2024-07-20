@@ -130,11 +130,11 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	{
 		TModel selected = null;
 
-		if (ImGui.beginTabBar(String.format("tabs/%s", id)))
+		if (ImGui.beginTabBar("tabs/" + id))
 		{
 			for (var model : this)
 			{
-				ImGui.pushID(String.format("tab/%s", model.getId()));
+				ImGui.pushID("tab/" + model.getId());
 
 				var isTabOpen = new ImBoolean(true);
 				if (ImGui.beginTabItem(model.getTitle(), isTabOpen))

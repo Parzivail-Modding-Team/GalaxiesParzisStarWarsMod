@@ -135,7 +135,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			// Crash if even the fallback model is null
 			if (m == null)
 			{
-				var crashReport = CrashReport.create(new IllegalStateException("Lightsaber fallback model is null"), String.format("Unable to load lightsaber fallback model: %s", FALLBACK_MODEL.model));
+				var crashReport = CrashReport.create(new IllegalStateException("Lightsaber fallback model is null"), "Unable to load lightsaber fallback model: " + FALLBACK_MODEL.model);
 				throw new CrashException(crashReport);
 			}
 		}

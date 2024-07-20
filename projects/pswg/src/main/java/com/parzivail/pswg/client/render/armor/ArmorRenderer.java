@@ -251,7 +251,7 @@ public class ArmorRenderer
 
 			if (armorModel == null)
 			{
-				var crashReport = CrashReport.create(new IllegalStateException("Armor model is null"), String.format("Loading armor model: %s", armorPair.getLeft()));
+				var crashReport = CrashReport.create(new IllegalStateException("Armor model is null"), "Loading armor model: " + armorPair.getLeft());
 				throw new CrashException(crashReport);
 			}
 

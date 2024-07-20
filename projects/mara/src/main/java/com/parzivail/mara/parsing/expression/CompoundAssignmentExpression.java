@@ -19,6 +19,6 @@ public class CompoundAssignmentExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("(%s [%s]= %s)", left, operator.type, right);
+		return "(" + left + " [" + operator.type + "]= " + right + ")";
 	}
 }

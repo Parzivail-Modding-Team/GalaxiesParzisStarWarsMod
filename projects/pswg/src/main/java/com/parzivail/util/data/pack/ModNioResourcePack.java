@@ -169,7 +169,7 @@ public class ModNioResourcePack implements ResourcePack
 	@Nullable
 	public InputSupplier<InputStream> open(ResourceType type, Identifier id)
 	{
-		final var filename = String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.getNamespace(), id.getPath());
+		final var filename = type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath();
 		final var path = getPath(filename);
 		return path == null ? null : InputSupplier.create(path);
 	}

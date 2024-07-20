@@ -131,7 +131,7 @@ public class BlasterEditor implements IDirectItemEditor
 
 			var bd = BlasterItem.getBlasterDescriptor(stack, false);
 
-			if (ImGui.beginTabItem(String.format("%s Type Data", bd.id.toString())))
+			if (ImGui.beginTabItem(bd.id.toString() + " Type Data"))
 			{
 				var f = new ImFloat(bd.damage);
 				if (ImGui.inputFloat("Damage", f, 0.5f))

@@ -228,7 +228,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 			case MAT_ID_EMISSIVE -> AbstractModel.MAT_EMISSIVE;
 			default ->
 			{
-				var crashReport = CrashReport.create(new IllegalStateException("Unknown material ID"), String.format("Unknown material ID: %s", material));
+				var crashReport = CrashReport.create(new IllegalStateException("Unknown material ID"), "Unknown material ID: " + material);
 				throw new CrashException(crashReport);
 			}
 		};
@@ -260,7 +260,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		catch (IOException ex)
 		{
 			ex.printStackTrace();
-			var crashReport = CrashReport.create(ex, String.format("Loading PR3R file: %s", modelFile));
+			var crashReport = CrashReport.create(ex, "Loading PR3R file: " + modelFile);
 			throw new CrashException(crashReport);
 		}
 	}
@@ -276,12 +276,12 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		var read = objStream.read(identBytes);
 		var ident = new String(identBytes);
 		if (!ident.equals(magic) || read != identBytes.length)
-			throw new IOException(String.format("Input file not %s model", magic));
+			throw new IOException("Input file not " + magic + " model");
 
 		var version = objStream.readInt();
 
 		if (!ArrayUtils.contains(ACCEPTED_VERSIONS, version))
-			throw new IOException(String.format("Input file version is 0x%s, expected one of: %s", Integer.toHexString(version), getAcceptedVersionString()));
+			throw new IOException("Input file version is 0x" + Integer.toHexString(version) + ", expected one of: " + getAcceptedVersionString());
 
 		// read sockets
 		var numSockets = objStream.readInt();

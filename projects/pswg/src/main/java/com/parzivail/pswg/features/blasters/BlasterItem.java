@@ -123,7 +123,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			if (ATTRIB_MODS_ADS.containsKey(d.adsSpeedModifier))
 				continue;
 
-			var modifierId = UUID.nameUUIDFromBytes(String.format("pswg:ads_speed_penalty/%f", d.adsSpeedModifier).getBytes());
+			var modifierId = UUID.nameUUIDFromBytes(("pswg:ads_speed_penalty/" + d.adsSpeedModifier).getBytes());
 			var modifier = new EntityAttributeModifier(modifierId, "pswg:ads_speed_penalty", d.adsSpeedModifier, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 			ATTRIB_MODS_ADS.put(d.adsSpeedModifier, ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
 			                                                         .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, modifier)
@@ -143,7 +143,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static Text getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
 	{
-		return Text.translatable(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
+		return Text.translatable(model.toTranslationKey("blaster", "attachment." + descriptor.id));
 	}
 
 	public static BlasterWield getWield(LivingEntity entity)

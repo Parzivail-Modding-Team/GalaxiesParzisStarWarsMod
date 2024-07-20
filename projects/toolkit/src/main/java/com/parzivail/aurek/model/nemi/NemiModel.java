@@ -99,6 +99,6 @@ public record NemiModel(String exporter, String name, NemiTexSize tex, HashMap<S
 	{
 		if (index == 0)
 			return name;
-		return String.format("%s_%d", name, index);
+		return name + '_' + index;
 	}
 }

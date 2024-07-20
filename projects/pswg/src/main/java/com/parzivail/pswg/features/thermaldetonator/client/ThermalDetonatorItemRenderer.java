@@ -96,7 +96,7 @@ public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 		var m = P3dManager.INSTANCE.get(ThermalDetonatorRenderer.MODEL);
 		if (m == null)
 		{
-			var crashReport = CrashReport.create(new IllegalStateException("Thermal detonator model is null"), String.format("Unable to load thermal detonator model: %s", ThermalDetonatorRenderer.MODEL));
+			var crashReport = CrashReport.create(new IllegalStateException("Thermal detonator model is null"), "Unable to load thermal detonator model: " + ThermalDetonatorRenderer.MODEL);
 			throw new CrashException(crashReport);
 		}
 

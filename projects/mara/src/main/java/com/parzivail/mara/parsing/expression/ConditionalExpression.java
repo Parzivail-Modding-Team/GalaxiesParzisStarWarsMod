@@ -17,6 +17,6 @@ public class ConditionalExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("(%s ? %s : %s)", conditional, truthy, falsy);
+		return "(" + conditional + " ? " + truthy + " : " + falsy + ")";
 	}
 }

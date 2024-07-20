@@ -11,6 +11,6 @@ public class SkinRemoteTextureResolver implements RemoteTextureResolver
 	{
 		var remotePath = id.getPath();
 		var path = remotePath.substring(remotePath.lastIndexOf('/') + 1);
-		return new RemoteTextureUrl(String.format("https://pswg.dev/skins/%s.png", path));
+		return new RemoteTextureUrl("https://pswg.dev/skins/" + path + ".png");
 	}
 }

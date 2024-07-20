@@ -7,7 +7,7 @@ import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
 
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URI;
 
 public class UpdateChecker
 {
@@ -25,7 +25,8 @@ public class UpdateChecker
 				return null;
 			}
 
-			var con = new URL(String.format("https://api.github.com/repos/%s/releases", repository)).openConnection();
+			// TODO: use JDK HttpClient
+			var con = URI.create("https://api.github.com/repos/" + repository + "/releases").toURL().openConnection();
 			con.setConnectTimeout(3000);
 			con.setReadTimeout(3000);
 			var isr = new InputStreamReader(con.getInputStream());

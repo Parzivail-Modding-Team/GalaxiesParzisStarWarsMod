@@ -17,6 +17,6 @@ public class CastExpression extends Expression
 	@Override
 	public String toString()
 	{
-		return String.format("((%s)(%s))", type, value);
+		return "((" + type + ")(" + value + "))";
 	}
 }

@@ -145,20 +145,20 @@ public class LightsaberAddonFeature implements IAddonFeature
 			buf.writeFloat(entry.getValue().get());
 		}
 
-		FileUtil.zip(zip, buf, "data/pswg/lightsabers/%s.%s.pswg_lightsaber".formatted(this.id.get(), namespace));
+		FileUtil.zip(zip, buf, "data/pswg/lightsabers/" + this.id.get() + '.' + namespace + ".pswg_lightsaber");
 
 		if (hiltModelFilename != null)
 			FileUtil.zip(
 					zip,
 					hiltModelFilename,
-					"assets/%s/models/item/lightsaber/%s.p3d".formatted(namespace, this.id.get())
+					"assets/" + namespace + "/models/item/lightsaber/" + this.id.get() + ".p3d"
 			);
 
 		if (hiltTextureFilename != null)
 			FileUtil.zip(
 					zip,
 					hiltTextureFilename,
-					"assets/%s/textures/item/model/lightsaber/%s.png".formatted(namespace, this.id.get())
+					"assets/" + namespace + "/textures/item/model/lightsaber/" + this.id.get() + ".png"
 			);
 	}
 
@@ -264,7 +264,7 @@ public class LightsaberAddonFeature implements IAddonFeature
 						ImGui.text(socket.name);
 						ImGui.tableNextColumn();
 						ImGui.setNextItemWidth(-1);
-						ImGui.inputFloat("##bladeLength_%s".formatted(socket.name), lightsaber.getBladeCoef(socket.name));
+						ImGui.inputFloat("##bladeLength_" + socket.name, lightsaber.getBladeCoef(socket.name));
 					}
 
 					if (foundBlades == 0)

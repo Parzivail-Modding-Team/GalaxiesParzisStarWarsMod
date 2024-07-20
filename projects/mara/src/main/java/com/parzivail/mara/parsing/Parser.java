@@ -71,7 +71,7 @@ public class Parser
 	{
 		var token = tokens.pop();
 		if (!kind.test(token.type))
-			throw new ParseException(String.format("Unexpected token, expected one of: %s", getMatchingTokens(kind)), token);
+			throw new ParseException("Unexpected token, expected one of: " + getMatchingTokens(kind), token);
 		return token;
 	}
 

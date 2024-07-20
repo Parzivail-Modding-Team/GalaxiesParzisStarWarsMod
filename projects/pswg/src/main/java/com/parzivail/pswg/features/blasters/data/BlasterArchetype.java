@@ -37,6 +37,6 @@ public enum BlasterArchetype
 
 	public String getLangKey()
 	{
-		return String.format("blaster.pswg.archetype.%s", value);
+		return "blaster.pswg.archetype." + value;
 	}
 }

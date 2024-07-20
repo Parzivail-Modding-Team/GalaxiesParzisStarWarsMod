@@ -33,7 +33,7 @@ public class SpeciesBuilder
 		private static SpeciesVariable getCheckedVariable(HashMap<String, SpeciesVariable> variables, String variableId)
 		{
 			if (!variables.containsKey(variableId))
-				throw new RuntimeException(String.format("Could not find variable \"%s\" within set \"%s\"", variableId, String.join(", ", variables.keySet())));
+				throw new RuntimeException("Could not find variable \"" + variableId + "\" within set \"" + String.join(", ", variables.keySet()) + "\"");
 			return variables.get(variableId);
 		}
 

@@ -54,6 +54,6 @@ public class SwgSpeciesRenderer
 	public static Identifier getTexture(LivingEntity player, SwgSpecies species)
 	{
 		var digest = species.digest();
-		return Client.stackedTextureProvider.getId(String.format("species/%s", digest), () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player));
+		return Client.stackedTextureProvider.getId("species/" + digest, () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player));
 	}
 }

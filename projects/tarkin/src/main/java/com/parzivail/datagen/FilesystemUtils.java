@@ -19,7 +19,7 @@ public class FilesystemUtils
 	public static void setOutputRoot(Path rootDir)
 	{
 		FilesystemUtils.rootDir = rootDir;
-		Tarkin.LOG.info(String.format("Set output directory to: %s", rootDir.toAbsolutePath()));
+		Tarkin.LOG.info("Set output directory to: " + rootDir.toAbsolutePath());
 	}
 
 	public static Path getRootDir()

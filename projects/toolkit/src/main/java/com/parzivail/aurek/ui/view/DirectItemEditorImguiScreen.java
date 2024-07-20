@@ -36,7 +36,7 @@ public class DirectItemEditorImguiScreen extends ImguiScreen
 		{
 			if (!IDirectItemEditor.EDITORS.containsKey(itemClass))
 			{
-				ImGui.text(String.format("No editor defined for %s", itemClass.getTypeName()));
+				ImGui.text("No editor defined for " + itemClass.getTypeName());
 			}
 			else
 				IDirectItemEditor.EDITORS.get(itemClass).process(client, stack);
