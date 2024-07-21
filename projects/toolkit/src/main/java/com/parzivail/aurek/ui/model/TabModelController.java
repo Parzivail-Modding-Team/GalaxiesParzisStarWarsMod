@@ -4,8 +4,6 @@ import imgui.internal.ImGui;
 import imgui.type.ImBoolean;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -63,19 +61,6 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	public boolean add(TModel tModel)
 	{
 		return models.add(tModel);
-	}
-
-	private JComponent createEmptyTabContents()
-	{
-		var p = new JPanel();
-		var empty = new Dimension(0, 0);
-		p.setSize(empty);
-		p.setMinimumSize(empty);
-		p.setMaximumSize(empty);
-		p.setPreferredSize(empty);
-		p.setVisible(false);
-		p.setBorder(BorderFactory.createEmptyBorder());
-		return p;
 	}
 
 	@Override
