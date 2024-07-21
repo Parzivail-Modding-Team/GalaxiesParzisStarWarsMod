@@ -60,7 +60,7 @@ public class ClusterLightBlock extends WaterloggableRotatingBlockWithBounds impl
 
 	@Nullable
 	@Override
-	protected BlockState getPlacementState(ItemPlacementContext ctx)
+	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		var blockState = ctx.getWorld().getBlockState(ctx.getBlockPos());
 
@@ -84,7 +84,7 @@ public class ClusterLightBlock extends WaterloggableRotatingBlockWithBounds impl
 	}
 
 	@Override
-	protected IntProperty getPickleProperty()
+	public IntProperty getPickleProperty()
 	{
 		return CLUSTER_SIZE;
 	}
