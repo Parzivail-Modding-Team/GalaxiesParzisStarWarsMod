@@ -3,6 +3,7 @@ package com.parzivail.util.client.texture.stacked;
 import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.data.TintedIdentifier;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +22,7 @@ public class StackedTexture extends CallbackTexture
 	private final Identifier transparentPlaceholder;
 	private final Identifier[] textures;
 
-	public StackedTexture(Identifier transparentTexture, Identifier fallbackSkin, Collection<Identifier> textures, Consumer<Boolean> callback)
+	public StackedTexture(Identifier transparentTexture, Identifier fallbackSkin, Collection<Identifier> textures, BooleanConsumer callback)
 	{
 		super(fallbackSkin, callback);
 		this.transparentPlaceholder = transparentTexture;

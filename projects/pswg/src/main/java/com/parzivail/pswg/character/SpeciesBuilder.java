@@ -2,6 +2,7 @@ package com.parzivail.pswg.character;
 
 import com.google.common.collect.ImmutableList;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 
@@ -244,11 +245,9 @@ public class SpeciesBuilder
 
 		if (additionalValues.length > 0)
 		{
-			var valueSet = new HashSet<Integer>();
+			var valueSet = new IntOpenHashSet(additionalValues);
 			valueSet.add(defaultValue);
-			for (var value : additionalValues)
-				valueSet.add(value);
-			allowedValues = valueSet.stream().mapToInt(i -> i).toArray();
+			allowedValues = valueSet.toIntArray();
 		}
 
 		variableTable.put(variableId, new SpeciesColorVariable(id, variableId, defaultValue, allowedValues));

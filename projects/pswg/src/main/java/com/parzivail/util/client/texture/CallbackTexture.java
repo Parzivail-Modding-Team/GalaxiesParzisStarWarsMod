@@ -3,6 +3,7 @@ package com.parzivail.util.client.texture;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.util.ParziUtil;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
@@ -14,11 +15,11 @@ import java.util.function.Consumer;
 
 public abstract class CallbackTexture extends ResourceTexture
 {
-	protected final Consumer<Boolean> completionCallback;
+	protected final BooleanConsumer completionCallback;
 	protected boolean isLoaded;
 	protected NativeImage image;
 
-	public CallbackTexture(Identifier location, Consumer<Boolean> completionCallback)
+	public CallbackTexture(Identifier location, BooleanConsumer completionCallback)
 	{
 		super(location);
 		this.completionCallback = completionCallback;

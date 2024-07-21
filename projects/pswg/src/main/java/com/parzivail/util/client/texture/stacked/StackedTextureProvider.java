@@ -3,6 +3,7 @@ package com.parzivail.util.client.texture.stacked;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.client.texture.TextureProvider;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
@@ -10,7 +11,6 @@ import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
-import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class StackedTextureProvider extends TextureProvider<Collection<Identifier>>
@@ -26,7 +26,7 @@ public class StackedTextureProvider extends TextureProvider<Collection<Identifie
 	}
 
 	@Override
-	protected CallbackTexture createTexture(Identifier destId, Collection<Identifier> requestData, Consumer<Boolean> callback)
+	protected CallbackTexture createTexture(Identifier destId, Collection<Identifier> requestData, BooleanConsumer callback)
 	{
 		for (var id : requestData)
 			registerDependencyCallbacks(destId, id);

@@ -5,13 +5,12 @@ import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.client.texture.TextureProvider;
 import com.parzivail.util.data.TintedIdentifier;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class TintedTextureProvider extends TextureProvider<TintedIdentifier>
@@ -33,7 +32,7 @@ public class TintedTextureProvider extends TextureProvider<TintedIdentifier>
 	}
 
 	@Override
-	protected CallbackTexture createTexture(Identifier destId, TintedIdentifier request, Consumer<Boolean> callback)
+	protected CallbackTexture createTexture(Identifier destId, TintedIdentifier request, BooleanConsumer callback)
 	{
 		registerDependencyCallbacks(destId, request);
 		return new TintedTexture(request, DefaultSkinHelper.getTexture(), callback);

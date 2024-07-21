@@ -3,6 +3,7 @@ package com.parzivail.scarif;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.DataReader;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
@@ -11,9 +12,8 @@ import net.minecraft.util.math.ChunkPos;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
-import java.util.HashMap;
 
-public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stream, HashMap<ChunkPos, Long> entries)
+public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stream, Object2LongOpenHashMap<ChunkPos> entries)
 {
 	public static final Lumberjack LOG = new Lumberjack("SCARIF");
 	private static final String MAGIC = "SCRF";
@@ -45,7 +45,7 @@ public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stre
 
 			var numChunks = s.readInt();
 
-			var chunkHeaderEntries = new HashMap<ChunkPos, Long>();
+			var chunkHeaderEntries = new Object2LongOpenHashMap<ChunkPos>();
 
 			for (var i = 0; i < numChunks; i++)
 			{
@@ -76,7 +76,7 @@ public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stre
 			{
 				var time = System.nanoTime();
 				//			var chunk = new ScarifChunk(file, entries.get(pos));
-				file.position(entries.get(pos));
+				file.position(entries.getLong(pos));
 				var chunk = new ScarifChunk(stream);
 				var dur = System.nanoTime() - time;
 

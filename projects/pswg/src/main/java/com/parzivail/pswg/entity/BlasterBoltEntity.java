@@ -47,7 +47,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.DoubleUnaryOperator;
 
 import static com.parzivail.pswg.block.ThermalDetonatorBlock.CLUSTER_SIZE;
 
@@ -62,7 +62,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 	private static final TrackedData<Byte> ARM = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.BYTE);
 
 	private boolean ignoreWater;
-	private Function<Double, Double> damageFunction;
+	private DoubleUnaryOperator damageFunction;
 
 	@Environment(EnvType.CLIENT)
 	public Vec3d sourceOffset;
@@ -434,7 +434,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 		if (damageFunction == null || !getTargetedEntityClass().isAssignableFrom(target.getClass()))
 			return;
 
-		target.damage(getDamageSource(this, this.getOwner()), (float)(double)damageFunction.apply((double)getOdometer()));
+		target.damage(getDamageSource(this, this.getOwner()), (float)damageFunction.applyAsDouble(getOdometer()));
 	}
 
 	public static DamageSource getDamageSource(Entity projectile, Entity attacker)
@@ -451,7 +451,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionVelocit
 		return LivingEntity.class;
 	}
 
-	public void setDamageFunction(Function<Double, Double> damage)
+	public void setDamageFunction(DoubleUnaryOperator damage)
 	{
 		this.damageFunction = damage;
 	}

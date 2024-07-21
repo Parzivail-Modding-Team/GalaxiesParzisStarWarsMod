@@ -2,14 +2,13 @@ package com.parzivail.pswg.client.sound.timeline;
 
 import com.google.common.collect.HashMultimap;
 import com.parzivail.pswg.client.sound.SoundTimelineEvents;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.util.Identifier;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Handles registering and raising sound timeline events
@@ -22,7 +21,7 @@ public final class SoundTimelineManager
 		void soundTimelineEvent(SoundInstance instance, Identifier timelineEvent, float delta);
 	}
 
-	private static final Map<SoundInstance, Integer> FIRST_TICKS = new HashMap<>();
+	private static final Object2IntMap<SoundInstance> FIRST_TICKS = new Object2IntOpenHashMap<>();
 	private static final HashMultimap<Identifier, SoundTimelineEvents> EVENTS = HashMultimap.create();
 
 	public static final Event<SoundTimelineEvent> SOUND_EVENT_ENTERED = EventFactory.createArrayBacked(
@@ -66,7 +65,7 @@ public final class SoundTimelineManager
 		if (currentFrameTick <= prevFrameTick)
 			return;
 
-		var it = FIRST_TICKS.entrySet().iterator();
+		var it = FIRST_TICKS.object2IntEntrySet().iterator();
 		while (it.hasNext())
 		{
 			var startTickPair = it.next();

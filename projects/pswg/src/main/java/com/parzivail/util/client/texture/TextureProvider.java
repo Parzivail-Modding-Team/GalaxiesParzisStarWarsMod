@@ -4,6 +4,7 @@ import com.mojang.authlib.minecraft.InsecurePublicKeyException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.util.ParziUtil;
 import com.parzivail.util.data.FallbackIdentifier;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
@@ -13,14 +14,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class TextureProvider<TData>
 {
 	private static final ArrayList<Identifier> TEXTURE_CACHE = new ArrayList<>();
 	private static final ArrayList<Identifier> FAILURE_CACHE = new ArrayList<>();
-	private static final HashMap<Identifier, List<Consumer<Boolean>>> LOAD_CALLBACKS = new HashMap<>();
+	private static final HashMap<Identifier, List<BooleanConsumer>> LOAD_CALLBACKS = new HashMap<>();
 
 	public static final ArrayList<TextureProvider<?>> TEXTURE_PROVIDERS = new ArrayList<>();
 
@@ -124,7 +124,7 @@ public abstract class TextureProvider<TData>
 		return new FallbackIdentifier(fallbackId.getNamespace(), fallbackId.getPath(), cacheId);
 	}
 
-	protected abstract CallbackTexture createTexture(Identifier destId, TData requestData, Consumer<Boolean> callback);
+	protected abstract CallbackTexture createTexture(Identifier destId, TData requestData, BooleanConsumer callback);
 
 	protected void bakeTextureAsync(Identifier cacheId, TData request)
 	{
@@ -147,7 +147,7 @@ public abstract class TextureProvider<TData>
 		this.textureManager.registerTexture(cacheId, createTexture(cacheId, request, success -> pollCallbacks(cacheId, success)));
 	}
 
-	public void addLoadCallback(Identifier target, Consumer<Boolean> callback)
+	public void addLoadCallback(Identifier target, BooleanConsumer callback)
 	{
 		if (isReady(target))
 		{

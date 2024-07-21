@@ -1,5 +1,6 @@
 package com.parzivail.util.math;
 
+import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
 
 /**
@@ -7,27 +8,27 @@ import java.util.function.Function;
  */
 public class Falloff
 {
-	public static Function<Double, Double> linear()
+	public static DoubleUnaryOperator linear()
 	{
 		return x -> 1 - x;
 	}
 
-	public static Function<Double, Double> power(double a)
+	public static DoubleUnaryOperator power(double a)
 	{
 		return x -> 1 - Math.pow(x, a);
 	}
 
-	public static Function<Double, Double> cliff(double a)
+	public static DoubleUnaryOperator cliff(double a)
 	{
 		return x -> 1 - Math.pow(x, a / x);
 	}
 
-	public static Function<Double, Double> sinusoidal(double a)
+	public static DoubleUnaryOperator sinusoidal(double a)
 	{
 		return x -> 1 - Math.pow(Math.sin((Math.PI * x) / 2), a);
 	}
 
-	public static Function<Double, Double> circular(double a)
+	public static DoubleUnaryOperator circular(double a)
 	{
 		return x -> Math.sqrt(1 - Math.pow(x, 2 * a));
 	}

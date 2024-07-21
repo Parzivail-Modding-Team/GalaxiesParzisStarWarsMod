@@ -3,6 +3,7 @@ package com.parzivail.util.client.texture.remote;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.util.ParziUtil;
 import com.parzivail.util.client.texture.CallbackTexture;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -33,7 +34,7 @@ public class RemoteTexture extends CallbackTexture
 	@Nullable
 	private CompletableFuture<?> loader;
 
-	public RemoteTexture(Identifier remoteId, @Nullable Path cacheFile, String url, Identifier fallbackSkin, Consumer<Boolean> onResolved)
+	public RemoteTexture(Identifier remoteId, @Nullable Path cacheFile, String url, Identifier fallbackSkin, BooleanConsumer onResolved)
 	{
 		super(fallbackSkin, onResolved);
 		this.remoteId = remoteId;

@@ -9,6 +9,7 @@ import com.parzivail.aurek.util.AnimatedFloat;
 import com.parzivail.util.math.MathUtil;
 import imgui.flag.ImGuiMouseButton;
 import imgui.internal.ImGui;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
@@ -22,18 +23,16 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-import java.util.HashMap;
-
 public class Viewport
 {
-	private static <T> void putNumpadEmu(HashMap<Integer, T> map, int key, T value)
+	private static <T> void putNumpadEmu(Int2ObjectOpenHashMap<T> map, int key, T value)
 	{
 		map.put(key + GLFW.GLFW_KEY_0, value);
 		map.put(key + GLFW.GLFW_KEY_KP_0, value);
 	}
 
-	private static final HashMap<Integer, Pair<Vector3f, Vector3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
-		var h = new HashMap<Integer, Pair<Vector3f, Vector3f>>();
+	private static final Int2ObjectOpenHashMap<Pair<Vector3f, Vector3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
+		var h = new Int2ObjectOpenHashMap<Pair<Vector3f, Vector3f>>();
 		putNumpadEmu(h, 1, new Pair<>(Direction.SOUTH.getUnitVector(), Direction.NORTH.getUnitVector()));
 		putNumpadEmu(h, 7, new Pair<>(Direction.UP.getUnitVector(), Direction.DOWN.getUnitVector()));
 		putNumpadEmu(h, 3, new Pair<>(Direction.EAST.getUnitVector(), Direction.WEST.getUnitVector()));
@@ -108,9 +107,9 @@ public class Viewport
 
 	private void pollKeyboard()
 	{
-		for (var cameraPresetEntry : VIEWPORT_DIRECTION_PRESETS.entrySet())
+		for (var cameraPresetEntry : VIEWPORT_DIRECTION_PRESETS.int2ObjectEntrySet())
 		{
-			if (ImGui.isKeyPressed(cameraPresetEntry.getKey()))
+			if (ImGui.isKeyPressed(cameraPresetEntry.getIntKey()))
 			{
 				var cameraPreset = cameraPresetEntry.getValue();
 				setCameraPosition(ImGuiHelper.isShiftDown() ? cameraPreset.getRight() : cameraPreset.getLeft());

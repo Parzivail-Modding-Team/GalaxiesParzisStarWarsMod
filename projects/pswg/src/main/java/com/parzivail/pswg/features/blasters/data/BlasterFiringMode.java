@@ -1,6 +1,7 @@
 package com.parzivail.pswg.features.blasters.data;
 
 import com.parzivail.pswg.Resources;
+import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 
 import java.util.HashMap;
 
@@ -14,7 +15,7 @@ public enum BlasterFiringMode
 	ION("ion", (byte)5);
 
 	public static final HashMap<String, BlasterFiringMode> VALUE_LOOKUP = new HashMap<>();
-	public static final HashMap<Byte, BlasterFiringMode> ID_LOOKUP = new HashMap<>();
+	public static final Byte2ObjectOpenHashMap<BlasterFiringMode> ID_LOOKUP = new Byte2ObjectOpenHashMap<>();
 
 	static
 	{

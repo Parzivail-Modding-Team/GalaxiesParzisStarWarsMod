@@ -24,11 +24,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.function.Consumer;
+import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
 
 public class BlasterUtil
 {
-	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, Function<Double, Double> damage, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
+	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, DoubleUnaryOperator damage, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
 	{
 		final var bolt = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world, ignoreWater);
 		entityInitializer.accept(bolt);

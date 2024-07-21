@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener, ITabStackProvider
@@ -539,7 +540,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			var range = getRange(bd, bt);
 			var damageRange = range * getRangeMultiplier(bd, bt.attachmentBitmask);
-			Function<Double, Double> damage = (x) -> getDamage(bd, bt) * bd.damageFalloff.apply(x / damageRange);
+			DoubleUnaryOperator damage = (x) -> getDamage(bd, bt) * bd.damageFalloff.applyAsDouble(x / damageRange);
 
 			var shouldRecoil = true;
 

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.DoubleUnaryOperator;
 import java.util.function.Function;
 
 public class BlasterDescriptor
@@ -18,7 +19,7 @@ public class BlasterDescriptor
 	public List<BlasterFiringMode> firingModes;
 	public BlasterWaterBehavior waterBehavior;
 	public float damage;
-	public Function<Double, Double> damageFalloff;
+	public DoubleUnaryOperator damageFalloff;
 	public float range;
 	public float adsSpeedModifier;
 	public float weight;
@@ -159,7 +160,7 @@ public class BlasterDescriptor
 	 *
 	 * @return this
 	 */
-	public BlasterDescriptor damage(float damage, float range, Function<Double, Double> damageFalloff)
+	public BlasterDescriptor damage(float damage, float range, DoubleUnaryOperator damageFalloff)
 	{
 		this.damage = damage;
 		this.range = range;

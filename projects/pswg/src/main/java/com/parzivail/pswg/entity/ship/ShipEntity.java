@@ -403,7 +403,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 	protected void tickControlledAnim(TrackedData<Byte> data, byte animLength, boolean keyInput)
 	{
-		var anim = dataTracker.get(data);
+		byte anim = dataTracker.get(data);
 		anim = TrackedAnimationValue.tick(anim);
 
 		if (getControllingPassenger() instanceof PlayerEntity)

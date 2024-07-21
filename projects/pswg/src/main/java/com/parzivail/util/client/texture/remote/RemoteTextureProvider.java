@@ -4,13 +4,13 @@ import com.google.common.hash.Hashing;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.client.texture.TextureProvider;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 
 import java.nio.file.Path;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
@@ -36,7 +36,7 @@ public class RemoteTextureProvider extends TextureProvider<Identifier>
 	}
 
 	@Override
-	protected CallbackTexture createTexture(Identifier destId, Identifier requestData, Consumer<Boolean> callback)
+	protected CallbackTexture createTexture(Identifier destId, Identifier requestData, BooleanConsumer callback)
 	{
 		registerDependencyCallbacks(destId, requestData);
 
