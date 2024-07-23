@@ -7,7 +7,6 @@ import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.recipe.VaporatorRecipe;
 import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import com.parzivail.util.blockentity.InventoryBlockEntity;
-import com.parzivail.util.item.ItemUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -114,7 +113,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		if (resultStack.getCount() + outputStack.getCount() > outputStack.getMaxCount())
 			return false;
 
-		return ItemUtil.areStacksEqualIgnoreCount(resultStack, outputStack);
+		return ItemStack.areItemsAndComponentsEqual(resultStack, outputStack);
 	}
 
 	private VaporatorRecipe hydrate(ItemStack stack)
@@ -149,7 +148,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 					t.setStack(1, resultStack.copy());
 				else
 				{
-					if (!ItemUtil.areStacksEqualIgnoreCount(outputStack, resultStack) || resultStack.getCount() + outputStack.getCount() > outputStack.getMaxCount())
+					if (!ItemStack.areItemsAndComponentsEqual(outputStack, resultStack) || resultStack.getCount() + outputStack.getCount() > outputStack.getMaxCount())
 						throw new RuntimeException("Result and output itemstacks cannot combine!");
 
 					outputStack.setCount(resultStack.getCount() + outputStack.getCount());
