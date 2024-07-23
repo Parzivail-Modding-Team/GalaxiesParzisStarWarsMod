@@ -22,7 +22,7 @@ public class GlobalControlsImguiScreen extends ImguiScreen
 	}
 
 	@Override
-	public void process()
+	public void process(float tickDelta)
 	{
 		if (client == null || client.player == null || client.player.getMainHandStack() == null)
 			return;
@@ -48,7 +48,7 @@ public class GlobalControlsImguiScreen extends ImguiScreen
 	}
 
 	@Override
-	protected void drawBackground(DrawContext context)
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float tickDelta)
 	{
 	}
 

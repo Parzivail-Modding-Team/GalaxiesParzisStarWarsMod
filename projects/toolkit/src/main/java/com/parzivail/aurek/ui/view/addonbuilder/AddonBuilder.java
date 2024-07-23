@@ -43,7 +43,7 @@ public class AddonBuilder extends ImguiScreen
 	}
 
 	@Override
-	public void process()
+	public void process(float tickDelta)
 	{
 		if (ImGui.beginMainMenuBar())
 		{

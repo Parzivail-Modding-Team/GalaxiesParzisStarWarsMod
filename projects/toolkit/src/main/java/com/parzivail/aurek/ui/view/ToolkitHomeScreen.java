@@ -24,7 +24,7 @@ public class ToolkitHomeScreen extends ImguiScreen
 	}
 
 	@Override
-	public void process()
+	public void process(float tickDelta)
 	{
 		var flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.MenuBar;
 		flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground;

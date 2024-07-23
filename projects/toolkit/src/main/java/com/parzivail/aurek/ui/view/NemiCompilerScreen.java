@@ -222,7 +222,7 @@ public class NemiCompilerScreen extends ImguiScreen
 	}
 
 	@Override
-	public void process()
+	public void process(float tickDelta)
 	{
 		var action = UiAction.None;
 
@@ -269,7 +269,7 @@ public class NemiCompilerScreen extends ImguiScreen
 			NemiModelProject selectedProject = null;
 
 			if (ImGui.begin("Viewport", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollWithMouse))
-				selectedProject = tabController.render(this::renderTab);
+				selectedProject = tabController.render(this::renderTab, tickDelta);
 			ImGui.end();
 
 			if (ImGui.begin("Model Tree", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove))
@@ -301,10 +301,9 @@ public class NemiCompilerScreen extends ImguiScreen
 		ImGui.end();
 	}
 
-	private void renderTab(NemiModelProject model)
+	private void renderTab(NemiModelProject model, float tickDelta)
 	{
 		assert this.client != null;
-		var tickDelta = client.getTickDelta();
 
 		viewport.capture(false, true);
 

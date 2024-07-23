@@ -20,17 +20,18 @@ public abstract class ImguiScreen extends Screen
 		client.setScreen(parent);
 	}
 
-	public abstract void process();
+	public abstract void process(float tickDelta);
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		drawBackground(context);
+		renderBackground(context, mouseX, mouseY, delta);
 
-		process();
+		process(delta);
 	}
 
-	protected void drawBackground(DrawContext context)
+	@Override
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float tickDelta)
 	{
 		context.fillGradient(0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
 	}

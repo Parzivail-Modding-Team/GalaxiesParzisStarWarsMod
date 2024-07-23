@@ -7,7 +7,6 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
 import imgui.type.ImBoolean;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
@@ -21,7 +20,7 @@ public class DirectItemEditorImguiScreen extends ImguiScreen
 	}
 
 	@Override
-	public void process()
+	public void process(float tickDelta)
 	{
 		if (client == null || client.player == null || client.player.getMainHandStack() == null)
 			return;
@@ -48,7 +47,7 @@ public class DirectItemEditorImguiScreen extends ImguiScreen
 	}
 
 	@Override
-	protected void drawBackground(DrawContext context)
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float tickDelta)
 	{
 	}
 

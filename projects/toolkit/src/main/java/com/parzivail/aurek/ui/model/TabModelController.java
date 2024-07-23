@@ -5,7 +5,6 @@ import imgui.type.ImBoolean;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class TabModelController<TModel extends TabModel> implements Collection<TModel>
 {
@@ -111,7 +110,7 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 		this.models.removeAll(discarded);
 	}
 
-	public TModel render(Consumer<TModel> renderer)
+	public TModel render(TabRenderer<TModel> renderer, float tickDelta)
 	{
 		TModel selected = null;
 
@@ -125,7 +124,7 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 				if (ImGui.beginTabItem(model.getTitle(), isTabOpen))
 				{
 					selected = model;
-					renderer.accept(model);
+					renderer.render(model, tickDelta);
 					ImGui.endTabItem();
 				}
 				ImGui.popID();
@@ -141,5 +140,9 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 			remove(removeQueue.pop());
 
 		return selected;
+	}
+
+	public interface TabRenderer<TModel extends TabModel> {
+		void render(TModel model, float tickDelta);
 	}
 }

@@ -75,10 +75,9 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 		viewport.tick();
 	}
 
-	protected void renderContent()
+	protected void renderContent(float tickDelta)
 	{
 		assert this.client != null;
-		var tickDelta = client.getTickDelta();
 
 		viewport.capture(false, true);
 
@@ -112,7 +111,7 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 	}
 
 	@Override
-	public void process()
+	public void process(float tickDelta)
 	{
 		if (ImGui.beginMainMenuBar())
 		{
@@ -143,7 +142,7 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 
 			if (ImGui.begin("Viewport", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollWithMouse))
 			{
-				renderContent();
+				renderContent(tickDelta);
 			}
 			ImGui.end();
 

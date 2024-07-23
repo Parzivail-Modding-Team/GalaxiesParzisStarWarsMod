@@ -37,12 +37,11 @@ public class TestScreen extends ImguiScreen
 	}
 
 	@Override
-	protected void drawBackground(DrawContext context)
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float tickDelta)
 	{
 		context.fillGradient(0, 0, this.width, this.height, 0xFF000000, 0xFF000011);
 
 		assert this.client != null;
-		var tickDelta = client.getTickDelta();
 
 		//		viewport.capture(false, true);
 		viewport.pollInput(this.width, this.height);
@@ -98,7 +97,7 @@ public class TestScreen extends ImguiScreen
 	}
 
 	@Override
-	public void process()
+	public void process(float tickDelta)
 	{
 		//		if (ImGui.begin("Aurek Toolkit"))
 		//		{
