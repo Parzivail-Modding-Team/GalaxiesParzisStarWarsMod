@@ -95,8 +95,8 @@ public class ThermalDetonatorEntity extends ThrowableExplosive implements IPreci
 	{
 		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getInventory().getMainHandStack().isEmpty())
 		{
-			player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
-
+			if (getWorld() instanceof ServerWorld)
+				player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
 			this.discard();
 		}
 		return super.interact(player, hand);

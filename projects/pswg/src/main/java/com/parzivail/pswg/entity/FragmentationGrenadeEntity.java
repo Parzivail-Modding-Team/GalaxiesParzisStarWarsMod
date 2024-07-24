@@ -55,8 +55,8 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	{
 		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getInventory().getMainHandStack().isEmpty())
 		{
-			player.giveItemStack(new ItemStack(SwgItems.Explosives.FragmentationGrenade));
-
+			if (getWorld() instanceof ServerWorld)
+				player.giveItemStack(new ItemStack(SwgItems.Explosives.FragmentationGrenade));
 			this.discard();
 		}
 		return super.interact(player, hand);
