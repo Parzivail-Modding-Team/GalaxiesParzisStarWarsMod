@@ -98,7 +98,7 @@ public abstract class CreatureCageBlock extends Block implements BlockEntityProv
 
 			for (var mobEntity : world.getNonSpectatingEntities(MobEntity.class, new Box((double)x - 7.0, (double)y - 7.0, (double)z - 7.0, (double)x + 7.0, (double)y + 7.0, (double)z + 7.0)))
 			{
-				if (mobEntity.getHoldingEntity() == player)
+				if (mobEntity.getLeashHolder() == player)
 				{
 					mobEntity.detachLeash(true, false);
 
