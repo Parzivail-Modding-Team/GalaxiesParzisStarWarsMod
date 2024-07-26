@@ -1,7 +1,6 @@
 package com.parzivail.pswg.features.lightsabers.addon;
 
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
-import com.parzivail.util.data.PacketByteBufHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -37,7 +36,7 @@ public class AddonLightsaberManager extends ByteBufResourceReloader<AddonLightsa
 		{
 			var namespace = buf.readString();
 			var id = buf.readString();
-			var owner = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
+			var owner = buf.readNullable(PacketByteBuf::readString);
 
 			var unstable = buf.readBoolean();
 			var bladeType = LightsaberBladeType.TYPES.get(buf.readString());

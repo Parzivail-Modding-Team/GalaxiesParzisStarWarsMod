@@ -1,12 +1,9 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.EntityTrackerEntry;
 import org.objectweb.asm.Opcodes;
@@ -32,9 +29,7 @@ public abstract class EntityTrackerEntryMixin
 
 		if (this.entity.velocityModified)
 		{
-			var passedData = new PacketByteBuf(Unpooled.buffer());
-			new PreciseEntityVelocityUpdateS2CPacket(this.entity).write(passedData);
-			this.sendSyncPacket(ServerPlayNetworking.createS2CPacket(SwgPackets.S2C.PreciseEntityVelocityUpdate, passedData));
+			this.sendSyncPacket(ServerPlayNetworking.createS2CPacket(new PreciseEntityVelocityUpdateS2CPacket(this.entity)));
 			this.entity.velocityModified = false;
 		}
 		ci.cancel();

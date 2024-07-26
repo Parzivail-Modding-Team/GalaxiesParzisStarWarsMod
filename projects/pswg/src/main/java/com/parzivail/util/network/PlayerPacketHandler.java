@@ -1,11 +1,14 @@
 package com.parzivail.util.network;
 
 import com.parzivail.pswg.component.PlayerData;
+import com.parzivail.pswg.network.PlayerItemLeftClickC2SPacket;
+import com.parzivail.pswg.network.UnitC2SPacket;
 import com.parzivail.util.ParziUtil;
 import com.parzivail.util.item.IItemActionListener;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.item.ItemAction;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -16,34 +19,29 @@ import net.minecraft.util.Hand;
 
 public class PlayerPacketHandler
 {
-	public static void handleLeftClickPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleLeftClickPacket(PlayerItemLeftClickC2SPacket packet, ServerPlayNetworking.Context context)
 	{
-		var hand = Hand.values()[buf.readInt()];
-		var isRepeatEvent = buf.readBoolean();
+		if (context.player().isSpectator())
+			return;
 
-		server.execute(() -> {
-			if (player.isSpectator())
-				return;
+		var stack = context.player().getStackInHand(packet.hand());
 
-			var stack = player.getStackInHand(hand);
-
-			if (stack.getItem() instanceof ILeftClickConsumer)
-				((ILeftClickConsumer)stack.getItem()).useLeft(player.getWorld(), player, hand, isRepeatEvent);
-		});
+		if (stack.getItem() instanceof ILeftClickConsumer)
+			((ILeftClickConsumer)stack.getItem()).useLeft(context.player().getWorld(), context.player(), packet.hand(), packet.isRepeatEvent());
 	}
 
 	public static void handleItemAction(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
 		var action = buf.readInt();
 
-		server.execute(() -> {
-			var actions = ItemAction.values();
-			if (action < 0 || action >= actions.length)
-			{
-				ParziUtil.LOG.warn("Player %s attempted to use invalid item action ordinal %s", player, action);
-				return;
-			}
+		var actions = ItemAction.values();
+		if (action < 0 || action >= actions.length)
+		{
+			ParziUtil.LOG.warn("Player %s attempted to use invalid item action ordinal %s", player, action);
+			return;
+		}
 
+		server.execute(() -> {
 			var stack = getStackInHand(player, false);
 			if (stack.getItem() instanceof IItemActionListener)
 				((IItemActionListener)stack.getItem()).onItemAction(player.getWorld(), player, stack, actions[action]);
@@ -66,13 +64,11 @@ public class PlayerPacketHandler
 		return player.getMainHandStack();
 	}
 
-	public static void handleTogglePatrolPosture(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleTogglePatrolPosture(UnitC2SPacket packet, ServerPlayNetworking.Context context)
 	{
-		server.execute(() -> {
-			var data = PlayerData.getVolatilePublic(player);
+		var data = PlayerData.getVolatilePublic(context.player());
 
-			data.setPatrolPosture(!data.isPatrolPosture());
-			data.syncAll();
-		});
+		data.setPatrolPosture(!data.isPatrolPosture());
+		data.syncAll();
 	}
 }

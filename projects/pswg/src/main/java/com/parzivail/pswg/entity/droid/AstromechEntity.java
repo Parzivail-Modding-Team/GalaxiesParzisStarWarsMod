@@ -1,7 +1,6 @@
 package com.parzivail.pswg.entity.droid;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.EntityWithInventory;
 import com.parzivail.pswg.screen.AstromechScreenHandler;
 import com.parzivail.util.entity.TrackedAnimationValue;
@@ -27,10 +26,6 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
@@ -312,7 +307,7 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 		if (player.shouldCancelInteraction())
 		{
 			if (!this.getWorld().isClient)
-				EntityWithInventory.openScreen(SwgPackets.S2C.OpenEntityInventory, (ServerPlayerEntity)player, this);
+				EntityWithInventory.openScreen((ServerPlayerEntity)player, this);
 			return ActionResult.success(this.getWorld().isClient);
 		}
 

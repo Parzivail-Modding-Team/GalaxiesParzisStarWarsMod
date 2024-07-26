@@ -24,7 +24,7 @@ public class ClientPlayNetworkHandlerMixin
 	@Inject(method = "onEntityVelocityUpdate(Lnet/minecraft/network/packet/s2c/play/EntityVelocityUpdateS2CPacket;)V", at = @At("TAIL"))
 	private void onEntityVelocityUpdate(EntityVelocityUpdateS2CPacket packet, CallbackInfo ci)
 	{
-		Entity entity = this.world.getEntityById(packet.getId());
+		Entity entity = this.world.getEntityById(packet.getEntityId());
 		if (!(entity instanceof IPrecisionVelocityEntity ipe))
 			return;
 

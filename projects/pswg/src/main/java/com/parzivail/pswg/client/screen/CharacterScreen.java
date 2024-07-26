@@ -332,10 +332,6 @@ public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 		hoverText.put(CLEAR_BTN, () -> Text.translatable(I18N_CLEAR_SPECIES));
 	}
 
-	private void updateAbility()
-	{
-	}
-
 	@Override
 	protected void init()
 	{
@@ -656,15 +652,8 @@ public class CharacterScreen extends HandledScreen<CharacterScreenHandler>
 
 	private void applySpecies()
 	{
-		var passedData = new PacketByteBuf(Unpooled.buffer());
-
-		if (previewSpecies == null)
-			passedData.writeString(SwgSpeciesRegistry.METASPECIES_NONE.toString());
-		else
-			passedData.writeString(this.previewSpecies.serialize());
-
 		// TODO: verify species variables on server
-		ClientPlayNetworking.send(SwgPackets.C2S.SetOwnSpecies, passedData);
+		ClientPlayNetworking.send(new SetOwnSpeciesC2SPacket(previewSpecies == null ? SwgSpeciesRegistry.METASPECIES_NONE.toString() : this.previewSpecies.serialize()));
 	}
 
 	@Override

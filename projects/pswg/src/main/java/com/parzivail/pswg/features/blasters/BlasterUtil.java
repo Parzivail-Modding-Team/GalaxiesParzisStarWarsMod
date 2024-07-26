@@ -5,18 +5,16 @@ import com.parzivail.pswg.container.SwgParticleTypes;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
-import com.parzivail.util.data.PacketByteBufHelper;
+import com.parzivail.pswg.network.BlasterHitS2CPacket;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.math.MathUtil;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +23,6 @@ import net.minecraft.world.World;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleUnaryOperator;
-import java.util.function.Function;
 
 public class BlasterUtil
 {
@@ -77,13 +74,9 @@ public class BlasterUtil
 		}
 	}
 
-	public static void handleBoltHit(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleBoltHit(BlasterHitS2CPacket packet, ClientPlayNetworking.Context context)
 	{
-		var pos = PacketByteBufHelper.readVec3d(buf);
-		var incident = PacketByteBufHelper.readVec3d(buf);
-		var normal = PacketByteBufHelper.readVec3d(buf);
-
-		client.execute(() -> createScorchParticles(client, pos, incident, normal, true));
+		createScorchParticles(context.client(), packet.pos(), packet.incident(), packet.normal(), true);
 	}
 
 	private static void createScorchParticles(MinecraftClient client, Vec3d pos, Vec3d incident, Vec3d normal, boolean energyScorch)

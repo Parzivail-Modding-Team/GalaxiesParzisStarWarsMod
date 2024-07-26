@@ -1,68 +1,41 @@
 package com.parzivail.pswg.network;
 
 import com.parzivail.pswg.client.screen.ScreenHelper;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.EntityWithInventory;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 
-public class OpenEntityInventoryS2CPacket
+public record OpenEntityInventoryS2CPacket(int syncId, int slotCount, int entityId) implements CustomPayload
 {
-	private final int syncId;
-	private final int slotCount;
-	private final int entityId;
+	public static final PacketCodec<RegistryByteBuf, OpenEntityInventoryS2CPacket> PACKET_CODEC = PacketCodec.tuple(PacketCodecs.VAR_INT, OpenEntityInventoryS2CPacket::syncId, PacketCodecs.VAR_INT, OpenEntityInventoryS2CPacket::slotCount, PacketCodecs.INTEGER, OpenEntityInventoryS2CPacket::entityId, OpenEntityInventoryS2CPacket::new);
 
-	public OpenEntityInventoryS2CPacket(int syncId, int slotCount, int entityId)
+	public static OpenEntityInventoryS2CPacket create(PacketByteBuf buf)
 	{
-		this.syncId = syncId;
-		this.slotCount = slotCount;
-		this.entityId = entityId;
+		return new OpenEntityInventoryS2CPacket(buf.readUnsignedByte(), buf.readVarInt(), buf.readInt());
 	}
 
-	public OpenEntityInventoryS2CPacket(PacketByteBuf buf)
+	@Override
+	public Id<OpenEntityInventoryS2CPacket> getId()
 	{
-		this.syncId = buf.readUnsignedByte();
-		this.slotCount = buf.readVarInt();
-		this.entityId = buf.readInt();
+		return SwgPackets.S2C.OpenEntityInventory;
 	}
 
-	public void write(PacketByteBuf buf)
+	public static void handle(OpenEntityInventoryS2CPacket payload, ClientPlayNetworking.Context context)
 	{
-		buf.writeByte(this.syncId);
-		buf.writeVarInt(this.slotCount);
-		buf.writeInt(this.entityId);
-	}
-
-	public static void handle(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender)
-	{
-		var packet = new OpenEntityInventoryS2CPacket(buf);
-		client.execute(() -> {
-			var entity = client.world.getEntityById(packet.getEntityId());
-			if (entity instanceof EntityWithInventory inventoryEntity)
-			{
-				var clientPlayerEntity = client.player;
-				var simpleInventory = new SimpleInventory(packet.getSlotCount());
-				var handler = inventoryEntity.createScreenHandler(packet.getSyncId(), clientPlayerEntity.getInventory(), simpleInventory);
-				clientPlayerEntity.currentScreenHandler = handler;
-				client.setScreen(ScreenHelper.createEntityScreen(client, handler, clientPlayerEntity.getInventory(), inventoryEntity));
-			}
-		});
-	}
-
-	public int getSyncId()
-	{
-		return this.syncId;
-	}
-
-	public int getSlotCount()
-	{
-		return this.slotCount;
-	}
-
-	public int getEntityId()
-	{
-		return this.entityId;
+		var entity = context.client().world.getEntityById(payload.entityId());
+		if (entity instanceof EntityWithInventory inventoryEntity)
+		{
+			var clientPlayerEntity = context.client().player;
+			var simpleInventory = new SimpleInventory(payload.slotCount());
+			var handler = inventoryEntity.createScreenHandler(payload.syncId(), clientPlayerEntity.getInventory(), simpleInventory);
+			clientPlayerEntity.currentScreenHandler = handler;
+			context.client().setScreen(ScreenHelper.createEntityScreen(context.client(), handler, clientPlayerEntity.getInventory(), inventoryEntity));
+		}
 	}
 }

@@ -4,11 +4,12 @@ import com.parzivail.pswg.client.input.IJetpackDataContainer;
 import com.parzivail.pswg.client.input.JetpackControls;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.jetpack.data.JetpackTag;
+import com.parzivail.pswg.network.JetpackControlsC2SPacket;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
@@ -16,11 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -66,10 +63,9 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		player.setVelocity(motion.x, y, motion.z);
 	}
 
-	public static void handeControlPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleControlPacket(JetpackControlsC2SPacket packet, ServerPlayNetworking.Context context)
 	{
-		var controls = buf.readShort();
-		server.execute(() -> ((IJetpackDataContainer)player).pswg_setJetpackControls(JetpackControls.unpack(controls)));
+		((IJetpackDataContainer)context.player()).pswg_setJetpackControls(packet.jetpackControls());
 	}
 
 	public static Optional<Boolean> tickFallFlying(LivingEntity entity, ItemStack jetpack, boolean flyFalling)

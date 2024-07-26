@@ -163,7 +163,7 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipFire, ShipEntity::handleFirePacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipRotation, ShipEntity::handleRotationPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipControls, ShipEntity::handleControlPacket);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.JetpackControls, JetpackItem::handeControlPacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.JetpackControls, JetpackItem::handleControlPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.TogglePatrolPosture, PlayerPacketHandler::handleTogglePatrolPosture);
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-addon");

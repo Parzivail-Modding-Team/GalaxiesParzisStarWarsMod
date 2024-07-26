@@ -1,14 +1,14 @@
 package com.parzivail.pswg.client.input;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
+import com.parzivail.pswg.network.JetpackControlsC2SPacket;
+import com.parzivail.pswg.network.PlayerItemActionC2SPacket;
+import com.parzivail.pswg.network.UnitC2SPacket;
 import com.parzivail.util.item.ItemAction;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.PacketByteBuf;
 
 import java.util.EnumSet;
 
@@ -20,7 +20,7 @@ public class KeyHandler
 			return;
 
 		if (Client.KEY_SPECIES_SELECT.wasPressed())
-			ClientPlayNetworking.send(SwgPackets.C2S.RequestCustomizeSelf, new PacketByteBuf(Unpooled.buffer()));
+			ClientPlayNetworking.send(UnitC2SPacket.OpenCharacterCustomizer);
 
 		if (Client.KEY_PRIMARY_ITEM_ACTION.wasPressed())
 			sendItemAction(ItemAction.PRIMARY);
@@ -29,7 +29,7 @@ public class KeyHandler
 			sendItemAction(ItemAction.SECONDARY);
 
 		if (Client.KEY_PATROL_POSTURE.wasPressed())
-			ClientPlayNetworking.send(SwgPackets.C2S.TogglePatrolPosture, new PacketByteBuf(Unpooled.buffer()));
+			ClientPlayNetworking.send(UnitC2SPacket.TogglePatrolPosture);
 
 		var ship = ShipEntity.getShip(mc.player);
 
@@ -81,9 +81,7 @@ public class KeyHandler
 
 			if (!controls.equals(originalControls))
 			{
-				var passedData = new PacketByteBuf(Unpooled.buffer());
-				passedData.writeShort(JetpackControls.pack(controls));
-				ClientPlayNetworking.send(SwgPackets.C2S.JetpackControls, passedData);
+				ClientPlayNetworking.send(new JetpackControlsC2SPacket(controls));
 			}
 
 			((IJetpackDataContainer)mc.player).pswg_setJetpackControls(controls);
@@ -92,8 +90,6 @@ public class KeyHandler
 
 	private static void sendItemAction(ItemAction action)
 	{
-		var passedData = new PacketByteBuf(Unpooled.buffer());
-		passedData.writeInt(action.ordinal());
-		ClientPlayNetworking.send(SwgPackets.C2S.PlayerItemAction, passedData);
+		ClientPlayNetworking.send(new PlayerItemActionC2SPacket(action));
 	}
 }

@@ -1,16 +1,14 @@
 package com.parzivail.pswg.handler;
 
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.pswg.features.blasters.BlasterWield;
+import com.parzivail.pswg.network.PlayerItemLeftClickC2SPacket;
 import com.parzivail.util.item.ILeftClickConsumer;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.NotNull;
@@ -87,10 +85,7 @@ public class LeftClickHandler
 		if (ar == ActionResult.PASS)
 			return false;
 
-		var passedData = new PacketByteBuf(Unpooled.buffer());
-		passedData.writeInt(hand.ordinal());
-		passedData.writeBoolean(isRepeatEvent);
-		ClientPlayNetworking.send(SwgPackets.C2S.PlayerLeftClickItem, passedData);
+		ClientPlayNetworking.send(new PlayerItemLeftClickC2SPacket(hand, isRepeatEvent));
 		return true;
 	}
 

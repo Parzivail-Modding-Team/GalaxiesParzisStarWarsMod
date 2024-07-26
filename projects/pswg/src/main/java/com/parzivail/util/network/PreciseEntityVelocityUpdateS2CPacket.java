@@ -1,19 +1,17 @@
 package com.parzivail.util.network;
 
-import com.parzivail.util.data.PacketByteBufHelper;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import com.parzivail.pswg.container.SwgPackets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.util.math.Vec3d;
 
-public class PreciseEntityVelocityUpdateS2CPacket extends EntityVelocityUpdateS2CPacket
+public class PreciseEntityVelocityUpdateS2CPacket extends EntityVelocityUpdateS2CPacket implements CustomPayload
 {
-	public static final PacketCodec<PacketByteBuf, PreciseEntityVelocityUpdateS2CPacket> CODEC = Packet.createCodec(
+	public static final PacketCodec<PacketByteBuf, PreciseEntityVelocityUpdateS2CPacket> CODEC = PacketCodec.of(
 			PreciseEntityVelocityUpdateS2CPacket::write, PreciseEntityVelocityUpdateS2CPacket::new
 	);
 
@@ -35,16 +33,22 @@ public class PreciseEntityVelocityUpdateS2CPacket extends EntityVelocityUpdateS2
 	public PreciseEntityVelocityUpdateS2CPacket(PacketByteBuf buf)
 	{
 		super(buf);
-		this.position = PacketByteBufHelper.readVec3d(buf);
-		this.velocity = PacketByteBufHelper.readVec3d(buf);
+		this.position = buf.readVec3d();
+		this.velocity = buf.readVec3d();
+	}
+
+	@Override
+	public Id<PreciseEntityVelocityUpdateS2CPacket> getId()
+	{
+		return SwgPackets.S2C.PreciseEntityVelocityUpdate;
 	}
 
 	@Override
 	public void write(PacketByteBuf buf)
 	{
 		super.write(buf);
-		PacketByteBufHelper.writeVec3d(buf, position);
-		PacketByteBufHelper.writeVec3d(buf, velocity);
+		buf.writeVec3d(position);
+		buf.writeVec3d(velocity);
 	}
 
 	public Vec3d getVelocity()
@@ -57,10 +61,9 @@ public class PreciseEntityVelocityUpdateS2CPacket extends EntityVelocityUpdateS2
 		return position;
 	}
 
-	public static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender)
+	public static void handle(PreciseEntityVelocityUpdateS2CPacket packet, ClientPlayNetworking.Context context)
 	{
-		var packet = new PreciseEntityVelocityUpdateS2CPacket(buf);
-		client.execute(() -> handler.onEntityVelocityUpdate(packet));
+		context.client().getNetworkHandler().onEntityVelocityUpdate(packet);
 	}
 }
 

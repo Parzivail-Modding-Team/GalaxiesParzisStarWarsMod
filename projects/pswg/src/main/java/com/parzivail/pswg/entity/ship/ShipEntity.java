@@ -6,7 +6,9 @@ import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.client.render.camera.ChaseCam;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.util.data.PacketByteBufHelper;
+import com.parzivail.pswg.network.ShipControlsC2SPacket;
+import com.parzivail.pswg.network.ShipRotationC2SPacket;
+import com.parzivail.pswg.network.UnitC2SPacket;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.IFlyingVehicle;
 import com.parzivail.util.entity.IPrecisionVelocityEntity;
@@ -18,9 +20,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -28,11 +34,8 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -97,14 +100,12 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		return false;
 	}
 
-	public static void handleFirePacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleFirePacket(UnitC2SPacket packet, ServerPlayNetworking.Context context)
 	{
-		server.execute(() -> {
-			var ship = getShip(player);
+		var ship = getShip(context.player());
 
-			if (ship != null && ship.isPilot(player))
-				ship.acceptFireInput();
-		});
+		if (ship != null && ship.isPilot(context.player()))
+			ship.acceptFireInput();
 	}
 
 	@Override
@@ -137,28 +138,20 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		return null;
 	}
 
-	public static void handleRotationPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleRotationPacket(ShipRotationC2SPacket packet, ServerPlayNetworking.Context context)
 	{
-		var q = PacketByteBufHelper.readQuaternion(buf);
+		var ship = getShip(context.player());
 
-		server.execute(() -> {
-			var ship = getShip(player);
-
-			if (ship != null && ship.isPilot(player))
-				ship.setRotation(q);
-		});
+		if (ship != null && ship.isPilot(context.player()))
+			ship.setRotation(packet.rotation());
 	}
 
-	public static void handleControlPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleControlPacket(ShipControlsC2SPacket packet, ServerPlayNetworking.Context context)
 	{
-		var controls = buf.readShort();
+			var ship = getShip(context.player());
 
-		server.execute(() -> {
-			var ship = getShip(player);
-
-			if (ship != null && ship.isPilot(player))
-				ship.acceptControlInput(ShipControls.unpack(controls));
-		});
+			if (ship != null && ship.isPilot(context.player()))
+				ship.acceptControlInput(packet.shipControls());
 	}
 
 	public static ShipEntity getShip(LivingEntity player)
@@ -464,9 +457,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 		if (this.getWorld().isClient)
 		{
-			var passedData = new PacketByteBuf(Unpooled.buffer());
-			passedData.writeShort(ShipControls.pack(controls));
-			ClientPlayNetworking.send(SwgPackets.C2S.ShipControls, passedData);
+			ClientPlayNetworking.send(new ShipControlsC2SPacket(controls));
 		}
 	}
 
@@ -536,9 +527,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 		clientInstRotation = new Quaternionf(rotation);
 
-		var passedData = new PacketByteBuf(Unpooled.buffer());
-		PacketByteBufHelper.writeQuaternion(passedData, rotation);
-		ClientPlayNetworking.send(SwgPackets.C2S.ShipRotation, passedData);
+		ClientPlayNetworking.send(new ShipRotationC2SPacket(rotation));
 	}
 
 	protected boolean allowPitchMovement()
@@ -552,7 +541,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		if (!isPilot(player))
 			return false;
 
-		ClientPlayNetworking.send(SwgPackets.C2S.ShipFire, new PacketByteBuf(Unpooled.buffer()));
+		ClientPlayNetworking.send(UnitC2SPacket.ShipFire);
 		return true;
 	}
 

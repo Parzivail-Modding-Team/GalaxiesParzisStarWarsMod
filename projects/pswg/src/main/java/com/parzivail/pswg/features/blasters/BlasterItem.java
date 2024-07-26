@@ -6,15 +6,15 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
 import com.parzivail.pswg.component.PlayerData;
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.features.blasters.data.*;
+import com.parzivail.pswg.network.AccumulateRecoilS2CPacket;
+import com.parzivail.pswg.network.PlayerSocketSparksS2CPacket;
 import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.TooltipUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.MathUtil;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
@@ -34,7 +34,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -53,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.DoubleUnaryOperator;
-import java.util.function.Function;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener, ITabStackProvider
 {
@@ -603,26 +601,22 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			if (shouldRecoil)
 			{
-				var passedData = new PacketByteBuf(Unpooled.buffer());
 				var horizNoise = world.random.nextGaussian();
 				horizNoise = horizNoise * 0.3 + 0.7 * Math.signum(horizNoise);
 
 				var recoilAmount = getRecoilAmount(bd, bt.attachmentBitmask);
 
-				passedData.writeFloat(recoilAmount * (float)(bd.recoil.horizontal * horizNoise));
-				passedData.writeFloat(recoilAmount * (float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
-				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.AccumulateRecoil, passedData);
+				ServerPlayNetworking.send((ServerPlayerEntity)player, new AccumulateRecoilS2CPacket(
+						recoilAmount * (float)(bd.recoil.horizontal * horizNoise),
+						recoilAmount * (float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2))
+				));
 			}
 
 			if (bd.pyrotechnics)
 			{
-				var passedData = new PacketByteBuf(Unpooled.buffer());
-				passedData.writeInt(player.getId());
-				passedData.writeString(SOCKET_ID_BARREL_END);
-
 				var sPlayer = (ServerPlayerEntity)player;
 				for (var trackingPlayer : PlayerLookup.tracking(sPlayer.getServerWorld(), player.getBlockPos()))
-					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PlayerSocketPyro, passedData);
+					ServerPlayNetworking.send(trackingPlayer, new PlayerSocketSparksS2CPacket(player.getId(), SOCKET_ID_BARREL_END));
 			}
 
 			bt.serializeAsSubtag(stack);

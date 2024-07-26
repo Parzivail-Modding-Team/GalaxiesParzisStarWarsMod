@@ -7,7 +7,6 @@ import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.features.lightsabers.data.LightsaberBladeType;
-import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.math.ColorUtil;
 import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiTableColumnFlags;
@@ -132,7 +131,7 @@ public class LightsaberAddonFeature implements IAddonFeature
 
 		var hasOwner = getNameType() == NameType.Owner;
 		var ownerName = hasOwner ? getName() : null;
-		PacketByteBufHelper.writeNullable(buf, ownerName, PacketByteBuf::writeString);
+		buf.writeNullable(ownerName, PacketByteBuf::writeString);
 
 		buf.writeBoolean(unstable.get());
 		buf.writeString(LightsaberBladeType.values()[bladeType.get()].getId());

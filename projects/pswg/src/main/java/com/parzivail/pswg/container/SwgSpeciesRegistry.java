@@ -6,6 +6,7 @@ import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.mixin.ServerPlayerEntityAccessor;
+import com.parzivail.pswg.network.SetOwnSpeciesC2SPacket;
 import com.parzivail.pswg.screen.CharacterScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -94,20 +95,16 @@ public class SwgSpeciesRegistry
 		return "species." + species.getNamespace() + "." + species.getPath();
 	}
 
-	public static void handleSetOwnSpecies(MinecraftServer server, ServerPlayerEntity serverPlayerEntity, ServerPlayNetworkHandler serverPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
+	public static void handleSetOwnSpecies(SetOwnSpeciesC2SPacket packet, ServerPlayNetworking.Context context)
 	{
-		var speciesString = packetByteBuf.readString();
-
-		server.execute(() -> {
-			// TODO: replace this with some other system
-			if (serverPlayerEntity.currentScreenHandler instanceof CharacterScreenHandler characterScreenHandler)
-				characterScreenHandler.setSpecies(speciesString);
-			else
-			{
-				var c = PlayerData.getPersistentPublic(serverPlayerEntity);
-				c.setCharacter(deserialize(speciesString));
-			}
-		});
+		// TODO: replace this with some other system
+		if (context.player().currentScreenHandler instanceof CharacterScreenHandler characterScreenHandler)
+			characterScreenHandler.setSpecies(packet.species());
+		else
+		{
+			var c = PlayerData.getPersistentPublic(context.player());
+			c.setCharacter(deserialize(packet.species()));
+		}
 	}
 
 	public static void handleRequestCustomizeSelf(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler serverPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)

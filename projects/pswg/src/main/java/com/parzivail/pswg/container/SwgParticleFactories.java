@@ -1,7 +1,5 @@
 package com.parzivail.pswg.container;
 
-import com.mojang.serialization.Codec;
-import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.particle.ExplosionSmokeParticle;
 import com.parzivail.pswg.client.particle.WakeParticle;
 import com.parzivail.pswg.client.particle.WaterWakeParticle;
@@ -9,20 +7,15 @@ import com.parzivail.pswg.client.render.player.PlayerSocket;
 import com.parzivail.pswg.features.blasters.client.particle.ScorchParticle;
 import com.parzivail.pswg.features.blasters.client.particle.SlugTrailParticle;
 import com.parzivail.pswg.features.blasters.client.particle.SparkParticle;
+import com.parzivail.pswg.network.PlayerSocketSparksS2CPacket;
 import com.parzivail.util.client.particle.PParticleType;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
 import static com.parzivail.pswg.container.SwgParticleTypes.*;
@@ -49,53 +42,46 @@ public class SwgParticleFactories
 		registerBlockStateBasedFactory(WAKE, new WakeParticle.Factory());
 	}
 
-	public static void handlePlayerSocketPyro(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handlePlayerSocketPyro(PlayerSocketSparksS2CPacket packet, ClientPlayNetworking.Context context)
 	{
-		var playerId = buf.readInt();
-		var playerSocket = buf.readString();
+		var entity = context.client().world.getEntityById(packet.playerId());
+		if (!(entity instanceof PlayerEntity player))
+			return;
 
-		client.execute(() -> {
-			assert client.world != null;
+		var socket = PlayerSocket.getSocket(player, packet.playerSocket());
+		if (socket == null)
+			return;
 
-			var entity = client.world.getEntityById(playerId);
-			if (!(entity instanceof PlayerEntity player))
-				return;
+		for (var i = 0; i < 25; i++)
+		{
+			var vx = context.client().world.random.nextGaussian() * 0.03;
+			var vy = context.client().world.random.nextGaussian() * 0.03;
+			var vz = context.client().world.random.nextGaussian() * 0.03;
 
-			var socket = PlayerSocket.getSocket(player, playerSocket);
-			if (socket == null)
-				return;
+			var sparkVelocity = socket.normal().mul(0.6f * (context.client().world.random.nextFloat() * 0.5f + 0.5f), new Vector3f());
+			context.client().world.addParticle(
+					SwgParticleTypes.SPARK,
+					socket.position().x,
+					socket.position().y,
+					socket.position().z,
+					sparkVelocity.x + vx,
+					sparkVelocity.y + vy,
+					sparkVelocity.z + vz
+			);
 
-			for (var i = 0; i < 25; i++)
+			if (i % 3 == 0)
 			{
-				var vx = client.world.random.nextGaussian() * 0.03;
-				var vy = client.world.random.nextGaussian() * 0.03;
-				var vz = client.world.random.nextGaussian() * 0.03;
-
-				var sparkVelocity = socket.normal().mul(0.6f * (client.world.random.nextFloat() * 0.5f + 0.5f), new Vector3f());
-				client.world.addParticle(
-						SwgParticleTypes.SPARK,
+				var smokeVelocity = socket.normal().mul(0.05f * (context.client().world.random.nextFloat() * 0.5f + 0.5f), new Vector3f());
+				context.client().world.addParticle(
+						ParticleTypes.SMOKE,
 						socket.position().x,
 						socket.position().y,
 						socket.position().z,
-						sparkVelocity.x + vx,
-						sparkVelocity.y + vy,
-						sparkVelocity.z + vz
+						smokeVelocity.x + vx,
+						smokeVelocity.y + vy,
+						smokeVelocity.z + vz
 				);
-
-				if (i % 3 == 0)
-				{
-					var smokeVelocity = socket.normal().mul(0.05f * (client.world.random.nextFloat() * 0.5f + 0.5f), new Vector3f());
-					client.world.addParticle(
-							ParticleTypes.SMOKE,
-							socket.position().x,
-							socket.position().y,
-							socket.position().z,
-							smokeVelocity.x + vx,
-							smokeVelocity.y + vy,
-							smokeVelocity.z + vz
-					);
-				}
 			}
-		});
+		}
 	}
 }

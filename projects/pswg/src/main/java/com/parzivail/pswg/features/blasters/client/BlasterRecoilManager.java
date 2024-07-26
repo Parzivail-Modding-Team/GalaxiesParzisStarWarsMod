@@ -1,14 +1,13 @@
 package com.parzivail.pswg.features.blasters.client;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.network.AccumulateRecoilS2CPacket;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Arm;
 import org.joml.Quaternionf;
 
@@ -84,13 +83,9 @@ public class BlasterRecoilManager
 		horizontalVelocity = horizontal;
 	}
 
-	public static void handleAccumulateRecoil(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleAccumulateRecoil(AccumulateRecoilS2CPacket packet, ClientPlayNetworking.Context context)
 	{
-		var horiz = buf.readFloat();
-		var vert = buf.readFloat();
-		client.execute(() -> {
-			setRecoil(vert, horiz);
-		});
+		setRecoil(packet.vert(), packet.horiz());
 	}
 
 	public static void applyCameraShake(MinecraftClient mc, MatrixStack matrix, Camera camera, float tickDelta, double fov)
