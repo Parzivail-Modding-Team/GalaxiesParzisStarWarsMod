@@ -2,15 +2,14 @@ package com.parzivail.pswg.item;
 
 import com.parzivail.pswg.blockentity.PowerCouplingBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgComponents;
 import com.parzivail.util.client.TooltipUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
@@ -24,8 +23,7 @@ public class CableItem extends Item
 	@Override
 	public boolean hasGlint(ItemStack stack)
 	{
-		var nbt = stack.getOrCreateNbt();
-		return nbt.contains("source");
+		return stack.contains(SwgComponents.CableSource);
 	}
 
 	@Override
@@ -33,16 +31,10 @@ public class CableItem extends Item
 	{
 		super.appendTooltip(stack, context, tooltip, type);
 
-		var nbt = stack.getOrCreateNbt();
-		if (nbt.contains("source"))
+		var source = stack.get(SwgComponents.CableSource);
+		if (source != null)
 		{
-			var source = nbt.getCompound("source");
-
-			var sourceX = source.getInt("x");
-			var sourceY = source.getInt("y");
-			var sourceZ = source.getInt("z");
-
-			tooltip.add(TooltipUtil.getStatus(this, sourceX, sourceY, sourceZ));
+			tooltip.add(TooltipUtil.getStatus(this, source.getX(), source.getY(), source.getZ()));
 		}
 	}
 
@@ -57,28 +49,18 @@ public class CableItem extends Item
 			var playerEntity = context.getPlayer();
 			if (!world.isClient && playerEntity != null)
 			{
-				var nbt = context.getStack().getOrCreateNbt();
-				if (nbt.contains("source"))
+				var source = context.getStack().get(SwgComponents.CableSource);
+				if (source != null)
 				{
-					var source = nbt.getCompound("source");
-
-					var sourceX = source.getInt("x");
-					var sourceY = source.getInt("y");
-					var sourceZ = source.getInt("z");
-					var sourcePos = new BlockPos(sourceX, sourceY, sourceZ);
-
-					if (!blockPos.equals(sourcePos) && world.getBlockEntity(sourcePos) instanceof PowerCouplingBlockEntity pcbe)
+					if (!blockPos.equals(source) && world.getBlockEntity(source) instanceof PowerCouplingBlockEntity pcbe)
 						pcbe.attachTo(world, blockPos);
 
-					nbt.remove("source");
+					context.getStack().remove(SwgComponents.CableSource);
 				}
 				else
 				{
-					var e = new NbtCompound();
-					e.putInt("x", blockPos.getX());
-					e.putInt("y", blockPos.getY());
-					e.putInt("z", blockPos.getZ());
-					nbt.put("source", e);
+					source = blockPos;
+					context.getStack().set(SwgComponents.CableSource, source);
 				}
 			}
 

@@ -82,6 +82,8 @@ public class Galaxies implements ModInitializer
 
 		Resources.checkVersion();
 
+		SwgComponents.register();
+
 		SwgRecipeType.register();
 		SwgRecipeSerializers.register();
 
