@@ -26,7 +26,6 @@ public class SwgPackets
 
 	public static class S2C
 	{
-		public static final Identifier SyncBlockToClient = Resources.id("csync");
 		public static final CustomPayload.Id<PreciseEntityVelocityUpdateS2CPacket> PreciseEntityVelocityUpdate = new CustomPayload.Id<>(Resources.id("pevel"));
 		public static final CustomPayload.Id<PreciseEntitySpawnS2CPacket> PreciseEntitySpawn = new CustomPayload.Id<>(Resources.id("pesp"));
 		public static final CustomPayload.Id<OpenEntityInventoryS2CPacket> OpenEntityInventory = new CustomPayload.Id<>(Resources.id("entity_inventory"));

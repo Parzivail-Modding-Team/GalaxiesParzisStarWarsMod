@@ -2,23 +2,22 @@ package com.parzivail.pswg.features.blasters.workbench;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgScreenTypes;
-import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.blockentity.InventoryBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory, BlockEntityClientSerializable
+public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
 {
 	public static final int SLOT_BLASTER = 0;
 	public static final int SLOT_1 = 1;
@@ -45,42 +44,27 @@ public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements
 	}
 
 	@Override
+	public Packet<ClientPlayPacketListener> toUpdatePacket()
+	{
+		return BlockEntityUpdateS2CPacket.create(this);
+	}
+
+	@Override
 	public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup)
 	{
-		return toClientTag(super.toInitialChunkDataNbt(registryLookup));
+		return createComponentlessNbt(registryLookup);
 	}
 
 	@Override
 	public void markDirty()
 	{
 		super.markDirty();
-		sync();
+		world.updateListeners(pos, getCachedState(), getCachedState(), BlasterWorkbenchBlock.NOTIFY_ALL);
 	}
 
 	@Override
-	public void readNbt(NbtCompound tag)
+	public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		if (this.world != null && this.world.isClient)
-			fromClientTag(tag);
-		super.readNbt(tag);
-	}
-
-	@Override
-	public void fromClientTag(NbtCompound compoundTag)
-	{
-		inventory.set(SLOT_BLASTER, ItemStack.fromNbt(compoundTag.getCompound("blaster")));
-	}
-
-	@Override
-	public NbtCompound toClientTag(NbtCompound compoundTag)
-	{
-		compoundTag.put("blaster", inventory.get(SLOT_BLASTER).writeNbt(new NbtCompound()));
-		return compoundTag;
-	}
-
-	@Override
-	public Identifier getSyncPacketId()
-	{
-		return SwgPackets.S2C.SyncBlockToClient;
+		super.readNbt(tag, registryLookup);
 	}
 }

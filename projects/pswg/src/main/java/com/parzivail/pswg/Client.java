@@ -49,7 +49,6 @@ import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
-import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.client.model.ModelRegistry;
@@ -381,7 +380,6 @@ public class Client implements ClientModInitializer
 			}
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlockToClient, BlockEntityClientSerializable::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);

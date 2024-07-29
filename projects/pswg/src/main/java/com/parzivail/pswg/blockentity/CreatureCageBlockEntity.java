@@ -1,20 +1,21 @@
 package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.entity.EntityUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CreatureCageBlockEntity extends BlockEntity implements BlockEntityClientSerializable
+public class CreatureCageBlockEntity extends BlockEntity
 {
 	private NbtCompound containedEntityData;
 	private Entity containedEntity;
@@ -44,22 +45,15 @@ public class CreatureCageBlockEntity extends BlockEntity implements BlockEntityC
 	}
 
 	@Override
+	public Packet<ClientPlayPacketListener> toUpdatePacket()
+	{
+		return BlockEntityUpdateS2CPacket.create(this);
+	}
+
+	@Override
 	public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup)
 	{
-		return toClientTag(super.toInitialChunkDataNbt(registryLookup));
-	}
-
-	@Override
-	public void fromClientTag(NbtCompound tag)
-	{
-		readNbt(tag);
-	}
-
-	@Override
-	public NbtCompound toClientTag(NbtCompound tag)
-	{
-		writeNbt(tag);
-		return tag;
+		return createComponentlessNbt(registryLookup);
 	}
 
 	public boolean hasContainedEntity()
@@ -77,7 +71,7 @@ public class CreatureCageBlockEntity extends BlockEntity implements BlockEntityC
 	public void setContainedEntity(Entity e)
 	{
 		this.containedEntity = e;
-		sync();
+		world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL_AND_REDRAW);
 		markDirty();
 	}
 
@@ -104,11 +98,5 @@ public class CreatureCageBlockEntity extends BlockEntity implements BlockEntityC
 		var entity = getContainedEntity();
 		if (entity != null)
 			entity.tick();
-	}
-
-	@Override
-	public Identifier getSyncPacketId()
-	{
-		return SwgPackets.S2C.SyncBlockToClient;
 	}
 }

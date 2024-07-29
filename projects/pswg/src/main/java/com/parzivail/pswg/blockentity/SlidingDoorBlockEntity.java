@@ -2,8 +2,6 @@ package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.block.Sliding1x2DoorBlock;
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.util.block.BlockEntityClientSerializable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -11,11 +9,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class SlidingDoorBlockEntity extends BlockEntity implements BlockEntityClientSerializable
+public class SlidingDoorBlockEntity extends BlockEntity
 {
 	private static final int ANIMATION_TIME = 10;
 
@@ -43,7 +40,7 @@ public class SlidingDoorBlockEntity extends BlockEntity implements BlockEntityCl
 	@Override
 	public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup)
 	{
-		return toClientTag(super.toInitialChunkDataNbt(registryLookup));
+		return createComponentlessNbt(registryLookup);
 	}
 
 	@Override
@@ -52,20 +49,6 @@ public class SlidingDoorBlockEntity extends BlockEntity implements BlockEntityCl
 		super.readNbt(tag, registryLookup);
 
 		timer = tag.getByte("timer");
-	}
-
-	@Override
-	public void fromClientTag(NbtCompound compoundTag)
-	{
-		timer = compoundTag.getByte("timer");
-	}
-
-	@Override
-	public NbtCompound toClientTag(NbtCompound compoundTag)
-	{
-		compoundTag.putByte("timer", timer);
-
-		return compoundTag;
 	}
 
 	public boolean isMoving()
@@ -122,7 +105,7 @@ public class SlidingDoorBlockEntity extends BlockEntity implements BlockEntityCl
 	{
 		setTimer(ANIMATION_TIME);
 		setDirection(opening);
-		sync();
+		world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL_AND_REDRAW);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -164,12 +147,6 @@ public class SlidingDoorBlockEntity extends BlockEntity implements BlockEntityCl
 
 			be.markDirty();
 		}
-	}
-
-	@Override
-	public Identifier getSyncPacketId()
-	{
-		return SwgPackets.S2C.SyncBlockToClient;
 	}
 
 	public BlockState getOccupiedState()
