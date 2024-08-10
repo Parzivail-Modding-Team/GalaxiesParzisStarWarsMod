@@ -1,7 +1,7 @@
 import java.io.ByteArrayOutputStream
 
 plugins {
-	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.1"
+	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.2"
 	id("fabric-loom") version "1.7-SNAPSHOT"
 	`maven-publish`
 }
