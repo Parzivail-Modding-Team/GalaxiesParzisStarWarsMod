@@ -5,9 +5,9 @@ import com.parzivail.aurek.ToolkitClient;
 import net.minecraft.Bootstrap;
 import net.minecraft.util.Util;
 import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.ReportType;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Locale;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -53,7 +53,7 @@ public class WorkerUtil
 
 		if (t instanceof CrashException)
 		{
-			Bootstrap.println(((CrashException)t).getReport().asString());
+			Bootstrap.println(((CrashException)t).getReport().asString(ReportType.MINECRAFT_CRASH_REPORT));
 			System.exit(-1);
 		}
 
