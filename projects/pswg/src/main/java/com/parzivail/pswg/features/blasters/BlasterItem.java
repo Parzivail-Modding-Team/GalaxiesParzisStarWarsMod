@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
 import com.parzivail.pswg.component.PlayerData;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.features.blasters.data.*;
@@ -534,7 +533,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			m.rotateY(MathUtil.toRadians(entityYaw));
 			m.rotateX(MathUtil.toRadians(entityPitch));
 
-			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, MathUtil.transform(MathUtil.V3D_POS_Z, m).normalize());
+			var fromDir = MathUtil.transform(MathUtil.V3D_POS_Z, m).normalize();
 
 			var range = getRange(bd, bt);
 			var damageRange = range * getRangeMultiplier(bd, bt.attachmentBitmask);
@@ -560,7 +559,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 30 + heatPitchIncrease);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
-						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
+						entity.setPosition(player.getPos().add(new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0)));
 						entity.setColor(bd.boltColor);
 
 						entity.setLength(bd.boltLength);
@@ -577,7 +576,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
-						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
+						entity.setPosition(player.getPos().add(new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0)));
 
 						entity.setLength(bd.boltLength);
 						entity.setRadius(bd.boltRadius);
@@ -589,7 +588,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
 					BlasterUtil.fireIon(world, player, range, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 2.0F, 0);
-						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
+						entity.setPosition(player.getPos().add(new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0)));
 						entity.setColor(bd.boltColor);
 						entity.setLength(bd.boltLength);
 						entity.setRadius(bd.boltRadius);
