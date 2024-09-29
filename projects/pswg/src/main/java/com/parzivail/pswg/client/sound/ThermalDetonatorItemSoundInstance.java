@@ -1,8 +1,9 @@
 package com.parzivail.pswg.client.sound;
 
+import com.parzivail.pswg.container.SwgComponents;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.item.ThermalDetonatorComponent;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
-import com.parzivail.pswg.item.ThermalDetonatorTag;
 import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -89,10 +90,10 @@ public class ThermalDetonatorItemSoundInstance extends DopplerSoundInstance impl
 
 	private static boolean isPrimed(ItemStack stack)
 	{
-		if (!(stack.getItem() instanceof ThermalDetonatorItem))
+		ThermalDetonatorComponent tdc = stack.get(SwgComponents.ThermalDetonator);
+		if (tdc == null)
 			return false;
 
-		var tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
-		return tdt.primed;
+		return tdc.primed();
 	}
 }

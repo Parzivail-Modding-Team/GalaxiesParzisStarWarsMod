@@ -328,7 +328,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
-	public float getCooldownProgress(PlayerEntity player, World world, ItemStack stack, float tickDelta)
+	public float getCooldownProgress(PlayerEntity player, ItemStack stack, float tickDelta)
 	{
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = getBlasterDescriptor(stack, true);

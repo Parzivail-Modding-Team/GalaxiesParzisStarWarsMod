@@ -5,8 +5,8 @@ import com.parzivail.pswg.client.container.SwgSoundTimelines;
 import com.parzivail.pswg.client.render.entity.ThermalDetonatorRenderer;
 import com.parzivail.pswg.client.sound.ThermalDetonatorItemSoundInstance;
 import com.parzivail.pswg.client.sound.timeline.SoundTimelineManager;
+import com.parzivail.pswg.container.SwgComponents;
 import com.parzivail.pswg.item.ThermalDetonatorItem;
-import com.parzivail.pswg.item.ThermalDetonatorTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.MinecraftClient;
@@ -91,7 +91,7 @@ public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 
 		matrices.push();
 
-		var tdt = new ThermalDetonatorTag(stack.getOrCreateNbt());
+		var tdc = stack.get(SwgComponents.ThermalDetonator);
 
 		var m = P3dManager.INSTANCE.get(ThermalDetonatorRenderer.MODEL);
 		if (m == null)
@@ -100,7 +100,7 @@ public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 			throw new CrashException(crashReport);
 		}
 
-		var primed = tdt.primed;
+		var primed = tdc.primed();
 		var beeping = false;
 
 		if (entity == null)
@@ -110,7 +110,7 @@ public class ThermalDetonatorItemRenderer implements ICustomItemRenderer
 			beeping = BEEPING_PLAYERS.contains(entity);
 
 		final var renderedTexture = primed ? (beeping ? ThermalDetonatorRenderer.TEXTURE_BEEPING : ThermalDetonatorRenderer.TEXTURE_PRIMED) : ThermalDetonatorRenderer.TEXTURE_OFF;
-		m.render(matrices, vertexConsumers, tdt, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(renderedTexture)), light, 0, 255, 255, 255, 255);
+		m.render(matrices, vertexConsumers, tdc, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(renderedTexture)), light, 0, 255, 255, 255, 255);
 
 		matrices.pop();
 	}

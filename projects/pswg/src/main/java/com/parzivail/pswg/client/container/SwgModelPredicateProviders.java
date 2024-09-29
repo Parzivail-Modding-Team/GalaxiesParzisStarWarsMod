@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.container.SwgComponents;
 import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.item.ThermalDetonatorTag;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.util.Identifier;
 
@@ -16,8 +16,7 @@ public class SwgModelPredicateProviders
 				SwgItems.Explosives.ThermalDetonator,
 				ThermalDetonatorPrimed,
 				(stack, world, entity, seed) -> {
-					var tag = new ThermalDetonatorTag(stack.getOrCreateNbt());
-					return entity != null && tag.primed ? 1.0F : 0.0F;
+					return entity != null && stack.get(SwgComponents.ThermalDetonator).primed() ? 1.0F : 0.0F;
 				}
 		);
 	}
