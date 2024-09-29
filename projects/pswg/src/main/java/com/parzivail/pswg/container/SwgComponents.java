@@ -2,7 +2,6 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.ThermalDetonatorComponent;
-import com.parzivail.pswg.item.jetpack.data.JetpackComponent;
 import net.minecraft.component.ComponentType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;

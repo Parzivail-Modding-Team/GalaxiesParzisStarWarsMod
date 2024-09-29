@@ -3,9 +3,7 @@ package com.parzivail.pswg.item.jetpack;
 import com.parzivail.pswg.client.input.IJetpackDataContainer;
 import com.parzivail.pswg.client.input.JetpackControls;
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import com.parzivail.pswg.item.jetpack.data.JetpackTag;
 import com.parzivail.pswg.network.JetpackControlsC2SPacket;
-import com.parzivail.util.item.IDefaultNbtProvider;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -14,16 +12,14 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Optional;
 
-public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
+public class JetpackItem extends TrinketItem
 {
 	public record Stats()
 	{
@@ -49,12 +45,6 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 			return ItemStack.EMPTY;
 
 		return item.getFirst().getRight();
-	}
-
-	@Override
-	public NbtCompound getDefaultTag(ItemConvertible item, int count)
-	{
-		return new JetpackTag().toSubtag();
 	}
 
 	private static void setVerticalVelocity(LivingEntity player, double y)
@@ -130,8 +120,6 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 
 		if (!stack.isEmpty())
 		{
-			var jt = new JetpackTag(stack.getOrCreateNbt());
-
 			if (true)
 			{
 				var jc = ((IJetpackDataContainer)living);
@@ -146,7 +134,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 				var isHoldingRight = controls.contains(JetpackControls.RIGHT);
 				var isHoldingMode = controls.contains(JetpackControls.MODE);
 
-//				var oldThrottle = jt.throttle;
+//				var oldThrottle = jt.throttle
 //				if (isHoldingUp)
 //					jt.throttle += 0.1f;
 //				else if (isHoldingDown)
