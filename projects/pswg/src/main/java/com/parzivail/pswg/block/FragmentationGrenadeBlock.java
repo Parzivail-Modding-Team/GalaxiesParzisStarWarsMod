@@ -3,7 +3,6 @@ package com.parzivail.pswg.block;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.FragmentationGrenadeEntity;
-import com.parzivail.pswg.entity.ThermalDetonatorEntity;
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
@@ -20,7 +19,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -105,9 +103,9 @@ public class FragmentationGrenadeBlock extends WaterloggableRotatingBlock implem
 	@Override
 	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
-		if (entity instanceof ThermalDetonatorEntity tde)
+		if (entity instanceof FragmentationGrenadeEntity fge)
 		{
-			if (state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && !tde.isPrimed())
+			if (state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && !fge.isPrimed())
 			{
 				world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
 				entity.discard();

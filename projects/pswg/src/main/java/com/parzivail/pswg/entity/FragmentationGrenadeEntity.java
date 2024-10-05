@@ -74,17 +74,6 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
 	{
 	}
-
-	@Override
-	public Vec3d getVelocity()
-	{
-		if (IS_EXPLODING)
-		{
-			return Vec3d.ZERO;
-		}
-		return super.getVelocity();
-	}
-
 	@Override
 	public boolean shouldRender(double cameraX, double cameraY, double cameraZ)
 	{
@@ -136,6 +125,7 @@ public class FragmentationGrenadeEntity extends ThrowableExplosive
 		if (IS_EXPLODING)
 		{
 			this.setVelocity(Vec3d.ZERO);
+			this.velocityModified=true;
 		}
 
 		if (EXPLOSION_TICK == 7)
