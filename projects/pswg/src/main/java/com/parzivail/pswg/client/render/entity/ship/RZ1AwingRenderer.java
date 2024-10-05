@@ -26,7 +26,7 @@ public class RZ1AwingRenderer extends ShipRenderer<RZ1Awing>
 		var modelRef = P3dManager.INSTANCE.get(Resources.id("ship/awing_rz1"));
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
 
-		modelRef.render(matrix, vertexConsumer, entity, RigRZ1.INSTANCE::getPartTransformation, light, tickDelta, 255, 255, 255, 255);
+		modelRef.render(matrix, vertexConsumer, entity, RigRZ1.INSTANCE::getPartTransformation, light, tickDelta, 255, 255, 255, 50);
 	}
 	@Override
 	public Identifier getTexture(RZ1Awing entity)
