@@ -49,6 +49,19 @@ public class PlateBlock extends BlockWithEntity
 		if (stack.isFood() && blockEntity instanceof PlateBlockEntity plateBlockEntity && foodAmount < MAX_FOOD_VALUE)
 			plateBlockEntity.addFood(stack);
 	}
+	@Override
+	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player)
+	{
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if(blockEntity instanceof PlateBlockEntity plateBlockEntity){
+			if(player.isSneaking())
+				plateBlockEntity.dropPlate();
+			else
+				plateBlockEntity.dropFoods();
+		}
+
+		super.onBreak(world, pos, state, player);
+	}
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)

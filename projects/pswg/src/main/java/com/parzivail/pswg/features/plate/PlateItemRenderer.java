@@ -34,14 +34,16 @@ public class PlateItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				matrices.scale(0.5f, 0.5f, 0.5f);
 			case HEAD:
 			case FIRST_PERSON_LEFT_HAND:
+				matrices.translate(-0.1, 0, 0);
+				break;
 			case FIRST_PERSON_RIGHT_HAND:
-				matrices.translate(0.4, -0.1, 0);
+				matrices.translate(0.2, 0, 0);
 				break;
 			case THIRD_PERSON_LEFT_HAND:
 			case THIRD_PERSON_RIGHT_HAND:
 				matrices.translate(0, 0, 0);
 				matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / 2)));
-				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / 6)));
+				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / 10)));
 				break;
 			case FIXED:
 				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / 4)));

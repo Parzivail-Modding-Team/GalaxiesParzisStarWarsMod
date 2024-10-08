@@ -12,13 +12,9 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.function.ValueLists;
 import net.minecraft.util.math.RotationAxis;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.IntFunction;
 
 public class PlateUtil
 {
@@ -26,6 +22,18 @@ public class PlateUtil
 	private static final P3dModel FALLBACK_MODEL = P3dManager.INSTANCE.get(Resources.id("block/food/haroun_bread"));
 	private static final Identifier FALLBACK_TEXTURE = Resources.id("textures/block/model/food/haroun_bread.png");
 	public static final Identifier TEXTURE = Resources.id("textures/block/model/food/plate.png");
+	public static float getHeightOverride(String s){
+		String food = s.substring(16);
+		float override = 0;
+		switch (food){
+			case "meiloorun": return (5f/16f);
+			case "bantha_cookie": return (3f/16f);
+			case "pallie_fruit": return (5f/16f);
+			case "deb_deb": return (8f/16f);
+			default: return 0;
+		}
+	}
+
 
 	public static int calculateCurrentFood(List<ItemStack> foodList, int i)
 	{
@@ -124,7 +132,6 @@ public class PlateUtil
 			boolean changeLayer = false;
 			var registryKey = foodList.get(i).getItem().getRegistryEntry().getKey().get().getValue().getPath();
 			var id = Resources.id("block/food/" + registryKey);
-
 			var foodModel = P3dManager.INSTANCE.get(id);
 			var foodTexture = new Identifier(id.getNamespace(), "textures/block/model/food/" + registryKey + ".png");
 			if (foodModel == null)
@@ -148,7 +155,12 @@ public class PlateUtil
 			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(360f / currentLayerSize), 0f, 0, 0f);
 			matrices.translate(-0.2, 0, -0.2);
 
-			if (addedHeight < foodModel.bounds().getLengthZ())
+			float override = getHeightOverride(id.toShortTranslationKey());
+			if(override!=0)
+			{
+				if (addedHeight < override)
+					addedHeight = override;
+			}else if (addedHeight < foodModel.bounds().getLengthZ())
 				addedHeight = foodModel.bounds().getLengthZ();
 			foodModel.render(matrices, vertexConsumers, null, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(finalFoodTexture)), light, 0, 255, 255, 255, 255);
 			if (changeLayer)

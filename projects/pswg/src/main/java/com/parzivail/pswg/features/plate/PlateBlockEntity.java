@@ -43,14 +43,17 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
 			this.FOODS.add(i, ItemStack.fromNbt(nbt.getCompound("food" + i)));
 		super.readNbt(nbt);
 	}
-
-	@Override
-	public void markRemoved()
-	{
+	public void dropFoods(){
 		if (world != null)
 		{
 			for (ItemStack food : FOODS)
 				world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), food));
+			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(SwgItems.Plate.PlateItem)));
+		}
+	}
+	public void dropPlate(){
+		if (world != null)
+		{
 			ItemStack plateItem = new ItemStack(SwgItems.Plate.PlateItem);
 			var nbt = plateItem.getNbt();
 			nbt.putInt("food_amount", FOODS.size());
@@ -58,9 +61,7 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
 				nbt.put("food" + i, this.FOODS.get(i).writeNbt(new NbtCompound()));
 			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), plateItem));
 		}
-		super.markRemoved();
 	}
-
 	public void addFood(ItemStack stack)
 	{
 		FOODS.add(stack);
