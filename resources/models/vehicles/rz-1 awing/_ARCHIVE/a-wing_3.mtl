@@ -1,15 +1,15 @@
-# Blender 3.4.1 MTL File: 'a-wing_3.blend'
+# Blender 4.1.1 MTL File: 'a-wing_3.blend'
 # www.blender.org
 
 newmtl none
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd rz-1_default.png
 
 newmtl none.001
 Ns 250.000000
@@ -84,12 +84,12 @@ illum 2
 newmtl none.008
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/Paint/Phoenix1 Combined.png
 
 newmtl none.009
 Ns 250.000000
@@ -744,12 +744,12 @@ illum 2
 newmtl none.074
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.075
 Ns 250.000000
@@ -864,12 +864,12 @@ illum 2
 newmtl none.086
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.087
 Ns 250.000000
@@ -12104,12 +12104,12 @@ illum 2
 newmtl none.110
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.1100
 Ns 250.000000
@@ -19474,12 +19474,12 @@ illum 2
 newmtl none.11663
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/Paint/PhoenixLeader Combined.png
 
 newmtl none.1167
 Ns 250.000000
@@ -20064,12 +20064,12 @@ illum 2
 newmtl none.122
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.1220
 Ns 250.000000
@@ -20924,12 +20924,12 @@ illum 2
 newmtl none.1298
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.130
 Ns 250.000000
@@ -21334,12 +21334,12 @@ illum 2
 newmtl none.170
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.2451
 Ns 250.000000
@@ -33314,12 +33314,12 @@ illum 2
 newmtl none.3602
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.3603
 Ns 250.000000
@@ -44064,12 +44064,12 @@ illum 2
 newmtl none.458
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.4580
 Ns 250.000000
@@ -45984,12 +45984,12 @@ illum 2
 newmtl none.4754
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.4755
 Ns 250.000000
@@ -73104,12 +73104,12 @@ illum 2
 newmtl none.722
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.7220
 Ns 250.000000
@@ -84004,12 +84004,12 @@ illum 2
 newmtl none.8210
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.450000
 d 1.000000
 illum 2
+map_Kd C:/Users/user/Documents/GitHub/GalaxiesParzisStarWarsMod/resources/models/vehicles/rz-1 awing/rz-1_default.png
 
 newmtl none.8211
 Ns 250.000000
