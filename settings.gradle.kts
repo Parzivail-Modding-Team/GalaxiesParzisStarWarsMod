@@ -12,7 +12,7 @@ pluginManagement {
 include(":projects:pswg")
 
 // The Aurek Tooklkit, a suite of ingame editors to add and edit base and addon features
-include(":projects:toolkit")
+// include(":projects:toolkit")
 
 // Lexer, parser, and API for the Mara programming language
-include(":projects:mara")
+// include(":projects:mara")

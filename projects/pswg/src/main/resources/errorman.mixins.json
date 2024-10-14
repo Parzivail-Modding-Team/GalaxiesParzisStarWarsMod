@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "dev.pswg.errorman.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+	],
+	"client": [
+		"CrashReportMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

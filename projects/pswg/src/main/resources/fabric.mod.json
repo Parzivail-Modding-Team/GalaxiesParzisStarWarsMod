@@ -27,16 +27,17 @@
 	},
 	"mixins": [
 		"pswg.mixins.json",
+		"errorman.mixins.json",
 		{
 			"config": "pswg.client.mixins.json",
 			"environment": "client"
 		}
 	],
 	"depends": {
-		"fabricloader": ">=${loader_version}",
+		"fabricloader": ">=0.16.7",
 		"minecraft": "~1.21.1",
 		"java": ">=21",
-		"fabric-api": ">=${fabric_version}"
+		"fabric-api": ">=0.105.4"
 	},
 	"breaks": {
 		"optifabric": "*"

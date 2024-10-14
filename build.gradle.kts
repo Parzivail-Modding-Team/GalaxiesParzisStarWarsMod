@@ -98,8 +98,6 @@ allprojects {
 
 		filesMatching("fabric.mod.json") {
 			expand("version" to project.version)
-			expand("loader_version" to loader_version)
-			expand("fabric_version" to fabric_version)
 		}
 	}
 
