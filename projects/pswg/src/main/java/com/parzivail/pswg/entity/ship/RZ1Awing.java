@@ -129,11 +129,16 @@ public class RZ1Awing extends ShipEntity implements IComplexEntityHitbox
 	}
 
 	@Override
+	public boolean useMouseInput(PlayerEntity player)
+	{
+		return true;
+	}
+
+	@Override
 	public void tick()
 	{
 		super.tick();
 		prevGearAnim = dataTracker.get(LANDING_GEAR_ANIM);
-
 		if (!getWorld().isClient)
 		{
 			var controls = getControls();

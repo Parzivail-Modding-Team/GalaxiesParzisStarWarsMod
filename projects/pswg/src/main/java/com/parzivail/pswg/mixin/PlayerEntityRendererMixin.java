@@ -46,13 +46,4 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	{
 		ArmorRenderer.renderArm(matrices, vertexConsumers, light, player, arm, sleeve, ci, playerEntityModel);
 	}
-
-	@Inject(method = "setupTransforms(Lnet/minecraft/client/network/AbstractClientPlayerEntity;Lnet/minecraft/client/util/math/MatrixStack;FFF)V", at = @At("HEAD"))
-	private void setupTransforms(AbstractClientPlayerEntity abstractClientPlayerEntity, MatrixStack matrixStack, float f, float g, float h, CallbackInfo ci)
-	{
-		if (abstractClientPlayerEntity.getRootVehicle() instanceof RZ1Awing awing)
-		{
-			matrixStack.multiply(awing.getRotation());
-		}
-	}
 }
