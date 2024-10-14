@@ -1,1 +1,0 @@
-{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"pswg:power_coupling"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]}

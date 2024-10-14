@@ -1,1 +1,0 @@
-{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:alternatives","children":[{"type":"minecraft:item","name":"pswg:molo_flower","functions":[{"function":"minecraft:set_count","count":{"min":0.0,"max":2.0,"type":"minecraft:uniform"}},{"function":"minecraft:explosion_decay"}]}]}]}]}

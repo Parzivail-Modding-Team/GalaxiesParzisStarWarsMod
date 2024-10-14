@@ -1,1 +1,0 @@
-{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"pswg:imperial_flooring_pattern_2"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]}

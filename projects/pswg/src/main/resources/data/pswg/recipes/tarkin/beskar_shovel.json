@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:beskar_shovel","pattern":["a","b","b"],"key":{"a":{"item":"pswg:beskar_ingot"},"b":{"item":"pswg:durasteel_rod"}},"result":{"item":"pswg:beskar_shovel","count":1}}

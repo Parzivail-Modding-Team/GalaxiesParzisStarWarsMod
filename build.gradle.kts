@@ -2,7 +2,7 @@ import java.io.ByteArrayOutputStream
 
 plugins {
 	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.1"
-	id("fabric-loom") version "1.4-SNAPSHOT"
+	id("fabric-loom") version "1.7-SNAPSHOT"
 	`maven-publish`
 }
 
@@ -47,6 +47,7 @@ allprojects {
 	// this fixes some edge cases with special characters not displaying correctly
 	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 	tasks.withType<JavaCompile> {
+		options.release = 21
 		options.encoding = "UTF-8"
 		options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000", "-Xdiags:verbose"))
 	}
@@ -55,26 +56,6 @@ allprojects {
 
 	repositories {
 		mavenCentral()
-
-		maven(url = "https://maven.ladysnake.org/releases") {
-			name = "Ladysnake Mods"
-		}
-
-		maven(url = "https://maven.terraformersmc.com/releases") {
-			name = "TerraformersMC"
-		}
-
-		//	maven(url = "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases") {
-		//		name = "TerraformersMC Archive"
-		//	}
-
-		maven(url = "https://maven.shedaniel.me") {
-			name = "Shedaniel Maven"
-		}
-
-		maven(url = "https://maven.gegy.dev") {
-			name = "Gegy Maven"
-		}
 
 		maven(url = "https://api.modrinth.com/maven") {
 			name = "Modrinth"
@@ -86,8 +67,8 @@ allprojects {
 	}
 
 	java {
-		sourceCompatibility = JavaVersion.VERSION_17
-		targetCompatibility = JavaVersion.VERSION_17
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
 
 		// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 		// if it is present.
@@ -100,10 +81,19 @@ allprojects {
 	version = versionName
 	group = maven_group
 
+	loom {
+		splitEnvironmentSourceSets()
+
+		mods {
+			create("pswg") {
+				sourceSet(sourceSets["main"])
+				sourceSet(sourceSets["client"])
+			}
+		}
+	}
+
 	dependencies {
 		compileOnlyApi("org.jetbrains:annotations:24.0.1")
-		// Used by dependencies
-		compileOnlyApi("com.demonwav.mcdev:annotations:1.0")
 
 		// To change the versions, see the gradle.properties file
 		minecraft("com.mojang:minecraft:${minecraft_version}")
@@ -119,6 +109,8 @@ allprojects {
 
 		filesMatching("fabric.mod.json") {
 			expand("version" to project.version)
+			expand("loader_version" to loader_version)
+			expand("fabric_version" to fabric_version)
 		}
 	}
 

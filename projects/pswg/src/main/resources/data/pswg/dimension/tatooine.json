@@ -1,9 +1,0 @@
-{
-  "type": "pswg:tatooine",
-  "generator": {
-    "type": "pswg:galaxies",
-    "biome_source": {
-      "type": "pswg:galaxies"
-    }
-  }
-}

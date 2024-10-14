@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:light_fixture","pattern":["aaa","aba","aaa"],"key":{"a":{"item":"minecraft:glass_pane"},"b":{"item":"pswg:light_panel"}},"result":{"item":"pswg:light_fixture","count":3}}

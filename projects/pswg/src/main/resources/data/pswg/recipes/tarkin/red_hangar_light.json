@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:red_hangar_light","pattern":[" a ","aba"," c "],"key":{"a":{"item":"pswg:plasteel_ingot"},"c":{"item":"minecraft:red_dye"},"b":{"item":"pswg:light_panel"}},"result":{"item":"pswg:red_hangar_light","count":4}}

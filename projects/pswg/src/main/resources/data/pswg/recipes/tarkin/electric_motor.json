@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:electric_motor","pattern":["aba","aca","aba"],"key":{"a":{"item":"pswg:desh_coil"},"c":{"item":"pswg:ball_bearing"},"b":{"item":"pswg:durasteel_rod"}},"result":{"item":"pswg:electric_motor","count":1}}

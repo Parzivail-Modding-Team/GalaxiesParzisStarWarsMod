@@ -1,1 +1,0 @@
-{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"pswg:gray_imperial_light_half_3"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]}
