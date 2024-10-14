@@ -81,17 +81,6 @@ allprojects {
 	version = versionName
 	group = maven_group
 
-	loom {
-		splitEnvironmentSourceSets()
-
-		mods {
-			create("pswg") {
-				sourceSet(sourceSets["main"])
-				sourceSet(sourceSets["client"])
-			}
-		}
-	}
-
 	dependencies {
 		compileOnlyApi("org.jetbrains:annotations:24.0.1")
 

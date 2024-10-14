@@ -1,1 +1,10 @@
-// No configuration
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"pswg" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
