@@ -8,12 +8,15 @@ import dev.pswg.runtime.ClassLoadingHelper;
 public final class FmlCompat
 {
 	/**
-	 * Determines if the mod is currently running underneath, or alongside, Forge
+	 * Determines if the mod is currently running underneath, or alongside,
+	 * a version of Forge
 	 *
-	 * @return True if Forge is loaded on the classpath
+	 * @return True if Forge, NeoForge, or Sinytra is loaded on the classpath
 	 */
 	public static boolean isForge()
 	{
-		return ClassLoadingHelper.exists("net.minecraftforge.fml.common.Mod");
+		return ClassLoadingHelper.exists("net.minecraftforge.fml.common.Mod")
+		       || ClassLoadingHelper.exists("net.neoforged.neoforge.common.NeoForgeMod")
+		       || ClassLoadingHelper.exists("org.sinytra.connector.mod.ConnectorMod");
 	}
 }
