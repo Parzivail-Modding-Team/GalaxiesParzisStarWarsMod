@@ -43,14 +43,18 @@ public final class ErrorManager
 	{
 		LOGGER.warn("Error manager triggered");
 
+		var config = Galaxies.CONFIG.get();
+
 		// Do not ask to report errors if the user has disabled it
-		if (!Galaxies.CONFIG.get().askToSendCrashReports)
+		if (!config.askToSendCrashReports)
 			return;
 
 		LOGGER.warn("Crash report system enabled");
 
 		// Do not report errors if a new version of PSWG is known
-		if (Galaxies.REMOTE_VERSION != null)
+		// or if we have no way of knowing if this version is out
+		// of date
+		if (config.isUpdateCheckingDisabled || Galaxies.getRemoteVersion().isPresent())
 			return;
 
 		LOGGER.warn("Running on latest version");

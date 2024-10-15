@@ -11,4 +11,10 @@ public final class GalaxiesConfig
 	 * to the development team via Rollbar
 	 */
 	public boolean askToSendCrashReports = true;
+
+	/**
+	 * Whether the user has requested that PSWG and addons not
+	 * notify them for updates, or search for them over the internet
+	 */
+	public boolean isUpdateCheckingDisabled = false;
 }
