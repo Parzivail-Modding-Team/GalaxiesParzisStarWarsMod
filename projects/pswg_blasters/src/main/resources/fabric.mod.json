@@ -33,7 +33,7 @@
 		}
 	],
 	"depends": {
-		"pswg_core": "*"
+		"pswg": "*"
 	},
 	"custom": {
 		"modmenu": {

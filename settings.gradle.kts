@@ -15,7 +15,7 @@ include(":projects:pswg_core")
 include(":projects:pswg_blasters")
 
 // The dummy entrypoint module that depends on all other modules
-include(":projects:pswg")
+include(":projects:pswg_entrypoint")
 
 // The Aurek Tooklkit, a suite of ingame editors to add and edit base and addon features
 // include(":projects:toolkit")
