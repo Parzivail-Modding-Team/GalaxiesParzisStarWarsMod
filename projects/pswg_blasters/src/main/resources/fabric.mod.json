@@ -23,6 +23,9 @@
 		],
 		"pswg-client-addon": [
 			"dev.pswg.BlastersClient"
+		],
+		"fabric-datagen": [
+			"dev.pswg.datagen.BlasterDataGenerator"
 		]
 	},
 	"mixins": [

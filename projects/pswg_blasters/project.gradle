@@ -9,6 +9,10 @@ loom {
 	}
 }
 
+fabricApi {
+	configureDataGeneration()
+}
+
 dependencies {
 	api(project(path: ":projects:pswg_core", configuration: "namedElements"))
 }

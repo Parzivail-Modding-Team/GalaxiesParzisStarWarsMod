@@ -8,6 +8,7 @@ import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,19 @@ public final class Galaxies implements ModInitializer
 	 * The mod ID assigned to PSWG
 	 */
 	public static final String MODID = "pswg";
+
+	/**
+	 * Creates a scoped {@link Identifier} whose domain is this
+	 * mod's MODID
+	 *
+	 * @param path The path for the {@link Identifier}
+	 *
+	 * @return A scoped {@link Identifier}
+	 */
+	static Identifier id(String path)
+	{
+		return Identifier.of(MODID, path);
+	}
 
 	/**
 	 * The newer version of PSWG core that exists on the remote, if any
