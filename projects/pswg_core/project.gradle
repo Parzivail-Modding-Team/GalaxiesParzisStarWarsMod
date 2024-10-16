@@ -1,0 +1,10 @@
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"pswg_core" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}

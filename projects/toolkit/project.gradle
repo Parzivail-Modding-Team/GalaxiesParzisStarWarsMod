@@ -6,7 +6,7 @@ repositories {
 }
 
 dependencies {
-	api(project(path: ":projects:pswg", configuration: "namedElements"))
+	api(project(path: ":projects:pswg_core", configuration: "namedElements"))
 
 	modImplementation("org.objenesis:objenesis:3.2")
 	include("org.objenesis:objenesis:3.2")

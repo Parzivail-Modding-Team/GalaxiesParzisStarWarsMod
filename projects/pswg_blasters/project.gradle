@@ -2,7 +2,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"pswg_entrypoint" {
+		"pswg_blasters" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
@@ -10,5 +10,5 @@ loom {
 }
 
 dependencies {
-	api(project(path: ":projects:pswg_blasters", configuration: "namedElements"))
+	api(project(path: ":projects:pswg_core", configuration: "namedElements"))
 }

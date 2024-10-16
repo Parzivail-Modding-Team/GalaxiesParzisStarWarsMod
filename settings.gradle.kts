@@ -9,6 +9,12 @@ pluginManagement {
 }
 
 // The core mod
+include(":projects:pswg_core")
+
+// The blasters module
+include(":projects:pswg_blasters")
+
+// The dummy entrypoint module that depends on all other modules
 include(":projects:pswg")
 
 // The Aurek Tooklkit, a suite of ingame editors to add and edit base and addon features

@@ -10,5 +10,6 @@ public class GalaxiesClient implements ClientModInitializer
 	@Override
 	public void onInitializeClient()
 	{
+		Galaxies.LOGGER.info("Galaxies client initialized");
 	}
 }

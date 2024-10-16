@@ -1,58 +1,15 @@
 {
 	"schemaVersion": 1,
-	"id": "pswg",
+	"id": "pswg_entrypoint",
 	"version": "${version}",
-	"name": "Galaxies: Parzi's Star Wars Mod",
-	"description": "Explore the galaxy with Galaxies: Parzi's Star Wars Mod!",
+	"name": "PSWG Entrypoint",
+	"description": "Dummy entrypoint mod",
 	"authors": [
 		"parzivail",
 		"Sindavar",
 		"kb1000"
 	],
-	"contact": {
-		"homepage": "https://pswg.dev/",
-		"issues": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/issues",
-		"sources": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod"
-	},
 	"license": "LGPL-3.0",
 	"icon": "assets/pswg/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"dev.pswg.Galaxies"
-		],
-		"client": [
-			"dev.pswg.GalaxiesClient"
-		]
-	},
-	"mixins": [
-		"pswg.mixins.json",
-		"errorman.mixins.json",
-		{
-			"config": "pswg.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.16.7",
-		"minecraft": "~1.21.2",
-		"java": ">=21",
-		"fabric-api": ">=0.106.0"
-	},
-	"breaks": {
-		"optifabric": "*"
-	},
-	"suggests": {
-		"modmenu": "*"
-	},
-	"conflicts": {
-		"connector": "*"
-	},
-	"custom": {
-		"modmenu": {
-			"links": {
-				"modmenu.discord": "https://discord.pswg.dev"
-			}
-		}
-	}
+	"environment": "*"
 }
