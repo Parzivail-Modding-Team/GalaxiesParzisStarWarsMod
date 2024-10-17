@@ -32,7 +32,7 @@ public final class Galaxies implements ModInitializer
 	 *
 	 * @return A scoped {@link Identifier}
 	 */
-	static Identifier id(String path)
+	public static Identifier id(String path)
 	{
 		return Identifier.of(MODID, path);
 	}

@@ -4,7 +4,11 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.configuration.BlastersConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
+import dev.pswg.item.BlasterItem;
+import dev.pswg.registry.Registrar;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
@@ -48,9 +52,14 @@ public final class Blasters implements GalaxiesAddon
 	 */
 	public static final TagKey<Item> BLASTERS_TAG = TagKey.of(RegistryKeys.ITEM, id("blasters"));
 
+	public static final BlasterItem BLASTER = Registrar.item(id("blaster"), BlasterItem::new);
+
 	@Override
 	public void onGalaxiesReady()
 	{
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
+		               .register((itemGroup) -> itemGroup.add(BLASTER));
+
 		// TODO: how to differentiate different modules' versions?
 		LOGGER.info("Module initialized");
 	}

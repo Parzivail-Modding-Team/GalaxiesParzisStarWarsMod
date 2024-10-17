@@ -3,6 +3,7 @@
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
+		"DrawContextMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

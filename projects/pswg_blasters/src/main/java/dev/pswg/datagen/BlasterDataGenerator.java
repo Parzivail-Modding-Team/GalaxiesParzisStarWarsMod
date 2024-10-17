@@ -1,11 +1,15 @@
 package dev.pswg.datagen;
 
 import dev.pswg.Blasters;
+import dev.pswg.Galaxies;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.client.Models;
 import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
@@ -22,6 +26,30 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(TagGenerator::new);
+		pack.addProvider(ModelGenerator::new);
+	}
+
+	/**
+	 * The blaster model generator. All models should be added through
+	 * this generator.
+	 */
+	private static class ModelGenerator extends GalaxiesModelProvider
+	{
+		public ModelGenerator(FabricDataOutput output)
+		{
+			super(output);
+		}
+
+		@Override
+		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
+		{
+		}
+
+		@Override
+		public void generateItemModels(ItemModelGenerator itemModelGenerator)
+		{
+			register(itemModelGenerator, Blasters.BLASTER, Galaxies.id("item/wizard"), Models.GENERATED);
+		}
 	}
 
 	/**
@@ -39,6 +67,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
 			translationBuilder.add(Blasters.BLASTERS_TAG, "Blasters");
+
+			translationBuilder.add(Blasters.BLASTER, "Blaster");
 		}
 	}
 
@@ -56,7 +86,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			getOrCreateTagBuilder(Blasters.BLASTERS_TAG);
+			getOrCreateTagBuilder(Blasters.BLASTERS_TAG)
+					.add(Blasters.BLASTER);
 		}
 	}
 }
