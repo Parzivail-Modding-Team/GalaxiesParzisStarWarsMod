@@ -31,11 +31,11 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
-      - name: setup python for uploader
-        uses: actions/setup-python@v5
-        with:
-          python-version : '3.12'
-          cache: pip
+      #  - name: setup python for uploader
+      #    uses: actions/setup-python@v5
+      #    with:
+      #      python-version : '3.12'
+      #      cache: pip
       - name: cache loom-cache
         uses: actions/cache@v4
         with:
