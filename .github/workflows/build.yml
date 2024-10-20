@@ -60,7 +60,7 @@ jobs:
         continue-on-error: true
         run: |
           pip install -r scripts/requirements.txt
-         mkdir -p projects/pswg/build/libs
+          mkdir -p projects/pswg/build/libs
           cd projects/pswg/build/libs
           python ../../../../scripts/upload_dev.py --token ${{ steps.idtoken.outputs.id_token }} --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --webhook ${{ secrets.DISCORD_RCOE_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
         env:
