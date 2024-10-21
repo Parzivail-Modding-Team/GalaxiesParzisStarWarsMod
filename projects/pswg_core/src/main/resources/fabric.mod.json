@@ -23,6 +23,9 @@
 		],
 		"client": [
 			"dev.pswg.GalaxiesClient"
+		],
+		"fabric-datagen": [
+			"dev.pswg.datagen.GalaxiesDataGenerator"
 		]
 	},
 	"mixins": [

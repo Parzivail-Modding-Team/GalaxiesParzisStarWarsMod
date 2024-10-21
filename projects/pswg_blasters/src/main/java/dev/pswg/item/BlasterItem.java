@@ -2,6 +2,8 @@ package dev.pswg.item;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.Blasters;
+import dev.pswg.attributes.AttributeUtil;
+import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -42,13 +44,13 @@ public class BlasterItem extends Item
 	);
 
 	/**
-	 * The attribute modifier that is applied to the {@link EntityAttributes#MOVEMENT_SPEED}
-	 * attribute in players when they are not aiming-down-sights.
+	 * The attribute modifier that is applied to the {@link GalaxiesEntityAttributes#FIELD_OF_VIEW_ZOOM}
+	 * attribute in players when they are aiming-down-sights.
 	 */
-	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_SPEED_PENALTY_DISABLED = new EntityAttributeModifier(
-			Blasters.id("aiming_speed_penalty"),
-			0,
-			EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_FOV_ENABLED = new EntityAttributeModifier(
+			Blasters.id("aiming_zoom"),
+			2,
+			EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
 	);
 
 	/**
@@ -88,11 +90,19 @@ public class BlasterItem extends Item
 	{
 		stack.set(IS_AIMING, aiming);
 		var attrs = stack.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
-		stack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, attrs.with(
-				EntityAttributes.MOVEMENT_SPEED,
-				aiming ? ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED : ATTR_MODIFIER_AIMING_SPEED_PENALTY_DISABLED,
-				AttributeModifierSlot.HAND)
-		);
+
+		if (aiming)
+		{
+			attrs = attrs.with(EntityAttributes.MOVEMENT_SPEED, ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED, AttributeModifierSlot.HAND);
+			attrs = attrs.with(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED, AttributeModifierSlot.HAND);
+		}
+		else
+		{
+			attrs = AttributeUtil.without(attrs, EntityAttributes.MOVEMENT_SPEED, ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED);
+			attrs = AttributeUtil.without(attrs, GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED);
+		}
+
+		stack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, attrs);
 	}
 
 	@Override
@@ -130,10 +140,15 @@ public class BlasterItem extends Item
 	{
 		var stack = user.getStackInHand(hand);
 
-		// TODO: hold-ADS not working
 		if (!world.isClient)
 		{
 			setAiming(stack, !isAiming(stack));
+
+			// this is required to "start using" the item instead of
+			// immediately consuming it.
+			user.setCurrentHand(hand);
+
+			return ActionResult.CONSUME;
 		}
 
 		return ActionResult.FAIL;

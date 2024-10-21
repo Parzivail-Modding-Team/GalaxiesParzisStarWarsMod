@@ -3,7 +3,9 @@
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"DrawContextAccessor"
+		"AbstractClientPlayerEntityMixin",
+		"DrawContextAccessor",
+		"ItemStackMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
