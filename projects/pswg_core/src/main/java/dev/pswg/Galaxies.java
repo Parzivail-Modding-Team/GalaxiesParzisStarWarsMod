@@ -45,7 +45,7 @@ public final class Galaxies implements ModInitializer
 	/**
 	 * A logger available only to PSWG core
 	 */
-	static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
 	/**
 	 * The configuration file that controls the behavior of PSWG core

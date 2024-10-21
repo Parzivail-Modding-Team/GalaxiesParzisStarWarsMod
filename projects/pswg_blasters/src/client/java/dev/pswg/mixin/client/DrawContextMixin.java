@@ -1,14 +1,10 @@
 package dev.pswg.mixin.client;
 
 import dev.pswg.Blasters;
-import dev.pswg.GalaxiesClient;
-import dev.pswg.item.BlasterItem;
-import dev.pswg.rendering.Drawables;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,15 +24,8 @@ public abstract class DrawContextMixin
 
 		if (stack.isOf(Blasters.BLASTER))
 		{
-			var nextTimestamp = stack.get(BlasterItem.NEXT_TIMESTAMP_COMPONENT);
-			if (nextTimestamp == null)
-				return;
-
-			var currentTimestamp = client.world.getTime() + GalaxiesClient.getTickDelta();
-
-			var value = MathHelper.clamp((nextTimestamp - currentTimestamp) / 10f, 0, 1);
-
-			Drawables.itemDurability(self, value, x, y - 13, 13, 0x0000FF);
+			// TODO: implement cooldown heat bar
+			// Drawables.itemDurability(self, value, x, y - 13, 13, 0x0000FF);
 		}
 	}
 }

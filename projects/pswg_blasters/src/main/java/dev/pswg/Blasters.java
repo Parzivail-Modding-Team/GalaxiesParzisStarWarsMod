@@ -38,9 +38,9 @@ public final class Blasters implements GalaxiesAddon
 	}
 
 	/**
-	 * A logger available only to PSWG core
+	 * A logger available only to PSWG module and addon blasters
 	 */
-	static final Logger LOGGER = Galaxies.createSubLogger("blasters");
+	public static final Logger LOGGER = Galaxies.createSubLogger("blasters");
 
 	/**
 	 * The configuration file that controls the behavior of PSWG core

@@ -2,27 +2,54 @@ package dev.pswg.item;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.Blasters;
-import dev.pswg.world.TickSpan;
+import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlasterItem extends Item
 {
 	/**
-	 * If a blaster us "used" for longer than this time, in seconds, then
+	 * If a blaster us "used" for longer than this time, in ticks, then
 	 * the "use" interaction will be considered a "hold to aim" instead of
 	 * a "toggle aim", and aiming will cease when the "using" stops.
 	 */
-	public static final float TOGGLE_AIMING_USE_TIME_SECONDS = 0.15f;
+	protected static final int TOGGLE_AIMING_USE_TIME_TICKS = 3;
+
+	/**
+	 * The attribute modifier that is applied to the {@link EntityAttributes#MOVEMENT_SPEED}
+	 * attribute in players when they are aiming-down-sights.
+	 */
+	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED = new EntityAttributeModifier(
+			Blasters.id("aiming_speed_penalty"),
+			-0.5F,
+			EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+	);
+
+	/**
+	 * The attribute modifier that is applied to the {@link EntityAttributes#MOVEMENT_SPEED}
+	 * attribute in players when they are not aiming-down-sights.
+	 */
+	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_SPEED_PENALTY_DISABLED = new EntityAttributeModifier(
+			Blasters.id("aiming_speed_penalty"),
+			0,
+			EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+	);
 
 	/**
 	 * The component that determines if the blaster is currently aiming-
@@ -51,6 +78,23 @@ public class BlasterItem extends Item
 		return stack.getOrDefault(IS_AIMING, false);
 	}
 
+	/**
+	 * Sets the aiming-down-sights status of the given blaster
+	 *
+	 * @param stack  The stack to modify
+	 * @param aiming True if the blaster should be aiming-down-sights, false otherwise
+	 */
+	public static void setAiming(ItemStack stack, boolean aiming)
+	{
+		stack.set(IS_AIMING, aiming);
+		var attrs = stack.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
+		stack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, attrs.with(
+				EntityAttributes.MOVEMENT_SPEED,
+				aiming ? ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED : ATTR_MODIFIER_AIMING_SPEED_PENALTY_DISABLED,
+				AttributeModifierSlot.HAND)
+		);
+	}
+
 	@Override
 	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
 	{
@@ -61,7 +105,7 @@ public class BlasterItem extends Item
 	public int getMaxUseTime(ItemStack stack, LivingEntity user)
 	{
 		if (isAiming(stack))
-			return TickSpan.fromSeconds(user.getWorld(), 3600);
+			return TickConstants.ONE_HOUR;
 
 		return super.getMaxUseTime(stack, user);
 	}
@@ -75,10 +119,23 @@ public class BlasterItem extends Item
 	@Override
 	public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
 	{
-		var toggleAimingUseTimeTicks = TickSpan.fromSeconds(world, TOGGLE_AIMING_USE_TIME_SECONDS);
-		if (!world.isClient && user.getItemUseTime() > toggleAimingUseTimeTicks && isAiming(stack))
-			stack.set(IS_AIMING, false);
+		if (!world.isClient && user.getItemUseTime() > TOGGLE_AIMING_USE_TIME_TICKS && isAiming(stack))
+			setAiming(stack, false);
 
 		return super.onStoppedUsing(stack, world, user, remainingUseTicks);
+	}
+
+	@Override
+	public ActionResult use(World world, PlayerEntity user, Hand hand)
+	{
+		var stack = user.getStackInHand(hand);
+
+		// TODO: hold-ADS not working
+		if (!world.isClient)
+		{
+			setAiming(stack, !isAiming(stack));
+		}
+
+		return ActionResult.FAIL;
 	}
 }
