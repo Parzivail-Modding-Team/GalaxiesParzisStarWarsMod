@@ -121,6 +121,14 @@ public class BlasterItem extends Item
 	}
 
 	@Override
+	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user)
+	{
+		onStoppedUsing(stack, world, user, 0);
+
+		return stack;
+	}
+
+	@Override
 	public UseAction getUseAction(ItemStack stack)
 	{
 		return UseAction.NONE;
