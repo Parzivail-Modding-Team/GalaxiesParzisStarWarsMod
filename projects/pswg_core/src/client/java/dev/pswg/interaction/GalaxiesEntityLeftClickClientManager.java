@@ -59,7 +59,7 @@ public final class GalaxiesEntityLeftClickClientManager
 		if (!isHoldingLeftClickableItem || !(client.player instanceof ILeftClickingEntity leftClickingEntity))
 			return;
 
-		if (leftClickingEntity.isUsingItemLeft())
+		if (leftClickingEntity.pswg$isUsingItemLeft())
 		{
 			if (!client.options.attackKey.isPressed())
 			{
@@ -96,7 +96,7 @@ public final class GalaxiesEntityLeftClickClientManager
 		if (!(player instanceof ILeftClickingEntity leftClickingEntity))
 			return;
 
-		leftClickingEntity.stopUsingItemLeft();
+		leftClickingEntity.pswg$stopUsingItemLeft();
 	}
 
 	/**
