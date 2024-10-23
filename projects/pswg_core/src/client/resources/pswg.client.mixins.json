@@ -4,8 +4,10 @@
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"AbstractClientPlayerEntityMixin",
+		"ClientPlayerInteractionManagerAccessor",
 		"DrawContextAccessor",
-		"ItemStackMixin"
+		"ItemStackMixin",
+		"MinecraftClientMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -47,9 +47,12 @@ public interface ILeftClickUsable
 	 * @param stack  The item stack to query
 	 * @param player The player that is holding the stack
 	 * @param world  The world that the player is in
+	 *
+	 * @return the new item stack after using the item
 	 */
-	default void finishUsingLeft(ItemStack stack, World world, LivingEntity player)
+	default ItemStack finishUsingLeft(ItemStack stack, World world, LivingEntity player)
 	{
+		return stack;
 	}
 
 	/**

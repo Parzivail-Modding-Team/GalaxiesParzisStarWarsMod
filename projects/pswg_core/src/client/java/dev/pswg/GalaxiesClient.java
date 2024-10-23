@@ -1,6 +1,7 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
+import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -26,6 +27,8 @@ public class GalaxiesClient implements ClientModInitializer
 	@Override
 	public void onInitializeClient()
 	{
+		GalaxiesEntityLeftClickClientManager.initialize();
+
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);
 

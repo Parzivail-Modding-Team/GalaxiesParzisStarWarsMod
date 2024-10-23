@@ -4,9 +4,14 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.configuration.GalaxiesConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
+import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
+import dev.pswg.interaction.GalaxiesPlayerActionManager;
+import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
+import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -94,6 +99,12 @@ public final class Galaxies implements ModInitializer
 		{
 			REMOTE_VERSION = UpdateChecker.getRemoteVersion(MODID, "Parzivail-Modding-Team/GalaxiesParzisStarWarsMod").orElse(null);
 		}
+
+		PayloadTypeRegistry.playC2S().register(PlayerInteractItemLeftC2SPacket.ID, PlayerInteractItemLeftC2SPacket.CODEC);
+		PayloadTypeRegistry.playC2S().register(GalaxiesPlayerActionC2SPacket.ID, GalaxiesPlayerActionC2SPacket.CODEC);
+
+		GalaxiesEntityLeftClickManager.initialize();
+		GalaxiesPlayerActionManager.initialize();
 
 		LOGGER.info("Loading PSWG modules and addons via pswg-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesStarting);

@@ -24,7 +24,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlasterItem extends Item
+public class BlasterItem extends Item implements ILeftClickUsable
 {
 	/**
 	 * If a blaster us "used" for longer than this time, in ticks, then
