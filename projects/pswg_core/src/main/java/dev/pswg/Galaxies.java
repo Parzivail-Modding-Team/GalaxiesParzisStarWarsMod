@@ -6,11 +6,14 @@ import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
+import dev.pswg.interaction.LeftClickingEntityAttachment;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
@@ -56,6 +59,15 @@ public final class Galaxies implements ModInitializer
 	 * The configuration file that controls the behavior of PSWG core
 	 */
 	public static final IConfigContainer<GalaxiesConfig> CONFIG = new MemoryConfigContainer<>(new GalaxiesConfig());
+
+	/**
+	 * An attachment for entities that contains the data required to
+	 * represent their left-using state
+	 */
+	public static final AttachmentType<LeftClickingEntityAttachment> LEFT_CLICKING_ATTACHMENT = AttachmentRegistry.createPersistent(
+			id("left_clicking_entity"),
+			LeftClickingEntityAttachment.CODEC
+	);
 
 	/**
 	 * Create a derived logger for a subsystem within PSWG

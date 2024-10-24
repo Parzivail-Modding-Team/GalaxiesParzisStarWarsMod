@@ -137,7 +137,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	@Override
 	public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
 	{
-		if (!world.isClient && user.getItemUseTime() > TOGGLE_AIMING_USE_TIME_TICKS && isAiming(stack))
+		if (!world.isClient() && user.getItemUseTime() > TOGGLE_AIMING_USE_TIME_TICKS && isAiming(stack))
 			setAiming(stack, false);
 
 		return super.onStoppedUsing(stack, world, user, remainingUseTicks);
@@ -148,7 +148,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	{
 		var stack = user.getStackInHand(hand);
 
-		if (!world.isClient)
+		if (!world.isClient())
 		{
 			setAiming(stack, !isAiming(stack));
 
