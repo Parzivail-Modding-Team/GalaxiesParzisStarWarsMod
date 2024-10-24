@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
+import dev.pswg.interaction.ILeftClickingEntity;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -160,5 +161,53 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		}
 
 		return ActionResult.FAIL;
+	}
+
+	@Override
+	public ActionResult useLeft(World world, LivingEntity user, Hand hand)
+	{
+		Blasters.LOGGER.info("useLeft");
+
+		if (!world.isClient() && (user instanceof ILeftClickingEntity lce))
+		{
+			// this is required to "start using" the item instead of
+			// immediately consuming it.
+			lce.pswg$setCurrentHandLeft(hand);
+
+			return ActionResult.CONSUME;
+		}
+
+		return ActionResult.PASS;
+	}
+
+	@Override
+	public ItemStack finishUsingLeft(ItemStack stack, World world, LivingEntity user)
+	{
+		Blasters.LOGGER.info("finishUsingLeft");
+		return stack;
+	}
+
+	@Override
+	public void onStoppedUsingLeft(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
+	{
+		Blasters.LOGGER.info("onStoppedUsingLeft: remainingUseTicks={}", remainingUseTicks);
+	}
+
+	@Override
+	public void usageTickLeft(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
+	{
+		Blasters.LOGGER.info("usageTickLeft: remainingUseTicks={}", remainingUseTicks);
+	}
+
+	@Override
+	public int getMaxUseLeftTime(ItemStack stack, LivingEntity user)
+	{
+		return 60;
+	}
+
+	@Override
+	public boolean isUsedOnLeftRelease(ItemStack stack)
+	{
+		return false;
 	}
 }

@@ -138,11 +138,11 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 	{
 		var self = (LivingEntity)(Object)this;
 
-		stack.usageTick(self.getWorld(), self, this.pswg$getItemLeftUseTimeLeft());
-		this.pswg$setItemLeftUseTimeLeft(this.pswg$getItemLeftUseTimeLeft() - 1);
-
 		if (!(stack.getItem() instanceof ILeftClickUsable leftClickingItem))
 			throw new RuntimeException("Attempted to tick usage of non-left-clicking item");
+
+		leftClickingItem.usageTickLeft(self.getWorld(), self, stack, this.pswg$getItemLeftUseTimeLeft());
+		this.pswg$setItemLeftUseTimeLeft(this.pswg$getItemLeftUseTimeLeft() - 1);
 
 		if (this.pswg$getItemLeftUseTimeLeft() == 0 && !self.getWorld().isClient() && !leftClickingItem.isUsedOnLeftRelease(stack))
 		{

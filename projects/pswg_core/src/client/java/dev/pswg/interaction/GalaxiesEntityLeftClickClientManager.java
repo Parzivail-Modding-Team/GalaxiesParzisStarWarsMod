@@ -63,6 +63,8 @@ public final class GalaxiesEntityLeftClickClientManager
 		{
 			if (!client.options.attackKey.isPressed())
 			{
+				// TODO: this won't work until client syncing is added
+				// for the entity data attachment
 				stopUsingItemLeft(client.interactionManager, client.player);
 			}
 		}
