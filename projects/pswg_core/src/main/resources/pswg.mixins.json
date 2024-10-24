@@ -3,8 +3,8 @@
 	"package": "dev.pswg.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"LivingEntityMixin",
-		"PlayerEntityMixin"
+		"Mixin$LivingEntity$LeftClickSupport",
+		"Mixin$PlayerEntity$GalaxiesAttributes"
 	],
 	"injectors": {
 		"defaultRequire": 1

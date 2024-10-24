@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ClientPlayerInteractionManager.class)
-public interface ClientPlayerInteractionManagerAccessor
+public interface Accessor$ClientPlayerInteractionManager
 {
 	@Invoker
 	void invokeSyncSelectedSlot();

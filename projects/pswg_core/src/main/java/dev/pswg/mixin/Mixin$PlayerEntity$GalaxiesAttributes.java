@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
-public class PlayerEntityMixin
+public class Mixin$PlayerEntity$GalaxiesAttributes
 {
 	/**
 	 * Appends our custom attributes to the player's attribute builder

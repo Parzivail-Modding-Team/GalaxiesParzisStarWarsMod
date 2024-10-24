@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements ILeftClickingEntity
+public abstract class Mixin$LivingEntity$LeftClickSupport implements ILeftClickingEntity
 {
 	@Unique
 	private int itemLeftUseTimeLeft;

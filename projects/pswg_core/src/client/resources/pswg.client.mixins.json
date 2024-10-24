@@ -3,11 +3,11 @@
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"AbstractClientPlayerEntityMixin",
-		"ClientPlayerInteractionManagerAccessor",
-		"DrawContextAccessor",
-		"ItemStackMixin",
-		"MinecraftClientMixin"
+		"Accessor$ClientPlayerInteractionManager",
+		"Accessor$DrawContext",
+		"Mixin$AbstractClientPlayerEntity$GalaxiesAttributes",
+		"Mixin$ItemStack$GalaxiesAttributes",
+		"Mixin$MinecraftClient$LeftClickInputSupport"
 	],
 	"injectors": {
 		"defaultRequire": 1

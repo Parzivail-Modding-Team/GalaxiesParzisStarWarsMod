@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin
+public abstract class Mixin$AbstractClientPlayerEntity$GalaxiesAttributes
 {
 	/**
 	 * Append our field of view changes to the client player's field of view calculations

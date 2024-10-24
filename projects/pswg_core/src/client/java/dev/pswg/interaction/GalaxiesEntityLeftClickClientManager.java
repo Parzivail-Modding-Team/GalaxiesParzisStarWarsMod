@@ -1,7 +1,7 @@
 package dev.pswg.interaction;
 
 import dev.pswg.item.ILeftClickUsable;
-import dev.pswg.mixin.client.ClientPlayerInteractionManagerAccessor;
+import dev.pswg.mixin.client.Accessor$ClientPlayerInteractionManager;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -89,7 +89,7 @@ public final class GalaxiesEntityLeftClickClientManager
 	 */
 	private static void stopUsingItemLeft(ClientPlayerInteractionManager interactionManager, ClientPlayerEntity player)
 	{
-		((ClientPlayerInteractionManagerAccessor)interactionManager).invokeSyncSelectedSlot();
+		((Accessor$ClientPlayerInteractionManager)interactionManager).invokeSyncSelectedSlot();
 
 		ClientPlayNetworking.send(new GalaxiesPlayerActionC2SPacket(PlayerAction.RELEASE_USE_LEFT_ITEM));
 
@@ -147,7 +147,7 @@ public final class GalaxiesEntityLeftClickClientManager
 		}
 		else
 		{
-			((ClientPlayerInteractionManagerAccessor)interactionManager).invokeSyncSelectedSlot();
+			((Accessor$ClientPlayerInteractionManager)interactionManager).invokeSyncSelectedSlot();
 
 			var packet = new PlayerInteractItemLeftC2SPacket(hand, player.getYaw(), player.getPitch());
 
