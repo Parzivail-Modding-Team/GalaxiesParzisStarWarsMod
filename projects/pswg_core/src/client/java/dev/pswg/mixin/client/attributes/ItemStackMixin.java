@@ -1,4 +1,4 @@
-package dev.pswg.mixin.client;
+package dev.pswg.mixin.client.attributes;
 
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import net.minecraft.component.type.AttributeModifiersComponent;
@@ -16,8 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
-public abstract class Mixin$ItemStack$GalaxiesAttributes
+public abstract class ItemStackMixin
 {
+	/**
+	 * Replaces the default attribute text for some custom
+	 * attributes with custom formatting
+	 */
 	@Inject(method = "appendAttributeModifierTooltip(Ljava/util/function/Consumer;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/entity/attribute/EntityAttributeModifier;)V", at = @At("HEAD"), cancellable = true)
 	public void appendAttributeModifierTooltip(Consumer<Text> textConsumer, PlayerEntity player, RegistryEntry<EntityAttribute> attribute, EntityAttributeModifier modifier, CallbackInfo ci)
 	{

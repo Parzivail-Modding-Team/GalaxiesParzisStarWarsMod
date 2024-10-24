@@ -1,6 +1,6 @@
 package dev.pswg.rendering;
 
-import dev.pswg.mixin.client.Accessor$DrawContext;
+import dev.pswg.mixin.client.accessors.DrawContextAccessor;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -24,7 +24,7 @@ public final class Drawables
 	 */
 	public static VertexConsumerProvider.Immediate getVertexConsumers(DrawContext context)
 	{
-		return ((Accessor$DrawContext)context).getVertexConsumers();
+		return ((DrawContextAccessor)context).getVertexConsumers();
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package dev.pswg.mixin;
+package dev.pswg.mixin.leftuse;
 
 import dev.pswg.Galaxies;
 import dev.pswg.interaction.ILeftClickingEntity;
@@ -14,8 +14,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Main featureset for left-use support in entities. Handles most
+ * item interactions and data storage. Abstracts out some calls
+ * to {@link ItemStack} with calls to the item itself, where
+ * applicable.
+ */
 @Mixin(LivingEntity.class)
-public abstract class Mixin$LivingEntity$LeftClickSupport implements ILeftClickingEntity
+public abstract class LivingEntityMixin implements ILeftClickingEntity
 {
 	@Unique
 	private int itemLeftUseTimeLeft;

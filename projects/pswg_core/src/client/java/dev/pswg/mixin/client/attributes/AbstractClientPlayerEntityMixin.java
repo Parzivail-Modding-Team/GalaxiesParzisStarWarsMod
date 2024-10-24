@@ -1,4 +1,4 @@
-package dev.pswg.mixin.client;
+package dev.pswg.mixin.client.attributes;
 
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public abstract class Mixin$AbstractClientPlayerEntity$GalaxiesAttributes
+public abstract class AbstractClientPlayerEntityMixin
 {
 	/**
 	 * Append our field of view changes to the client player's field of view calculations

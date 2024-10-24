@@ -1,4 +1,4 @@
-package dev.pswg.mixin.client;
+package dev.pswg.mixin.client.accessors;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(DrawContext.class)
-public interface Accessor$DrawContext
+public interface DrawContextAccessor
 {
 	@Accessor("vertexConsumers")
 	VertexConsumerProvider.Immediate getVertexConsumers();

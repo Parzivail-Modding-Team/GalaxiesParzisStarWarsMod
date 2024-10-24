@@ -1,4 +1,4 @@
-package dev.pswg.mixin;
+package dev.pswg.mixin.attributes;
 
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -8,14 +8,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/**
+ * Appends our custom attributes to the player's attribute builder
+ */
 @Mixin(PlayerEntity.class)
-public class Mixin$PlayerEntity$GalaxiesAttributes
+public class PlayerEntityMixin
 {
-	/**
-	 * Appends our custom attributes to the player's attribute builder
-	 *
-	 * @param cir The builder container
-	 */
 	@Inject(method = "createPlayerAttributes", at = @At("RETURN"))
 	private static void modifyPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir)
 	{
