@@ -94,7 +94,7 @@ public class GalaxiesEntityLeftClickManager
 			{
 				return actionResult;
 			}
-			else if (actionResult instanceof ActionResult.Fail && leftItem.getMaxUseLeftTime(itemStack, player) > 0 && !leftClickingEntity.pswg$isUsingItemLeft())
+			else if (actionResult instanceof ActionResult.Fail && leftItem.getMaxUseLeftTime(itemStack, player) > 0 && !leftClickingEntity.pswg$isLeftUsingItem())
 			{
 				return actionResult;
 			}
@@ -110,7 +110,7 @@ public class GalaxiesEntityLeftClickManager
 					player.setStackInHand(hand, ItemStack.EMPTY);
 				}
 
-				if (!leftClickingEntity.pswg$isUsingItemLeft())
+				if (!leftClickingEntity.pswg$isLeftUsingItem())
 				{
 					player.playerScreenHandler.syncState();
 				}
@@ -149,7 +149,7 @@ public class GalaxiesEntityLeftClickManager
 			if (!(player instanceof ILeftClickingEntity leftClickingEntity))
 				return;
 
-			leftClickingEntity.pswg$stopUsingItemLeft();
+			leftClickingEntity.pswg$stopLeftUsingItem();
 		});
 	}
 }
