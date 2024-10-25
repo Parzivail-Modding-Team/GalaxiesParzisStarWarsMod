@@ -1,6 +1,5 @@
 package dev.pswg.mixin.leftuse;
 
-import dev.pswg.Galaxies;
 import dev.pswg.interaction.ILeftClickingEntity;
 import dev.pswg.interaction.LeftClickingEntityAttachment;
 import dev.pswg.item.ILeftClickUsable;
@@ -9,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.world.event.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,19 +21,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements ILeftClickingEntity
 {
-	@Unique
-	private int itemLeftUseTimeLeft;
-
-	@Unique
-	private ItemStack leftActiveItemStack;
-
 	@Override
 	public boolean pswg$isLeftUsingItem()
 	{
 		var self = (LivingEntity)(Object)this;
 
-		var attachment = LeftClickingEntityAttachment.get(self);
-		return attachment.isUsingItemLeft();
+		return LeftClickingEntityAttachment
+				.get(self)
+				.isUsingItemLeft();
 	}
 
 	@Override
@@ -43,8 +36,10 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 	{
 		var self = (LivingEntity)(Object)this;
 
-		var attachment = LeftClickingEntityAttachment.get(self);
-		self.setAttached(Galaxies.LEFT_CLICKING_ATTACHMENT, attachment.withIsLeftUsing(isLeftUsing));
+		LeftClickingEntityAttachment
+				.get(self)
+				.withIsUsingItemLeft(isLeftUsing)
+				.set(self);
 
 		if (this.pswg$isLeftUsingItem() && this.pswg$getLeftActiveItemStack().isEmpty())
 		{
@@ -69,27 +64,43 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 	@Override
 	public int pswg$getItemLeftUseTimeLeft()
 	{
-		return itemLeftUseTimeLeft;
+		var self = (LivingEntity)(Object)this;
+
+		return LeftClickingEntityAttachment
+				.get(self)
+				.itemLeftUseTimeLeft();
 	}
 
 	@Override
 	public void pswg$setItemLeftUseTimeLeft(int timeLeft)
 	{
-		// TODO: find all setters
-		itemLeftUseTimeLeft = timeLeft;
+		var self = (LivingEntity)(Object)this;
+
+		LeftClickingEntityAttachment
+				.get(self)
+				.withItemLeftUseTimeLeft(timeLeft)
+				.set(self);
 	}
 
 	@Override
 	public ItemStack pswg$getLeftActiveItemStack()
 	{
-		return leftActiveItemStack;
+		var self = (LivingEntity)(Object)this;
+
+		return LeftClickingEntityAttachment
+				.get(self)
+				.leftActiveItemStack();
 	}
 
 	@Override
 	public void pswg$setLeftActiveItemStack(ItemStack stack)
 	{
-		// TODO: find all setters
-		leftActiveItemStack = stack;
+		var self = (LivingEntity)(Object)this;
+
+		LeftClickingEntityAttachment
+				.get(self)
+				.withLeftActiveItemStack(stack)
+				.set(self);
 	}
 
 	@Override

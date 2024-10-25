@@ -6,14 +6,12 @@ import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
-import dev.pswg.interaction.LeftClickingEntityAttachment;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
+import dev.pswg.networking.PlayerLeftUsingStateS2CPacket;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
@@ -61,15 +59,6 @@ public final class Galaxies implements ModInitializer
 	public static final IConfigContainer<GalaxiesConfig> CONFIG = new MemoryConfigContainer<>(new GalaxiesConfig());
 
 	/**
-	 * An attachment for entities that contains the data required to
-	 * represent their left-using state
-	 */
-	public static final AttachmentType<LeftClickingEntityAttachment> LEFT_CLICKING_ATTACHMENT = AttachmentRegistry.createPersistent(
-			id("left_clicking_entity"),
-			LeftClickingEntityAttachment.CODEC
-	);
-
-	/**
 	 * Create a derived logger for a subsystem within PSWG
 	 *
 	 * @param key The sub-header to log underneath the modid
@@ -113,10 +102,15 @@ public final class Galaxies implements ModInitializer
 		}
 
 		PayloadTypeRegistry.playC2S().register(PlayerInteractItemLeftC2SPacket.ID, PlayerInteractItemLeftC2SPacket.CODEC);
+		PayloadTypeRegistry.playS2C().register(PlayerLeftUsingStateS2CPacket.ID, PlayerLeftUsingStateS2CPacket.CODEC);
+
 		PayloadTypeRegistry.playC2S().register(GalaxiesPlayerActionC2SPacket.ID, GalaxiesPlayerActionC2SPacket.CODEC);
+
 
 		GalaxiesEntityLeftClickManager.initialize();
 		GalaxiesPlayerActionManager.initialize();
+
+		GalaxiesEntityLeftClickManager.initialize();
 
 		LOGGER.info("Loading PSWG modules and addons via pswg-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesStarting);

@@ -1,7 +1,7 @@
 package dev.pswg.networking;
 
 import dev.pswg.Galaxies;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
@@ -18,7 +18,7 @@ public record PlayerInteractItemLeftC2SPacket(Hand hand, float yaw, float pitch)
 {
 	public static final CustomPayload.Id<PlayerInteractItemLeftC2SPacket> ID = new CustomPayload.Id<>(Galaxies.id("use_item_left"));
 
-	public static final PacketCodec<PacketByteBuf, PlayerInteractItemLeftC2SPacket> CODEC = PacketCodec.tuple(
+	public static final PacketCodec<RegistryByteBuf, PlayerInteractItemLeftC2SPacket> CODEC = PacketCodec.tuple(
 			GalaxiesPacketCodecs.HAND,
 			PlayerInteractItemLeftC2SPacket::hand,
 			PacketCodecs.FLOAT,
