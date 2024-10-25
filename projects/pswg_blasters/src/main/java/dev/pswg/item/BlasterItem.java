@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
-import dev.pswg.interaction.ILeftClickingEntity;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -15,11 +14,16 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -166,48 +170,23 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	@Override
 	public ActionResult useLeft(World world, LivingEntity user, Hand hand)
 	{
-		Blasters.LOGGER.info("useLeft");
+		ItemStack itemStack = user.getStackInHand(hand);
+		world.playSound(
+				null,
+				user.getX(),
+				user.getY(),
+				user.getZ(),
+				SoundEvents.ENTITY_SNOWBALL_THROW,
+				SoundCategory.NEUTRAL,
+				0.5F,
+				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+		);
 
-		if (!world.isClient() && (user instanceof ILeftClickingEntity lce))
+		if (world instanceof ServerWorld serverWorld)
 		{
-			// this is required to "start using" the item instead of
-			// immediately consuming it.
-			lce.pswg$setCurrentHandLeft(hand);
-
-			return ActionResult.CONSUME;
+			ProjectileEntity.spawnWithVelocity(SnowballEntity::new, serverWorld, itemStack, user, 0.0F, 1.5F, 1.0F);
 		}
 
-		return ActionResult.PASS;
-	}
-
-	@Override
-	public ItemStack finishUsingLeft(ItemStack stack, World world, LivingEntity user)
-	{
-		Blasters.LOGGER.info("finishUsingLeft");
-		return stack;
-	}
-
-	@Override
-	public void onStoppedUsingLeft(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
-	{
-		Blasters.LOGGER.info("onStoppedUsingLeft: remainingUseTicks={}", remainingUseTicks);
-	}
-
-	@Override
-	public void usageTickLeft(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
-	{
-		Blasters.LOGGER.info("usageTickLeft: remainingUseTicks={}", remainingUseTicks);
-	}
-
-	@Override
-	public int getMaxUseLeftTime(ItemStack stack, LivingEntity user)
-	{
-		return 60;
-	}
-
-	@Override
-	public boolean isUsedOnLeftRelease(ItemStack stack)
-	{
-		return false;
+		return ActionResult.SUCCESS;
 	}
 }

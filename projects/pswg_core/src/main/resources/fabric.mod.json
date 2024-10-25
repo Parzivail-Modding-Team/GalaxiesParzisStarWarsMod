@@ -52,6 +52,11 @@
 		"connector": "*"
 	},
 	"custom": {
+		"loom:injected_interfaces": {
+			"net/minecraft/class_1309": [
+				"dev/pswg/interaction/ILeftClickingEntity"
+			]
+		},
 		"modmenu": {
 			"links": {
 				"modmenu.discord": "https://discord.pswg.dev"

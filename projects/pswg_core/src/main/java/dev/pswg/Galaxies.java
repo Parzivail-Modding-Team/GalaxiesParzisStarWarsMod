@@ -7,6 +7,7 @@ import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
+import dev.pswg.networking.GalaxiesPlayerActionS2CPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import dev.pswg.networking.PlayerLeftUsingStateS2CPacket;
 import dev.pswg.updater.GithubReleaseEntry;
@@ -105,6 +106,7 @@ public final class Galaxies implements ModInitializer
 		PayloadTypeRegistry.playS2C().register(PlayerLeftUsingStateS2CPacket.ID, PlayerLeftUsingStateS2CPacket.CODEC);
 
 		PayloadTypeRegistry.playC2S().register(GalaxiesPlayerActionC2SPacket.ID, GalaxiesPlayerActionC2SPacket.CODEC);
+		PayloadTypeRegistry.playS2C().register(GalaxiesPlayerActionS2CPacket.ID, GalaxiesPlayerActionS2CPacket.CODEC);
 
 
 		GalaxiesEntityLeftClickManager.initialize();

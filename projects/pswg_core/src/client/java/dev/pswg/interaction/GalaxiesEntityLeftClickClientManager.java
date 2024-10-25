@@ -101,7 +101,7 @@ public final class GalaxiesEntityLeftClickClientManager
 	{
 		((ClientPlayerInteractionManagerAccessor)interactionManager).invokeSyncSelectedSlot();
 
-		ClientPlayNetworking.send(new GalaxiesPlayerActionC2SPacket(PlayerAction.RELEASE_USE_LEFT_ITEM));
+		ClientPlayNetworking.send(new GalaxiesPlayerActionC2SPacket(ClientPlayerAction.RELEASE_USE_LEFT_ITEM));
 
 		if (!(player instanceof ILeftClickingEntity leftClickingEntity))
 			return;
@@ -183,5 +183,16 @@ public final class GalaxiesEntityLeftClickClientManager
 
 			return actionResult;
 		}
+	}
+
+	/**
+	 * Handles packets notifying the client that the server has consumed the item
+	 */
+	public static void handleConsumeItem(ClientPlayNetworking.Context context)
+	{
+		if (!(context.player() instanceof ILeftClickingEntity lce))
+			return;
+
+		lce.pswg$consumeLeftItem();
 	}
 }

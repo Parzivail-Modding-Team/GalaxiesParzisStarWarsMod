@@ -3,7 +3,7 @@ package dev.pswg.interaction;
 /**
  * Each type of action a player can notify the server about
  */
-public enum PlayerAction
+public enum ClientPlayerAction
 {
 	/**
 	 * This member denotes any invalid action

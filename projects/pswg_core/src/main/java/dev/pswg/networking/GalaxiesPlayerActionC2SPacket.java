@@ -1,7 +1,7 @@
 package dev.pswg.networking;
 
 import dev.pswg.Galaxies;
-import dev.pswg.interaction.PlayerAction;
+import dev.pswg.interaction.ClientPlayerAction;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -11,12 +11,12 @@ import net.minecraft.network.packet.CustomPayload;
  *
  * @param action The action to invoke
  */
-public record GalaxiesPlayerActionC2SPacket(PlayerAction action) implements CustomPayload
+public record GalaxiesPlayerActionC2SPacket(ClientPlayerAction action) implements CustomPayload
 {
-	public static final Id<GalaxiesPlayerActionC2SPacket> ID = new Id<>(Galaxies.id("stop_using_item_left"));
+	public static final Id<GalaxiesPlayerActionC2SPacket> ID = new Id<>(Galaxies.id("client_player_action"));
 
 	public static final PacketCodec<RegistryByteBuf, GalaxiesPlayerActionC2SPacket> CODEC = PacketCodec.tuple(
-			GalaxiesPacketCodecs.PLAYER_ACTION,
+			GalaxiesPacketCodecs.CLIENT_PLAYER_ACTION,
 			GalaxiesPlayerActionC2SPacket::action,
 			GalaxiesPlayerActionC2SPacket::new
 	);
