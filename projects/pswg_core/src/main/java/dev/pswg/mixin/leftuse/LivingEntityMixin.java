@@ -76,6 +76,7 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 	{
 		var self = (LivingEntity)(Object)this;
 
+		// TODO: does this need to sync with the client? it's called every tick
 		LeftClickingEntityAttachment
 				.get(self)
 				.withItemLeftUseTimeLeft(timeLeft)
