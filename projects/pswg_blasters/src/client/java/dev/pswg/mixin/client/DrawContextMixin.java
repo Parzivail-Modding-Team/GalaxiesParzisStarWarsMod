@@ -22,7 +22,7 @@ public abstract class DrawContextMixin
 		var self = (DrawContext)(Object)this;
 		var client = MinecraftClient.getInstance();
 
-		if (stack.isOf(Blasters.BLASTER))
+		if (stack.isOf(Blasters.BLASTER_ITEM))
 		{
 			// TODO: implement cooldown heat bar
 			// Drawables.itemDurability(self, value, x, y - 13, 13, 0x0000FF);

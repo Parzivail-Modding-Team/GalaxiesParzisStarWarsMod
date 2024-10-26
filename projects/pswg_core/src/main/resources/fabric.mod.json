@@ -28,6 +28,7 @@
 			"dev.pswg.datagen.GalaxiesDataGenerator"
 		]
 	},
+	"accessWidener": "pswg.accesswidener",
 	"mixins": [
 		"pswg.mixins.json",
 		"errorman.mixins.json",

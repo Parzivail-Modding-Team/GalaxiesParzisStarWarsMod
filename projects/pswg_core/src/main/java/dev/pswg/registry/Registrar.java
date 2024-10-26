@@ -1,5 +1,7 @@
 package dev.pswg.registry;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -46,5 +48,23 @@ public final class Registrar
 	public static <TItem extends Item> TItem item(Identifier registryKey, Function<Item.Settings, TItem> constructor)
 	{
 		return item(registryKey, constructor, new Item.Settings());
+	}
+
+	/**
+	 * Builds and registers an entity type with the provided registry key
+	 *
+	 * @param registryKey The registry key to assign to the entity type
+	 * @param builder     The builder that represents the entity type
+	 * @param <T>         The type of entity to build
+	 *
+	 * @return A built entity type, given the corresponding registry key
+	 */
+	public static <T extends Entity> EntityType<T> entityType(Identifier registryKey, EntityType.Builder<T> builder)
+	{
+		return Registry.register(
+				Registries.ENTITY_TYPE,
+				registryKey,
+				builder.build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, registryKey))
+		);
 	}
 }

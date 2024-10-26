@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
+import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -14,8 +15,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
@@ -27,6 +26,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class BlasterItem extends Item implements ILeftClickUsable
@@ -184,7 +185,24 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		if (world instanceof ServerWorld serverWorld)
 		{
-			ProjectileEntity.spawnWithVelocity(SnowballEntity::new, serverWorld, itemStack, user, 0.0F, 1.5F, 1.0F);
+			var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
+
+			// TODO: abstract into blaster-creating factory
+			projectile.setPosition(user.getX(), user.getEyeY() - 0.2f, user.getZ());
+
+			var pitch = user.getPitch();
+			var yaw = user.getHeadYaw();
+			var roll = 0;
+
+			float f = -MathHelper.sin(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
+			float g = -MathHelper.sin((pitch + roll) * MathHelper.RADIANS_PER_DEGREE);
+			float h = MathHelper.cos(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
+			projectile.setVelocity(new Vec3d(f, g, h).multiply(3));
+			projectile.setAngles(yaw, pitch);
+			Vec3d vec3d = user.getMovement();
+			projectile.setVelocity(projectile.getVelocity().add(vec3d));
+
+			serverWorld.spawnEntity(projectile);
 		}
 
 		return ActionResult.SUCCESS;

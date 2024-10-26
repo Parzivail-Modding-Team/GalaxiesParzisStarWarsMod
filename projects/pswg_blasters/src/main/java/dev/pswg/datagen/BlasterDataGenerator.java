@@ -48,7 +48,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
-			register(itemModelGenerator, Blasters.BLASTER, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, Blasters.BLASTER_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -68,7 +68,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		{
 			translationBuilder.add(Blasters.BLASTERS_TAG, "Blasters");
 
-			translationBuilder.add(Blasters.BLASTER, "Blaster");
+			translationBuilder.add(Blasters.BLASTER_ITEM, "Blaster");
 		}
 	}
 
@@ -87,7 +87,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
 			getOrCreateTagBuilder(Blasters.BLASTERS_TAG)
-					.add(Blasters.BLASTER);
+					.add(Blasters.BLASTER_ITEM);
 		}
 	}
 }
