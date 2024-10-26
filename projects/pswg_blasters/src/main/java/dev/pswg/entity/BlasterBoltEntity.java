@@ -38,7 +38,7 @@ public class BlasterBoltEntity extends Entity
 	{
 		super.tick();
 
-		this.move(MovementType.SELF, this.getVelocity());
+		move(MovementType.SELF, getVelocity());
 
 		if (this.getWorld() instanceof ServerWorld serverWorld && this.age > 20)
 			kill(serverWorld);
@@ -51,16 +51,27 @@ public class BlasterBoltEntity extends Entity
 
 		float yaw = packet.getYaw();
 		float pitch = packet.getPitch();
-		this.setAngles(yaw, pitch);
+		setAngles(yaw, pitch);
 
 		if (packet instanceof GalaxiesEntitySpawnS2CPacket precisePacket)
-			this.setVelocity(precisePacket.getVelocity());
+		{
+			setVelocity(precisePacket.getVelocity());
+			readCustomDataFromNbt(precisePacket.getCustomData(this, NbtCompound.CODEC).getOrThrow());
+		}
 	}
 
 	@Override
 	public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entityTrackerEntry)
 	{
-		return GalaxiesNetworking.createPlayS2CPacket(new GalaxiesEntitySpawnS2CPacket(this, entityTrackerEntry));
+		var nbt = new NbtCompound();
+		writeCustomDataToNbt(nbt);
+
+		return GalaxiesNetworking.createPlayS2CPacket(new GalaxiesEntitySpawnS2CPacket(
+				this,
+				entityTrackerEntry,
+				NbtCompound.CODEC,
+				nbt
+		));
 	}
 
 	@Override

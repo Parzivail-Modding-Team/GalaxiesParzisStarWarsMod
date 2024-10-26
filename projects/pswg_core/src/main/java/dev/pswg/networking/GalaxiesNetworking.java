@@ -35,6 +35,6 @@ public final class GalaxiesNetworking
 	@SuppressWarnings("unchecked")
 	public static <T extends CustomPayload> Packet<ClientPlayPacketListener> createPlayS2CPacket(T packet)
 	{
-		return (Packet<ClientPlayPacketListener>)(Object)ServerPlayNetworking.createS2CPacket(packet);
+		return (Packet<ClientPlayPacketListener>)(Packet<?>)ServerPlayNetworking.createS2CPacket(packet);
 	}
 }
