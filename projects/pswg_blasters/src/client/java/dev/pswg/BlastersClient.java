@@ -2,6 +2,7 @@ package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.renderer.BlasterBoltEntityRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 
 /**
@@ -13,7 +14,7 @@ public class BlastersClient implements GalaxiesClientAddon
 	public void onGalaxiesClientReady()
 	{
 		EntityRendererRegistry.register(Blasters.BLASTER_BOLT_ENTITY, BlasterBoltEntityRenderer::new);
-		//		EntityModelLayerRegistry.registerModelLayer(BlasterBoltEntityRenderer.LAYER, BlasterBoltEntityRenderer::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(BlasterBoltEntityRenderer.MODEL_LAYER, BlasterBoltEntityRenderer.Model::getTexturedModelData);
 
 		Blasters.LOGGER.info("Client module initialized");
 	}

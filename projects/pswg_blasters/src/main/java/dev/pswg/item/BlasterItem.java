@@ -197,10 +197,11 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			float f = -MathHelper.sin(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
 			float g = -MathHelper.sin((pitch + roll) * MathHelper.RADIANS_PER_DEGREE);
 			float h = MathHelper.cos(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
-			projectile.setVelocity(new Vec3d(f, g, h).multiply(3));
+			projectile.setVelocity(new Vec3d(f, g, h).multiply(5));
 			projectile.setAngles(yaw, pitch);
-			Vec3d vec3d = user.getMovement();
-			projectile.setVelocity(projectile.getVelocity().add(vec3d));
+
+			//			Vec3d vec3d = user.getMovement();
+			//			projectile.setVelocity(projectile.getVelocity().add(vec3d));
 
 			serverWorld.spawnEntity(projectile);
 		}
