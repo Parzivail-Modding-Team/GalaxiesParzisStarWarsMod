@@ -30,6 +30,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.Optional;
+
 public class BlasterItem extends Item implements ILeftClickUsable
 {
 	/**
@@ -68,6 +70,35 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			Blasters.id("is_aiming"),
 			ComponentType.<Boolean>builder().codec(Codec.BOOL).build()
 	);
+
+	/**
+	 * The component that defines when the blaster was last fired
+	 */
+	public static final ComponentType<Long> LAST_FIRED = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("last_fired"),
+			ComponentType.<Long>builder().codec(Codec.LONG).build()
+	);
+
+	/**
+	 * The component that defines when the blaster is cooling down until
+	 */
+	public static final ComponentType<Long> FIRE_COOLDOWN = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("fire_cooldown"),
+			ComponentType.<Long>builder().codec(Codec.LONG).build()
+	);
+
+	/**
+	 * @return A new instance of the item settings for this item
+	 */
+	public static Settings createSettings()
+	{
+		return new Settings()
+				.component(IS_AIMING, false)
+				.component(LAST_FIRED, 0L)
+				.component(FIRE_COOLDOWN, 0L);
+	}
 
 	public BlasterItem(Settings settings)
 	{
@@ -109,6 +140,102 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		}
 
 		stack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, attrs);
+	}
+
+	/**
+	 * Determines the timestamp when the blaster was last fired. It
+	 * is derived from the global timestamp {@link World#getTime()}.
+	 *
+	 * @param stack The stack to query
+	 *
+	 * @return A world tick that can be compared against {@link World#getTime()}
+	 */
+	public static long getLastFired(ItemStack stack)
+	{
+		return stack.getOrDefault(LAST_FIRED, 0L);
+	}
+
+	/**
+	 * Sets the timestamp when the blaster was last fired
+	 *
+	 * @param stack     The stack to modify
+	 * @param lastFired The world tick
+	 *
+	 * @see #getLastFired
+	 */
+	public static void setLastFired(ItemStack stack, long lastFired)
+	{
+		stack.set(LAST_FIRED, lastFired);
+	}
+
+	/**
+	 * Determines the next world tick when the blaster is able to be
+	 * fired again. It is derived from the global timestamp {@link World#getTime()}.
+	 *
+	 * @param stack The stack to query
+	 *
+	 * @return A world tick that can be compared against {@link World#getTime()}
+	 */
+	public static long getFireCooldown(ItemStack stack)
+	{
+		return stack.getOrDefault(FIRE_COOLDOWN, 0L);
+	}
+
+	/**
+	 * Sets the timestamp when the blaster cooldown should end
+	 *
+	 * @param stack       The stack to modify
+	 * @param cooldownEnd The world tick when the cooldown should end
+	 *
+	 * @see #getFireCooldown
+	 */
+	public static void setFireCooldown(ItemStack stack, long cooldownEnd)
+	{
+		stack.set(FIRE_COOLDOWN, cooldownEnd);
+	}
+
+	/**
+	 * If currently waiting to be able to fire again, gets the current
+	 * progress [0,1) of the cooldown process
+	 *
+	 * @param world The world to the stack's timestamps are referenced
+	 * @param stack The stack to query
+	 *
+	 * @return A float [0,1) if currently waiting to be able to fire, empty otherwise
+	 */
+	public static Optional<Float> getFireCooldownProgress(World world, ItemStack stack)
+	{
+		var lastFired = getLastFired(stack);
+		var cooldown = getFireCooldown(stack);
+		var time = world.getTime();
+
+		if (cooldown <= lastFired || cooldown < time)
+			return Optional.empty();
+
+		var cooldownLength = cooldown - lastFired;
+		var cooldownProgress = (float)(time - lastFired) / cooldownLength;
+		return Optional.of(cooldownProgress);
+	}
+
+	/**
+	 * Determines if the blaster is currently able to be fired based on
+	 * the blaster's own properties (e.g. ignoring player eligibility)
+	 *
+	 * @param world The world to the stack's timestamps are referenced
+	 * @param user  The entity that is requesting to fire the blaster
+	 * @param stack The stack to query
+	 *
+	 * @return True if the blaster can be fired, false otherwise
+	 */
+	public static boolean canFire(World world, LivingEntity user, ItemStack stack)
+	{
+		var isCoolingDown = getFireCooldown(stack) > world.getTime();
+		if (isCoolingDown)
+			return false;
+
+		// TODO: other checks
+
+		return true;
 	}
 
 	@Override
@@ -172,6 +299,10 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public ActionResult useLeft(World world, LivingEntity user, Hand hand)
 	{
 		ItemStack itemStack = user.getStackInHand(hand);
+
+		if (!canFire(world, user, itemStack))
+			return ActionResult.PASS;
+
 		world.playSound(
 				null,
 				user.getX(),
@@ -183,11 +314,15 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
 		);
 
+		setLastFired(itemStack, world.getTime());
+		// TODO: pull this value from a default component
+		setFireCooldown(itemStack, world.getTime() + TickConstants.ONE_SECOND);
+
 		if (world instanceof ServerWorld serverWorld)
 		{
 			var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
 
-			// TODO: abstract into blaster-creating factory
+			// TODO: abstract into bolt-creating factory
 			projectile.setPosition(user.getX(), user.getEyeY() - 0.2f, user.getZ());
 
 			var pitch = user.getPitch();

@@ -1,6 +1,8 @@
 package dev.pswg.mixin.client;
 
 import dev.pswg.Blasters;
+import dev.pswg.item.BlasterItem;
+import dev.pswg.rendering.Drawables;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -24,8 +26,11 @@ public abstract class DrawContextMixin
 
 		if (stack.isOf(Blasters.BLASTER_ITEM))
 		{
-			// TODO: implement cooldown heat bar
-			// Drawables.itemDurability(self, value, x, y - 13, 13, 0x0000FF);
+			assert client.world != null;
+
+			// TODO: better visual
+			BlasterItem.getFireCooldownProgress(client.world, stack)
+			           .ifPresent(value -> Drawables.itemDurability(self, value, x, y - 13, 13, 0x0000FF));
 		}
 	}
 }
