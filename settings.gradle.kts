@@ -8,6 +8,9 @@ pluginManagement {
 	}
 }
 
+// Compile-only framework tools, like annotation processors
+include(":projects:framework")
+
 // The core mod
 include(":projects:pswg_core")
 

@@ -1,6 +1,7 @@
 package dev.pswg.item;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
@@ -18,6 +19,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
@@ -34,6 +38,34 @@ import java.util.Optional;
 
 public class BlasterItem extends Item implements ILeftClickUsable
 {
+	public record StateComponent(
+			boolean isAiming,
+			long lastFired,
+			long fireCooldown
+	)
+	{
+		public static final Codec<BlasterItem.StateComponent> CODEC = RecordCodecBuilder.create(
+				instance -> instance.group(
+						                    Codec.BOOL.fieldOf("isAiming").forGetter(BlasterItem.StateComponent::isAiming),
+						                    Codec.LONG.fieldOf("lastFired").forGetter(BlasterItem.StateComponent::lastFired),
+						                    Codec.LONG.fieldOf("fireCooldown").forGetter(BlasterItem.StateComponent::fireCooldown)
+				                    )
+				                    .apply(instance, BlasterItem.StateComponent::new)
+		);
+
+		public static final PacketCodec<RegistryByteBuf, StateComponent> PACKET_CODEC = PacketCodec.tuple(
+				PacketCodecs.BOOL,
+				StateComponent::isAiming,
+				PacketCodecs.VAR_LONG,
+				StateComponent::lastFired,
+				PacketCodecs.VAR_LONG,
+				StateComponent::fireCooldown,
+				StateComponent::new
+		);
+
+		public static final StateComponent DEFAULT = new StateComponent(false, 0L, 0L);
+	}
+
 	/**
 	 * If a blaster us "used" for longer than this time, in ticks, then
 	 * the "use" interaction will be considered a "hold to aim" instead of
@@ -87,6 +119,15 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			Registries.DATA_COMPONENT_TYPE,
 			Blasters.id("fire_cooldown"),
 			ComponentType.<Long>builder().codec(Codec.LONG).build()
+	);
+
+	/**
+	 * The component that contains the mutable gameplay state of the blaster
+	 */
+	public static final ComponentType<StateComponent> STATE = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("state"),
+			ComponentType.<StateComponent>builder().codec(StateComponent.CODEC).packetCodec(StateComponent.PACKET_CODEC).build()
 	);
 
 	/**
