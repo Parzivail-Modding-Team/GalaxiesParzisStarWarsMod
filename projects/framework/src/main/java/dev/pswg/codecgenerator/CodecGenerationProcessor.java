@@ -638,6 +638,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		}
 		catch (IOException e)
 		{
+			log("Failed: %s".formatted(e.getMessage()));
 		}
 	}
 

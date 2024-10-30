@@ -6,6 +6,7 @@ import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.entity.BlasterBoltEntity;
+import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -35,9 +36,18 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 public class BlasterItem extends Item implements ILeftClickUsable
 {
+	/**
+	 * The container that contains the mutable gameplay state of the blaster
+	 *
+	 * @param isAiming     Determines if the blaster is currently aiming-down-sights
+	 * @param lastFired    Defines when the blaster was last fired
+	 * @param fireCooldown Defines when the blaster is cooling down until
+	 */
+	@MutableRecord
 	public record StateComponent(
 			boolean isAiming,
 			long lastFired,
@@ -64,6 +74,21 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		);
 
 		public static final StateComponent DEFAULT = new StateComponent(false, 0L, 0L);
+
+		public StateComponent withIsAiming(boolean isAiming)
+		{
+			return new StateComponent(isAiming, lastFired, fireCooldown);
+		}
+
+		public StateComponent withLastFired(long lastFired)
+		{
+			return new StateComponent(isAiming, lastFired, fireCooldown);
+		}
+
+		public StateComponent withFireCooldown(long fireCooldown)
+		{
+			return new StateComponent(isAiming, lastFired, fireCooldown);
+		}
 	}
 
 	/**
@@ -94,34 +119,6 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	);
 
 	/**
-	 * The component that determines if the blaster is currently aiming-
-	 * down-sights
-	 */
-	public static final ComponentType<Boolean> IS_AIMING = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
-			Blasters.id("is_aiming"),
-			ComponentType.<Boolean>builder().codec(Codec.BOOL).build()
-	);
-
-	/**
-	 * The component that defines when the blaster was last fired
-	 */
-	public static final ComponentType<Long> LAST_FIRED = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
-			Blasters.id("last_fired"),
-			ComponentType.<Long>builder().codec(Codec.LONG).build()
-	);
-
-	/**
-	 * The component that defines when the blaster is cooling down until
-	 */
-	public static final ComponentType<Long> FIRE_COOLDOWN = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
-			Blasters.id("fire_cooldown"),
-			ComponentType.<Long>builder().codec(Codec.LONG).build()
-	);
-
-	/**
 	 * The component that contains the mutable gameplay state of the blaster
 	 */
 	public static final ComponentType<StateComponent> STATE = Registry.register(
@@ -136,14 +133,23 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public static Settings createSettings()
 	{
 		return new Settings()
-				.component(IS_AIMING, false)
-				.component(LAST_FIRED, 0L)
-				.component(FIRE_COOLDOWN, 0L);
+				.component(STATE, StateComponent.DEFAULT);
 	}
 
 	public BlasterItem(Settings settings)
 	{
 		super(settings);
+	}
+
+	/**
+	 * Applies a state modification to the given stack.
+	 *
+	 * @param stack         The ItemStack to be modified.
+	 * @param stateOperator A UnaryOperator function that modifies and returns a new StateComponent.
+	 */
+	public static void applyState(ItemStack stack, UnaryOperator<StateComponent> stateOperator)
+	{
+		stack.apply(STATE, StateComponent.DEFAULT, stateOperator);
 	}
 
 	/**
@@ -155,7 +161,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static boolean isAiming(ItemStack stack)
 	{
-		return stack.getOrDefault(IS_AIMING, false);
+		return stack.getOrDefault(STATE, StateComponent.DEFAULT).isAiming();
 	}
 
 	/**
@@ -166,7 +172,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static void setAiming(ItemStack stack, boolean aiming)
 	{
-		stack.set(IS_AIMING, aiming);
+		applyState(stack, state -> state.withIsAiming(aiming));
+
 		var attrs = stack.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
 
 		if (aiming)
@@ -193,7 +200,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static long getLastFired(ItemStack stack)
 	{
-		return stack.getOrDefault(LAST_FIRED, 0L);
+		return stack.getOrDefault(STATE, StateComponent.DEFAULT).lastFired();
 	}
 
 	/**
@@ -206,7 +213,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static void setLastFired(ItemStack stack, long lastFired)
 	{
-		stack.set(LAST_FIRED, lastFired);
+		applyState(stack, state -> state.withLastFired(lastFired));
 	}
 
 	/**
@@ -219,7 +226,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static long getFireCooldown(ItemStack stack)
 	{
-		return stack.getOrDefault(FIRE_COOLDOWN, 0L);
+		return stack.getOrDefault(STATE, StateComponent.DEFAULT).fireCooldown();
 	}
 
 	/**
@@ -232,7 +239,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static void setFireCooldown(ItemStack stack, long cooldownEnd)
 	{
-		stack.set(FIRE_COOLDOWN, cooldownEnd);
+		applyState(stack, state -> state.withFireCooldown(cooldownEnd));
 	}
 
 	/**
