@@ -51,14 +51,18 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public record StateComponent(
 			boolean isAiming,
 			long lastFired,
-			long fireCooldown
+			long fireCooldown,
+			long lastHeated,
+			float lastTotalHeat
 	)
 	{
 		public static final Codec<BlasterItem.StateComponent> CODEC = RecordCodecBuilder.create(
 				instance -> instance.group(
 						                    Codec.BOOL.fieldOf("isAiming").forGetter(BlasterItem.StateComponent::isAiming),
 						                    Codec.LONG.fieldOf("lastFired").forGetter(BlasterItem.StateComponent::lastFired),
-						                    Codec.LONG.fieldOf("fireCooldown").forGetter(BlasterItem.StateComponent::fireCooldown)
+						                    Codec.LONG.fieldOf("fireCooldown").forGetter(BlasterItem.StateComponent::fireCooldown),
+						                    Codec.LONG.fieldOf("lastHeated").forGetter(BlasterItem.StateComponent::fireCooldown),
+						                    Codec.FLOAT.fieldOf("lastTotalHeat").forGetter(BlasterItem.StateComponent::lastTotalHeat)
 				                    )
 				                    .apply(instance, BlasterItem.StateComponent::new)
 		);
@@ -70,24 +74,38 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				StateComponent::lastFired,
 				PacketCodecs.VAR_LONG,
 				StateComponent::fireCooldown,
+				PacketCodecs.VAR_LONG,
+				StateComponent::lastHeated,
+				PacketCodecs.FLOAT,
+				StateComponent::lastTotalHeat,
 				StateComponent::new
 		);
 
-		public static final StateComponent DEFAULT = new StateComponent(false, 0L, 0L);
+		public static final StateComponent DEFAULT = new StateComponent(false, 0, 0, 0, 0);
 
 		public StateComponent withIsAiming(boolean isAiming)
 		{
-			return new StateComponent(isAiming, lastFired, fireCooldown);
+			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
 		}
 
 		public StateComponent withLastFired(long lastFired)
 		{
-			return new StateComponent(isAiming, lastFired, fireCooldown);
+			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
 		}
 
 		public StateComponent withFireCooldown(long fireCooldown)
 		{
-			return new StateComponent(isAiming, lastFired, fireCooldown);
+			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
+		}
+
+		public StateComponent withLastHeated(long lastHeated)
+		{
+			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
+		}
+
+		public StateComponent withLastTotalHeat(float lastTotalHeat)
+		{
+			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
 		}
 	}
 
@@ -121,7 +139,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	/**
 	 * The component that contains the mutable gameplay state of the blaster
 	 */
-	public static final ComponentType<StateComponent> STATE = Registry.register(
+	private static final ComponentType<StateComponent> STATE = Registry.register(
 			Registries.DATA_COMPONENT_TYPE,
 			Blasters.id("state"),
 			ComponentType.<StateComponent>builder().codec(StateComponent.CODEC).packetCodec(StateComponent.PACKET_CODEC).build()
@@ -208,12 +226,54 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 *
 	 * @param stack     The stack to modify
 	 * @param lastFired The world tick
-	 *
-	 * @see #getLastFired
 	 */
 	public static void setLastFired(ItemStack stack, long lastFired)
 	{
 		applyState(stack, state -> state.withLastFired(lastFired));
+	}
+
+	/**
+	 * Gets the timestamp when heat was last added, and therefore the
+	 * time from which all heat calculations (e.g. cooldowns) are made.
+	 *
+	 * @param stack The stack to query
+	 *
+	 * @return The world tick when heat was last applied
+	 */
+	public static long getLastHeated(ItemStack stack)
+	{
+		return stack.getOrDefault(STATE, StateComponent.DEFAULT).lastHeated();
+	}
+
+	/**
+	 * Gets the amount of heat the blaster contained the last time
+	 * heat was added. To get the current amount of heat, taking
+	 * into account cooling and other parameters, see {@link #getHeat(World, ItemStack, float)}.
+	 *
+	 * @param stack The stack to query
+	 *
+	 * @return The total amount of heat at the last time heat was added
+	 *
+	 * @see #getLastHeated
+	 */
+	public static float getLastTotalHeat(ItemStack stack)
+	{
+		return stack.getOrDefault(STATE, StateComponent.DEFAULT).lastTotalHeat();
+	}
+
+	/**
+	 * Sets the amount of heat the blaster contained the last time
+	 * heat was added.
+	 *
+	 * @param stack The stack to modify
+	 * @param heat  The total amount of heat in the blaster
+	 */
+	public static void setLastTotalHeat(ItemStack stack, long timestamp, float heat)
+	{
+		applyState(stack, state -> state
+				.withLastTotalHeat(heat)
+				.withLastHeated(timestamp)
+		);
 	}
 
 	/**
@@ -246,22 +306,23 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * If currently waiting to be able to fire again, gets the current
 	 * progress [0,1) of the cooldown process
 	 *
-	 * @param world The world to the stack's timestamps are referenced
-	 * @param stack The stack to query
+	 * @param world     The world to the stack's timestamps are referenced
+	 * @param stack     The stack to query
+	 * @param tickDelta The partial tick to evaluate at
 	 *
 	 * @return A float [0,1) if currently waiting to be able to fire, empty otherwise
 	 */
-	public static Optional<Float> getFireCooldownProgress(World world, ItemStack stack)
+	public static Optional<Float> getFireCooldownProgress(World world, ItemStack stack, float tickDelta)
 	{
 		var lastFired = getLastFired(stack);
 		var cooldown = getFireCooldown(stack);
-		var time = world.getTime();
+		var time = world.getTime() + tickDelta;
 
 		if (cooldown <= lastFired || cooldown < time)
 			return Optional.empty();
 
 		var cooldownLength = cooldown - lastFired;
-		var cooldownProgress = (float)(time - lastFired) / cooldownLength;
+		var cooldownProgress = (time - lastFired) / cooldownLength;
 		return Optional.of(cooldownProgress);
 	}
 
@@ -284,6 +345,30 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		// TODO: other checks
 
 		return true;
+	}
+
+	/**
+	 * Calculates the current heat of the blaster based on the dissipation rate and the time passed since the last shot.
+	 *
+	 * @param world     The world to the stack's timestamps are referenced
+	 * @param stack     The stack to query
+	 * @param tickDelta The partial tick to evaluate at
+	 *
+	 * @return The current heat of the blaster
+	 */
+	public static float getHeat(World world, ItemStack stack, float tickDelta)
+	{
+		var time = world.getTime() + tickDelta;
+
+		var lastCommittedHeat = getLastTotalHeat(stack);
+		var lastCommittedHeatTime = getLastHeated(stack);
+
+		// TODO: pull these values from a default component
+		var dissipationDelayTicks = 30;
+		var dissipationPerTick = 2;
+
+		var dissipation = dissipationPerTick * (time - lastCommittedHeatTime - dissipationDelayTicks);
+		return MathHelper.clamp(lastCommittedHeat - dissipation, 0, lastCommittedHeat);
 	}
 
 	@Override
@@ -362,8 +447,13 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
 		);
 
-		setLastFired(itemStack, world.getTime());
-		// TODO: pull this value from a default component
+		var currentHeat = getHeat(world, itemStack, 0);
+
+		var timestamp = world.getTime();
+		setLastFired(itemStack, timestamp);
+
+		// TODO: pull these values from a default component
+		setLastTotalHeat(itemStack, timestamp, currentHeat + 100);
 		setFireCooldown(itemStack, world.getTime() + TickConstants.ONE_SECOND);
 
 		if (world instanceof ServerWorld serverWorld)
