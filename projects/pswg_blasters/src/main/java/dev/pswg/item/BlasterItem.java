@@ -6,7 +6,6 @@ import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.entity.BlasterBoltEntity;
-import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -41,13 +40,105 @@ import java.util.function.UnaryOperator;
 public class BlasterItem extends Item implements ILeftClickUsable
 {
 	/**
-	 * The container that contains the mutable gameplay state of the blaster
+	 * Contains stats related to blaster heating and cooling
+	 *
+	 * @param capacity             The maximum amount of heat units that may be accumulated before overheating.
+	 * @param perRound             The amount of heat units accumulated per shot fired.
+	 * @param drainSpeed           The amount of time, in ticks, after the most recent shot was fired before the
+	 *                             blaster will begin to passively cool without venting.
+	 * @param overheatPenalty      The amount of heat units removed from the blaster per tick while passively cooling
+	 *                             or venting.
+	 * @param overheatDrainSpeed   The amount of heat units removed from the blaster per tick while venting due to
+	 *                             an overheat.
+	 * @param passiveCooldownDelay The amount of "extra" heat units accumulated when the blaster overheats, effectively
+	 *                             delaying the blaster from beginning to cool by {@code overheatPenalty / (overheatDrainSpeed * 20)} seconds.
+	 * @param overchargeBonus      The amount of time, in ticks, the blaster stays in overcharge when the secondary
+	 *                             bypass is triggered.
+	 */
+	public record Heat(
+			int capacity,
+			int perRound,
+			int drainSpeed,
+			int overheatPenalty,
+			int overheatDrainSpeed,
+			int passiveCooldownDelay,
+			int overchargeBonus
+	)
+	{
+		public static final Heat DEFAULT = new Heat(
+				100,
+				20,
+				5,
+				60,
+				1,
+				20,
+				40
+		);
+
+		public static final Codec<Heat> CODEC = RecordCodecBuilder.create(
+				instance -> instance.group(
+						                    Codec.INT.fieldOf("capacity").forGetter(Heat::capacity),
+						                    Codec.INT.fieldOf("perRound").forGetter(Heat::perRound),
+						                    Codec.INT.fieldOf("drainSpeed").forGetter(Heat::drainSpeed),
+						                    Codec.INT.fieldOf("overheatPenalty").forGetter(Heat::overheatPenalty),
+						                    Codec.INT.fieldOf("overheatDrainSpeed").forGetter(Heat::overheatDrainSpeed),
+						                    Codec.INT.fieldOf("passiveCooldownDelay").forGetter(Heat::passiveCooldownDelay),
+						                    Codec.INT.fieldOf("overchargeBonus").forGetter(Heat::overchargeBonus)
+				                    )
+				                    .apply(instance, Heat::new)
+		);
+
+		public static final PacketCodec<RegistryByteBuf, Heat> PACKET_CODEC = PacketCodec.tuple(
+				PacketCodecs.VAR_INT, Heat::capacity,
+				PacketCodecs.VAR_INT, Heat::perRound,
+				PacketCodecs.VAR_INT, Heat::drainSpeed,
+				PacketCodecs.VAR_INT, Heat::overheatPenalty,
+				PacketCodecs.VAR_INT, Heat::overheatDrainSpeed,
+				PacketCodecs.VAR_INT, Heat::passiveCooldownDelay,
+				PacketCodecs.VAR_INT, Heat::overchargeBonus,
+				Heat::new
+		);
+	}
+
+	/**
+	 * Contains the immutable, intrinsic stats of this particular
+	 * variant of blaster
+	 *
+	 * @param damage The damage, in hit points (half hearts) a single shot inflicts.
+	 * @param range  The maximum distance, in blocks, a blaster can fire a bolt.
+	 * @param heat   The heating and cooling stats.
+	 */
+	public record StatsComponent(
+			float damage,
+			int range,
+			Heat heat
+	)
+	{
+		public static final StatsComponent DEFAULT = new StatsComponent(8, 48, Heat.DEFAULT);
+
+		public static final Codec<StatsComponent> CODEC = RecordCodecBuilder.create(
+				instance -> instance.group(
+						Codec.FLOAT.fieldOf("damage").forGetter(StatsComponent::damage),
+						Codec.INT.fieldOf("range").forGetter(StatsComponent::range),
+						Heat.CODEC.fieldOf("heat").forGetter(StatsComponent::heat)
+				).apply(instance, StatsComponent::new)
+		);
+
+		public static final PacketCodec<RegistryByteBuf, StatsComponent> PACKET_CODEC = PacketCodec.tuple(
+				PacketCodecs.FLOAT, StatsComponent::damage,
+				PacketCodecs.VAR_INT, StatsComponent::range,
+				Heat.PACKET_CODEC, StatsComponent::heat,
+				StatsComponent::new
+		);
+	}
+
+	/**
+	 * The container for the mutable gameplay state of the blaster
 	 *
 	 * @param isAiming     Determines if the blaster is currently aiming-down-sights
 	 * @param lastFired    Defines when the blaster was last fired
 	 * @param fireCooldown Defines when the blaster is cooling down until
 	 */
-	@MutableRecord
 	public record StateComponent(
 			boolean isAiming,
 			long lastFired,
@@ -68,16 +159,11 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		);
 
 		public static final PacketCodec<RegistryByteBuf, StateComponent> PACKET_CODEC = PacketCodec.tuple(
-				PacketCodecs.BOOL,
-				StateComponent::isAiming,
-				PacketCodecs.VAR_LONG,
-				StateComponent::lastFired,
-				PacketCodecs.VAR_LONG,
-				StateComponent::fireCooldown,
-				PacketCodecs.VAR_LONG,
-				StateComponent::lastHeated,
-				PacketCodecs.FLOAT,
-				StateComponent::lastTotalHeat,
+				PacketCodecs.BOOL, StateComponent::isAiming,
+				PacketCodecs.VAR_LONG, StateComponent::lastFired,
+				PacketCodecs.VAR_LONG, StateComponent::fireCooldown,
+				PacketCodecs.VAR_LONG, StateComponent::lastHeated,
+				PacketCodecs.FLOAT, StateComponent::lastTotalHeat,
 				StateComponent::new
 		);
 
@@ -146,17 +232,39 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	);
 
 	/**
+	 * The component that contains the immutable base statistics of the blaster
+	 */
+	private static final ComponentType<StatsComponent> STATS = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("stats"),
+			ComponentType.<StatsComponent>builder().codec(StatsComponent.CODEC).packetCodec(StatsComponent.PACKET_CODEC).build()
+	);
+
+	/**
 	 * @return A new instance of the item settings for this item
 	 */
 	public static Settings createSettings()
 	{
 		return new Settings()
+				.component(STATS, StatsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
 	}
 
 	public BlasterItem(Settings settings)
 	{
 		super(settings);
+	}
+
+	/**
+	 * Gets the stats of the given blaster
+	 *
+	 * @param stack The stack to query
+	 *
+	 * @return The blaster's stats
+	 */
+	public static StatsComponent getStats(ItemStack stack)
+	{
+		return stack.getOrDefault(STATS, StatsComponent.DEFAULT);
 	}
 
 	/**
@@ -363,9 +471,11 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		var lastCommittedHeat = getLastTotalHeat(stack);
 		var lastCommittedHeatTime = getLastHeated(stack);
 
-		// TODO: pull these values from a default component
-		var dissipationDelayTicks = 30;
-		var dissipationPerTick = 2;
+		var stats = getStats(stack);
+
+		// TODO: other kinds of delays, overheats, etc.
+		var dissipationDelayTicks = stats.heat().passiveCooldownDelay();
+		var dissipationPerTick = stats.heat().drainSpeed();
 
 		var dissipation = dissipationPerTick * (time - lastCommittedHeatTime - dissipationDelayTicks);
 		return MathHelper.clamp(lastCommittedHeat - dissipation, 0, lastCommittedHeat);
@@ -447,13 +557,15 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
 		);
 
+		var stats = getStats(itemStack);
 		var currentHeat = getHeat(world, itemStack, 0);
 
 		var timestamp = world.getTime();
 		setLastFired(itemStack, timestamp);
 
-		// TODO: pull these values from a default component
-		setLastTotalHeat(itemStack, timestamp, currentHeat + 100);
+		setLastTotalHeat(itemStack, timestamp, currentHeat + stats.heat().perRound());
+
+		// TODO: pull this value from a default component
 		setFireCooldown(itemStack, world.getTime() + TickConstants.ONE_SECOND);
 
 		if (world instanceof ServerWorld serverWorld)

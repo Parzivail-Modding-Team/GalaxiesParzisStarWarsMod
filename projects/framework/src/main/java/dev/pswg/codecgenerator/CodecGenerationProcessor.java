@@ -546,7 +546,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 			if (nestedCodecType == null)
 				return null;
 
-			codecInitializer.add("$1T.$2L,\n", nestedCodecType.className(), nestedCodecType.elementName());
+			codecInitializer.add("$1T.$2L, ", nestedCodecType.className(), nestedCodecType.elementName());
 			codecInitializer.add("$1T::$2L,\n", stateComponentType, component.getSimpleName().toString());
 		}
 
