@@ -39,6 +39,14 @@ import java.util.function.UnaryOperator;
 
 public class BlasterItem extends Item implements ILeftClickUsable
 {
+	public enum CoolingMode
+	{
+		NONE,
+		OVERHEAT,
+		SUCCESSFUL_BYPASS,
+		FAILED_BYPASS
+	}
+
 	/**
 	 * Contains stats related to blaster heating and cooling
 	 *
@@ -481,6 +489,11 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		return MathHelper.clamp(lastCommittedHeat - dissipation, 0, lastCommittedHeat);
 	}
 
+	public static float overchargeTimeRemaining(World world, ItemStack itemStack, float tickDelta)
+	{
+		return 0;
+	}
+
 	@Override
 	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
 	{
@@ -558,15 +571,19 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		);
 
 		var stats = getStats(itemStack);
-		var currentHeat = getHeat(world, itemStack, 0);
 
 		var timestamp = world.getTime();
 		setLastFired(itemStack, timestamp);
 
-		setLastTotalHeat(itemStack, timestamp, currentHeat + stats.heat().perRound());
+		// TODO: set in stack
+		var passiveCooldownStartTimestamp = timestamp + stats.heat().passiveCooldownDelay();
+
+		var totalHeat = getHeat(world, itemStack, 0);
+		if (overchargeTimeRemaining(world, itemStack, 0) == 0)
+			totalHeat += stats.heat().perRound();
 
 		// TODO: pull this value from a default component
-		setFireCooldown(itemStack, world.getTime() + TickConstants.ONE_SECOND);
+		setFireCooldown(itemStack, world.getTime() + 4);
 
 		if (world instanceof ServerWorld serverWorld)
 		{
@@ -590,6 +607,21 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 			serverWorld.spawnEntity(projectile);
 		}
+
+		if (totalHeat > stats.heat().capacity())
+		{
+			// overheat sound
+
+			// TODO: set all in stack
+			var ventingHeat = totalHeat + stats.heat().overheatPenalty();
+			var coolingMode = CoolingMode.OVERHEAT;
+			var canBypassCooling = true;
+			var burstCounter = 0;
+
+			totalHeat = 0;
+		}
+
+		setLastTotalHeat(itemStack, timestamp, totalHeat);
 
 		return ActionResult.SUCCESS;
 	}

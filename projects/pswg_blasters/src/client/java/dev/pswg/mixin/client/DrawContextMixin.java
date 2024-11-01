@@ -33,8 +33,10 @@ public abstract class DrawContextMixin
 			BlasterItem.getFireCooldownProgress(client.world, stack, GalaxiesClient.getTickDelta())
 			           .ifPresent(value -> Drawables.itemDurability(self, value, x, y - 13, 13, 0x0000FF));
 
+			var stats = BlasterItem.getStats(stack);
 			var heat = BlasterItem.getHeat(client.world, stack, GalaxiesClient.getTickDelta());
-			Drawables.itemDurability(self, heat / 10, x, y - 10, 13, 0x0000FF);
+
+			Drawables.itemDurability(self, heat / stats.heat().capacity(), x, y - 10, 13, 0xFF3000);
 		}
 	}
 }
