@@ -70,7 +70,9 @@ public class MutableRecordProcessor extends AbstractProcessor
 
 		for (var component : classElement.getRecordComponents())
 		{
+			// TODO: this might create ambiguous method references
 			iface.addMethod(generateGetterMethod(component));
+
 			iface.addMethod(generateBuilderMethod(classElement, component));
 		}
 

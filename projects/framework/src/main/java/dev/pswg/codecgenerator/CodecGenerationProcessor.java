@@ -8,6 +8,8 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.io.IOException;
@@ -32,7 +34,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 	 * @param className   The class in which the codec is defined
 	 * @param elementName The name of the codec field
 	 */
-	private record CodecType(ClassName className, String elementName)
+	private record CodecType(TypeName className, String elementName)
 	{
 		@Override
 		public String toString()
@@ -486,6 +488,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 
 		var recordCodecBuilder = ClassName.get("com.mojang.serialization.codecs", "RecordCodecBuilder");
 
+		// TODO: this will need to generate an anonymous class (?) for record with more than 16 members
 		var codecInitializer = CodeBlock.builder()
 		                                .add("$T.create(instance -> instance.group(\n", recordCodecBuilder)
 		                                .indent();
@@ -532,6 +535,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		var packetCodecType = ClassName.get("net.minecraft.network.codec", "PacketCodec");
 		var parameterizedCodec = ParameterizedTypeName.get(packetCodecType, registryByteBufType, stateComponentType);
 
+		// TODO: this will need to generate an anonymous class for record with more than 8 members
 		var codecInitializer = CodeBlock.builder()
 		                                .add("$T.tuple(\n", packetCodecType)
 		                                .indent();
@@ -570,14 +574,22 @@ public class CodecGenerationProcessor extends AbstractProcessor
 	 */
 	private CodecType getCodecType(RecordComponentElement component)
 	{
+		var annotation = Optional.ofNullable(component.getAnnotation(UseCodec.class));
+		if (annotation.map(UseCodec::customCodec).orElse(null) instanceof CodecSource codecSource)
+		{
+			var customCodecType = new CodecType(ClassName.get(getCodecSourceType(codecSource)), codecSource.member());
+			log("Custom codec requested for %s: %s".formatted(component.getSimpleName().toString(), customCodecType));
+			return customCodecType;
+		}
+
 		var type = component.asType().toString();
 		var codecTypeMap = codecTypes.get(type);
 
 		if (codecTypeMap != null)
 		{
-			var requestedCodec = Optional.ofNullable(component.getAnnotation(UseCodec.class))
-			                             .map(UseCodec::codec)
-			                             .orElse(defaultCodecTypes.get(type));
+			var requestedCodec = annotation
+					.map(UseCodec::codec)
+					.orElse(defaultCodecTypes.get(type));
 
 			if (!codecTypeMap.containsKey(requestedCodec))
 			{
@@ -603,14 +615,22 @@ public class CodecGenerationProcessor extends AbstractProcessor
 	 */
 	private CodecType getPacketCodecType(RecordComponentElement component)
 	{
+		var annotation = Optional.ofNullable(component.getAnnotation(UseCodec.class));
+		if (annotation.map(UseCodec::customPacket).orElse(null) instanceof CodecSource codecSource)
+		{
+			var customCodecType = new CodecType(ClassName.get(getCodecSourceType(codecSource)), codecSource.member());
+			log("Custom codec requested for %s: %s".formatted(component.getSimpleName().toString(), customCodecType));
+			return customCodecType;
+		}
+
 		var type = component.asType().toString();
 		var codecTypeMap = packetCodecTypes.get(type);
 
 		if (codecTypeMap != null)
 		{
-			var requestedCodec = Optional.ofNullable(component.getAnnotation(UseCodec.class))
-			                             .map(UseCodec::packet)
-			                             .orElse(defaultPacketCodecTypes.get(type));
+			var requestedCodec = annotation
+					.map(UseCodec::packet)
+					.orElse(defaultPacketCodecTypes.get(type));
 
 			if (!codecTypeMap.containsKey(requestedCodec))
 			{
@@ -625,6 +645,30 @@ public class CodecGenerationProcessor extends AbstractProcessor
 
 		log("Found element %s of type %s, which has no supported packet codec!".formatted(component.getSimpleName().toString(), type));
 		return null;
+	}
+
+	/**
+	 * Gets the source type of a {@link CodecSource} as a {@link TypeMirror}
+	 *
+	 * @param codecSource The source to extract from
+	 *
+	 * @return The extracted source type
+	 */
+	private TypeMirror getCodecSourceType(CodecSource codecSource)
+	{
+		try
+		{
+			// This will throw an exception:
+			//     javax.lang.model.type.MirroredTypeException: Attempt to access Class object for TypeMirror...
+			// which will give us the mirror
+			codecSource.source();
+		}
+		catch (MirroredTypeException mte)
+		{
+			return mte.getTypeMirror();
+		}
+
+		throw new RuntimeException("Source type did not result in a mirror");
 	}
 
 	private void writeInterfaceToFile(JavaFile file)

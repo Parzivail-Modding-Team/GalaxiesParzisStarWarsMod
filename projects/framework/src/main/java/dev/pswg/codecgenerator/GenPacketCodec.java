@@ -9,6 +9,7 @@ public enum GenPacketCodec
 	 * Automatically determine which packet codec best represents the given type
 	 */
 	AUTOMATIC,
+
 	/**
 	 * An available codec for the {@link Boolean} type.
 	 * Delegates to {@link net.minecraft.network.codec.PacketCodecs#BOOL}

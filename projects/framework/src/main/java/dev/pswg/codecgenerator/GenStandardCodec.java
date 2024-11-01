@@ -9,6 +9,7 @@ public enum GenStandardCodec
 	 * Automatically determine which codec best represents the given type
 	 */
 	AUTOMATIC,
+
 	/**
 	 * An available codec for the {@link Boolean} type.
 	 * Delegates to {@link com.mojang.serialization.Codec#BOOL}
