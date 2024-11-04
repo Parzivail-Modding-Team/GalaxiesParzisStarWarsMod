@@ -1,11 +1,17 @@
 package dev.pswg.item;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
+import dev.pswg.codecgenerator.CodecSource;
+import dev.pswg.codecgenerator.GenerateCodec;
+import dev.pswg.codecgenerator.UseCodec;
 import dev.pswg.entity.BlasterBoltEntity;
+import dev.pswg.generated.codecs.IHeatCodec;
+import dev.pswg.generated.codecs.IStateComponentCodec;
+import dev.pswg.generated.codecs.IStatsComponentCodec;
+import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
+import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -19,9 +25,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
@@ -63,6 +66,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * @param overchargeBonus      The amount of time, in ticks, the blaster stays in overcharge when the secondary
 	 *                             bypass is triggered.
 	 */
+	@GenerateCodec
 	public record Heat(
 			int capacity,
 			int perRound,
@@ -71,7 +75,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			int overheatDrainSpeed,
 			int passiveCooldownDelay,
 			int overchargeBonus
-	)
+	) implements IHeatCodec
 	{
 		public static final Heat DEFAULT = new Heat(
 				100,
@@ -81,30 +85,6 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				1,
 				20,
 				40
-		);
-
-		public static final Codec<Heat> CODEC = RecordCodecBuilder.create(
-				instance -> instance.group(
-						                    Codec.INT.fieldOf("capacity").forGetter(Heat::capacity),
-						                    Codec.INT.fieldOf("perRound").forGetter(Heat::perRound),
-						                    Codec.INT.fieldOf("drainSpeed").forGetter(Heat::drainSpeed),
-						                    Codec.INT.fieldOf("overheatPenalty").forGetter(Heat::overheatPenalty),
-						                    Codec.INT.fieldOf("overheatDrainSpeed").forGetter(Heat::overheatDrainSpeed),
-						                    Codec.INT.fieldOf("passiveCooldownDelay").forGetter(Heat::passiveCooldownDelay),
-						                    Codec.INT.fieldOf("overchargeBonus").forGetter(Heat::overchargeBonus)
-				                    )
-				                    .apply(instance, Heat::new)
-		);
-
-		public static final PacketCodec<RegistryByteBuf, Heat> PACKET_CODEC = PacketCodec.tuple(
-				PacketCodecs.VAR_INT, Heat::capacity,
-				PacketCodecs.VAR_INT, Heat::perRound,
-				PacketCodecs.VAR_INT, Heat::drainSpeed,
-				PacketCodecs.VAR_INT, Heat::overheatPenalty,
-				PacketCodecs.VAR_INT, Heat::overheatDrainSpeed,
-				PacketCodecs.VAR_INT, Heat::passiveCooldownDelay,
-				PacketCodecs.VAR_INT, Heat::overchargeBonus,
-				Heat::new
 		);
 	}
 
@@ -116,28 +96,18 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * @param range  The maximum distance, in blocks, a blaster can fire a bolt.
 	 * @param heat   The heating and cooling stats.
 	 */
+	@GenerateCodec
 	public record StatsComponent(
 			float damage,
 			int range,
+			@UseCodec(
+					customCodec = @CodecSource(source = Heat.class, member = "CODEC"),
+					customPacket = @CodecSource(source = Heat.class, member = "PACKET_CODEC")
+			)
 			Heat heat
-	)
+	) implements IStatsComponentCodec
 	{
 		public static final StatsComponent DEFAULT = new StatsComponent(8, 48, Heat.DEFAULT);
-
-		public static final Codec<StatsComponent> CODEC = RecordCodecBuilder.create(
-				instance -> instance.group(
-						Codec.FLOAT.fieldOf("damage").forGetter(StatsComponent::damage),
-						Codec.INT.fieldOf("range").forGetter(StatsComponent::range),
-						Heat.CODEC.fieldOf("heat").forGetter(StatsComponent::heat)
-				).apply(instance, StatsComponent::new)
-		);
-
-		public static final PacketCodec<RegistryByteBuf, StatsComponent> PACKET_CODEC = PacketCodec.tuple(
-				PacketCodecs.FLOAT, StatsComponent::damage,
-				PacketCodecs.VAR_INT, StatsComponent::range,
-				Heat.PACKET_CODEC, StatsComponent::heat,
-				StatsComponent::new
-		);
 	}
 
 	/**
@@ -147,60 +117,17 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * @param lastFired    Defines when the blaster was last fired
 	 * @param fireCooldown Defines when the blaster is cooling down until
 	 */
+	@MutableRecord
+	@GenerateCodec
 	public record StateComponent(
 			boolean isAiming,
 			long lastFired,
 			long fireCooldown,
 			long lastHeated,
 			float lastTotalHeat
-	)
+	) implements IStateComponentBuilder, IStateComponentCodec
 	{
-		public static final Codec<BlasterItem.StateComponent> CODEC = RecordCodecBuilder.create(
-				instance -> instance.group(
-						                    Codec.BOOL.fieldOf("isAiming").forGetter(BlasterItem.StateComponent::isAiming),
-						                    Codec.LONG.fieldOf("lastFired").forGetter(BlasterItem.StateComponent::lastFired),
-						                    Codec.LONG.fieldOf("fireCooldown").forGetter(BlasterItem.StateComponent::fireCooldown),
-						                    Codec.LONG.fieldOf("lastHeated").forGetter(BlasterItem.StateComponent::fireCooldown),
-						                    Codec.FLOAT.fieldOf("lastTotalHeat").forGetter(BlasterItem.StateComponent::lastTotalHeat)
-				                    )
-				                    .apply(instance, BlasterItem.StateComponent::new)
-		);
-
-		public static final PacketCodec<RegistryByteBuf, StateComponent> PACKET_CODEC = PacketCodec.tuple(
-				PacketCodecs.BOOL, StateComponent::isAiming,
-				PacketCodecs.VAR_LONG, StateComponent::lastFired,
-				PacketCodecs.VAR_LONG, StateComponent::fireCooldown,
-				PacketCodecs.VAR_LONG, StateComponent::lastHeated,
-				PacketCodecs.FLOAT, StateComponent::lastTotalHeat,
-				StateComponent::new
-		);
-
 		public static final StateComponent DEFAULT = new StateComponent(false, 0, 0, 0, 0);
-
-		public StateComponent withIsAiming(boolean isAiming)
-		{
-			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
-		}
-
-		public StateComponent withLastFired(long lastFired)
-		{
-			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
-		}
-
-		public StateComponent withFireCooldown(long fireCooldown)
-		{
-			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
-		}
-
-		public StateComponent withLastHeated(long lastHeated)
-		{
-			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
-		}
-
-		public StateComponent withLastTotalHeat(float lastTotalHeat)
-		{
-			return new StateComponent(isAiming, lastFired, fireCooldown, lastHeated, lastTotalHeat);
-		}
 	}
 
 	/**

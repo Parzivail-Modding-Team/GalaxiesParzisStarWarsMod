@@ -15,7 +15,6 @@ fabricApi {
 
 dependencies {
 	api(project(path: ":projects:pswg_core", configuration: "namedElements"))
+	compileOnly(project(path: ":projects:framework"))
+	annotationProcessor(project(path: ":projects:framework-generator"))
 }
-
-def generatedSourcesPath = file("src/main/generated_sources")
-java.sourceSets.main.java.srcDir(generatedSourcesPath)
