@@ -3,18 +3,13 @@ package dev.pswg.codecgenerator;
 import com.google.auto.service.AutoService;
 import com.palantir.javapoet.*;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
-import javax.tools.StandardLocation;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -23,6 +18,8 @@ import java.util.*;
  * static fields.
  */
 @AutoService(Processor.class)
+@SupportedAnnotationTypes("dev.pswg.codecgenerator.GenerateCodec")
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class CodecGenerationProcessor extends AbstractProcessor
 {
 	/**
@@ -435,7 +432,14 @@ public class CodecGenerationProcessor extends AbstractProcessor
 						continue;
 					}
 
-					writeInterfaceToFile(generatedInterface);
+					try
+					{
+						generatedInterface.writeTo(processingEnv.getFiler());
+					}
+					catch (IOException e)
+					{
+						processingEnv.getMessager().printError(e.toString(), element);
+					}
 				}
 			}
 		}
@@ -460,6 +464,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 
 		var iface = TypeSpec.interfaceBuilder(interfaceName)
 		                    .addModifiers(Modifier.PUBLIC)
+							.addOriginatingElement(classElement)
 		                    .addField(codec)
 		                    .addField(packetCodec)
 		                    .build();
@@ -686,32 +691,5 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		}
 
 		throw new RuntimeException("Source type did not result in a mirror");
-	}
-
-	private void writeInterfaceToFile(JavaFile file)
-	{
-		try
-		{
-			Path path = Paths.get(processingEnv.getFiler().getResource(StandardLocation.SOURCE_OUTPUT, "", "dummy").toUri());
-			var dir = path.getParent();
-			file.writeToFile(dir.toFile());
-			log("Generated in " + dir);
-		}
-		catch (IOException e)
-		{
-			log("Failed: %s".formatted(e.getMessage()));
-		}
-	}
-
-	@Override
-	public Set<String> getSupportedAnnotationTypes()
-	{
-		return Set.of(GenerateCodec.class.getCanonicalName());
-	}
-
-	@Override
-	public SourceVersion getSupportedSourceVersion()
-	{
-		return SourceVersion.latestSupported();
 	}
 }

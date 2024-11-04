@@ -3,16 +3,11 @@ package dev.pswg.mutablerecord;
 import com.google.auto.service.AutoService;
 import com.palantir.javapoet.*;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
-import javax.tools.StandardLocation;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Set;
 
 /**
@@ -20,6 +15,8 @@ import java.util.Set;
  * and mutators
  */
 @AutoService(Processor.class)
+@SupportedAnnotationTypes("dev.pswg.mutablerecord.MutableRecord")
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class MutableRecordProcessor extends AbstractProcessor
 {
 	private void log(String message)
@@ -50,7 +47,14 @@ public class MutableRecordProcessor extends AbstractProcessor
 						continue;
 					}
 
-					writeInterfaceToFile(generatedInterface);
+					try
+					{
+						generatedInterface.writeTo(processingEnv.getFiler());
+					}
+					catch (IOException e)
+					{
+						processingEnv.getMessager().printError(e.toString(), element);
+					}
 				}
 			}
 		}
@@ -66,7 +70,8 @@ public class MutableRecordProcessor extends AbstractProcessor
 	private JavaFile generateInterface(String packageName, TypeElement classElement, String interfaceName)
 	{
 		var iface = TypeSpec.interfaceBuilder(interfaceName)
-		                    .addModifiers(Modifier.PUBLIC);
+		                    .addModifiers(Modifier.PUBLIC)
+							.addOriginatingElement(classElement);
 
 		for (var component : classElement.getRecordComponents())
 		{
@@ -156,32 +161,5 @@ public class MutableRecordProcessor extends AbstractProcessor
 			return str;
 
 		return str.substring(0, 1).toUpperCase() + str.substring(1);
-	}
-
-	private void writeInterfaceToFile(JavaFile file)
-	{
-		try
-		{
-			Path path = Paths.get(processingEnv.getFiler().getResource(StandardLocation.SOURCE_OUTPUT, "", "dummy").toUri());
-			var dir = path.getParent();
-			file.writeToFile(dir.toFile());
-			log("Generated in " + dir);
-		}
-		catch (IOException e)
-		{
-			log("Failed: %s".formatted(e.getMessage()));
-		}
-	}
-
-	@Override
-	public Set<String> getSupportedAnnotationTypes()
-	{
-		return Set.of(MutableRecord.class.getCanonicalName());
-	}
-
-	@Override
-	public SourceVersion getSupportedSourceVersion()
-	{
-		return SourceVersion.latestSupported();
 	}
 }
