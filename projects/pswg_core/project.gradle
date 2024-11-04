@@ -16,6 +16,6 @@ fabricApi {
 }
 
 dependencies {
-	compileOnlyApi project(":projects:framework")
-	annotationProcessor project(":projects:framework")
+	compileOnly project(":projects:framework")
+	annotationProcessor project(":projects:framework-generator")
 }

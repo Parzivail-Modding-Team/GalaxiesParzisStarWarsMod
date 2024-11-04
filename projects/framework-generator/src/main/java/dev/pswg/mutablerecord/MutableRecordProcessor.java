@@ -1,7 +1,7 @@
 package dev.pswg.mutablerecord;
 
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.*;
+import com.palantir.javapoet.*;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
