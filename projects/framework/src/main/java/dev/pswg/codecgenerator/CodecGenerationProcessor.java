@@ -15,10 +15,7 @@ import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An annotation processor that generates record codecs as an
@@ -531,37 +528,57 @@ public class CodecGenerationProcessor extends AbstractProcessor
 	private FieldSpec generatePacketCodec(TypeElement classElement)
 	{
 		var registryByteBufType = ClassName.get("net.minecraft.network", "RegistryByteBuf");
-		var stateComponentType = TypeName.get(classElement.asType());
+		var recordType = TypeName.get(classElement.asType());
 		var packetCodecType = ClassName.get("net.minecraft.network.codec", "PacketCodec");
-		var parameterizedCodec = ParameterizedTypeName.get(packetCodecType, registryByteBufType, stateComponentType);
+		var parameterizedCodec = ParameterizedTypeName.get(packetCodecType, registryByteBufType, recordType);
 
-		// TODO: this will need to generate an anonymous class for record with more than 8 members
-		var codecInitializer = CodeBlock.builder()
-		                                .add("$T.tuple(\n", packetCodecType)
-		                                .indent();
+		CodeBlock.Builder encodeBuilder = CodeBlock.builder();
+		CodeBlock.Builder decodeBuilder = CodeBlock.builder();
 
-		var components = classElement.getRecordComponents();
-		if (components.isEmpty())
-			return null;
-
-		for (var component : components)
+		var paramNames = new ArrayList<String>();
+		for (var component : classElement.getRecordComponents())
 		{
 			var nestedCodecType = getPacketCodecType(component);
 			if (nestedCodecType == null)
 				return null;
 
-			codecInitializer.add("$1T.$2L, ", nestedCodecType.className(), nestedCodecType.elementName());
-			codecInitializer.add("$1T::$2L,\n", stateComponentType, component.getSimpleName().toString());
+			var paramName = component.getSimpleName().toString();
+			paramNames.add(paramName);
+
+			encodeBuilder.addStatement("$1T.$2L.encode(registryByteBuf, value.$3L())", nestedCodecType.className(), nestedCodecType.elementName(), component.getSimpleName().toString());
+			decodeBuilder.addStatement("var $1L = $2T.$3L.decode(registryByteBuf)", paramName, nestedCodecType.className(), nestedCodecType.elementName());
 		}
 
-		codecInitializer
-				.add("$T::new\n", stateComponentType)
-				.unindent()
-				.add(")", stateComponentType);
+		decodeBuilder.addStatement(
+				"return new $1T($2L)",
+				recordType,
+				String.join(", ", paramNames)
+		);
+
+		var anonPacketCodec = TypeSpec.anonymousClassBuilder("")
+		                              .addSuperinterface(ParameterizedTypeName.get(packetCodecType, registryByteBufType, recordType))
+		                              .addMethod(MethodSpec.methodBuilder("encode")
+		                                                   .addAnnotation(Override.class)
+		                                                   .addModifiers(Modifier.PUBLIC)
+		                                                   .returns(void.class)
+		                                                   .addParameter(registryByteBufType, "registryByteBuf")
+		                                                   .addParameter(recordType, "value")
+		                                                   .addCode(encodeBuilder.build())
+		                                                   .build())
+		                              .addMethod(MethodSpec.methodBuilder("decode")
+		                                                   .addAnnotation(Override.class)
+		                                                   .addModifiers(Modifier.PUBLIC)
+		                                                   .returns(recordType)
+		                                                   .addParameter(registryByteBufType, "registryByteBuf")
+		                                                   .addCode(decodeBuilder.build())
+		                                                   .build())
+		                              .build();
 
 		return FieldSpec.builder(parameterizedCodec, "PACKET_CODEC")
 		                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-		                .initializer(codecInitializer.build())
+		                .initializer(CodeBlock.builder()
+		                                      .add("$L", anonPacketCodec)
+		                                      .build())
 		                .build();
 	}
 
