@@ -2,41 +2,32 @@ package dev.pswg.networking;
 
 import dev.pswg.interaction.ClientPlayerAction;
 import dev.pswg.interaction.ServerPlayerAction;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.codec.PacketDecoder;
 import net.minecraft.util.Hand;
-import net.minecraft.util.function.ValueLists;
-
-import java.util.function.IntFunction;
 
 /**
- * Defines packet codecs for common data types
+ * Defines packet codecs and related utilities for common data types
  */
-public class GalaxiesPacketCodecs
+public final class GalaxiesPacketCodecs
 {
-	private static final IntFunction<Hand> HAND_IDS = ValueLists.createIdToValueFunction(Hand::ordinal, Hand.values(), ValueLists.OutOfBoundsHandling.ZERO);
-
 	/**
 	 * A packet codec that can serialize and deserialize {@link Hand} enum values
 	 */
-	public static final PacketCodec<ByteBuf, Hand> HAND = PacketCodecs.indexed(HAND_IDS, Hand::ordinal);
+	public static final PacketCodec<RegistryByteBuf, Hand> HAND = forEnum(Hand.class);
 
-	private static final IntFunction<ClientPlayerAction> CLIENT_PLAYER_ACTION_IDS = ValueLists.createIdToValueFunction(ClientPlayerAction::ordinal, ClientPlayerAction.values(), ValueLists.OutOfBoundsHandling.ZERO);
 
 	/**
 	 * A packet codec that can serialize and deserialize {@link ClientPlayerAction} enum values
 	 */
-	public static final PacketCodec<ByteBuf, ClientPlayerAction> CLIENT_PLAYER_ACTION = PacketCodecs.indexed(CLIENT_PLAYER_ACTION_IDS, ClientPlayerAction::ordinal);
+	public static final PacketCodec<RegistryByteBuf, ClientPlayerAction> CLIENT_PLAYER_ACTION = forEnum(ClientPlayerAction.class);
 
-	private static final IntFunction<ServerPlayerAction> SERVER_PLAYER_ACTION_IDS = ValueLists.createIdToValueFunction(ServerPlayerAction::ordinal, ServerPlayerAction.values(), ValueLists.OutOfBoundsHandling.ZERO);
 
 	/**
 	 * A packet codec that can serialize and deserialize {@link ServerPlayerAction} enum values
 	 */
-	public static final PacketCodec<ByteBuf, ServerPlayerAction> SERVER_PLAYER_ACTION = PacketCodecs.indexed(SERVER_PLAYER_ACTION_IDS, ServerPlayerAction::ordinal);
+	public static final PacketCodec<RegistryByteBuf, ServerPlayerAction> SERVER_PLAYER_ACTION = forEnum(ServerPlayerAction.class);
 
 	/**
 	 * Creates a packet decoder for the given enum type
@@ -60,5 +51,18 @@ public class GalaxiesPacketCodecs
 	public static void writeEnumConstant(Enum<?> instance, RegistryByteBuf writer)
 	{
 		writer.writeVarInt(instance.ordinal());
+	}
+
+	/**
+	 * Creates a packet codec for the given enum type.
+	 *
+	 * @param <T>   The type of the enum
+	 * @param clazz The class of the enum
+	 *
+	 * @return A {@link PacketCodec} that can serialize and deserialize the enum type
+	 */
+	public static <T extends Enum<T>> PacketCodec<RegistryByteBuf, T> forEnum(Class<T> clazz)
+	{
+		return PacketCodec.of(GalaxiesPacketCodecs::writeEnumConstant, GalaxiesPacketCodecs.readEnumConstant(clazz));
 	}
 }

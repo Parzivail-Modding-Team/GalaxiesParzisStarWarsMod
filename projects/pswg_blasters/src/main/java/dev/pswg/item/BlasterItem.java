@@ -1,17 +1,19 @@
 package dev.pswg.item;
 
+import com.mojang.serialization.Codec;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
-import dev.pswg.codecgenerator.CodecSource;
+import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.GenerateCodec;
-import dev.pswg.codecgenerator.UseCodec;
+import dev.pswg.codecgenerator.SelfCodec;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.IHeatCodec;
 import dev.pswg.generated.codecs.IStateComponentCodec;
 import dev.pswg.generated.codecs.IStatsComponentCodec;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.mutablerecord.MutableRecord;
+import dev.pswg.networking.GalaxiesPacketCodecs;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -25,6 +27,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
@@ -42,12 +46,37 @@ import java.util.function.UnaryOperator;
 
 public class BlasterItem extends Item implements ILeftClickUsable
 {
+	/**
+	 * The reason, if any, for a blaster to be cooling.
+	 * Different cooling modes allow different interactions
+	 * to interrupt their progress.
+	 */
 	public enum CoolingMode
 	{
+		/**
+		 * The blaster is not currently cooling
+		 */
 		NONE,
+		/**
+		 * The blaster is cooling due to an overheating event.
+		 * This mode displays the bypass minigame.
+		 */
 		OVERHEAT,
-		SUCCESSFUL_BYPASS,
-		FAILED_BYPASS
+		/**
+		 * The blaster is cooling due to a request to manually
+		 * vent the accumulated heat. This mode does not display
+		 * the bypass minigame.
+		 */
+		REQUESTED_BYPASS,
+		/**
+		 * The blaster is cooling after a failed attempt at
+		 * the bypass minigame. This mode does not display
+		 * the bypass minigame.
+		 */
+		FAILED_OVERCHARGE;
+
+		public static final Codec<CoolingMode> CODEC = GalaxiesCodecs.forEnum(CoolingMode.class);
+		public static final PacketCodec<RegistryByteBuf, CoolingMode> PACKET_CODEC = GalaxiesPacketCodecs.forEnum(CoolingMode.class);
 	}
 
 	/**
@@ -92,30 +121,39 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * Contains the immutable, intrinsic stats of this particular
 	 * variant of blaster
 	 *
-	 * @param damage The damage, in hit points (half hearts) a single shot inflicts.
-	 * @param range  The maximum distance, in blocks, a blaster can fire a bolt.
-	 * @param heat   The heating and cooling stats.
+	 * @param damage               The damage, in hit points (half hearts) a single shot inflicts.
+	 * @param range                The maximum distance, in blocks, a blaster can fire a bolt.
+	 * @param automaticRepeatDelay The minimum time, in ticks, between two bolts firing during automatic fire.
+	 * @param heat                 The heating and cooling stats.
 	 */
 	@GenerateCodec
 	public record StatsComponent(
 			float damage,
 			int range,
-			@UseCodec(
-					customCodec = @CodecSource(source = Heat.class, member = "CODEC"),
-					customPacket = @CodecSource(source = Heat.class, member = "PACKET_CODEC")
-			)
-			Heat heat
+			int automaticRepeatDelay,
+			@SelfCodec Heat heat
 	) implements IStatsComponentCodec
 	{
-		public static final StatsComponent DEFAULT = new StatsComponent(8, 48, Heat.DEFAULT);
+		public static final StatsComponent DEFAULT = new StatsComponent(8, 48, 4, Heat.DEFAULT);
 	}
 
 	/**
 	 * The container for the mutable gameplay state of the blaster
 	 *
-	 * @param isAiming     Determines if the blaster is currently aiming-down-sights
-	 * @param lastFired    Defines when the blaster was last fired
-	 * @param fireCooldown Defines when the blaster is cooling down until
+	 * @param isAiming             Determines if the blaster is currently aiming-down-sights
+	 * @param lastFired            The timestamp when the blaster was last fired. It is derived
+	 *                             from the global timestamp {@link World#getTime()}.
+	 * @param fireCooldown         Determines the next world tick when the blaster is able to be
+	 *                             fired again. It is derived from the global timestamp {@link World#getTime()}
+	 * @param passiveCooldownStart The timestamp when the blaster will begin passively cooling down
+	 * @param lastHeated           The timestamp when the blaster last accumulated heat
+	 * @param lastTotalHeat        The amount of heat the blaster contained the last time
+	 *                             heat was added. To get the current amount of heat, taking
+	 *                             into account cooling and other parameters, see {@link #getHeat(World, ItemStack, float)}.
+	 * @param lastVentingHeat      The amount of heat at the time of cooling start. Can be different
+	 *                             from {@code lastTotalHeat} if e.g. a heat penalty was applied
+	 * @param coolingMode          The cooling mode of the blaster, if any
+	 * @param burstBoltsRemaining  The amount of bolts remaining in this burst
 	 */
 	@MutableRecord
 	@GenerateCodec
@@ -123,11 +161,38 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			boolean isAiming,
 			long lastFired,
 			long fireCooldown,
+			long passiveCooldownStart,
 			long lastHeated,
-			float lastTotalHeat
+			float lastTotalHeat,
+			float lastVentingHeat,
+			@SelfCodec CoolingMode coolingMode,
+			int burstBoltsRemaining
 	) implements IStateComponentBuilder, IStateComponentCodec
 	{
-		public static final StateComponent DEFAULT = new StateComponent(false, 0, 0, 0, 0);
+		public static final StateComponent DEFAULT = new StateComponent(
+				false,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				CoolingMode.NONE,
+				0
+		);
+
+		/**
+		 * Sets the amount of heat the blaster contained the last time
+		 * heat was added.
+		 *
+		 * @param timestamp The timestamp when the heat was generated
+		 * @param heat      The total amount of heat in the blaster
+		 */
+		public StateComponent withHeat(long timestamp, float heat)
+		{
+			return this.withLastTotalHeat(heat)
+			           .withLastHeated(timestamp);
+		}
 	}
 
 	/**
@@ -203,6 +268,18 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	/**
+	 * Gets the state of the given blaster
+	 *
+	 * @param stack The stack to query
+	 *
+	 * @return The blaster's mutable state
+	 */
+	private static StateComponent getState(ItemStack stack)
+	{
+		return stack.getOrDefault(STATE, StateComponent.DEFAULT);
+	}
+
+	/**
 	 * Applies a state modification to the given stack.
 	 *
 	 * @param stack         The ItemStack to be modified.
@@ -211,18 +288,6 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public static void applyState(ItemStack stack, UnaryOperator<StateComponent> stateOperator)
 	{
 		stack.apply(STATE, StateComponent.DEFAULT, stateOperator);
-	}
-
-	/**
-	 * Determines if the blaster is currently aiming-down-sights
-	 *
-	 * @param stack The stack to query
-	 *
-	 * @return True if the blaster is currently aiming-down-sights, false otherwise
-	 */
-	public static boolean isAiming(ItemStack stack)
-	{
-		return stack.getOrDefault(STATE, StateComponent.DEFAULT).isAiming();
 	}
 
 	/**
@@ -252,100 +317,6 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	/**
-	 * Determines the timestamp when the blaster was last fired. It
-	 * is derived from the global timestamp {@link World#getTime()}.
-	 *
-	 * @param stack The stack to query
-	 *
-	 * @return A world tick that can be compared against {@link World#getTime()}
-	 */
-	public static long getLastFired(ItemStack stack)
-	{
-		return stack.getOrDefault(STATE, StateComponent.DEFAULT).lastFired();
-	}
-
-	/**
-	 * Sets the timestamp when the blaster was last fired
-	 *
-	 * @param stack     The stack to modify
-	 * @param lastFired The world tick
-	 */
-	public static void setLastFired(ItemStack stack, long lastFired)
-	{
-		applyState(stack, state -> state.withLastFired(lastFired));
-	}
-
-	/**
-	 * Gets the timestamp when heat was last added, and therefore the
-	 * time from which all heat calculations (e.g. cooldowns) are made.
-	 *
-	 * @param stack The stack to query
-	 *
-	 * @return The world tick when heat was last applied
-	 */
-	public static long getLastHeated(ItemStack stack)
-	{
-		return stack.getOrDefault(STATE, StateComponent.DEFAULT).lastHeated();
-	}
-
-	/**
-	 * Gets the amount of heat the blaster contained the last time
-	 * heat was added. To get the current amount of heat, taking
-	 * into account cooling and other parameters, see {@link #getHeat(World, ItemStack, float)}.
-	 *
-	 * @param stack The stack to query
-	 *
-	 * @return The total amount of heat at the last time heat was added
-	 *
-	 * @see #getLastHeated
-	 */
-	public static float getLastTotalHeat(ItemStack stack)
-	{
-		return stack.getOrDefault(STATE, StateComponent.DEFAULT).lastTotalHeat();
-	}
-
-	/**
-	 * Sets the amount of heat the blaster contained the last time
-	 * heat was added.
-	 *
-	 * @param stack The stack to modify
-	 * @param heat  The total amount of heat in the blaster
-	 */
-	public static void setLastTotalHeat(ItemStack stack, long timestamp, float heat)
-	{
-		applyState(stack, state -> state
-				.withLastTotalHeat(heat)
-				.withLastHeated(timestamp)
-		);
-	}
-
-	/**
-	 * Determines the next world tick when the blaster is able to be
-	 * fired again. It is derived from the global timestamp {@link World#getTime()}.
-	 *
-	 * @param stack The stack to query
-	 *
-	 * @return A world tick that can be compared against {@link World#getTime()}
-	 */
-	public static long getFireCooldown(ItemStack stack)
-	{
-		return stack.getOrDefault(STATE, StateComponent.DEFAULT).fireCooldown();
-	}
-
-	/**
-	 * Sets the timestamp when the blaster cooldown should end
-	 *
-	 * @param stack       The stack to modify
-	 * @param cooldownEnd The world tick when the cooldown should end
-	 *
-	 * @see #getFireCooldown
-	 */
-	public static void setFireCooldown(ItemStack stack, long cooldownEnd)
-	{
-		applyState(stack, state -> state.withFireCooldown(cooldownEnd));
-	}
-
-	/**
 	 * If currently waiting to be able to fire again, gets the current
 	 * progress [0,1) of the cooldown process
 	 *
@@ -357,8 +328,10 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static Optional<Float> getFireCooldownProgress(World world, ItemStack stack, float tickDelta)
 	{
-		var lastFired = getLastFired(stack);
-		var cooldown = getFireCooldown(stack);
+		var state = getState(stack);
+
+		var lastFired = state.lastFired();
+		var cooldown = state.fireCooldown();
 		var time = world.getTime() + tickDelta;
 
 		if (cooldown <= lastFired || cooldown < time)
@@ -381,7 +354,9 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static boolean canFire(World world, LivingEntity user, ItemStack stack)
 	{
-		var isCoolingDown = getFireCooldown(stack) > world.getTime();
+		var state = getState(stack);
+
+		var isCoolingDown = state.fireCooldown() > world.getTime();
 		if (isCoolingDown)
 			return false;
 
@@ -401,18 +376,15 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 */
 	public static float getHeat(World world, ItemStack stack, float tickDelta)
 	{
+		var stats = getStats(stack);
+		var state = getState(stack);
+
 		var time = world.getTime() + tickDelta;
 
-		var lastCommittedHeat = getLastTotalHeat(stack);
-		var lastCommittedHeatTime = getLastHeated(stack);
-
-		var stats = getStats(stack);
-
-		// TODO: other kinds of delays, overheats, etc.
-		var dissipationDelayTicks = stats.heat().passiveCooldownDelay();
+		var lastCommittedHeat = state.lastTotalHeat();
 		var dissipationPerTick = stats.heat().drainSpeed();
 
-		var dissipation = dissipationPerTick * (time - lastCommittedHeatTime - dissipationDelayTicks);
+		var dissipation = dissipationPerTick * (time - state.passiveCooldownStart());
 		return MathHelper.clamp(lastCommittedHeat - dissipation, 0, lastCommittedHeat);
 	}
 
@@ -430,7 +402,9 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	@Override
 	public int getMaxUseTime(ItemStack stack, LivingEntity user)
 	{
-		if (isAiming(stack))
+		var state = getState(stack);
+
+		if (state.isAiming())
 			return TickConstants.ONE_HOUR;
 
 		return super.getMaxUseTime(stack, user);
@@ -453,7 +427,9 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	@Override
 	public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
 	{
-		if (!world.isClient() && user.getItemUseTime() > TOGGLE_AIMING_USE_TIME_TICKS && isAiming(stack))
+		var state = getState(stack);
+
+		if (!world.isClient() && user.getItemUseTime() > TOGGLE_AIMING_USE_TIME_TICKS && state.isAiming())
 			setAiming(stack, false);
 
 		return super.onStoppedUsing(stack, world, user, remainingUseTicks);
@@ -463,10 +439,11 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public ActionResult use(World world, PlayerEntity user, Hand hand)
 	{
 		var stack = user.getStackInHand(hand);
+		var state = getState(stack);
 
 		if (!world.isClient())
 		{
-			setAiming(stack, !isAiming(stack));
+			setAiming(stack, !state.isAiming());
 
 			// this is required to "start using" the item instead of
 			// immediately consuming it.
@@ -486,6 +463,9 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		if (!canFire(world, user, itemStack))
 			return ActionResult.PASS;
 
+		var state = getState(itemStack);
+		var stats = getStats(itemStack);
+
 		world.playSound(
 				null,
 				user.getX(),
@@ -497,59 +477,56 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
 		);
 
-		var stats = getStats(itemStack);
-
 		var timestamp = world.getTime();
-		setLastFired(itemStack, timestamp);
-
-		// TODO: set in stack
-		var passiveCooldownStartTimestamp = timestamp + stats.heat().passiveCooldownDelay();
+		state = state.withLastFired(timestamp)
+		             .withPassiveCooldownStart(timestamp + stats.heat().passiveCooldownDelay())
+		             .withFireCooldown(world.getTime() + stats.automaticRepeatDelay());
 
 		var totalHeat = getHeat(world, itemStack, 0);
 		if (overchargeTimeRemaining(world, itemStack, 0) == 0)
 			totalHeat += stats.heat().perRound();
 
-		// TODO: pull this value from a default component
-		setFireCooldown(itemStack, world.getTime() + 4);
-
 		if (world instanceof ServerWorld serverWorld)
-		{
-			var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
-
-			// TODO: abstract into bolt-creating factory
-			projectile.setPosition(user.getX(), user.getEyeY() - 0.2f, user.getZ());
-
-			var pitch = user.getPitch();
-			var yaw = user.getHeadYaw();
-			var roll = 0;
-
-			float f = -MathHelper.sin(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
-			float g = -MathHelper.sin((pitch + roll) * MathHelper.RADIANS_PER_DEGREE);
-			float h = MathHelper.cos(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
-			projectile.setVelocity(new Vec3d(f, g, h).multiply(5));
-			projectile.setAngles(yaw, pitch);
-
-			//			Vec3d vec3d = user.getMovement();
-			//			projectile.setVelocity(projectile.getVelocity().add(vec3d));
-
-			serverWorld.spawnEntity(projectile);
-		}
+			fireBolt(user, serverWorld);
 
 		if (totalHeat > stats.heat().capacity())
 		{
 			// overheat sound
 
-			// TODO: set all in stack
-			var ventingHeat = totalHeat + stats.heat().overheatPenalty();
-			var coolingMode = CoolingMode.OVERHEAT;
-			var canBypassCooling = true;
-			var burstCounter = 0;
+			state = state.withLastVentingHeat(totalHeat + stats.heat().overheatPenalty())
+			             .withCoolingMode(CoolingMode.OVERHEAT)
+			             .withBurstBoltsRemaining(0);
 
 			totalHeat = 0;
 		}
 
-		setLastTotalHeat(itemStack, timestamp, totalHeat);
+		state = state.withHeat(timestamp, totalHeat);
+
+		itemStack.set(STATE, state);
 
 		return ActionResult.SUCCESS;
+	}
+
+	private static void fireBolt(LivingEntity user, ServerWorld serverWorld)
+	{
+		var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
+
+		// TODO: abstract into bolt-creating factory
+		projectile.setPosition(user.getX(), user.getEyeY() - 0.2f, user.getZ());
+
+		var pitch = user.getPitch();
+		var yaw = user.getHeadYaw();
+		var roll = 0;
+
+		float f = -MathHelper.sin(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
+		float g = -MathHelper.sin((pitch + roll) * MathHelper.RADIANS_PER_DEGREE);
+		float h = MathHelper.cos(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
+		projectile.setVelocity(new Vec3d(f, g, h).multiply(5));
+		projectile.setAngles(yaw, pitch);
+
+		//			Vec3d vec3d = user.getMovement();
+		//			projectile.setVelocity(projectile.getVelocity().add(vec3d));
+
+		serverWorld.spawnEntity(projectile);
 	}
 }

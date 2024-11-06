@@ -11,6 +11,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * An annotation processor that generates record codecs as an
@@ -464,7 +465,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 
 		var iface = TypeSpec.interfaceBuilder(interfaceName)
 		                    .addModifiers(Modifier.PUBLIC)
-							.addOriginatingElement(classElement)
+		                    .addOriginatingElement(classElement)
 		                    .addField(codec)
 		                    .addField(packetCodec)
 		                    .build();
@@ -502,7 +503,16 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		var first = true;
 		for (var component : components)
 		{
-			var nestedCodecType = getCodecType(component);
+			var nestedCodecType = getCodec(
+					component,
+					UseCodec::customCodec,
+					UseCodec::codec,
+					GenStandardCodec.AUTOMATIC,
+					codecTypes,
+					defaultCodecTypes,
+					"CODEC",
+					"codec"
+			);
 			if (nestedCodecType == null)
 				return null;
 
@@ -543,7 +553,16 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		var paramNames = new ArrayList<String>();
 		for (var component : classElement.getRecordComponents())
 		{
-			var nestedCodecType = getPacketCodecType(component);
+			var nestedCodecType = getCodec(
+					component,
+					UseCodec::customPacket,
+					UseCodec::packet,
+					GenPacketCodec.AUTOMATIC,
+					packetCodecTypes,
+					defaultPacketCodecTypes,
+					"PACKET_CODEC",
+					"packet codec"
+			);
 			if (nestedCodecType == null)
 				return null;
 
@@ -594,13 +613,32 @@ public class CodecGenerationProcessor extends AbstractProcessor
 	 *
 	 * @return The corresponding {@link CodecType} if a suitable codec is found, otherwise null.
 	 */
-	private CodecType getCodecType(RecordComponentElement component)
+	private <TGenCodec extends Enum<TGenCodec>> CodecType getCodec(
+			RecordComponentElement component,
+			Function<UseCodec, CodecSource> customCodecGetter,
+			Function<UseCodec, TGenCodec> codecGetter,
+			TGenCodec automaticMember,
+			HashMap<String, Map<TGenCodec, CodecType>> codecTypes,
+			HashMap<String, TGenCodec> defaultCodecs,
+			String memberName,
+			String friendlyName
+	)
 	{
-		var annotation = Optional.ofNullable(component.getAnnotation(UseCodec.class));
-		if (annotation.map(UseCodec::customCodec).orElse(null) instanceof CodecSource codecSource)
+		if (component.getAnnotation(SelfCodec.class) != null)
+		{
+			var type = component.asType();
+			var codecType = new CodecType(ClassName.get(type), memberName);
+			log("Requested element %s of type %s use defined %s member within type, using %s: %s".formatted(component.getSimpleName().toString(), type, memberName, friendlyName, codecType));
+			return codecType;
+		}
+
+		var useCodecInstance = Optional.ofNullable(component.getAnnotation(UseCodec.class));
+
+		// If a custom codec is requested, it takes the highest precedence
+		if (useCodecInstance.map(customCodecGetter).filter(src -> !"".equals(src.member())).orElse(null) instanceof CodecSource codecSource)
 		{
 			var customCodecType = new CodecType(ClassName.get(getCodecSourceType(codecSource)), codecSource.member());
-			log("Custom codec requested for %s: %s".formatted(component.getSimpleName().toString(), customCodecType));
+			log("Custom %s requested for %s: %s".formatted(friendlyName, component.getSimpleName().toString(), customCodecType));
 			return customCodecType;
 		}
 
@@ -609,63 +647,27 @@ public class CodecGenerationProcessor extends AbstractProcessor
 
 		if (codecTypeMap != null)
 		{
-			var requestedCodec = annotation
-					.map(UseCodec::codec)
-					.orElse(defaultCodecTypes.get(type));
+			// If AUTOMATIC is specified, or if no @UseCodec annotation exists,
+			// use the default codec for this type
+			var requestedCodec = useCodecInstance
+					.map(codecGetter)
+					.filter(c -> c != automaticMember)
+					.orElse(defaultCodecs.get(type));
 
 			if (!codecTypeMap.containsKey(requestedCodec))
 			{
-				log("Found element %s of type %s, which is not supported by codec %s!".formatted(component.getSimpleName().toString(), type, requestedCodec));
+				// If a codec is specified which doesn't support this type, fail early
+				log("Found element %s of type %s, which is not supported by %s %s!".formatted(component.getSimpleName().toString(), type, friendlyName, requestedCodec));
 				return null;
 			}
 
 			var codecType = codecTypeMap.get(requestedCodec);
-			log("Found element %s of type %s, using codec: %s".formatted(component.getSimpleName().toString(), type, codecType));
+			log("Found element %s of type %s, using %s: %s".formatted(component.getSimpleName().toString(), type, friendlyName, codecType));
 			return codecType;
 		}
 
-		log("Found element %s of type %s, which has no supported codec!".formatted(component.getSimpleName().toString(), type));
-		return null;
-	}
-
-	/**
-	 * Retrieves the packet codec type for the given record component based on its type and optional {@link UseCodec} annotation.
-	 *
-	 * @param component The record component element for which the packet codec type is to be retrieved.
-	 *
-	 * @return The corresponding {@link CodecType} if a suitable packet codec is found, otherwise null.
-	 */
-	private CodecType getPacketCodecType(RecordComponentElement component)
-	{
-		var annotation = Optional.ofNullable(component.getAnnotation(UseCodec.class));
-		if (annotation.map(UseCodec::customPacket).orElse(null) instanceof CodecSource codecSource)
-		{
-			var customCodecType = new CodecType(ClassName.get(getCodecSourceType(codecSource)), codecSource.member());
-			log("Custom codec requested for %s: %s".formatted(component.getSimpleName().toString(), customCodecType));
-			return customCodecType;
-		}
-
-		var type = component.asType().toString();
-		var codecTypeMap = packetCodecTypes.get(type);
-
-		if (codecTypeMap != null)
-		{
-			var requestedCodec = annotation
-					.map(UseCodec::packet)
-					.orElse(defaultPacketCodecTypes.get(type));
-
-			if (!codecTypeMap.containsKey(requestedCodec))
-			{
-				log("Found element %s of type %s, which is not supported by packet codec %s!".formatted(component.getSimpleName().toString(), type, requestedCodec));
-				return null;
-			}
-
-			var codecType = codecTypeMap.get(requestedCodec);
-			log("Found element %s of type %s, using packet codec: %s".formatted(component.getSimpleName().toString(), type, codecType));
-			return codecType;
-		}
-
-		log("Found element %s of type %s, which has no supported packet codec!".formatted(component.getSimpleName().toString(), type));
+		// No supported codec was found
+		log("Found element %s of type %s, which has no supported %s!".formatted(component.getSimpleName().toString(), type, friendlyName));
 		return null;
 	}
 

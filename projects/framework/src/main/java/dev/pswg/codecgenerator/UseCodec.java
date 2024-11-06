@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Specifies the codecs to use for the given record component
+ * Specifies the codecs to use for the given record component. If a {@link SelfCodec}
+ * annotation is defined, it will take precedence.
  */
 @Target(ElementType.RECORD_COMPONENT)
 @Retention(RetentionPolicy.SOURCE)
