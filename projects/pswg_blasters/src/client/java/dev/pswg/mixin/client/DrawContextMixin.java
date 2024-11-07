@@ -34,9 +34,17 @@ public abstract class DrawContextMixin
 			           .ifPresent(value -> Drawables.itemDurability(self, value, x, y - 13, 13, 0x0000FF));
 
 			var stats = BlasterItem.getStats(stack);
-			var heat = BlasterItem.getHeat(client.world, stack, GalaxiesClient.getTickDelta());
-
-			Drawables.itemDurability(self, heat / stats.heat().capacity(), x, y - 10, 13, 0xFF3000);
+			var state = BlasterItem.getState(stack);
+			if (state.coolingMode() == BlasterItem.CoolingMode.PASSIVE)
+			{
+				var heat = BlasterItem.getAccumulatedHeat(client.world, stack, GalaxiesClient.getTickDelta());
+				Drawables.itemDurability(self, heat / stats.heat().capacity(), x, y - 10, 13, 0x30FF00);
+			}
+			else
+			{
+				var heat = BlasterItem.getVentingHeat(client.world, stack, GalaxiesClient.getTickDelta());
+				Drawables.itemDurability(self, heat / stats.heat().capacity(), x, y - 10, 13, 0xFF3000);
+			}
 		}
 	}
 }
