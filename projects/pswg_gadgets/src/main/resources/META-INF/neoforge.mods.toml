@@ -1,0 +1,34 @@
+modLoader = "javafml"
+loaderVersion = "*"
+license = "LGPL-3.0"
+
+[properties]
+"connector:placeholder" = true
+
+[[mods]]
+modId = "pswg"
+version = "1.0.0"
+displayName = "Galaxies: Parzi's Star Wars Mod"
+authors = "parzivail, Sindavar, kb1000"
+description = '''Explore the galaxy with Galaxies: Parzi's Star Wars Mod!'''
+
+[[dependencies.pswg]]
+modId = "forge"
+mandatory = true
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.pswg]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.21.2]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.pswg]]
+modId = "connector"
+mandatory = true
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"

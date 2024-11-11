@@ -1,3 +1,4 @@
 dependencies {
 	api(project(path: ":projects:pswg_blasters", configuration: "namedElements"))
+	api(project(path: ":projects:pswg_gadgets", configuration: "namedElements"))
 }

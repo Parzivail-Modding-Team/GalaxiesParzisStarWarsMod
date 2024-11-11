@@ -1,0 +1,49 @@
+{
+	"schemaVersion": 1,
+	"id": "pswg_gadgets",
+	"version": "${version}",
+	"name": "Galaxies: Gadgets",
+	"description": "Gadget-related feature support for PSWG",
+	"authors": [
+		"parzivail",
+		"Sindavar",
+		"kb1000",
+		"deltahelios"
+	],
+	"contact": {
+		"homepage": "https://pswg.dev/",
+		"issues": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/issues",
+		"sources": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/pswg/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"pswg-addon": [
+			"dev.pswg.Gadgets"
+		],
+		"pswg-client-addon": [
+			"dev.pswg.GadgetsClient"
+		],
+		"fabric-datagen": [
+			"dev.pswg.datagen.GadgetsDataGenerator"
+		]
+	},
+	"mixins": [
+		"pswg_gadgets.mixins.json",
+		{
+			"config": "pswg_gadgets.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"pswg": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.pswg.dev"
+			}
+		}
+	}
+}

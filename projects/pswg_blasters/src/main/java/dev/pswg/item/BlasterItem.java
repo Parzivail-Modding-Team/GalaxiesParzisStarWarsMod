@@ -212,12 +212,12 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 *                            from the global timestamp {@link World#getTime()}.
 	 * @param fireCooldown        Determines the next world tick when the blaster is able to be
 	 *                            fired again. It is derived from the global timestamp {@link World#getTime()}
-	 * @param cooldownStart       The timestamp when the blaster will begin, or has begun, cooling down. The type of cooldown is/will be determined by {@link StateComponent#coolingMode}
+	 * @param cooldownStart       The timestamp when the blaster will begin, or has begun, cooling down. The type of cooldown is/will be determined by {@link StateComponent#coolingMode()}
 	 * @param lastTotalHeat       The amount of heat the blaster contained the last time
 	 *                            heat was added. To get the current amount of heat, taking
 	 *                            into account cooling and other parameters, see {@link #getAccumulatedHeat(World, ItemStack, float)}.
 	 * @param lastVentingHeat     The amount of heat at the time of cooling start. Can be different
-	 *                            from {@link StateComponent#lastTotalHeat} if e.g. a heat penalty was applied
+	 *                            from {@link StateComponent#lastTotalHeat()} if e.g. a heat penalty was applied
 	 * @param coolingMode         The cooling mode of the blaster, if any
 	 * @param burstBoltsRemaining The amount of bolts remaining in this burst
 	 */
@@ -736,6 +736,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		             .withFireCooldown(timestamp + getScaledAutoRepeatDelay(stats, attachments));
 
 		var totalHeat = getAccumulatedHeat(world, itemStack, 0);
+
 		if (overchargeTimeRemaining(world, itemStack, 0) == 0)
 			totalHeat += stats.heat().perRound();
 

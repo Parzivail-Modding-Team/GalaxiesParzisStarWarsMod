@@ -1,0 +1,20 @@
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"pswg_gadgets" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+fabricApi {
+	configureDataGeneration()
+}
+
+dependencies {
+	api(project(path: ":projects:pswg_core", configuration: "namedElements"))
+	compileOnly(project(path: ":projects:framework"))
+	annotationProcessor(project(path: ":projects:framework-generator"))
+}
