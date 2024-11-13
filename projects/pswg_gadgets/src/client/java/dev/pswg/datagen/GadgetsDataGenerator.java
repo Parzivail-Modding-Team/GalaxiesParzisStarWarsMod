@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * The gadget data generator
  */
-public class GadgetDataGenerator implements DataGeneratorEntrypoint
+public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator)

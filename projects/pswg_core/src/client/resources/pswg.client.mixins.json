@@ -5,6 +5,7 @@
 	"client": [
 		"accessors.ClientPlayerInteractionManagerAccessor",
 		"accessors.DrawContextAccessor",
+		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.ItemStackMixin",
 		"leftuse.MinecraftClientMixin"

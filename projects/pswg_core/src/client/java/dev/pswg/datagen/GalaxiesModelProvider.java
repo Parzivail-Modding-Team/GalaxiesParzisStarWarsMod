@@ -1,11 +1,12 @@
 package dev.pswg.datagen;
 
+import dev.pswg.mixin.client.accessors.ItemModelGeneratorAccessor;
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.ModelIds;
-import net.minecraft.data.client.TextureMap;
+import net.minecraft.client.data.ItemModelGenerator;
+import net.minecraft.client.data.Model;
+import net.minecraft.client.data.ModelIds;
+import net.minecraft.client.data.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
@@ -30,6 +31,6 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	 */
 	protected static void register(ItemModelGenerator itemModelGenerator, Item item, Identifier texture, Model model)
 	{
-		model.upload(ModelIds.getItemModelId(item), TextureMap.layer0(texture), itemModelGenerator.writer);
+		model.upload(ModelIds.getItemModelId(item), TextureMap.layer0(texture), ((ItemModelGeneratorAccessor)itemModelGenerator).getModelCollector());
 	}
 }

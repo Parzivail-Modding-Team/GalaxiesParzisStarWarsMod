@@ -255,7 +255,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				"boolean",
 				GenPacketCodec.BOOL,
 				Map.of(
-						GenPacketCodec.BOOL, new CodecType(packetCodecsType, "BOOL")
+						GenPacketCodec.BOOL, new CodecType(packetCodecsType, "BOOLEAN")
 				)
 		);
 		registerPacketCodecsForType(

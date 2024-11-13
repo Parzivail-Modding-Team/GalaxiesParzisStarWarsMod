@@ -6,6 +6,7 @@ import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
+import dev.pswg.interaction.LeftClickingEntityAttachment;
 import dev.pswg.networking.*;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
@@ -110,6 +111,7 @@ public final class Galaxies implements ModInitializer
 		GalaxiesEntityLeftClickManager.initialize();
 		GalaxiesPlayerActionManager.initialize();
 
+		LeftClickingEntityAttachment.register();
 		GalaxiesEntityLeftClickManager.initialize();
 
 		LOGGER.info("Loading PSWG modules and addons via pswg-addon");

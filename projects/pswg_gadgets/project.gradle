@@ -13,6 +13,14 @@ fabricApi {
 	configureDataGeneration()
 }
 
+loom {
+	runs {
+		datagen {
+			inherit client
+		}
+	}
+}
+
 dependencies {
 	api(project(path: ":projects:pswg_core", configuration: "namedElements"))
 	compileOnly(project(path: ":projects:framework"))
