@@ -3,10 +3,8 @@ package dev.pswg.datagen;
 import dev.pswg.mixin.client.accessors.ItemModelGeneratorAccessor;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.client.data.ItemModelGenerator;
-import net.minecraft.client.data.Model;
-import net.minecraft.client.data.ModelIds;
-import net.minecraft.client.data.TextureMap;
+import net.minecraft.client.data.*;
+import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
@@ -31,6 +29,34 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	 */
 	protected static void register(ItemModelGenerator itemModelGenerator, Item item, Identifier texture, Model model)
 	{
-		model.upload(ModelIds.getItemModelId(item), TextureMap.layer0(texture), ((ItemModelGeneratorAccessor)itemModelGenerator).getModelCollector());
+		register(itemModelGenerator, item, ItemModels.basic(registerDisjointModel(itemModelGenerator, item, texture, model)));
+	}
+
+	/**
+	 * Registers a model for an item that points to a texture that does not derive from
+	 * the item's identifier
+	 *
+	 * @param itemModelGenerator The generator into which the item model will be uploaded
+	 * @param item               The item to generate a model for
+	 * @param texture            The texture to assign to the item
+	 * @param model              The model that will be uploaded with the given texture
+	 *
+	 * @return The identifier of the registered item model
+	 */
+	protected static Identifier registerDisjointModel(ItemModelGenerator itemModelGenerator, Item item, Identifier texture, Model model)
+	{
+		return model.upload(ModelIds.getItemModelId(item), TextureMap.layer0(texture), ((ItemModelGeneratorAccessor)itemModelGenerator).getModelCollector());
+	}
+
+	/**
+	 * Registers an item model with the provided item model generator.
+	 *
+	 * @param itemModelGenerator The generator into which the item will be uploaded
+	 * @param item               The item to generate a model for
+	 * @param model              The unbaked model that will be used for the item
+	 */
+	protected static void register(ItemModelGenerator itemModelGenerator, Item item, ItemModel.Unbaked model)
+	{
+		((ItemModelGeneratorAccessor)itemModelGenerator).getOutput().accept(item, model);
 	}
 }

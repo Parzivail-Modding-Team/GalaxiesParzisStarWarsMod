@@ -1,6 +1,7 @@
 package dev.pswg.mixin.client.accessors;
 
 import net.minecraft.client.data.ItemModelGenerator;
+import net.minecraft.client.data.ItemModelOutput;
 import net.minecraft.client.data.ModelSupplier;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,4 +14,7 @@ public interface ItemModelGeneratorAccessor
 {
 	@Accessor("modelCollector")
 	BiConsumer<Identifier, ModelSupplier> getModelCollector();
+
+	@Accessor("output")
+	ItemModelOutput getOutput();
 }
