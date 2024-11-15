@@ -8,6 +8,7 @@
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.ItemStackMixin",
+		"events.InGameHudMixin",
 		"leftuse.MinecraftClientMixin"
 	],
 	"injectors": {
