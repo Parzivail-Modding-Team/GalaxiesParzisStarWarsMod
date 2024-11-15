@@ -104,8 +104,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	/**
 	 * Represents the cooling status of a blaster
 	 *
-	 * @param coolingMode The current cooling mode of the blaster.
-	 * @param totalHeat   The total amount of heat accumulated in the blaster, passively or otherwise.
+	 * @param coolingMode      The current cooling mode of the blaster.
+	 * @param totalHeat The total amount of heat accumulated in the blaster, passively or otherwise.
 	 */
 	public record CoolingStatus(CoolingMode coolingMode, float totalHeat)
 	{
@@ -450,7 +450,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		if (potentialVentingHeat.isEmpty())
 			return Optional.empty();
 
-		var ventingHeat = potentialVentingHeat.get() / stats.heat().capacity();
+		var ventingHeat = potentialVentingHeat.get() / state.lastVentingHeat();
 
 		var attachments = getAttachments(stack);
 
@@ -797,7 +797,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		{
 			// TODO: play sound - overheat
 
-			state = state.withLastVentingHeat(stats.heat().capacity() + stats.heat().overheatPenalty())
+			state = state.withLastVentingHeat(totalHeat + stats.heat().overheatPenalty())
 			             .withCooling(CoolingMode.OVERHEAT, timestamp)
 			             .withBurstBoltsRemaining(0);
 

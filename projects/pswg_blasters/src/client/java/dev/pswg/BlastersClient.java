@@ -41,6 +41,7 @@ public class BlastersClient implements GalaxiesClientAddon
 			return;
 
 		var stats = BlasterItem.getStats(stack);
+		var state = BlasterItem.getState(stack);
 		var coolingStatus = BlasterItem.getCoolingStatus(client.world, stack, tickCounter.getTickDelta(false));
 
 		var m = context.getMatrices();
@@ -90,7 +91,7 @@ public class BlastersClient implements GalaxiesClientAddon
 					-1
 			);
 
-			var heat = coolingStatus.totalHeat() / (stats.heat().capacity() + stats.heat().overheatPenalty());
+			var heat = coolingStatus.totalHeat() / state.lastVentingHeat();
 
 			// cursor
 			m.push();
