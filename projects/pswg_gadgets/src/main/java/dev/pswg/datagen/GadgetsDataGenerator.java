@@ -1,5 +1,7 @@
 package dev.pswg.datagen;
 
+import dev.pswg.Gadgets;
+import dev.pswg.Galaxies;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -7,6 +9,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.client.Models;
 import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
@@ -14,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * The gadget data generator
  */
-public class GadgetDataGenerator implements DataGeneratorEntrypoint
+public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator)
@@ -45,6 +48,7 @@ public class GadgetDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
+			register(itemModelGenerator, Gadgets.THERMAL_DETONATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -62,6 +66,7 @@ public class GadgetDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
+			translationBuilder.add(Gadgets.THERMAL_DETONATOR_ITEM, "Thermal Detonator");
 		}
 	}
 
