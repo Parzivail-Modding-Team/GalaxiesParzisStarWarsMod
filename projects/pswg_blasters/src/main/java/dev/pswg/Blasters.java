@@ -55,6 +55,8 @@ public final class Blasters implements GalaxiesAddon
 	 */
 	public static final TagKey<Item> BLASTERS_TAG = TagKey.of(RegistryKeys.ITEM, id("blasters"));
 
+	public static final Identifier DEFAULT_HUD = id("default");
+
 	public static final BlasterItem BLASTER_ITEM = Registrar.item(id("blaster"), BlasterItem::new, BlasterItem.createSettings());
 
 	public static final EntityType<BlasterBoltEntity> BLASTER_BOLT_ENTITY = Registrar.entityType(

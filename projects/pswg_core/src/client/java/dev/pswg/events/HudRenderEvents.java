@@ -7,22 +7,28 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 
+/**
+ * Contains events for being notified when certain HUD elements are drawn
+ */
 public final class HudRenderEvents
 {
 	@FunctionalInterface
 	@Environment(EnvType.CLIENT)
-	public interface Crosshair
+	public interface ElementRenderedCallback
 	{
-		void crosshair(DrawContext context, RenderTickCounter tickCounter);
+		void render(DrawContext context, RenderTickCounter tickCounter);
 	}
 
-	public static final Event<Crosshair> CROSSHAIR = EventFactory.createArrayBacked(
-			Crosshair.class,
+	/**
+	 * Fired when the player's crosshair is about to be rendered
+	 */
+	public static final Event<ElementRenderedCallback> CROSSHAIR = EventFactory.createArrayBacked(
+			ElementRenderedCallback.class,
 			(context, tickCounter) -> {
 			},
 			(callbacks) -> (context, tickCounter) -> {
-				for (Crosshair callback : callbacks)
-					callback.crosshair(context, tickCounter);
+				for (ElementRenderedCallback callback : callbacks)
+					callback.render(context, tickCounter);
 			}
 	);
 }

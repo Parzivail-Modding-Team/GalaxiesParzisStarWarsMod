@@ -117,6 +117,7 @@ public final class Galaxies implements ModInitializer
 		LOGGER.info("Loading PSWG modules and addons via pswg-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesStarting);
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesReady);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesFinalizing);
 
 		LOGGER.info("Galaxies initialized");
 	}

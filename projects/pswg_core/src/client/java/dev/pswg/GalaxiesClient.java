@@ -40,6 +40,7 @@ public class GalaxiesClient implements ClientModInitializer
 
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesFinalizing);
 
 		Galaxies.LOGGER.info("Galaxies client initialized");
 	}

@@ -18,7 +18,7 @@ public class InGameHudMixin
 		var matrix = context.getMatrices();
 
 		matrix.push();
-		HudRenderEvents.CROSSHAIR.invoker().crosshair(context, tickCounter);
+		HudRenderEvents.CROSSHAIR.invoker().render(context, tickCounter);
 		matrix.pop();
 	}
 }

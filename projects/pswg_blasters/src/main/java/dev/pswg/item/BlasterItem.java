@@ -8,10 +8,7 @@ import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.GenerateCodec;
 import dev.pswg.codecgenerator.SelfCodec;
 import dev.pswg.entity.BlasterBoltEntity;
-import dev.pswg.generated.codecs.ICoolingCodec;
-import dev.pswg.generated.codecs.IHeatCodec;
-import dev.pswg.generated.codecs.IStateComponentCodec;
-import dev.pswg.generated.codecs.IStatsComponentCodec;
+import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
@@ -37,6 +34,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -130,12 +128,17 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		SECONDARY
 	}
 
-	public record AttachmentsComponent()
+	/**
+	 * Contains the infrequently-modified attachment data for the blaster
+	 *
+	 * @param hud The ID of the HUD renderer this blaster should display
+	 */
+	@GenerateCodec
+	public record AttachmentsComponent(Identifier hud) implements IAttachmentsComponentCodec
 	{
-		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent();
-
-		public static final Codec<AttachmentsComponent> CODEC = Codec.unit(DEFAULT);
-		public static final PacketCodec<RegistryByteBuf, AttachmentsComponent> PACKET_CODEC = PacketCodec.unit(DEFAULT);
+		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent(
+				Blasters.DEFAULT_HUD
+		);
 	}
 
 	/**
