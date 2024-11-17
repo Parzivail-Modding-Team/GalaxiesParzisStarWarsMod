@@ -91,6 +91,37 @@ public class BlastersClient implements GalaxiesClientAddon
 					-1
 			);
 
+			if (coolingStatus.coolingMode().canBypass())
+			{
+				var profile = stats.cooling();
+				var primaryBypassStartX = (int)((profile.primaryBypassTime() - profile.primaryBypassTolerance()) * cooldownWidth);
+				var primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance() * cooldownWidth);
+				var secondaryBypassStartX = (int)((profile.secondaryBypassTime() - profile.secondaryBypassTolerance()) * cooldownWidth);
+				var secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance() * cooldownWidth);
+
+				// blue primary bypass
+				context.drawTexture(
+						RenderLayer::getGuiTexturedOverlay,
+						HUD_ELEMENTS_TEXTURE,
+						cooldownBarX + primaryBypassStartX, top + cooldownOffset,
+						primaryBypassStartX, 8,
+						primaryBypassWidth, 3,
+						256, 256,
+						-1
+				);
+
+				// yellow secondary bypass
+				context.drawTexture(
+						RenderLayer::getGuiTexturedOverlay,
+						HUD_ELEMENTS_TEXTURE,
+						cooldownBarX + secondaryBypassStartX, top + cooldownOffset,
+						secondaryBypassStartX, 12,
+						secondaryBypassWidth, 3,
+						256, 256,
+						-1
+				);
+			}
+
 			var heat = coolingStatus.totalHeat() / state.lastVentingHeat();
 
 			// cursor

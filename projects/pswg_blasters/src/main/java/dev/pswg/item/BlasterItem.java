@@ -104,8 +104,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	/**
 	 * Represents the cooling status of a blaster
 	 *
-	 * @param coolingMode      The current cooling mode of the blaster.
-	 * @param totalHeat The total amount of heat accumulated in the blaster, passively or otherwise.
+	 * @param coolingMode The current cooling mode of the blaster.
+	 * @param totalHeat   The total amount of heat accumulated in the blaster, passively or otherwise.
 	 */
 	public record CoolingStatus(CoolingMode coolingMode, float totalHeat)
 	{
@@ -185,9 +185,9 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	) implements ICoolingCodec
 	{
 		public static final Cooling DEFAULT = new Cooling(
+				0.7f,
+				0.1f,
 				0.25f,
-				0.05f,
-				0.75f,
 				0.05f
 		);
 	}
@@ -738,8 +738,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			var bypass = getCoolingBypass(world, itemStack, 0);
 			if (bypass.isEmpty())
 			{
-				state = state.withLastVentingHeat(coolingStatus.totalHeat())
-				             .withCooling(CoolingMode.FAILED_OVERCHARGE, timestamp);
+				state = state.withCoolingMode(CoolingMode.FAILED_OVERCHARGE);
 
 				// TODO: play sound - failed bypass
 
