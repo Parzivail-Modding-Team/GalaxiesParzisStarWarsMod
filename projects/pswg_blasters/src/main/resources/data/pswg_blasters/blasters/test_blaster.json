@@ -1,0 +1,25 @@
+{
+  "stats": {
+    "damage": 8,
+    "range": 48,
+    "automaticRepeatDelay": 4,
+    "heat": {
+      "capacity": 100,
+      "perRound": 20,
+      "drainSpeed": 5.0,
+      "overheatPenalty": 60,
+      "overheatDrainSpeed": 1,
+      "passiveCooldownDelay": 20,
+      "overchargeBonus": 40
+    },
+    "cooling": {
+      "primaryBypassTime": 0.7,
+      "primaryBypassTolerance": 0.1,
+      "secondaryBypassTime": 0.25,
+      "secondaryBypassTolerance": 0.05
+    }
+  },
+  "attachments": {
+    "hud": "pswg_blasters:default"
+  }
+}

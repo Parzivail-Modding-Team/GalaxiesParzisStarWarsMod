@@ -4,16 +4,20 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.configuration.BlastersConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
+import dev.pswg.data.BlasterDataReloadListener;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.registry.Registrar;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
@@ -69,11 +73,22 @@ public final class Blasters implements GalaxiesAddon
 			                  .trackingTickInterval(20)
 	);
 
+	private static void addBlastersToTab(FabricItemGroupEntries itemGroup)
+	{
+		for (var definition : BlasterDataReloadListener.INSTANCE.getDefinitions().entrySet())
+		{
+			LOGGER.debug("Registering blaster definition: {}", definition.getKey());
+			itemGroup.add(BlasterItem.createStack(definition.getKey(), definition.getValue()));
+		}
+	}
+
 	@Override
 	public void onGalaxiesReady()
 	{
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
-		               .register((itemGroup) -> itemGroup.add(BLASTER_ITEM));
+		               .register(Blasters::addBlastersToTab);
+
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(BlasterDataReloadListener.INSTANCE);
 
 		// TODO: how to differentiate different modules' versions?
 		LOGGER.info("Module initialized");

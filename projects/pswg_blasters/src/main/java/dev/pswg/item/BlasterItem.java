@@ -7,6 +7,7 @@ import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.GenerateCodec;
 import dev.pswg.codecgenerator.SelfCodec;
+import dev.pswg.data.BlasterDatapackDefinition;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
@@ -25,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;
@@ -32,6 +34,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -40,6 +43,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
@@ -301,6 +305,15 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	);
 
 	/**
+	 * The component that contains the datapack registrar ID of the blaster
+	 */
+	private static final ComponentType<Identifier> ID = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("id"),
+			ComponentType.<Identifier>builder().codec(Identifier.CODEC).packetCodec(Identifier.PACKET_CODEC).build()
+	);
+
+	/**
 	 * The component that contains the mutable gameplay state of the blaster
 	 */
 	private static final ComponentType<StateComponent> STATE = Registry.register(
@@ -333,9 +346,29 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public static Settings createSettings()
 	{
 		return new Settings()
+				.component(ID, Blasters.id("missingno"))
 				.component(STATS, StatsComponent.DEFAULT)
 				.component(ATTACHMENTS, AttachmentsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
+	}
+
+	/**
+	 * Creates a new ItemStack that represents the given {@link BlasterDatapackDefinition}.
+	 *
+	 * @param id         The id of the blaster item.
+	 * @param definition The definition that this stack should represent.
+	 *
+	 * @return A new stack configured with the given definition.
+	 */
+	public static ItemStack createStack(Identifier id, BlasterDatapackDefinition definition)
+	{
+		var stack = new ItemStack(Blasters.BLASTER_ITEM);
+
+		stack.set(ID, id);
+		stack.set(STATS, definition.stats());
+		stack.set(ATTACHMENTS, definition.attachments());
+
+		return stack;
 	}
 
 	public BlasterItem(Settings settings)
@@ -491,6 +524,12 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		// TODO: other checks (e.g. quickdraw delay)
 
 		return true;
+	}
+
+	@Override
+	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type)
+	{
+		tooltip.add(Text.of(stack.get(ID)));
 	}
 
 	/**
