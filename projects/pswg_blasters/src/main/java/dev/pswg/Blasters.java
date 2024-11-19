@@ -4,7 +4,9 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.configuration.BlastersConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
-import dev.pswg.data.BlasterDataReloadListener;
+import dev.pswg.data.BlasterDatapackDefinition;
+import dev.pswg.data.CodecDataLoader;
+import dev.pswg.data.IdentifierUtil;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.registry.Registrar;
@@ -54,6 +56,13 @@ public final class Blasters implements GalaxiesAddon
 	 */
 	public static final IConfigContainer<BlastersConfig> CONFIG = new MemoryConfigContainer<>(new BlastersConfig());
 
+	public static final CodecDataLoader<BlasterDatapackDefinition> DATAPACK_LOADER = new CodecDataLoader<>(
+			id("data"),
+			"blasters",
+			IdentifierUtil::isJsonFile,
+			BlasterDatapackDefinition.CODEC
+	);
+
 	/**
 	 * An item tag that contains all PSWG module and addon blasters
 	 */
@@ -75,7 +84,7 @@ public final class Blasters implements GalaxiesAddon
 
 	private static void addBlastersToTab(FabricItemGroupEntries itemGroup)
 	{
-		for (var definition : BlasterDataReloadListener.INSTANCE.getDefinitions().entrySet())
+		for (var definition : DATAPACK_LOADER.getDefinitions().entrySet())
 		{
 			LOGGER.debug("Registering blaster definition: {}", definition.getKey());
 			itemGroup.add(BlasterItem.createStack(definition.getKey(), definition.getValue()));
@@ -88,7 +97,7 @@ public final class Blasters implements GalaxiesAddon
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
 		               .register(Blasters::addBlastersToTab);
 
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(BlasterDataReloadListener.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(DATAPACK_LOADER);
 
 		// TODO: how to differentiate different modules' versions?
 		LOGGER.info("Module initialized");

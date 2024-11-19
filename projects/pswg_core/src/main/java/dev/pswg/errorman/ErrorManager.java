@@ -173,10 +173,10 @@ public final class ErrorManager
 			var exc = new RollbarException(cause.getClass().getName(), cause.getMessage());
 
 			var trace = cause.getStackTrace();
-			var frames = new com.parzivail.errorman.model.RollbarFrame[trace.length];
+			var frames = new RollbarFrame[trace.length];
 
 			for (var i = 0; i < trace.length; i++)
-				frames[trace.length - i - 1] = new com.parzivail.errorman.model.RollbarFrame(trace[i].getFileName(), trace[i].getClassName(), trace[i].getMethodName(), trace[i].getLineNumber());
+				frames[trace.length - i - 1] = new RollbarFrame(trace[i].getFileName(), trace[i].getClassName(), trace[i].getMethodName(), trace[i].getLineNumber());
 
 			traceStack.push(new RollbarTrace(exc, frames));
 

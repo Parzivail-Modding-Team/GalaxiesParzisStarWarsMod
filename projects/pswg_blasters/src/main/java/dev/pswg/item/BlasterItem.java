@@ -277,6 +277,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		}
 	}
 
+	protected static final Identifier MISSING_ID = Blasters.id("missingno");
+
 	/**
 	 * If a blaster us "used" for longer than this time, in ticks, then
 	 * the "use" interaction will be considered a "hold to aim" instead of
@@ -346,7 +348,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public static Settings createSettings()
 	{
 		return new Settings()
-				.component(ID, Blasters.id("missingno"))
+				.component(ID, MISSING_ID)
 				.component(STATS, StatsComponent.DEFAULT)
 				.component(ATTACHMENTS, AttachmentsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
@@ -529,7 +531,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	@Override
 	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type)
 	{
-		tooltip.add(Text.of(stack.get(ID)));
+		tooltip.add(Text.of(stack.getOrDefault(ID, MISSING_ID)));
 	}
 
 	/**

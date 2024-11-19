@@ -12,7 +12,7 @@ public enum GenPacketCodec
 
 	/**
 	 * An available codec for the {@link Boolean} type.
-	 * Delegates to {@link net.minecraft.network.codec.PacketCodecs#BOOL}
+	 * Delegates to {@link net.minecraft.network.codec.PacketCodecs#BOOLEAN}
 	 */
 	BOOL,
 

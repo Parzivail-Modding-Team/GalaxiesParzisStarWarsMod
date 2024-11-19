@@ -21,7 +21,7 @@ public class BlastersClient implements GalaxiesClientAddon
 	/**
 	 * The registry for blaster information HUD renderers
 	 */
-	public static final SlimRegistry<ItemHudRenderer> BLASTER_HUD_REGISTRY = new SlimRegistry<ItemHudRenderer>();
+	public static final SlimRegistry<ItemHudRenderer> BLASTER_HUD_REGISTRY = new SlimRegistry<>();
 
 	@Override
 	public void onGalaxiesClientReady()

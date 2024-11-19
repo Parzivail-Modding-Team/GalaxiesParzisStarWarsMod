@@ -29,6 +29,7 @@ public record LeftClickingEntityAttachment(
 		ItemStack leftActiveItemStack
 ) implements ILeftClickingEntityAttachmentBuilder, ILeftClickingEntityAttachmentCodec
 {
+	@SuppressWarnings("UnstableApiUsage")
 	public static final AttachmentType<LeftClickingEntityAttachment> ATTACHMENT = AttachmentRegistry.create(
 			Galaxies.id("left_clicking_entity"),
 			builder -> builder
@@ -37,6 +38,7 @@ public record LeftClickingEntityAttachment(
 					.syncWith(LeftClickingEntityAttachment.PACKET_CODEC, AttachmentSyncPredicate.all())
 	);
 
+	@SuppressWarnings("EmptyMethod")
 	public static void register()
 	{
 		// Dummy method to force static initialization
