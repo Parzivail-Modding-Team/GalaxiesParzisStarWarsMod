@@ -1,7 +1,9 @@
 package dev.pswg.entity;
 
+import dev.pswg.Gadgets;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -20,7 +22,6 @@ public class ThermalDetonatorEntity extends GrenadeEntity
 		super(type, world);
 		setExplosionPower(5f);
 	}
-
 	@Override
 	public void explode()
 	{
@@ -35,6 +36,7 @@ public class ThermalDetonatorEntity extends GrenadeEntity
 		//	SoundHelper.playDetonatorEntitySound(this);
 
 		this.speed = this.speed * 0.95f;
+		velocityModified = true;
 		super.tick();
 	}
 
@@ -76,7 +78,7 @@ public class ThermalDetonatorEntity extends GrenadeEntity
 			this.bounce(blockHitResult);
 
 			if (getVelocity().length() > 0.01f)
-				this.playSound(state.getBlock().asItem().getBreakSound(), 1f, 1f);
+				this.playSound(state.getSoundGroup().getHitSound(), 0.5f, 1f);
 		}
 
 		super.onCollision(hitResult);
@@ -85,14 +87,11 @@ public class ThermalDetonatorEntity extends GrenadeEntity
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand)
 	{
-		/*if (!isPrimed() && age > MIN_PICKUP_AGE && player.getInventory().getMainHandStack().isEmpty())
+		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getMainHandStack().isEmpty())
 		{
-			if (getWorld() instanceof ServerWorld)
-				player.giveItemStack(new ItemStack(SwgItems.Explosives.ThermalDetonator));
-			this.discard();
-		}*/
-		setPrimed(true);
-		setLife(0);
+			player.giveItemStack(new ItemStack(Gadgets.THERMAL_DETONATOR_ITEM));
+			this.remove(RemovalReason.KILLED);
+		}
 		return super.interact(player, hand);
 	}
 

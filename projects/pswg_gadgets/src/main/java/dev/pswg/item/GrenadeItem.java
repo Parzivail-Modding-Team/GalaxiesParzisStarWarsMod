@@ -15,6 +15,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -71,14 +72,11 @@ public class GrenadeItem extends BlockItem implements ILeftClickUsable
 
 	}
 
-
 	public void createExplosion(World world, int power, Entity player)
 	{
 		if(player instanceof LivingEntity livingEntity)
 			spawnEntity(world, power, livingEntity.getMainHandStack(), player);
 	}
-
-	;
 
 	public void createExplosion(World world, Entity player)
 	{
@@ -170,11 +168,33 @@ public class GrenadeItem extends BlockItem implements ILeftClickUsable
 	@Override
 	public ActionResult use(World world, PlayerEntity user, Hand hand)
 	{
-		ItemStack itemStack = user.getStackInHand(hand);
-		user.setCurrentHand(hand);
-		throwEntity(world, itemStack, user);
-
 		return ActionResult.CONSUME;
+	}
+
+	@Override
+	public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
+	{
+		if (user instanceof PlayerEntity playerEntity)
+		{
+			boolean inCreative = playerEntity.getAbilities().creativeMode;
+			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
+			if (!itemStack.isEmpty())
+			{
+				GrenadeItem throwableExplosiveItem = (GrenadeItem)(itemStack.getItem() instanceof GrenadeItem ? itemStack.getItem() : item);
+				throwEntity(world, itemStack, playerEntity);
+
+				//playerEntity.getItemCooldownManager().remove(itemStack.getItem().);
+				stack.remove(Gadgets.PRIMING_TIME);
+
+				//sounds.playThrowSound(playerEntity);
+				if (!inCreative)
+				{
+					stack.decrement(1);
+				}
+				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+			}
+		}
+		return super.onStoppedUsing(stack, world, user, remainingUseTicks);
 	}
 
 	@Override
@@ -201,6 +221,7 @@ public class GrenadeItem extends BlockItem implements ILeftClickUsable
 		}
 		return ActionResult.SUCCESS;
 	}
+
 	/*
 	@Override
 	public boolean allowRepeatedLeftHold(World world, PlayerEntity player, Hand mainHand)

@@ -32,7 +32,7 @@ public class GrenadeEntity extends ThrownEntity
 
 	private int delay = 0;
 	private boolean shouldExplode = false;
-	private float explosionPower = 5f;
+	private float explosionPower = 4f;
 	private boolean isVisible = true;
 	protected GrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
@@ -139,7 +139,9 @@ public class GrenadeEntity extends ThrownEntity
 		return isVisible() && super.shouldRender(distance);
 	}
 
-	protected void createParticles(double x, double y, double z, ServerWorld serverWorld){};
+	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
+	{
+	}
 	@Override
 	public boolean damage(ServerWorld world, DamageSource source, float amount)
 	{
@@ -164,7 +166,7 @@ public class GrenadeEntity extends ThrownEntity
 	{
 		if (getWorld() instanceof ServerWorld serverWorld)
 		{
-			getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY(), this.getZ(), explosionPower, false, World.ExplosionSourceType.TRIGGER);
+			getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY() + 0.1f, this.getZ(), explosionPower, false, World.ExplosionSourceType.TRIGGER);
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
 		this.discard();

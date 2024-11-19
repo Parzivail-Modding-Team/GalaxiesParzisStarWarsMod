@@ -6,8 +6,6 @@ import dev.pswg.entity.ThermalDetonatorEntity;
 import dev.pswg.item.GrenadeItem;
 import dev.pswg.item.ThermalDetonatorItem;
 import dev.pswg.registry.Registrar;
-import net.fabricmc.fabric.api.item.v1.FabricItem;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -51,10 +49,9 @@ public final class Gadgets implements GalaxiesAddon
 	public static final EntityType<ThermalDetonatorEntity> THERMAL_DETONATOR_ENTITY = Registrar.entityType(
 			id("thermal_detonator"),
 			EntityType.Builder.create(ThermalDetonatorEntity::new, SpawnGroup.MISC)
-			                  .dimensions(0.4f, 0.4f)
-			                  .eyeHeight(0.2f)
+			                  .dimensions(0.2f, 0.2f)
 			                  .dropsNothing()
-			                  .maxTrackingRange(4)
+			                  .maxTrackingRange(100)
 			                  .trackingTickInterval(20)
 	);
 	public static final ComponentType<Long> PRIMING_TIME = Registry.register(
