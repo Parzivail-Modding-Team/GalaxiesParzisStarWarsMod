@@ -4,7 +4,6 @@ import dev.pswg.item.ILeftClickUsable;
 import dev.pswg.mixin.client.accessors.ClientPlayerInteractionManagerAccessor;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
-import dev.pswg.networking.PlayerLeftUsingStateS2CPacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -33,13 +32,6 @@ public final class GalaxiesEntityLeftClickClientManager
 	public static void initialize()
 	{
 		ClientTickEvents.START_CLIENT_TICK.register(GalaxiesEntityLeftClickClientManager::tick);
-
-		ClientPlayNetworking.registerGlobalReceiver(PlayerLeftUsingStateS2CPacket.ID, GalaxiesEntityLeftClickClientManager::handleLeftUseStateChange);
-	}
-
-	private static void handleLeftUseStateChange(PlayerLeftUsingStateS2CPacket packet, ClientPlayNetworking.Context context)
-	{
-		packet.attachment().set(context.player());
 	}
 
 	/**

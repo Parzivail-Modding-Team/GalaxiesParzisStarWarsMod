@@ -7,13 +7,11 @@ import dev.pswg.codecgenerator.UseCodec;
 import dev.pswg.generated.codecs.ILeftClickingEntityAttachmentCodec;
 import dev.pswg.generated.recordbuilders.ILeftClickingEntityAttachmentBuilder;
 import dev.pswg.mutablerecord.MutableRecord;
-import dev.pswg.networking.PlayerLeftUsingStateS2CPacket;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * An attachment for entities that contains the data required to
@@ -31,21 +29,13 @@ public record LeftClickingEntityAttachment(
 		ItemStack leftActiveItemStack
 ) implements ILeftClickingEntityAttachmentBuilder, ILeftClickingEntityAttachmentCodec
 {
-	public static final AttachmentType<LeftClickingEntityAttachment> ATTACHMENT = AttachmentRegistry.createPersistent(
+	public static final AttachmentType<LeftClickingEntityAttachment> ATTACHMENT = AttachmentRegistry.create(
 			Galaxies.id("left_clicking_entity"),
-			LeftClickingEntityAttachment.CODEC
+			builder -> builder
+					.initializer(() -> new LeftClickingEntityAttachment(false, 0, ItemStack.EMPTY))
+					.persistent(LeftClickingEntityAttachment.CODEC)
+					.syncWith(LeftClickingEntityAttachment.PACKET_CODEC, AttachmentSyncPredicate.all())
 	);
-
-	// TODO: this can be sync'd with the syncing extension if PACKET_CODEC can be PacketCodec<PacketByteBuf, T> instead
-	//       of RegistryByteBuf
-	//
-	//	public static final AttachmentType<LeftClickingEntityAttachment> ATTACHMENT = AttachmentRegistry.create(
-	//			Galaxies.id("left_clicking_entity"),
-	//			builder -> builder
-	//					.initializer(() -> new LeftClickingEntityAttachment(false, 0, ItemStack.EMPTY))
-	//					.persistent(LeftClickingEntityAttachment.CODEC)
-	//					.syncWith(LeftClickingEntityAttachment.PACKET_CODEC, AttachmentSyncPredicate.all())
-	//	);
 
 	public static void register()
 	{
@@ -64,8 +54,5 @@ public record LeftClickingEntityAttachment(
 	public void set(LivingEntity entity)
 	{
 		entity.setAttached(ATTACHMENT, this);
-
-		if (entity instanceof ServerPlayerEntity player)
-			ServerPlayNetworking.send(player, new PlayerLeftUsingStateS2CPacket(this));
 	}
 }
