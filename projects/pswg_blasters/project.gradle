@@ -10,14 +10,8 @@ loom {
 }
 
 fabricApi {
-	configureDataGeneration()
-}
-
-loom {
-	runs {
-		datagen {
-			inherit client
-		}
+	configureDataGeneration {
+		client = true
 	}
 }
 
