@@ -41,7 +41,7 @@
 		"fabricloader": ">=0.16.7",
 		"minecraft": "~1.21.2-beta.5",
 		"java": ">=21",
-		"fabric-api": ">=0.109.0"
+		"fabric-api": ">=0.111.0"
 	},
 	"breaks": {
 		"optifabric": "*"

@@ -33,6 +33,15 @@ public class BlastersClient implements GalaxiesClientAddon
 
 		HudRenderEvents.CROSSHAIR.register(BlastersClient::renderCrosshair);
 
+		//		var uiElement = BlasterItem.StatsComponent.CODEC
+		//				.encode(BlasterItem.StatsComponent.DEFAULT, ConfigUiOps.INSTANCE, new GroupUiElement())
+		//				.getOrThrow();
+		//
+		//		var encodedData = BlasterItem.StatsComponent.CODEC
+		//				.decode(ConfigUiOps.INSTANCE, uiElement)
+		//				.resultOrPartial(Blasters.LOGGER::error)
+		//				.orElseThrow();
+
 		Blasters.LOGGER.info("Client module initialized");
 	}
 
