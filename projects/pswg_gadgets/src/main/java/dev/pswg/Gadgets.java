@@ -6,6 +6,7 @@ import dev.pswg.entity.ThermalDetonatorEntity;
 import dev.pswg.item.GrenadeItem;
 import dev.pswg.item.ThermalDetonatorItem;
 import dev.pswg.registry.Registrar;
+import net.minecraft.block.Block;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -60,6 +61,7 @@ public final class Gadgets implements GalaxiesAddon
 			ComponentType.<Long>builder().codec(Codec.LONG).build()
 	);
 	public static final GrenadeItem THERMAL_DETONATOR_ITEM = Registrar.item(id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
+	public static final TagKey<Block> FRAGMENTATION_GRENADE_DESTROY = TagKey.of(RegistryKeys.BLOCK, id("fragmentation_destroy"));
 
 	@Override
 	public void onGalaxiesReady()
