@@ -6,7 +6,11 @@ import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
-import dev.pswg.networking.*;
+import dev.pswg.interaction.LeftClickingEntityAttachment;
+import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
+import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
+import dev.pswg.networking.GalaxiesPlayerActionS2CPacket;
+import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
 import net.fabricmc.api.ModInitializer;
@@ -100,7 +104,6 @@ public final class Galaxies implements ModInitializer
 		}
 
 		PayloadTypeRegistry.playC2S().register(PlayerInteractItemLeftC2SPacket.ID, PlayerInteractItemLeftC2SPacket.CODEC);
-		PayloadTypeRegistry.playS2C().register(PlayerLeftUsingStateS2CPacket.ID, PlayerLeftUsingStateS2CPacket.CODEC);
 
 		PayloadTypeRegistry.playC2S().register(GalaxiesPlayerActionC2SPacket.ID, GalaxiesPlayerActionC2SPacket.CODEC);
 		PayloadTypeRegistry.playS2C().register(GalaxiesPlayerActionS2CPacket.ID, GalaxiesPlayerActionS2CPacket.CODEC);
@@ -110,11 +113,13 @@ public final class Galaxies implements ModInitializer
 		GalaxiesEntityLeftClickManager.initialize();
 		GalaxiesPlayerActionManager.initialize();
 
+		LeftClickingEntityAttachment.register();
 		GalaxiesEntityLeftClickManager.initialize();
 
 		LOGGER.info("Loading PSWG modules and addons via pswg-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesStarting);
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesReady);
+		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesFinalizing);
 
 		LOGGER.info("Galaxies initialized");
 	}

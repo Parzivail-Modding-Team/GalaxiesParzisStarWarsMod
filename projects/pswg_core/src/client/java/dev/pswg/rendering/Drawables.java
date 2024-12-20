@@ -10,7 +10,7 @@ import net.minecraft.util.math.ColorHelper;
 import org.joml.Matrix4f;
 
 /**
- * Provides utilities for drawing garphical primitives inside
+ * Provides utilities for drawing graphical primitives inside
  * a {@link DrawContext}
  */
 public final class Drawables

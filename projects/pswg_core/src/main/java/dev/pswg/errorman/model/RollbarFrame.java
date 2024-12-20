@@ -1,4 +1,4 @@
-package com.parzivail.errorman.model;
+package dev.pswg.errorman.model;
 
 public record RollbarFrame(String filename, String class_name, String method, int lineno)
 {

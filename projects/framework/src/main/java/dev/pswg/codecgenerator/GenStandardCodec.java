@@ -230,5 +230,11 @@ public enum GenStandardCodec
 	 * An available codec for the byte[] type.
 	 * Delegates to {@link net.minecraft.util.dynamic.Codecs#BASE_64}
 	 */
-	BASE_64;
+	BASE_64,
+
+	/**
+	 * An available codec for the {@link net.minecraft.util.Identifier} type.
+	 * Delegates to {@link net.minecraft.util.Identifier#CODEC}
+	 */
+	IDENTIFIER;
 }

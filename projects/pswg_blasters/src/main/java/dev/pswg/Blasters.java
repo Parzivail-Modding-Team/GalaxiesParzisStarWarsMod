@@ -4,16 +4,22 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.configuration.BlastersConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
+import dev.pswg.data.BlasterDatapackDefinition;
+import dev.pswg.data.CodecDataLoader;
+import dev.pswg.data.IdentifierUtil;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.registry.Registrar;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
@@ -50,10 +56,19 @@ public final class Blasters implements GalaxiesAddon
 	 */
 	public static final IConfigContainer<BlastersConfig> CONFIG = new MemoryConfigContainer<>(new BlastersConfig());
 
+	public static final CodecDataLoader<BlasterDatapackDefinition> DATAPACK_LOADER = new CodecDataLoader<>(
+			id("data"),
+			"blasters",
+			IdentifierUtil::isJsonFile,
+			BlasterDatapackDefinition.CODEC
+	);
+
 	/**
 	 * An item tag that contains all PSWG module and addon blasters
 	 */
 	public static final TagKey<Item> BLASTERS_TAG = TagKey.of(RegistryKeys.ITEM, id("blasters"));
+
+	public static final Identifier DEFAULT_HUD = id("default");
 
 	public static final BlasterItem BLASTER_ITEM = Registrar.item(id("blaster"), BlasterItem::new, BlasterItem.createSettings());
 
@@ -67,11 +82,22 @@ public final class Blasters implements GalaxiesAddon
 			                  .trackingTickInterval(20)
 	);
 
+	private static void addBlastersToTab(FabricItemGroupEntries itemGroup)
+	{
+		for (var definition : DATAPACK_LOADER.getDefinitions().entrySet())
+		{
+			LOGGER.debug("Registering blaster definition: {}", definition.getKey());
+			itemGroup.add(BlasterItem.createStack(definition.getKey(), definition.getValue()));
+		}
+	}
+
 	@Override
 	public void onGalaxiesReady()
 	{
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
-		               .register((itemGroup) -> itemGroup.add(BLASTER_ITEM));
+		               .register(Blasters::addBlastersToTab);
+
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(DATAPACK_LOADER);
 
 		// TODO: how to differentiate different modules' versions?
 		LOGGER.info("Module initialized");

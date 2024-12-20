@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * Handles left-use item interactions on the server
  */
-public class GalaxiesEntityLeftClickManager
+public final class GalaxiesEntityLeftClickManager
 {
 	/**
 	 * Initializes this manager

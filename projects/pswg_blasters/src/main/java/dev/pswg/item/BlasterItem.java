@@ -7,11 +7,9 @@ import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.GenerateCodec;
 import dev.pswg.codecgenerator.SelfCodec;
+import dev.pswg.data.BlasterDatapackDefinition;
 import dev.pswg.entity.BlasterBoltEntity;
-import dev.pswg.generated.codecs.ICoolingCodec;
-import dev.pswg.generated.codecs.IHeatCodec;
-import dev.pswg.generated.codecs.IStateComponentCodec;
-import dev.pswg.generated.codecs.IStatsComponentCodec;
+import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
@@ -28,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;
@@ -35,13 +34,16 @@ import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
@@ -102,6 +104,16 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	/**
+	 * Represents the cooling status of a blaster
+	 *
+	 * @param coolingMode The current cooling mode of the blaster.
+	 * @param totalHeat   The total amount of heat accumulated in the blaster, passively or otherwise.
+	 */
+	public record CoolingStatus(CoolingMode coolingMode, float totalHeat)
+	{
+	}
+
+	/**
 	 * The available cooling bypass categories
 	 */
 	public enum CoolingBypass
@@ -120,12 +132,17 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		SECONDARY
 	}
 
-	public record AttachmentsComponent()
+	/**
+	 * Contains the infrequently-modified attachment data for the blaster
+	 *
+	 * @param hud The ID of the HUD renderer this blaster should display
+	 */
+	@GenerateCodec
+	public record AttachmentsComponent(Identifier hud) implements IAttachmentsComponentCodec
 	{
-		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent();
-
-		public static final Codec<AttachmentsComponent> CODEC = Codec.unit(DEFAULT);
-		public static final PacketCodec<RegistryByteBuf, AttachmentsComponent> PACKET_CODEC = PacketCodec.unit(DEFAULT);
+		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent(
+				Blasters.DEFAULT_HUD
+		);
 	}
 
 	/**
@@ -175,9 +192,9 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	) implements ICoolingCodec
 	{
 		public static final Cooling DEFAULT = new Cooling(
+				0.7f,
+				0.1f,
 				0.25f,
-				0.05f,
-				0.75f,
 				0.05f
 		);
 	}
@@ -260,6 +277,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		}
 	}
 
+	protected static final Identifier MISSING_ID = Blasters.id("missingno");
+
 	/**
 	 * If a blaster us "used" for longer than this time, in ticks, then
 	 * the "use" interaction will be considered a "hold to aim" instead of
@@ -285,6 +304,15 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			Blasters.id("aiming_zoom"),
 			2,
 			EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+	);
+
+	/**
+	 * The component that contains the datapack registrar ID of the blaster
+	 */
+	private static final ComponentType<Identifier> ID = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("id"),
+			ComponentType.<Identifier>builder().codec(Identifier.CODEC).packetCodec(Identifier.PACKET_CODEC).build()
 	);
 
 	/**
@@ -320,9 +348,29 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public static Settings createSettings()
 	{
 		return new Settings()
+				.component(ID, MISSING_ID)
 				.component(STATS, StatsComponent.DEFAULT)
 				.component(ATTACHMENTS, AttachmentsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
+	}
+
+	/**
+	 * Creates a new ItemStack that represents the given {@link BlasterDatapackDefinition}.
+	 *
+	 * @param id         The id of the blaster item.
+	 * @param definition The definition that this stack should represent.
+	 *
+	 * @return A new stack configured with the given definition.
+	 */
+	public static ItemStack createStack(Identifier id, BlasterDatapackDefinition definition)
+	{
+		var stack = new ItemStack(Blasters.BLASTER_ITEM);
+
+		stack.set(ID, id);
+		stack.set(STATS, definition.stats());
+		stack.set(ATTACHMENTS, definition.attachments());
+
+		return stack;
 	}
 
 	public BlasterItem(Settings settings)
@@ -436,20 +484,22 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			return Optional.empty();
 
 		var stats = getStats(stack);
-		var progress = getAccumulatedHeat(world, stack, tickDelta) / stats.heat().capacity();
-		if (progress == 0)
+		var potentialVentingHeat = getVentingHeat(world, stack, tickDelta);
+		if (potentialVentingHeat.isEmpty())
 			return Optional.empty();
+
+		var ventingHeat = potentialVentingHeat.get() / state.lastVentingHeat();
 
 		var attachments = getAttachments(stack);
 
 		var primaryBypassTime = stats.cooling().primaryBypassTime();
 		var primaryBypassTolerance = getScaledPrimaryBypassTolerance(stats, attachments);
-		if (Math.abs(progress - primaryBypassTime) <= primaryBypassTolerance)
+		if (Math.abs(ventingHeat - primaryBypassTime) <= primaryBypassTolerance)
 			return Optional.of(CoolingBypass.PRIMARY);
 
 		var secondaryBypassTime = stats.cooling().secondaryBypassTime();
 		var secondaryBypassTolerance = getScaledSecondaryBypassTolerance(stats, attachments);
-		if (Math.abs(progress - secondaryBypassTime) <= secondaryBypassTolerance)
+		if (Math.abs(ventingHeat - secondaryBypassTime) <= secondaryBypassTolerance)
 			return Optional.of(CoolingBypass.SECONDARY);
 
 		return Optional.empty();
@@ -478,6 +528,12 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		return true;
 	}
 
+	@Override
+	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type)
+	{
+		tooltip.add(Text.of(stack.getOrDefault(ID, MISSING_ID)));
+	}
+
 	/**
 	 * Calculates the current accumulated heat of the blaster based on the dissipation rate and the time passed since the last shot.
 	 *
@@ -487,11 +543,14 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 *
 	 * @return The current heat of the blaster
 	 */
-	public static float getAccumulatedHeat(World world, ItemStack stack, float tickDelta)
+	public static Optional<Float> getAccumulatedHeat(World world, ItemStack stack, float tickDelta)
 	{
+		var state = getState(stack);
+		if (state.coolingMode() != CoolingMode.PASSIVE)
+			return Optional.empty();
+
 		var stats = getStats(stack);
 		var attachments = getAttachments(stack);
-		var state = getState(stack);
 
 		var time = world.getTime() + tickDelta;
 
@@ -499,7 +558,10 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		var dissipationPerTick = getScaledHeatDrainSpeed(stats, attachments);
 
 		var dissipation = dissipationPerTick * (time - state.cooldownStart());
-		return MathHelper.clamp(lastCommittedHeat - dissipation, 0, lastCommittedHeat);
+		if (dissipation > lastCommittedHeat)
+			return Optional.empty();
+
+		return Optional.of(Math.min(lastCommittedHeat - dissipation, lastCommittedHeat));
 	}
 
 	/**
@@ -511,11 +573,11 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 *
 	 * @return The current heat of the blaster
 	 */
-	public static float getVentingHeat(World world, ItemStack stack, float tickDelta)
+	public static Optional<Float> getVentingHeat(World world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
 		if (state.coolingMode() == CoolingMode.PASSIVE)
-			return 0;
+			return Optional.empty();
 
 		var stats = getStats(stack);
 		var attachments = getAttachments(stack);
@@ -526,7 +588,27 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		var dissipationPerTick = getScaledOverheatDrainSpeed(stats, attachments);
 
 		var dissipation = dissipationPerTick * (time - state.cooldownStart());
-		return MathHelper.clamp(lastVentingHeat - dissipation, 0, lastVentingHeat);
+		if (dissipation > lastVentingHeat)
+			return Optional.empty();
+
+		return Optional.of(Math.min(lastVentingHeat - dissipation, lastVentingHeat));
+	}
+
+	/**
+	 * Determines the cooling status of a blaster, whether passively or actively cooling
+	 *
+	 * @param world     The world to the stack's timestamps are referenced
+	 * @param stack     The stack to query
+	 * @param tickDelta The partial tick to evaluate at
+	 *
+	 * @return The cooling status of the blaster, including its current cooling mode and total accumulated or venting heat
+	 */
+	public static CoolingStatus getCoolingStatus(World world, ItemStack stack, float tickDelta)
+	{
+		var state = getState(stack);
+		return getVentingHeat(world, stack, tickDelta)
+				.map(ventingHeat -> new CoolingStatus(state.coolingMode(), ventingHeat))
+				.orElseGet(() -> new CoolingStatus(CoolingMode.PASSIVE, getAccumulatedHeat(world, stack, tickDelta).orElse(0f)));
 	}
 
 	/**
@@ -683,14 +765,15 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		var timestamp = world.getTime();
 
-		var totalVentingHeat = getVentingHeat(world, itemStack, 0);
-		if (totalVentingHeat == 0 && state.coolingMode != CoolingMode.PASSIVE)
+		var coolingStatus = getCoolingStatus(world, itemStack, 0);
+
+		if (coolingStatus.coolingMode() == CoolingMode.PASSIVE && state.coolingMode() != CoolingMode.PASSIVE)
 			state = state.withCooling(CoolingMode.PASSIVE, timestamp);
 
-		if (state.coolingMode.isCooling())
+		if (state.coolingMode().isCooling())
 		{
 			var isRepeatEvent = false; // TODO: value ultimately comes from #usageTickLeft
-			if (world.isClient() || !state.coolingMode.canBypass() || isRepeatEvent)
+			if (world.isClient() || !state.coolingMode().canBypass() || isRepeatEvent)
 			{
 				itemStack.set(STATE, state);
 				return ActionResult.FAIL;
@@ -699,8 +782,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			var bypass = getCoolingBypass(world, itemStack, 0);
 			if (bypass.isEmpty())
 			{
-				state = state.withLastVentingHeat(totalVentingHeat)
-				             .withCooling(CoolingMode.FAILED_OVERCHARGE, timestamp);
+				state = state.withCoolingMode(CoolingMode.FAILED_OVERCHARGE);
 
 				// TODO: play sound - failed bypass
 
@@ -735,7 +817,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		             .withCooling(CoolingMode.PASSIVE, timestamp + getScaledPassiveCooldownDelay(stats, attachments))
 		             .withFireCooldown(timestamp + getScaledAutoRepeatDelay(stats, attachments));
 
-		var totalHeat = getAccumulatedHeat(world, itemStack, 0);
+		var totalHeat = coolingStatus.totalHeat();
 
 		if (overchargeTimeRemaining(world, itemStack, 0) == 0)
 			totalHeat += stats.heat().perRound();

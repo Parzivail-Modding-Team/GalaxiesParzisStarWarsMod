@@ -243,6 +243,13 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				)
 		);
 		registerCodecsForType(
+				"net.minecraft.util.Identifier",
+				GenStandardCodec.IDENTIFIER,
+				Map.of(
+						GenStandardCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.util", "Identifier"), "CODEC")
+				)
+		);
+		registerCodecsForType(
 				"byte[]",
 				GenStandardCodec.BASE_64,
 				Map.of(
@@ -255,7 +262,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				"boolean",
 				GenPacketCodec.BOOL,
 				Map.of(
-						GenPacketCodec.BOOL, new CodecType(packetCodecsType, "BOOL")
+						GenPacketCodec.BOOL, new CodecType(packetCodecsType, "BOOLEAN")
 				)
 		);
 		registerPacketCodecsForType(
@@ -374,6 +381,13 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				GenPacketCodec.GAME_PROFILE,
 				Map.of(
 						GenPacketCodec.GAME_PROFILE, new CodecType(packetCodecsType, "GAME_PROFILE")
+				)
+		);
+		registerPacketCodecsForType(
+				"net.minecraft.util.Identifier",
+				GenPacketCodec.IDENTIFIER,
+				Map.of(
+						GenPacketCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.util", "Identifier"), "PACKET_CODEC")
 				)
 		);
 	}

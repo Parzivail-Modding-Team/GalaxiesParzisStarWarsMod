@@ -12,7 +12,7 @@ public enum GenPacketCodec
 
 	/**
 	 * An available codec for the {@link Boolean} type.
-	 * Delegates to {@link net.minecraft.network.codec.PacketCodecs#BOOL}
+	 * Delegates to {@link net.minecraft.network.codec.PacketCodecs#BOOLEAN}
 	 */
 	BOOL,
 
@@ -152,5 +152,11 @@ public enum GenPacketCodec
 	 * An available codec for the {@link com.mojang.authlib.GameProfile} type.
 	 * Delegates to {@link net.minecraft.network.codec.PacketCodecs#GAME_PROFILE}
 	 */
-	GAME_PROFILE
+	GAME_PROFILE,
+
+	/**
+	 * An available codec for the {@link net.minecraft.util.Identifier} type.
+	 * Delegates to {@link net.minecraft.util.Identifier#PACKET_CODEC}
+	 */
+	IDENTIFIER;
 }
