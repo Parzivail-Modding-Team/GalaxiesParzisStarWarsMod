@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
-import net.minecraft.data.client.Models;
+import net.minecraft.client.data.Models;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 
@@ -112,7 +112,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.addTag(BlockTags.FLOWERS)
 					.addTag(BlockTags.SAPLINGS)
 					.addTag(ConventionalBlockTags.GLASS_BLOCKS);
-
 		}
 	}
 }

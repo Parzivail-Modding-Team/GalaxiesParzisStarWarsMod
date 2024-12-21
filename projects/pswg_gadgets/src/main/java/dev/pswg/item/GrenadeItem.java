@@ -168,6 +168,27 @@ public class GrenadeItem extends BlockItem implements ILeftClickUsable
 	@Override
 	public ActionResult use(World world, PlayerEntity user, Hand hand)
 	{
+		ItemStack stack = user.getStackInHand(hand);
+		if (user instanceof PlayerEntity playerEntity)
+		{
+			boolean inCreative = playerEntity.getAbilities().creativeMode;
+			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
+			if (!itemStack.isEmpty())
+			{
+				GrenadeItem throwableExplosiveItem = (GrenadeItem)(itemStack.getItem() instanceof GrenadeItem ? itemStack.getItem() : item);
+				throwEntity(world, itemStack, playerEntity);
+
+				//playerEntity.getItemCooldownManager().remove(itemStack.getItem().);
+				stack.remove(Gadgets.PRIMING_TIME);
+
+				//sounds.playThrowSound(playerEntity);
+				if (!inCreative)
+				{
+					stack.decrement(1);
+				}
+				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+			}
+		}
 		return ActionResult.CONSUME;
 	}
 
