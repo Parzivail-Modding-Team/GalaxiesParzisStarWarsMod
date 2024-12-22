@@ -103,7 +103,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getMainHandStack().isEmpty())
 		{
 			player.giveItemStack(new ItemStack(Gadgets.THERMAL_DETONATOR_ITEM));
-			this.remove(RemovalReason.KILLED);
+			this.remove(RemovalReason.DISCARDED);
 		}
 		return super.interact(player, hand);
 	}
@@ -168,7 +168,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 	@Override
 	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
 	{
-
 		return state.isIn(Gadgets.FRAGMENTATION_GRENADE_DESTROY);
 	}
 
