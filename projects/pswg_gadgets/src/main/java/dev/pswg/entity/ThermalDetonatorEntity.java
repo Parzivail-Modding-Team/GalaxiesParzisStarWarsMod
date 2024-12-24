@@ -52,11 +52,11 @@ public class ThermalDetonatorEntity extends GrenadeEntity
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 		{
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLASH, true, true, x, y, z, 1, 0, 0, 0, 0);
-			//serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.EXPLOSION_SMOKE, true, x, y, z, m2 * 6, m, m, m, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, Gadgets.EXPLOSION_SMOKE_PARTICLE, true, true, x, y, z, m2 * 6, m, m, m, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME, true, true, x, y, z, m2 * 2, m3, m3, m3, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, true, true, x, y, z, m2 * 3, m4, m4, m4, 0);
 
-			//serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.EXPLOSION_SMOKE, false, x, y, z, m2 * 4, m, m, m, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, Gadgets.EXPLOSION_SMOKE_PARTICLE, true, false, x, y, z, m2 * 4, m, m, m, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME,  true, true, x, y, z, m2 * 2, m3, m3, m3, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME,  true, true, x, y, z, m2 * 2, m4, m4, m4, 0);
 		}
