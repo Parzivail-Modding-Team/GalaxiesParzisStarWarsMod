@@ -1,4 +1,4 @@
-package dev.pswg.util.math;
+package dev.pswg.util;
 
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.util.math.MatrixStack;

@@ -1,4 +1,4 @@
-package dev.pswg.util.math;
+package dev.pswg.util;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;

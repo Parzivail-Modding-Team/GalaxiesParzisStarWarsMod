@@ -1,7 +1,5 @@
 package dev.pswg.util;
 
-import dev.pswg.util.math.MathUtil;
-import dev.pswg.util.math.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.AnimatedParticle;

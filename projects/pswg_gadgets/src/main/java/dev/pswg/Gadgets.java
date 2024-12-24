@@ -6,12 +6,14 @@ import dev.pswg.entity.ThermalDetonatorEntity;
 import dev.pswg.item.GrenadeItem;
 import dev.pswg.item.ThermalDetonatorItem;
 import dev.pswg.registry.Registrar;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.block.Block;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.item.Item;
+import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
@@ -60,13 +62,21 @@ public final class Gadgets implements GalaxiesAddon
 			Identifier.of(MODID, "priming_time"),
 			ComponentType.<Long>builder().codec(Codec.LONG).build()
 	);
+
 	public static final GrenadeItem THERMAL_DETONATOR_ITEM = Registrar.item(id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
+
 	public static final TagKey<Block> FRAGMENTATION_GRENADE_DESTROY = TagKey.of(RegistryKeys.BLOCK, id("fragmentation_destroy"));
+
+	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE =  FabricParticleTypes.simple();
+
+
+
 
 	@Override
 	public void onGalaxiesReady()
 	{
 		// TODO: how to differentiate different modules' versions?
+		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "explosion_smoke"), EXPLOSION_SMOKE_PARTICLE);
 		LOGGER.info("Module initialized");
 	}
 }
