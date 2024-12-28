@@ -8,6 +8,7 @@ import dev.pswg.item.ThermalDetonatorItem;
 import dev.pswg.registry.Registrar;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.block.Block;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -72,11 +73,13 @@ public final class Gadgets implements GalaxiesAddon
 
 
 
+
 	@Override
 	public void onGalaxiesReady()
 	{
 		// TODO: how to differentiate different modules' versions?
 		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "explosion_smoke"), EXPLOSION_SMOKE_PARTICLE);
+		DispenserBlock.registerProjectileBehavior(Gadgets.THERMAL_DETONATOR_ITEM);
 		LOGGER.info("Module initialized");
 	}
 }

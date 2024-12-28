@@ -5,14 +5,18 @@ import dev.pswg.entity.ThermalDetonatorEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class ThermalDetonatorItem extends GrenadeItem
 {
-	public ThermalDetonatorItem(Settings settings)
+	public ThermalDetonatorItem(Item.Settings settings)
 	{
 		super(settings, Blocks.IRON_BLOCK, Gadgets.THERMAL_DETONATOR_ITEM, 150);
 	}
@@ -42,9 +46,20 @@ public class ThermalDetonatorItem extends GrenadeItem
 		ThermalDetonatorEntity td = new ThermalDetonatorEntity(Gadgets.THERMAL_DETONATOR_ENTITY, world);
 		//world.getTime() - baseTicksToExplosion
 		td.setLife(stack.contains(Gadgets.PRIMING_TIME) ? (int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime() ) : 1);
-		td.setPrimed(stack.contains(Gadgets.PRIMING_TIME) ? true : false );
+		td.setPrimed(stack.contains(Gadgets.PRIMING_TIME));
 		td.setExplosionPower(power);
 		td.onSpawnPacket(new EntitySpawnS2CPacket(td.getId(), td.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), td.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
 		world.spawnEntity(td);
+	}
+
+	@Override
+	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction)
+	{
+		ThermalDetonatorEntity td = new ThermalDetonatorEntity(Gadgets.THERMAL_DETONATOR_ENTITY, world);
+		td.setLife(stack.contains(Gadgets.PRIMING_TIME) ? (int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime() ) : 1);
+		td.setPrimed(stack.contains(Gadgets.PRIMING_TIME));
+		td.setPos(pos.getX(), pos.getY(), pos.getZ());
+
+		return td;
 	}
 }

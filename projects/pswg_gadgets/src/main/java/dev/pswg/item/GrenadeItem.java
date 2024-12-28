@@ -1,36 +1,41 @@
 package dev.pswg.item;
 
 import dev.pswg.Gadgets;
+import dev.pswg.entity.GrenadeEntity;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.Block;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.component.type.ConsumableComponents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.item.*;
 import net.minecraft.item.consume.UseAction;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Position;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class GrenadeItem extends BlockItem implements ILeftClickUsable
+public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileItem
 {
 	public final int baseTicksToExplosion;
 	public final Block block;
 	public final Item item;
 	//public final ExplosionSoundGroup sounds;
 
-	public GrenadeItem(Settings settings, Block block, Item item, int baseTicksToExplosion)
+	public GrenadeItem(Item.Settings settings, Block block, Item item, int baseTicksToExplosion)
 	{
-		super(block, settings);
+		super(settings);
 		this.block = block;
 		this.item = item;
 		//this.sounds = sounds;
@@ -241,6 +246,26 @@ public class GrenadeItem extends BlockItem implements ILeftClickUsable
 			//sounds.playDisarmSound(user);
 		}
 		return ActionResult.SUCCESS;
+	}
+
+	@Override
+	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction)
+	{
+		return null;
+	}
+
+	@Override
+	public ProjectileItem.Settings getProjectileSettings()
+	{
+		return ProjectileItem.super.getProjectileSettings();
+	}
+
+	@Override
+	public void initializeProjectile(ProjectileEntity entity, double x, double y, double z, float power, float uncertainty)
+	{
+
+		//grenade.setLife();
+		ProjectileItem.super.initializeProjectile(entity, x, y, z, power, uncertainty);
 	}
 
 	/*
