@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.Models;
@@ -28,6 +29,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
+		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ModelGenerator::new);
 	}
 
@@ -69,6 +71,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
 			translationBuilder.add(Gadgets.THERMAL_DETONATOR_ITEM, "Thermal Detonator");
+
 			translationBuilder.add(Gadgets.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 		}
 	}
@@ -104,14 +107,20 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-
 			getOrCreateTagBuilder(Gadgets.FRAGMENTATION_GRENADE_DESTROY)
-					.addTag(BlockTags.LEAVES)
-					.addTag(BlockTags.CAVE_VINES)
-					.addTag(BlockTags.CROPS)
-					.addTag(BlockTags.FLOWERS)
-					.addTag(BlockTags.SAPLINGS)
-					.addTag(ConventionalBlockTags.GLASS_BLOCKS);
+					.addOptionalTag(BlockTags.LEAVES)
+					.addOptionalTag(BlockTags.CAVE_VINES)
+					.addOptionalTag(BlockTags.CROPS)
+					.addOptionalTag(BlockTags.FLOWERS)
+					.addOptionalTag(BlockTags.SAPLINGS)
+					.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS);
+
+			getOrCreateTagBuilder(Gadgets.DETONATES_GRENADE)
+					.add(Blocks.REDSTONE_BLOCK)
+					.add(Blocks.REDSTONE_TORCH)
+					.add(Blocks.REDSTONE_WALL_TORCH)
+					.add(Blocks.FIRE)
+					.add(Blocks.SOUL_FIRE);
 		}
 	}
 }

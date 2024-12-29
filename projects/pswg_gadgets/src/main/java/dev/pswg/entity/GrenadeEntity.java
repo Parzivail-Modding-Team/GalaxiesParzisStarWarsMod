@@ -71,6 +71,15 @@ public class GrenadeEntity extends ThrownEntity
 
 		super.tick();
 	}
+
+	@Override
+	protected void onBlockCollision(BlockState state)
+	{
+		if (state.isIn(Gadgets.DETONATES_GRENADE))
+			explode();
+		super.onBlockCollision(state);
+	}
+
 	protected void bounce(HitResult hit)
 	{
 		if (hit.getType() == HitResult.Type.BLOCK)

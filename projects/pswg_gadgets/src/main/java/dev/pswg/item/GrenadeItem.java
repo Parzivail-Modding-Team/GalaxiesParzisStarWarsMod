@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
@@ -230,6 +231,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		if (!stack.contains(Gadgets.PRIMING_TIME))
 		{
 			if(user instanceof PlayerEntity player){
+				player.getItemCooldownManager().set(stack, baseTicksToExplosion);
 				player.sendMessage(Text.of("Primed"), true);
 			}
 			stack.set(Gadgets.PRIMING_TIME, world.getTime());
@@ -263,8 +265,10 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 	@Override
 	public void initializeProjectile(ProjectileEntity entity, double x, double y, double z, float power, float uncertainty)
 	{
-
-		//grenade.setLife();
+		GrenadeEntity grenade = (GrenadeEntity)entity;
+		grenade.setLife(baseTicksToExplosion);
+		grenade.setPrimed(true);
+		grenade.setPos(x, y, z);
 		ProjectileItem.super.initializeProjectile(entity, x, y, z, power, uncertainty);
 	}
 

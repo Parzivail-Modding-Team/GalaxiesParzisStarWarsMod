@@ -70,6 +70,9 @@ public final class Gadgets implements GalaxiesAddon
 
 	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE =  FabricParticleTypes.simple();
 
+	public static final TagKey<Block> DETONATES_GRENADE = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MODID, "detonates_grenade"));
+	public static final TagKey<Item> GRENADES_TAG = TagKey.of(RegistryKeys.ITEM, id("grenades"));
+
 
 
 

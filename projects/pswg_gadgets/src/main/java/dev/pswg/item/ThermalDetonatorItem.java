@@ -52,14 +52,12 @@ public class ThermalDetonatorItem extends GrenadeItem
 		world.spawnEntity(td);
 	}
 
+	// Used for dispensers
 	@Override
 	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction)
 	{
 		ThermalDetonatorEntity td = new ThermalDetonatorEntity(Gadgets.THERMAL_DETONATOR_ENTITY, world);
-		td.setLife(stack.contains(Gadgets.PRIMING_TIME) ? (int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime() ) : 1);
-		td.setPrimed(stack.contains(Gadgets.PRIMING_TIME));
-		td.setPos(pos.getX(), pos.getY(), pos.getZ());
-
+		initializeProjectile(td, pos.getX(), pos.getY(), pos.getZ(), 1f, 0);
 		return td;
 	}
 }
