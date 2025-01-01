@@ -11,10 +11,10 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.state.EntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
 
 public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetonatorEntity, ThermalDetonatorEntityRenderer.State>
 {
@@ -29,13 +29,9 @@ public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetona
 		{
 			ModelData modelData = new ModelData();
 			ModelPartData modelPartData = modelData.getRoot();
-			modelPartData.addChild("back", ModelPartBuilder.create()
-					                                  .uv(0, 0)
-					                                  .cuboid(0.0F, 0F, 0F, 8.0F, 8.0F, 8.0F), ModelTransform.of(8.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F)
-			                                          .withScale(1F));
-			return TexturedModelData.of(modelData.transform((modelTransform) -> {
-				return modelTransform.scaled(0.9F);
-			}), 8, 8);
+			modelPartData.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-1.5F, -3F, -1.5F, 3F, 3F, 3F), ModelTransform.of(0F, 0F, 0F, 0, 0, (float)Math.toRadians(180)));
+			modelPartData.addChild("trigger", ModelPartBuilder.create().uv(0, 6).cuboid(-0.5F, -3.5F, -0.75F, 1F, 1F, 2F), ModelTransform.of(0F, 0F, 0F, 0, 0, (float)Math.toRadians(180)));
+			return TexturedModelData.of(modelData, 16, 16);
 		}
 	}
 	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("thermal_detonator"), "temp");

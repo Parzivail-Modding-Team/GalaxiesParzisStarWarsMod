@@ -2,7 +2,9 @@ package dev.pswg;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.api.GalaxiesAddon;
+import dev.pswg.entity.FragmentationGrenadeEntity;
 import dev.pswg.entity.ThermalDetonatorEntity;
+import dev.pswg.item.FragmentationGrenadeItem;
 import dev.pswg.item.GrenadeItem;
 import dev.pswg.item.ThermalDetonatorItem;
 import dev.pswg.registry.Registrar;
@@ -49,15 +51,24 @@ public final class Gadgets implements GalaxiesAddon
 	 * A logger available only to PSWG module and addon gadgets
 	 */
 	public static final Logger LOGGER = Galaxies.createSubLogger("gadgets");
-	public static final TagKey<DamageType> IGNITES_EXPLOSIVES = TagKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(MODID, "ignites_explosives"));
+
+	public static final EntityType<FragmentationGrenadeEntity> FRAGMENTATION_GRENADE_ENTITY = Registrar.entityType(
+			id("fragmentation_grenade"),
+			EntityType.Builder.create(FragmentationGrenadeEntity::new, SpawnGroup.MISC)
+			                  .dimensions(0.2f, 0.4f)
+			                  .spawnBoxScale(0.2f)
+			                  .dropsNothing()
+
+	);
 	public static final EntityType<ThermalDetonatorEntity> THERMAL_DETONATOR_ENTITY = Registrar.entityType(
 			id("thermal_detonator"),
 			EntityType.Builder.create(ThermalDetonatorEntity::new, SpawnGroup.MISC)
 			                  .dimensions(0.2f, 0.2f)
+			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
-			                  .maxTrackingRange(100)
-			                  .trackingTickInterval(20)
+
 	);
+
 	public static final ComponentType<Long> PRIMING_TIME = Registry.register(
 			Registries.DATA_COMPONENT_TYPE,
 			Identifier.of(MODID, "priming_time"),
@@ -65,16 +76,16 @@ public final class Gadgets implements GalaxiesAddon
 	);
 
 	public static final GrenadeItem THERMAL_DETONATOR_ITEM = Registrar.item(id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
+	public static final GrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Settings());
 
 	public static final TagKey<Block> FRAGMENTATION_GRENADE_DESTROY = TagKey.of(RegistryKeys.BLOCK, id("fragmentation_destroy"));
-
-	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE =  FabricParticleTypes.simple();
-
 	public static final TagKey<Block> DETONATES_GRENADE = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MODID, "detonates_grenade"));
+
 	public static final TagKey<Item> GRENADES_TAG = TagKey.of(RegistryKeys.ITEM, id("grenades"));
 
+	public static final TagKey<DamageType> IGNITES_EXPLOSIVES = TagKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(MODID, "ignites_explosives"));
 
-
+	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE =  FabricParticleTypes.simple();
 
 
 	@Override

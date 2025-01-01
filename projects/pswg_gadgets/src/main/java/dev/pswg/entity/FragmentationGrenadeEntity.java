@@ -2,15 +2,12 @@ package dev.pswg.entity;
 
 import dev.pswg.Gadgets;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -102,7 +99,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 	{
 		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getMainHandStack().isEmpty())
 		{
-			player.giveItemStack(new ItemStack(Gadgets.THERMAL_DETONATOR_ITEM));
+			player.giveItemStack(new ItemStack(Gadgets.FRAGMENTATION_GRENADE_ITEM));
 			this.remove(RemovalReason.DISCARDED);
 		}
 		return super.interact(player, hand);

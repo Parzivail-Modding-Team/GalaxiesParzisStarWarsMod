@@ -114,7 +114,6 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 				player.damage(serverWorld, new DamageSource(player.getWorld().getRegistryManager().getOrThrow(RegistryKeys.DAMAGE_TYPE).getEntry(DamageTypes.EXPLOSION.getValue()).get()), 40f);
 			GrenadeItem tei = (GrenadeItem)(stack.getItem() instanceof GrenadeItem ? stack.getItem() : item);
 			createExplosion(world, player);
-			player.getItemCooldownManager().set(stack, 0);
 			if (!player.isCreative())
 			{
 				stack.decrement(1);
@@ -231,7 +230,6 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		if (!stack.contains(Gadgets.PRIMING_TIME))
 		{
 			if(user instanceof PlayerEntity player){
-				player.getItemCooldownManager().set(stack, baseTicksToExplosion);
 				player.sendMessage(Text.of("Primed"), true);
 			}
 			stack.set(Gadgets.PRIMING_TIME, world.getTime());

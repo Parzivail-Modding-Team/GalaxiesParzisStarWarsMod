@@ -90,7 +90,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-
+			getOrCreateTagBuilder(Gadgets.GRENADES_TAG)
+					.add(Gadgets.THERMAL_DETONATOR_ITEM)
+					.add(Gadgets.FRAGMENTATION_GRENADE_ITEM);
 		}
 	}
 	/**
