@@ -1,16 +1,14 @@
 package dev.pswg.item;
 
 import dev.pswg.Gadgets;
+import dev.pswg.block.GrenadeBlock;
 import dev.pswg.entity.GrenadeEntity;
 import dev.pswg.world.TickConstants;
-import net.minecraft.block.Block;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.component.type.ConsumableComponents;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
@@ -30,19 +28,26 @@ import net.minecraft.world.World;
 public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileItem
 {
 	public final int baseTicksToExplosion;
-	public final Block block;
 	public final Item item;
 	//public final ExplosionSoundGroup sounds;
 
-	public GrenadeItem(Item.Settings settings, Block block, Item item, int baseTicksToExplosion)
+	public GrenadeItem(Item.Settings settings, Item item, int baseTicksToExplosion)
 	{
 		super(settings);
-		this.block = block;
 		this.item = item;
 		//this.sounds = sounds;
 		this.baseTicksToExplosion = baseTicksToExplosion;
 	}
 
+	public <T extends GrenadeBlock> T getBlock()
+	{
+		return null;
+	}
+
+	public <T extends GrenadeEntity> EntityType<T> getEntity()
+	{
+		return null;
+	}
 
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context)
@@ -68,14 +73,43 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		return super.useOnBlock(context);
 	}
 
+	/**
+	 * Method called when a grenade is thrown by a player, not to be confused with spawnEntity
+	 */
 	public void throwEntity(World world, ItemStack stack, PlayerEntity player)
 	{
+		GrenadeEntity grenade = new GrenadeEntity(getEntity(), world);
+		if (stack.contains(Gadgets.PRIMING_TIME))
+		{
+			// By checking if the stack contains PRIMING_TIME, it's impossible to get an NPE
+			grenade.setLife((int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime()));
+			grenade.setPrimed(true);
+		}
+		else
+		{
+			grenade.setLife(1);
+			grenade.setPrimed(false);
+		}
+		grenade.setVisible(true);
+		grenade.onSpawnPacket(new EntitySpawnS2CPacket(grenade.getId(), grenade.getUuid(), player.getX(), player.getY() + 1.5, player.getZ(), -player.getPitch(), -player.getYaw(), grenade.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
+		grenade.setOwner(player);
+		grenade.setVelocity(player, player.getPitch(), player.getYaw(), (float)player.getRotationVector().z * 10, 1.0F, 0F);
 
+		world.spawnEntity(grenade);
 	}
 
-	public void spawnEntity(World world, int power, ItemStack stack ,Entity player)
+	/**
+	 * Method called when a grenade explodes in inventory or through a grenade block, not to be confused with throwEntity
+	 */
+	public void spawnEntity(World world, int power, ItemStack stack, Entity player)
 	{
-
+		GrenadeEntity grenade = new GrenadeEntity(getEntity(), world);
+		//world.getTime() - baseTicksToExplosion
+		grenade.setLife(stack.contains(Gadgets.PRIMING_TIME) ? (int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime()) : 1);
+		grenade.setPrimed(stack.contains(Gadgets.PRIMING_TIME));
+		grenade.setExplosionPower(power);
+		grenade.onSpawnPacket(new EntitySpawnS2CPacket(grenade.getId(), grenade.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), grenade.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
+		world.spawnEntity(grenade);
 	}
 
 	public void createExplosion(World world, int power, Entity player)
@@ -164,6 +198,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 	{
 		return TickConstants.ONE_HOUR;
 	}
+
 	@Override
 	public UseAction getUseAction(ItemStack stack)
 	{
@@ -248,10 +283,16 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		return ActionResult.SUCCESS;
 	}
 
+	/**
+	 * methods used for dispenser behavior
+	 * createEntity should be overwritten, or a NPE will be caused
+	 */
 	@Override
 	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction)
 	{
-		return null;
+		GrenadeEntity grenade = new GrenadeEntity(getEntity(), world);
+		initializeProjectile(grenade, pos.getX(), pos.getY(), pos.getZ(), 1f, 0);
+		return grenade;
 	}
 
 	@Override

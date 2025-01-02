@@ -2,10 +2,10 @@ package dev.pswg;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.api.GalaxiesAddon;
+import dev.pswg.block.ThermalDetonatorBlock;
 import dev.pswg.entity.FragmentationGrenadeEntity;
 import dev.pswg.entity.ThermalDetonatorEntity;
 import dev.pswg.item.FragmentationGrenadeItem;
-import dev.pswg.item.GrenadeItem;
 import dev.pswg.item.ThermalDetonatorItem;
 import dev.pswg.registry.Registrar;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -75,25 +75,28 @@ public final class Gadgets implements GalaxiesAddon
 			ComponentType.<Long>builder().codec(Codec.LONG).build()
 	);
 
-	public static final GrenadeItem THERMAL_DETONATOR_ITEM = Registrar.item(id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
-	public static final GrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Settings());
+	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
+	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Settings());
+
+	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.block(id("thermal_detonator_block"), ThermalDetonatorBlock::new, Block.Settings.create());
 
 	public static final TagKey<Block> FRAGMENTATION_GRENADE_DESTROY = TagKey.of(RegistryKeys.BLOCK, id("fragmentation_destroy"));
-	public static final TagKey<Block> DETONATES_GRENADE = TagKey.of(RegistryKeys.BLOCK, Identifier.of(MODID, "detonates_grenade"));
+	public static final TagKey<Block> DETONATES_GRENADE = TagKey.of(RegistryKeys.BLOCK, id("detonates_grenade"));
 
 	public static final TagKey<Item> GRENADES_TAG = TagKey.of(RegistryKeys.ITEM, id("grenades"));
 
-	public static final TagKey<DamageType> IGNITES_EXPLOSIVES = TagKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(MODID, "ignites_explosives"));
+	public static final TagKey<DamageType> IGNITES_EXPLOSIVES = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("ignites_explosives"));
 
-	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE =  FabricParticleTypes.simple();
+	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("explosion_smoke"), FabricParticleTypes.simple());
 
 
 	@Override
 	public void onGalaxiesReady()
 	{
 		// TODO: how to differentiate different modules' versions?
-		Registry.register(Registries.PARTICLE_TYPE, Identifier.of(MODID, "explosion_smoke"), EXPLOSION_SMOKE_PARTICLE);
+
 		DispenserBlock.registerProjectileBehavior(Gadgets.THERMAL_DETONATOR_ITEM);
+
 		LOGGER.info("Module initialized");
 	}
 }

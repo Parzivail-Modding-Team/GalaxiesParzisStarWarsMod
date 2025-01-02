@@ -16,13 +16,10 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
 public class GrenadeEntity extends ThrownEntity
@@ -34,7 +31,8 @@ public class GrenadeEntity extends ThrownEntity
 	private boolean shouldExplode = false;
 	private float explosionPower = 4f;
 	private boolean isVisible = true;
-	protected GrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
+
+	public GrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
 		super(entityType, world);
 	}
@@ -175,7 +173,7 @@ public class GrenadeEntity extends ThrownEntity
 	{
 		if (getWorld() instanceof ServerWorld serverWorld)
 		{
-			getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY() + 0.1f, this.getZ(), explosionPower, false, World.ExplosionSourceType.TRIGGER);
+			getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY() + 0.1f, this.getZ(), explosionPower, false, World.ExplosionSourceType.TNT);
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
 		this.discard();
@@ -206,9 +204,4 @@ public class GrenadeEntity extends ThrownEntity
 		this.isVisible = visible;
 	}
 
-	@Override
-	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
-	{
-		return super.canExplosionDestroyBlock(explosion, world, pos, state, explosionPower);
-	}
 }

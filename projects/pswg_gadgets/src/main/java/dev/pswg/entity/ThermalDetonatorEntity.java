@@ -1,6 +1,7 @@
 package dev.pswg.entity;
 
 import dev.pswg.Gadgets;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -11,9 +12,12 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 
 public class ThermalDetonatorEntity extends GrenadeEntity
 {
@@ -95,6 +99,12 @@ public class ThermalDetonatorEntity extends GrenadeEntity
 			this.remove(RemovalReason.KILLED);
 		}
 		return super.interact(player, hand);
+	}
+
+	@Override
+	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
+	{
+		return true;
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package dev.pswg.item;
 
 import dev.pswg.Gadgets;
 import dev.pswg.entity.FragmentationGrenadeEntity;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -18,7 +17,7 @@ public class FragmentationGrenadeItem extends GrenadeItem
 {
 	public FragmentationGrenadeItem(Item.Settings settings)
 	{
-		super(settings, Blocks.IRON_BLOCK, Gadgets.FRAGMENTATION_GRENADE_ITEM, 150);
+		super(settings, Gadgets.FRAGMENTATION_GRENADE_ITEM, 150);
 	}
 
 	@Override

@@ -1,63 +1,29 @@
 package dev.pswg.item;
 
 import dev.pswg.Gadgets;
+import dev.pswg.block.GrenadeBlock;
+import dev.pswg.block.ThermalDetonatorBlock;
+import dev.pswg.entity.GrenadeEntity;
 import dev.pswg.entity.ThermalDetonatorEntity;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Position;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 public class ThermalDetonatorItem extends GrenadeItem
 {
 	public ThermalDetonatorItem(Item.Settings settings)
 	{
-		super(settings, Blocks.IRON_BLOCK, Gadgets.THERMAL_DETONATOR_ITEM, 150);
-	}
-	@Override
-	public void throwEntity(World world, ItemStack stack, PlayerEntity player)
-	{
-		ThermalDetonatorEntity td = new ThermalDetonatorEntity(Gadgets.THERMAL_DETONATOR_ENTITY, world);
-		if(stack.contains(Gadgets.PRIMING_TIME))
-		{
-			td.setLife((int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime()));
-			td.setPrimed(true);
-		}else{
-			td.setLife(150);
-			td.setPrimed(false);
-		}
-		td.setVisible(true);
-		td.onSpawnPacket(new EntitySpawnS2CPacket(td.getId(), td.getUuid(), player.getX(), player.getY() + 1.5, player.getZ(), -player.getPitch(), -player.getYaw(), td.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
-		td.setOwner(player);
-		td.setVelocity(player, player.getPitch(), player.getYaw(), (float)player.getRotationVector().z *10, 1.0F, 0F);
-
-		world.spawnEntity(td);
+		super(settings, Gadgets.THERMAL_DETONATOR_ITEM, 150);
 	}
 
 	@Override
-	public void spawnEntity(World world, int power, ItemStack stack , Entity player)
+	public EntityType<ThermalDetonatorEntity> getEntity()
 	{
-		ThermalDetonatorEntity td = new ThermalDetonatorEntity(Gadgets.THERMAL_DETONATOR_ENTITY, world);
-		//world.getTime() - baseTicksToExplosion
-		td.setLife(stack.contains(Gadgets.PRIMING_TIME) ? (int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime() ) : 1);
-		td.setPrimed(stack.contains(Gadgets.PRIMING_TIME));
-		td.setExplosionPower(power);
-		td.onSpawnPacket(new EntitySpawnS2CPacket(td.getId(), td.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), td.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
-		world.spawnEntity(td);
+		return Gadgets.THERMAL_DETONATOR_ENTITY;
 	}
 
-	// Used for dispensers
 	@Override
-	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction)
+	public ThermalDetonatorBlock getBlock()
 	{
-		ThermalDetonatorEntity td = new ThermalDetonatorEntity(Gadgets.THERMAL_DETONATOR_ENTITY, world);
-		initializeProjectile(td, pos.getX(), pos.getY(), pos.getZ(), 1f, 0);
-		return td;
+		return Gadgets.THERMAL_DETONATOR_BLOCK;
 	}
 }
