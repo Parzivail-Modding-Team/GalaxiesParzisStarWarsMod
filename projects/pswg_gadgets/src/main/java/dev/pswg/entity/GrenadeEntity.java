@@ -91,11 +91,11 @@ public class GrenadeEntity extends ThrownEntity
 			var blockMultiplier = 1.;
 
 			if (getWorld().getBlockState(blockHit.getBlockPos()).getBlock() == Blocks.SLIME_BLOCK)
-				blockMultiplier = 5;
-			if (getWorld().getBlockState(blockHit.getBlockPos()).getBlock() == Blocks.HONEY_BLOCK)
 				blockMultiplier = 3;
-			if (getWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.WOOL))
-				blockMultiplier = 0.5;
+			if (getWorld().getBlockState(blockHit.getBlockPos()).getBlock() == Blocks.HONEY_BLOCK)
+				blockMultiplier = 2;
+			if (getWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.WOOL) || getWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.LEAVES))
+				blockMultiplier = 0.75;
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{

@@ -1,9 +1,7 @@
 package dev.pswg.item;
 
 import dev.pswg.Gadgets;
-import dev.pswg.block.GrenadeBlock;
 import dev.pswg.block.ThermalDetonatorBlock;
-import dev.pswg.entity.GrenadeEntity;
 import dev.pswg.entity.ThermalDetonatorEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -16,7 +14,7 @@ public class ThermalDetonatorItem extends GrenadeItem
 	}
 
 	@Override
-	public EntityType<ThermalDetonatorEntity> getEntity()
+	public EntityType<ThermalDetonatorEntity> getEntityType()
 	{
 		return Gadgets.THERMAL_DETONATOR_ENTITY;
 	}

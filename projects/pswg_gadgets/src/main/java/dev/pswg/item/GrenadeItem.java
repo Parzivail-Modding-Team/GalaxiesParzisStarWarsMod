@@ -7,6 +7,7 @@ import dev.pswg.world.TickConstants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,7 +45,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		return null;
 	}
 
-	public <T extends GrenadeEntity> EntityType<T> getEntity()
+	public EntityType<? extends GrenadeEntity> getEntityType()
 	{
 		return null;
 	}
@@ -78,7 +79,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 	 */
 	public void throwEntity(World world, ItemStack stack, PlayerEntity player)
 	{
-		GrenadeEntity grenade = new GrenadeEntity(getEntity(), world);
+		GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
 		if (stack.contains(Gadgets.PRIMING_TIME))
 		{
 			// By checking if the stack contains PRIMING_TIME, it's impossible to get an NPE
@@ -103,8 +104,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 	 */
 	public void spawnEntity(World world, int power, ItemStack stack, Entity player)
 	{
-		GrenadeEntity grenade = new GrenadeEntity(getEntity(), world);
-		//world.getTime() - baseTicksToExplosion
+		GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
 		grenade.setLife(stack.contains(Gadgets.PRIMING_TIME) ? (int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime()) : 1);
 		grenade.setPrimed(stack.contains(Gadgets.PRIMING_TIME));
 		grenade.setExplosionPower(power);
@@ -290,7 +290,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 	@Override
 	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction)
 	{
-		GrenadeEntity grenade = new GrenadeEntity(getEntity(), world);
+		GrenadeEntity grenade = new GrenadeEntity(getEntityType(), world);
 		initializeProjectile(grenade, pos.getX(), pos.getY(), pos.getZ(), 1f, 0);
 		return grenade;
 	}
