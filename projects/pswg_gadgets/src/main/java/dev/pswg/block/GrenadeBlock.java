@@ -7,6 +7,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -43,7 +44,7 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	 * Returns the entity type corresponding with the block
 	 * Needs to be overwritten
 	 */
-	public <T extends GrenadeEntity> EntityType<T> getEntity()
+	public EntityType<? extends GrenadeEntity> getEntity()
 	{
 		return null;
 	}
@@ -167,15 +168,15 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 
 	public void explode(World world, BlockPos blockPos, float explosionPower)
 	{
-		var tde = new GrenadeEntity(getEntity(), world);
-		tde.setExplosionPower(explosionPower);
-		tde.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-		tde.setPrimed(true);
-		tde.setLife(0);
+		var grenade = getEntity().create(world, SpawnReason.EVENT);
+		grenade.setExplosionPower(explosionPower);
+		grenade.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+		grenade.setPrimed(true);
+		grenade.setLife(0);
 
 		world.setBlockState(blockPos, Blocks.AIR.getDefaultState());
 
-		world.spawnEntity(tde);
+		world.spawnEntity(grenade);
 	}
 
 	@Override
