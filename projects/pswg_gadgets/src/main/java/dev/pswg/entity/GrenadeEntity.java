@@ -1,6 +1,7 @@
 package dev.pswg.entity;
 
 import dev.pswg.Gadgets;
+import dev.pswg.item.GrenadeItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -31,6 +32,7 @@ public class GrenadeEntity extends ThrownEntity
 	private boolean shouldExplode = false;
 	private float explosionPower = 4f;
 	private boolean isVisible = true;
+	private float clientYaw;
 
 	public GrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
@@ -44,11 +46,23 @@ public class GrenadeEntity extends ThrownEntity
 		builder.add(PRIMED, false);
 	}
 
+	public GrenadeItem getItem()
+	{
+		return null;
+	}
+
 	@Override
 	public void onSpawnPacket(EntitySpawnS2CPacket packet)
 	{
 		super.onSpawnPacket(packet);
+		clientYaw = packet.getYaw();
 	}
+
+	public float getClientYaw()
+	{
+		return clientYaw;
+	}
+
 	@Override
 	public void tick()
 	{
@@ -66,10 +80,8 @@ public class GrenadeEntity extends ThrownEntity
 			if (isPrimed())
 				this.explode();
 		}
-
 		super.tick();
 	}
-
 	@Override
 	protected void onBlockCollision(BlockState state)
 	{
@@ -108,6 +120,8 @@ public class GrenadeEntity extends ThrownEntity
 			var normal = new Vec3d(blockHit.getSide().getUnitVector());
 			var newDir = normal.multiply(2 * normal.dotProduct(dir)).subtract(dir).multiply(-1);
 			this.setVelocity(newDir.multiply(velocity.length() * restitution * blockMultiplier));
+			if (Math.abs(getVelocity().length()) > 0.2f)
+				clientYaw = (float)(MathHelper.atan2(getVelocity().y, getVelocity().horizontalLength()) * (double)(180F / (float)Math.PI));
 		}
 
 	}
@@ -193,7 +207,6 @@ public class GrenadeEntity extends ThrownEntity
 		setLife(tag.getInt("life"));
 		setPrimed(tag.getBoolean("primed"));
 	}
-
 	public boolean isVisible()
 	{
 		return isVisible;

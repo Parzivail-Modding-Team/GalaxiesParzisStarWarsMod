@@ -11,10 +11,10 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.state.EntityRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 
 public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetonatorEntity, ThermalDetonatorEntityRenderer.State>
 {
@@ -47,6 +47,9 @@ public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetona
 	{
 		matrixStack.push();
 		VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
+
+		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw));
+
 		this.model.setAngles(state);
 		this.model.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
 		matrixStack.pop();
@@ -57,6 +60,14 @@ public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetona
 	public State createRenderState()
 	{
 		return new State();
+	}
+
+	@Override
+	public void updateRenderState(ThermalDetonatorEntity entity, State state, float tickDelta)
+	{
+		super.updateRenderState(entity, state, tickDelta);
+		state.pitch = entity.getLerpedPitch(tickDelta);
+		state.yaw = entity.getClientYaw();
 	}
 
 	public static class State extends EntityRenderState

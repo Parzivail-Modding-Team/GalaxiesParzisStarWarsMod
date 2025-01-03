@@ -119,8 +119,8 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 		for (int i = 0; i < count; i++)
 		{
 			GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
-			float rx = world.random.nextBetween(-5, 5) / 100f;
-			float rz = world.random.nextBetween(-5, 5) / 100f;
+			float rx = world.random.nextBetween(-7, 7) / 100f;
+			float rz = world.random.nextBetween(-7, 7) / 100f;
 			grenade.setPos(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
 			grenade.setVelocity(rx, -0.1f, rz);
 			grenade.setPrimed(false);
