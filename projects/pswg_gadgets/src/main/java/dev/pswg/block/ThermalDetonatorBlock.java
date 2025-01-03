@@ -15,7 +15,7 @@ public class ThermalDetonatorBlock extends GrenadeBlock
 	}
 
 	@Override
-	public EntityType<ThermalDetonatorEntity> getEntity()
+	public EntityType<ThermalDetonatorEntity> getEntityType()
 	{
 		return Gadgets.THERMAL_DETONATOR_ENTITY;
 	}

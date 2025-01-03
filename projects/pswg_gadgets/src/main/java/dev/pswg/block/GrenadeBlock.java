@@ -19,12 +19,17 @@ import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.block.WireOrientation;
 import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.tick.ScheduledTickView;
+import org.jetbrains.annotations.Nullable;
 
 public class GrenadeBlock extends WaterloggableRotatingBlock
 {
@@ -44,7 +49,7 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	 * Returns the entity type corresponding with the block
 	 * Needs to be overwritten
 	 */
-	public EntityType<? extends GrenadeEntity> getEntity()
+	public EntityType<? extends GrenadeEntity> getEntityType()
 	{
 		return null;
 	}
@@ -101,15 +106,56 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	}
 
 	@Override
+	protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify)
+	{
+		super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+	}
+
+	@Override
+	protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	{
+		int count = state.get(CLUSTER_SIZE);
+		world.setBlockState(pos, Blocks.AIR.getDefaultState());
+		for (int i = 0; i < count; i++)
+		{
+			GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
+			float rx = world.random.nextBetween(-5, 5) / 100f;
+			float rz = world.random.nextBetween(-5, 5) / 100f;
+			grenade.setPos(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
+			grenade.setVelocity(rx, -0.1f, rz);
+			grenade.setPrimed(false);
+			world.spawnEntity(grenade);
+		}
+		super.scheduledTick(state, world, pos, random);
+	}
+
+	@Override
+	protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random)
+	{
+		if (neighborState.isAir() && direction == Direction.DOWN)
+		{
+			tickView.scheduleBlockTick(pos, asBlock(), 0);
+		}
+		return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+	}
+
+	@Override
 	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
 	{
-		if (player.getInventory().getMainHandStack().isOf(getItem()) && state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && player.isSneaking())
+		if (player.getInventory().getMainHandStack().isOf(getItem()) && !player.isSneaking())
 		{
-			if (!player.isCreative())
-				player.getInventory().getMainHandStack().decrement(1);
+			if (state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE)
+			{
+				if (!player.isCreative())
+					player.getInventory().getMainHandStack().decrement(1);
 
-			world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
-			return ActionResult.SUCCESS;
+				world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
+				return ActionResult.SUCCESS;
+			}
+			else
+			{
+				return ActionResult.PASS;
+			}
 		}
 
 		player.giveItemStack(new ItemStack(getItem()));
@@ -125,7 +171,7 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	@Override
 	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
-		if (entity instanceof GrenadeEntity grenade && entity.getType() == getEntity())
+		if (entity instanceof GrenadeEntity grenade && entity.getType() == getEntityType())
 		{
 			if (state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && !grenade.isPrimed())
 			{
@@ -168,7 +214,7 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 
 	public void explode(World world, BlockPos blockPos, float explosionPower)
 	{
-		var grenade = getEntity().create(world, SpawnReason.EVENT);
+		var grenade = getEntityType().create(world, SpawnReason.EVENT);
 		grenade.setExplosionPower(explosionPower);
 		grenade.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 		grenade.setPrimed(true);

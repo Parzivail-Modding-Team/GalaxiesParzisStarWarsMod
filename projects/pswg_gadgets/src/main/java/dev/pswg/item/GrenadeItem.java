@@ -1,7 +1,6 @@
 package dev.pswg.item;
 
 import dev.pswg.Gadgets;
-import dev.pswg.block.GrenadeBlock;
 import dev.pswg.entity.GrenadeEntity;
 import dev.pswg.world.TickConstants;
 import net.minecraft.entity.Entity;
@@ -40,38 +39,9 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		this.baseTicksToExplosion = baseTicksToExplosion;
 	}
 
-	public <T extends GrenadeBlock> T getBlock()
-	{
-		return null;
-	}
-
 	public EntityType<? extends GrenadeEntity> getEntityType()
 	{
 		return null;
-	}
-
-	@Override
-	public ActionResult useOnBlock(ItemUsageContext context)
-	{
-		/*var stack = context.getStack();
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(stack.getOrCreateNbt());
-		if (context.getPlayer().isSneaking() && !tag.primed)
-		{
-			var state = context.getWorld().getBlockState(context.getBlockPos());
-			if (state.isOf(block) && state.get(ThermalDetonatorBlock.CLUSTER_SIZE) < 5)
-			{
-				context.getWorld().setBlockState(context.getBlockPos(), state.with(ThermalDetonatorBlock.CLUSTER_SIZE, state.get(ThermalDetonatorBlock.CLUSTER_SIZE) + 1));
-				if (!context.getPlayer().isCreative())
-				{
-					context.getStack().decrement(1);
-				}
-				return ActionResult.SUCCESS;
-			}
-			return super.useOnBlock(context);
-		}
-		use(context.getWorld(), context.getPlayer(), context.getHand());
-		return ActionResult.PASS;*/
-		return super.useOnBlock(context);
 	}
 
 	/**

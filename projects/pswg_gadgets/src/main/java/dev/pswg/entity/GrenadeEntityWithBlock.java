@@ -1,0 +1,45 @@
+package dev.pswg.entity;
+
+import dev.pswg.block.GrenadeBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.projectile.thrown.ThrownEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+
+public class GrenadeEntityWithBlock extends GrenadeEntity
+{
+	public static final int BLOCK_AGE = 300;
+
+	public GrenadeEntityWithBlock(EntityType<? extends ThrownEntity> entityType, World world)
+	{
+		super(entityType, world);
+	}
+
+	public GrenadeBlock getBlock()
+	{
+		return null;
+	}
+
+	@Override
+	public void tick()
+	{
+		if (age >= BLOCK_AGE && !this.isPrimed())
+		{
+			BlockPos pos = getBlockPos();
+			BlockState state = getWorld().getBlockState(pos);
+			if (state.isAir())
+			{
+				this.discard();
+				getWorld().setBlockState(pos, getBlock().getDefaultState());
+			}
+			else if (getWorld().getBlockState(pos.offset(Direction.UP)).isAir())
+			{
+				this.discard();
+				getWorld().setBlockState(pos.offset(Direction.UP), getBlock().getDefaultState().with(GrenadeBlock.CLUSTER_SIZE, 1));
+			}
+		}
+		super.tick();
+	}
+}

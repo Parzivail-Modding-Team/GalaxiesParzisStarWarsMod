@@ -1,6 +1,7 @@
 package dev.pswg.entity;
 
 import dev.pswg.Gadgets;
+import dev.pswg.block.GrenadeBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,13 +14,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
-public class ThermalDetonatorEntity extends GrenadeEntity
+public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 {
 	public static final int MIN_PICKUP_AGE = 30;
 
@@ -28,6 +27,13 @@ public class ThermalDetonatorEntity extends GrenadeEntity
 		super(type, world);
 		setExplosionPower(5f);
 	}
+
+	@Override
+	public GrenadeBlock getBlock()
+	{
+		return Gadgets.THERMAL_DETONATOR_BLOCK;
+	}
+
 	@Override
 	public void explode()
 	{
