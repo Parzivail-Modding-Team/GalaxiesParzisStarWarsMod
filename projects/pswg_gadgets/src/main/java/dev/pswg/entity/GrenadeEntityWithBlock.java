@@ -10,7 +10,8 @@ import net.minecraft.world.World;
 
 public class GrenadeEntityWithBlock extends GrenadeEntity
 {
-	public static final int BLOCK_AGE = 300;
+	public static final int BLOCK_TIME = 300;
+	public int timer = 0;
 
 	public GrenadeEntityWithBlock(EntityType<? extends ThrownEntity> entityType, World world)
 	{
@@ -25,7 +26,9 @@ public class GrenadeEntityWithBlock extends GrenadeEntity
 	@Override
 	public void tick()
 	{
-		if (age >= BLOCK_AGE && !this.isPrimed())
+		if (getVelocity().length() <= 0.01f && !this.isPrimed())
+			timer++;
+		if (timer >= BLOCK_TIME)
 		{
 			BlockPos pos = getBlockPos();
 			BlockState state = getWorld().getBlockState(pos);
