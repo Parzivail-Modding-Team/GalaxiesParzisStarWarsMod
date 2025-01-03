@@ -1,6 +1,7 @@
 package dev.pswg.entity;
 
 import dev.pswg.Gadgets;
+import dev.pswg.item.GrenadeItem;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -24,7 +25,6 @@ import java.util.List;
 
 public class FragmentationGrenadeEntity extends GrenadeEntity
 {
-	public static final int MIN_PICKUP_AGE = 30;
 	public boolean IS_EXPLODING = false;
 	public int EXPLOSION_TICK = 0;
 	private boolean COLLISION_BELOW;
@@ -34,6 +34,12 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 	{
 		super(type, world);
 		setExplosionPower(5f);
+	}
+
+	@Override
+	public GrenadeItem getItem()
+	{
+		return Gadgets.FRAGMENTATION_GRENADE_ITEM;
 	}
 
 	@Override
@@ -71,11 +77,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 			*/
 		}
 	}
-	@Override
-	public boolean canBeHitByProjectile()
-	{
-		return true;
-	}
 
 	@Override
 	protected void onCollision(HitResult hitResult)
@@ -83,26 +84,12 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
 			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-			var pos = blockHitResult.getBlockPos();
-			var state = getWorld().getBlockState(pos);
 			this.bounce(blockHitResult);
 
 			if (getVelocity().length() > 0.01f)
-				this.playSound(state.getSoundGroup().getHitSound(), 0.5f, 1f);
+				playCollisionSound(blockHitResult);
 		}
-
 		super.onCollision(hitResult);
-	}
-
-	@Override
-	public ActionResult interact(PlayerEntity player, Hand hand)
-	{
-		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getMainHandStack().isEmpty())
-		{
-			player.giveItemStack(new ItemStack(Gadgets.FRAGMENTATION_GRENADE_ITEM));
-			this.remove(RemovalReason.DISCARDED);
-		}
-		return super.interact(player, hand);
 	}
 
 	@Override
@@ -120,8 +107,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 	@Override
 	public void tick()
 	{
-		this.speed = this.speed * 0.95f;
-		velocityModified = true;
 		super.tick();
 		//if (getWorld().isClient() && this.age == 1 && this.isPrimed())
 		//	SoundHelper.playFragmentationEntitySound(this);

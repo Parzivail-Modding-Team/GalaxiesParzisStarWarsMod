@@ -9,12 +9,16 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
@@ -51,6 +55,16 @@ public class GrenadeEntity extends ThrownEntity
 		return null;
 	}
 
+	public int getMinPickUpTime()
+	{
+		return 40;
+	}
+
+	public boolean hasDrag()
+	{
+		return true;
+	}
+
 	@Override
 	public void onSpawnPacket(EntitySpawnS2CPacket packet)
 	{
@@ -81,6 +95,22 @@ public class GrenadeEntity extends ThrownEntity
 				this.explode();
 		}
 		super.tick();
+		if (hasDrag())
+		{
+			this.setVelocity(getVelocity().multiply(0.9d));
+			velocityModified = true;
+		}
+	}
+
+	@Override
+	public ActionResult interact(PlayerEntity player, Hand hand)
+	{
+		if (!isPrimed() && age > getMinPickUpTime() && player.getMainHandStack().isEmpty())
+		{
+			player.giveItemStack(new ItemStack(getItem()));
+			this.remove(RemovalReason.DISCARDED);
+		}
+		return super.interact(player, hand);
 	}
 	@Override
 	protected void onBlockCollision(BlockState state)
@@ -125,6 +155,13 @@ public class GrenadeEntity extends ThrownEntity
 		}
 
 	}
+
+	public void playCollisionSound(BlockHitResult blockHitResult)
+	{
+		BlockState state = getWorld().getBlockState(blockHitResult.getBlockPos());
+		this.playSound(state.getSoundGroup().getHitSound(), 0.5f, 1f);
+	}
+
 	public float getExplosionPower()
 	{
 		return explosionPower;
@@ -183,6 +220,13 @@ public class GrenadeEntity extends ThrownEntity
 			else
 				return false;
 	}
+
+	@Override
+	public boolean canBeHitByProjectile()
+	{
+		return true;
+	}
+
 	public void explode()
 	{
 		if (getWorld() instanceof ServerWorld serverWorld)

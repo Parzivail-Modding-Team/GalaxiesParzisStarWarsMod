@@ -23,7 +23,6 @@ import net.minecraft.world.explosion.Explosion;
 
 public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 {
-	public static final int MIN_PICKUP_AGE = 30;
 
 	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
 	{
@@ -48,17 +47,6 @@ public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 	{
 		//getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
 		super.explode();
-	}
-
-	@Override
-	public void tick()
-	{
-		//if (getWorld().isClient() && this.age == 1 && this.isPrimed())
-		//	SoundHelper.playDetonatorEntitySound(this);
-
-		this.speed = this.speed * 0.95f;
-		velocityModified = true;
-		super.tick();
 	}
 
 	@Override
@@ -94,26 +82,11 @@ public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
 			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-			var pos = blockHitResult.getBlockPos();
-			var state = getWorld().getBlockState(pos);
 			this.bounce(blockHitResult);
-
 			if (getVelocity().length() > 0.01f)
-				this.playSound(state.getSoundGroup().getHitSound(), 0.5f, 1f);
+				this.playCollisionSound(blockHitResult);
 		}
-
 		super.onCollision(hitResult);
-	}
-
-	@Override
-	public ActionResult interact(PlayerEntity player, Hand hand)
-	{
-		if (!isPrimed() && age > MIN_PICKUP_AGE && player.getMainHandStack().isEmpty())
-		{
-			player.giveItemStack(new ItemStack(Gadgets.THERMAL_DETONATOR_ITEM));
-			this.remove(RemovalReason.KILLED);
-		}
-		return super.interact(player, hand);
 	}
 
 	@Override
