@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -25,7 +26,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
+import net.minecraft.world.explosion.ExplosionImpl;
 
 public class GrenadeEntity extends ThrownEntity
 {
@@ -153,13 +156,13 @@ public class GrenadeEntity extends ThrownEntity
 			if (Math.abs(getVelocity().length()) > 0.2f)
 				clientYaw = (float)(MathHelper.atan2(getVelocity().y, getVelocity().horizontalLength()) * (double)(180F / (float)Math.PI));
 		}
-
 	}
 
 	public void playCollisionSound(BlockHitResult blockHitResult)
 	{
 		BlockState state = getWorld().getBlockState(blockHitResult.getBlockPos());
-		this.playSound(state.getSoundGroup().getHitSound(), 0.5f, 1f);
+		if (getVelocity().length() > 0.05f)
+			this.playSound(state.getSoundGroup().getHitSound(), 0.5f, 1f);
 	}
 
 	public float getExplosionPower()
@@ -227,11 +230,20 @@ public class GrenadeEntity extends ThrownEntity
 		return true;
 	}
 
+	@Override
+	public boolean canHit()
+	{
+		return true;
+	}
+
 	public void explode()
 	{
 		if (getWorld() instanceof ServerWorld serverWorld)
 		{
-			getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY() + 0.1f, this.getZ(), explosionPower, false, World.ExplosionSourceType.TNT);
+			Vec3d pos = new Vec3d(getX(), getY(), getZ());
+			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, pos, getExplosionPower(), false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			explosion.explode();
+			//getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY() + 0.1f, this.getZ(), explosionPower, false, World.ExplosionSourceType.BLOCK);
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
 		this.discard();

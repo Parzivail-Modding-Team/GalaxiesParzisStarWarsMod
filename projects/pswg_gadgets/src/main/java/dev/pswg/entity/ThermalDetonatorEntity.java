@@ -82,21 +82,14 @@ public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
 			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-			this.bounce(blockHitResult);
-			if (getVelocity().length() > 0.01f)
-				this.playCollisionSound(blockHitResult);
+			bounce(blockHitResult);
+			playCollisionSound(blockHitResult);
 		}
 		super.onCollision(hitResult);
 	}
 
 	@Override
 	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canHit()
 	{
 		return true;
 	}

@@ -1,28 +1,34 @@
 {
-	"values": [
-		{
-			"id": "#minecraft:leaves",
-			"required": false
-		},
-		{
-			"id": "#minecraft:cave_vines",
-			"required": false
-		},
-		{
-			"id": "#minecraft:crops",
-			"required": false
-		},
-		{
-			"id": "#minecraft:flowers",
-			"required": false
-		},
-		{
-			"id": "#minecraft:saplings",
-			"required": false
-		},
-		{
-			"id": "#c:glass_blocks",
-			"required": false
-		}
-	]
+  "values": [
+    {
+      "id": "#minecraft:leaves",
+      "required": false
+    },
+    {
+      "id": "#minecraft:cave_vines",
+      "required": false
+    },
+    {
+      "id": "#minecraft:crops",
+      "required": false
+    },
+    {
+      "id": "#minecraft:flowers",
+      "required": false
+    },
+    {
+      "id": "#minecraft:saplings",
+      "required": false
+    },
+    {
+      "id": "#c:glass_blocks",
+      "required": false
+    },
+    {
+      "id": "#minecraft:ice",
+      "required": false
+    },
+    "minecraft:fern",
+    "minecraft:large_fern"
+  ]
 }

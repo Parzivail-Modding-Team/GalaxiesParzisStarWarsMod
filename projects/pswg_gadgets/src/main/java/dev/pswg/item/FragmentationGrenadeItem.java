@@ -9,7 +9,7 @@ public class FragmentationGrenadeItem extends GrenadeItem
 {
 	public FragmentationGrenadeItem(Item.Settings settings)
 	{
-		super(settings, Gadgets.FRAGMENTATION_GRENADE_ITEM, 150);
+		super(settings, Gadgets.FRAGMENTATION_GRENADE_ITEM, 50);
 	}
 
 	@Override

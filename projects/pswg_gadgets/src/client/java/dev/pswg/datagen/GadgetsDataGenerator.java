@@ -53,6 +53,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
 			register(itemModelGenerator, Gadgets.THERMAL_DETONATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, Gadgets.FRAGMENTATION_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -115,7 +116,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.addOptionalTag(BlockTags.CROPS)
 					.addOptionalTag(BlockTags.FLOWERS)
 					.addOptionalTag(BlockTags.SAPLINGS)
-					.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS);
+					.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS)
+					.addOptionalTag(BlockTags.ICE)
+					.add(Blocks.FERN)
+					.add(Blocks.LARGE_FERN);
 
 			getOrCreateTagBuilder(Gadgets.DETONATES_GRENADE)
 					.add(Blocks.REDSTONE_BLOCK)

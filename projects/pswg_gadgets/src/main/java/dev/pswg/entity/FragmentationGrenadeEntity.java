@@ -33,7 +33,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 	public FragmentationGrenadeEntity(EntityType<FragmentationGrenadeEntity> type, World world)
 	{
 		super(type, world);
-		setExplosionPower(5f);
+		setExplosionPower(4f);
 	}
 
 	@Override
@@ -84,19 +84,12 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 		if (hitResult.getType() == HitResult.Type.BLOCK)
 		{
 			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-			this.bounce(blockHitResult);
-
-			if (getVelocity().length() > 0.01f)
-				playCollisionSound(blockHitResult);
+			bounce(blockHitResult);
+			playCollisionSound(blockHitResult);
 		}
 		super.onCollision(hitResult);
 	}
 
-	@Override
-	public boolean canHit()
-	{
-		return true;
-	}
 	@Override
 	public boolean shouldRender(double distance)
 	{
@@ -104,6 +97,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 			return true;
 		return false;
 	}
+
 	@Override
 	public void tick()
 	{
@@ -129,13 +123,13 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 				for (var player : PlayerLookup.tracking((ServerWorld)getWorld(), this.getBlockPos()))
 					ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
 			}*/
-			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(3, 3, 3), entity -> {
+			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> {
 				return true;
 			});
 			for (LivingEntity entity : entities)
 			{
-				float x = (float)(entity.getX() - getX()) / 3f;
-				float z = (float)(entity.getZ() - getZ()) / 3f;
+				float x = (float)(entity.getX() - getX()) / (getExplosionPower() / 4f * 3f);
+				float z = (float)(entity.getZ() - getZ()) / (getExplosionPower() / 4f * 3f);
 				entity.addVelocity(-x, 0, -z);
 			}
 		}
