@@ -21,6 +21,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
@@ -89,6 +90,21 @@ public final class Gadgets implements GalaxiesAddon
 
 	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("explosion_smoke"), FabricParticleTypes.simple());
 
+	public static final SoundEvent ARM = registerSound(id("shared.arm"));
+	public static final SoundEvent DISARM = registerSound(id("shared.disarm"));
+	public static final SoundEvent THROW = registerSound(id("shared.throw"));
+	public static final SoundEvent THERMAL_DETONATOR_BEEP = registerSound(id("thermaldetonator.beep"));
+	public static final SoundEvent THERMAL_DETONATOR_EXPLOSION = registerSound(id("thermaldetonator.explode"));
+	public static final SoundEvent FRAGMENTATION_GRENADE_EXPLOSION1 = registerSound(id("fragmentationgrenade.explode1"));
+	public static final SoundEvent FRAGMENTATION_GRENADE_EXPLOSION2 = registerSound(id("fragmentationgrenade.explode2"));
+	public static final SoundEvent FRAGMENTATION_GRENADE_EXPLOSION3 = registerSound(id("fragmentationgrenade.explode3"));
+	public static final SoundEvent FRAGMENTATION_GRENADE_EXPLOSION4 = registerSound(id("fragmentationgrenade.explode4"));
+	public static final SoundEvent FRAGMENTATION_GRENADE_BEEP = registerSound(id("fragmentationgrenade.beep"));
+
+	private static SoundEvent registerSound(Identifier id)
+	{
+		return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
+	}
 
 	@Override
 	public void onGalaxiesReady()

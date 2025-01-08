@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -67,14 +68,21 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 
 			int randomNum = Random.create().nextBetween(1, 4);
 
-			/*
+
 			switch (randomNum){
-				case 1: getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.FRAGMENTATION_GRENADE_EXPLOSION1, SoundCategory.PLAYERS, 4f, 1f); break;
-				case 2: getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.FRAGMENTATION_GRENADE_EXPLOSION2, SoundCategory.PLAYERS, 4f, 1f); break;
-				case 3: getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.FRAGMENTATION_GRENADE_EXPLOSION3, SoundCategory.PLAYERS, 4f, 1f); break;
-				case 4: getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.FRAGMENTATION_GRENADE_EXPLOSION4, SoundCategory.PLAYERS, 4f, 1f); break;
+				case 1:
+					getWorld().playSound(null, getBlockPos(), Gadgets.FRAGMENTATION_GRENADE_EXPLOSION1, SoundCategory.PLAYERS, 4f, 1f);
+					break;
+				case 2:
+					getWorld().playSound(null, getBlockPos(), Gadgets.FRAGMENTATION_GRENADE_EXPLOSION2, SoundCategory.PLAYERS, 4f, 1f);
+					break;
+				case 3:
+					getWorld().playSound(null, getBlockPos(), Gadgets.FRAGMENTATION_GRENADE_EXPLOSION3, SoundCategory.PLAYERS, 4f, 1f);
+					break;
+				case 4:
+					getWorld().playSound(null, getBlockPos(), Gadgets.FRAGMENTATION_GRENADE_EXPLOSION4, SoundCategory.PLAYERS, 4f, 1f);
+					break;
 			}
-			*/
 		}
 	}
 
@@ -135,7 +143,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 		}
 		if (EXPLOSION_TICK >= 15)
 		{
-			super.explode();
+			super.explode(new Vec3d(getX(), getY() + 0.1d, getZ()));
 		}
 		if (IS_EXPLODING)
 			EXPLOSION_TICK++;

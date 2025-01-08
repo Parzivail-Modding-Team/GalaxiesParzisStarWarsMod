@@ -29,13 +29,13 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 {
 	public final int baseTicksToExplosion;
 	public final Item item;
-	//public final ExplosionSoundGroup sounds;
+	public final ExplosionSoundGroup sounds;
 
-	public GrenadeItem(Item.Settings settings, Item item, int baseTicksToExplosion)
+	public GrenadeItem(Item.Settings settings, Item item, int baseTicksToExplosion, ExplosionSoundGroup sounds)
 	{
 		super(settings);
 		this.item = item;
-		//this.sounds = sounds;
+		this.sounds = sounds;
 		this.baseTicksToExplosion = baseTicksToExplosion;
 	}
 
@@ -67,6 +67,9 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		grenade.setVelocity(player, player.getPitch(), player.getYaw(), (float)player.getRotationVector().z * 10, 1.0F, 0F);
 
 		world.spawnEntity(grenade);
+
+		if (world.isClient())
+			sounds.playThrowSound(player);
 	}
 
 	/**
@@ -234,19 +237,18 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		ItemStack stack = user.getMainHandStack();
 		if (!stack.contains(Gadgets.PRIMING_TIME))
 		{
-			if(user instanceof PlayerEntity player){
-				player.sendMessage(Text.of("Primed"), true);
-			}
+
 			stack.set(Gadgets.PRIMING_TIME, world.getTime());
 			if (world.isClient())
 			{
-
-				//sounds.playArmSound(user);
+				sounds.playArmSound(user);
 				//sounds.playBeepingSound(user);
 			}
 		}
 		else
 		{
+			if (world.isClient())
+				sounds.playArmSound(user);
 			stack.remove(Gadgets.PRIMING_TIME);
 			//sounds.playDisarmSound(user);
 		}

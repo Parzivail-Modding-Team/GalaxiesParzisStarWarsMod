@@ -9,7 +9,7 @@ public class ThermalDetonatorItem extends GrenadeItem
 {
 	public ThermalDetonatorItem(Item.Settings settings)
 	{
-		super(settings, Gadgets.THERMAL_DETONATOR_ITEM, 150);
+		super(settings, Gadgets.THERMAL_DETONATOR_ITEM, 150, new ThermalDetonatorSoundGroup());
 	}
 
 	@Override

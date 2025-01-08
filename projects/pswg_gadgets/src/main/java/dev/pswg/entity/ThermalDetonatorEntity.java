@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -45,7 +46,7 @@ public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 	@Override
 	public void explode()
 	{
-		//getWorld().playSound(null, getBlockPos(), SwgSounds.Explosives.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
+		getWorld().playSound(null, getBlockPos(), Gadgets.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
 		super.explode();
 	}
 

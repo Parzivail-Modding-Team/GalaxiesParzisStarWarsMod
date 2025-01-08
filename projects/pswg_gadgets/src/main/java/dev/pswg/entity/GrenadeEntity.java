@@ -238,12 +238,16 @@ public class GrenadeEntity extends ThrownEntity
 
 	public void explode()
 	{
+		Vec3d pos = new Vec3d(getX(), getY(), getZ());
+		explode(pos);
+	}
+
+	public void explode(Vec3d pos)
+	{
 		if (getWorld() instanceof ServerWorld serverWorld)
 		{
-			Vec3d pos = new Vec3d(getX(), getY(), getZ());
 			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, pos, getExplosionPower(), false, Explosion.DestructionType.DESTROY_WITH_DECAY);
 			explosion.explode();
-			//getWorld().createExplosion(this, (DamageSource)null, (ExplosionBehavior)null, this.getX(), this.getY() + 0.1f, this.getZ(), explosionPower, false, World.ExplosionSourceType.BLOCK);
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
 		this.discard();
