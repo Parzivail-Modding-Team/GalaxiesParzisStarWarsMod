@@ -100,7 +100,7 @@ public class GrenadeEntity extends ThrownEntity
 		super.tick();
 		if (hasDrag())
 		{
-			this.setVelocity(getVelocity().multiply(0.95d));
+			this.setVelocity(getVelocity().multiply(0.975d));
 			velocityModified = true;
 		}
 	}

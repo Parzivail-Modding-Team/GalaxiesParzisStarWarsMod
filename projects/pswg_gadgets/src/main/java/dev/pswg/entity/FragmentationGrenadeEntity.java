@@ -120,7 +120,18 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 
 		if (EXPLOSION_TICK == 7)
 		{
-			//createSparkParticles(getWorld(), getX(), getY(), getZ(), COLLISION_BELOW);
+			for (int i = 0; i < Random.create().nextBetween(50, 80); i++)
+			{
+				double vx = getWorld().random.nextGaussian() * 0.5;
+				double vz = getWorld().random.nextGaussian() * 0.5;
+				double vy;
+
+				if (COLLISION_BELOW)
+					vy = Math.abs(getWorld().random.nextGaussian() * 0.8);
+				else
+					vy = getWorld().random.nextGaussian() * 0.4;
+				getWorld().addParticle(Gadgets.FRAGMENTATION_GRENADE_SPARK, getX(), getY(), getZ(), vx, vy, vz);
+			}
 			/*if (!getWorld().isClient)
 			{
 				var passedData = new PacketByteBuf(Unpooled.buffer());

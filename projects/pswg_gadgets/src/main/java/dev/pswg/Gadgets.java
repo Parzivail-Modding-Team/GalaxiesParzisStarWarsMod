@@ -89,6 +89,7 @@ public final class Gadgets implements GalaxiesAddon
 	public static final TagKey<DamageType> IGNITES_EXPLOSIVES = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("ignites_explosives"));
 
 	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("explosion_smoke"), FabricParticleTypes.simple());
+	public static final SimpleParticleType FRAGMENTATION_GRENADE_SPARK = Registry.register(Registries.PARTICLE_TYPE, id("fragmentation_grenade_spark"), FabricParticleTypes.simple());
 
 	public static final SoundEvent ARM = registerSound(id("shared.arm"));
 	public static final SoundEvent DISARM = registerSound(id("shared.disarm"));
