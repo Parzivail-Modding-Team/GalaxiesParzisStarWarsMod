@@ -248,7 +248,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		else
 		{
 			if (world.isClient())
-				sounds.playArmSound(user);
+				sounds.playDisarmSound(user);
 			stack.remove(Gadgets.PRIMING_TIME);
 			//sounds.playDisarmSound(user);
 		}

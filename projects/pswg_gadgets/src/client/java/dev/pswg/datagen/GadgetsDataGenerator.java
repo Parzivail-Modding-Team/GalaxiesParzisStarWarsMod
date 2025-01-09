@@ -119,7 +119,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS)
 					.addOptionalTag(BlockTags.ICE)
 					.add(Blocks.FERN)
-					.add(Blocks.LARGE_FERN);
+					.add(Blocks.LARGE_FERN)
+					.add(Blocks.BROWN_MUSHROOM)
+					.add(Blocks.RED_MUSHROOM);
 
 			getOrCreateTagBuilder(Gadgets.DETONATES_GRENADE)
 					.add(Blocks.REDSTONE_BLOCK)

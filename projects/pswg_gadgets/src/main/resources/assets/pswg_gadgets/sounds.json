@@ -1,12 +1,12 @@
 {
 	"shared.arm": {
-		"subtitle": "subtitle.pswg_gadgets.arm",
+		"subtitle": "subtitle.pswg_gadgets.grenade_arm",
 		"sounds": [
 			"pswg_gadgets:arm"
 		]
 	},
 	"shared.disarm": {
-		"subtitle": "subtitle.pswg_gadgets.disarm",
+		"subtitle": "subtitle.pswg_gadgets.grenade_disarm",
 		"sounds": [
 			"pswg_gadgets:disarm"
 		]
@@ -56,7 +56,7 @@
 	"fragmentationgrenade.beep": {
 		"subtitle": "subtitle.pswg_gadgets.fragmentationgrenade.beep",
 		"sounds": [
-			"pswg_gadgets_gadgets:c25_beep_loop"
+			"pswg_gadgets:c25_beep_loop"
 		]
 	}
 }
