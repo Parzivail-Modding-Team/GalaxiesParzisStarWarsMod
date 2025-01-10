@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
@@ -37,6 +38,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 		setExplosionPower(4f);
 	}
 
+
 	@Override
 	public GrenadeItem getItem()
 	{
@@ -54,8 +56,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 		{
 			if (getWorld() instanceof ServerWorld serverWorld)
 			{
-				//for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
-				//	serverWorld.spawnParticles(serverPlayerEntity, SwgParticleTypes.FRAGMENTATION_GRENADE, true, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
+				serverWorld.spawnParticles(Gadgets.FRAGMENTATION_GRENADE_WAVE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
 				var passedData = new PacketByteBuf(Unpooled.buffer());
 				passedData.writeBoolean(true);
 				passedData.writeInt(getId());
@@ -120,7 +121,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 
 		if (EXPLOSION_TICK == 7)
 		{
-			for (int i = 0; i < Random.create().nextBetween(50, 80); i++)
+			for (int i = 0; i < Random.create().nextBetween(70, 100); i++)
 			{
 				double vx = getWorld().random.nextGaussian() * 0.5;
 				double vz = getWorld().random.nextGaussian() * 0.5;
