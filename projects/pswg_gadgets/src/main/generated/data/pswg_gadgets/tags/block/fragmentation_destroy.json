@@ -29,6 +29,11 @@
       "required": false
     },
     "minecraft:fern",
-    "minecraft:large_fern"
+    "minecraft:large_fern",
+    "minecraft:brown_mushroom",
+    "minecraft:red_mushroom",
+    "minecraft:dead_bush",
+    "minecraft:short_grass",
+    "minecraft:tall_grass"
   ]
 }

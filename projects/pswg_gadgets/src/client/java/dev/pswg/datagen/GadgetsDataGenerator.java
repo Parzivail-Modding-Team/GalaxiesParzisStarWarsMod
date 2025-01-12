@@ -72,8 +72,18 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
 			translationBuilder.add(Gadgets.THERMAL_DETONATOR_ITEM, "Thermal Detonator");
+			translationBuilder.add(Gadgets.FRAGMENTATION_GRENADE_ITEM, "Fragmentation Grenade");
 
 			translationBuilder.add(Gadgets.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
+			translationBuilder.add(Gadgets.DETONATES_GRENADE, "Detonates Grenade");
+			translationBuilder.add(Gadgets.GRENADES_TAG, "Grenades");
+
+			translationBuilder.add("subtitle.pswg_gadgets.grenade_throw", "Grenade Thrown");
+			translationBuilder.add("subtitle.pswg_gadgets.grenade_arm", "Grenade Armed");
+			translationBuilder.add("subtitle.pswg_gadgets.grenade_disarm", "Grenade Disarmed");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode", "C25 Grenade Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Thermal Detonator Explosion");
+
 		}
 	}
 
