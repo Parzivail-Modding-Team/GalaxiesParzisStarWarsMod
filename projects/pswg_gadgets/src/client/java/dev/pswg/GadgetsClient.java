@@ -4,6 +4,7 @@ import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.particles.FragmentationGrenadeSparkParticle;
 import dev.pswg.particles.ExplosionSmokeParticle;
 import dev.pswg.particles.FragmentationGrenadeWaveParticle;
+import dev.pswg.particles.SmokeParticle;
 import dev.pswg.renderer.FragmentationGrenadeEntityRenderer;
 import dev.pswg.renderer.ThermalDetonatorEntityRenderer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -24,8 +25,9 @@ public class GadgetsClient implements GalaxiesClientAddon
 		EntityModelLayerRegistry.registerModelLayer(FragmentationGrenadeEntityRenderer.MODEL_LAYER, FragmentationGrenadeEntityRenderer.Model::getTexturedModelData);
 
 		ParticleFactoryRegistry.getInstance().register(Gadgets.EXPLOSION_SMOKE_PARTICLE, ExplosionSmokeParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(Gadgets.FRAGMENTATION_GRENADE_SPARK, FragmentationGrenadeSparkParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(Gadgets.FRAGMENTATION_GRENADE_WAVE, FragmentationGrenadeWaveParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(Gadgets.FRAGMENTATION_GRENADE_SPARK_PARTICLE, FragmentationGrenadeSparkParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(Gadgets.FRAGMENTATION_GRENADE_WAVE_PARTICLE, FragmentationGrenadeWaveParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(Gadgets.SMOKE_PARTICLE, SmokeParticle.Factory::new);
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

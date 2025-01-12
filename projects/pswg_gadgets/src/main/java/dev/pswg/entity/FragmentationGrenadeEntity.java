@@ -6,14 +6,9 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -56,7 +51,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 		{
 			if (getWorld() instanceof ServerWorld serverWorld)
 			{
-				serverWorld.spawnParticles(Gadgets.FRAGMENTATION_GRENADE_WAVE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
+				serverWorld.spawnParticles(Gadgets.FRAGMENTATION_GRENADE_WAVE_PARTICLE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
 				var passedData = new PacketByteBuf(Unpooled.buffer());
 				passedData.writeBoolean(true);
 				passedData.writeInt(getId());
@@ -131,7 +126,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 					vy = Math.abs(getWorld().random.nextGaussian() * 0.8);
 				else
 					vy = getWorld().random.nextGaussian() * 0.4;
-				getWorld().addParticle(Gadgets.FRAGMENTATION_GRENADE_SPARK, getX(), getY(), getZ(), vx, vy, vz);
+				getWorld().addParticle(Gadgets.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
 			}
 			/*if (!getWorld().isClient)
 			{
@@ -143,9 +138,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 				for (var player : PlayerLookup.tracking((ServerWorld)getWorld(), this.getBlockPos()))
 					ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
 			}*/
-			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> {
-				return true;
-			});
+			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> true);
 			for (LivingEntity entity : entities)
 			{
 				float x = (float)(entity.getX() - getX()) / (getExplosionPower() / 4f * 3f);

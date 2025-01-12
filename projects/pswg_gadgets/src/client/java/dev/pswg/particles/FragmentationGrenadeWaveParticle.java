@@ -2,15 +2,11 @@ package dev.pswg.particles;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -33,9 +29,9 @@ public class FragmentationGrenadeWaveParticle extends SpriteBillboardParticle
 		velocityY = vY + (double)(random.nextFloat() / 500.0f);
 		velocityZ = vZ;
 		this.maxAge = 20;
-		this.scale = 1;
+		this.scale = Random.create().nextBetween(0, 5) / 5f + 0.95f;
 		this.setSprite(spriteProvider);
-		this.setColor(Random.create().nextBetween(0, 2) / 2f + 0.98f, Random.create().nextBetween(0, 2) / 2f + 0.98f, 1);
+		this.setColor(Random.create().nextBetween(0, 3) / 3f + 0.97f, Random.create().nextBetween(0, 3) / 3f + 0.98f, 1);
 	}
 
 	private void updateShape(float age)
