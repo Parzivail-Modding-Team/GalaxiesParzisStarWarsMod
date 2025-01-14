@@ -1,6 +1,7 @@
 package dev.pswg.entity;
 
 import dev.pswg.Gadgets;
+import dev.pswg.block.GrenadeBlock;
 import dev.pswg.item.GrenadeItem;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
@@ -20,7 +21,7 @@ import net.minecraft.world.explosion.Explosion;
 
 import java.util.List;
 
-public class FragmentationGrenadeEntity extends GrenadeEntity
+public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 {
 	public boolean IS_EXPLODING = false;
 	public int EXPLOSION_TICK = 0;
@@ -33,6 +34,11 @@ public class FragmentationGrenadeEntity extends GrenadeEntity
 		setExplosionPower(4f);
 	}
 
+	@Override
+	public GrenadeBlock getBlock()
+	{
+		return Gadgets.FRAGMENTATION_GRENADE_BLOCK;
+	}
 
 	@Override
 	public GrenadeItem getItem()

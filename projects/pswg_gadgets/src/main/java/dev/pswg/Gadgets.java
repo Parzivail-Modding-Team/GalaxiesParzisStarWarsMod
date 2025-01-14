@@ -2,6 +2,7 @@ package dev.pswg;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.api.GalaxiesAddon;
+import dev.pswg.block.FragmentationGrenadeBlock;
 import dev.pswg.block.ThermalDetonatorBlock;
 import dev.pswg.entity.FragmentationGrenadeEntity;
 import dev.pswg.entity.ThermalDetonatorEntity;
@@ -80,6 +81,7 @@ public final class Gadgets implements GalaxiesAddon
 	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Settings());
 
 	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.block(id("thermal_detonator_block"), ThermalDetonatorBlock::new, Block.Settings.create());
+	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.block(id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, Block.Settings.create());
 
 	public static final TagKey<Block> FRAGMENTATION_GRENADE_DESTROY = TagKey.of(RegistryKeys.BLOCK, id("fragmentation_destroy"));
 	public static final TagKey<Block> DETONATES_GRENADE = TagKey.of(RegistryKeys.BLOCK, id("detonates_grenade"));
