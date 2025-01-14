@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public class GrenadeEntityWithBlock extends GrenadeEntity
+public abstract class GrenadeEntityWithBlock extends GrenadeEntity
 {
 	public static final int BLOCK_TIME = 300;
 	public int timer = 0;
@@ -18,10 +18,7 @@ public class GrenadeEntityWithBlock extends GrenadeEntity
 		super(entityType, world);
 	}
 
-	public GrenadeBlock getBlock()
-	{
-		return null;
-	}
+	public abstract GrenadeBlock getBlock();
 
 	@Override
 	public void tick()

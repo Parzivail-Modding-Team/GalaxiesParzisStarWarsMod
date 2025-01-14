@@ -30,7 +30,7 @@ import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import net.minecraft.world.explosion.ExplosionImpl;
 
-public class GrenadeEntity extends ThrownEntity
+public abstract class GrenadeEntity extends ThrownEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> PRIMED = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -53,10 +53,7 @@ public class GrenadeEntity extends ThrownEntity
 		builder.add(PRIMED, false);
 	}
 
-	public GrenadeItem getItem()
-	{
-		return null;
-	}
+	public abstract GrenadeItem getItem();
 
 	public int getMinPickUpTime()
 	{

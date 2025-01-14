@@ -262,7 +262,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 	@Override
 	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction)
 	{
-		GrenadeEntity grenade = new GrenadeEntity(getEntityType(), world);
+		GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
 		initializeProjectile(grenade, pos.getX(), pos.getY(), pos.getZ(), 1f, 0);
 		return grenade;
 	}
