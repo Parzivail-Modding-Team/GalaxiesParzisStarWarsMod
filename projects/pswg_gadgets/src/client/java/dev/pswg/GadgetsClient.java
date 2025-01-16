@@ -1,10 +1,7 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
-import dev.pswg.particles.FragmentationGrenadeSparkParticle;
-import dev.pswg.particles.ExplosionSmokeParticle;
-import dev.pswg.particles.FragmentationGrenadeWaveParticle;
-import dev.pswg.particles.SmokeParticle;
+import dev.pswg.particles.*;
 import dev.pswg.renderer.FragmentationGrenadeEntityRenderer;
 import dev.pswg.renderer.ThermalDetonatorEntityRenderer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -28,6 +25,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 		ParticleFactoryRegistry.getInstance().register(Gadgets.FRAGMENTATION_GRENADE_SPARK_PARTICLE, FragmentationGrenadeSparkParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(Gadgets.FRAGMENTATION_GRENADE_WAVE_PARTICLE, FragmentationGrenadeWaveParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(Gadgets.SMOKE_PARTICLE, SmokeParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(Gadgets.NEURAL_GAS_PARTICLE, NeuralGasParticle.Factory::new);
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

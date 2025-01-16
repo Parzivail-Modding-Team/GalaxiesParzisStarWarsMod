@@ -94,6 +94,7 @@ public final class Gadgets implements GalaxiesAddon
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_SPARK_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("fragmentation_grenade_spark"), FabricParticleTypes.simple());
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_WAVE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("fragmentation_grenade_wave"), FabricParticleTypes.simple());
 	public static final SimpleParticleType SMOKE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("smoke"), FabricParticleTypes.simple());
+	public static final SimpleParticleType NEURAL_GAS_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("neural_gas"), FabricParticleTypes.simple());
 
 	public static final SoundEvent ARM = registerSound(id("shared.arm"));
 	public static final SoundEvent DISARM = registerSound(id("shared.disarm"));

@@ -134,7 +134,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(Blocks.RED_MUSHROOM)
 					.add(Blocks.DEAD_BUSH)
 					.add(Blocks.SHORT_GRASS)
-					.add(Blocks.TALL_GRASS);
+					.add(Blocks.TALL_GRASS)
+					.add(Blocks.SNOW);
 
 			getOrCreateTagBuilder(Gadgets.DETONATES_GRENADE)
 					.add(Blocks.REDSTONE_BLOCK)

@@ -1,19 +1,22 @@
 package dev.pswg.particles;
 
+import dev.pswg.PswgGadgetsRenderLayers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.render.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(value = EnvType.CLIENT)
-public class SmokeParticle extends SpriteBillboardParticle
+public class NeuralGasParticle extends SpriteBillboardParticle
 {
 	private final int variant;
-	final int NUM_VARIANTS = 9;
+	final int NUM_VARIANTS = 7;
 
-	protected SmokeParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
+	protected NeuralGasParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z);
 		scale(16f);
@@ -21,7 +24,18 @@ public class SmokeParticle extends SpriteBillboardParticle
 		setBoundingBoxSpacing(0.25f, 0.25f);
 		this.setAlpha(0.95f);
 		variant = random.nextInt(NUM_VARIANTS);
-		this.setColor(0.975f, 0.975f, 1);
+		velocityX = random.nextFloat() / 10f * (random.nextBoolean() ? 1 : -1);
+		velocityZ = random.nextFloat() / 10f * (random.nextBoolean() ? 1 : -1);
+		this.setColor(1, 0.8f, 1);
+	}
+
+	@Override
+	public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta)
+	{
+		var texture = this.sprite.getAtlasId();
+		var mc = MinecraftClient.getInstance();
+		var v = mc.getBufferBuilders().getEffectVertexConsumers().getBuffer(PswgGadgetsRenderLayers.pswgParticle(texture, true));
+		super.render(v, camera, tickDelta);
 	}
 
 	@Override
@@ -39,14 +53,12 @@ public class SmokeParticle extends SpriteBillboardParticle
 		}
 		if (age >= 100)
 		{
-			alpha -= 0.0025f;
+			alpha -= 0.001f;
 		}
-		velocityX += random.nextFloat() / 2000f * (age / 50f) * (random.nextBoolean() ? 1 : -1);
-		velocityZ += random.nextFloat() / 2000f * (age / 50f) * (random.nextBoolean() ? 1 : -1);
-		if (age >= 150)
-		{
-			velocityY += 0.00005;
-		}
+		if (alpha <= 0.25f)
+			velocityY += 1 / 2000f;
+		velocityX *= 0.95;
+		velocityZ *= 0.95;
 		move(velocityX, velocityY, velocityZ);
 	}
 
@@ -70,9 +82,9 @@ public class SmokeParticle extends SpriteBillboardParticle
 		@Override
 		public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 		{
-			SmokeParticle smokeParticle = new SmokeParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
-			smokeParticle.setSprite(spriteProvider);
-			return smokeParticle;
+			NeuralGasParticle neuralGasParticle = new NeuralGasParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
+			neuralGasParticle.setSprite(spriteProvider);
+			return neuralGasParticle;
 		}
 	}
 }
