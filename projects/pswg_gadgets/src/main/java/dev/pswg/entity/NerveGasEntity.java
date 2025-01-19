@@ -8,10 +8,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
-public class NeuralGasEntity extends Entity
+public class NerveGasEntity extends Entity
 {
 
-	public NeuralGasEntity(EntityType<?> type, World world)
+	public NerveGasEntity(EntityType<?> type, World world)
 	{
 		super(type, world);
 	}

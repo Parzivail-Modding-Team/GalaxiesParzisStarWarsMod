@@ -5,8 +5,10 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.block.FragmentationGrenadeBlock;
 import dev.pswg.block.ThermalDetonatorBlock;
 import dev.pswg.entity.FragmentationGrenadeEntity;
+import dev.pswg.entity.NerveGasGrenadeEntity;
 import dev.pswg.entity.ThermalDetonatorEntity;
 import dev.pswg.item.FragmentationGrenadeItem;
+import dev.pswg.item.NerveGasGrenadeItem;
 import dev.pswg.item.ThermalDetonatorItem;
 import dev.pswg.registry.Registrar;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -70,6 +72,14 @@ public final class Gadgets implements GalaxiesAddon
 			                  .dropsNothing()
 
 	);
+	public static final EntityType<NerveGasGrenadeEntity> NERVE_GAS_GRENADE_ENTITY = Registrar.entityType(
+			id("nerve_gas_grenade"),
+			EntityType.Builder.create(NerveGasGrenadeEntity::new, SpawnGroup.MISC)
+			                  .dimensions(0.2f, 0.4f)
+			                  .spawnBoxScale(0.2f)
+			                  .dropsNothing()
+
+	);
 
 	public static final ComponentType<Long> PRIMING_TIME = Registry.register(
 			Registries.DATA_COMPONENT_TYPE,
@@ -79,6 +89,7 @@ public final class Gadgets implements GalaxiesAddon
 
 	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
 	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Settings());
+	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Settings());
 
 	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.block(id("thermal_detonator_block"), ThermalDetonatorBlock::new, Block.Settings.create());
 	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.block(id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, Block.Settings.create());
@@ -94,7 +105,7 @@ public final class Gadgets implements GalaxiesAddon
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_SPARK_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("fragmentation_grenade_spark"), FabricParticleTypes.simple());
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_WAVE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("fragmentation_grenade_wave"), FabricParticleTypes.simple());
 	public static final SimpleParticleType SMOKE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("smoke"), FabricParticleTypes.simple());
-	public static final SimpleParticleType NEURAL_GAS_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("neural_gas"), FabricParticleTypes.simple());
+	public static final SimpleParticleType NERVE_GAS_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("nerve_gas"), FabricParticleTypes.simple());
 
 	public static final SoundEvent ARM = registerSound(id("shared.arm"));
 	public static final SoundEvent DISARM = registerSound(id("shared.disarm"));

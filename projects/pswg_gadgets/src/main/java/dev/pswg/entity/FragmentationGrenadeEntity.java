@@ -47,10 +47,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 	}
 
 	@Override
-	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
-	{
-	}
-	@Override
 	public void explode()
 	{
 		if (!IS_EXPLODING)

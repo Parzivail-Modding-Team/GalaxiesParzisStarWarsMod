@@ -25,7 +25,7 @@ import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileItem
+public abstract class GrenadeItem extends Item implements ILeftClickUsable, ProjectileItem
 {
 	public final int baseTicksToExplosion;
 	public final Item item;
@@ -39,10 +39,7 @@ public class GrenadeItem extends Item implements ILeftClickUsable, ProjectileIte
 		this.baseTicksToExplosion = baseTicksToExplosion;
 	}
 
-	public EntityType<? extends GrenadeEntity> getEntityType()
-	{
-		return null;
-	}
+	public abstract EntityType<? extends GrenadeEntity> getEntityType();
 
 	/**
 	 * Method called when a grenade is thrown by a player, not to be confused with spawnEntity

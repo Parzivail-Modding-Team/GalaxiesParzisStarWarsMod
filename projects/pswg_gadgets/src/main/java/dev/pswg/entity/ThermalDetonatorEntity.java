@@ -71,11 +71,6 @@ public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME,  true, true, x, y, z, m2 * 2, m4, m4, m4, 0);
 		}
 	}
-	@Override
-	public boolean canBeHitByProjectile()
-	{
-		return true;
-	}
 
 	@Override
 	protected void onCollision(HitResult hitResult)
