@@ -19,4 +19,8 @@ public final class TickConstants
 	 * One hour, or 72000 ticks
 	 */
 	public static final int ONE_HOUR = 60 * ONE_MINUTE;
+	/**
+	 * One day, or 1728000 ticks
+	 */
+	public static final int ONE_DAY = 24 * ONE_HOUR;
 }

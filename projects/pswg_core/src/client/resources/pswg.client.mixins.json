@@ -9,6 +9,7 @@
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.ItemStackMixin",
 		"events.DrawContextMixin",
+		"events.GameRendererMixin",
 		"events.InGameHudMixin",
 		"leftuse.MinecraftClientMixin"
 	],
