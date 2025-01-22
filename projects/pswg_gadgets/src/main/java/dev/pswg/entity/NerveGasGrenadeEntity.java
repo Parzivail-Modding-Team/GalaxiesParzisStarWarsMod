@@ -3,10 +3,13 @@ package dev.pswg.entity;
 import dev.pswg.Gadgets;
 import dev.pswg.item.GrenadeItem;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class NerveGasGrenadeEntity extends GrenadeEntity
@@ -22,15 +25,17 @@ public class NerveGasGrenadeEntity extends GrenadeEntity
 	@Override
 	public GrenadeItem getItem()
 	{
-		return null;
+		return Gadgets.NERVE_GAS_GRENADE_ITEM;
 	}
 
 	@Override
 	public void explode()
 	{
+		NerveGasEntity gasEntity = Gadgets.NERVE_GAS.create(getWorld(), SpawnReason.TRIGGERED);
+		gasEntity.setPosition(getX(), getY(), getZ());
 		EXPELLING_GAS = true;
+		getWorld().spawnEntity(gasEntity);
 	}
-
 	@Override
 	protected void onCollision(HitResult hitResult)
 	{

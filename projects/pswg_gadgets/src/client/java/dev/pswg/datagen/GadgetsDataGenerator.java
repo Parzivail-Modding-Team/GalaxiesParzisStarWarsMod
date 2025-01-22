@@ -54,6 +54,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			register(itemModelGenerator, Gadgets.THERMAL_DETONATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, Gadgets.FRAGMENTATION_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, Gadgets.NERVE_GAS_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -84,6 +85,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode", "C25 Grenade Explosion");
 			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Thermal Detonator Explosion");
 
+			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
+
 		}
 	}
 
@@ -103,7 +106,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			getOrCreateTagBuilder(Gadgets.GRENADES_TAG)
 					.add(Gadgets.THERMAL_DETONATOR_ITEM)
-					.add(Gadgets.FRAGMENTATION_GRENADE_ITEM);
+					.add(Gadgets.FRAGMENTATION_GRENADE_ITEM)
+					.add(Gadgets.NERVE_GAS_GRENADE_ITEM);
 		}
 	}
 	/**

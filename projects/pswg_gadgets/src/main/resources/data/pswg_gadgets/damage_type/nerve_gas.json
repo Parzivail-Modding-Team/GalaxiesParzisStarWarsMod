@@ -1,0 +1,6 @@
+{
+	"exhaustion" : 0,
+	"death_message_type" : "default",
+	"message_id": "nerve_gas",
+	"scaling": "never"
+}

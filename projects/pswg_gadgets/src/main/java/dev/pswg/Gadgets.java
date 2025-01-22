@@ -5,8 +5,10 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.block.FragmentationGrenadeBlock;
 import dev.pswg.block.ThermalDetonatorBlock;
 import dev.pswg.entity.FragmentationGrenadeEntity;
+import dev.pswg.entity.NerveGasEntity;
 import dev.pswg.entity.NerveGasGrenadeEntity;
 import dev.pswg.entity.ThermalDetonatorEntity;
+import dev.pswg.entity.effects.IntoxicatedEffect;
 import dev.pswg.item.FragmentationGrenadeItem;
 import dev.pswg.item.NerveGasGrenadeItem;
 import dev.pswg.item.ThermalDetonatorItem;
@@ -17,15 +19,20 @@ import net.minecraft.block.DispenserBlock;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import org.slf4j.Logger;
 
 /**
@@ -80,6 +87,14 @@ public final class Gadgets implements GalaxiesAddon
 			                  .dropsNothing()
 
 	);
+	public static final EntityType<NerveGasEntity> NERVE_GAS = Registrar.entityType(
+			id("nerve_gas"),
+			EntityType.Builder.create(NerveGasEntity::new, SpawnGroup.MISC)
+			                  .dimensions(6f, 3f)
+			                  .spawnBoxScale(0.2f)
+			                  .dropsNothing()
+
+	);
 
 	public static final ComponentType<Long> PRIMING_TIME = Registry.register(
 			Registries.DATA_COMPONENT_TYPE,
@@ -101,6 +116,10 @@ public final class Gadgets implements GalaxiesAddon
 
 	public static final TagKey<DamageType> IGNITES_EXPLOSIVES = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("ignites_explosives"));
 
+	public static final RegistryKey<DamageType> NERVE_GAS_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, id("nerve_gas"));
+
+	public static final RegistryEntry<StatusEffect> INTOXICATED = Registry.registerReference(Registries.STATUS_EFFECT, id("intoxicated"), new IntoxicatedEffect());
+
 	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("explosion_smoke"), FabricParticleTypes.simple());
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_SPARK_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("fragmentation_grenade_spark"), FabricParticleTypes.simple());
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_WAVE_PARTICLE = Registry.register(Registries.PARTICLE_TYPE, id("fragmentation_grenade_wave"), FabricParticleTypes.simple());
@@ -121,6 +140,11 @@ public final class Gadgets implements GalaxiesAddon
 	private static SoundEvent registerSound(Identifier id)
 	{
 		return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
+	}
+
+	public static DamageSource create(World world, RegistryKey<DamageType> key)
+	{
+		return new DamageSource(world.getRegistryManager().getOrThrow(RegistryKeys.DAMAGE_TYPE).getOrThrow(key));
 	}
 
 	@Override

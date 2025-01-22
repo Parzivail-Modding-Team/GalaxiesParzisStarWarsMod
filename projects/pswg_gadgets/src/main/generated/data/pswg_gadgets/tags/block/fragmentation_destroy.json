@@ -34,6 +34,7 @@
     "minecraft:red_mushroom",
     "minecraft:dead_bush",
     "minecraft:short_grass",
-    "minecraft:tall_grass"
+	  "minecraft:tall_grass",
+	  "minecraft:snow"
   ]
 }

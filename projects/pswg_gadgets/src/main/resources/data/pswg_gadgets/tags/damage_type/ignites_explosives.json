@@ -1,0 +1,17 @@
+        {
+            "replace": false,
+            "values": [
+                "minecraft:campfire",
+                "minecraft:dragon_breath",
+                "minecraft:explosion",
+                "minecraft:fireball",
+                "minecraft:fireworks",
+                "minecraft:hot_floor",
+                "minecraft:in_fire",
+                "minecraft:lava",
+                "minecraft:lightning_bolt",
+                "minecraft:on_fire",
+                "minecraft:sonic_boom"
+            ]
+        }
+
