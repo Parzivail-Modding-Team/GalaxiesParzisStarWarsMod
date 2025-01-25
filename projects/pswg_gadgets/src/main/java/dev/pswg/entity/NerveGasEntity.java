@@ -43,11 +43,24 @@ public class NerveGasEntity extends Entity
 	@Override
 	protected void readCustomDataFromNbt(NbtCompound nbt)
 	{
+		var entityIdList = nbt.getList("entityList", 1);
+		var entityToxicityList = nbt.getList("toxicity", 1);
+		var s = entityIdList.size();
+		for (int i = 0; i < s; i++)
+			toxicityIndex.put((LivingEntity)getWorld().getEntityById(entityIdList.getInt(i)), entityToxicityList.getInt(i));
 	}
 
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt)
 	{
+		List<Integer> list = new ArrayList<>(List.of());
+		List<Integer> finalList1 = list;
+		toxicityIndex.forEach((livingEntity, integer) -> finalList1.add(livingEntity.getId()));
+		nbt.putIntArray("entityList", finalList1);
+		list = new ArrayList<>(List.of());
+		List<Integer> finalList = list;
+		toxicityIndex.forEach((livingEntity, integer) -> finalList.add(integer));
+		nbt.putIntArray("toxicity", finalList);
 	}
 
 	@Override
@@ -78,20 +91,26 @@ public class NerveGasEntity extends Entity
 		{
 			toxicityIndex.replace(entity, (int)(toxicityIndex.get(entity) - 3f));
 			if (toxicityIndex.get(entity) <= 3)
+			{
+				entity.removeStatusEffect(Gadgets.INTOXICATED);
 				toxicityIndex.remove(entity);
+			}
 		}
-		if (getWorld() instanceof ServerWorld serverWorld)
+		//if (getWorld() instanceof ServerWorld serverWorld)
 			toxicityIndex.forEach((livingEntity, integer) -> {
 				int amplifier = integer / 50 - 1;
-				if (livingEntity.hasStatusEffect(Gadgets.INTOXICATED))
+				if (integer > 50)
 				{
-					if (livingEntity.getStatusEffect(Gadgets.INTOXICATED).getAmplifier() != amplifier)
+					if (livingEntity.hasStatusEffect(Gadgets.INTOXICATED))
 					{
-						livingEntity.setStatusEffect(new StatusEffectInstance(Gadgets.INTOXICATED, TickConstants.ONE_DAY * 10, amplifier, false, false, true), this);
+						if (livingEntity.getStatusEffect(Gadgets.INTOXICATED).getAmplifier() != amplifier)
+						{
+							livingEntity.setStatusEffect(new StatusEffectInstance(Gadgets.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
+						}
 					}
+					else
+						livingEntity.addStatusEffect(new StatusEffectInstance(Gadgets.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
 				}
-				else
-					livingEntity.addStatusEffect(new StatusEffectInstance(Gadgets.INTOXICATED, TickConstants.ONE_DAY * 10, amplifier, false, false, true), this);
 			});
 
 		super.tick();
