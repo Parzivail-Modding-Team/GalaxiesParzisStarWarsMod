@@ -284,11 +284,23 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		{
 			if (Client.isShipClientControlled(this))
 			{
+				if (clientRotation == null)
+					clientRotation = new Quaternionf(QuatUtil.IDENTITY);
+
+				if (clientInstRotation == null)
+					clientInstRotation = new Quaternionf(QuatUtil.IDENTITY);
+
 				clientPrevRotation = new Quaternionf(clientRotation);
 				clientRotation = new Quaternionf(clientInstRotation);
 			}
 			else
 			{
+				if (viewPrevRotation == null)
+					viewPrevRotation = new Quaternionf(QuatUtil.IDENTITY);
+
+				if (viewRotation == null)
+					viewRotation = new Quaternionf(QuatUtil.IDENTITY);
+
 				clientPrevRotation = new Quaternionf(viewPrevRotation);
 				clientRotation = new Quaternionf(viewRotation);
 			}
