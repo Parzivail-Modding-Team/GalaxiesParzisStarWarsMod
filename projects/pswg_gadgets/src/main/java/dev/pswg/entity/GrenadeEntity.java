@@ -142,6 +142,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{
 				this.setVelocity(0f, 0f, 0f);
+				this.velocityModified = true;
 				return;
 			}
 
