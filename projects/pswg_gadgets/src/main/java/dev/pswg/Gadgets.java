@@ -153,6 +153,8 @@ public final class Gadgets implements GalaxiesAddon
 		// TODO: how to differentiate different modules' versions?
 
 		DispenserBlock.registerProjectileBehavior(Gadgets.THERMAL_DETONATOR_ITEM);
+		DispenserBlock.registerProjectileBehavior(Gadgets.FRAGMENTATION_GRENADE_ITEM);
+		DispenserBlock.registerProjectileBehavior(Gadgets.NERVE_GAS_GRENADE_ITEM);
 
 		LOGGER.info("Module initialized");
 	}
