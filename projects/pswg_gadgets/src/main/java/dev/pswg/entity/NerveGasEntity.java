@@ -6,15 +6,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -73,7 +68,10 @@ public class NerveGasEntity extends Entity
 	public void tick()
 	{
 		if (age > 850)
+		{
+			toxicityIndex.clear();
 			this.discard();
+		}
 		var entities = getWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
 		for (LivingEntity entity : entities)
 		{
@@ -97,9 +95,9 @@ public class NerveGasEntity extends Entity
 			}
 		}
 		//if (getWorld() instanceof ServerWorld serverWorld)
-			toxicityIndex.forEach((livingEntity, integer) -> {
-				int amplifier = integer / 50 - 1;
-				if (integer > 50)
+		toxicityIndex.forEach((livingEntity, toxicity) -> {
+			int amplifier = toxicity / 50 - 1;
+			if (toxicity > 50)
 				{
 					if (livingEntity.hasStatusEffect(Gadgets.INTOXICATED))
 					{
@@ -111,6 +109,10 @@ public class NerveGasEntity extends Entity
 					else
 						livingEntity.addStatusEffect(new StatusEffectInstance(Gadgets.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
 				}
+			if (livingEntity.isDead())
+			{
+				toxicityIndex.remove(livingEntity);
+			}
 			});
 
 		super.tick();
