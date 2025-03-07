@@ -1,6 +1,8 @@
 package dev.pswg.block;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsItems;
+import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -17,13 +19,13 @@ public class FragmentationGrenadeBlock extends GrenadeBlock
 	@Override
 	public EntityType<FragmentationGrenadeEntity> getEntityType()
 	{
-		return Gadgets.FRAGMENTATION_GRENADE_ENTITY;
+		return GadgetsEntities.FRAGMENTATION_GRENADE_ENTITY;
 	}
 
 	@Override
 	public Item getItem()
 	{
-		return Gadgets.FRAGMENTATION_GRENADE_ITEM;
+		return GadgetsItems.FRAGMENTATION_GRENADE_ITEM;
 	}
 
 	@Override

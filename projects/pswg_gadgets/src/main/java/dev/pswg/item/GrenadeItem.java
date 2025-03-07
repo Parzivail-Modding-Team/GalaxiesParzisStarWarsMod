@@ -1,6 +1,7 @@
 package dev.pswg.item;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsItems;
 import dev.pswg.entity.grenades.GrenadeEntity;
 import dev.pswg.world.TickConstants;
 import net.minecraft.entity.Entity;
@@ -47,10 +48,10 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	public void throwEntity(World world, ItemStack stack, PlayerEntity player)
 	{
 		GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
-		if (stack.contains(Gadgets.PRIMING_TIME))
+		if (stack.contains(GadgetsItems.Components.PRIMING_TIME))
 		{
 			// By checking if the stack contains PRIMING_TIME, it's impossible to get an NPE
-			grenade.setLife((int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime()));
+			grenade.setLife((int)(stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getTime()));
 			grenade.setPrimed(true);
 		}
 		else
@@ -75,8 +76,8 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	public void spawnEntity(World world, int power, ItemStack stack, Entity player)
 	{
 		GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
-		grenade.setLife(stack.contains(Gadgets.PRIMING_TIME) ? (int)(stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion - world.getTime()) : 1);
-		grenade.setPrimed(stack.contains(Gadgets.PRIMING_TIME));
+		grenade.setLife(stack.contains(GadgetsItems.Components.PRIMING_TIME) ? (int)(stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getTime()) : 1);
+		grenade.setPrimed(stack.contains(GadgetsItems.Components.PRIMING_TIME));
 		grenade.setExplosionPower(power);
 		grenade.onSpawnPacket(new EntitySpawnS2CPacket(grenade.getId(), grenade.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), grenade.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
 		world.spawnEntity(grenade);
@@ -96,8 +97,9 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		if(entity instanceof PlayerEntity player && stack.contains(Gadgets.PRIMING_TIME)){
-			player.sendMessage(Text.of(""+ (stack.get(Gadgets.PRIMING_TIME)+baseTicksToExplosion - world.getTime())), true);
+		if (entity instanceof PlayerEntity player && stack.contains(GadgetsItems.Components.PRIMING_TIME))
+		{
+			player.sendMessage(Text.of("" + (stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getTime())), true);
 		}
 		if (entity.isOnFire())
 		{
@@ -111,7 +113,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 			teItem.createExplosion(world, power * 2, player);
 		}
 
-		if (stack.contains(Gadgets.PRIMING_TIME) && world.getTime() >= stack.get(Gadgets.PRIMING_TIME) + baseTicksToExplosion )
+		if (stack.contains(GadgetsItems.Components.PRIMING_TIME) && world.getTime() >= stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion)
 		{
 			PlayerEntity player = (PlayerEntity)entity;
 			if(player.getWorld() instanceof ServerWorld serverWorld)
@@ -122,7 +124,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 			{
 				stack.decrement(1);
 			}
-			stack.remove(Gadgets.PRIMING_TIME);
+			stack.remove(GadgetsItems.Components.PRIMING_TIME);
 		}
 		
 		super.inventoryTick(stack, world, entity, slot, selected);
@@ -189,7 +191,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 				throwEntity(world, itemStack, playerEntity);
 
 				//playerEntity.getItemCooldownManager().remove(itemStack.getItem().);
-				stack.remove(Gadgets.PRIMING_TIME);
+				stack.remove(GadgetsItems.Components.PRIMING_TIME);
 
 				//sounds.playThrowSound(playerEntity);
 				if (!inCreative)
@@ -215,7 +217,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 				throwEntity(world, itemStack, playerEntity);
 
 				//playerEntity.getItemCooldownManager().remove(itemStack.getItem().);
-				stack.remove(Gadgets.PRIMING_TIME);
+				stack.remove(GadgetsItems.Components.PRIMING_TIME);
 
 				//sounds.playThrowSound(playerEntity);
 				if (!inCreative)
@@ -232,10 +234,10 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	public ActionResult useLeft(World world, LivingEntity user, Hand hand)
 	{
 		ItemStack stack = user.getMainHandStack();
-		if (!stack.contains(Gadgets.PRIMING_TIME))
+		if (!stack.contains(GadgetsItems.Components.PRIMING_TIME))
 		{
 
-			stack.set(Gadgets.PRIMING_TIME, world.getTime());
+			stack.set(GadgetsItems.Components.PRIMING_TIME, world.getTime());
 			if (world.isClient())
 			{
 				sounds.playArmSound(user);
@@ -246,7 +248,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 		{
 			if (world.isClient())
 				sounds.playDisarmSound(user);
-			stack.remove(Gadgets.PRIMING_TIME);
+			stack.remove(GadgetsItems.Components.PRIMING_TIME);
 			//sounds.playDisarmSound(user);
 		}
 		return ActionResult.SUCCESS;

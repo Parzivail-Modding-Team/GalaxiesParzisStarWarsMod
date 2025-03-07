@@ -1,6 +1,7 @@
 package dev.pswg.entity;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.world.TickConstants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -90,7 +91,7 @@ public class NerveGasEntity extends Entity
 			toxicityIndex.replace(entity, (int)(toxicityIndex.get(entity) - 3f));
 			if (toxicityIndex.get(entity) <= 3)
 			{
-				entity.removeStatusEffect(Gadgets.INTOXICATED);
+				entity.removeStatusEffect(GadgetsEffects.INTOXICATED);
 				toxicityIndex.remove(entity);
 			}
 		}
@@ -99,15 +100,15 @@ public class NerveGasEntity extends Entity
 			int amplifier = toxicity / 50 - 1;
 			if (toxicity > 50)
 				{
-					if (livingEntity.hasStatusEffect(Gadgets.INTOXICATED))
+					if (livingEntity.hasStatusEffect(GadgetsEffects.INTOXICATED))
 					{
-						if (livingEntity.getStatusEffect(Gadgets.INTOXICATED).getAmplifier() != amplifier)
+						if (livingEntity.getStatusEffect(GadgetsEffects.INTOXICATED).getAmplifier() != amplifier)
 						{
-							livingEntity.setStatusEffect(new StatusEffectInstance(Gadgets.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
+							livingEntity.setStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
 						}
 					}
 					else
-						livingEntity.addStatusEffect(new StatusEffectInstance(Gadgets.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
+						livingEntity.addStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
 				}
 			if (livingEntity.isDead())
 			{

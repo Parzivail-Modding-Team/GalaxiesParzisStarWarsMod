@@ -1,6 +1,8 @@
 package dev.pswg.entity.grenades;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.item.GrenadeItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -115,7 +117,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 	@Override
 	protected void onBlockCollision(BlockState state)
 	{
-		if (state.isIn(Gadgets.DETONATES_GRENADE))
+		if (state.isIn(GadgetsBlocks.Tags.DETONATES_GRENADE))
 			explode();
 		super.onBlockCollision(state);
 	}
@@ -212,7 +214,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 				this.shouldExplode = true;
 			}
 		}
-		else if (source.isIn(Gadgets.IGNITES_EXPLOSIVES))
+		else if (source.isIn(GadgetsDamage.DamageTags.IGNITES_EXPLOSIVES))
 			if (!this.shouldExplode)
 				this.explode();
 

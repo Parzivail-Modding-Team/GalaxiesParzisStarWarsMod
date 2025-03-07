@@ -1,6 +1,7 @@
 package dev.pswg.entity.effects;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.entity.GadgetsDamage;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -32,6 +33,6 @@ public class IntoxicatedEffect extends StatusEffect
 	@Override
 	public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier)
 	{
-		return entity.damage(world, Gadgets.create(world, Gadgets.NERVE_GAS_DAMAGE_TYPE), (amplifier) / 8f);
+		return entity.damage(world, GadgetsDamage.create(world, GadgetsDamage.NERVE_GAS_DAMAGE_TYPE), (amplifier) / 8f);
 	}
 }

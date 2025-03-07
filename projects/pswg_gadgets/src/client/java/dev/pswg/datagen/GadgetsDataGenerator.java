@@ -1,6 +1,7 @@
 package dev.pswg.datagen;
 
-import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -52,9 +53,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
-			register(itemModelGenerator, Gadgets.THERMAL_DETONATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, Gadgets.FRAGMENTATION_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, Gadgets.NERVE_GAS_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, GadgetsItems.THERMAL_DETONATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, GadgetsItems.FRAGMENTATION_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, GadgetsItems.NERVE_GAS_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -72,12 +73,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
-			translationBuilder.add(Gadgets.THERMAL_DETONATOR_ITEM, "Thermal Detonator");
-			translationBuilder.add(Gadgets.FRAGMENTATION_GRENADE_ITEM, "Fragmentation Grenade");
+			translationBuilder.add(GadgetsItems.THERMAL_DETONATOR_ITEM, "Thermal Detonator");
+			translationBuilder.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM, "Fragmentation Grenade");
 
-			translationBuilder.add(Gadgets.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
-			translationBuilder.add(Gadgets.DETONATES_GRENADE, "Detonates Grenade");
-			translationBuilder.add(Gadgets.GRENADES_TAG, "Grenades");
+			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
+			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
+			translationBuilder.add(GadgetsItems.Tags.GRENADES_TAG, "Grenades");
 
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_throw", "Grenade Thrown");
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_arm", "Grenade Armed");
@@ -104,10 +105,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			getOrCreateTagBuilder(Gadgets.GRENADES_TAG)
-					.add(Gadgets.THERMAL_DETONATOR_ITEM)
-					.add(Gadgets.FRAGMENTATION_GRENADE_ITEM)
-					.add(Gadgets.NERVE_GAS_GRENADE_ITEM);
+			getOrCreateTagBuilder(GadgetsItems.Tags.GRENADES_TAG)
+					.add(GadgetsItems.THERMAL_DETONATOR_ITEM)
+					.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM)
+					.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM);
 		}
 	}
 	/**
@@ -124,7 +125,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			getOrCreateTagBuilder(Gadgets.FRAGMENTATION_GRENADE_DESTROY)
+			getOrCreateTagBuilder(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY)
 					.addOptionalTag(BlockTags.LEAVES)
 					.addOptionalTag(BlockTags.CAVE_VINES)
 					.addOptionalTag(BlockTags.CROPS)
@@ -141,7 +142,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(Blocks.TALL_GRASS)
 					.add(Blocks.SNOW);
 
-			getOrCreateTagBuilder(Gadgets.DETONATES_GRENADE)
+			getOrCreateTagBuilder(GadgetsBlocks.Tags.DETONATES_GRENADE)
 					.add(Blocks.REDSTONE_BLOCK)
 					.add(Blocks.REDSTONE_TORCH)
 					.add(Blocks.REDSTONE_WALL_TORCH)

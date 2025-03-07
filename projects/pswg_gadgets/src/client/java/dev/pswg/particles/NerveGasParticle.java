@@ -56,6 +56,7 @@ public class NerveGasParticle extends SpriteBillboardParticle
 		float f = (float)(MathHelper.lerp((double)tickDelta, this.prevPosX, this.x) - vec3d.getX());
 		float g = (float)(MathHelper.lerp((double)tickDelta, this.prevPosY, this.y) - vec3d.getY());
 		float h = (float)(MathHelper.lerp((double)tickDelta, this.prevPosZ, this.z) - vec3d.getZ());
+
 		Vector3f[] corners = new Vector3f[] {
 				new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)
 		};
@@ -90,7 +91,6 @@ public class NerveGasParticle extends SpriteBillboardParticle
 		 .texture(k, n)
 		 .color(this.red, this.green, this.blue, this.alpha)
 		 .light(o);
-		//super.render(v, camera, tickDelta);
 	}
 
 	@Override

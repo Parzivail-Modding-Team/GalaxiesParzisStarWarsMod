@@ -1,6 +1,9 @@
 package dev.pswg.entity.grenades;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsItems;
+import dev.pswg.container.GadgetsParticleTypes;
+import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.entity.NerveGasEntity;
 import dev.pswg.item.GrenadeItem;
 import net.minecraft.entity.EntityType;
@@ -9,6 +12,7 @@ import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 public class NerveGasGrenadeEntity extends GrenadeEntity
@@ -24,13 +28,13 @@ public class NerveGasGrenadeEntity extends GrenadeEntity
 	@Override
 	public GrenadeItem getItem()
 	{
-		return Gadgets.NERVE_GAS_GRENADE_ITEM;
+		return GadgetsItems.NERVE_GAS_GRENADE_ITEM;
 	}
 
 	@Override
 	public void explode()
 	{
-		NerveGasEntity gasEntity = Gadgets.NERVE_GAS.create(getWorld(), SpawnReason.TRIGGERED);
+		NerveGasEntity gasEntity = GadgetsEntities.NERVE_GAS.create(getWorld(), SpawnReason.TRIGGERED);
 		gasEntity.setPosition(getX(), getY(), getZ());
 		EXPELLING_GAS = true;
 		getWorld().spawnEntity(gasEntity);
@@ -54,7 +58,7 @@ public class NerveGasGrenadeEntity extends GrenadeEntity
 		{
 			if (getWorld() instanceof ServerWorld serverWorld)
 			{
-				serverWorld.spawnParticles(Gadgets.NERVE_GAS_PARTICLE, getX(), getY() + 1, getZ(), 4, 0.05d, 0.5, 0.05d, 0);
+				serverWorld.spawnParticles(GadgetsParticleTypes.NERVE_GAS_PARTICLE, getX(), getY() + 1, getZ(), 4, Random.create().nextBetween(1, 10) / 100d, 0.5d, Random.create().nextBetween(1, 10) / 100d, 0);
 			}
 			EXPELLING_TIME++;
 		}

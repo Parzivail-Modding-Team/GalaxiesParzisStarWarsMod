@@ -2,6 +2,10 @@ package dev.pswg.entity.grenades;
 
 import dev.pswg.Gadgets;
 import dev.pswg.block.GrenadeBlock;
+import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.container.GadgetsItems;
+import dev.pswg.container.GadgetsParticleTypes;
+import dev.pswg.container.GadgetsSounds;
 import dev.pswg.item.GrenadeItem;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
@@ -37,13 +41,13 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 	@Override
 	public GrenadeBlock getBlock()
 	{
-		return Gadgets.FRAGMENTATION_GRENADE_BLOCK;
+		return GadgetsBlocks.FRAGMENTATION_GRENADE_BLOCK;
 	}
 
 	@Override
 	public GrenadeItem getItem()
 	{
-		return Gadgets.FRAGMENTATION_GRENADE_ITEM;
+		return GadgetsItems.FRAGMENTATION_GRENADE_ITEM;
 	}
 
 	@Override
@@ -53,7 +57,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 		{
 			if (getWorld() instanceof ServerWorld serverWorld)
 			{
-				serverWorld.spawnParticles(Gadgets.FRAGMENTATION_GRENADE_WAVE_PARTICLE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
+				serverWorld.spawnParticles(GadgetsParticleTypes.FRAGMENTATION_GRENADE_WAVE_PARTICLE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
 				var passedData = new PacketByteBuf(Unpooled.buffer());
 				passedData.writeBoolean(true);
 				passedData.writeInt(getId());
@@ -69,16 +73,16 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 
 			switch (randomNum){
 				case 1:
-					getWorld().playSound(null, getBlockPos(), Gadgets.FRAGMENTATION_GRENADE_EXPLOSION1, SoundCategory.PLAYERS, 4f, 1f);
+					getWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION1, SoundCategory.PLAYERS, 4f, 1f);
 					break;
 				case 2:
-					getWorld().playSound(null, getBlockPos(), Gadgets.FRAGMENTATION_GRENADE_EXPLOSION2, SoundCategory.PLAYERS, 4f, 1f);
+					getWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION2, SoundCategory.PLAYERS, 4f, 1f);
 					break;
 				case 3:
-					getWorld().playSound(null, getBlockPos(), Gadgets.FRAGMENTATION_GRENADE_EXPLOSION3, SoundCategory.PLAYERS, 4f, 1f);
+					getWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION3, SoundCategory.PLAYERS, 4f, 1f);
 					break;
 				case 4:
-					getWorld().playSound(null, getBlockPos(), Gadgets.FRAGMENTATION_GRENADE_EXPLOSION4, SoundCategory.PLAYERS, 4f, 1f);
+					getWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION4, SoundCategory.PLAYERS, 4f, 1f);
 					break;
 			}
 		}
@@ -128,7 +132,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 					vy = Math.abs(getWorld().random.nextGaussian() * 0.8);
 				else
 					vy = getWorld().random.nextGaussian() * 0.4;
-				getWorld().addParticle(Gadgets.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
+				getWorld().addParticle(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
 			}
 			/*if (!getWorld().isClient)
 			{
@@ -159,7 +163,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 	@Override
 	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
 	{
-		return state.isIn(Gadgets.FRAGMENTATION_GRENADE_DESTROY);
+		return state.isIn(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY);
 	}
 
 }

@@ -1,6 +1,6 @@
 package dev.pswg.item;
 
-import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsSounds;
 import net.minecraft.entity.LivingEntity;
 
 public abstract class ExplosionSoundGroup
@@ -20,19 +20,19 @@ class ThermalDetonatorSoundGroup extends ExplosionSoundGroup
 	@Override
 	public void playArmSound(LivingEntity player)
 	{
-		player.playSound(Gadgets.ARM, 1f, 1f);
+		player.playSound(GadgetsSounds.ARM, 1f, 1f);
 	}
 
 	@Override
 	public void playDisarmSound(LivingEntity player)
 	{
-		player.playSound(Gadgets.DISARM, 1f, 1f);
+		player.playSound(GadgetsSounds.DISARM, 1f, 1f);
 	}
 
 	@Override
 	public void playThrowSound(LivingEntity player)
 	{
-		player.playSound(Gadgets.THROW, 1f, 1f);
+		player.playSound(GadgetsSounds.THROW, 1f, 1f);
 	}
 
 	@Override
@@ -48,19 +48,19 @@ class FragmentationGrenadeSoundGroup extends ExplosionSoundGroup
 	@Override
 	public void playArmSound(LivingEntity player)
 	{
-		player.playSound(Gadgets.ARM, 1f, 1f);
+		player.playSound(GadgetsSounds.ARM, 1f, 1f);
 	}
 
 	@Override
 	public void playDisarmSound(LivingEntity player)
 	{
-		player.playSound(Gadgets.DISARM, 1f, 1f);
+		player.playSound(GadgetsSounds.DISARM, 1f, 1f);
 	}
 
 	@Override
 	public void playThrowSound(LivingEntity player)
 	{
-		player.playSound(Gadgets.THROW, 1f, 1f);
+		player.playSound(GadgetsSounds.THROW, 1f, 1f);
 	}
 
 	@Override
