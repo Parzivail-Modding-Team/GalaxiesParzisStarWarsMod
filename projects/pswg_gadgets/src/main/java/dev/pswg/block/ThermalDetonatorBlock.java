@@ -1,7 +1,7 @@
 package dev.pswg.block;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.ThermalDetonatorEntity;
+import dev.pswg.entity.grenades.ThermalDetonatorEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.util.shape.VoxelShape;

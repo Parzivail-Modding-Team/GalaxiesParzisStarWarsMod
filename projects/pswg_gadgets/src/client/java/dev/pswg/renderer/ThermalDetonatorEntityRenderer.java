@@ -1,7 +1,7 @@
 package dev.pswg.renderer;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.ThermalDetonatorEntity;
+import dev.pswg.entity.grenades.ThermalDetonatorEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;

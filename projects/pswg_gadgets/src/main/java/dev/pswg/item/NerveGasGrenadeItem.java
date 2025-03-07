@@ -1,7 +1,7 @@
 package dev.pswg.item;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.GrenadeEntity;
+import dev.pswg.entity.grenades.GrenadeEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 

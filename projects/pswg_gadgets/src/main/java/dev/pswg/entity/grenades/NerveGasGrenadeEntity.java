@@ -1,6 +1,7 @@
-package dev.pswg.entity;
+package dev.pswg.entity.grenades;
 
 import dev.pswg.Gadgets;
+import dev.pswg.entity.NerveGasEntity;
 import dev.pswg.item.GrenadeItem;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -8,8 +9,6 @@ import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class NerveGasGrenadeEntity extends GrenadeEntity

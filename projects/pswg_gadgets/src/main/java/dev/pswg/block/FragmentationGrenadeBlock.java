@@ -1,7 +1,7 @@
 package dev.pswg.block;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.FragmentationGrenadeEntity;
+import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.util.shape.VoxelShape;

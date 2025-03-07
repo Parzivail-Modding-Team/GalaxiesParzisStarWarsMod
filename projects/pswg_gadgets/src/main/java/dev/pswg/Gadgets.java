@@ -4,10 +4,10 @@ import com.mojang.serialization.Codec;
 import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.block.FragmentationGrenadeBlock;
 import dev.pswg.block.ThermalDetonatorBlock;
-import dev.pswg.entity.FragmentationGrenadeEntity;
+import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
 import dev.pswg.entity.NerveGasEntity;
-import dev.pswg.entity.NerveGasGrenadeEntity;
-import dev.pswg.entity.ThermalDetonatorEntity;
+import dev.pswg.entity.grenades.NerveGasGrenadeEntity;
+import dev.pswg.entity.grenades.ThermalDetonatorEntity;
 import dev.pswg.entity.effects.IntoxicatedEffect;
 import dev.pswg.item.FragmentationGrenadeItem;
 import dev.pswg.item.NerveGasGrenadeItem;
@@ -69,7 +69,6 @@ public final class Gadgets implements GalaxiesAddon
 			                  .dimensions(0.2f, 0.4f)
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
-
 	);
 	public static final EntityType<ThermalDetonatorEntity> THERMAL_DETONATOR_ENTITY = Registrar.entityType(
 			id("thermal_detonator"),
@@ -85,7 +84,6 @@ public final class Gadgets implements GalaxiesAddon
 			                  .dimensions(0.2f, 0.4f)
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
-
 	);
 	public static final EntityType<NerveGasEntity> NERVE_GAS = Registrar.entityType(
 			id("nerve_gas"),
@@ -93,7 +91,6 @@ public final class Gadgets implements GalaxiesAddon
 			                  .dimensions(6f, 3f)
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
-
 	);
 
 	public static final ComponentType<Long> PRIMING_TIME = Registry.register(

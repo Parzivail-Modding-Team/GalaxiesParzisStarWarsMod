@@ -1,8 +1,7 @@
 package dev.pswg.renderer;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.FragmentationGrenadeEntity;
-import dev.pswg.entity.NerveGasGrenadeEntity;
+import dev.pswg.entity.grenades.NerveGasGrenadeEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;

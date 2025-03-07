@@ -1,4 +1,4 @@
-package dev.pswg.entity;
+package dev.pswg.entity.grenades;
 
 import dev.pswg.Gadgets;
 import dev.pswg.block.GrenadeBlock;
