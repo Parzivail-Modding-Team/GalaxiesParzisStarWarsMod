@@ -1,6 +1,6 @@
 package dev.pswg.particle;
 
-import dev.pswg.util.MathUtil;
+import dev.pswg.util.math.MathUtil;
 import dev.pswg.util.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

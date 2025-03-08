@@ -1,7 +1,7 @@
 package dev.pswg.particles;
 
 import dev.pswg.particle.CrossPointingParticle;
-import dev.pswg.util.Ease;
+import dev.pswg.util.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.Particle;

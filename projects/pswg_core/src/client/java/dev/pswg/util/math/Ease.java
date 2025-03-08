@@ -1,4 +1,4 @@
-package dev.pswg.util;
+package dev.pswg.util.math;
 
 public class Ease
 {
