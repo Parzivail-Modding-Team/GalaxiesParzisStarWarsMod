@@ -148,6 +148,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(Blocks.REDSTONE_WALL_TORCH)
 					.add(Blocks.FIRE)
 					.add(Blocks.SOUL_FIRE);
+
+			getOrCreateTagBuilder(GadgetsBlocks.Tags.BOUNCY)
+					.add(Blocks.HONEY_BLOCK)
+					.add(Blocks.SLIME_BLOCK);
 		}
 	}
 }

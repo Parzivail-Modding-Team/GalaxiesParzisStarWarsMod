@@ -134,10 +134,8 @@ public abstract class GrenadeEntity extends ThrownEntity
 			var restitution = MathHelper.clamp(0.4 - 0.25 / hardness, 0.1, 1);
 			var blockMultiplier = 1.;
 
-			if (getWorld().getBlockState(blockHit.getBlockPos()).getBlock() == Blocks.SLIME_BLOCK)
-				blockMultiplier = 3;
-			if (getWorld().getBlockState(blockHit.getBlockPos()).getBlock() == Blocks.HONEY_BLOCK)
-				blockMultiplier = 2;
+			if (getWorld().getBlockState(blockHit.getBlockPos()).isIn(GadgetsBlocks.Tags.BOUNCY))
+				blockMultiplier = 2.5;
 			if (getWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.WOOL) || getWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.LEAVES))
 				blockMultiplier = 0.75;
 
