@@ -68,6 +68,17 @@ public class NerveGasEntity extends Entity
 	@Override
 	public void tick()
 	{
+		int toxicityIncrement = 0;
+		if (age > 50 && age < 800)
+		{
+			toxicityIncrement++;
+		}
+		if (age > 200 && age < 700)
+		{
+			toxicityIncrement++;
+		}
+
+
 		if (age > 850)
 		{
 			toxicityIndex.clear();
@@ -77,7 +88,7 @@ public class NerveGasEntity extends Entity
 		for (LivingEntity entity : entities)
 		{
 			if (toxicityIndex.containsKey(entity))
-				toxicityIndex.replace(entity, toxicityIndex.get(entity) + 1);
+				toxicityIndex.replace(entity, toxicityIndex.get(entity) + toxicityIncrement);
 			else
 				toxicityIndex.put(entity, 5);
 		}
