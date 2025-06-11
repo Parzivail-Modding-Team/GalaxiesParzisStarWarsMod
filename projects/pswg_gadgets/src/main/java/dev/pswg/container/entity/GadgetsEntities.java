@@ -1,7 +1,7 @@
 package dev.pswg.container.entity;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.NerveGasEntity;
+import dev.pswg.entity.gas.NerveGasEntity;
 import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
 import dev.pswg.entity.grenades.NerveGasGrenadeEntity;
 import dev.pswg.entity.grenades.ThermalDetonatorEntity;
@@ -36,7 +36,7 @@ public class GadgetsEntities
 	public static final EntityType<NerveGasEntity> NERVE_GAS = Registrar.entityType(
 			Gadgets.id("nerve_gas"),
 			EntityType.Builder.create(NerveGasEntity::new, SpawnGroup.MISC)
-			                  .dimensions(6f, 3f)
+			                  .dimensions(2f, 2f)
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
 	);

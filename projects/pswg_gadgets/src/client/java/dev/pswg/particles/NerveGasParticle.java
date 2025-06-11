@@ -9,6 +9,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
@@ -29,20 +30,30 @@ public class NerveGasParticle extends SpriteBillboardParticle
 	protected NerveGasParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z);
-		scale(8f);
+		scale(1f);
 
 		setBoundingBoxSpacing(0f, 0f);
 		this.setAlpha(0.05f);
 		shrinkSpeed = (float)random.nextBetween(1, 10) / 2000f;
-		growthSpeed = (float)random.nextBetween(1, 10) / 100f;
-		billowing = (float)random.nextBetween(1, 10) / 25000f;
+		growthSpeed = (float)random.nextBetween(1, 5) / 200f;
+		billowing = (float)random.nextBetween(1, 10) / 2500f;
 		variant = random.nextInt(NUM_VARIANTS);
 		dirX = random.nextBoolean() ? 1 : -1;
 		dirZ = random.nextBoolean() ? 1 : -1;
-		velocityX = random.nextFloat() / 8f * dirX;
-		velocityZ = random.nextFloat() / 8f * dirZ;
+		velocityX = random.nextFloat() / 16f * dirX;
+		velocityZ = random.nextFloat() / 16f * dirZ;
 		age = 0;
+		maxAge = 2000;
 		this.setColor(1f, 0.9f, 0.6f);
+	}
+
+	@Override
+	protected int getBrightness(float tint)
+	{
+		BlockPos blockPos = BlockPos.ofFloored(this.x, this.y, this.z);
+		int light = this.world.isChunkLoaded(blockPos) ? WorldRenderer.getLightmapCoordinates(this.world, blockPos) : 0;
+		return Math.max(light, 80);
+		//return light;
 	}
 
 	@Override
@@ -65,7 +76,7 @@ public class NerveGasParticle extends SpriteBillboardParticle
 		for (int j = 0; j < 4; ++j)
 		{
 			Vector3f vector3f = corners[j];
-			vector3f.rotate(camera.getRotation().rotateZ((float)Math.toRadians((float)age * billowing)));
+			vector3f.rotate(camera.getRotation().rotateZ((float)Math.toRadians(billowing)));
 			vector3f.mul(size);
 			vector3f.add(f, g, h);
 		}
@@ -106,16 +117,16 @@ public class NerveGasParticle extends SpriteBillboardParticle
 			markDead();
 			return;
 		}
-		if (age <= 100)
+		if (age <= 200)
 		{
-			if (alpha <= 0.9f)
-				alpha += 0.025f;
+			if (alpha <= 0.15f)
+				alpha += 0.003125f;
 			if (scale <= 2)
 				scale += growthSpeed;
 		}
 		if (age >= 300)
 		{
-			alpha -= 0.00125f;
+			alpha -= 0.000125f;
 		}
 		if (age >= 550)
 		{
