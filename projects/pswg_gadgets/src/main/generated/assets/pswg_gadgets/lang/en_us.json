@@ -1,13 +1,16 @@
 {
   "effect.pswg_gadgets.intoxicated": "Intoxicated",
   "item.pswg_gadgets.fragmentation_grenade": "Fragmentation Grenade",
+  "item.pswg_gadgets.nerve_gas_grenade": "FEX-M3 Gas Grenade",
   "item.pswg_gadgets.thermal_detonator": "Thermal Detonator",
   "subtitle.pswg_gadgets.fragmentationgrenade.explode": "C25 Grenade Explosion",
   "subtitle.pswg_gadgets.grenade_arm": "Grenade Armed",
   "subtitle.pswg_gadgets.grenade_disarm": "Grenade Disarmed",
   "subtitle.pswg_gadgets.grenade_throw": "Grenade Thrown",
   "subtitle.pswg_gadgets.thermaldetonator.explode": "Thermal Detonator Explosion",
+  "tag.block.pswg_gadgets.bouncy": "Bouncy",
   "tag.block.pswg_gadgets.detonates_grenade": "Detonates Grenade",
   "tag.block.pswg_gadgets.fragmentation_destroy": "Fragmenetation Grenade Destroy",
+  "tag.block.pswg_gadgets.gass_pass_through": "Gass Pass Through",
   "tag.item.pswg_gadgets.grenades": "Grenades"
 }

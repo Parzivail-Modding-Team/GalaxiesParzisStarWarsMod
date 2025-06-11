@@ -1,8 +1,10 @@
 package dev.pswg.entity.gas;
 
+import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.world.TickConstants;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -25,7 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NerveGasEntity extends Entity
 {
-	private final int DEFAULT_VOLUME = 400; // how many blocks the gas can exist on times 10
+	private final int DEFAULT_VOLUME = 400;
+	/// how many blocks the gas can expand to times 10
 
 	public ConcurrentMap<LivingEntity, Integer> toxicityIndex;
 	public ConcurrentMap<BlockPos, Integer> blockConcentration;
@@ -63,11 +66,6 @@ public class NerveGasEntity extends Entity
 	@Override
 	protected void readCustomDataFromNbt(NbtCompound nbt)
 	{
-		//var entityIdList = nbt.getList("entityList", 1);
-		//var entityToxicityList = nbt.getList("toxicity", 1);
-		//var s = entityIdList.size();
-		//for (int i = 0; i < s; i++)
-		//	toxicityIndex.put((LivingEntity)getWorld().getEntityById(entityIdList.getInt(i)), entityToxicityList.getInt(i));
 
 		var xList = nbt.getList("xList", 1);
 		var yList = nbt.getList("yList", 1);
@@ -81,22 +79,17 @@ public class NerveGasEntity extends Entity
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt)
 	{
-		//List<Integer> idList = new ArrayList<>(List.of());
-		//toxicityIndex.keySet().forEach(livingEntity -> idList.add(livingEntity.getId()));
-		//nbt.putIntArray("entityList", idList);
-		//nbt.putIntArray("toxicity", toxicityIndex.values().stream().toList());
 
 		List<Integer> xList = new ArrayList<>(List.of());
 		List<Integer> yList = new ArrayList<>(List.of());
 		List<Integer> zList = new ArrayList<>(List.of());
-		List<Integer> concentrationList = new ArrayList<>(List.of());
 
 		blockConcentration.keySet().forEach(blockPos -> {
 			xList.add(blockPos.getX());
 			yList.add(blockPos.getY());
 			zList.add(blockPos.getZ());
 		});
-		concentrationList = blockConcentration.values().stream().toList();
+		List<Integer> concentrationList = blockConcentration.values().stream().toList();
 		nbt.putIntArray("xList", xList);
 		nbt.putIntArray("yList", yList);
 		nbt.putIntArray("zList", zList);
@@ -117,10 +110,9 @@ public class NerveGasEntity extends Entity
 		super.onRemoved();
 	}
 
-	@Override
-	public void tick()
+	public void debug()
 	{
-		if (this.getWorld() instanceof ServerWorld serverWorld)
+		if (getWorld() instanceof ServerWorld serverWorld)
 		{
 			AtomicInteger totalVolume = new AtomicInteger();
 			AtomicInteger maxConcentration = new AtomicInteger(-1);
@@ -133,41 +125,43 @@ public class NerveGasEntity extends Entity
 					minConcentration.set(integer);
 			});
 
-			/*for (PlayerEntity player : serverWorld.getPlayers())
-			{
+			for (PlayerEntity player : serverWorld.getPlayers())
 				player.sendMessage(Text.of("vol: " + totalVolume + "  count: " + (blockConcentration.size()) + " maxConc: " + maxConcentration + " avgConc: " + volume / Math.max(blockConcentration.size(), 1) + " minConc: " + minConcentration), true);
-				if (age % 20 == 0)
-					player.sendMessage(Text.of("blocks: " + blockConcentration.keySet().toString()), false);
-			}*/
+		}
+	}
 
+	@Override
+	public void tick()
+	{
+		if (this.getWorld() instanceof ServerWorld serverWorld)
+		{
 			blockConcentration.keySet().forEach(pos -> {
 
 				Direction.stream().forEach(direction -> {
 					BlockPos offsetPos = pos.offset(direction);
 					int originalConcentration = blockConcentration.get(pos);
 
+					BlockState offsetState = getWorld().getBlockState(offsetPos);
+					var view = getWorld().getChunkAsView(offsetPos.getX(), offsetPos.getZ());
 					if (blockConcentration.containsKey(offsetPos))
 					{
 						int offsetConcentration = blockConcentration.get(offsetPos);
 						if (originalConcentration - 1 >= blockConcentration.get(offsetPos))
 						{
-							blockConcentration.replace(pos, originalConcentration - (originalConcentration - offsetConcentration) / 2);
-							blockConcentration.replace(offsetPos, offsetConcentration + (originalConcentration - offsetConcentration) / 2);
+							blockConcentration.replace(pos, originalConcentration - Math.min((originalConcentration - offsetConcentration) / 2, 10));
+							blockConcentration.replace(offsetPos, offsetConcentration + Math.min((originalConcentration - offsetConcentration) / 2, 10));
 						}
 					}
-					else if (getWorld().getBlockState(offsetPos).isAir() && originalConcentration >= 11)
+					else if ((offsetState.isIn(GadgetsBlocks.Tags.GASS_PASS_THROUGH) || (!offsetState.isSideSolidFullSquare(view, pos, direction.getOpposite()) && !offsetState.isSideSolidFullSquare(view, pos, direction))) && originalConcentration >= 12 && volume / 10 > blockConcentration.size())
 					{
 						blockConcentration.put(offsetPos, 10);
 						blockConcentration.replace(pos, originalConcentration - 10);
 
-						serverWorld.spawnParticles(GadgetsParticleTypes.NERVE_GAS_PARTICLE, offsetPos.getX(), offsetPos.getY(), offsetPos.getZ(), 1, Random.create().nextBetween(-25, 25) / 100d, Random.create().nextBetween(-25, 25) / 100d, Random.create().nextBetween(-25, 25) / 100d, 0);
+						serverWorld.spawnParticles(GadgetsParticleTypes.NERVE_GAS_PARTICLE, offsetPos.getX(), offsetPos.getY(), offsetPos.getZ(), Random.create().nextBetween(1, 2), Random.create().nextBetween(-25, 25) / 100d, Random.create().nextBetween(-25, 25) / 100d, Random.create().nextBetween(-25, 25) / 100d, 0);
 					}
 				});
 			});
 		}
-
-
-
 
 
 
@@ -177,13 +171,13 @@ public class NerveGasEntity extends Entity
 			this.discard();
 		}
 
-		var entities = getWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(20));
+		var entities = getWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(32));
 		for (LivingEntity entity : entities)
 		{
 			if (blockConcentration.containsKey(entity.getBlockPos()))
 			{
 				if (toxicityIndex.containsKey(entity))
-					toxicityIndex.replace(entity, toxicityIndex.get(entity) + (blockConcentration.get(entity.getBlockPos())) / 10);
+					toxicityIndex.replace(entity, toxicityIndex.get(entity) + (blockConcentration.get(entity.getBlockPos())) / 10 + 1);
 				else
 					toxicityIndex.put(entity, 1);
 			}
@@ -195,14 +189,13 @@ public class NerveGasEntity extends Entity
 		});
 		for (LivingEntity entity : decrement)
 		{
-			toxicityIndex.replace(entity, (int)(toxicityIndex.get(entity) - 3f));
+			toxicityIndex.replace(entity, (int)(toxicityIndex.get(entity) - 5f));
 			if (toxicityIndex.get(entity) <= 1)
 			{
 				entity.removeStatusEffect(GadgetsEffects.INTOXICATED);
 				toxicityIndex.remove(entity);
 			}
 		}
-		//if (getWorld() instanceof ServerWorld serverWorld)
 		List<LivingEntity> remove = new ArrayList<>(1024);
 		toxicityIndex.forEach((livingEntity, toxicity) -> {
 			int amplifier = toxicity / 50 - 1;
