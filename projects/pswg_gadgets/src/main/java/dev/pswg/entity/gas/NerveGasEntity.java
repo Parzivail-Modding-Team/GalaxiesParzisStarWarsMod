@@ -139,12 +139,12 @@ public class NerveGasEntity extends Entity
 		if (this.age == 1)
 		{
 			var state = getWorld().getBlockState(getBlockPos().up());
-			if (state.isIn(GadgetsBlocks.Tags.GASS_PASS_THROUGH) || !state.isSolid())
+			if (state.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !state.isSolid())
 				this.setOriginalPos(this.getBlockPos().up());
 			else
 				Direction.stream().forEach(direction -> {
 					var offState = getWorld().getBlockState(getBlockPos().offset(direction));
-					if (offState.isIn(GadgetsBlocks.Tags.GASS_PASS_THROUGH) || !offState.isSolid() && !foundPos.get())
+					if (offState.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !offState.isSolid() && !foundPos)
 					{
 						this.setOriginalPos(this.getBlockPos());
 						foundPos.set(true);
@@ -172,7 +172,7 @@ public class NerveGasEntity extends Entity
 							blockConcentration.replace(offsetPos, offsetConcentration + delta);
 						}
 					}
-					else if ((offsetState.isIn(GadgetsBlocks.Tags.GASS_PASS_THROUGH) || (!offsetState.isSideSolidFullSquare(view, pos, direction.getOpposite()) && !offsetState.isSideSolidFullSquare(view, pos, direction))) && originalConcentration > 1000 && volume / 1000 > blockConcentration.size())
+					else if ((offsetState.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || (!offsetState.isSideSolidFullSquare(view, pos, direction.getOpposite()) && !offsetState.isSideSolidFullSquare(view, pos, direction))) && originalConcentration > 1000 && volume / 1000 > blockConcentration.size())
 					{
 						blockConcentration.put(offsetPos, 1000);
 						blockConcentration.replace(pos, originalConcentration - 1000);

@@ -82,7 +82,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
 			translationBuilder.add(GadgetsBlocks.Tags.BOUNCY, "Bouncy");
-			translationBuilder.add(GadgetsBlocks.Tags.GASS_PASS_THROUGH, "Gass Pass Through");
+			translationBuilder.add(GadgetsBlocks.Tags.GAS_PASS_THROUGH, "Gas Pass Through");
 			translationBuilder.add(GadgetsItems.Tags.GRENADES_TAG, "Grenades");
 
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_throw", "Grenade Thrown");
@@ -158,7 +158,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(Blocks.HONEY_BLOCK)
 					.add(Blocks.SLIME_BLOCK);
 
-			getOrCreateTagBuilder(GadgetsBlocks.Tags.GASS_PASS_THROUGH)
+			getOrCreateTagBuilder(GadgetsBlocks.Tags.GAS_PASS_THROUGH)
 					.addOptionalTag(BlockTags.LEAVES)
 					.add(Blocks.COPPER_GRATE);
 
