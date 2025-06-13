@@ -1,11 +1,9 @@
 package dev.pswg.entity.grenades;
 
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.item.GrenadeItem;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -34,18 +32,32 @@ import net.minecraft.world.explosion.ExplosionImpl;
 
 public abstract class GrenadeEntity extends ThrownEntity
 {
+	public enum CollisionType
+	{
+		BOUNCE,
+		STOP,
+		EXPLODE
+	}
+
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> PRIMED = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
+	private CollisionType collisionType;
 	private int delay = 0;
 	private boolean shouldExplode = false;
 	private float explosionPower = 4f;
 	private boolean isVisible = true;
 	private float clientYaw;
 
+	public GrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world, CollisionType collisionType)
+	{
+		super(entityType, world);
+		this.collisionType = collisionType;
+	}
 	public GrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
 		super(entityType, world);
+		this.collisionType = CollisionType.BOUNCE;
 	}
 
 	@Override
@@ -120,6 +132,18 @@ public abstract class GrenadeEntity extends ThrownEntity
 		if (state.isIn(GadgetsBlocks.Tags.DETONATES_GRENADE))
 			explode();
 		super.onBlockCollision(state);
+	}
+
+	@Override
+	protected void onCollision(HitResult hitResult)
+	{
+		switch (collisionType)
+		{
+			case EXPLODE -> this.explode();
+			case STOP -> this.setVelocity(0, 0, 0, 0, 0);
+			case BOUNCE -> this.bounce(hitResult);
+		}
+		super.onCollision(hitResult);
 	}
 
 	protected void bounce(HitResult hit)

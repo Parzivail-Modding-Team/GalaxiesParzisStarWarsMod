@@ -13,6 +13,10 @@ public abstract class GrenadeEntityWithBlock extends GrenadeEntity
 	public static final int BLOCK_TIME = 300;
 	public int timer = 0;
 
+	public GrenadeEntityWithBlock(EntityType<? extends ThrownEntity> entityType, World world, CollisionType collisionType)
+	{
+		super(entityType, world, collisionType);
+	}
 	public GrenadeEntityWithBlock(EntityType<? extends ThrownEntity> entityType, World world)
 	{
 		super(entityType, world);

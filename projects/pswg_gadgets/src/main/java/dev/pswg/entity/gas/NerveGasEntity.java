@@ -1,194 +1,30 @@
 package dev.pswg.entity.gas;
 
-import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.world.TickConstants;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.util.math.random.Random;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class NerveGasEntity extends Entity
+public class NerveGasEntity extends GasEntity
 {
-	private final int DEFAULT_VOLUME = 40000;
-	private final int MAX_AGE = 900;
-
-	private final int DENSITY = 60;
-
 	public ConcurrentMap<LivingEntity, Integer> toxicityIndex;
-	public ConcurrentMap<BlockPos, Integer> blockConcentration;
-	public int volume;
 
 	public NerveGasEntity(EntityType<?> type, World world)
 	{
-		super(type, world);
+		super(type, world, 40000, 900, 60, GadgetsParticleTypes.NERVE_GAS_PARTICLE);
 		toxicityIndex = new ConcurrentHashMap<>(1024);
-		blockConcentration = new ConcurrentHashMap<>(1024);
-		volume = DEFAULT_VOLUME;
-	}
-
-	public void setVolume(int volume)
-	{
-		this.volume = volume;
-	}
-
-	public void setOriginalPos(BlockPos originalPos)
-	{
-		this.blockConcentration.put(originalPos, volume);
-	}
-
-	@Override
-	protected void initDataTracker(DataTracker.Builder builder)
-	{
-	}
-
-	@Override
-	public boolean damage(ServerWorld world, DamageSource source, float amount)
-	{
-		return false;
-	}
-
-	@Override
-	protected void readCustomDataFromNbt(NbtCompound nbt)
-	{
-
-		var xList = nbt.getList("xList", 1);
-		var yList = nbt.getList("yList", 1);
-		var zList = nbt.getList("zList", 1);
-		var conList = nbt.getList("concentrationList", 1);
-		int s = xList.size();
-		for (int i = 0; i < s; i++)
-			blockConcentration.put(new BlockPos(xList.getInt(i), yList.getInt(i), zList.getInt(i)), conList.getInt(i));
-	}
-
-	@Override
-	protected void writeCustomDataToNbt(NbtCompound nbt)
-	{
-
-		List<Integer> xList = new ArrayList<>(List.of());
-		List<Integer> yList = new ArrayList<>(List.of());
-		List<Integer> zList = new ArrayList<>(List.of());
-
-		blockConcentration.keySet().forEach(blockPos -> {
-			xList.add(blockPos.getX());
-			yList.add(blockPos.getY());
-			zList.add(blockPos.getZ());
-		});
-		List<Integer> concentrationList = blockConcentration.values().stream().toList();
-		nbt.putIntArray("xList", xList);
-		nbt.putIntArray("yList", yList);
-		nbt.putIntArray("zList", zList);
-		nbt.putIntArray("concentrationList", concentrationList);
-	}
-
-	@Override
-	public boolean hasNoGravity()
-	{
-		return true;
-	}
-
-	@Override
-	public void onRemoved()
-	{
-		super.onRemoved();
-	}
-
-	public void debug()
-	{
-		if (getWorld() instanceof ServerWorld serverWorld)
-		{
-			AtomicInteger totalVolume = new AtomicInteger();
-			AtomicInteger maxConcentration = new AtomicInteger(-1);
-			AtomicInteger minConcentration = new AtomicInteger(volume);
-			blockConcentration.forEach((pos, integer) -> {
-				totalVolume.addAndGet(integer);
-				if (maxConcentration.intValue() < integer)
-					maxConcentration.set(integer);
-				if (minConcentration.intValue() > integer)
-					minConcentration.set(integer);
-			});
-
-			for (PlayerEntity player : serverWorld.getPlayers())
-				player.sendMessage(Text.of("vol: " + totalVolume + "  count: " + (blockConcentration.size()) + " maxConc: " + maxConcentration + " avgConc: " + volume / Math.max(blockConcentration.size(), 1) + " minConc: " + minConcentration), true);
-		}
 	}
 
 	@Override
 	public void tick()
 	{
-		float pressure = 1 + (1 - ((float)(blockConcentration.size()) / (volume / 1000)));
-		AtomicBoolean foundPos = new AtomicBoolean(false);
-		if (this.age == 1)
-		{
-			var state = getWorld().getBlockState(getBlockPos().up());
-			if (state.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !state.isSolid())
-				this.setOriginalPos(this.getBlockPos().up());
-			else
-				Direction.stream().forEach(direction -> {
-					var offState = getWorld().getBlockState(getBlockPos().offset(direction));
-					if (offState.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !offState.isSolid() && !foundPos)
-					{
-						this.setOriginalPos(this.getBlockPos());
-						foundPos.set(true);
-					}
-				});
-		}
-
-		if (this.getWorld() instanceof ServerWorld serverWorld)
-		{
-			blockConcentration.keySet().forEach(pos -> {
-
-				Direction.stream().forEach(direction -> {
-					BlockPos offsetPos = pos.offset(direction);
-					int originalConcentration = blockConcentration.get(pos);
-
-					BlockState offsetState = getWorld().getBlockState(offsetPos);
-					var view = getWorld().getChunkAsView(offsetPos.getX(), offsetPos.getZ());
-					if (blockConcentration.containsKey(offsetPos))
-					{
-						int offsetConcentration = blockConcentration.get(offsetPos);
-						if (originalConcentration > offsetConcentration)
-						{
-							int delta = Math.max(Random.create().nextBetween(0, 1), (int)((direction == Direction.UP ? Math.min((originalConcentration - offsetConcentration) / 2, 100 - DENSITY) : Math.min((originalConcentration - offsetConcentration) / 2, DENSITY)) * pressure));
-							blockConcentration.replace(pos, originalConcentration - delta);
-							blockConcentration.replace(offsetPos, offsetConcentration + delta);
-						}
-					}
-					else if ((offsetState.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || (!offsetState.isSideSolidFullSquare(view, pos, direction.getOpposite()) && !offsetState.isSideSolidFullSquare(view, pos, direction))) && originalConcentration > 1000 && volume / 1000 > blockConcentration.size())
-					{
-						blockConcentration.put(offsetPos, 1000);
-						blockConcentration.replace(pos, originalConcentration - 1000);
-
-						serverWorld.spawnParticles(GadgetsParticleTypes.NERVE_GAS_PARTICLE, offsetPos.getX(), offsetPos.getY(), offsetPos.getZ(), Random.create().nextBetween(1, 2), Random.create().nextBetween(-15, 15) / 100d, Random.create().nextBetween(-15, 15) / 100d, Random.create().nextBetween(-15, 15) / 100d, 0);
-					}
-				});
-			});
-		}
-
-		if (age > MAX_AGE)
-		{
-			toxicityIndex.clear();
-			this.discard();
-		}
-
 		var entities = getWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(32));
 		for (LivingEntity entity : entities)
 		{

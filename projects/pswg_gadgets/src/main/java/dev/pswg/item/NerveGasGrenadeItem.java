@@ -10,7 +10,7 @@ public class NerveGasGrenadeItem extends GrenadeItem
 {
 	public NerveGasGrenadeItem(Item.Settings settings)
 	{
-		super(settings, GadgetsItems.NERVE_GAS_GRENADE_ITEM, 80, new FragmentationGrenadeSoundGroup());
+		super(settings, GadgetsItems.NERVE_GAS_GRENADE_ITEM, 60, new FragmentationGrenadeSoundGroup());
 	}
 
 	@Override

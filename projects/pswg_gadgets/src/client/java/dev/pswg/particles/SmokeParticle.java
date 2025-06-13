@@ -117,7 +117,7 @@ public class SmokeParticle extends SpriteBillboardParticle
 		}
 		if (age <= 200)
 		{
-			if (alpha <= 0.15f)
+			if (alpha <= 0.25f)
 				alpha += 0.003125f;
 			if (scale <= 2)
 				scale += growthSpeed;

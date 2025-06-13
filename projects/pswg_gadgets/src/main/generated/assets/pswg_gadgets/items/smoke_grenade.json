@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/smoke_grenade"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/smoke_grenade"
+  }
 }

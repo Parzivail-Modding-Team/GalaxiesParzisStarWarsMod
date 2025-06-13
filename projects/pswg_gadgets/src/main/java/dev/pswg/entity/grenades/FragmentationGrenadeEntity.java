@@ -1,6 +1,5 @@
 package dev.pswg.entity.grenades;
 
-import dev.pswg.Gadgets;
 import dev.pswg.block.GrenadeBlock;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
@@ -14,8 +13,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -34,7 +31,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 
 	public FragmentationGrenadeEntity(EntityType<FragmentationGrenadeEntity> type, World world)
 	{
-		super(type, world);
+		super(type, world, CollisionType.BOUNCE);
 		setExplosionPower(4f);
 	}
 
@@ -86,18 +83,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 					break;
 			}
 		}
-	}
-
-	@Override
-	protected void onCollision(HitResult hitResult)
-	{
-		if (hitResult.getType() == HitResult.Type.BLOCK)
-		{
-			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-			bounce(blockHitResult);
-			playCollisionSound(blockHitResult);
-		}
-		super.onCollision(hitResult);
 	}
 
 	@Override

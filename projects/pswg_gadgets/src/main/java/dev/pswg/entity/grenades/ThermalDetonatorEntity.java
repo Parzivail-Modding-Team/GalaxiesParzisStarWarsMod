@@ -25,7 +25,7 @@ public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 
 	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
 	{
-		super(type, world);
+		super(type, world, CollisionType.BOUNCE);
 		setExplosionPower(5f);
 	}
 
@@ -68,18 +68,6 @@ public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME,  true, true, x, y, z, m2 * 2, m3, m3, m3, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME,  true, true, x, y, z, m2 * 2, m4, m4, m4, 0);
 		}
-	}
-
-	@Override
-	protected void onCollision(HitResult hitResult)
-	{
-		if (hitResult.getType() == HitResult.Type.BLOCK)
-		{
-			BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-			bounce(blockHitResult);
-			playCollisionSound(blockHitResult);
-		}
-		super.onCollision(hitResult);
 	}
 
 	@Override
