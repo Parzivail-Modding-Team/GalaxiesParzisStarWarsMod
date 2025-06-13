@@ -2,45 +2,41 @@ package dev.pswg.entity.gas;
 
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsParticleTypes;
-import dev.pswg.container.entity.GadgetsEffects;
-import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class NerveGasEntity extends Entity
+public class SmokeGasEntity extends Entity
 {
-	private final int DEFAULT_VOLUME = 40000;
+	/// how many blocks the gas can expand to times 1000
+	private final int DEFAULT_VOLUME = 80000;
 	private final int MAX_AGE = 900;
 
-	private final int DENSITY = 60;
+	private final int DENSITY = 90;
 
-	public ConcurrentMap<LivingEntity, Integer> toxicityIndex;
 	public ConcurrentMap<BlockPos, Integer> blockConcentration;
 	public int volume;
 
-	public NerveGasEntity(EntityType<?> type, World world)
+	public SmokeGasEntity(EntityType<?> type, World world)
 	{
 		super(type, world);
-		toxicityIndex = new ConcurrentHashMap<>(1024);
 		blockConcentration = new ConcurrentHashMap<>(1024);
 		volume = DEFAULT_VOLUME;
 	}
@@ -127,7 +123,7 @@ public class NerveGasEntity extends Entity
 			});
 
 			for (PlayerEntity player : serverWorld.getPlayers())
-				player.sendMessage(Text.of("vol: " + totalVolume + "  count: " + (blockConcentration.size()) + " maxConc: " + maxConcentration + " avgConc: " + volume / Math.max(blockConcentration.size(), 1) + " minConc: " + minConcentration), true);
+				player.sendMessage(Text.of("vol: " + totalVolume.intValue() / 1000 + "  count: " + (blockConcentration.size()) + " maxConc: " + maxConcentration.floatValue() / 1000f + " avgConc: " + volume / Math.max(blockConcentration.size(), 1) / 1000f + " minConc: " + minConcentration.floatValue() / 1000f + " pressure: " + (1 + (1 - ((float)blockConcentration.size() / (volume / 1000))))), true);
 		}
 	}
 
@@ -177,62 +173,14 @@ public class NerveGasEntity extends Entity
 						blockConcentration.put(offsetPos, 1000);
 						blockConcentration.replace(pos, originalConcentration - 1000);
 
-						serverWorld.spawnParticles(GadgetsParticleTypes.NERVE_GAS_PARTICLE, offsetPos.getX(), offsetPos.getY(), offsetPos.getZ(), Random.create().nextBetween(1, 2), Random.create().nextBetween(-15, 15) / 100d, Random.create().nextBetween(-15, 15) / 100d, Random.create().nextBetween(-15, 15) / 100d, 0);
+						serverWorld.spawnParticles(GadgetsParticleTypes.SMOKE_PARTICLE, offsetPos.getX(), offsetPos.getY(), offsetPos.getZ(), Random.create().nextBetween(1, 2), Random.create().nextBetween(-15, 15) / 100d, Random.create().nextBetween(-15, 15) / 100d, Random.create().nextBetween(-15, 15) / 100d, 0);
 					}
 				});
 			});
 		}
 
 		if (age > MAX_AGE)
-		{
-			toxicityIndex.clear();
 			this.discard();
-		}
-
-		var entities = getWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(32));
-		for (LivingEntity entity : entities)
-		{
-			if (blockConcentration.containsKey(entity.getBlockPos()))
-			{
-				if (toxicityIndex.containsKey(entity))
-					toxicityIndex.replace(entity, toxicityIndex.get(entity) + (blockConcentration.get(entity.getBlockPos())) / 10 + 1);
-				else
-					toxicityIndex.put(entity, 1);
-			}
-		}
-		List<LivingEntity> decrement = new ArrayList<>(1024);
-		toxicityIndex.forEach((livingEntity, integer) -> {
-			if (!entities.contains(livingEntity))
-				decrement.add(livingEntity);
-		});
-		for (LivingEntity entity : decrement)
-		{
-			toxicityIndex.replace(entity, (int)(toxicityIndex.get(entity) - 5f));
-			if (toxicityIndex.get(entity) <= 1)
-			{
-				entity.removeStatusEffect(GadgetsEffects.INTOXICATED);
-				toxicityIndex.remove(entity);
-			}
-		}
-		List<LivingEntity> remove = new ArrayList<>(1024);
-		toxicityIndex.forEach((livingEntity, toxicity) -> {
-			int amplifier = toxicity / 50 - 1;
-			if (toxicity > 50)
-				{
-					if (livingEntity.hasStatusEffect(GadgetsEffects.INTOXICATED))
-					{
-						if (livingEntity.getStatusEffect(GadgetsEffects.INTOXICATED).getAmplifier() != amplifier)
-							livingEntity.setStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
-					}
-					else
-						livingEntity.addStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
-				}
-			if (livingEntity.isDead())
-				remove.add(livingEntity);
-		});
-		remove.forEach(livingEntity -> {
-			toxicityIndex.remove(livingEntity);
-		});
 
 		super.tick();
 	}

@@ -30,12 +30,12 @@ public class NerveGasParticle extends SpriteBillboardParticle
 	protected NerveGasParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z);
-		scale(1f);
+		scale(2f);
 
 		setBoundingBoxSpacing(0f, 0f);
 		this.setAlpha(0.05f);
 		shrinkSpeed = (float)random.nextBetween(1, 10) / 2000f;
-		growthSpeed = (float)random.nextBetween(1, 5) / 200f;
+		growthSpeed = (float)random.nextBetween(1, 4) / 250f;
 		billowing = (float)random.nextBetween(1, 10) / 2500f;
 		variant = random.nextInt(NUM_VARIANTS);
 		dirX = random.nextBoolean() ? 1 : -1;

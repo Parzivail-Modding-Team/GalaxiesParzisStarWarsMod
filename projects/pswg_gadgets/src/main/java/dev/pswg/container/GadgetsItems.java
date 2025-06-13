@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import dev.pswg.Gadgets;
 import dev.pswg.item.FragmentationGrenadeItem;
 import dev.pswg.item.NerveGasGrenadeItem;
+import dev.pswg.item.SmokeGasGrenadeItem;
 import dev.pswg.item.ThermalDetonatorItem;
 import dev.pswg.registry.Registrar;
 import net.minecraft.block.DispenserBlock;
@@ -42,6 +43,7 @@ public class GadgetsItems
 	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(Gadgets.id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
 	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(Gadgets.id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Settings());
 	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Settings());
+	public static final SmokeGasGrenadeItem SMOKE_GRENADE_ITEM = Registrar.item(Gadgets.id("smoke_grenade"), SmokeGasGrenadeItem::new, new Item.Settings());
 
 	public static void register()
 	{

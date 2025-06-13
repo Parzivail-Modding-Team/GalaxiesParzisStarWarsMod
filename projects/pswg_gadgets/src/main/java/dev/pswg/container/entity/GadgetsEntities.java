@@ -2,8 +2,10 @@ package dev.pswg.container.entity;
 
 import dev.pswg.Gadgets;
 import dev.pswg.entity.gas.NerveGasEntity;
+import dev.pswg.entity.gas.SmokeGasEntity;
 import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
 import dev.pswg.entity.grenades.NerveGasGrenadeEntity;
+import dev.pswg.entity.grenades.SmokeGasGrenadeEntity;
 import dev.pswg.entity.grenades.ThermalDetonatorEntity;
 import dev.pswg.registry.Registrar;
 import net.minecraft.entity.EntityType;
@@ -33,6 +35,13 @@ public class GadgetsEntities
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
 	);
+	public static final EntityType<SmokeGasGrenadeEntity> SMOKE_GAS_GRENADE_ENTITY = Registrar.entityType(
+			Gadgets.id("smoke_grenade"),
+			EntityType.Builder.create(SmokeGasGrenadeEntity::new, SpawnGroup.MISC)
+			                  .dimensions(0.2f, 0.4f)
+			                  .spawnBoxScale(0.2f)
+			                  .dropsNothing()
+	);
 	public static final EntityType<NerveGasEntity> NERVE_GAS = Registrar.entityType(
 			Gadgets.id("nerve_gas"),
 			EntityType.Builder.create(NerveGasEntity::new, SpawnGroup.MISC)
@@ -40,6 +49,14 @@ public class GadgetsEntities
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
 	);
+	public static final EntityType<SmokeGasEntity> SMOKE_GAS = Registrar.entityType(
+			Gadgets.id("smoke"),
+			EntityType.Builder.create(SmokeGasEntity::new, SpawnGroup.MISC)
+			                  .dimensions(2f, 2f)
+			                  .spawnBoxScale(0.2f)
+			                  .dropsNothing()
+	);
+
 
 	public static void register()
 	{
