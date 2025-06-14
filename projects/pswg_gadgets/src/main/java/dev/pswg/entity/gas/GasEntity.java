@@ -136,18 +136,19 @@ public class GasEntity extends Entity
 	@Override
 	public void tick()
 	{
+		var world = getWorld();
 		float pressure = 1 + (1 - ((float)(blockConcentration.size()) / (volume / 1000)));
 		boolean foundPos = false;
 		if (this.age == 1)
 		{
-			var state = getWorld().getBlockState(getBlockPos().up());
+			var state = world.getBlockState(getBlockPos().up());
 			if (state.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !state.isSolid())
 				this.addDefaultPos(this.getBlockPos().up());
 			else
 			{
 				for (Direction direction : Direction.values())
 				{
-					var offState = getWorld().getBlockState(getBlockPos().offset(direction));
+					var offState = world.getBlockState(getBlockPos().offset(direction));
 					if (offState.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !offState.isSolid() && !foundPos)
 					{
 						this.addDefaultPos(this.getBlockPos());
@@ -157,7 +158,7 @@ public class GasEntity extends Entity
 			}
 		}
 
-		if (this.getWorld() instanceof ServerWorld serverWorld)
+		if (world instanceof ServerWorld serverWorld)
 		{
 			blockConcentration.keySet().forEach(pos -> {
 
@@ -165,24 +166,34 @@ public class GasEntity extends Entity
 					BlockPos offsetPos = pos.offset(direction);
 					int originalConcentration = blockConcentration.get(pos);
 
-					BlockState offsetState = getWorld().getBlockState(offsetPos);
-					var view = getWorld().getChunkAsView(offsetPos.getX(), offsetPos.getZ());
+					BlockState offsetState = world.getBlockState(offsetPos);
 					if (blockConcentration.containsKey(offsetPos))
 					{
 						int offsetConcentration = blockConcentration.get(offsetPos);
 						if (originalConcentration > offsetConcentration)
 						{
-							int delta = Math.max(Random.create().nextBetween(0, 1), (int)((direction == Direction.UP ? Math.min((originalConcentration - offsetConcentration) / 2, 100 - DENSITY) : Math.min((originalConcentration - offsetConcentration) / 2, DENSITY)) * pressure));
+							int concentrationAverage = (originalConcentration - offsetConcentration) / 2;
+							int verticalDelta = Math.min(concentrationAverage, 100 - DENSITY);
+							int horizontalDelta = Math.min(concentrationAverage, DENSITY);
+							int delta = Math.max(Random.create().nextBetween(0, 1), (int)((direction == Direction.UP ? verticalDelta : horizontalDelta) * pressure));
 							blockConcentration.replace(pos, originalConcentration - delta);
 							blockConcentration.replace(offsetPos, offsetConcentration + delta);
 						}
 					}
-					else if ((offsetState.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || (!offsetState.isSideSolidFullSquare(view, pos, direction.getOpposite()) && !offsetState.isSideSolidFullSquare(view, pos, direction))) && originalConcentration > 1000 && volume / 1000 > blockConcentration.size())
+					else if ((offsetState.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || (!offsetState.isSideSolidFullSquare(world, pos, direction.getOpposite()) && !offsetState.isSideSolidFullSquare(world, pos, direction))) && originalConcentration > 1000 && volume / 1000 > blockConcentration.size())
 					{
 						blockConcentration.put(offsetPos, 1000);
 						blockConcentration.replace(pos, originalConcentration - 1000);
 
-						serverWorld.spawnParticles(particleType, offsetPos.getX(), offsetPos.getY(), offsetPos.getZ(), Random.create().nextBetween(1, 2), Random.create().nextBetween(-15, 15) / 100d, Random.create().nextBetween(-15, 15) / 100d, Random.create().nextBetween(-15, 15) / 100d, 0);
+						serverWorld.spawnParticles(particleType,
+						                           offsetPos.getX(),
+						                           offsetPos.getY(),
+						                           offsetPos.getZ(),
+						                           Random.create().nextBetween(1, 2),
+						                           Random.create().nextBetween(-15, 15) / 100d,
+						                           Random.create().nextBetween(-15, 15) / 100d,
+						                           Random.create().nextBetween(-15, 15) / 100d,
+						                           0);
 					}
 				});
 			});
