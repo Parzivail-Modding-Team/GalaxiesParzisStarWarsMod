@@ -28,7 +28,7 @@ public class GasEntity extends Entity
 	private final int DEFAULT_VOLUME;
 	private final int MAX_AGE;
 	private final int DENSITY;
-	private final SimpleParticleType particleType;
+	private final SimpleParticleType PARTICLE_TYPE;
 
 	public ConcurrentMap<LivingEntity, Integer> toxicityIndex;
 	public ConcurrentMap<BlockPos, Integer> blockConcentration;
@@ -40,7 +40,7 @@ public class GasEntity extends Entity
 		DEFAULT_VOLUME = defaultVolume;
 		MAX_AGE = maxAge;
 		DENSITY = density;
-		particleType = particle;
+		PARTICLE_TYPE = particle;
 		volume = DEFAULT_VOLUME;
 		toxicityIndex = new ConcurrentHashMap<>(1024);
 		blockConcentration = new ConcurrentHashMap<>(1024);
@@ -185,7 +185,7 @@ public class GasEntity extends Entity
 						blockConcentration.put(offsetPos, 1000);
 						blockConcentration.replace(pos, originalConcentration - 1000);
 
-						serverWorld.spawnParticles(particleType,
+						serverWorld.spawnParticles(PARTICLE_TYPE,
 						                           offsetPos.getX(),
 						                           offsetPos.getY(),
 						                           offsetPos.getZ(),

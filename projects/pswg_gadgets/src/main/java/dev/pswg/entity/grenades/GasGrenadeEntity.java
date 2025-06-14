@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 
 public abstract class GasGrenadeEntity extends GrenadeEntity
 {
-	private boolean EXPELLING_GAS = false;
 	private int MAX_EXPELLING_TIME;
 	private int expellingTime = 0;
+	private boolean expellingGas = false;
 	//private int volume ;
 	//private float expellingRate;
 	private final EntityType<? extends GasEntity> gasEntityType;
@@ -36,7 +36,7 @@ public abstract class GasGrenadeEntity extends GrenadeEntity
 		var gasEntity = gasEntityType.create(world, SpawnReason.TRIGGERED);
 		gasEntity.setPosition(getX(), getY(), getZ());
 
-		EXPELLING_GAS = true;
+		expellingGas = true;
 
 		world.spawnEntity(gasEntity);
 	}
@@ -44,7 +44,7 @@ public abstract class GasGrenadeEntity extends GrenadeEntity
 	@Override
 	public void tick()
 	{
-		if (EXPELLING_GAS)
+		if (expellingGas)
 		{
 			//TODO: IMPLEMENT GAS EXPELLING
 			expellingTime++;
