@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentMap;
 
 public class NerveGasEntity extends GasEntity
 {
-	public ConcurrentMap<LivingEntity, Integer> toxicityIndex;
+	public ConcurrentMap<LivingEntity, Float> toxicityIndex;
 
 	public NerveGasEntity(EntityType<?> type, World world)
 	{
-		super(type, world, 40000, 900, 60, GadgetsParticleTypes.NERVE_GAS_PARTICLE);
+		super(type, world, 40, 900, 0.5f, GadgetsParticleTypes.NERVE_GAS_PARTICLE);
 		toxicityIndex = new ConcurrentHashMap<>(1024);
 	}
 
@@ -33,7 +33,7 @@ public class NerveGasEntity extends GasEntity
 				if (toxicityIndex.containsKey(entity))
 					toxicityIndex.replace(entity, toxicityIndex.get(entity) + (blockConcentration.get(entity.getBlockPos())) / 10 + 1);
 				else
-					toxicityIndex.put(entity, 1);
+					toxicityIndex.put(entity, 1f);
 			}
 		}
 		List<LivingEntity> decrement = new ArrayList<>(1024);
@@ -43,7 +43,7 @@ public class NerveGasEntity extends GasEntity
 		});
 		for (LivingEntity entity : decrement)
 		{
-			toxicityIndex.replace(entity, (int)(toxicityIndex.get(entity) - 5f));
+			toxicityIndex.replace(entity, (toxicityIndex.get(entity) - 5f));
 			if (toxicityIndex.get(entity) <= 1)
 			{
 				entity.removeStatusEffect(GadgetsEffects.INTOXICATED);
@@ -52,7 +52,7 @@ public class NerveGasEntity extends GasEntity
 		}
 		List<LivingEntity> remove = new ArrayList<>(1024);
 		toxicityIndex.forEach((livingEntity, toxicity) -> {
-			int amplifier = toxicity / 50 - 1;
+			int amplifier = (int)(toxicity / 50 - 1);
 			if (toxicity > 50)
 				{
 					if (livingEntity.hasStatusEffect(GadgetsEffects.INTOXICATED))

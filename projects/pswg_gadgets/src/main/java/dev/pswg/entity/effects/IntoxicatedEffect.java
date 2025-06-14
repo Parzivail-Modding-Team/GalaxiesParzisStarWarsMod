@@ -26,7 +26,7 @@ public class IntoxicatedEffect extends StatusEffect
 	@Override
 	public void onApplied(LivingEntity entity, int amplifier)
 	{
-		addAttributeModifier(EntityAttributes.MOVEMENT_SPEED, Identifier.of("intoxicated"), -amplifier / 100f, EntityAttributeModifier.Operation.ADD_VALUE);
+		//addAttributeModifier(EntityAttributes.MOVEMENT_SPEED, Identifier.of("intoxicated"), -amplifier / 100f, EntityAttributeModifier.Operation.ADD_VALUE);
 		super.onApplied(entity, amplifier);
 	}
 
