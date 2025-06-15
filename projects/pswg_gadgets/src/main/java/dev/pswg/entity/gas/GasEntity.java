@@ -121,7 +121,7 @@ public class GasEntity extends Entity
 			float totalVolume = 0;
 			float maxConcentration = -1;
 			float minConcentration = volume;
-			for (Float f : blockConcentration.values())
+			for (float f : blockConcentration.values())
 			{
 				totalVolume += f;
 				if (maxConcentration < f)
