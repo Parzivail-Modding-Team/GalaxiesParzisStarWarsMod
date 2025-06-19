@@ -1,6 +1,7 @@
 package dev.pswg.entity.gas;
 
 import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.particle.GasParticleEffect;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -9,7 +10,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -25,15 +26,15 @@ import java.util.concurrent.ConcurrentMap;
 public class GasEntity extends Entity
 {
 	private final int DEFAULT_VOLUME;
-	private final int MAX_AGE;
+	public final int MAX_AGE;
 	private final float DENSITY;
-	private final SimpleParticleType PARTICLE_TYPE;
+	private final ParticleType<GasParticleEffect> PARTICLE_TYPE;
 
 	public ConcurrentMap<LivingEntity, Integer> toxicityIndex;
 	public ConcurrentMap<BlockPos, Float> blockConcentration;
 	public int volume;
 
-	public GasEntity(EntityType<?> type, World world, int defaultVolume, int maxAge, float density, SimpleParticleType particle)
+	public GasEntity(EntityType<?> type, World world, int defaultVolume, int maxAge, float density, ParticleType<GasParticleEffect> particle)
 	{
 		super(type, world);
 		DEFAULT_VOLUME = defaultVolume;
@@ -186,7 +187,7 @@ public class GasEntity extends Entity
 						blockConcentration.put(offsetPos, 1f);
 						blockConcentration.replace(pos, originalConcentration - 1);
 
-						serverWorld.spawnParticles(PARTICLE_TYPE,
+						serverWorld.spawnParticles(new GasParticleEffect(PARTICLE_TYPE, this.getId()),
 						                           offsetPos.getX(),
 						                           offsetPos.getY(),
 						                           offsetPos.getZ(),

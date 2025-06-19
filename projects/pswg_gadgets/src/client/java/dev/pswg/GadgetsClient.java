@@ -3,6 +3,7 @@ package dev.pswg;
 import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.entity.GadgetsEntities;
+import dev.pswg.particle.GasParticleEffect;
 import dev.pswg.particles.*;
 import dev.pswg.renderer.FragmentationGrenadeEntityRenderer;
 import dev.pswg.renderer.NerveGasGrenadeEntityRenderer;
