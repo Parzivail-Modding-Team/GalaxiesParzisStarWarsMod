@@ -39,6 +39,7 @@ public abstract class GasGrenadeEntity extends GrenadeEntity
 		expellingGas = true;
 
 		world.spawnEntity(gasEntity);
+		discard();
 	}
 
 	@Override
