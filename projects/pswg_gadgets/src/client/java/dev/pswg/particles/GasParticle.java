@@ -21,29 +21,39 @@ public abstract class GasParticle extends SpriteBillboardParticle
 	final int NUM_VARIANTS = 5;
 	final float shrinkSpeed;
 	final float growthSpeed;
+	final float originalScale;
+	final float maxScale;
+	float alphaScaling;
 	final int dirX;
 	final int dirZ;
 	final float billowing;
+	final float minConcentration;
 	final GasEntity gasEntity;
 
-	protected GasParticle(GasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
+	protected GasParticle(GasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider, float minConcentration)
 	{
 		super(clientWorld, x, y, z);
 
-		scale(Random.create().nextBetween(300, 400) / 100f);
+		this.originalScale = Random.create().nextBetween(50, 75) / 100f;
+		scale(originalScale);
 		setBoundingBoxSpacing(0f, 0f);
 		this.setAlpha(0.1f);
 		this.gasEntity = gasEntity;
+		this.minConcentration = minConcentration;
 		shrinkSpeed = (float)random.nextBetween(10, 100) / 25000f;
-		growthSpeed = (float)random.nextBetween(20, 40) / 5000f;
+		growthSpeed = (float)random.nextBetween(20, 40) * 0.000005f;
 		billowing = (float)random.nextBetween(1, 10) / 2500f;
 		variant = random.nextInt(NUM_VARIANTS);
 		dirX = random.nextBoolean() ? 1 : -1;
 		dirZ = random.nextBoolean() ? 1 : -1;
-		velocityX = random.nextFloat() / 16f * dirX;
-		velocityZ = random.nextFloat() / 16f * dirZ;
+		velocityX = 0;
+		velocityZ = 0;
 		age = 0;
-		maxAge = gasEntity.MAX_AGE - gasEntity.age;
+		maxAge = gasEntity != null ? gasEntity.MAX_AGE - gasEntity.age : 1000;
+		maxScale = growthSpeed * 250 + originalScale;
+		alphaScaling = gasEntity != null ? gasEntity.blockConcentration.getOrDefault(new BlockPos((int)x, (int)y, (int)z), 1f) : 1;
+
+
 	}
 
 	@Override
@@ -107,40 +117,33 @@ public abstract class GasParticle extends SpriteBillboardParticle
 	@Override
 	public void tick()
 	{
-
+		float blockConcentration = gasEntity != null ? gasEntity.blockConcentration.getOrDefault(new BlockPos((int)x, (int)y, (int)z), 1f) : 1;
+		;
+		alphaScaling = blockConcentration;
 		prevPosX = x;
 		prevPosY = y;
 		prevPosZ = z;
 		age++;
-		float ageCoeficient = (float)gasEntity.MAX_AGE / maxAge;
-		float inverseAgeCoeficient = (float)maxAge / gasEntity.MAX_AGE;
-
-		//MinecraftClient.getInstance().player.sendMessage(Text.of("age: "+age + " alpha: "+ alpha), false);
-		if (alpha < 0.1f)
+		float ageCoeficient = gasEntity != null ? (float)gasEntity.MAX_AGE / maxAge : 1;
+		float inverseAgeCoeficient = gasEntity != null ? (float)maxAge / gasEntity.MAX_AGE : 1;
+		if (alpha < 0.1f || minConcentration > blockConcentration)
 		{
-			//MinecraftClient.getInstance().player.sendMessage(Text.of(""+age), false);
 			markDead();
 			return;
 		}
 		if (age <= 250 * inverseAgeCoeficient)
 		{
-			if (alpha <= 0.2f)
-				alpha += 0.0005f * ageCoeficient;
-			if (scale <= 2)
-				scale += growthSpeed * ageCoeficient;
+			alpha = age / (250 * inverseAgeCoeficient) * 0.25f * alphaScaling + 0.1f;
+			scale = growthSpeed * ageCoeficient * age + originalScale;
 		}
+
 		if (age >= 400 * inverseAgeCoeficient)
 		{
-			alpha -= 0.000165f * ageCoeficient;
+			alpha = (0.1f + 0.25f * alphaScaling) - (0.25f * alphaScaling * ((age - (400 * inverseAgeCoeficient)) / (600 * inverseAgeCoeficient)));
 		}
 		if (age >= 600 * inverseAgeCoeficient)
 		{
-			scale -= shrinkSpeed * ageCoeficient;
-		}
-		if (age == 700 * inverseAgeCoeficient)
-		{
-			velocityX = random.nextFloat() / 256f * dirX;
-			velocityZ = random.nextFloat() / 256f * dirZ;
+			scale = maxScale - (shrinkSpeed * ageCoeficient * (age - 600 * inverseAgeCoeficient));
 		}
 		if (age <= 500 * inverseAgeCoeficient)
 		{

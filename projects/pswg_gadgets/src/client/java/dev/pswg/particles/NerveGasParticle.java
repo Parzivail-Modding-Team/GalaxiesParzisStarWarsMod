@@ -13,9 +13,9 @@ import org.jetbrains.annotations.Nullable;
 public class NerveGasParticle extends GasParticle
 {
 
-	protected NerveGasParticle(NerveGasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
+	protected NerveGasParticle(NerveGasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider, float minConcentration)
 	{
-		super(gasEntity, clientWorld, x, y, z, vX, vY, vZ, spriteProvider);
+		super(gasEntity, clientWorld, x, y, z, vX, vY, vZ, spriteProvider, minConcentration);
 		setColor(1, 0.9f, 0.6f);
 	}
 
@@ -34,7 +34,7 @@ public class NerveGasParticle extends GasParticle
 		public Particle createParticle(GasParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 		{
 			NerveGasEntity entity = (NerveGasEntity)MinecraftClient.getInstance().world.getEntityById(parameters.getGasEntityId());
-			NerveGasParticle gasParticle = new NerveGasParticle(entity, world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
+			NerveGasParticle gasParticle = new NerveGasParticle(entity, world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider, parameters.minConcentration);
 			gasParticle.setSprite(spriteProvider);
 			return gasParticle;
 		}

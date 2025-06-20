@@ -18,7 +18,7 @@ public class NerveGasEntity extends GasEntity
 
 	public NerveGasEntity(EntityType<?> type, World world)
 	{
-		super(type, world, 40, 900, 0.5f, GadgetsParticleTypes.NERVE_GAS_PARTICLE);
+		super(type, world, 80, 900, 0.7f, GadgetsParticleTypes.NERVE_GAS_PARTICLE);
 		toxicityIndex = new ConcurrentHashMap<>(1024);
 	}
 

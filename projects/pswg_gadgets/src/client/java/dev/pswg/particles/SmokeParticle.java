@@ -13,9 +13,9 @@ import org.jetbrains.annotations.Nullable;
 public class SmokeParticle extends GasParticle
 {
 
-	protected SmokeParticle(SmokeGasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
+	protected SmokeParticle(SmokeGasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider, float minConcentration)
 	{
-		super(gasEntity, clientWorld, x, y, z, vX, vY, vZ, spriteProvider);
+		super(gasEntity, clientWorld, x, y, z, vX, vY, vZ, spriteProvider, minConcentration);
 	}
 
 	@Environment(value = EnvType.CLIENT)
@@ -33,7 +33,7 @@ public class SmokeParticle extends GasParticle
 		public Particle createParticle(GasParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 		{
 			SmokeGasEntity entity = (SmokeGasEntity)MinecraftClient.getInstance().world.getEntityById(parameters.getGasEntityId());
-			SmokeParticle smokeParticle = new SmokeParticle(entity, world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
+			SmokeParticle smokeParticle = new SmokeParticle(entity, world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider, parameters.minConcentration);
 			smokeParticle.setSprite(spriteProvider);
 			return smokeParticle;
 		}
