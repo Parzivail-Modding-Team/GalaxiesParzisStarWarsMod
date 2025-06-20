@@ -32,14 +32,16 @@ public abstract class GasGrenadeEntity extends GrenadeEntity
 	@Override
 	public void explode()
 	{
-		var world = getWorld();
-		var gasEntity = gasEntityType.create(world, SpawnReason.TRIGGERED);
-		gasEntity.setPosition(getX(), getY(), getZ());
+		if (!expellingGas)
+		{
+			var world = getWorld();
+			var gasEntity = gasEntityType.create(world, SpawnReason.TRIGGERED);
+			gasEntity.setPosition(getX(), getY(), getZ());
 
-		expellingGas = true;
+			expellingGas = true;
 
-		world.spawnEntity(gasEntity);
-		discard();
+			world.spawnEntity(gasEntity);
+		}
 	}
 
 	@Override
