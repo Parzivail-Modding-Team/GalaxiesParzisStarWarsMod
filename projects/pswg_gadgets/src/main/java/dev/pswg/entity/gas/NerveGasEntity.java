@@ -18,7 +18,7 @@ public class NerveGasEntity extends GasEntity
 
 	public NerveGasEntity(EntityType<?> type, World world)
 	{
-		super(type, world, 80, 900, 0.7f, GadgetsParticleTypes.NERVE_GAS_PARTICLE);
+		super(type, world, 80, 900, 0.7f, 0.7f, GadgetsParticleTypes.NERVE_GAS_PARTICLE);
 		toxicityIndex = new ConcurrentHashMap<>(1024);
 	}
 
@@ -28,10 +28,10 @@ public class NerveGasEntity extends GasEntity
 		var entities = getWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(32));
 		for (LivingEntity entity : entities)
 		{
-			if (blockConcentration.containsKey(entity.getBlockPos()))
+			if (massMap.containsKey(entity.getBlockPos()))
 			{
 				if (toxicityIndex.containsKey(entity))
-					toxicityIndex.replace(entity, toxicityIndex.get(entity) + (blockConcentration.get(entity.getBlockPos())) / 10 + 1);
+					toxicityIndex.replace(entity, toxicityIndex.get(entity) + (massMap.get(entity.getBlockPos())) / 10 + 1);
 				else
 					toxicityIndex.put(entity, 1f);
 			}

@@ -34,7 +34,7 @@ public abstract class GasParticle extends SpriteBillboardParticle
 	{
 		super(clientWorld, x, y, z);
 
-		this.originalScale = Random.create().nextBetween(50, 75) / 100f;
+		this.originalScale = Random.create().nextBetween(50, 75) / 20f;
 		scale(originalScale);
 		setBoundingBoxSpacing(0f, 0f);
 		this.setAlpha(0.1f);
@@ -51,8 +51,8 @@ public abstract class GasParticle extends SpriteBillboardParticle
 		age = 0;
 		maxAge = gasEntity != null ? gasEntity.MAX_AGE - gasEntity.age : 1000;
 		maxScale = growthSpeed * 250 + originalScale;
-		alphaScaling = gasEntity != null ? gasEntity.blockConcentration.getOrDefault(new BlockPos((int)x, (int)y, (int)z), 1f) : 1;
-
+		var pos = new BlockPos((int)x, (int)y, (int)z);
+		alphaScaling = (gasEntity != null ? gasEntity.massMap.getOrDefault(pos, 1f) : 1) * 0.5f;
 
 	}
 
@@ -117,7 +117,12 @@ public abstract class GasParticle extends SpriteBillboardParticle
 	@Override
 	public void tick()
 	{
-		float blockConcentration = gasEntity != null ? gasEntity.blockConcentration.getOrDefault(new BlockPos((int)x, (int)y, (int)z), 1f) : 1;
+		var pos = new BlockPos((int)x, (int)y, (int)z);
+		if (gasEntity != null && !gasEntity.massMap.containsKey(pos))
+		{
+			markDead();
+		}
+		float blockConcentration = gasEntity != null ? gasEntity.massMap.getOrDefault(new BlockPos((int)x, (int)y, (int)z), 1f) : 1;
 		;
 		alphaScaling = blockConcentration;
 		prevPosX = x;
@@ -134,7 +139,7 @@ public abstract class GasParticle extends SpriteBillboardParticle
 		if (age <= 250 * inverseAgeCoeficient)
 		{
 			alpha = age / (250 * inverseAgeCoeficient) * 0.25f * alphaScaling + 0.1f;
-			scale = growthSpeed * ageCoeficient * age + originalScale;
+			//scale = growthSpeed * ageCoeficient * age + originalScale;
 		}
 
 		if (age >= 400 * inverseAgeCoeficient)
@@ -143,7 +148,7 @@ public abstract class GasParticle extends SpriteBillboardParticle
 		}
 		if (age >= 600 * inverseAgeCoeficient)
 		{
-			scale = maxScale - (shrinkSpeed * ageCoeficient * (age - 600 * inverseAgeCoeficient));
+			//scale = maxScale - (shrinkSpeed * ageCoeficient * (age - 600 * inverseAgeCoeficient));
 		}
 		if (age <= 500 * inverseAgeCoeficient)
 		{
