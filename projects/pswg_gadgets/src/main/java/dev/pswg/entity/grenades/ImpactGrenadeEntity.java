@@ -1,51 +1,27 @@
 package dev.pswg.entity.grenades;
 
-import dev.pswg.Gadgets;
-import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
-import dev.pswg.block.GrenadeBlock;
 import dev.pswg.container.GadgetsParticleTypes;
-import dev.pswg.container.GadgetsSounds;
 import dev.pswg.item.GrenadeItem;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 
-public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
+public class ImpactGrenadeEntity extends GrenadeEntity
 {
-
-	public ThermalDetonatorEntity(EntityType<ThermalDetonatorEntity> type, World world)
+	public ImpactGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
-		super(type, world, CollisionType.BOUNCE);
-		setExplosionPower(5f);
+		super(entityType, world, CollisionType.EXPLODE);
+		setExplosionPower(2f);
 	}
 
 	@Override
 	public GrenadeItem getItem()
 	{
-		return GadgetsItems.THERMAL_DETONATOR_ITEM;
-	}
-
-	@Override
-	public GrenadeBlock getBlock()
-	{
-		return GadgetsBlocks.THERMAL_DETONATOR_BLOCK;
-	}
-
-	@Override
-	public void explode()
-	{
-		getWorld().playSound(null, getBlockPos(), GadgetsSounds.THERMAL_DETONATOR_EXPLOSION, SoundCategory.PLAYERS, 4f, 1f);
-		super.explode();
+		return GadgetsItems.IMPACT_GRENADE_ITEM;
 	}
 
 	@Override
@@ -65,8 +41,8 @@ public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, true, true, x, y, z, m2 * 3, m4, m4, m4, 0);
 
 			serverWorld.spawnParticles(serverPlayerEntity, GadgetsParticleTypes.EXPLOSION_SMOKE_PARTICLE, true, false, x, y, z, m2 * 4, m, m, m, 0);
-			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME,  true, true, x, y, z, m2 * 2, m3, m3, m3, 0);
-			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME,  true, true, x, y, z, m2 * 2, m4, m4, m4, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME, true, true, x, y, z, m2 * 2, m3, m3, m3, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, true, true, x, y, z, m2 * 2, m4, m4, m4, 0);
 		}
 	}
 }

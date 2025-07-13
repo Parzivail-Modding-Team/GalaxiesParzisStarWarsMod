@@ -57,6 +57,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			register(itemModelGenerator, GadgetsItems.FRAGMENTATION_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.NERVE_GAS_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.SMOKE_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, GadgetsItems.IMPACT_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -78,6 +79,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM, "Fragmentation Grenade");
 			translationBuilder.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM, "FEX-M3 Gas Grenade");
 			translationBuilder.add(GadgetsItems.SMOKE_GRENADE_ITEM, "NACHT-5 Smoke Grenade");
+			translationBuilder.add(GadgetsItems.IMPACT_GRENADE_ITEM, "Impact Grenade");
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
@@ -113,7 +115,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			getOrCreateTagBuilder(GadgetsItems.Tags.GRENADES_TAG)
 					.add(GadgetsItems.THERMAL_DETONATOR_ITEM)
 					.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM)
-					.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM);
+					.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM)
+					.add(GadgetsItems.IMPACT_GRENADE_ITEM);
 		}
 	}
 	/**

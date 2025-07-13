@@ -116,9 +116,6 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 		if (stack.contains(GadgetsItems.Components.PRIMING_TIME) && world.getTime() >= stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion)
 		{
 			PlayerEntity player = (PlayerEntity)entity;
-			if(player.getWorld() instanceof ServerWorld serverWorld)
-				player.damage(serverWorld, new DamageSource(player.getWorld().getRegistryManager().getOrThrow(RegistryKeys.DAMAGE_TYPE).getEntry(DamageTypes.EXPLOSION.getValue()).get()), 40f);
-			GrenadeItem tei = (GrenadeItem)(stack.getItem() instanceof GrenadeItem ? stack.getItem() : item);
 			createExplosion(world, player);
 			if (!player.isCreative())
 			{

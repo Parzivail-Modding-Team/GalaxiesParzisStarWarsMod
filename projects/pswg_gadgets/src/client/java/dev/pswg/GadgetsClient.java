@@ -3,12 +3,8 @@ package dev.pswg;
 import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.entity.GadgetsEntities;
-import dev.pswg.particle.GasParticleEffect;
 import dev.pswg.particles.*;
-import dev.pswg.renderer.FragmentationGrenadeEntityRenderer;
-import dev.pswg.renderer.NerveGasGrenadeEntityRenderer;
-import dev.pswg.renderer.SmokeGasGrenadeEntityRenderer;
-import dev.pswg.renderer.ThermalDetonatorEntityRenderer;
+import dev.pswg.renderer.*;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -30,6 +26,8 @@ public class GadgetsClient implements GalaxiesClientAddon
 		EntityModelLayerRegistry.registerModelLayer(NerveGasGrenadeEntityRenderer.MODEL_LAYER, NerveGasGrenadeEntityRenderer.Model::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.SMOKE_GAS_GRENADE_ENTITY, SmokeGasGrenadeEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(SmokeGasGrenadeEntityRenderer.MODEL_LAYER, SmokeGasGrenadeEntityRenderer.Model::getTexturedModelData);
+		EntityRendererRegistry.register(GadgetsEntities.IMPACT_GRENADE_ENTITY, ImpactGrenadeEntityRenderer::new);
+		EntityModelLayerRegistry.registerModelLayer(ImpactGrenadeEntityRenderer.MODEL_LAYER, ImpactGrenadeEntityRenderer.Model::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.NERVE_GAS, EmptyEntityRenderer::new);
 		EntityRendererRegistry.register(GadgetsEntities.SMOKE_GAS, EmptyEntityRenderer::new);
 

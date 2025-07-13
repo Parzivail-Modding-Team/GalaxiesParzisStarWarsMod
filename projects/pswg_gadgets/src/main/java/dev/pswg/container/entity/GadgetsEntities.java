@@ -3,10 +3,7 @@ package dev.pswg.container.entity;
 import dev.pswg.Gadgets;
 import dev.pswg.entity.gas.NerveGasEntity;
 import dev.pswg.entity.gas.SmokeGasEntity;
-import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
-import dev.pswg.entity.grenades.NerveGasGrenadeEntity;
-import dev.pswg.entity.grenades.SmokeGasGrenadeEntity;
-import dev.pswg.entity.grenades.ThermalDetonatorEntity;
+import dev.pswg.entity.grenades.*;
 import dev.pswg.registry.Registrar;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -40,6 +37,13 @@ public class GadgetsEntities
 			EntityType.Builder.create(SmokeGasGrenadeEntity::new, SpawnGroup.MISC)
 			                  .dimensions(0.2f, 0.4f)
 			                  .spawnBoxScale(0.2f)
+			                  .dropsNothing()
+	);
+	public static final EntityType<ImpactGrenadeEntity> IMPACT_GRENADE_ENTITY = Registrar.entityType(
+			Gadgets.id("impact_grenade"),
+			EntityType.Builder.create(ImpactGrenadeEntity::new, SpawnGroup.MISC)
+			                  .dimensions(0.3f, 0.3f)
+			                  .spawnBoxScale(0.3f)
 			                  .dropsNothing()
 	);
 	public static final EntityType<NerveGasEntity> NERVE_GAS = Registrar.entityType(
