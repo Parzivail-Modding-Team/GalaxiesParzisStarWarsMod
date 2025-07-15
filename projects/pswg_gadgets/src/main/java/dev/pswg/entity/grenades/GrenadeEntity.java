@@ -268,7 +268,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 	{
 		if (getWorld() instanceof ServerWorld serverWorld)
 		{
-			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, pos, getExplosionPower(), false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, pos.add(0, 0.05f, 0), getExplosionPower(), false, Explosion.DestructionType.DESTROY_WITH_DECAY);
 			explosion.explode();
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}

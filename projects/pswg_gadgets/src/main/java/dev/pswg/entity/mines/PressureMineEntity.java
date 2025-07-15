@@ -74,7 +74,7 @@ public class PressureMineEntity extends Entity implements Ownable
 	{
 		if (getWorld() instanceof ServerWorld serverWorld)
 		{
-			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, this.getPos(), 3f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, this.getPos().add(0, 0.05f, 0), 3f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
 			explosion.explode();
 			//createParticles(getX(), getY(), getZ(), serverWorld);
 		}
