@@ -1,7 +1,7 @@
-package dev.pswg.renderer;
+package dev.pswg.renderer.grenades;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.grenades.NerveGasGrenadeEntity;
+import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -16,7 +16,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
-public class NerveGasGrenadeEntityRenderer extends EntityRenderer<NerveGasGrenadeEntity, NerveGasGrenadeEntityRenderer.State>
+public class FragmentationGrenadeEntityRenderer extends EntityRenderer<FragmentationGrenadeEntity, FragmentationGrenadeEntityRenderer.State>
 {
 	public static class Model extends EntityModel<State>
 	{
@@ -35,11 +35,11 @@ public class NerveGasGrenadeEntityRenderer extends EntityRenderer<NerveGasGrenad
 		}
 	}
 
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("nerve_gas_grenade"), "temp");
+	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("fragmentation_grenade"), "temp");
 	public static final Identifier TEXTURE = Identifier.of("pswg_gadgets", "textures/items/thermal_detonator.png");
 	private final Model model;
 
-	public NerveGasGrenadeEntityRenderer(EntityRendererFactory.Context context)
+	public FragmentationGrenadeEntityRenderer(EntityRendererFactory.Context context)
 	{
 		super(context);
 		this.model = new Model(context.getPart(MODEL_LAYER));
@@ -66,7 +66,7 @@ public class NerveGasGrenadeEntityRenderer extends EntityRenderer<NerveGasGrenad
 	}
 
 	@Override
-	public void updateRenderState(NerveGasGrenadeEntity entity, State state, float tickDelta)
+	public void updateRenderState(FragmentationGrenadeEntity entity, State state, float tickDelta)
 	{
 		super.updateRenderState(entity, state, tickDelta);
 		state.pitch = entity.getLerpedPitch(tickDelta);

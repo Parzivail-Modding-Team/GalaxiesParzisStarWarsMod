@@ -2,7 +2,7 @@ package dev.pswg.container;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.Gadgets;
-import dev.pswg.item.*;
+import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.component.ComponentType;

@@ -2,7 +2,7 @@ package dev.pswg.entity.grenades;
 
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
-import dev.pswg.item.GrenadeItem;
+import dev.pswg.item.grenades.GrenadeItem;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.particle.ParticleTypes;

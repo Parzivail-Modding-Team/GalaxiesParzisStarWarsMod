@@ -1,22 +1,19 @@
-package dev.pswg.item;
+package dev.pswg.item.grenades;
 
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.entity.grenades.GrenadeEntity;
+import dev.pswg.item.ExplosionSoundGroup;
+import dev.pswg.item.ILeftClickUsable;
 import dev.pswg.world.TickConstants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;

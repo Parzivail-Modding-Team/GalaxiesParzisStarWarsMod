@@ -1,24 +1,17 @@
 package dev.pswg.entity.grenades;
 
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.block.GrenadeBlock;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
-import dev.pswg.item.GrenadeItem;
-import net.minecraft.block.BlockState;
+import dev.pswg.item.grenades.GrenadeItem;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 
 public class ThermalDetonatorEntity extends GrenadeEntityWithBlock
 {

@@ -2,7 +2,7 @@ package dev.pswg.entity.grenades;
 
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.entity.GadgetsDamage;
-import dev.pswg.item.GrenadeItem;
+import dev.pswg.item.grenades.GrenadeItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;

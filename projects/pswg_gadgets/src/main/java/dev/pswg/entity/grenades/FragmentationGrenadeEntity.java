@@ -5,7 +5,7 @@ import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
-import dev.pswg.item.GrenadeItem;
+import dev.pswg.item.grenades.GrenadeItem;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;

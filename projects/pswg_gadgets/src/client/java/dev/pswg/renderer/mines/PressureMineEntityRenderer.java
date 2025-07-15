@@ -1,7 +1,8 @@
-package dev.pswg.renderer;
+package dev.pswg.renderer.mines;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
+import dev.pswg.entity.grenades.ThermalDetonatorEntity;
+import dev.pswg.entity.mines.PressureMineEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -16,7 +17,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
-public class FragmentationGrenadeEntityRenderer extends EntityRenderer<FragmentationGrenadeEntity, FragmentationGrenadeEntityRenderer.State>
+public class PressureMineEntityRenderer extends EntityRenderer<PressureMineEntity, PressureMineEntityRenderer.State>
 {
 	public static class Model extends EntityModel<State>
 	{
@@ -35,11 +36,11 @@ public class FragmentationGrenadeEntityRenderer extends EntityRenderer<Fragmenta
 		}
 	}
 
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("fragmentation_grenade"), "temp");
+	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("pressure_mine"), "temp");
 	public static final Identifier TEXTURE = Identifier.of("pswg_gadgets", "textures/items/thermal_detonator.png");
 	private final Model model;
 
-	public FragmentationGrenadeEntityRenderer(EntityRendererFactory.Context context)
+	public PressureMineEntityRenderer(EntityRendererFactory.Context context)
 	{
 		super(context);
 		this.model = new Model(context.getPart(MODEL_LAYER));
@@ -66,11 +67,11 @@ public class FragmentationGrenadeEntityRenderer extends EntityRenderer<Fragmenta
 	}
 
 	@Override
-	public void updateRenderState(FragmentationGrenadeEntity entity, State state, float tickDelta)
+	public void updateRenderState(PressureMineEntity entity, State state, float tickDelta)
 	{
 		super.updateRenderState(entity, state, tickDelta);
 		state.pitch = entity.getLerpedPitch(tickDelta);
-		state.yaw = entity.getClientYaw();
+		state.yaw = entity.getYaw();
 	}
 
 	public static class State extends EntityRenderState

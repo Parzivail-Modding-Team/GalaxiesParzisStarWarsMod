@@ -1,4 +1,4 @@
-package dev.pswg.renderer;
+package dev.pswg.renderer.grenades;
 
 import dev.pswg.Gadgets;
 import dev.pswg.entity.grenades.ImpactGrenadeEntity;

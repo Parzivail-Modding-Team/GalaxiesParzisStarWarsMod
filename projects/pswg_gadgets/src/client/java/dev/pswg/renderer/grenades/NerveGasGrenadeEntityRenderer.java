@@ -1,7 +1,7 @@
-package dev.pswg.renderer;
+package dev.pswg.renderer.grenades;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.grenades.ThermalDetonatorEntity;
+import dev.pswg.entity.grenades.NerveGasGrenadeEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -16,7 +16,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
-public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetonatorEntity, ThermalDetonatorEntityRenderer.State>
+public class NerveGasGrenadeEntityRenderer extends EntityRenderer<NerveGasGrenadeEntity, NerveGasGrenadeEntityRenderer.State>
 {
 	public static class Model extends EntityModel<State>
 	{
@@ -34,14 +34,17 @@ public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetona
 			return TexturedModelData.of(modelData, 16, 16);
 		}
 	}
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("thermal_detonator"), "temp");
+
+	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("nerve_gas_grenade"), "temp");
 	public static final Identifier TEXTURE = Identifier.of("pswg_gadgets", "textures/items/thermal_detonator.png");
 	private final Model model;
-	public ThermalDetonatorEntityRenderer(EntityRendererFactory.Context context)
+
+	public NerveGasGrenadeEntityRenderer(EntityRendererFactory.Context context)
 	{
 		super(context);
 		this.model = new Model(context.getPart(MODEL_LAYER));
 	}
+
 	@Override
 	public void render(State state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light)
 	{
@@ -63,7 +66,7 @@ public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetona
 	}
 
 	@Override
-	public void updateRenderState(ThermalDetonatorEntity entity, State state, float tickDelta)
+	public void updateRenderState(NerveGasGrenadeEntity entity, State state, float tickDelta)
 	{
 		super.updateRenderState(entity, state, tickDelta);
 		state.pitch = entity.getLerpedPitch(tickDelta);
