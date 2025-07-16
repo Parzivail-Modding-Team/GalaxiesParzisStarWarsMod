@@ -5,6 +5,7 @@ import dev.pswg.entity.gas.NerveGasEntity;
 import dev.pswg.entity.gas.SmokeGasEntity;
 import dev.pswg.entity.grenades.*;
 import dev.pswg.entity.mines.PressureMineEntity;
+import dev.pswg.entity.mines.TripwireMineEntity;
 import dev.pswg.registry.Registrar;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -50,6 +51,14 @@ public class GadgetsEntities
 	public static final EntityType<PressureMineEntity> PRESSURE_MINE_ENTITY = Registrar.entityType(
 			Gadgets.id("pressure_mine"),
 			EntityType.Builder.create(PressureMineEntity::new, SpawnGroup.MISC)
+			                  .dimensions(0.2f, 0.1f)
+			                  .spawnBoxScale(0.2f)
+			                  .dropsNothing()
+	);
+
+	public static final EntityType<TripwireMineEntity> TRIPWIRE_MINE_ENTITY = Registrar.entityType(
+			Gadgets.id("tripwire_mine"),
+			EntityType.Builder.create(TripwireMineEntity::new, SpawnGroup.MISC)
 			                  .dimensions(0.2f, 0.1f)
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
