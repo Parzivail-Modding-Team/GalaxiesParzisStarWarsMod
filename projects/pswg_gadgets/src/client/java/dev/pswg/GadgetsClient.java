@@ -39,6 +39,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.FRAGMENTATION_GRENADE_WAVE_PARTICLE, FragmentationGrenadeWaveParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SMOKE_PARTICLE, SmokeParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.NERVE_GAS_PARTICLE, NerveGasParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

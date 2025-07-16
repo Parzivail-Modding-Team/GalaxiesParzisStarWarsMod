@@ -15,7 +15,7 @@ public class ImpactGrenadeEntity extends GrenadeEntity
 	public ImpactGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
 		super(entityType, world, CollisionType.EXPLODE);
-		setExplosionPower(2f);
+		setExplosionPower(1.5f);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class ImpactGrenadeEntity extends GrenadeEntity
 
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 		{
-			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLASH, true, true, x, y, z, 1, 0, 0, 0, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, (power > 2 ? ParticleTypes.FLASH : GadgetsParticleTypes.SMALL_FLASH_PARTICLE), true, true, x, y, z, 1, 0, 0, 0, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, GadgetsParticleTypes.EXPLOSION_SMOKE_PARTICLE, true, true, x, y, z, m2 * 6, m, m, m, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME, true, true, x, y, z, m2 * 2, m3, m3, m3, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, true, true, x, y, z, m2 * 3, m4, m4, m4, 0);

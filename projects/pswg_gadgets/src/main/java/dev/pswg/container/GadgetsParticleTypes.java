@@ -15,6 +15,8 @@ public class GadgetsParticleTypes
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_SPARK_PARTICLE = registerSimple("fragmentation_grenade_spark");
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_WAVE_PARTICLE = registerSimple("fragmentation_grenade_wave");
 
+	public static final SimpleParticleType SMALL_FLASH_PARTICLE = registerSimple("small_flash");
+
 	public static final ParticleType<GasParticleEffect> SMOKE_PARTICLE = registerGas("smoke");
 	public static final ParticleType<GasParticleEffect> NERVE_GAS_PARTICLE = registerGas("nerve_gas");
 

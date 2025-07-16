@@ -1,6 +1,7 @@
 package dev.pswg.entity.mines;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -18,6 +19,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -74,11 +76,20 @@ public class PressureMineEntity extends Entity implements Ownable
 	{
 		if (getWorld() instanceof ServerWorld serverWorld)
 		{
-			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, this.getPos().add(0, 0.05f, 0), 3f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, this.getPos().add(0, 0.05f, 0), 2f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
 			explosion.explode();
-			//createParticles(getX(), getY(), getZ(), serverWorld);
+			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
 		this.discard();
+	}
+
+	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
+	{
+
+		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
+		{
+			serverWorld.spawnParticles(serverPlayerEntity, GadgetsParticleTypes.SMALL_FLASH_PARTICLE, true, true, x, y, z, 1, 0, 0, 0, 0);
+		}
 	}
 
 	private void applyDrag()
@@ -174,7 +185,7 @@ public class PressureMineEntity extends Entity implements Ownable
 		if (!isInGround())
 			this.applyGravity();
 		else
-			this.setVelocity(this.getVelocity().multiply(1, 0, 1));
+			this.setVelocity(this.getVelocity().multiply(1, -0.5, 1));
 		this.applyDrag();
 		if (this.age == PRIMING_TIME)
 		{
