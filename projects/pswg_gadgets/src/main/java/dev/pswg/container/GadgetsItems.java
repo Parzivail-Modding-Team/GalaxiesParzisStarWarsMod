@@ -2,6 +2,7 @@ package dev.pswg.container;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.Gadgets;
+import dev.pswg.item.PressureMineItem;
 import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;
 import net.minecraft.block.DispenserBlock;
@@ -42,6 +43,8 @@ public class GadgetsItems
 	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Settings());
 	public static final SmokeGasGrenadeItem SMOKE_GRENADE_ITEM = Registrar.item(Gadgets.id("smoke_grenade"), SmokeGasGrenadeItem::new, new Item.Settings());
 	public static final ImpactGrenadeItem IMPACT_GRENADE_ITEM = Registrar.item(Gadgets.id("impact_grenade"), ImpactGrenadeItem::new, new Item.Settings());
+
+	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Settings());
 
 	public static void register()
 	{

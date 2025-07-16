@@ -1,9 +1,9 @@
 {
-	"values": [
-		{
-			"id": "#minecraft:leaves",
-			"required": false
-		},
-		"minecraft:copper_grate"
-	]
+  "values": [
+    {
+      "id": "#minecraft:leaves",
+      "required": false
+    },
+    "minecraft:copper_grate"
+  ]
 }

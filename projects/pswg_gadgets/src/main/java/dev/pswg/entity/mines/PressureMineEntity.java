@@ -1,6 +1,5 @@
 package dev.pswg.entity.mines;
 
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import net.minecraft.block.BlockState;
@@ -12,7 +11,6 @@ import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -196,9 +194,9 @@ public class PressureMineEntity extends Entity implements Ownable
 
 		if (primed && !entityCollisions.isEmpty())
 		{
-			entityCollisions.forEach(entity -> Gadgets.LOGGER.info(entity.getName().toString()));
 			explode();
 		}
+
 		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
 		Vec3d vec;
 		if (hitResult.getType() != HitResult.Type.MISS)

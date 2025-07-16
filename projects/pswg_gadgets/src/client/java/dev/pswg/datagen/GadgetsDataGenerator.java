@@ -58,6 +58,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			register(itemModelGenerator, GadgetsItems.NERVE_GAS_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.SMOKE_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.IMPACT_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+
+			register(itemModelGenerator, GadgetsItems.PRESSURE_MINE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -75,11 +77,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
-			translationBuilder.add(GadgetsItems.THERMAL_DETONATOR_ITEM, "Thermal Detonator");
-			translationBuilder.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM, "Fragmentation Grenade");
+			translationBuilder.add(GadgetsItems.THERMAL_DETONATOR_ITEM, "CLS-A Thermal Detonator");
+			translationBuilder.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM, "C-25 Fragmentation Grenade");
 			translationBuilder.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM, "FEX-M3 Gas Grenade");
 			translationBuilder.add(GadgetsItems.SMOKE_GRENADE_ITEM, "NACHT-5 Smoke Grenade");
 			translationBuilder.add(GadgetsItems.IMPACT_GRENADE_ITEM, "Impact Grenade");
+			translationBuilder.add(GadgetsItems.PRESSURE_MINE_ITEM, "Pressure Mine");
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
