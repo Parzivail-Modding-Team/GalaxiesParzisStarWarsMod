@@ -2,6 +2,8 @@ package dev.pswg.renderer.grenades;
 
 import dev.pswg.Gadgets;
 import dev.pswg.entity.grenades.ThermalDetonatorEntity;
+import dev.pswg.models.GrenadeRenderState;
+import dev.pswg.models.ThermalDetonatorGrenadeModel;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -16,34 +18,18 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
-public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetonatorEntity, ThermalDetonatorEntityRenderer.State>
+public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetonatorEntity, GrenadeRenderState>
 {
-	public static class Model extends EntityModel<State>
-	{
-		public Model(ModelPart modelPart)
-		{
-			super(modelPart, RenderLayer::getEntityCutout);
-		}
-
-		public static TexturedModelData getTexturedModelData()
-		{
-			ModelData modelData = new ModelData();
-			ModelPartData modelPartData = modelData.getRoot();
-			modelPartData.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-1.5F, -3F, -1.5F, 3F, 3F, 3F), ModelTransform.of(0F, 0F, 0F, 0, 0, (float)Math.toRadians(180)));
-			modelPartData.addChild("trigger", ModelPartBuilder.create().uv(0, 6).cuboid(-0.5F, -3.5F, -0.75F, 1F, 1F, 2F), ModelTransform.of(0F, 0F, 0F, 0, 0, (float)Math.toRadians(180)));
-			return TexturedModelData.of(modelData, 16, 16);
-		}
-	}
 	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("thermal_detonator"), "temp");
 	public static final Identifier TEXTURE = Identifier.of("pswg_gadgets", "textures/items/thermal_detonator.png");
-	private final Model model;
+	private final ThermalDetonatorGrenadeModel model;
 	public ThermalDetonatorEntityRenderer(EntityRendererFactory.Context context)
 	{
 		super(context);
-		this.model = new Model(context.getPart(MODEL_LAYER));
+		this.model = new ThermalDetonatorGrenadeModel(context.getPart(MODEL_LAYER));
 	}
 	@Override
-	public void render(State state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light)
+	public void render(GrenadeRenderState state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light)
 	{
 		matrixStack.push();
 		VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
@@ -57,22 +43,16 @@ public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetona
 	}
 
 	@Override
-	public State createRenderState()
+	public GrenadeRenderState createRenderState()
 	{
-		return new State();
+		return new GrenadeRenderState();
 	}
 
 	@Override
-	public void updateRenderState(ThermalDetonatorEntity entity, State state, float tickDelta)
+	public void updateRenderState(ThermalDetonatorEntity entity, GrenadeRenderState state, float tickDelta)
 	{
 		super.updateRenderState(entity, state, tickDelta);
 		state.pitch = entity.getLerpedPitch(tickDelta);
 		state.yaw = entity.getClientYaw();
-	}
-
-	public static class State extends EntityRenderState
-	{
-		public float pitch;
-		public float yaw;
 	}
 }

@@ -3,6 +3,7 @@ package dev.pswg.entity.grenades;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.item.grenades.GrenadeItem;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.particle.ParticleTypes;
@@ -14,8 +15,16 @@ public class ImpactGrenadeEntity extends GrenadeEntity
 {
 	public ImpactGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
-		super(entityType, world, CollisionType.EXPLODE);
+		super(entityType, world, CollisionType.BOUNCE);
 		setExplosionPower(1.5f);
+	}
+
+	@Override
+	protected void onBlockCollision(BlockState state)
+	{
+		if (isPrimed())
+			explode();
+		super.onBlockCollision(state);
 	}
 
 	@Override
