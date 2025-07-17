@@ -3,6 +3,7 @@ package dev.pswg.container;
 import com.mojang.serialization.Codec;
 import dev.pswg.Gadgets;
 import dev.pswg.item.PressureMineItem;
+import dev.pswg.item.TripwireMineItem;
 import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;
 import net.minecraft.block.DispenserBlock;
@@ -19,6 +20,7 @@ public class GadgetsItems
 	public static class Tags
 	{
 		public static final TagKey<Item> GRENADES_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("grenades"));
+		public static final TagKey<Item> MINES_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("mines"));
 
 		public static void register()
 		{
@@ -45,6 +47,7 @@ public class GadgetsItems
 	public static final ImpactGrenadeItem IMPACT_GRENADE_ITEM = Registrar.item(Gadgets.id("impact_grenade"), ImpactGrenadeItem::new, new Item.Settings());
 
 	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Settings());
+	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Settings());
 
 	public static void register()
 	{

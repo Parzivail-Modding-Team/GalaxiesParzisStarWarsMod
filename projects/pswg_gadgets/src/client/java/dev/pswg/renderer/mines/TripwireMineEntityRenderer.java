@@ -30,8 +30,7 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 		{
 			ModelData modelData = new ModelData();
 			ModelPartData modelPartData = modelData.getRoot();
-			modelPartData.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-1.5F, -3F, -1.5F, 3F, 3F, 3F), ModelTransform.of(0F, 0F, 0F, 0, 0, (float)Math.toRadians(180)));
-			modelPartData.addChild("trigger", ModelPartBuilder.create().uv(0, 6).cuboid(-0.5F, -3.5F, -0.75F, 1F, 1F, 2F), ModelTransform.of(0F, 0F, 0F, 0, 0, (float)Math.toRadians(180)));
+			modelPartData.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-1.5F, -1F, -1.5F, 3F, 1F, 3F), ModelTransform.of(0F, 0F, 0F, 0, 0, (float)Math.toRadians(180)));
 			return TexturedModelData.of(modelData, 16, 16);
 		}
 	}

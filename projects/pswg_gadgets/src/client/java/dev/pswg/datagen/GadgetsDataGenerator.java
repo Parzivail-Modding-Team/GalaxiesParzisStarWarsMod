@@ -60,6 +60,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			register(itemModelGenerator, GadgetsItems.IMPACT_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 
 			register(itemModelGenerator, GadgetsItems.PRESSURE_MINE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, GadgetsItems.TRIPWIRE_MINE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -83,6 +84,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsItems.SMOKE_GRENADE_ITEM, "NACHT-5 Smoke Grenade");
 			translationBuilder.add(GadgetsItems.IMPACT_GRENADE_ITEM, "Impact Grenade");
 			translationBuilder.add(GadgetsItems.PRESSURE_MINE_ITEM, "Pressure Mine");
+			translationBuilder.add(GadgetsItems.TRIPWIRE_MINE_ITEM, "Tripwire Mine");
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
@@ -120,6 +122,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM)
 					.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM)
 					.add(GadgetsItems.IMPACT_GRENADE_ITEM);
+
+			getOrCreateTagBuilder(GadgetsItems.Tags.MINES_TAG)
+					.add(GadgetsItems.PRESSURE_MINE_ITEM)
+					.add(GadgetsItems.TRIPWIRE_MINE_ITEM);
 		}
 	}
 	/**
