@@ -1,9 +1,9 @@
 package dev.pswg.entity.mines;
 
+import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Ownable;
@@ -20,12 +20,12 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
@@ -180,7 +180,6 @@ public class TripwireMineEntity extends Entity implements Ownable
 			}
 		}
 
-		var world = getWorld();
 		if (!isInGround())
 			this.applyGravity();
 		else
@@ -191,17 +190,34 @@ public class TripwireMineEntity extends Entity implements Ownable
 			primed = true;
 			playSound(GadgetsSounds.ARM, 1, 1);
 		}
-		var raycast = world.raycast(new RaycastContext(this.getPos().add(0, 0.05, 0), this.getPos().add(0, 0.05, 0).add(this.getRotationVector().multiply(3)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.ANY, ShapeContext.absent()));
+		float maxDist = 3;
+		var rotVec = getRotationVector();
 
-		if (raycast.getType() == HitResult.Type.ENTITY)
+		var raycast = ProjectileUtil.raycast(
+				this,
+				this.getPos().add(0, 0.05, 0),
+				this.getPos().add(0, 0.05, 0).add(rotVec.multiply(maxDist)),
+				this.getBoundingBox().stretch(rotVec.multiply(maxDist)).expand(1.0, 1.0, 1.0),
+				entity -> true,
+				maxDist);
+
+		if (raycast != null && raycast.getType() == HitResult.Type.ENTITY && this.primed)
 			explode();
 
 		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
 
+
 		if (hitResult.getType() != HitResult.Type.MISS)
 		{
+			if (hitResult.getType() == HitResult.Type.BLOCK)
+			{
+				var blockHit = (BlockHitResult)hitResult;
+				setRotation(blockHit.getSide().getDoubleVector());
+				setInGround(true);
+			}
 			vec3d = hitResult.getPos();
 		}
+
 		else
 		{
 			vec3d = this.getPos().add(this.getVelocity());
@@ -210,6 +226,14 @@ public class TripwireMineEntity extends Entity implements Ownable
 		this.tickBlockCollision();
 
 		super.tick();
+	}
+
+	public void setRotation(Vec3d vec)
+	{
+		double yaw = Math.atan(vec.x / (-vec.y)) / Math.PI * 180f;
+		double tanPitch = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2)) / vec.z;
+		double pitch = Math.atan(tanPitch) / Math.PI * 180f;
+		setRotation((float)yaw, (float)-pitch);
 	}
 
 	@Override
