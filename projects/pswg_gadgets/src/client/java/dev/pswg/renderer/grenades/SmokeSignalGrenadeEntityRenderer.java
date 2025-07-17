@@ -1,7 +1,7 @@
 package dev.pswg.renderer.grenades;
 
 import dev.pswg.Gadgets;
-import dev.pswg.entity.grenades.SmokeGasGrenadeEntity;
+import dev.pswg.entity.grenades.SmokeSignalGrenadeEntity;
 import dev.pswg.models.GrenadeRenderState;
 import dev.pswg.models.SmokeSignalGrenadeModel;
 import net.minecraft.client.render.OverlayTexture;
@@ -15,14 +15,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
-public class SmokeGasGrenadeEntityRenderer extends EntityRenderer<SmokeGasGrenadeEntity, GrenadeRenderState>
+public class SmokeSignalGrenadeEntityRenderer extends EntityRenderer<SmokeSignalGrenadeEntity, GrenadeRenderState>
 {
 
 	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("smoke_grenade"), "temp");
 	public static final Identifier TEXTURE = Identifier.of("pswg_gadgets", "textures/items/smoke_signal_grenade.png");
 	private final SmokeSignalGrenadeModel model;
 
-	public SmokeGasGrenadeEntityRenderer(EntityRendererFactory.Context context)
+	public SmokeSignalGrenadeEntityRenderer(EntityRendererFactory.Context context)
 	{
 		super(context);
 		this.model = new SmokeSignalGrenadeModel(context.getPart(MODEL_LAYER));
@@ -49,7 +49,7 @@ public class SmokeGasGrenadeEntityRenderer extends EntityRenderer<SmokeGasGrenad
 	}
 
 	@Override
-	public void updateRenderState(SmokeGasGrenadeEntity entity, GrenadeRenderState state, float tickDelta)
+	public void updateRenderState(SmokeSignalGrenadeEntity entity, GrenadeRenderState state, float tickDelta)
 	{
 		super.updateRenderState(entity, state, tickDelta);
 		state.pitch = entity.getLerpedPitch(tickDelta);

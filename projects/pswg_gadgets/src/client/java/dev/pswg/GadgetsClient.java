@@ -27,8 +27,8 @@ public class GadgetsClient implements GalaxiesClientAddon
 		EntityModelLayerRegistry.registerModelLayer(FragmentationGrenadeEntityRenderer.MODEL_LAYER, FragmentationGrenadeModel::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.NERVE_GAS_GRENADE_ENTITY, NerveGasGrenadeEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(NerveGasGrenadeEntityRenderer.MODEL_LAYER, NerveGasGrenadeModel::getTexturedModelData);
-		EntityRendererRegistry.register(GadgetsEntities.SMOKE_GAS_GRENADE_ENTITY, SmokeGasGrenadeEntityRenderer::new);
-		EntityModelLayerRegistry.registerModelLayer(SmokeGasGrenadeEntityRenderer.MODEL_LAYER, SmokeSignalGrenadeModel::getTexturedModelData);
+		EntityRendererRegistry.register(GadgetsEntities.SMOKE_SIGNAL_GRENADE_ENTITY, SmokeSignalGrenadeEntityRenderer::new);
+		EntityModelLayerRegistry.registerModelLayer(SmokeSignalGrenadeEntityRenderer.MODEL_LAYER, SmokeSignalGrenadeModel::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.IMPACT_GRENADE_ENTITY, ImpactGrenadeEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(ImpactGrenadeEntityRenderer.MODEL_LAYER, ImpactGrenadeModel::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.PRESSURE_MINE_ENTITY, PressureMineEntityRenderer::new);

@@ -56,7 +56,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			register(itemModelGenerator, GadgetsItems.THERMAL_DETONATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.FRAGMENTATION_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.NERVE_GAS_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.SMOKE_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.IMPACT_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 
 			register(itemModelGenerator, GadgetsItems.PRESSURE_MINE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
@@ -81,7 +81,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsItems.THERMAL_DETONATOR_ITEM, "CLS-A Thermal Detonator");
 			translationBuilder.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM, "C-25 Fragmentation Grenade");
 			translationBuilder.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM, "FEX-M3 Gas Grenade");
-			translationBuilder.add(GadgetsItems.SMOKE_GRENADE_ITEM, "NACHT-5 Smoke Grenade");
+			translationBuilder.add(GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM, "NACHT-5 Smoke Grenade");
 			translationBuilder.add(GadgetsItems.IMPACT_GRENADE_ITEM, "Impact Grenade");
 			translationBuilder.add(GadgetsItems.PRESSURE_MINE_ITEM, "Pressure Mine");
 			translationBuilder.add(GadgetsItems.TRIPWIRE_MINE_ITEM, "Tripwire Mine");

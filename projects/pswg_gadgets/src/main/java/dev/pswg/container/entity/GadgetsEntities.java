@@ -34,9 +34,9 @@ public class GadgetsEntities
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()
 	);
-	public static final EntityType<SmokeGasGrenadeEntity> SMOKE_GAS_GRENADE_ENTITY = Registrar.entityType(
+	public static final EntityType<SmokeSignalGrenadeEntity> SMOKE_SIGNAL_GRENADE_ENTITY = Registrar.entityType(
 			Gadgets.id("smoke_grenade"),
-			EntityType.Builder.create(SmokeGasGrenadeEntity::new, SpawnGroup.MISC)
+			EntityType.Builder.create(SmokeSignalGrenadeEntity::new, SpawnGroup.MISC)
 			                  .dimensions(0.2f, 0.2f)
 			                  .spawnBoxScale(0.2f)
 			                  .dropsNothing()

@@ -7,10 +7,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.world.World;
 
-public class SmokeGasGrenadeEntity extends GasGrenadeEntity
+public class SmokeSignalGrenadeEntity extends GasGrenadeEntity
 {
 
-	public SmokeGasGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
+	public SmokeSignalGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
 	{
 		super(entityType, world, GadgetsEntities.SMOKE_GAS, CollisionType.BOUNCE, 30);
 	}
@@ -18,7 +18,7 @@ public class SmokeGasGrenadeEntity extends GasGrenadeEntity
 	@Override
 	public GrenadeItem getItem()
 	{
-		return GadgetsItems.SMOKE_GRENADE_ITEM;
+		return GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM;
 	}
 
 }

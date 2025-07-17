@@ -7,16 +7,16 @@ import dev.pswg.item.FragmentationGrenadeSoundGroup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 
-public class SmokeGasGrenadeItem extends GrenadeItem
+public class SmokeSignalGrenadeItem extends GrenadeItem
 {
-	public SmokeGasGrenadeItem(Item.Settings settings)
+	public SmokeSignalGrenadeItem(Item.Settings settings)
 	{
-		super(settings, GadgetsItems.SMOKE_GRENADE_ITEM, 80, new FragmentationGrenadeSoundGroup());
+		super(settings, GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM, 80, new FragmentationGrenadeSoundGroup());
 	}
 
 	@Override
 	public EntityType<? extends GrenadeEntity> getEntityType()
 	{
-		return GadgetsEntities.SMOKE_GAS_GRENADE_ENTITY;
+		return GadgetsEntities.SMOKE_SIGNAL_GRENADE_ENTITY;
 	}
 }
