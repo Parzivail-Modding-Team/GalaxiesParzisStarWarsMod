@@ -1,6 +1,5 @@
 package dev.pswg.entity.mines;
 
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import net.minecraft.block.BlockState;
@@ -26,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
@@ -41,7 +41,8 @@ public class TripwireMineEntity extends Entity implements Ownable
 	private static final TrackedData<Boolean> IN_GROUND = DataTracker.registerData(TripwireMineEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	private int PRIMING_TIME = 60;
-	private boolean primed;
+	public boolean primed;
+	public float tripwireDistance;
 
 	@Nullable
 	private UUID ownerUuid;
@@ -193,7 +194,16 @@ public class TripwireMineEntity extends Entity implements Ownable
 		float maxDist = 3;
 		var rotVec = getRotationVector();
 
-		var raycast = ProjectileUtil.raycast(
+		var blockRaycast = getWorld().raycast(new RaycastContext(
+				this.getPos().add(0, 0, 0),
+				this.getPos().add(rotVec.multiply(maxDist)),
+				RaycastContext.ShapeType.COLLIDER,
+				RaycastContext.FluidHandling.ANY,
+				this
+		));
+		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getPos().distanceTo(getPos()));
+
+		var entityRaycast = ProjectileUtil.raycast(
 				this,
 				this.getPos().add(0, 0.05, 0),
 				this.getPos().add(0, 0.05, 0).add(rotVec.multiply(maxDist)),
@@ -201,7 +211,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 				entity -> true,
 				maxDist);
 
-		if (raycast != null && raycast.getType() == HitResult.Type.ENTITY && this.primed)
+		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && this.primed)
 			explode();
 
 		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);

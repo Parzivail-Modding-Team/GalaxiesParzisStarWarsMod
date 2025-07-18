@@ -34,7 +34,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 		EntityRendererRegistry.register(GadgetsEntities.PRESSURE_MINE_ENTITY, PressureMineEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(PressureMineEntityRenderer.MODEL_LAYER, PressureMineEntityRenderer.Model::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.TRIPWIRE_MINE_ENTITY, TripwireMineEntityRenderer::new);
-		EntityModelLayerRegistry.registerModelLayer(TripwireMineEntityRenderer.MODEL_LAYER, TripwireMineEntityRenderer.Model::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(TripwireMineEntityRenderer.MODEL_LAYER, TripwireMineModel::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.NERVE_GAS, EmptyEntityRenderer::new);
 		EntityRendererRegistry.register(GadgetsEntities.SMOKE_GAS, EmptyEntityRenderer::new);
 
