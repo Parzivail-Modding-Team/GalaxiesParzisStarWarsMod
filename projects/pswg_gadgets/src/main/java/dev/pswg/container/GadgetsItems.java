@@ -57,5 +57,7 @@ public class GadgetsItems
 		DispenserBlock.registerProjectileBehavior(GadgetsItems.THERMAL_DETONATOR_ITEM);
 		DispenserBlock.registerProjectileBehavior(GadgetsItems.FRAGMENTATION_GRENADE_ITEM);
 		DispenserBlock.registerProjectileBehavior(GadgetsItems.NERVE_GAS_GRENADE_ITEM);
+		DispenserBlock.registerProjectileBehavior(GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM);
+		DispenserBlock.registerProjectileBehavior(GadgetsItems.IMPACT_GRENADE_ITEM);
 	}
 }
