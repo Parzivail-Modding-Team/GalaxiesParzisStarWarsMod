@@ -206,10 +206,10 @@ public class TripwireMineEntity extends Entity implements Ownable
 		var entityRaycast = ProjectileUtil.raycast(
 				this,
 				this.getPos().add(0, 0.05, 0),
-				this.getPos().add(0, 0.05, 0).add(rotVec.multiply(maxDist)),
-				this.getBoundingBox().stretch(rotVec.multiply(maxDist)).expand(1.0, 1.0, 1.0),
+				this.getPos().add(0, 0.05, 0).add(rotVec.multiply(tripwireDistance)),
+				this.getBoundingBox().stretch(rotVec.multiply(tripwireDistance)).expand(1.0, 1.0, 1.0),
 				entity -> true,
-				maxDist);
+				tripwireDistance);
 
 		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && this.primed)
 			explode();
