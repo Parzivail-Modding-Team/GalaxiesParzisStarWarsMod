@@ -1,5 +1,6 @@
 package dev.pswg.entity.mines;
 
+import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import net.minecraft.block.BlockState;
@@ -82,6 +83,12 @@ public class TripwireMineEntity extends Entity implements Ownable
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
 		this.discard();
+	}
+
+	@Override
+	public void onDamaged(DamageSource damageSource)
+	{
+		super.onDamaged(damageSource);
 	}
 
 	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
@@ -184,7 +191,10 @@ public class TripwireMineEntity extends Entity implements Ownable
 		if (!isInGround())
 			this.applyGravity();
 		else
+		{
 			this.setVelocity(this.getVelocity().multiply(0, 0, 0));
+			this.velocityModified = true;
+		}
 		this.applyDrag();
 		if (this.age == PRIMING_TIME)
 		{
@@ -203,6 +213,18 @@ public class TripwireMineEntity extends Entity implements Ownable
 		));
 		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getPos().distanceTo(getPos()));
 
+		if (this.primed)
+		{
+			for (float f = 0; f < tripwireDistance; f += 0.015f)
+			{
+				if (getWorld() instanceof ServerWorld serverWorld)
+				{
+					serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX() + getRotationVector().multiply(f).x, getY() + getRotationVector().multiply(f).y, getZ() + getRotationVector().multiply(f).z, 1, getWorld().random.nextBetween(1, 100) / 30000f, 0, getWorld().random.nextBetween(1, 100) / 30000f, 0);
+					//serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX(), getY() + f, getZ(), 1, getWorld().random.nextBetween(1, 100) / 30000f, 0, getWorld().random.nextBetween(1, 100) / 30000f, 0);
+				}
+			}
+		}
+
 		var entityRaycast = ProjectileUtil.raycast(
 				this,
 				this.getPos().add(0, 0.05, 0),
@@ -219,11 +241,14 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 		if (hitResult.getType() != HitResult.Type.MISS)
 		{
-			if (hitResult.getType() == HitResult.Type.BLOCK)
+			if (hitResult.getType() == HitResult.Type.BLOCK && !isInGround())
 			{
 				var blockHit = (BlockHitResult)hitResult;
-				setRotation(blockHit.getSide().getDoubleVector());
+				var normal = new Vec3d(blockHit.getSide().getUnitVector());
+
+				setRotation(normal);
 				setInGround(true);
+				this.velocityModified = true;
 			}
 			vec3d = hitResult.getPos();
 		}
@@ -240,10 +265,10 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 	public void setRotation(Vec3d vec)
 	{
-		double yaw = Math.atan(vec.x / (-vec.y)) / Math.PI * 180f;
-		double tanPitch = Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2)) / vec.z;
-		double pitch = Math.atan(tanPitch) / Math.PI * 180f;
-		setRotation((float)yaw, (float)-pitch);
+		var pitch = Math.asin(-vec.y) / Math.PI * 180f;
+		var yaw = Math.atan2(vec.x, vec.z) / Math.PI * 180f;
+		//Gadgets.LOGGER.info(yaw+ " "+ pitch);
+		setRotation((float)-yaw, (float)pitch);
 	}
 
 	@Override

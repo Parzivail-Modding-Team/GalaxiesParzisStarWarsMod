@@ -5,9 +5,11 @@ import net.minecraft.client.render.entity.model.EntityModel;
 
 public class TripwireMineModel extends EntityModel<TripwireMineRenderState>
 {
+	private final ModelPart root;
 	public TripwireMineModel(ModelPart root)
 	{
 		super(root);
+		this.root = root.getChild("body");
 	}
 
 	public static TexturedModelData getTexturedModelData()
@@ -25,6 +27,7 @@ public class TripwireMineModel extends EntityModel<TripwireMineRenderState>
 	@Override
 	public void setAngles(TripwireMineRenderState state)
 	{
+		this.root.setAngles(state.pitch, state.yaw, 0);
 		super.setAngles(state);
 	}
 }

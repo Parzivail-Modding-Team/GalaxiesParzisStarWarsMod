@@ -16,6 +16,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntity, TripwireMineRenderState>
 {
@@ -29,14 +30,14 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 		super(context);
 		this.model = new TripwireMineModel(context.getPart(MODEL_LAYER));
 	}
-
 	@Override
 	public void render(TripwireMineRenderState state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light)
 	{
 		matrixStack.push();
 		VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE));
 
-		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw));
+		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw - 90));
+		matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(state.pitch + 90));
 
 		this.model.setAngles(state);
 
@@ -45,7 +46,7 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 		model.getRootPart().getChild("laser").hidden = !state.primed;
 
 		this.model.getRootPart().getChild("body").render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-		this.model.getRootPart().getChild("laser").render(matrixStack, vertexConsumer, 205, OverlayTexture.DEFAULT_UV);
+		//this.model.getRootPart().getChild("laser").render(matrixStack, vertexConsumer, 205, OverlayTexture.DEFAULT_UV);
 		matrixStack.pop();
 		super.render(state, matrixStack, vertexConsumerProvider, light);
 	}
@@ -64,5 +65,6 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 		state.yaw = entity.getYaw();
 		state.primed = entity.primed;
 		state.tripwireDistance = entity.tripwireDistance;
+		state.rotationVec = entity.getRotationVector();
 	}
 }
