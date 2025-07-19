@@ -3,6 +3,7 @@ package dev.pswg.entity.mines;
 import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
+import dev.pswg.container.entity.GadgetsDamage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -88,6 +89,8 @@ public class TripwireMineEntity extends Entity implements Ownable
 	@Override
 	public void onDamaged(DamageSource damageSource)
 	{
+		if (damageSource.isIn(GadgetsDamage.DamageTags.IGNITES_EXPLOSIVES))
+			explode();
 		super.onDamaged(damageSource);
 	}
 
