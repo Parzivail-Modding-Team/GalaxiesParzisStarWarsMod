@@ -162,23 +162,6 @@ public class TripwireMineEntity extends Entity implements Ownable
 		Vec3d vec3d = this.getVelocity();
 		BlockPos blockPos = this.getBlockPos();
 		BlockState blockState = this.getWorld().getBlockState(blockPos);
-		if (!blockState.isAir())
-		{
-			VoxelShape voxelShape = blockState.getCollisionShape(this.getWorld(), blockPos);
-			if (!voxelShape.isEmpty())
-			{
-				Vec3d vec3d2 = this.getPos();
-
-				for (Box box : voxelShape.getBoundingBoxes())
-				{
-					if (box.offset(blockPos).contains(vec3d2))
-					{
-						this.setInGround(true);
-						break;
-					}
-				}
-			}
-		}
 
 		if (this.isInGround())
 		{
@@ -218,7 +201,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 		if (this.primed)
 		{
-			for (float f = 0; f < tripwireDistance; f += 0.015f)
+			for (float f = 0.015f; f < tripwireDistance; f += 0.015f)
 			{
 				if (getWorld() instanceof ServerWorld serverWorld)
 				{
@@ -249,9 +232,15 @@ public class TripwireMineEntity extends Entity implements Ownable
 				var blockHit = (BlockHitResult)hitResult;
 				var normal = new Vec3d(blockHit.getSide().getUnitVector());
 
-				setRotation(normal);
-				setInGround(true);
-				this.velocityModified = true;
+				if (!getWorld().getBlockState(blockHit.getBlockPos()).isAir())
+				{
+					inBlockState = getWorld().getBlockState(blockHit.getBlockPos());
+					this.setPosition(this.getPos().add(getRotationVector().multiply(0.05f)));
+					//inBlockState = getWorld().getBlockState(blockHit.getBlockPos());
+					setRotation(normal);
+					setInGround(true);
+					this.velocityModified = true;
+				}
 			}
 			vec3d = hitResult.getPos();
 		}
@@ -277,7 +266,11 @@ public class TripwireMineEntity extends Entity implements Ownable
 	@Override
 	protected void onBlockCollision(BlockState state)
 	{
-		inBlockState = state;
+		if (!state.isAir())
+		{
+			inBlockState = getBlockStateAtPos();
+			setInGround(true);
+		}
 		super.onBlockCollision(state);
 	}
 

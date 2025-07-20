@@ -36,7 +36,7 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 		matrixStack.push();
 		VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE));
 
-		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw - 90));
+		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw + 90));
 		matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(state.pitch + 90));
 
 		this.model.setAngles(state);
