@@ -1,6 +1,5 @@
 package dev.pswg.entity.mines;
 
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import dev.pswg.container.entity.GadgetsDamage;
@@ -23,10 +22,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -159,20 +155,11 @@ public class TripwireMineEntity extends Entity implements Ownable
 	@Override
 	public void tick()
 	{
-		Vec3d vec3d = this.getVelocity();
-		BlockPos blockPos = this.getBlockPos();
-		BlockState blockState = this.getWorld().getBlockState(blockPos);
 
-		if (this.isInGround())
-		{
-			if (!this.getWorld().isClient())
-			{
-				if (this.inBlockState != blockState)
-				{
+		BlockState blockState = getBlockStateAtPos();
+
+		if (this.inBlockState != blockState && !this.getWorld().isClient() && this.isInGround())
 					this.fall();
-				}
-			}
-		}
 
 		if (!isInGround())
 			this.applyGravity();
@@ -188,15 +175,57 @@ public class TripwireMineEntity extends Entity implements Ownable
 			playSound(GadgetsSounds.ARM, 1, 1);
 		}
 		float maxDist = 3;
+
+
+
+
+		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
+
+		Vec3d newPos = this.getPos();
+		if (hitResult.getType() != HitResult.Type.MISS)
+		{
+			newPos = hitResult.getPos().add(getVelocity().multiply(0.005));
+			if (hitResult.getType() == HitResult.Type.BLOCK && !isInGround())
+			{
+				var blockHit = (BlockHitResult)hitResult;
+				var normal = new Vec3d(blockHit.getSide().getUnitVector());
+
+				if (!getWorld().getBlockState(blockHit.getBlockPos()).isAir())
+				{
+					inBlockState = getWorld().getBlockState(blockHit.getBlockPos());
+					setRotation(normal);
+					setInGround(true);
+					this.velocityModified = true;
+				}
+			}
+		}
+		else
+		{
+			newPos = this.getPos().add(this.getVelocity());
+		}
+		this.setPosition(newPos);
+		this.tickBlockCollision();
+
 		var rotVec = getRotationVector();
 
 		var blockRaycast = getWorld().raycast(new RaycastContext(
-				this.getPos().add(0, 0, 0),
+				this.getPos().add(rotVec.multiply(0.05d)),
 				this.getPos().add(rotVec.multiply(maxDist)),
 				RaycastContext.ShapeType.COLLIDER,
 				RaycastContext.FluidHandling.ANY,
 				this
 		));
+		var entityRaycast = ProjectileUtil.raycast(
+				this,
+				this.getPos(),
+				this.getPos().add(rotVec.multiply(tripwireDistance)),
+				this.getBoundingBox().stretch(rotVec.multiply(tripwireDistance)).expand(1.0, 1.0, 1.0),
+				entity -> true,
+				tripwireDistance);
+
+		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && this.primed)
+			explode();
+
 		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getPos().distanceTo(getPos()));
 
 		if (this.primed)
@@ -211,47 +240,6 @@ public class TripwireMineEntity extends Entity implements Ownable
 			}
 		}
 
-		var entityRaycast = ProjectileUtil.raycast(
-				this,
-				this.getPos().add(0, 0.05, 0),
-				this.getPos().add(0, 0.05, 0).add(rotVec.multiply(tripwireDistance)),
-				this.getBoundingBox().stretch(rotVec.multiply(tripwireDistance)).expand(1.0, 1.0, 1.0),
-				entity -> true,
-				tripwireDistance);
-
-		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && this.primed)
-			explode();
-
-		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
-
-
-		if (hitResult.getType() != HitResult.Type.MISS)
-		{
-			if (hitResult.getType() == HitResult.Type.BLOCK && !isInGround())
-			{
-				var blockHit = (BlockHitResult)hitResult;
-				var normal = new Vec3d(blockHit.getSide().getUnitVector());
-
-				if (!getWorld().getBlockState(blockHit.getBlockPos()).isAir())
-				{
-					inBlockState = getWorld().getBlockState(blockHit.getBlockPos());
-					this.setPosition(this.getPos().add(getRotationVector().multiply(0.05f)));
-					//inBlockState = getWorld().getBlockState(blockHit.getBlockPos());
-					setRotation(normal);
-					setInGround(true);
-					this.velocityModified = true;
-				}
-			}
-			vec3d = hitResult.getPos();
-		}
-
-		else
-		{
-			vec3d = this.getPos().add(this.getVelocity());
-		}
-		this.setPosition(vec3d);
-		this.tickBlockCollision();
-
 		super.tick();
 	}
 
@@ -259,19 +247,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 	{
 		var pitch = Math.asin(-vec.y) / Math.PI * 180f;
 		var yaw = Math.atan2(vec.x, vec.z) / Math.PI * 180f;
-		//Gadgets.LOGGER.info(yaw+ " "+ pitch);
 		setRotation((float)-yaw, (float)pitch);
-	}
-
-	@Override
-	protected void onBlockCollision(BlockState state)
-	{
-		if (!state.isAir())
-		{
-			inBlockState = getBlockStateAtPos();
-			setInGround(true);
-		}
-		super.onBlockCollision(state);
 	}
 
 	@Override
