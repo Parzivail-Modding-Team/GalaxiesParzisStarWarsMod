@@ -252,16 +252,22 @@ public abstract class GrenadeEntity extends ThrownEntity
 		return true;
 	}
 
-	@Override
-	public boolean canHit()
-	{
-		return true;
-	}
-
 	public void explode()
 	{
 		Vec3d pos = new Vec3d(getX(), getY(), getZ());
 		explode(pos);
+	}
+
+	@Override
+	public float getTargetingMargin()
+	{
+		return (float)getBoundingBox().getAverageSideLength();
+	}
+
+	@Override
+	public boolean canHit()
+	{
+		return true;
 	}
 
 	public void explode(Vec3d pos)
