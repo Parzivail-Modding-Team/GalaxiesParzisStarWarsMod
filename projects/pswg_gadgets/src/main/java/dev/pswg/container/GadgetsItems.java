@@ -45,6 +45,7 @@ public class GadgetsItems
 	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Settings());
 	public static final SmokeSignalGrenadeItem SMOKE_SIGNAL_GRENADE_ITEM = Registrar.item(Gadgets.id("smoke_grenade"), SmokeSignalGrenadeItem::new, new Item.Settings());
 	public static final ImpactGrenadeItem IMPACT_GRENADE_ITEM = Registrar.item(Gadgets.id("impact_grenade"), ImpactGrenadeItem::new, new Item.Settings());
+	public static final InfernoGrenadeItem INFERNO_GRENADE_ITEM = Registrar.item(Gadgets.id("inferno_grenade"), InfernoGrenadeItem::new, new Item.Settings());
 
 	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Settings());
 	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Settings());

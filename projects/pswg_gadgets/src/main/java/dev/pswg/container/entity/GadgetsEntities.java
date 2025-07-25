@@ -48,6 +48,13 @@ public class GadgetsEntities
 			                  .spawnBoxScale(0.3f)
 			                  .dropsNothing()
 	);
+	public static final EntityType<InfernoGrenadeEntity> INFERNO_GRENADE_ENTITY = Registrar.entityType(
+			Gadgets.id("inferno_grenade"),
+			EntityType.Builder.create(InfernoGrenadeEntity::new, SpawnGroup.MISC)
+			                  .dimensions(0.15f, 0.3f)
+			                  .spawnBoxScale(0.2f)
+			                  .dropsNothing()
+	);
 	public static final EntityType<PressureMineEntity> PRESSURE_MINE_ENTITY = Registrar.entityType(
 			Gadgets.id("pressure_mine"),
 			EntityType.Builder.create(PressureMineEntity::new, SpawnGroup.MISC)

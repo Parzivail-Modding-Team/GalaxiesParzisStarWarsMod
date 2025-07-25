@@ -31,6 +31,8 @@ public class GadgetsClient implements GalaxiesClientAddon
 		EntityModelLayerRegistry.registerModelLayer(SmokeSignalGrenadeEntityRenderer.MODEL_LAYER, SmokeSignalGrenadeModel::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.IMPACT_GRENADE_ENTITY, ImpactGrenadeEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(ImpactGrenadeEntityRenderer.MODEL_LAYER, ImpactGrenadeModel::getTexturedModelData);
+		EntityRendererRegistry.register(GadgetsEntities.INFERNO_GRENADE_ENTITY, InfernoGrenadeEntityRenderer::new);
+		EntityModelLayerRegistry.registerModelLayer(InfernoGrenadeEntityRenderer.MODEL_LAYER, InfernoGrenadeModel::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.PRESSURE_MINE_ENTITY, PressureMineEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(PressureMineEntityRenderer.MODEL_LAYER, PressureMineEntityRenderer.Model::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.TRIPWIRE_MINE_ENTITY, TripwireMineEntityRenderer::new);
@@ -45,6 +47,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.NERVE_GAS_PARTICLE, NerveGasParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, TripwireLaserParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE, InfernoScorchParticle.Factory::new);
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

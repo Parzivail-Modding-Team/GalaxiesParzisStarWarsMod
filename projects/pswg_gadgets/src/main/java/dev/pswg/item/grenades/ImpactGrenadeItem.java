@@ -11,7 +11,7 @@ public class ImpactGrenadeItem extends GrenadeItem
 {
 	public ImpactGrenadeItem(Item.Settings settings)
 	{
-		super(settings, GadgetsItems.IMPACT_GRENADE_ITEM, 400, new ThermalDetonatorSoundGroup());
+		super(settings, GadgetsItems.IMPACT_GRENADE_ITEM, 250, new ThermalDetonatorSoundGroup());
 	}
 
 	@Override
