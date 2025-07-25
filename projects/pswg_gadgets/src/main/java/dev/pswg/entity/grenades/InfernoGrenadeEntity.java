@@ -3,12 +3,18 @@ package dev.pswg.entity.grenades;
 import com.google.common.collect.ConcurrentHashMultiset;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
+import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.item.grenades.GrenadeItem;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -146,6 +152,14 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		{
 			var oPos = getBlockPos();
 			this.burntBlocks.add(oPos);
+			for (LivingEntity entity : world.getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(MAX_DISTANCE), livingEntity -> livingEntity.getPos().distanceTo(getPos()) <= MAX_DISTANCE))
+			{
+				entity.setOnFireForTicks(160);
+				if (world instanceof ServerWorld serverWorld)
+				{
+					entity.damage(serverWorld, GadgetsDamage.create(serverWorld, DamageTypes.IN_FIRE), 6);
+				}
+			}
 		}
 		if (detonated && detonationTicks % 2 == 0)
 		{
@@ -170,17 +184,36 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 						{
 							burntBlocks.add(offsetPos);
 							var offsetState = world.getBlockState(offsetPos);
-							if (!offsetState.isAir() && !offsetState.isLiquid())
+							if (!offsetState.isLiquid())
 							{
 								if (!offsetState.isAir())
-									world.setBlockState(offsetPos, Blocks.COAL_BLOCK.getDefaultState());
-
-								for (Direction dir3 : dirList)
 								{
-									var offsetPos2 = offsetPos.offset(dir3);
-									var unitVec = dir3.getUnitVector().normalize();
-									spawnScorchParticles(unitVec, offsetPos);
+									if (!offsetState.isAir())
+										world.setBlockState(offsetPos, Blocks.COAL_BLOCK.getDefaultState());
 
+									for (Direction dir3 : dirList)
+									{
+										var offsetPos2 = offsetPos.offset(dir3);
+										var unitVec = dir3.getUnitVector().normalize();
+										spawnScorchParticles(unitVec, offsetPos);
+									}
+								}
+								else if (offsetPos.isWithinDistance(getPos(), MAX_DISTANCE))
+								{
+									for (int i = 0; i < MAX_DISTANCE / getPos().distanceTo(offsetPos.toCenterPos()); i++)
+									{
+										world.addParticle(
+												ParticleTypes.FLAME,
+												true,
+												true,
+												offsetPos.getX() + world.random.nextGaussian() * 0.5,
+												offsetPos.getY() + world.random.nextGaussian() * 0.5,
+												offsetPos.getZ() + world.random.nextGaussian() * 0.5,
+												0,
+												0,
+												0
+										);
+									}
 								}
 							}
 						}
