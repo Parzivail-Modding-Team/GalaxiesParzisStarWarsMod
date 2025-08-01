@@ -1,0 +1,63 @@
+{
+	"values": [
+		{
+			"id": "#minecraft:leaves",
+			"required": false
+		},
+		{
+			"id": "#minecraft:cave_vines",
+			"required": false
+		},
+		{
+			"id": "#minecraft:flowers",
+			"required": false
+		},
+		{
+			"id": "#minecraft:crops",
+			"required": false
+		},
+		{
+			"id": "#minecraft:crimson_stems",
+			"required": false
+		},
+		{
+			"id": "#minecraft:all_signs",
+			"required": false
+		},
+		{
+			"id": "#minecraft:banners",
+			"required": false
+		},
+		{
+			"id": "#minecraft:flower_pots",
+			"required": false
+		},
+		{
+			"id": "#minecraft:wool_carpets",
+			"required": false
+		},
+		{
+			"id": "#minecraft:wooden_buttons",
+			"required": false
+		},
+		{
+			"id": "#minecraft:warped_stems",
+			"required": false
+		},
+		{
+			"id": "#minecraft:snow",
+			"required": false
+		},
+		{
+			"id": "#minecraft:ice",
+			"required": false
+		},
+		"minecraft:bamboo",
+		"minecraft:vine",
+		"minecraft:fern",
+		"minecraft:large_fern",
+		"minecraft:dead_bush",
+		"minecraft:tall_grass",
+		"minecraft:short_grass"
+	]
+}

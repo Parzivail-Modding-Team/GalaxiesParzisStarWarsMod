@@ -49,6 +49,9 @@ public class GadgetsClient implements GalaxiesClientAddon
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, TripwireLaserParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE, InfernoScorchParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.DENSE_INFERNO_SCORCH_PARTICLE, InfernoScorchParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SHORT_FLAME_PARTICLE, ShortFlameParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SMALL_SHORT_FLAME_PARTICLE, ShortFlameParticle.SmallFactory::new);
+
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

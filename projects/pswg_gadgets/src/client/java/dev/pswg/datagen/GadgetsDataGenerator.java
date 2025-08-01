@@ -48,6 +48,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
 		{
+			blockStateModelGenerator.registerSimpleCubeAll(GadgetsBlocks.CHARRED_BLOCK);
+			blockStateModelGenerator.registerSimpleCubeAll(GadgetsBlocks.FERTILE_DIRT_BLOCK);
 		}
 
 		@Override
@@ -88,9 +90,14 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsItems.PRESSURE_MINE_ITEM, "Pressure Mine");
 			translationBuilder.add(GadgetsItems.TRIPWIRE_MINE_ITEM, "Tripwire Mine");
 
+			translationBuilder.add(GadgetsBlocks.CHARRED_BLOCK, "Charred Wood");
+			translationBuilder.add(GadgetsBlocks.FERTILE_DIRT_BLOCK, "Fertile Dirt");
+
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
 			translationBuilder.add(GadgetsBlocks.Tags.BOUNCY, "Bouncy");
+			translationBuilder.add(GadgetsBlocks.Tags.INFERNO_CHAR, "Inferno Grenade Char");
+			translationBuilder.add(GadgetsBlocks.Tags.INFERNO_DESTROY, "Inferno Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.GAS_PASS_THROUGH, "Gas Pass Through");
 			translationBuilder.add(GadgetsItems.Tags.GRENADES_TAG, "Grenades");
 
@@ -177,6 +184,45 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			getOrCreateTagBuilder(GadgetsBlocks.Tags.GAS_PASS_THROUGH)
 					.addOptionalTag(BlockTags.LEAVES)
 					.add(Blocks.COPPER_GRATE);
+
+			getOrCreateTagBuilder(GadgetsBlocks.Tags.INFERNO_CHAR)
+					.add(Blocks.MOSS_BLOCK)
+					.addOptionalTag(BlockTags.LOGS)
+					.addOptionalTag(BlockTags.PLANKS)
+					.addOptionalTag(BlockTags.BAMBOO_BLOCKS)
+					.addOptionalTag(BlockTags.WOOL)
+					.addOptionalTag(BlockTags.WOODEN_FENCES)
+					.addOptionalTag(BlockTags.WOODEN_SLABS)
+					.addOptionalTag(BlockTags.WOODEN_STAIRS)
+					.addOptionalTag(BlockTags.WOODEN_TRAPDOORS)
+					.addOptionalTag(ConventionalBlockTags.BOOKSHELVES)
+			;
+
+			getOrCreateTagBuilder(GadgetsBlocks.Tags.INFERNO_DESTROY)
+					.addOptionalTag(BlockTags.LEAVES)
+					.addOptionalTag(BlockTags.CAVE_VINES)
+					.addOptionalTag(BlockTags.FLOWERS)
+					.addOptionalTag(BlockTags.CROPS)
+					.addOptionalTag(BlockTags.CRIMSON_STEMS)
+					.addOptionalTag(BlockTags.ALL_SIGNS)
+					.addOptionalTag(BlockTags.BANNERS)
+					.addOptionalTag(BlockTags.FLOWER_POTS)
+					.addOptionalTag(BlockTags.WOOL_CARPETS)
+					.addOptionalTag(BlockTags.WOODEN_BUTTONS)
+					.addOptionalTag(BlockTags.WARPED_STEMS)
+					.addOptionalTag(BlockTags.SNOW)
+					.addOptionalTag(BlockTags.ICE)
+					.add(Blocks.BAMBOO)
+					.add(Blocks.VINE)
+					.add(Blocks.FERN)
+					.add(Blocks.LARGE_FERN)
+					.add(Blocks.DEAD_BUSH)
+					.add(Blocks.TALL_GRASS)
+					.add(Blocks.SHORT_GRASS)
+					.add(Blocks.CACTUS)
+			;
+
+
 
 		}
 	}
