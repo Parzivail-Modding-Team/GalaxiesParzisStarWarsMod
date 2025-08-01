@@ -152,11 +152,14 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 			burnBlock(world.getBlockState(oPos), oPos);
 			for (LivingEntity entity : world.getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(MAX_DISTANCE), livingEntity -> livingEntity.getPos().distanceTo(getPos()) <= MAX_DISTANCE))
 			{
-				entity.setOnFireForTicks(160);
-				if (world instanceof ServerWorld serverWorld)
+				if (!entity.isFireImmune())
 				{
-					float damageAmount = entity.getPos().distanceTo(getPos()) <= INNER_AREA_DISTANCE ? 10 : 6;
-					entity.damage(serverWorld, GadgetsDamage.create(serverWorld, DamageTypes.IN_FIRE), damageAmount);
+					entity.setOnFireForTicks(200);
+					if (world instanceof ServerWorld serverWorld)
+					{
+						float damageAmount = entity.getPos().distanceTo(getPos()) <= INNER_AREA_DISTANCE ? 10 : 6;
+						entity.damage(serverWorld, GadgetsDamage.create(serverWorld, DamageTypes.IN_FIRE), damageAmount);
+					}
 				}
 			}
 		}
