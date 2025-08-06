@@ -2,6 +2,7 @@ package dev.pswg.entity.grenades;
 
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.entity.GadgetsDamage;
+import dev.pswg.entity.mines.TripwireMineEntity;
 import dev.pswg.item.grenades.GrenadeItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -41,6 +42,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> PRIMED = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final TrackedData<Boolean> IN_GROUND = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	private CollisionType collisionType;
 	private int delay = 0;
@@ -65,6 +67,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 	{
 		builder.add(LIFE, 75);
 		builder.add(PRIMED, false);
+		builder.add(IN_GROUND, false);
 	}
 
 	public abstract GrenadeItem getItem();
@@ -84,6 +87,22 @@ public abstract class GrenadeEntity extends ThrownEntity
 	{
 		super.onSpawnPacket(packet);
 		clientYaw = packet.getYaw();
+	}
+
+	public boolean isInGround()
+	{
+		return this.dataTracker.get(IN_GROUND);
+	}
+
+	protected void setInGround(boolean inGround)
+	{
+		this.dataTracker.set(IN_GROUND, inGround);
+	}
+
+	@Override
+	public boolean hasNoGravity()
+	{
+		return isInGround();
 	}
 
 	public float getClientYaw()
@@ -165,8 +184,8 @@ public abstract class GrenadeEntity extends ThrownEntity
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{
-				this.setVelocity(0f, 0f, 0f);
-				this.velocityModified = true;
+				setInGround(true);
+				setVelocity(Vec3d.ZERO);
 				return;
 			}
 
@@ -286,6 +305,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 		super.writeCustomDataToNbt(tag);
 		tag.putInt("life", getLife());
 		tag.putBoolean("primed", isPrimed());
+		tag.putBoolean("in_ground", isInGround());
 	}
 
 	@Override
@@ -294,6 +314,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 		super.readCustomDataFromNbt(tag);
 		setLife(tag.getInt("life"));
 		setPrimed(tag.getBoolean("primed"));
+		setInGround(tag.getBoolean("in_ground"));
 	}
 	public boolean isVisible()
 	{
