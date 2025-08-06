@@ -278,14 +278,10 @@ public class TripwireMineEntity extends Entity implements Ownable
 	protected void readCustomDataFromNbt(NbtCompound nbt)
 	{
 		if (nbt.containsUuid("Owner"))
-		{
 			this.setOwner(nbt.getUuid("Owner"));
-		}
 		this.setInGround(nbt.getBoolean("inGround"));
 		if (nbt.contains("inBlockState", NbtElement.COMPOUND_TYPE))
-		{
 			this.inBlockState = NbtHelper.toBlockState(this.getWorld().createCommandRegistryWrapper(RegistryKeys.BLOCK), nbt.getCompound("inBlockState"));
-		}
 	}
 
 	@Override

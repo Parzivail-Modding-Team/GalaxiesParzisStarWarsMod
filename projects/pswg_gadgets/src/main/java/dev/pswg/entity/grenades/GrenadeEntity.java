@@ -15,7 +15,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
@@ -44,6 +47,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 	private static final TrackedData<Boolean> PRIMED = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private static final TrackedData<Boolean> IN_GROUND = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
+	private BlockState inBlockState;
 	private CollisionType collisionType;
 	private int delay = 0;
 	private boolean shouldExplode = false;
@@ -110,9 +114,21 @@ public abstract class GrenadeEntity extends ThrownEntity
 		return clientYaw;
 	}
 
+	private void fall()
+	{
+		this.setInGround(false);
+		Vec3d vec3d = this.getVelocity();
+		this.setVelocity(vec3d.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
+	}
+
 	@Override
 	public void tick()
 	{
+		BlockState blockState = getBlockStateAtPos();
+
+		if (this.inBlockState != blockState && !this.getWorld().isClient() && this.isInGround())
+			this.fall();
+
 		if (shouldExplode)
 		{
 			this.delay--;
@@ -184,6 +200,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{
+				inBlockState = getWorld().getBlockState(blockHit.getBlockPos());
 				setInGround(true);
 				setVelocity(Vec3d.ZERO);
 				return;
@@ -306,6 +323,8 @@ public abstract class GrenadeEntity extends ThrownEntity
 		tag.putInt("life", getLife());
 		tag.putBoolean("primed", isPrimed());
 		tag.putBoolean("in_ground", isInGround());
+		if (this.inBlockState != null)
+			tag.put("inBlockState", NbtHelper.fromBlockState(this.inBlockState));
 	}
 
 	@Override
@@ -315,6 +334,8 @@ public abstract class GrenadeEntity extends ThrownEntity
 		setLife(tag.getInt("life"));
 		setPrimed(tag.getBoolean("primed"));
 		setInGround(tag.getBoolean("in_ground"));
+		if (tag.contains("inBlockState", NbtElement.COMPOUND_TYPE))
+			this.inBlockState = NbtHelper.toBlockState(this.getWorld().createCommandRegistryWrapper(RegistryKeys.BLOCK), tag.getCompound("inBlockState"));
 	}
 	public boolean isVisible()
 	{
