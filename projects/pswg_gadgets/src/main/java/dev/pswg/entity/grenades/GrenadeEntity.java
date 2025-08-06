@@ -297,7 +297,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 	@Override
 	public float getTargetingMargin()
 	{
-		return (float)getBoundingBox().getAverageSideLength();
+		return (float)getBoundingBox().getAverageSideLength() / 2f;
 	}
 
 	@Override
