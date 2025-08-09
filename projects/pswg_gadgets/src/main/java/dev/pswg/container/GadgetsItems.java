@@ -21,6 +21,7 @@ public class GadgetsItems
 	{
 		public static final TagKey<Item> GRENADES_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("grenades"));
 		public static final TagKey<Item> MINES_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("mines"));
+		public static final TagKey<Item> SCRAP_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("scrap"));
 
 		public static void register()
 		{
@@ -49,6 +50,10 @@ public class GadgetsItems
 
 	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Settings());
 	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Settings());
+
+	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), Item::new, new Item.Settings());
+	public static final Item SPANNER_ITEM = Registrar.item(Gadgets.id("spanner"), Item::new, new Item.Settings());
+	public static final Item CALIBRATOR_ITEM = Registrar.item(Gadgets.id("calibrator"), Item::new, new Item.Settings());
 
 	public static void register()
 	{

@@ -1,13 +1,10 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesAddon;
-import dev.pswg.container.GadgetsBlocks;
-import dev.pswg.container.GadgetsParticleTypes;
-import dev.pswg.container.GadgetsSounds;
+import dev.pswg.container.*;
 import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.container.entity.GadgetsEntities;
-import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.entity.LivingEntities;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
@@ -57,6 +54,7 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsEffects.register();
 		GadgetsParticleTypes.register();
 		GadgetsDamage.register();
+		GadgetsBlockEntities.register();
 		LivingEntities.register();
 
 		// TODO: how to differentiate different modules' versions?

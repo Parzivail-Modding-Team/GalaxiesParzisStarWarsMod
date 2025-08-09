@@ -1,9 +1,14 @@
 package dev.pswg.registry;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -86,5 +91,40 @@ public final class Registrar
 				registryKey,
 				builder.build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, registryKey))
 		);
+	}
+
+	/**
+	 * Builds and registers a block entity type with the provided registry key
+	 *
+	 * @param registryKey The registry key to assign to the block entity type
+	 * @param factory     The factory that constructs the block entity
+	 * @param <T>         The type of block entity to build
+	 *
+	 * @return A built block entity type, given the corresponding registry key
+	 */
+
+	public static <T extends BlockEntity> BlockEntityType<T> blockEntity(Identifier registryKey, FabricBlockEntityTypeBuilder.Factory<? extends T> factory, Block... blocks)
+	{
+		return Registry.register(Registries.BLOCK_ENTITY_TYPE, registryKey, FabricBlockEntityTypeBuilder.<T>create(factory, blocks).build());
+	}
+
+	/**
+	 * Builds and registers a recipe type with the provided registry key
+	 *
+	 * @param registryKey The registry key to assign to the recipe type
+	 * @param <T>         The type of recipe to build
+	 *
+	 * @return A built recipe type, given the corresponding registry key
+	 */
+	public static <T extends Recipe<?>> RecipeType<T> recipeType(Identifier registryKey)
+	{
+		return Registry.register(Registries.RECIPE_TYPE, registryKey, new RecipeType<T>()
+		{
+			@Override
+			public String toString()
+			{
+				return registryKey.toString();
+			}
+		});
 	}
 }
