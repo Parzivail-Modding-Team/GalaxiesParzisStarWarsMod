@@ -37,20 +37,20 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		this.world = playerInventory.player.getWorld();
 		this.propertyDelegate = propertyDelegate;
 		///  Cutter
-		this.addSlot(new Slot(inventory, 0, 5, 45));
+		this.addSlot(new Slot(inventory, 0, 6, 46));
 		///  Spanner
-		this.addSlot(new Slot(inventory, 1, 5, 67));
+		this.addSlot(new Slot(inventory, 1, 6, 68));
 		///  Calibrator
-		this.addSlot(new Slot(inventory, 2, 5, 89));
+		this.addSlot(new Slot(inventory, 2, 6, 90));
 		///  Input
-		this.addSlot(new Slot(inventory, 3, 80, 27));
+		this.addSlot(new Slot(inventory, 3, 81, 28));
 		/// Output
-		this.addSlot(new Slot(inventory, 4, 128, 53));
-		this.addSlot(new Slot(inventory, 5, 128, 79));
-		this.addSlot(new Slot(inventory, 6, 149, 53));
-		this.addSlot(new Slot(inventory, 7, 149, 79));
+		this.addSlot(new Slot(inventory, 4, 129, 54));
+		this.addSlot(new Slot(inventory, 5, 129, 80));
+		this.addSlot(new Slot(inventory, 6, 150, 54));
+		this.addSlot(new Slot(inventory, 7, 150, 80));
 
-		this.addPlayerSlots(playerInventory, 7, 116);
+		this.addPlayerSlots(playerInventory, 8, 132);
 	}
 
 	public int getCutterProgress()

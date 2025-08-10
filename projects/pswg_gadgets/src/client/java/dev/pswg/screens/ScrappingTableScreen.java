@@ -17,8 +17,10 @@ public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHand
 	public ScrappingTableScreen(ScrappingTableScreenHandler handler, PlayerInventory inventory, Text title)
 	{
 		super(handler, inventory, title);
-		this.backgroundHeight = 198;
+		this.backgroundHeight = 213;
 		this.backgroundWidth = 175;
+		this.playerInventoryTitleX = 8;
+		this.playerInventoryTitleY = 120;
 	}
 
 	@Override
@@ -27,6 +29,5 @@ public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHand
 		var i = (this.width - this.backgroundWidth) / 2;
 		var j = (this.height - this.backgroundHeight) / 2;
 		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
-		//context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x, y, 00.0F, 0.0F, this.backgroundWidth, this.backgroundHeight, 216, 176);
 	}
 }
