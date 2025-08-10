@@ -1,13 +1,17 @@
 package dev.pswg.feature.scrapping;
 
+import dev.pswg.container.GadgetsScreenHandlerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.book.RecipeBookType;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.screen.ArrayPropertyDelegate;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
@@ -17,29 +21,51 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 {
 	private final Inventory inventory;
 	private final PlayerInventory playerInventory;
+	private final PropertyDelegate propertyDelegate;
 	protected final World world;
 
-	public ScrappingTableScreenHandler(ScreenHandlerType<?> screenHandlerType, int syncId, PlayerInventory playerInventory, Inventory inventory)
+	public ScrappingTableScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		super(screenHandlerType, syncId);
+		this(syncId, playerInventory, new SimpleInventory(8), new ArrayPropertyDelegate(3));
+	}
+
+	public ScrappingTableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate)
+	{
+		super(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, syncId);
 		this.inventory = inventory;
 		this.playerInventory = playerInventory;
 		this.world = playerInventory.player.getWorld();
-		/// Cutter
-		this.addSlot(new Slot(inventory, 0, 45, 45));
+		this.propertyDelegate = propertyDelegate;
+		///  Cutter
+		this.addSlot(new Slot(inventory, 0, 5, 45));
 		///  Spanner
-		this.addSlot(new Slot(inventory, 1, 45, 67));
+		this.addSlot(new Slot(inventory, 1, 5, 67));
 		///  Calibrator
-		this.addSlot(new Slot(inventory, 2, 45, 89));
+		this.addSlot(new Slot(inventory, 2, 5, 89));
 		///  Input
-		this.addSlot(new Slot(inventory, 3, 120, 27));
+		this.addSlot(new Slot(inventory, 3, 80, 27));
 		/// Output
-		this.addSlot(new Slot(inventory, 4, 168, 53));
-		this.addSlot(new Slot(inventory, 5, 168, 79));
-		this.addSlot(new Slot(inventory, 6, 189, 53));
-		this.addSlot(new Slot(inventory, 7, 189, 79));
+		this.addSlot(new Slot(inventory, 4, 128, 53));
+		this.addSlot(new Slot(inventory, 5, 128, 79));
+		this.addSlot(new Slot(inventory, 6, 149, 53));
+		this.addSlot(new Slot(inventory, 7, 149, 79));
 
-		this.addPlayerSlots(playerInventory, 8, 84);
+		this.addPlayerSlots(playerInventory, 7, 116);
+	}
+
+	public int getCutterProgress()
+	{
+		return propertyDelegate.get(0);
+	}
+
+	public int getSpannerProgress()
+	{
+		return propertyDelegate.get(1);
+	}
+
+	public int getCalibratorProgress()
+	{
+		return propertyDelegate.get(2);
 	}
 
 	@Override
@@ -57,7 +83,7 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 	@Override
 	public RecipeBookType getCategory()
 	{
-		return null;
+		return RecipeBookType.CRAFTING;
 	}
 
 	@Override

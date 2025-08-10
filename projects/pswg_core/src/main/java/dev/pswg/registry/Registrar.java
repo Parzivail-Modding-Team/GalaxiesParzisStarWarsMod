@@ -13,6 +13,9 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
@@ -126,5 +129,10 @@ public final class Registrar
 				return registryKey.toString();
 			}
 		});
+	}
+
+	public static <T extends ScreenHandler> ScreenHandlerType<T> screenHandlerType(Identifier registryKey, ScreenHandlerType.Factory<T> factory)
+	{
+		return Registry.register(Registries.SCREEN_HANDLER, registryKey, new ScreenHandlerType<>(factory, FeatureFlags.DEFAULT_ENABLED_FEATURES));
 	}
 }

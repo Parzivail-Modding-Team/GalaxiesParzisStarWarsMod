@@ -3,12 +3,14 @@ package dev.pswg.feature.scrapping;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsRecipeTypes;
+import dev.pswg.container.GadgetsScreenHandlerTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
@@ -53,7 +55,7 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 				case 0 -> cutterProgress;
 				case 1 -> spannerProgress;
 				case 2 -> calibratorProgress;
-				default -> 0;
+				default -> -1;
 			};
 		}
 
@@ -76,7 +78,7 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 		@Override
 		public int size()
 		{
-			return 4;
+			return 3;
 		}
 	};
 
@@ -144,7 +146,7 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 	@Override
 	protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		return null;
+		return new ScrappingTableScreenHandler(syncId, playerInventory, this, propertyDelegate);
 	}
 
 	@Override

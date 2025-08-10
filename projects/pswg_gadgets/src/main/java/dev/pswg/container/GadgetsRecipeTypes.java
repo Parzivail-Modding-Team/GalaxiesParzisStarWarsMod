@@ -8,4 +8,9 @@ import net.minecraft.recipe.RecipeType;
 public class GadgetsRecipeTypes
 {
 	public static final RecipeType<ScrappingTableRecipe> SCRAPPING = Registrar.recipeType(Gadgets.id("scrapping"));
+
+	public static void register()
+	{
+
+	}
 }

@@ -55,6 +55,8 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsParticleTypes.register();
 		GadgetsDamage.register();
 		GadgetsBlockEntities.register();
+		GadgetsScreenHandlerTypes.register();
+		GadgetsRecipeTypes.register();
 		LivingEntities.register();
 
 		// TODO: how to differentiate different modules' versions?
