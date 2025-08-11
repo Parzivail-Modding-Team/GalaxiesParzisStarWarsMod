@@ -31,17 +31,19 @@ public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHand
 		var backgroundY = (this.height - this.backgroundHeight) / 2;
 		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX, backgroundY, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
 
+		int cutterProgress = handler.getCutterProgress() > 0 ? (int)((handler.getCutterProgress() + 2d) / 3) + 1 : 0;
+		int spannerProgress = handler.getSpannerProgress() > 0 ? (int)((handler.getSpannerProgress() + 2d) / 3) + 1 : 0;
+		int calibratorProgress = handler.getCalibratorProgress() > 0 ? (int)((handler.getCalibratorProgress() + 2d) / 3) + 1 : 0;
+
 		for (int i = 0; i < 3; i++)
 		{
-			if (mouseX > 31 + backgroundX && mouseX < 41 + backgroundX && mouseY > 48 + i * 23 + backgroundY && mouseY < 58 + i * 22 + backgroundY)
+			if (handler.getToolProgress(i) >= 0)
 			{
-				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, 31 + backgroundX, 48 + i * 22 + backgroundY, 177, 29, 10, 10, 256, 256);
+				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, 31 + backgroundX, 48 + i * 22 + backgroundY, 177, 18, 10, 10, 256, 256);
+				if (mouseX > 31 + backgroundX && mouseX < 41 + backgroundX && mouseY > 48 + i * 23 + backgroundY && mouseY < 58 + i * 22 + backgroundY)
+					context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, 31 + backgroundX, 48 + i * 22 + backgroundY, 177, 29, 10, 10, 256, 256);
 			}
 		}
-
-		int cutterProgress = handler.getCutterProgress() != 0 ? (int)((handler.getCutterProgress() + 2d) / 3) + 1 : 0;
-		int spannerProgress = handler.getSpannerProgress() != 0 ? (int)((handler.getSpannerProgress() + 2d) / 3) + 1 : 0;
-		int calibratorProgress = handler.getCalibratorProgress() != 0 ? (int)((handler.getCalibratorProgress() + 2d) / 3) + 1 : 0;
 
 		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, 25 + backgroundX, 45 + backgroundY + (16 - cutterProgress + 1), 187, 16 - cutterProgress + 1, 4, cutterProgress, 256, 256);
 		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, 25 + backgroundX, 67 + backgroundY + (16 - spannerProgress + 1), 187, 16 - spannerProgress + 1, 4, spannerProgress, 256, 256);

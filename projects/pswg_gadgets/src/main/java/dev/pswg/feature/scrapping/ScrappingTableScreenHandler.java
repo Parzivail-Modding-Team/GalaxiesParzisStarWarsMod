@@ -72,6 +72,11 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		return propertyDelegate.get(2);
 	}
 
+	public int getToolProgress(int toolIndex)
+	{
+		return propertyDelegate.get(toolIndex);
+	}
+
 	public ItemStack getInputItem()
 	{
 		return inventory.getStack(3);
