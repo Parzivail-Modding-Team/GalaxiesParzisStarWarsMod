@@ -138,14 +138,16 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 							decreaseComponent(inputStack, GadgetsItems.Components.TECH_COMPONENT, 2);
 							decreaseComponent(inputStack, GadgetsItems.Components.METAL_COMPONENT, 1);
 							damageTool(scrappingBlockEntity.getStack(toolIndex));
+							scrappingBlockEntity.propertyDelegate.set(toolIndex, -1);
 						}
-						scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
+						else
+							scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
 					}
 					else
 					{
 						//TODO: uncomment and delete current once recipes are functional
-						//scrappingBlockEntity.propertyDelegate.set(toolIndex, -1);
-						scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
+						scrappingBlockEntity.propertyDelegate.set(toolIndex, -1);
+						//scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
 					}
 				}
 				scrappingBlockEntity.markDirty();

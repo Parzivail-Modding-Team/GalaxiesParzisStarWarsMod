@@ -90,13 +90,16 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 			switch (id)
 			{
 				case 0:
-					propertyDelegate.set(0, Math.min(getCutterProgress() + 10, MAX_TOOL_PROGRESS));
+					if (propertyDelegate.get(0) > -1)
+						propertyDelegate.set(0, Math.min(getCutterProgress() + 10, MAX_TOOL_PROGRESS));
 					break;
 				case 1:
-					propertyDelegate.set(1, Math.min(getSpannerProgress() + 10, MAX_TOOL_PROGRESS));
+					if (propertyDelegate.get(1) > -1)
+						propertyDelegate.set(1, Math.min(getSpannerProgress() + 10, MAX_TOOL_PROGRESS));
 					break;
 				case 2:
-					propertyDelegate.set(2, Math.min(getCalibratorProgress() + 10, MAX_TOOL_PROGRESS));
+					if (propertyDelegate.get(2) > -1)
+						propertyDelegate.set(2, Math.min(getCalibratorProgress() + 10, MAX_TOOL_PROGRESS));
 			}
 			return true;
 		}

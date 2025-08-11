@@ -1,0 +1,12 @@
+{
+    "type": "pswg_gadgets:scrapping",
+    "tool": {
+    	"item":"pswg_gadgets:cutter"
+    },
+    "ingredient": {
+        "item": "pswg_gadgets:scrap"
+    },
+    "result": {
+        "item": "minecraft:iron_ingot"
+    }
+}
