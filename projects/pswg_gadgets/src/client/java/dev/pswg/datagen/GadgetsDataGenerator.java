@@ -1,5 +1,6 @@
 package dev.pswg.datagen;
 
+import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
@@ -64,6 +65,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			register(itemModelGenerator, GadgetsItems.PRESSURE_MINE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.TRIPWIRE_MINE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+
+			register(itemModelGenerator, GadgetsItems.SCRAP_ITEM, Gadgets.id("item/scrap"), Models.GENERATED);
+
+			register(itemModelGenerator, GadgetsItems.CUTTER_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, GadgetsItems.SPANNER_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+			register(itemModelGenerator, GadgetsItems.CALIBRATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 

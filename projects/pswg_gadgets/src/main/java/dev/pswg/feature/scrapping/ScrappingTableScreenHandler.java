@@ -8,6 +8,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeFinder;
+import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.book.RecipeBookType;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ArrayPropertyDelegate;
@@ -23,6 +24,7 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 	private final PlayerInventory playerInventory;
 	private final PropertyDelegate propertyDelegate;
 	protected final World world;
+	public final int MAX_TOOL_PROGRESS = 48;
 
 	public ScrappingTableScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
@@ -50,7 +52,9 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		this.addSlot(new Slot(inventory, 6, 150, 54));
 		this.addSlot(new Slot(inventory, 7, 150, 80));
 
-		this.addPlayerSlots(playerInventory, 8, 132);
+		this.addPlayerSlots(playerInventory, 8, 124);
+
+		this.addProperties(propertyDelegate);
 	}
 
 	public int getCutterProgress()
@@ -68,6 +72,33 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		return propertyDelegate.get(2);
 	}
 
+	public ItemStack getInputItem()
+	{
+		return inventory.getStack(3);
+	}
+
+	@Override
+	public boolean onButtonClick(PlayerEntity player, int id)
+	{
+		if (id >= 0 && id < 3)
+		{
+			switch (id)
+			{
+				case 0:
+					propertyDelegate.set(0, Math.min(getCutterProgress() + 10, MAX_TOOL_PROGRESS));
+					break;
+				case 1:
+					propertyDelegate.set(1, Math.min(getSpannerProgress() + 10, MAX_TOOL_PROGRESS));
+					break;
+				case 2:
+					propertyDelegate.set(2, Math.min(getCalibratorProgress() + 10, MAX_TOOL_PROGRESS));
+			}
+			return true;
+		}
+		return super.onButtonClick(player, id);
+	}
+
+
 	@Override
 	public PostFillAction fillInputSlots(boolean craftAll, boolean creative, RecipeEntry<?> recipe, ServerWorld world, PlayerInventory inventory)
 	{
@@ -77,7 +108,10 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 	@Override
 	public void populateRecipeFinder(RecipeFinder finder)
 	{
-
+		if (this.inventory instanceof RecipeInputProvider recipeInputProvider)
+		{
+			recipeInputProvider.provideRecipeInputs(finder);
+		}
 	}
 
 	@Override

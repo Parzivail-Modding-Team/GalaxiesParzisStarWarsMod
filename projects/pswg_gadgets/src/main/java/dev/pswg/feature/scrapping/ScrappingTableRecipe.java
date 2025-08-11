@@ -22,19 +22,19 @@ public interface ScrappingTableRecipe extends Recipe<ScrappingTableRecipeInput>
 	default boolean matches(ScrappingTableRecipeInput input, World world)
 	{
 		return Ingredient.matches(this.scrapItem(), input.scrapItem)
-		       && (this.spanner().isEmpty() || this.spanner().get().test(input.spanner))
-		       && (this.cutter().isEmpty() || this.cutter().get().test(input.cutter))
-		       && (this.calibrator().isEmpty() || this.calibrator().get().test(input.calibrator))
+		       && (this.tool().isEmpty() || this.tool().get().test(input.tool))
+				// && (this.cutter().isEmpty() || this.cutter().get().test(input.cutter))
+				// && (this.calibrator().isEmpty() || this.calibrator().get().test(input.calibrator))
 				;
 	}
 
 	Optional<Ingredient> scrapItem();
 
-	Optional<Ingredient> spanner();
+	Optional<Ingredient> tool();
 
-	Optional<Ingredient> cutter();
+	//Optional<Ingredient> cutter();
 
-	Optional<Ingredient> calibrator();
+	//Optional<Ingredient> calibrator();
 
 	@Override
 	default RecipeBookCategory getRecipeBookCategory()

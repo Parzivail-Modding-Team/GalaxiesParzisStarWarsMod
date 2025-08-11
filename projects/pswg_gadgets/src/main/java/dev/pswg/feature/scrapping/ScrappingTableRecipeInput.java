@@ -5,23 +5,19 @@ import net.minecraft.recipe.input.RecipeInput;
 
 public class ScrappingTableRecipeInput implements RecipeInput
 {
-	public final ItemStack spanner;
-	public final ItemStack cutter;
-	public final ItemStack calibrator;
+	public final ItemStack tool;
 	public final ItemStack scrapItem;
 
-	public ScrappingTableRecipeInput(ItemStack cutter, ItemStack spanner, ItemStack calibrator, ItemStack scrapItem)
+	public ScrappingTableRecipeInput(ItemStack tool, ItemStack scrapItem)
 	{
-		this.spanner = spanner;
-		this.cutter = cutter;
-		this.calibrator = calibrator;
+		this.tool = tool;
 		this.scrapItem = scrapItem;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		if (slot > 3 || slot < 0)
+		if (slot > 2 || slot < 0)
 		{
 			throw new IllegalArgumentException("No item for index " + slot);
 		}
@@ -29,10 +25,8 @@ public class ScrappingTableRecipeInput implements RecipeInput
 		{
 			return switch (slot)
 			{
-				case 0 -> cutter;
-				case 1 -> spanner;
-				case 2 -> calibrator;
-				case 3 -> scrapItem;
+				case 0 -> tool;
+				case 1 -> scrapItem;
 				default -> null;
 			};
 		}
@@ -41,12 +35,12 @@ public class ScrappingTableRecipeInput implements RecipeInput
 	@Override
 	public boolean isEmpty()
 	{
-		return spanner.isEmpty() && cutter.isEmpty() && calibrator.isEmpty() && scrapItem.isEmpty();
+		return tool.isEmpty() && scrapItem.isEmpty();
 	}
 
 	@Override
 	public int size()
 	{
-		return 4;
+		return 2;
 	}
 }

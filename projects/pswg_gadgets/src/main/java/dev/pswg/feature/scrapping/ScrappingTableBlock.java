@@ -1,10 +1,14 @@
 package dev.pswg.feature.scrapping;
 
 import com.mojang.serialization.MapCodec;
+import dev.pswg.container.GadgetsBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +32,14 @@ public class ScrappingTableBlock extends BlockWithEntity
 	public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
 		return new ScrappingTableBlockEntity(pos, state);
+	}
+
+	@Override
+	public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type)
+	{
+		if (type != GadgetsBlockEntities.SCRAPPING_TABLE_BLOCK_ENTITY)
+			return null;
+		return world.isClient ? null : ScrappingTableBlockEntity::tick;
 	}
 
 	@Override

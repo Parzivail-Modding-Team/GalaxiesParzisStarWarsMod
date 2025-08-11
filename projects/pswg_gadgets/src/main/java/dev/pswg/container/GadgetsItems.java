@@ -35,6 +35,28 @@ public class GadgetsItems
 				Identifier.of(Gadgets.MODID, "priming_time"),
 				ComponentType.<Long>builder().codec(Codec.LONG).build()
 		);
+		public static final ComponentType<Integer> METAL_COMPONENT = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "metal_component"),
+				ComponentType.<Integer>builder().codec(Codec.INT).build()
+		);
+		public static final ComponentType<Integer> TECH_COMPONENT = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "tech_component"),
+				ComponentType.<Integer>builder().codec(Codec.INT).build()
+		);
+		public static final ComponentType<Integer> PLASTIC_COMPONENT = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "plastic_component"),
+				ComponentType.<Integer>builder().codec(Codec.INT).build()
+		);
+		public static final ComponentType<Integer> ENERGY_COMPONENT = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "energy_component"),
+				ComponentType.<Integer>builder().codec(Codec.INT).build()
+		);
+
+
 
 		public static void register()
 		{
@@ -50,6 +72,8 @@ public class GadgetsItems
 
 	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Settings());
 	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Settings());
+
+	public static final Item SCRAP_ITEM = Registrar.item(Gadgets.id("scrap"), Item::new, new Item.Settings().component(Components.METAL_COMPONENT, 4).component(Components.PLASTIC_COMPONENT, 3).component(Components.TECH_COMPONENT, 1));
 
 	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), Item::new, new Item.Settings());
 	public static final Item SPANNER_ITEM = Registrar.item(Gadgets.id("spanner"), Item::new, new Item.Settings());
