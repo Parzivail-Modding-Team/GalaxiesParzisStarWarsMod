@@ -1,0 +1,8 @@
+{
+    "type": "pswg_gadgets:scrapping",
+    "tool" :"pswg_gadgets:calibrator",
+    "ingredient": "pswg_gadgets:broken_small_power_pack",
+    "result": {
+        "id": "minecraft:redstone"
+    }
+}

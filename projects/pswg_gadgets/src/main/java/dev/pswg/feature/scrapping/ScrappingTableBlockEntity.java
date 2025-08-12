@@ -182,10 +182,11 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 			}
 			else
 			{
-				if (outputStack.getCount() < getMaxCount(stack) && outputStack.getCount() < outputStack.getMaxCount() || outputStack.getCount() < stack.getMaxCount())
-				{
-					return slot;
-				}
+				if (outputStack.isOf(stack.getItem()))
+					if (outputStack.getCount() < getMaxCount(stack) && outputStack.getCount() < outputStack.getMaxCount() || outputStack.getCount() < stack.getMaxCount())
+					{
+						return slot;
+					}
 			}
 		}
 		return 0;

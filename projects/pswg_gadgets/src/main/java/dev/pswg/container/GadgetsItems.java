@@ -74,6 +74,7 @@ public class GadgetsItems
 	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Settings());
 
 	public static final Item SCRAP_ITEM = Registrar.item(Gadgets.id("scrap"), Item::new, new Item.Settings().component(Components.METAL_COMPONENT, 4).component(Components.PLASTIC_COMPONENT, 3).component(Components.TECH_COMPONENT, 1));
+	public static final Item BROKEN_SMALL_POWER_PACK_ITEM = Registrar.item(Gadgets.id("broken_small_power_pack"), Item::new, new Item.Settings().component(Components.METAL_COMPONENT, 1).component(Components.ENERGY_COMPONENT, 4).component(Components.TECH_COMPONENT, 2));
 
 	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), Item::new, new Item.Settings().maxDamage(100));
 	public static final Item SPANNER_ITEM = Registrar.item(Gadgets.id("spanner"), Item::new, new Item.Settings().maxDamage(100));
