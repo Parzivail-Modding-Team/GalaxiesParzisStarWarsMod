@@ -38,10 +38,12 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 	protected static final int OUTPUT_2_SLOT_INDEX = 5;
 	protected static final int OUTPUT_3_SLOT_INDEX = 6;
 	protected static final int OUTPUT_4_SLOT_INDEX = 7;
-	public static final int[] OUTPUT_SLOTS = new int[] { 4, 5, 6, 7 };
+	protected static final int OUTPUT_5_SLOT_INDEX = 8;
+	protected static final int OUTPUT_6_SLOT_INDEX = 9;
+	public static final int[] OUTPUT_SLOTS = new int[] { 4, 5, 6, 7, 8, 9 };
 	public static final int MAX_TOOL_PROGRESS = 48;
 
-	protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(8, ItemStack.EMPTY);
+	protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY);
 
 	int cutterProgress;
 	int spannerProgress;
@@ -127,18 +129,37 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 
 				for (int toolIndex = 0; toolIndex < 3; toolIndex++)
 				{
-					if (foundRecipe(scrappingBlockEntity, serverWorld, toolIndex))
+					var recipeInput = new ScrappingTableRecipeInput(scrappingBlockEntity.getStack(toolIndex), inputStack);
+					var recipeEntry = scrappingBlockEntity.matchGetter.getFirstMatch(recipeInput, serverWorld).orElse(null);
+
+					ItemStack outputStack = ItemStack.EMPTY;
+					ItemStack secondaryOutputStack = ItemStack.EMPTY;
+					boolean canOutput = false;
+					if (recipeEntry != null)
 					{
+						outputStack = recipeEntry.value().getPrimaryResult();
+						secondaryOutputStack = recipeEntry.value().getSecondaryResult();
+						canOutput = scrappingBlockEntity.areOutputSlotsAvailable(outputStack, secondaryOutputStack, toolIndex);
+					}
+
+					if (foundRecipe(scrappingBlockEntity, serverWorld, toolIndex) && recipeEntry != null && canOutput)
+					{
+						float secondaryChance = recipeEntry.value().getSecondaryChance();
 						if (scrappingBlockEntity.propertyDelegate.get(toolIndex) + 1 > MAX_TOOL_PROGRESS)
 						{
-							var recipeInput = new ScrappingTableRecipeInput(scrappingBlockEntity.getStack(toolIndex), inputStack);
-							var recipeEntry = scrappingBlockEntity.matchGetter.getFirstMatch(recipeInput, serverWorld).orElse(null);
-							ItemStack outputStack = recipeEntry.value().getResult();
-							int outputSlot = scrappingBlockEntity.getAvailableOutputSlot(outputStack);
-							if (scrappingBlockEntity.inventory.get(outputSlot).getItem() == outputStack.getItem())
-								scrappingBlockEntity.inventory.get(outputSlot).increment(outputStack.getCount());
+
+							if (scrappingBlockEntity.inventory.get(toolIndex * 2 + 4).getItem() == outputStack.getItem())
+								scrappingBlockEntity.inventory.get(toolIndex * 2 + 4).increment(outputStack.getCount());
 							else
-								scrappingBlockEntity.inventory.set(outputSlot, outputStack);
+								scrappingBlockEntity.inventory.set(toolIndex * 2 + 4, outputStack);
+
+							if (secondaryChance <= world.random.nextFloat())
+							{
+								if (scrappingBlockEntity.inventory.get(toolIndex * 2 + 5).getItem() == secondaryOutputStack.getItem())
+									scrappingBlockEntity.inventory.get(toolIndex * 2 + 5).increment(secondaryOutputStack.getCount());
+								else
+									scrappingBlockEntity.inventory.set(toolIndex * 2 + 5, secondaryOutputStack);
+							}
 
 							switch (toolIndex)
 							{
@@ -159,19 +180,19 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 						}
 						else
 							scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
-
 					}
 					else
 					{
 						scrappingBlockEntity.propertyDelegate.set(toolIndex, -1);
 					}
+
 				}
 				scrappingBlockEntity.markDirty();
 			}
 		}
 	}
 
-	public int getAvailableOutputSlot(ItemStack stack)
+	public int areOutputSlotsAvailable(ItemStack stack)
 	{
 		for (int slot : OUTPUT_SLOTS)
 		{
@@ -190,6 +211,32 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 			}
 		}
 		return 0;
+	}
+
+	public boolean areOutputSlotsAvailable(ItemStack primary, ItemStack secondary, int toolIndex)
+	{
+		int slotPrimary = toolIndex * 2 + 4;
+		int slotSecondary = toolIndex * 2 + 5;
+		ItemStack primaryOutputStack = inventory.get(slotPrimary);
+		ItemStack secondaryOutputStack = inventory.get(slotSecondary);
+
+		boolean primaryAvailable = false;
+		if (primaryOutputStack.isOf(primary.getItem()))
+		{
+			if (primaryOutputStack.getCount() < getMaxCount(primary) && primaryOutputStack.getCount() < primaryOutputStack.getMaxCount() || primaryOutputStack.getCount() < primary.getMaxCount())
+			{
+				primaryAvailable = true;
+			}
+		}
+		boolean secondaryAvailable = false;
+		if (secondaryOutputStack.isOf(secondary.getItem()))
+		{
+			if (secondaryOutputStack.getCount() < getMaxCount(secondary) && secondaryOutputStack.getCount() < secondaryOutputStack.getMaxCount() || secondaryOutputStack.getCount() < secondary.getMaxCount())
+			{
+				secondaryAvailable = true;
+			}
+		}
+		return (primaryAvailable || primaryOutputStack.isEmpty()) && (secondaryAvailable || secondaryOutputStack.isEmpty());
 	}
 
 	public static void damageTool(ItemStack tool)

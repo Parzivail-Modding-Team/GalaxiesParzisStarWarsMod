@@ -27,7 +27,7 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 
 	public ScrappingTableScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		this(syncId, playerInventory, new SimpleInventory(8), new ArrayPropertyDelegate(3));
+		this(syncId, playerInventory, new SimpleInventory(10), new ArrayPropertyDelegate(3));
 	}
 
 	public ScrappingTableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate)
@@ -46,10 +46,12 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		///  Input
 		this.addSlot(new SingleItemInputSlot(inventory, 3, 81, 28));
 		/// Output
-		this.addSlot(new OutputSlot(inventory, 4, 129, 54));
-		this.addSlot(new OutputSlot(inventory, 5, 129, 80));
-		this.addSlot(new OutputSlot(inventory, 6, 150, 54));
-		this.addSlot(new OutputSlot(inventory, 7, 150, 80));
+		this.addSlot(new OutputSlot(inventory, 4, 129, 46));
+		this.addSlot(new OutputSlot(inventory, 5, 150, 46));
+		this.addSlot(new OutputSlot(inventory, 6, 129, 68));
+		this.addSlot(new OutputSlot(inventory, 7, 150, 68));
+		this.addSlot(new OutputSlot(inventory, 8, 129, 90));
+		this.addSlot(new OutputSlot(inventory, 9, 150, 90));
 
 		this.addPlayerSlots(playerInventory, 8, 124);
 

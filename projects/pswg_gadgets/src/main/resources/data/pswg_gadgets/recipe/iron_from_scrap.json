@@ -2,7 +2,12 @@
     "type": "pswg_gadgets:scrapping",
     "tool" :"pswg_gadgets:cutter",
     "ingredient": "pswg_gadgets:scrap",
-    "result": {
+    "primary_result": {
         "id": "minecraft:iron_ingot"
-    }
+    },
+    "secondary_result": {
+                "id": "minecraft:iron_nugget",
+                "count": 4
+    },
+    "secondary_chance": 0.5
 }

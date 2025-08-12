@@ -4,12 +4,15 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsRecipeSerializers;
 import dev.pswg.container.GadgetsRecipeTypes;
+import dev.pswg.packet.GadgetsPacketUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -19,14 +22,18 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 {
 	private final Ingredient tool;
 	private final Ingredient ingredient;
-	private final ItemStack result;
+	private final ItemStack primaryResult;
+	private final ItemStack secondaryResult;
+	private final float secondaryChance;
 	private IngredientPlacement ingredientPlacement;
 
-	public ScrappingTableRecipe(Ingredient tool, Ingredient ingredient, ItemStack result)
+	public ScrappingTableRecipe(Ingredient tool, Ingredient ingredient, ItemStack primaryResult, ItemStack secondaryResult, float secondaryChance)
 	{
 		this.tool = tool;
 		this.ingredient = ingredient;
-		this.result = result;
+		this.primaryResult = primaryResult;
+		this.secondaryResult = secondaryResult;
+		this.secondaryChance = secondaryChance;
 		ingredientPlacement = IngredientPlacement.forMultipleSlots(List.of(tool(), scrapItem()));
 	}
 
@@ -57,7 +64,12 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	@Override
 	public ItemStack craft(ScrappingTableRecipeInput input, RegistryWrapper.WrapperLookup registries)
 	{
-		return result;
+		return primaryResult;
+	}
+
+	public ItemStack craftSecondary()
+	{
+		return secondaryResult;
 	}
 
 	@Override
@@ -88,6 +100,11 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 		return ingredient;
 	}
 
+	public float getSecondaryChance()
+	{
+		return secondaryChance;
+	}
+
 	Optional<Ingredient> tool()
 	{
 		return Optional.ofNullable(tool);
@@ -98,15 +115,20 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 		return tool;
 	}
 
-	ItemStack getResult()
+	ItemStack getPrimaryResult()
 	{
-		return result.copy();
+		return primaryResult.copy();
+	}
+
+	ItemStack getSecondaryResult()
+	{
+		return secondaryResult.copy();
 	}
 
 	@FunctionalInterface
 	public interface RecipeFactory<T extends ScrappingTableRecipe>
 	{
-		T create(Ingredient tool, Ingredient ingredient, ItemStack result);
+		T create(Ingredient tool, Ingredient ingredient, ItemStack result, ItemStack secondaryResult, float secondaryChance);
 	}
 
 	public static class Serializer<T extends ScrappingTableRecipe> implements RecipeSerializer<T>
@@ -120,17 +142,23 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 					instance -> instance.group(
 							                    Ingredient.CODEC.fieldOf("tool").forGetter(ScrappingTableRecipe::getTool),
 							                    Ingredient.CODEC.fieldOf("ingredient").forGetter(ScrappingTableRecipe::getIngredient),
-							                    ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(ScrappingTableRecipe::getResult)
+							                    ItemStack.VALIDATED_CODEC.fieldOf("primary_result").forGetter(ScrappingTableRecipe::getPrimaryResult),
+							                    ItemStack.VALIDATED_CODEC.fieldOf("secondary_result").forGetter(ScrappingTableRecipe::getSecondaryResult),
+							                    Codecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(ScrappingTableRecipe::getSecondaryChance)
 					                    )
 					                    .apply(instance, recipeFactory::create)
 			);
-			this.packetCodec = PacketCodec.tuple(
+			this.packetCodec = GadgetsPacketUtil.quintuple(
 					Ingredient.PACKET_CODEC,
 					ScrappingTableRecipe::getTool,
 					Ingredient.PACKET_CODEC,
 					ScrappingTableRecipe::getIngredient,
 					ItemStack.PACKET_CODEC,
-					ScrappingTableRecipe::getResult,
+					ScrappingTableRecipe::getPrimaryResult,
+					ItemStack.PACKET_CODEC,
+					ScrappingTableRecipe::getSecondaryResult,
+					PacketCodecs.FLOAT,
+					ScrappingTableRecipe::getSecondaryChance,
 					recipeFactory::create
 			);
 		}
