@@ -114,7 +114,6 @@ public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHand
 				return true;
 			}
 		}
-		//Gadgets.LOGGER.info("x: " + mouseX + " y: " + mouseY + " button: " + button + " xMinLoc: " + (30 + ((this.width - this.backgroundWidth) / 2)) + " yMinLoc: " + (70 + ((this.height - this.backgroundHeight) / 2)));
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 

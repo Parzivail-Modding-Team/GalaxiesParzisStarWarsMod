@@ -34,12 +34,6 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 	protected static final int SPANNER_SLOT_INDEX = 1;
 	protected static final int CALIBRATOR_SLOT_INDEX = 2;
 	protected static final int INPUT_SLOT_INDEX = 3;
-	protected static final int OUTPUT_1_SLOT_INDEX = 4;
-	protected static final int OUTPUT_2_SLOT_INDEX = 5;
-	protected static final int OUTPUT_3_SLOT_INDEX = 6;
-	protected static final int OUTPUT_4_SLOT_INDEX = 7;
-	protected static final int OUTPUT_5_SLOT_INDEX = 8;
-	protected static final int OUTPUT_6_SLOT_INDEX = 9;
 	public static final int[] OUTPUT_SLOTS = new int[] { 4, 5, 6, 7, 8, 9 };
 	public static final int MAX_TOOL_PROGRESS = 48;
 
@@ -190,27 +184,6 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 				scrappingBlockEntity.markDirty();
 			}
 		}
-	}
-
-	public int areOutputSlotsAvailable(ItemStack stack)
-	{
-		for (int slot : OUTPUT_SLOTS)
-		{
-			ItemStack outputStack = inventory.get(slot);
-			if (outputStack.isEmpty())
-			{
-				return slot;
-			}
-			else
-			{
-				if (outputStack.isOf(stack.getItem()))
-					if (outputStack.getCount() < getMaxCount(stack) && outputStack.getCount() < outputStack.getMaxCount() || outputStack.getCount() < stack.getMaxCount())
-					{
-						return slot;
-					}
-			}
-		}
-		return 0;
 	}
 
 	public boolean areOutputSlotsAvailable(ItemStack primary, ItemStack secondary, int toolIndex)
