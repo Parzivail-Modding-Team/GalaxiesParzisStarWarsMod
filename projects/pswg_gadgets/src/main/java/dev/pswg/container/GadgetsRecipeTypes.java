@@ -11,7 +11,6 @@ import net.minecraft.recipe.StonecuttingRecipe;
 public class GadgetsRecipeTypes
 {
 	public static final RecipeType<ScrappingTableRecipe> SCRAPPING = Registrar.recipeType(Gadgets.id("scrapping"));
-	public static final RecipeSerializer<ScrappingTableRecipe> SCRAPPING_SERIALIZER = RecipeSerializer.register("scrapping", new ScrappingTableRecipe.Serializer<>(ScrappingTableRecipe::new));
 
 	public static void register()
 	{

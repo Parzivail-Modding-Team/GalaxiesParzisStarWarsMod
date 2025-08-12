@@ -1,5 +1,6 @@
 package dev.pswg.feature.scrapping;
 
+import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -39,18 +40,18 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		this.world = playerInventory.player.getWorld();
 		this.propertyDelegate = propertyDelegate;
 		///  Cutter
-		this.addSlot(new Slot(inventory, 0, 6, 46));
+		this.addSlot(new ToolSlot(inventory, 0, 6, 46, GadgetsItems.CUTTER_ITEM));
 		///  Spanner
-		this.addSlot(new Slot(inventory, 1, 6, 68));
+		this.addSlot(new ToolSlot(inventory, 1, 6, 68, GadgetsItems.SPANNER_ITEM));
 		///  Calibrator
-		this.addSlot(new Slot(inventory, 2, 6, 90));
+		this.addSlot(new ToolSlot(inventory, 2, 6, 90, GadgetsItems.CALIBRATOR_ITEM));
 		///  Input
 		this.addSlot(new Slot(inventory, 3, 81, 28));
 		/// Output
-		this.addSlot(new Slot(inventory, 4, 129, 54));
-		this.addSlot(new Slot(inventory, 5, 129, 80));
-		this.addSlot(new Slot(inventory, 6, 150, 54));
-		this.addSlot(new Slot(inventory, 7, 150, 80));
+		this.addSlot(new OutputSlot(inventory, 4, 129, 54));
+		this.addSlot(new OutputSlot(inventory, 5, 129, 80));
+		this.addSlot(new OutputSlot(inventory, 6, 150, 54));
+		this.addSlot(new OutputSlot(inventory, 7, 150, 80));
 
 		this.addPlayerSlots(playerInventory, 8, 124);
 

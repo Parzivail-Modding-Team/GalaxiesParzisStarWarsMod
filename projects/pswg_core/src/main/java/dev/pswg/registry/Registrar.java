@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -134,5 +135,10 @@ public final class Registrar
 	public static <T extends ScreenHandler> ScreenHandlerType<T> screenHandlerType(Identifier registryKey, ScreenHandlerType.Factory<T> factory)
 	{
 		return Registry.register(Registries.SCREEN_HANDLER, registryKey, new ScreenHandlerType<>(factory, FeatureFlags.DEFAULT_ENABLED_FEATURES));
+	}
+
+	public static <S extends RecipeSerializer<T>, T extends Recipe<?>> S recipeSerializer(Identifier id, S serializer)
+	{
+		return Registry.register(Registries.RECIPE_SERIALIZER, id, serializer);
 	}
 }

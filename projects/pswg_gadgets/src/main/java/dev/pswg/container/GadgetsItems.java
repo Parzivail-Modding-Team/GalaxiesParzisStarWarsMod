@@ -75,9 +75,9 @@ public class GadgetsItems
 
 	public static final Item SCRAP_ITEM = Registrar.item(Gadgets.id("scrap"), Item::new, new Item.Settings().component(Components.METAL_COMPONENT, 4).component(Components.PLASTIC_COMPONENT, 3).component(Components.TECH_COMPONENT, 1));
 
-	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), Item::new, new Item.Settings());
-	public static final Item SPANNER_ITEM = Registrar.item(Gadgets.id("spanner"), Item::new, new Item.Settings());
-	public static final Item CALIBRATOR_ITEM = Registrar.item(Gadgets.id("calibrator"), Item::new, new Item.Settings());
+	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), Item::new, new Item.Settings().maxDamage(100));
+	public static final Item SPANNER_ITEM = Registrar.item(Gadgets.id("spanner"), Item::new, new Item.Settings().maxDamage(100));
+	public static final Item CALIBRATOR_ITEM = Registrar.item(Gadgets.id("calibrator"), Item::new, new Item.Settings().maxDamage(100));
 
 	public static void register()
 	{

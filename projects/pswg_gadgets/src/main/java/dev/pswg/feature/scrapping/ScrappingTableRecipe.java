@@ -1,15 +1,13 @@
 package dev.pswg.feature.scrapping;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.pswg.container.GadgetsRecipeSerializers;
 import dev.pswg.container.GadgetsRecipeTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.recipe.*;
-import net.minecraft.recipe.book.RecipeBookCategories;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
@@ -77,7 +75,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	@Override
 	public RecipeSerializer<? extends Recipe<ScrappingTableRecipeInput>> getSerializer()
 	{
-		return GadgetsRecipeTypes.SCRAPPING_SERIALIZER;
+		return GadgetsRecipeSerializers.SCRAPPING_SERIALIZER;
 	}
 
 	Optional<Ingredient> scrapItem()
@@ -102,7 +100,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 
 	ItemStack getResult()
 	{
-		return result;
+		return result.copy();
 	}
 
 	@FunctionalInterface

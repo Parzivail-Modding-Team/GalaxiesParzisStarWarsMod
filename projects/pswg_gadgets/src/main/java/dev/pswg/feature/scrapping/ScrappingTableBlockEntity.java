@@ -1,6 +1,5 @@
 package dev.pswg.feature.scrapping;
 
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsRecipeTypes;
@@ -11,11 +10,9 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -134,18 +131,37 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 					{
 						if (scrappingBlockEntity.propertyDelegate.get(toolIndex) + 1 > MAX_TOOL_PROGRESS)
 						{
-							//TODO: craft code
-							decreaseComponent(inputStack, GadgetsItems.Components.TECH_COMPONENT, 2);
-							decreaseComponent(inputStack, GadgetsItems.Components.METAL_COMPONENT, 1);
+							var recipeInput = new ScrappingTableRecipeInput(scrappingBlockEntity.getStack(toolIndex), inputStack);
+							var recipeEntry = scrappingBlockEntity.matchGetter.getFirstMatch(recipeInput, serverWorld).orElse(null);
+							ItemStack outputStack = recipeEntry.value().getResult();
+							int outputSlot = scrappingBlockEntity.getAvailableOutputSlot(outputStack);
+							if (scrappingBlockEntity.inventory.get(outputSlot).getItem() == outputStack.getItem())
+								scrappingBlockEntity.inventory.get(outputSlot).increment(outputStack.getCount());
+							else
+								scrappingBlockEntity.inventory.set(outputSlot, outputStack);
+
+							switch (toolIndex)
+							{
+								case 0:
+									decreaseComponent(inputStack, GadgetsItems.Components.METAL_COMPONENT, 2);
+									decreaseComponent(inputStack, GadgetsItems.Components.PLASTIC_COMPONENT, 1);
+									break;
+								case 1:
+									decreaseComponent(inputStack, GadgetsItems.Components.TECH_COMPONENT, 2);
+									decreaseComponent(inputStack, GadgetsItems.Components.METAL_COMPONENT, 1);
+									break;
+								case 2:
+									decreaseComponent(inputStack, GadgetsItems.Components.ENERGY_COMPONENT, 2);
+									decreaseComponent(inputStack, GadgetsItems.Components.TECH_COMPONENT, 1);
+							}
 							damageTool(scrappingBlockEntity.getStack(toolIndex));
-							scrappingBlockEntity.propertyDelegate.set(toolIndex, -1);
+							scrappingBlockEntity.propertyDelegate.set(toolIndex, 0);
 						}
 						else
 							scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
 					}
 					else
 					{
-						//TODO: uncomment and delete current once recipes are functional
 						scrappingBlockEntity.propertyDelegate.set(toolIndex, -1);
 						//scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
 					}
@@ -155,9 +171,29 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 		}
 	}
 
+	public int getAvailableOutputSlot(ItemStack stack)
+	{
+		for (int slot : OUTPUT_SLOTS)
+		{
+			ItemStack outputStack = inventory.get(slot);
+			if (outputStack.isEmpty())
+			{
+				return slot;
+			}
+			else
+			{
+				if (outputStack.getCount() < getMaxCount(stack) && outputStack.getCount() < outputStack.getMaxCount() || outputStack.getCount() < stack.getMaxCount())
+				{
+					return slot;
+				}
+			}
+		}
+		return 0;
+	}
+
 	public static void damageTool(ItemStack tool)
 	{
-		tool.setDamage(tool.getDamage() + 5);
+		tool.setDamage(tool.getDamage() + 1);
 		if (tool.getDamage() >= tool.getMaxDamage())
 			tool.decrement(1);
 	}
@@ -190,7 +226,7 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 		if (stack.contains(component))
 		{
 			stack.set(component, stack.get(component) - value);
-			if (stack.get(component) < 0)
+			if (stack.get(component) <= 0)
 				stack.decrement(1);
 		}
 	}
@@ -238,7 +274,7 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 		if (Arrays.stream(OUTPUT_SLOTS).anyMatch(value -> value == slot))
 			return false;
 		if (slot == INPUT_SLOT_INDEX)
-			return stack.isIn(GadgetsItems.Tags.SCRAP_TAG);
+			return true;//return stack.isIn(GadgetsItems.Tags.SCRAP_TAG);
 		if (slot == CUTTER_SLOT_INDEX)
 			return stack.isOf(GadgetsItems.CUTTER_ITEM);
 		if (slot == CALIBRATOR_SLOT_INDEX)
