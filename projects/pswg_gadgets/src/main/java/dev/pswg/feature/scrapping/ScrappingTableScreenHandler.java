@@ -14,8 +14,6 @@ import net.minecraft.recipe.book.RecipeBookType;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
@@ -46,7 +44,7 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		///  Calibrator
 		this.addSlot(new ToolSlot(inventory, 2, 6, 90, GadgetsItems.CALIBRATOR_ITEM));
 		///  Input
-		this.addSlot(new Slot(inventory, 3, 81, 28));
+		this.addSlot(new SingleItemInputSlot(inventory, 3, 81, 28));
 		/// Output
 		this.addSlot(new OutputSlot(inventory, 4, 129, 54));
 		this.addSlot(new OutputSlot(inventory, 5, 129, 80));
@@ -130,9 +128,37 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 	}
 
 	@Override
-	public ItemStack quickMove(PlayerEntity player, int slot)
+	public ItemStack quickMove(PlayerEntity player, int index)
 	{
-		return ItemStack.EMPTY;
+		var itemStack = ItemStack.EMPTY;
+		var slot = this.slots.get(index);
+		if (slot != null && slot.hasStack())
+		{
+			var slotStack = slot.getStack();
+			itemStack = slotStack.copy();
+			if (index < this.inventory.size())
+			{
+				if (!this.insertItem(slotStack, this.inventory.size(), this.slots.size(), true))
+				{
+					return ItemStack.EMPTY;
+				}
+			}
+			else if (!this.insertItem(slotStack, 0, this.inventory.size(), false))
+			{
+				return ItemStack.EMPTY;
+			}
+
+			if (slotStack.isEmpty())
+			{
+				slot.setStack(ItemStack.EMPTY);
+			}
+			else
+			{
+				slot.markDirty();
+			}
+		}
+
+		return itemStack;
 	}
 
 	@Override

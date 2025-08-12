@@ -38,7 +38,7 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 	protected static final int OUTPUT_2_SLOT_INDEX = 5;
 	protected static final int OUTPUT_3_SLOT_INDEX = 6;
 	protected static final int OUTPUT_4_SLOT_INDEX = 7;
-	private static final int[] OUTPUT_SLOTS = new int[] { 4, 5, 6, 7 };
+	public static final int[] OUTPUT_SLOTS = new int[] { 4, 5, 6, 7 };
 	public static final int MAX_TOOL_PROGRESS = 48;
 
 	protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(8, ItemStack.EMPTY);
@@ -159,11 +159,11 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 						}
 						else
 							scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
+
 					}
 					else
 					{
 						scrappingBlockEntity.propertyDelegate.set(toolIndex, -1);
-						//scrappingBlockEntity.propertyDelegate.set(toolIndex, Math.max(scrappingBlockEntity.propertyDelegate.get(toolIndex) - 1, 0));
 					}
 				}
 				scrappingBlockEntity.markDirty();
