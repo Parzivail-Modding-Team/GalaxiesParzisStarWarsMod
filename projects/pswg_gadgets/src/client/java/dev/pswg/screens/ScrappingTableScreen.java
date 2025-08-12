@@ -42,7 +42,7 @@ public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHand
 			if (handler.getToolProgress(i) >= 0)
 			{
 				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, 31 + backgroundX, 48 + i * 22 + backgroundY, 177, 18, 10, 10, 256, 256);
-				if (mouseX > 31 + backgroundX && mouseX < 41 + backgroundX && mouseY > 48 + i * 23 + backgroundY && mouseY < 58 + i * 22 + backgroundY)
+				if (mouseX > 31 + backgroundX && mouseX < 41 + backgroundX && mouseY > 48 + i * 22 + backgroundY && mouseY < 58 + i * 22 + backgroundY)
 				{
 					hoveringOverTool = i;
 					context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, 31 + backgroundX, 48 + i * 22 + backgroundY, 177, 29, 10, 10, 256, 256);
