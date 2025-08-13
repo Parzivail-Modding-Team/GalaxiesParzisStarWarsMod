@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/fertile_dirt"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/fertile_dirt"
+    }
+  }
 }

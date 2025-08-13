@@ -10,14 +10,20 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.Models;
+import net.minecraft.client.data.TexturedModel;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * The gadget data generator
@@ -49,13 +55,22 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
 		{
-			blockStateModelGenerator.registerSimpleCubeAll(GadgetsBlocks.CHARRED_BLOCK);
-			blockStateModelGenerator.registerSimpleCubeAll(GadgetsBlocks.FERTILE_DIRT_BLOCK);
+			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
+				switch (dataGenBlock.model())
+				{
+					case CubeAll -> blockStateModelGenerator.registerSimpleCubeAll(block);
+					case Column -> blockStateModelGenerator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
+				}
+			});
+
+			//blockStateModelGenerator.registerSimpleCubeAll(GadgetsBlocks.CHARRED_BLOCK);
+			//blockStateModelGenerator.registerSimpleCubeAll(GadgetsBlocks.FERTILE_DIRT_BLOCK);
 		}
 
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
+
 			register(itemModelGenerator, GadgetsItems.THERMAL_DETONATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.FRAGMENTATION_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 			register(itemModelGenerator, GadgetsItems.NERVE_GAS_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
@@ -97,8 +112,19 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsItems.PRESSURE_MINE_ITEM, "Pressure Mine");
 			translationBuilder.add(GadgetsItems.TRIPWIRE_MINE_ITEM, "Tripwire Mine");
 
-			translationBuilder.add(GadgetsBlocks.CHARRED_BLOCK, "Charred Wood");
-			translationBuilder.add(GadgetsBlocks.FERTILE_DIRT_BLOCK, "Fertile Dirt");
+			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
+
+				if (!Objects.equals(dataGenBlock.langOverride(), ""))
+				{
+					translationBuilder.add(block, dataGenBlock.langOverride());
+				}
+				else
+				{
+					translationBuilder.add(block, generateDefaultLang(block.getRegistryEntry().registryKey().getValue()));
+				}
+			});
+			//translationBuilder.add(GadgetsBlocks.CHARRED_BLOCK, "Charred Wood");
+			//translationBuilder.add(GadgetsBlocks.FERTILE_DIRT_BLOCK, "Fertile Dirt");
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
@@ -232,5 +258,13 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 
 		}
+	}
+
+	private static String generateDefaultLang(Identifier reg)
+	{
+		var path = reg.getPath();
+		return Arrays.stream(path.split("_"))
+		             .map(s -> Character.toUpperCase(s.charAt(0)) + s.substring(1))
+		             .collect(Collectors.joining(" "));
 	}
 }

@@ -3,9 +3,11 @@ package dev.pswg.container;
 import dev.pswg.Gadgets;
 import dev.pswg.block.FertileDirt;
 import dev.pswg.block.FragmentationGrenadeBlock;
+import dev.pswg.datagen.DataGenBlock;
 import dev.pswg.feature.scrapping.ScrappingTableBlock;
 import dev.pswg.block.ThermalDetonatorBlock;
 import dev.pswg.registry.Registrar;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.registry.RegistryKeys;
@@ -25,8 +27,12 @@ public class GadgetsBlocks
 
 	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.block(Gadgets.id("thermal_detonator_block"), ThermalDetonatorBlock::new, Block.Settings.create());
 	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.block(Gadgets.id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, Block.Settings.create());
+
+	@DataGenBlock
 	public static final FertileDirt FERTILE_DIRT_BLOCK = Registrar.block(Gadgets.id("fertile_dirt"), FertileDirt::new, Block.Settings.create().ticksRandomly());
+	@DataGenBlock
 	public static final Block CHARRED_BLOCK = Registrar.block(Gadgets.id("charred_block"), Block::new, AbstractBlock.Settings.create().dropsNothing().breakInstantly());
+
 	public static final Block SCRAPPING_TABLE_BLOCK = Registrar.block(Gadgets.id("scrapping_table"), ScrappingTableBlock::new, AbstractBlock.Settings.create());
 	//public static final StairsBlock CHARRED_STAIRS = Registrar.block(Gadgets.id("charred_stairs"), Block::new, Block.Settings.create().dropsNothing().breakInstantly());
 
