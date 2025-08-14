@@ -3,5 +3,6 @@ package dev.pswg.datagen;
 public enum DataGenBlockModel
 {
 	CubeAll,
-	Column
+	Column,
+	None
 }

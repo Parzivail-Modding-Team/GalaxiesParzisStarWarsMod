@@ -1,11 +1,13 @@
 package dev.pswg.registry;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
@@ -57,11 +59,31 @@ public final class Registrar
 	 *
 	 * @return A constructed block with the provided settings, given the corresponding registry key
 	 */
+	public static <TBlock extends Block, TSettings extends Block.Settings> TBlock blockWithoutItem(Identifier registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
+	{
+		// this cast to TSettings is legal since `registryKey` returns `this`
+		//noinspection unchecked
+		var block = constructor.apply((TSettings)settings.registryKey(RegistryKey.of(RegistryKeys.BLOCK, registryKey)));
+		return Registry.register(Registries.BLOCK, registryKey, block);
+	}
+
+	/**
+	 * Constructs and registers a block with an item with the provided registry key
+	 *
+	 * @param registryKey The registry key to assign to the block
+	 * @param constructor The constructor that will instantiate the block
+	 * @param settings    The settings that will be passed to the block
+	 * @param <TBlock>    The type of block to construct
+	 * @param <TSettings> The type of settings to construct the block with
+	 *
+	 * @return A constructed block with the provided settings, given the corresponding registry key
+	 */
 	public static <TBlock extends Block, TSettings extends Block.Settings> TBlock block(Identifier registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
 	{
 		// this cast to TSettings is legal since `registryKey` returns `this`
 		//noinspection unchecked
 		var block = constructor.apply((TSettings)settings.registryKey(RegistryKey.of(RegistryKeys.BLOCK, registryKey)));
+		Registrar.item(registryKey, itemSettings -> new BlockItem(block, itemSettings));
 		return Registry.register(Registries.BLOCK, registryKey, block);
 	}
 

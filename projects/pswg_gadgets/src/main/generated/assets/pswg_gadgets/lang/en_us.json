@@ -1,6 +1,12 @@
 {
+	"block.pswg_gadgets.canyone_stone_bricks": "Canyone Stone Bricks",
   "block.pswg_gadgets.charred_block": "Charred Block",
+	"block.pswg_gadgets.chiseled_canyon_stone": "Chiseled Canyon Stone",
   "block.pswg_gadgets.fertile_dirt": "Fertile Dirt",
+	"block.pswg_gadgets.fragmentation_grenade_block": "Fragmentation Grenade Block",
+	"block.pswg_gadgets.polished_canyon_stone": "Polished Canyon Stone",
+	"block.pswg_gadgets.scrapping_table": "Scrapping Table",
+	"block.pswg_gadgets.thermal_detonator_block": "Thermal Detonator Block",
   "effect.pswg_gadgets.intoxicated": "Intoxicated",
   "item.pswg_gadgets.fragmentation_grenade": "C-25 Fragmentation Grenade",
   "item.pswg_gadgets.impact_grenade": "Impact Grenade",

@@ -1,6 +1,7 @@
 package dev.pswg.datagen;
 
 import dev.pswg.Gadgets;
+import dev.pswg.block.StoneProducts;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
@@ -12,13 +13,14 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.ItemModelGenerator;
-import net.minecraft.client.data.Models;
-import net.minecraft.client.data.TexturedModel;
+import net.minecraft.block.enums.BlockHalf;
+import net.minecraft.block.enums.StairShape;
+import net.minecraft.client.data.*;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -62,9 +64,17 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					case Column -> blockStateModelGenerator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
 				}
 			});
+			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
 
-			//blockStateModelGenerator.registerSimpleCubeAll(GadgetsBlocks.CHARRED_BLOCK);
-			//blockStateModelGenerator.registerSimpleCubeAll(GadgetsBlocks.FERTILE_DIRT_BLOCK);
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					blockStateModelGenerator.registerCubeAllModelTexturePool(stoneProducts.block)
+					                        .wall(stoneProducts.wall)
+					                        .slab(stoneProducts.slab)
+					                        .stairs(stoneProducts.stairs);
+				}
+			});
+
 		}
 
 		@Override
