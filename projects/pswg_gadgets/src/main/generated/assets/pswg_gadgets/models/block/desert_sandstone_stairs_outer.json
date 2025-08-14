@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/outer_stairs",
+	"textures": {
+		"bottom": "pswg_gadgets:block/desert_sandstone",
+		"side": "pswg_gadgets:block/desert_sandstone",
+		"top": "pswg_gadgets:block/desert_sandstone"
+	}
+}

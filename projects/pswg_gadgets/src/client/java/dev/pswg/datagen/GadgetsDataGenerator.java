@@ -1,10 +1,13 @@
 package dev.pswg.datagen;
 
+import com.mojang.datafixers.util.Pair;
 import dev.pswg.Gadgets;
+import dev.pswg.block.DyedStoneProducts;
 import dev.pswg.block.StoneProducts;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
+import dev.pswg.data.IdentifierUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -13,11 +16,11 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.block.enums.StairShape;
+import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.data.*;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -25,7 +28,10 @@ import net.minecraft.util.math.Direction;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static net.minecraft.client.data.BlockStateModelGenerator.CONNECTION_VARIANT_FUNCTIONS;
 
 /**
  * The gadget data generator
@@ -62,6 +68,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				{
 					case CubeAll -> blockStateModelGenerator.registerSimpleCubeAll(block);
 					case Column -> blockStateModelGenerator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
+					case Cross -> blockStateModelGenerator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
 				}
 			});
 			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
@@ -72,6 +79,17 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					                        .wall(stoneProducts.wall)
 					                        .slab(stoneProducts.slab)
 					                        .stairs(stoneProducts.stairs);
+				}
+			});
+			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedStoneProducts.class, (dyedStoneProducts, dataGenBlock) -> {
+
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					for (StoneProducts stoneProducts : dyedStoneProducts.values())
+						blockStateModelGenerator.registerCubeAllModelTexturePool(stoneProducts.block)
+						                        .wall(stoneProducts.wall)
+						                        .slab(stoneProducts.slab)
+						                        .stairs(stoneProducts.stairs);
 				}
 			});
 
@@ -183,7 +201,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 	}
 	/**
-	 * The gadget block tag generator. All block tags should be added
+	 * The gadget connectingBlock tag generator. All connectingBlock tags should be added
 	 * through this generator.
 	 */
 	private static class BlockTagGenerator extends FabricTagProvider.BlockTagProvider
@@ -269,7 +287,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		}
 	}
-
 	private static String generateDefaultLang(Identifier reg)
 	{
 		var path = reg.getPath();

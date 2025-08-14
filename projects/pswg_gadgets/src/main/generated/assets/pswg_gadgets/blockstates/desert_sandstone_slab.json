@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "pswg_gadgets:block/desert_sandstone_slab"
+		},
+		"type=double": {
+			"model": "pswg_gadgets:block/desert_sandstone"
+		},
+		"type=top": {
+			"model": "pswg_gadgets:block/desert_sandstone_slab_top"
+		}
+	}
+}

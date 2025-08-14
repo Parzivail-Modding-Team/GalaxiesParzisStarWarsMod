@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "pswg_gadgets:block/massassi_stone_bricks_slab"
+		},
+		"type=double": {
+			"model": "pswg_gadgets:block/massassi_stone_bricks"
+		},
+		"type=top": {
+			"model": "pswg_gadgets:block/massassi_stone_bricks_slab_top"
+		}
+	}
+}
