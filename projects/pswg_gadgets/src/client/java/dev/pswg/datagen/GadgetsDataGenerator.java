@@ -1,13 +1,12 @@
 package dev.pswg.datagen;
 
-import com.mojang.datafixers.util.Pair;
 import dev.pswg.Gadgets;
+import dev.pswg.block.DyedBlocks;
 import dev.pswg.block.DyedStoneProducts;
 import dev.pswg.block.StoneProducts;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
-import dev.pswg.data.IdentifierUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -16,22 +15,17 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.data.*;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static net.minecraft.client.data.BlockStateModelGenerator.CONNECTION_VARIANT_FUNCTIONS;
 
 /**
  * The gadget data generator
@@ -63,13 +57,42 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
 		{
-			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
+			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (genBlock, dataGenBlock) -> {
+
 				switch (dataGenBlock.model())
 				{
-					case CubeAll -> blockStateModelGenerator.registerSimpleCubeAll(block);
-					case Column -> blockStateModelGenerator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
-					case Cross -> blockStateModelGenerator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
+					case CubeAll -> blockStateModelGenerator.registerSimpleCubeAll(genBlock);
+					case Column -> blockStateModelGenerator.registerSingleton(genBlock, TexturedModel.CUBE_COLUMN);
+					case Cross -> blockStateModelGenerator.registerTintableCross(genBlock, BlockStateModelGenerator.CrossType.NOT_TINTED);
+					case DataGenModel ->
+					{
+						switch (dataGenBlock.dataGenModelKey())
+						{
+							case "corrugated_crate":
+								registerCorrugatedCrate(blockStateModelGenerator, genBlock);
+							case null, default:
+						}
+					}
 				}
+			});
+			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (genDyedBlocks, dataGenBlock) -> {
+
+				for (Block block : genDyedBlocks.values())
+					switch (dataGenBlock.model())
+					{
+						case CubeAll -> blockStateModelGenerator.registerSimpleCubeAll(block);
+						case Column -> blockStateModelGenerator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
+						case Cross -> blockStateModelGenerator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
+						case DataGenModel ->
+						{
+							switch (dataGenBlock.dataGenModelKey())
+							{
+								case "corrugated_crate":
+									registerCorrugatedCrate(blockStateModelGenerator, block);
+								case null, default:
+							}
+						}
+					}
 			});
 			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
 
@@ -93,6 +116,32 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				}
 			});
 
+			//String blockKey = genBlock.getRegistryEntry().getKey().get().getValue().toString().substring(Gadgets.MODID.length()+1);
+			//TexturedModel.makeFactory(block -> TextureMap.texture(Gadgets.id("block/"+blockKey)), blockModel("corrugated_crate", TextureKey.of(blockKey)));
+
+		}
+
+		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
+		{
+			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);
+		}
+
+		public final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)
+		{
+			var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("block/model/corrugated_crate/");
+			TexturedModel.makeFactory(block1 -> TextureMap.all(crateKey).put(TextureKey.PARTICLE, crateKey.withSuffixedPath("_particle")), blockModel("template_corrugated_crate", TextureKey.ALL, TextureKey.PARTICLE)).upload(block, generator.modelCollector);
+			generator.registerSimpleState(block);
+		}
+
+		public static Identifier getBlockKey(Block block)
+		{
+			return block.getRegistryEntry().getKey().get().getValue();
+		}
+
+		public static Identifier getCorrugatedCrateKey(Block block)
+		{
+			String string = block.getRegistryEntry().getKey().get().getValue().toString();
+			return Identifier.of(string.substring(0, string.indexOf("_corrugated_crate")));
 		}
 
 		@Override

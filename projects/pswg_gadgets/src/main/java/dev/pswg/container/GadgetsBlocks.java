@@ -2,6 +2,8 @@ package dev.pswg.container;
 
 import dev.pswg.Gadgets;
 import dev.pswg.block.*;
+import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
+import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.datagen.DataGenBlock;
 import dev.pswg.datagen.DataGenBlockModel;
 import dev.pswg.feature.scrapping.ScrappingTableBlock;
@@ -13,6 +15,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.ColorCode;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.shape.VoxelShape;
 
 public class GadgetsBlocks
 {
@@ -284,11 +287,28 @@ public class GadgetsBlocks
 	//TODO: Add "@TabIgnore" for LAB_WALL
 	public static final Block LAB_WALL = createBlock("lab_wall", AbstractBlock.Settings.create());
 
+	/// CRATES
+	public static final VoxelShape CRATE_SHAPE = VoxelShapeUtil.getCenteredCube(14, 16);
+	public static final AbstractBlock.Settings CORRUGATED_CRATE_SETTINGS = AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F);
+
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
+	public static final Block IMPERIAL_CORRUGATED_CRATE = createCorrugatedCrate("imperial_corrugated_crate");
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
+	public static final Block MEDICAL_CORRUGATED_CRATE = createCorrugatedCrate("medical_corrugated_crate");
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
+	public static final Block MINING_CORRUGATED_CRATE = createCorrugatedCrate("mining_corrugated_crate");
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
+	public static final DyedBlocks CORRUGATED_CRATE = new DyedBlocks(color -> createCorrugatedCrate(color.name().toLowerCase() + "_corrugated_crate"));
+
 	public static Block createBlock(String key, AbstractBlock.Settings settings)
 	{
 		return Registrar.block(Gadgets.id(key), Block::new, settings);
 	}
 
+	public static WaterloggableRotatingBlockWithBoundsGuiEntity createCorrugatedCrate(String key)
+	{
+		return Registrar.block(Gadgets.id(key), blockSettings -> new WaterloggableRotatingBlockWithBoundsGuiEntity(CRATE_SHAPE, blockSettings, CrateCorrugatedBlockEntity::new), CORRUGATED_CRATE_SETTINGS);
+	}
 	public static SelfConnectingBlock createSelfConnectingBlock(String key, AbstractBlock.Settings settings)
 	{
 		return Registrar.block(Gadgets.id(key), SelfConnectingBlock::new, settings);

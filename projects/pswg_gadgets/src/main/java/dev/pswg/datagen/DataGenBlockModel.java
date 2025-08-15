@@ -6,5 +6,6 @@ public enum DataGenBlockModel
 	Column,
 	Connecting,
 	Cross,
+	DataGenModel,
 	None
 }

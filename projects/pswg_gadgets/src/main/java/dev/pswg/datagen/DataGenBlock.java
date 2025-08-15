@@ -12,4 +12,6 @@ public @interface DataGenBlock
 	DataGenBlockModel model() default DataGenBlockModel.CubeAll;
 
 	String langOverride() default "";
+
+	String dataGenModelKey() default "";
 }

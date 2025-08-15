@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHandler>
 {
-	private static final Identifier TEXTURE = Gadgets.id("textures/gui/scrapping_table.png");
+	private static final Identifier TEXTURE = Gadgets.id("textures/gui/container/scrapping_table.png");
 
 
 	public ScrappingTableScreen(ScrappingTableScreenHandler handler, PlayerInventory inventory, Text title)
