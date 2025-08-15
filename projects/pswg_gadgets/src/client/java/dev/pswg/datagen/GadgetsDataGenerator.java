@@ -3,6 +3,7 @@ package dev.pswg.datagen;
 import dev.pswg.Gadgets;
 import dev.pswg.block.DyedBlocks;
 import dev.pswg.block.DyedStoneProducts;
+import dev.pswg.block.NumberedBlocks;
 import dev.pswg.block.StoneProducts;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
@@ -58,61 +59,28 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (genBlock, dataGenBlock) -> {
-
-				switch (dataGenBlock.model())
-				{
-					case CubeAll -> blockStateModelGenerator.registerSimpleCubeAll(genBlock);
-					case Column -> blockStateModelGenerator.registerSingleton(genBlock, TexturedModel.CUBE_COLUMN);
-					case Cross -> blockStateModelGenerator.registerTintableCross(genBlock, BlockStateModelGenerator.CrossType.NOT_TINTED);
-					case DataGenModel ->
-					{
-						switch (dataGenBlock.dataGenModelKey())
-						{
-							case "corrugated_crate":
-								registerCorrugatedCrate(blockStateModelGenerator, genBlock);
-							case null, default:
-						}
-					}
-				}
+				registerDataGenBlock(genBlock, dataGenBlock, blockStateModelGenerator);
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (genDyedBlocks, dataGenBlock) -> {
 
 				for (Block block : genDyedBlocks.values())
-					switch (dataGenBlock.model())
-					{
-						case CubeAll -> blockStateModelGenerator.registerSimpleCubeAll(block);
-						case Column -> blockStateModelGenerator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
-						case Cross -> blockStateModelGenerator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
-						case DataGenModel ->
-						{
-							switch (dataGenBlock.dataGenModelKey())
-							{
-								case "corrugated_crate":
-									registerCorrugatedCrate(blockStateModelGenerator, block);
-								case null, default:
-							}
-						}
-					}
+					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, NumberedBlocks.class, (numberedBlocks, dataGenBlock) -> {
+				for (Block block : numberedBlocks)
+					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
-
 				if (dataGenBlock.model() != DataGenBlockModel.None)
 				{
-					blockStateModelGenerator.registerCubeAllModelTexturePool(stoneProducts.block)
-					                        .wall(stoneProducts.wall)
-					                        .slab(stoneProducts.slab)
-					                        .stairs(stoneProducts.stairs);
+					registerStoneProducts(stoneProducts, blockStateModelGenerator);
 				}
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedStoneProducts.class, (dyedStoneProducts, dataGenBlock) -> {
-
 				if (dataGenBlock.model() != DataGenBlockModel.None)
 				{
 					for (StoneProducts stoneProducts : dyedStoneProducts.values())
-						blockStateModelGenerator.registerCubeAllModelTexturePool(stoneProducts.block)
-						                        .wall(stoneProducts.wall)
-						                        .slab(stoneProducts.slab)
-						                        .stairs(stoneProducts.stairs);
+						registerStoneProducts(stoneProducts, blockStateModelGenerator);
 				}
 			});
 
@@ -121,12 +89,39 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		}
 
+		private static void registerStoneProducts(StoneProducts stoneProducts, BlockStateModelGenerator generator)
+		{
+			generator.registerCubeAllModelTexturePool(stoneProducts.block)
+			         .wall(stoneProducts.wall)
+			         .slab(stoneProducts.slab)
+			         .stairs(stoneProducts.stairs);
+		}
+
+		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
+		{
+			switch (dataGenBlock.model())
+			{
+				case CubeAll -> generator.registerSimpleCubeAll(block);
+				case Column -> generator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
+				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
+				case DataGenModel ->
+				{
+					switch (dataGenBlock.dataGenModelKey())
+					{
+						case "corrugated_crate":
+							registerCorrugatedCrate(generator, block);
+						case null, default:
+					}
+				}
+			}
+		}
+
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
 			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);
 		}
 
-		public final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)
+		public static final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)
 		{
 			var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("block/model/corrugated_crate/");
 			TexturedModel.makeFactory(block1 -> TextureMap.all(crateKey).put(TextureKey.PARTICLE, crateKey.withSuffixedPath("_particle")), blockModel("template_corrugated_crate", TextureKey.ALL, TextureKey.PARTICLE)).upload(block, generator.modelCollector);

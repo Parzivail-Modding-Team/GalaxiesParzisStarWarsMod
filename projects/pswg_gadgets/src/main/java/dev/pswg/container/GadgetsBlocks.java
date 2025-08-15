@@ -267,24 +267,123 @@ public class GadgetsBlocks
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_1 = createSelfConnectingBlock("gray_imperial_tall_panel_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 	@DataGenBlock
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_2 = createSelfConnectingBlock("gray_imperial_tall_panel_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
-
 	// TODO: Implement lighting panels
-	/*@RegistryName("gray_imperial_tall_light_1")
-	@TarkinBlock(state = TrState.None, model = TrModel.None)
-	public static final InteractableConnectingInvertedLampBlock IMPERIAL_LIGHT_TALL_1 = createLitConnectingPanel(MapColor.GRAY, 14);
-	@RegistryName("gray_imperial_tall_light_2")
-	@TarkinBlock(state = TrState.None, model = TrModel.None)
-	public static final InteractableConnectingInvertedLampBlock IMPERIAL_LIGHT_TALL_2 = createLitConnectingPanel(MapColor.GRAY, 14);
-	@RegistryName("gray_imperial_light_panel_1")
-	public static final Block GRAY_IMPERIAL_LIGHT_PANEL_1 = createLightingPanelBlock(11);
-	@RegistryName("gray_imperial_light_panel_2")
-	public static final Block GRAY_IMPERIAL_LIGHT_PANEL_2 = createLightingPanelBlock(9);
-	@RegistryName("gray_imperial_light_panel_3")
-	public static final Block GRAY_IMPERIAL_LIGHT_PANEL_3 = createLightingPanelBlock(14);
-	@RegistryName("gray_imperial_light_1")
-	public static final Block GRAY_IMPERIAL_LIGHT_1 = createLightingPanelBlock(15);
-	@RegistryName("gray_imperial_light_2")
-	public static final Block GRAY_IMPERIAL_LIGHT_2 = createLightingPanelBlock(15);*/
+	@DataGenBlock
+	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("light_gray_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	@DataGenBlock
+	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("light_gray_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	@DataGenBlock
+	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("light_gray_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	@DataGenBlock
+	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("white_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
+	@DataGenBlock
+	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("white_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
+	@DataGenBlock
+	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("white_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
+	@DataGenBlock
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_BORDERED = createSelfConnectingBlock("black_imperial_panel_bordered", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	@DataGenBlock
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SPLIT = createSelfConnectingBlock("black_imperial_panel_split", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	@DataGenBlock
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_THIN_BORDERED = createSelfConnectingBlock("black_imperial_panel_thin_bordered", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	@DataGenBlock
+	public static final SelfConnectingBlock EXTERNAL_IMPERIAL_PLATING = createSelfConnectingBlock("external_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	@DataGenBlock
+	public static final SelfConnectingBlock LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	@DataGenBlock
+	public static final SelfConnectingBlock RUSTED_LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("rusted_large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	@DataGenBlock
+	public static final SelfConnectingBlock MOSSY_LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("mossy_large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	@DataGenBlock
+	public static final SelfConnectingBlock LARGE_LIGHT_GRAY_IMPERIAL_PLATING = createSelfConnectingBlock("large_light_gray_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	@DataGenBlock
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_A = createNumberedBlocks("black_imperial_panel_pattern_a", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	@DataGenBlock
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_B = createNumberedBlocks("black_imperial_panel_pattern_b", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	@DataGenBlock
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_C = createNumberedBlocks("black_imperial_panel_pattern_c", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	@DataGenBlock
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_D = createNumberedBlocks("black_imperial_panel_pattern_d", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	@DataGenBlock
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_E = createNumberedBlocks("black_imperial_panel_pattern_e", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("gray_imperial_panel_pattern_3", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("light_gray_imperial_panel_pattern_3", MapColor.LIGHT_GRAY);
+	@DataGenBlock
+	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("light_gray_imperial_panel_pattern_4", MapColor.LIGHT_GRAY);
+	@DataGenBlock
+	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("light_gray_imperial_panel_pattern_5", MapColor.LIGHT_GRAY);
+	@DataGenBlock
+	public static final Block RustedGrayImperialPanelPattern3 = createPanel("rusted_gray_imperial_panel_pattern_3", MapColor.GRAY);
+	//@RegistryName("rusted_gray_imperial_panel_pattern_3_stairs")
+	//public static final Block RustedGrayImperialPanelPattern3Stairs = new StairsBlock(RustedGrayImperialPanelPattern3.getDefaultState(), FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
+	//@RegistryName("rusted_gray_imperial_panel_pattern_3_slab")
+	//public static final Block RustedGrayImperialPanelPattern3Slab = new VerticalSlabBlock(FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
+	@DataGenBlock
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("mossy_gray_imperial_panel_pattern_3", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("gray_imperial_panel_pattern_4", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("rusted_gray_imperial_panel_pattern_4", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("mossy_gray_imperial_panel_pattern_4", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("gray_imperial_panel_pattern_5", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("rusted_gray_imperial_panel_pattern_5", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("mossy_gray_imperial_panel_pattern_5", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("gray_imperial_panel_pattern_6", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("rusted_gray_imperial_panel_pattern_6", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("mossy_gray_imperial_panel_pattern_6", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_7 = createPanel("gray_imperial_panel_pattern_7", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_8 = createPanel("gray_imperial_panel_pattern_8", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("gray_imperial_panel_pattern_9", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("rusted_gray_imperial_panel_pattern_9", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("mossy_gray_imperial_panel_pattern_9", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_10 = createPanel("gray_imperial_panel_pattern_10", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_11 = createPanel("gray_imperial_panel_pattern_11", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_12 = createPanel("gray_imperial_panel_pattern_12", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_13 = createPanel("gray_imperial_panel_pattern_13", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_FLOORING_0 = createPanel("gray_imperial_flooring_0", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_FLOORING_3 = createPanel("gray_imperial_flooring_3", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block GRAY_IMPERIAL_FLOORING_4 = createPanel("gray_imperial_flooring_4", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_0 = createPanel("light_gray_imperial_flooring_0", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_3 = createPanel("light_gray_imperial_flooring_3", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_4 = createPanel("light_gray_imperial_flooring_4", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block BLACK_IMPERIAL_FLOORING_3 = createPanel("black_imperial_flooring_3", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block BLACK_IMPERIAL_FLOORING_4 = createPanel("black_imperial_flooring_4", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block WHITE_IMPERIAL_FLOORING_3 = createPanel("white_imperial_flooring_3", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block WHITE_IMPERIAL_FLOORING_4 = createPanel("white_imperial_flooring_4", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block IMPERIAL_FLOORING_PATTERN_1 = createPanel("imperial_flooring_pattern_1", MapColor.GRAY);
+	@DataGenBlock
+	public static final Block IMPERIAL_FLOORING_PATTERN_2 = createPanel("imperial_flooring_pattern_2", MapColor.GRAY);
+
+
 
 	@DataGenBlock(itemGroup = DataGenItemGroup.None)
 	public static final Block LAB_WALL = createBlock("lab_wall", AbstractBlock.Settings.create());
@@ -305,6 +404,11 @@ public class GadgetsBlocks
 	public static Block createBlock(String key, AbstractBlock.Settings settings)
 	{
 		return Registrar.block(Gadgets.id(key), Block::new, settings);
+	}
+
+	public static NumberedBlocks createNumberedBlocks(String key, int count, AbstractBlock.Settings settings)
+	{
+		return new NumberedBlocks(count, integer -> Registrar.block(Gadgets.id(key + "_" + integer), Block::new, settings));
 	}
 
 	public static WaterloggableRotatingBlockWithBoundsGuiEntity createCorrugatedCrate(String key)
