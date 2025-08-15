@@ -58,6 +58,7 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsScreenHandlerTypes.register();
 		GadgetsRecipeTypes.register();
 		GadgetsRecipeSerializers.register();
+		GadgetsItemGroups.register();
 		LivingEntities.register();
 
 		// TODO: how to differentiate different modules' versions?

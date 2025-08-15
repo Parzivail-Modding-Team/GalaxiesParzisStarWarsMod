@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "pswg_gadgets:block/canyone_stone_bricks"
+		"all": "pswg_gadgets:block/lab_wall"
 	}
 }

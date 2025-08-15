@@ -11,6 +11,8 @@ public @interface DataGenBlock
 {
 	DataGenBlockModel model() default DataGenBlockModel.CubeAll;
 
+	DataGenItemGroup itemGroup() default DataGenItemGroup.ConstructionBlock;
+
 	String langOverride() default "";
 
 	String dataGenModelKey() default "";

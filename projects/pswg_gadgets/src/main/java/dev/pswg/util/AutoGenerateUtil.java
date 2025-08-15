@@ -1,10 +1,10 @@
-package dev.pswg.datagen;
+package dev.pswg.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.function.BiConsumer;
 
-public class DataGenUtil
+public class AutoGenerateUtil
 {
 
 	public static <T, TA extends Annotation> void consumeAnnotatedFields(Class<TA> annotationClazz, Class<?> rootClazz, Class<T> registryType, BiConsumer<T, TA> consumer)

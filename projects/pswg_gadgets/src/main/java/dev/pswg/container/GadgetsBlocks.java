@@ -6,6 +6,7 @@ import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.datagen.DataGenBlock;
 import dev.pswg.datagen.DataGenBlockModel;
+import dev.pswg.datagen.DataGenItemGroup;
 import dev.pswg.feature.scrapping.ScrappingTableBlock;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.BlockUtil;
@@ -36,7 +37,7 @@ public class GadgetsBlocks
 
 	@DataGenBlock
 	public static final FertileDirt FERTILE_DIRT_BLOCK = Registrar.block(Gadgets.id("fertile_dirt"), FertileDirt::new, Block.Settings.create().ticksRandomly());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block CHARRED_BLOCK = Registrar.block(Gadgets.id("charred_block"), Block::new, AbstractBlock.Settings.create().dropsNothing().breakInstantly());
 
 	@DataGenBlock(model = DataGenBlockModel.None)
@@ -44,23 +45,23 @@ public class GadgetsBlocks
 	//public static final StairsBlock CHARRED_STAIRS = Registrar.block(Gadgets.id("charred_stairs"), Block::new, Block.Settings.create().dropsNothing().breakInstantly());
 
 	/// STONE
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final StoneProducts CANYON = new StoneProducts(AbstractBlock.Settings.create().strength(0.5F), "canyon_stone");
-	@DataGenBlock
-	public static final Block CANYON_BRICKS = createBlock("canyone_stone_bricks", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	public static final Block CANYON_BRICKS = createBlock("canyon_stone_bricks", AbstractBlock.Settings.create().strength(0.5F));
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block POLISHED_CANYON = createBlock("polished_canyon_stone", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block CHISELED_CANYON = createBlock("chiseled_canyon_stone", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final StoneProducts CANYON_COBBLE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "canyon_cobblestone");
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final StoneProducts POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "pourstone");
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final StoneProducts SMOOTH_POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "smooth_pourstone");
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final StoneProducts CRACKED_POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.0F).requiresTool(), "cracked_pourstone");
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final DyedStoneProducts DYED_POURSTONE = new DyedStoneProducts(color -> new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), color.name().toLowerCase() + "_pourstone"));
 	@DataGenBlock
 	// TODO: find a way implement "connecting" blocks
@@ -92,51 +93,51 @@ public class GadgetsBlocks
 	@DataGenBlock
 	public static final Block ILUM_CHISELED_BRICKS = createBlock("chiseled_ilum_stone_bricks", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
 	/// SANDSTONE
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final StoneProducts DESERT_SANDSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "desert_sandstone");
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block DUNESTONE = createBlock("dunestone", AbstractBlock.Settings.create().strength(1.25F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block SMOOTH_DESERT_SANDSTONE = createBlock("smooth_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block POLISHED_DESERT_SANDSTONE = createBlock("polished_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block CHISELED_DESERT = createBlock("chiseled_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
 	/// SAND
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock DESERT_SAND = createFallingBlock("desert_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFEDBB8A));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock PIT_SAND = createFallingBlock("pit_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFEAC795));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock FINE_SAND = createFallingBlock("fine_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFE9C490));
 	// TODO: implement & add Datagen for "LOOSE_DESERT_SAND"
 	//@RegistryName("loose_desert_sand")
 	//public static final Block LooseDesert = new AccumulatingBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), Desert::getPlacementState);
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
 	/// SALT
 	// TODO: implement "state = TrState.RandomRotation" for "CAKED_SALT"
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block CAKED_SALT = createBlock("caked_salt", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	/// GRAVEL
 	// TODO: implement "state = TrState.RandomRotation" for "JUNDLAND_GRAVEL"
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final FallingBlock JUNDLAND_GRAVEL = createFallingBlock("jundland_gravel", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F), new ColorCode(0xFF7A5346));
 	/// DIRT
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final DryingBlock RUINED_WET_POURSTONE = Registrar.block(Gadgets.id("ruined_wet_pourstone"), settings -> new DryingBlock(CRACKED_POURSTONE.block, 10, settings, new ColorCode(0xFF986A39)), AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final RuiningDryingBlock WET_POURSTONE = createRuiningDryingBlock("wet_pourstone", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), 10, POURSTONE.block, RUINED_WET_POURSTONE, new ColorCode(0xFF9E6E3B));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final DryingStairsBlock RUINED_WET_POURSTONE_STAIRS = Registrar.block(Gadgets.id("ruined_wet_pourstone_stairs"), settings -> new DryingStairsBlock(WET_POURSTONE.getDefaultState(), CRACKED_POURSTONE.stairs, 10, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final RuiningDryingStairsBlock WET_POURSTONE_STAIRS = Registrar.block(Gadgets.id("wet_pourstone_stairs"), settings -> new RuiningDryingStairsBlock(WET_POURSTONE.getDefaultState(), POURSTONE.stairs, 10, () -> RUINED_WET_POURSTONE_STAIRS, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final DryingSlabBlock RUINED_WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("ruined_wet_pourstone_slab"), settings -> new DryingSlabBlock(CRACKED_POURSTONE.slab, 10, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final RuiningDryingSlabBlock WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("wet_pourstone_slab"), settings -> new RuiningDryingSlabBlock(POURSTONE.slab, 10, () -> RUINED_WET_POURSTONE_SLAB, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
 	// TODO: implement "state = TrState.RandomRotation" & tags = { TrBlockTag.PickaxeMineable, TrBlockTag.DeadBushSubstrate } for "DESERT_LOAM"
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
 	// TODO: Implement tree & plant
@@ -146,44 +147,44 @@ public class GadgetsBlocks
 	@DataGenBlock
 	public static final Block BESKAR_BLOCK = createBlock("beskar_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block CHROMIUM_ORE = createBlock("chromium_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block CHROMIUM_BLOCK = createBlock("chromium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block CORTOSIS_ORE = createBlock("cortosis_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
 	@DataGenBlock
 	public static final Block CORTOSIS_BLOCK = createBlock("cortosis_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block DESH_ORE = createBlock("desh_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block DESH_BLOCK = createBlock("desh_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block DIATIUM_ORE = createBlock("diatium_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
 	@DataGenBlock
 	// TODO: Implement @TarkinBlock(tags = { TrBlockTag.BlasterReflect })
 	public static final Block DIATIUM_BLOCK = createBlock("diatium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block IONITE_ORE = createBlock("ionite_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
 	@DataGenBlock
 	public static final Block IONITE_BLOCK = createBlock("ionite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).luminance(value -> 3).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block LOMMITE_ORE = createBlock("lommite_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block LOMMITE_BLOCK = createBlock("lommite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block TITANIUM_ORE = createBlock("titanium_ore", AbstractBlock.Settings.create().strength(4.0F).requiresTool());
 	@DataGenBlock
 	public static final Block TITANIUM_BLOCK = createBlock("titanium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block ZERSIUM_ORE = createBlock("zersium_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block ZERSIUM_BLOCK = createBlock("zersium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block THORILIDE_ORE = createBlock("thorilide_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block THORILIDE_BLOCK = createBlock("thorilide_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block HELICITE_ORE = createBlock("helicite_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block HELICITE_BLOCK = createBlock("helicite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
@@ -284,7 +285,7 @@ public class GadgetsBlocks
 	@RegistryName("gray_imperial_light_2")
 	public static final Block GRAY_IMPERIAL_LIGHT_2 = createLightingPanelBlock(15);*/
 
-	//TODO: Add "@TabIgnore" for LAB_WALL
+	@DataGenBlock(itemGroup = DataGenItemGroup.None)
 	public static final Block LAB_WALL = createBlock("lab_wall", AbstractBlock.Settings.create());
 
 	/// CRATES

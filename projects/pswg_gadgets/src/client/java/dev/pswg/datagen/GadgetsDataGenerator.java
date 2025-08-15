@@ -7,6 +7,7 @@ import dev.pswg.block.StoneProducts;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
+import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -19,7 +20,6 @@ import net.minecraft.client.data.*;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -57,7 +57,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
 		{
-			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (genBlock, dataGenBlock) -> {
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (genBlock, dataGenBlock) -> {
 
 				switch (dataGenBlock.model())
 				{
@@ -75,7 +75,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					}
 				}
 			});
-			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (genDyedBlocks, dataGenBlock) -> {
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (genDyedBlocks, dataGenBlock) -> {
 
 				for (Block block : genDyedBlocks.values())
 					switch (dataGenBlock.model())
@@ -94,7 +94,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 						}
 					}
 			});
-			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
 
 				if (dataGenBlock.model() != DataGenBlockModel.None)
 				{
@@ -104,7 +104,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					                        .stairs(stoneProducts.stairs);
 				}
 			});
-			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedStoneProducts.class, (dyedStoneProducts, dataGenBlock) -> {
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedStoneProducts.class, (dyedStoneProducts, dataGenBlock) -> {
 
 				if (dataGenBlock.model() != DataGenBlockModel.None)
 				{
@@ -189,7 +189,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsItems.PRESSURE_MINE_ITEM, "Pressure Mine");
 			translationBuilder.add(GadgetsItems.TRIPWIRE_MINE_ITEM, "Tripwire Mine");
 
-			DataGenUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
 
 				if (!Objects.equals(dataGenBlock.langOverride(), ""))
 				{
