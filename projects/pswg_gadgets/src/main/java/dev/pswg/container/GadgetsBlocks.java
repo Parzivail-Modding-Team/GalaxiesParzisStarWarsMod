@@ -7,6 +7,7 @@ import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.datagen.DataGenBlock;
 import dev.pswg.datagen.DataGenBlockModel;
 import dev.pswg.datagen.DataGenItemGroup;
+import dev.pswg.datagen.SVRenderLayer;
 import dev.pswg.feature.scrapping.ScrappingTableBlock;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.BlockUtil;
@@ -199,39 +200,39 @@ public class GadgetsBlocks
 
 	/// GLASS
 
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingGlassBlock IMPERIAL_GLASS = createSelfConnectingGlass("imperial_glass");
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock WHITE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("white_stained_imperial_glass", DyeColor.WHITE);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock ORANGE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("orange_stained_imperial_glass", DyeColor.ORANGE);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock MAGENTA_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("magenta_stained_imperial_glass", DyeColor.MAGENTA);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIGHT_BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_blue_stained_imperial_glass", DyeColor.LIGHT_BLUE);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock YELLOW_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("yellow_stained_imperial_glass", DyeColor.YELLOW);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIME_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("lime_stained_imperial_glass", DyeColor.LIME);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock PINK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("pink_stained_imperial_glass", DyeColor.PINK);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("gray_stained_imperial_glass", DyeColor.GRAY);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIGHT_GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_gray_stained_imperial_glass", DyeColor.LIGHT_GRAY);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock CYAN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("cyan_stained_imperial_glass", DyeColor.CYAN);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock PURPLE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("purple_stained_imperial_glass", DyeColor.PURPLE);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("blue_stained_imperial_glass", DyeColor.BLUE);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BROWN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("brown_stained_imperial_glass", DyeColor.BROWN);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock GREEN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("green_stained_imperial_glass", DyeColor.GREEN);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock RED_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("red_stained_imperial_glass", DyeColor.RED);
-	@DataGenBlock
+	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BLACK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("black_stained_imperial_glass", DyeColor.BLACK);
 
 	/// PANEL

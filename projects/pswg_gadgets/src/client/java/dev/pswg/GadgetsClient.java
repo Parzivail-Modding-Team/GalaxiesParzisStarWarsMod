@@ -1,9 +1,12 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
+import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
 import dev.pswg.container.entity.GadgetsEntities;
+import dev.pswg.datagen.DataGenBlock;
+import dev.pswg.datagen.SVRenderLayer;
 import dev.pswg.feature.scrapping.ScrappingTableScreenHandler;
 import dev.pswg.models.*;
 import dev.pswg.particles.*;
@@ -12,12 +15,16 @@ import dev.pswg.renderer.mines.PressureMineEntityRenderer;
 import dev.pswg.renderer.mines.TripwireMineEntityRenderer;
 import dev.pswg.screens.CrateGenericSmallScreen;
 import dev.pswg.screens.ScrappingTableScreen;
+import dev.pswg.util.AutoGenerateUtil;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
@@ -64,6 +71,11 @@ public class GadgetsClient implements GalaxiesClientAddon
 
 		HandledScreens.register(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, ScrappingTableScreen::new);
 		HandledScreens.register(GadgetsScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
+
+		AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
+			if (dataGenBlock.renderLayer() == SVRenderLayer.Transparent)
+				BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent());
+		});
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

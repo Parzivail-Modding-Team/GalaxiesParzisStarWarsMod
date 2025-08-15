@@ -13,6 +13,8 @@ public @interface DataGenBlock
 
 	DataGenItemGroup itemGroup() default DataGenItemGroup.ConstructionBlock;
 
+	SVRenderLayer renderLayer() default SVRenderLayer.Default;
+
 	String langOverride() default "";
 
 	String dataGenModelKey() default "";
