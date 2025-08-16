@@ -185,15 +185,21 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsItems.TRIPWIRE_MINE_ITEM, "Tripwire Mine");
 
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
-
-				if (!Objects.equals(dataGenBlock.langOverride(), ""))
-				{
-					translationBuilder.add(block, dataGenBlock.langOverride());
-				}
-				else
-				{
-					translationBuilder.add(block, generateDefaultLang(block.getRegistryEntry().registryKey().getValue()));
-				}
+				addDataGenBlock(translationBuilder, block, dataGenBlock);
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, NumberedBlocks.class, (numberedBlocks, dataGenBlock) -> {
+				for (Block block : numberedBlocks)
+					addDataGenBlock(translationBuilder, block, dataGenBlock);
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (dyedBlocks, dataGenBlock) -> {
+				for (Block block : dyedBlocks.values())
+					addDataGenBlock(translationBuilder, block, dataGenBlock);
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
+				addDataGenBlock(translationBuilder, stoneProducts.slab, dataGenBlock);
+				addDataGenBlock(translationBuilder, stoneProducts.block, dataGenBlock);
+				addDataGenBlock(translationBuilder, stoneProducts.stairs, dataGenBlock);
+				addDataGenBlock(translationBuilder, stoneProducts.wall, dataGenBlock);
 			});
 			//translationBuilder.add(GadgetsBlocks.CHARRED_BLOCK, "Charred Wood");
 			//translationBuilder.add(GadgetsBlocks.FERTILE_DIRT_BLOCK, "Fertile Dirt");
@@ -214,6 +220,14 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
+		}
+
+		public void addDataGenBlock(TranslationBuilder translationBuilder, Block block, DataGenBlock dataGenBlock)
+		{
+			if (!Objects.equals(dataGenBlock.langOverride(), ""))
+				translationBuilder.add(block, dataGenBlock.langOverride());
+			else
+				translationBuilder.add(block, generateDefaultLang(block.getRegistryEntry().registryKey().getValue()));
 		}
 	}
 
