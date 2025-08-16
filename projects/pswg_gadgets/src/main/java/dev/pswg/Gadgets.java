@@ -6,10 +6,19 @@ import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.container.entity.LivingEntities;
+import dev.pswg.structure.StructUtil;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.profiling.jfr.event.StructureGenerationEvent;
+import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.world.gen.structure.Structures;
 import org.slf4j.Logger;
 
 /**
@@ -57,7 +66,9 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsRecipeTypes.register();
 		GadgetsRecipeSerializers.register();
 		GadgetsItemGroups.register();
+		GadgetsStructurePieces.register();
 		GadgetsStructureTypes.register();
+		GadgetsStructureKeys.register();
 		LivingEntities.register();
 
 		// TODO: how to differentiate different modules' versions?
