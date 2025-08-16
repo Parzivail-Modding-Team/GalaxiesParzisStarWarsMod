@@ -65,7 +65,7 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 	{
 		BlockPos blockPos = world.getTopPosition(Heightmap.Type.WORLD_SURFACE_WG, pos);
 		Identifier identifier = Identifier.of(this.templateIdString);
-		this.pos.withY(blockPos.getY() + random.nextBetween(-3, 3));
+		this.pos.withY(blockPos.getY() + random.nextBetween(-3, 0));
 		StructurePlacementData structurePlacementData = createPlacementData(this.placementData.getRotation(), identifier);
 		super.generate(world, structureAccessor, chunkGenerator, random, chunkBox, chunkPos, pivot);
 	}
