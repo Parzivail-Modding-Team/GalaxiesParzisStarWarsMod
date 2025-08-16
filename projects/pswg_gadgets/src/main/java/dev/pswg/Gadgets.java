@@ -7,9 +7,12 @@ import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.container.entity.LivingEntities;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.structure.StructureType;
 import org.slf4j.Logger;
 
 /**
@@ -59,6 +62,7 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsRecipeTypes.register();
 		GadgetsRecipeSerializers.register();
 		GadgetsItemGroups.register();
+		GadgetsStructureTypes.register();
 		LivingEntities.register();
 
 		// TODO: how to differentiate different modules' versions?
