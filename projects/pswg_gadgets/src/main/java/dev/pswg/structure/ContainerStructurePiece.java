@@ -63,7 +63,9 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 	@Override
 	public void generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, Random random, BlockBox chunkBox, ChunkPos chunkPos, BlockPos pivot)
 	{
+		BlockPos blockPos = world.getTopPosition(Heightmap.Type.WORLD_SURFACE_WG, pos);
 		Identifier identifier = Identifier.of(this.templateIdString);
+		this.pos.withY(blockPos.getY() + random.nextBetween(-3, 3));
 		StructurePlacementData structurePlacementData = createPlacementData(this.placementData.getRotation(), identifier);
 		super.generate(world, structureAccessor, chunkGenerator, random, chunkBox, chunkPos, pivot);
 	}
@@ -75,8 +77,7 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 		{
 			if (random.nextFloat() > 0.25f)
 			{
-
-				world.toServerWorld().setBlockState(pos, StructUtil.getRandomCrate(random).getDefaultState(), Block.NOTIFY_ALL);
+				world.setBlockState(pos, StructUtil.getRandomCrate(random).getDefaultState(), Block.NOTIFY_ALL);
 				BlockEntity be = world.getBlockEntity(pos);
 				if (be instanceof LootableContainerBlockEntity lootTable)
 				{

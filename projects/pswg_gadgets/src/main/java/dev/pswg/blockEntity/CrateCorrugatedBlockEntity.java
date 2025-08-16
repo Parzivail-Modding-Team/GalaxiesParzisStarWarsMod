@@ -92,10 +92,6 @@ public class CrateCorrugatedBlockEntity extends LootableContainerBlockEntity imp
 	@Override
 	public void onOpen(PlayerEntity player)
 	{
-		if (lootTable != null)
-			Gadgets.LOGGER.info("onOpen lootable: " + lootTable.toString());
-		else
-			Gadgets.LOGGER.info("onOpen lootable: null");
 		generateLoot(player);
 		super.onOpen(player);
 	}
