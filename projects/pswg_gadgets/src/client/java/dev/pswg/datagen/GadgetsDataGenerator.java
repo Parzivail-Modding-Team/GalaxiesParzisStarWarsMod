@@ -10,6 +10,7 @@ import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
+import dev.pswg.item.NumberedItems;
 import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -121,12 +122,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
-			return new Model(Optional.of(Gadgets.id("item/" + parent)), Optional.empty(), requiredTextureKeys);
+			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);
 		}
 
 		public static final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)
 		{
-			var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("item/model/corrugated_crate/");
+			var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("block/model/corrugated_crate/");
 			TexturedModel.makeFactory(block1 -> TextureMap.all(crateKey).put(TextureKey.PARTICLE, crateKey.withSuffixedPath("_particle")), blockModel("template_corrugated_crate", TextureKey.ALL, TextureKey.PARTICLE)).upload(block, generator.modelCollector);
 			generator.registerSimpleState(block);
 		}
@@ -155,7 +156,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				if (dataGenItem.wiz())
 					register(itemModelGenerator, item, Galaxies.id("item/wizard"), Models.GENERATED);
 				else
-					register(itemModelGenerator, item, createItemKey(item), Models.GENERATED);
+					switch (dataGenItem.model())
+					{
+						case generated -> register(itemModelGenerator, item, createItemKey(item), Models.GENERATED);
+						case handheld -> register(itemModelGenerator, item, createItemKey(item), Models.HANDHELD);
+					}
 			}
 		}
 
@@ -172,6 +177,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
 				for (Item item : dyedItems.values())
+					registerItem(itemModelGenerator, item, dataGenItem);
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
+				for (Item item : numberedItems.stream().toList())
 					registerItem(itemModelGenerator, item, dataGenItem);
 			});
 
@@ -202,6 +211,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
 				for (Item item : dyedItems.values())
+					addDatagenItem(translationBuilder, item, dataGenItem);
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
+				for (Item item : numberedItems.stream().toList())
 					addDatagenItem(translationBuilder, item, dataGenItem);
 			});
 
@@ -283,6 +296,13 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			getOrCreateTagBuilder(GadgetsItems.Tags.MINES_TAG)
 					.add(GadgetsItems.PRESSURE_MINE_ITEM)
 					.add(GadgetsItems.TRIPWIRE_MINE_ITEM);
+
+			getOrCreateTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
+					.add(GadgetsItems.BESKAR_INGOT);
+			getOrCreateTagBuilder(GadgetsItems.Tags.DURASTEEL_TOOL_MATERIALS_TAG)
+					.add(GadgetsItems.PLASTEEL_INGOT);
+			getOrCreateTagBuilder(GadgetsItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
+					.add(GadgetsItems.TITANIUM_INGOT);
 		}
 	}
 	/**

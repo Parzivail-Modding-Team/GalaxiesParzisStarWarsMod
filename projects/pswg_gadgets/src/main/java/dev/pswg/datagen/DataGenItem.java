@@ -13,6 +13,8 @@ public @interface DataGenItem
 
 	boolean wiz() default false;
 
+	ItemModel model() default ItemModel.generated;
+
 	DataGenItemGroup itemGroup() default DataGenItemGroup.Items;
 
 	String langOverride() default "";

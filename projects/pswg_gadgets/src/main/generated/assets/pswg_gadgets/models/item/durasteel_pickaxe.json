@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "pswg_gadgets:item/durasteel_pickaxe"
+	}
+}
