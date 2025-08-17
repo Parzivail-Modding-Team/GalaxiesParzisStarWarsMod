@@ -1,7 +1,7 @@
 {
-	"parent": "pswg_gadgets:block/template_corrugated_crate",
+	"parent": "pswg_gadgets:item/template_corrugated_crate",
 	"textures": {
-		"all": "pswg_gadgets:block/model/corrugated_crate/yellow",
-		"particle": "pswg_gadgets:block/model/corrugated_crate/yellow_particle"
+		"all": "pswg_gadgets:item/model/corrugated_crate/yellow",
+		"particle": "pswg_gadgets:item/model/corrugated_crate/yellow_particle"
 	}
 }

@@ -8,6 +8,8 @@ import dev.pswg.block.StoneProducts;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
+import dev.pswg.item.ArmorItems;
+import dev.pswg.item.DyedItems;
 import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -18,6 +20,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.data.*;
+import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
@@ -85,7 +88,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			});
 
 			//String blockKey = genBlock.getRegistryEntry().getKey().get().getValue().toString().substring(Gadgets.MODID.length()+1);
-			//TexturedModel.makeFactory(block -> TextureMap.texture(Gadgets.id("block/"+blockKey)), blockModel("corrugated_crate", TextureKey.of(blockKey)));
+			//TexturedModel.makeFactory(item -> TextureMap.texture(Gadgets.id("item/"+blockKey)), blockModel("corrugated_crate", TextureKey.of(blockKey)));
 
 		}
 
@@ -118,12 +121,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
-			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);
+			return new Model(Optional.of(Gadgets.id("item/" + parent)), Optional.empty(), requiredTextureKeys);
 		}
 
 		public static final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)
 		{
-			var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("block/model/corrugated_crate/");
+			var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("item/model/corrugated_crate/");
 			TexturedModel.makeFactory(block1 -> TextureMap.all(crateKey).put(TextureKey.PARTICLE, crateKey.withSuffixedPath("_particle")), blockModel("template_corrugated_crate", TextureKey.ALL, TextureKey.PARTICLE)).upload(block, generator.modelCollector);
 			generator.registerSimpleState(block);
 		}
@@ -139,25 +142,40 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			return Identifier.of(string.substring(0, string.indexOf("_corrugated_crate")));
 		}
 
+		public static Identifier createItemKey(Item item)
+		{
+
+			return item.getRegistryEntry().getKey().get().getValue().withPrefixedPath("item/");
+		}
+
+		public void registerItem(ItemModelGenerator itemModelGenerator, Item item, DataGenItem dataGenItem)
+		{
+			if (dataGenItem.genModel())
+			{
+				if (dataGenItem.wiz())
+					register(itemModelGenerator, item, Galaxies.id("item/wizard"), Models.GENERATED);
+				else
+					register(itemModelGenerator, item, createItemKey(item), Models.GENERATED);
+			}
+		}
+
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
+			itemModelGenerator.register();
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
+				registerItem(itemModelGenerator, armorItems.helmet, dataGenItem);
+				registerItem(itemModelGenerator, armorItems.chestplate, dataGenItem);
+				registerItem(itemModelGenerator, armorItems.leggings, dataGenItem);
+				registerItem(itemModelGenerator, armorItems.boots, dataGenItem);
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
+				for (Item item : dyedItems.values())
+					registerItem(itemModelGenerator, item, dataGenItem);
+			});
 
-			register(itemModelGenerator, GadgetsItems.THERMAL_DETONATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.FRAGMENTATION_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.NERVE_GAS_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.IMPACT_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.INFERNO_GRENADE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 
-			register(itemModelGenerator, GadgetsItems.PRESSURE_MINE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.TRIPWIRE_MINE_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-
-			register(itemModelGenerator, GadgetsItems.SCRAP_ITEM, Gadgets.id("item/scrap"), Models.GENERATED);
-
-			register(itemModelGenerator, GadgetsItems.CUTTER_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.SPANNER_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-			register(itemModelGenerator, GadgetsItems.CALIBRATOR_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
 		}
 	}
 
@@ -175,14 +193,17 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
-			translationBuilder.add(GadgetsItems.THERMAL_DETONATOR_ITEM, "CLS-A Thermal Detonator");
-			translationBuilder.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM, "C-25 Fragmentation Grenade");
-			translationBuilder.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM, "FEX-M3 Gas Grenade");
-			translationBuilder.add(GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM, "NACHT-5 Smoke Grenade");
-			translationBuilder.add(GadgetsItems.IMPACT_GRENADE_ITEM, "Impact Grenade");
-			translationBuilder.add(GadgetsItems.INFERNO_GRENADE_ITEM, "D-24 Inferno Grenade");
-			translationBuilder.add(GadgetsItems.PRESSURE_MINE_ITEM, "Pressure Mine");
-			translationBuilder.add(GadgetsItems.TRIPWIRE_MINE_ITEM, "Tripwire Mine");
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> addDatagenItem(translationBuilder, item, dataGenItem));
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
+				addDatagenItem(translationBuilder, armorItems.helmet, dataGenItem);
+				addDatagenItem(translationBuilder, armorItems.chestplate, dataGenItem);
+				addDatagenItem(translationBuilder, armorItems.leggings, dataGenItem);
+				addDatagenItem(translationBuilder, armorItems.boots, dataGenItem);
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
+				for (Item item : dyedItems.values())
+					addDatagenItem(translationBuilder, item, dataGenItem);
+			});
 
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
 				addDataGenBlock(translationBuilder, block, dataGenBlock);
@@ -201,8 +222,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				addDataGenBlock(translationBuilder, stoneProducts.stairs, dataGenBlock);
 				addDataGenBlock(translationBuilder, stoneProducts.wall, dataGenBlock);
 			});
-			//translationBuilder.add(GadgetsBlocks.CHARRED_BLOCK, "Charred Wood");
-			//translationBuilder.add(GadgetsBlocks.FERTILE_DIRT_BLOCK, "Fertile Dirt");
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
@@ -220,6 +239,14 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
+		}
+
+		public void addDatagenItem(TranslationBuilder translationBuilder, Item item, DataGenItem dataGenItem)
+		{
+			if (dataGenItem.langOverride().isEmpty())
+				translationBuilder.add(item, generateDefaultLang(item.getRegistryEntry().registryKey().getValue()));
+			else
+				translationBuilder.add(item, dataGenItem.langOverride());
 		}
 
 		public void addDataGenBlock(TranslationBuilder translationBuilder, Block block, DataGenBlock dataGenBlock)

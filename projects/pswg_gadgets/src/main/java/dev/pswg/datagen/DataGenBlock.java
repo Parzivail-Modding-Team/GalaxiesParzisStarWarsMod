@@ -18,4 +18,6 @@ public @interface DataGenBlock
 	String langOverride() default "";
 
 	String dataGenModelKey() default "";
+
+	DGBlockTag[] tags() default {};
 }

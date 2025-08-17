@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/thermal_detonator_block"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/thermal_detonator_block"
+  }
 }
