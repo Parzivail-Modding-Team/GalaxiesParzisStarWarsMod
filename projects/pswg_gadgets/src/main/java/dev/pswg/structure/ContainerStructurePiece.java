@@ -1,10 +1,10 @@
 package dev.pswg.structure;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.container.GadgetsLootTables;
 import dev.pswg.container.GadgetsStructurePieces;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.loot.LootTables;
@@ -77,12 +77,20 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 		{
 			if (random.nextFloat() > 0.25f)
 			{
-				world.setBlockState(pos, StructUtil.getRandomCrate(random).getDefaultState(), Block.NOTIFY_ALL);
+				Block crateBlock = StructUtil.getRandomCrate(random);
+				world.setBlockState(pos, crateBlock.getDefaultState(), Block.NOTIFY_ALL);
 				BlockEntity be = world.getBlockEntity(pos);
 				if (be instanceof LootableContainerBlockEntity lootTable)
 				{
 					// TODO: CHANGE LOOT HERE
-					lootTable.setLootTable(LootTables.ABANDONED_MINESHAFT_CHEST);
+					if (crateBlock.equals(GadgetsBlocks.IMPERIAL_CORRUGATED_CRATE))
+						lootTable.setLootTable(GadgetsLootTables.IMPERIAL_CRATE);
+					else if (crateBlock.equals(GadgetsBlocks.MEDICAL_CORRUGATED_CRATE))
+						lootTable.setLootTable(GadgetsLootTables.MEDICAL_CRATE);
+					else if (crateBlock.equals(GadgetsBlocks.MINING_CORRUGATED_CRATE))
+						lootTable.setLootTable(GadgetsLootTables.MINING_CRATE);
+					else
+						lootTable.setLootTable(LootTables.ABANDONED_MINESHAFT_CHEST);
 					lootTable.setLootTableSeed(random.nextLong());
 				}
 			}

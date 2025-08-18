@@ -69,6 +69,7 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsStructurePieces.register();
 		GadgetsStructureTypes.register();
 		GadgetsStructureKeys.register();
+		GadgetsLootTables.register();
 		LivingEntities.register();
 
 		// TODO: how to differentiate different modules' versions?
