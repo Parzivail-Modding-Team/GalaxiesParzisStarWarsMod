@@ -1,0 +1,13 @@
+{
+    "type": "pswg_gadgets:scrapping",
+    "tool" :"pswg_gadgets:spanner",
+    "ingredient": "pswg_gadgets:electric_motor",
+    "primary_result": {
+        "id": "pswg_gadgets:turbine"
+    },
+    "secondary_result": {
+                 "id": "pswg_gadgets:durasteel_rod",
+                 "count": 1
+         },
+    "secondary_chance": 0.2
+}

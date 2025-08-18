@@ -3,11 +3,11 @@
     "tool" :"pswg_gadgets:calibrator",
     "ingredient": "pswg_gadgets:broken_small_power_pack",
     "primary_result": {
-        "id": "minecraft:redstone"
+        "id": "pswg_gadgets:ionite_ingot"
     },
     "secondary_result": {
-                "id": "minecraft:redstone",
-                "count": 1
+                "id": "pswg_gadgets:ionite_nugget",
+                "count": 3
     },
-    "secondary_chance": 0.25
+    "secondary_chance": 0.35
 }

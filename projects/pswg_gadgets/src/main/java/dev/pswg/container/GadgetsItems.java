@@ -198,17 +198,17 @@ public class GadgetsItems
 	@DataGenItem
 	public static final Item ELECTRIC_MOTOR = registerSimpleItem("electric_motor", new Item.Settings().component(Components.METAL_COMPONENT, 1).component(Components.TECH_COMPONENT, 2).component(Components.ENERGY_COMPONENT, 3).component(Components.SCRAP, false));
 	@DataGenItem
-	public static final Item TURBINE = registerSimpleItem("turbine", new Item.Settings().component(Components.METAL_COMPONENT, 2).component(Components.TECH_COMPONENT, 2).component(Components.ENERGY_COMPONENT, 2).component(Components.SCRAP, false));
+	public static final Item TURBINE = registerSimpleItem("turbine", new Item.Settings().component(Components.METAL_COMPONENT, 1).component(Components.TECH_COMPONENT, 2));
 	@DataGenItem
-	public static final Item BALL_BEARING = registerSimpleItem("ball_bearing", new Item.Settings().component(Components.METAL_COMPONENT, 3).component(Components.TECH_COMPONENT, 2).component(Components.ENERGY_COMPONENT, 1).component(Components.SCRAP, false));
+	public static final Item BALL_BEARING = registerSimpleItem("ball_bearing", new Item.Settings().component(Components.METAL_COMPONENT, 2));
 	@DataGenItem
-	public static final Item DESH_WIRE = registerSimpleItem("desh_wire", new Item.Settings().component(Components.METAL_COMPONENT, 1).component(Components.PLASTIC_COMPONENT, 1).component(Components.ENERGY_COMPONENT, 2).component(Components.SCRAP, false));
+	public static final Item DESH_WIRE = registerSimpleItem("desh_wire", new Item.Settings().component(Components.METAL_COMPONENT, 1).component(Components.PLASTIC_COMPONENT, 1));
 	@DataGenItem
 	public static final Item DESH_COIL = registerSimpleItem("desh_coil", new Item.Settings().component(Components.METAL_COMPONENT, 2).component(Components.PLASTIC_COMPONENT, 2).component(Components.ENERGY_COMPONENT, 2).component(Components.SCRAP, false));
 	@DataGenItem
-	public static final Item LIGHT_PANEL = registerSimpleItem("light_panel", new Item.Settings().component(Components.PLASTIC_COMPONENT, 2).component(Components.TECH_COMPONENT, 1).component(Components.SCRAP, false));
+	public static final Item LIGHT_PANEL = registerSimpleItem("light_panel", new Item.Settings().component(Components.PLASTIC_COMPONENT, 2).component(Components.TECH_COMPONENT, 2).component(Components.SCRAP, false));
 	@DataGenItem
-	public static final Item DISPLAY_PANEL = registerSimpleItem("display_panel", new Item.Settings().component(Components.PLASTIC_COMPONENT, 1).component(Components.TECH_COMPONENT, 2).component(Components.SCRAP, false));
+	public static final Item DISPLAY_PANEL = registerSimpleItem("display_panel", new Item.Settings().component(Components.PLASTIC_COMPONENT, 1).component(Components.TECH_COMPONENT, 2).component(Components.ENERGY_COMPONENT, 2).component(Components.SCRAP, false));
 	@DataGenItem
 	public static final Item PLASTEEL_ROD = registerSimpleItem("plasteel_rod", new Item.Settings().component(Components.PLASTIC_COMPONENT, 1));
 	@DataGenItem

@@ -1,0 +1,14 @@
+{
+    "type": "pswg_gadgets:scrapping",
+    "tool" :"pswg_gadgets:calibrator",
+    "ingredient": "pswg_gadgets:desh_coil",
+    "primary_result": {
+        "id": "pswg_gadgets:desh_wire",
+        "count" : 1
+    },
+    "secondary_result": {
+                "id": "pswg_gadgets:plasteel_nugget",
+                "count": 6
+    },
+    "secondary_chance": 0.35
+}

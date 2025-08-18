@@ -147,7 +147,7 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 							else
 								scrappingBlockEntity.inventory.set(toolIndex * 2 + 4, outputStack);
 
-							if (secondaryChance <= world.random.nextFloat())
+							if (secondaryChance <= Math.abs(world.random.nextFloat()))
 							{
 								if (scrappingBlockEntity.inventory.get(toolIndex * 2 + 5).getItem() == secondaryOutputStack.getItem())
 									scrappingBlockEntity.inventory.get(toolIndex * 2 + 5).increment(secondaryOutputStack.getCount());

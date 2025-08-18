@@ -1,0 +1,14 @@
+{
+    "type": "pswg_gadgets:scrapping",
+    "tool" :"pswg_gadgets:cutter",
+    "ingredient": "pswg_gadgets:desh_coil",
+    "primary_result": {
+        "id": "pswg_gadgets:desh_ingot",
+        "count" : 1
+    },
+    "secondary_result": {
+                "id": "pswg_gadgets:desh_nugget",
+                "count": 6
+    },
+    "secondary_chance": 0.35
+}
