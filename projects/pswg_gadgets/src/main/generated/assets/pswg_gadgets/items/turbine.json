@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/turbine"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/turbine"
+  }
 }

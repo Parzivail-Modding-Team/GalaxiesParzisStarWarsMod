@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "pswg_gadgets:block/desert_sandstone"
-	}
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "pswg_gadgets:block/desert_sandstone"
+  }
 }

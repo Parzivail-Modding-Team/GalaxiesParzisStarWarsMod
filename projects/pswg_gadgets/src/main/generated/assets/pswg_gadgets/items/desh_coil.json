@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/desh_coil"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/desh_coil"
+  }
 }

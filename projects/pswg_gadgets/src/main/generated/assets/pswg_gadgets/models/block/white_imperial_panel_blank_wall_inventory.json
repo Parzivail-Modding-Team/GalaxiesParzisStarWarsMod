@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/wall_inventory",
-	"textures": {
-		"wall": "pswg_gadgets:block/white_imperial_panel_blank"
-	}
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "pswg_gadgets:block/white_imperial_panel_blank"
+  }
 }

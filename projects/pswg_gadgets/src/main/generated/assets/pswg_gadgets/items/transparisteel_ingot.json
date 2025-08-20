@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/transparisteel_ingot"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/transparisteel_ingot"
+  }
 }

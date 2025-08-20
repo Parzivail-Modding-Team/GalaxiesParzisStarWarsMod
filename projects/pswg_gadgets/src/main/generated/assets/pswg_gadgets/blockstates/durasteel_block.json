@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/durasteel_block"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/durasteel_block"
+    }
+  }
 }

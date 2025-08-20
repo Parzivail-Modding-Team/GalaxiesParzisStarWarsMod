@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "pswg_gadgets:item/eopie_loin"
-	}
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pswg_gadgets:item/eopie_loin"
+  }
 }

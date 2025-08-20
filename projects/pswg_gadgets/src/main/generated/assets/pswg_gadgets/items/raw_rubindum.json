@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/raw_rubindum"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/raw_rubindum"
+  }
 }

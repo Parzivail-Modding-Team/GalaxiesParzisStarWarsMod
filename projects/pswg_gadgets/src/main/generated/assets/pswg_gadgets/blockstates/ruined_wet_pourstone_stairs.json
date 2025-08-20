@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/ruined_wet_pourstone_stairs"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/ruined_wet_pourstone_stairs"
+    }
+  }
 }

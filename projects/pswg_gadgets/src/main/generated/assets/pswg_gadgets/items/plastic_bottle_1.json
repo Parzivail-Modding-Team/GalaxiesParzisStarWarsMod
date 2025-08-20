@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/plastic_bottle_1"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/plastic_bottle_1"
+  }
 }

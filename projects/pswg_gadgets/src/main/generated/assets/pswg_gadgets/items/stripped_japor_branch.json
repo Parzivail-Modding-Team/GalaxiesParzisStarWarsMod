@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/stripped_japor_branch"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/stripped_japor_branch"
+  }
 }

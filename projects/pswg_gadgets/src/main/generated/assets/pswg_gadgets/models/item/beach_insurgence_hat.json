@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "pswg_gadgets:item/beach_insurgence_hat"
-	}
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pswg_gadgets:item/beach_insurgence_hat"
+  }
 }

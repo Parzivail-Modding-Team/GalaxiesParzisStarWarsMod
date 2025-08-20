@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "pswg_gadgets:block/blue_pourstone"
-	}
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "pswg_gadgets:block/blue_pourstone"
+  }
 }

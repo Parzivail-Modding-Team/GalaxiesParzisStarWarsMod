@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/black_stained_imperial_glass"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/black_stained_imperial_glass"
+  }
 }

@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/ilum_stone_bricks"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/ilum_stone_bricks"
+    }
+  }
 }

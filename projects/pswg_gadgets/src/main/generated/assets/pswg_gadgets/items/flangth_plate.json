@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/flangth_plate"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/flangth_plate"
+  }
 }

@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/hubba_gourd"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/hubba_gourd"
+  }
 }

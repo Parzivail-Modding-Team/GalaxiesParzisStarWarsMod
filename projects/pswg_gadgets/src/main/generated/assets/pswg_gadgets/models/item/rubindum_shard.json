@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "pswg_gadgets:item/rubindum_shard"
-	}
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pswg_gadgets:item/rubindum_shard"
+  }
 }

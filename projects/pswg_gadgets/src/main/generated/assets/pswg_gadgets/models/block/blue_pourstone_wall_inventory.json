@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/wall_inventory",
-	"textures": {
-		"wall": "pswg_gadgets:block/blue_pourstone"
-	}
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "pswg_gadgets:block/blue_pourstone"
+  }
 }

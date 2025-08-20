@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/molo_flower"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/molo_flower"
+  }
 }

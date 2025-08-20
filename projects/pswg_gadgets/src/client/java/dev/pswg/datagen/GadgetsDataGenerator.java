@@ -265,9 +265,14 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void addDataGenBlock(TranslationBuilder translationBuilder, Block block, DataGenBlock dataGenBlock)
 		{
 			if (!Objects.equals(dataGenBlock.langOverride(), ""))
+			{
 				translationBuilder.add(block, dataGenBlock.langOverride());
-			else
+				translationBuilder.add(block.asItem(), dataGenBlock.langOverride());
+			}else
+			{
 				translationBuilder.add(block, generateDefaultLang(block.getRegistryEntry().registryKey().getValue()));
+				translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().getRegistryEntry().registryKey().getValue()));
+			}
 		}
 	}
 

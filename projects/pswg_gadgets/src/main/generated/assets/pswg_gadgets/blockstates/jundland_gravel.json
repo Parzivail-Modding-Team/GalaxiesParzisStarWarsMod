@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/jundland_gravel"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/jundland_gravel"
+    }
+  }
 }

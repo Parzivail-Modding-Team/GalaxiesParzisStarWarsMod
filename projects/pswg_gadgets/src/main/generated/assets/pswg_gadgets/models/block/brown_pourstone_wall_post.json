@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/template_wall_post",
-	"textures": {
-		"wall": "pswg_gadgets:block/brown_pourstone"
-	}
+  "parent": "minecraft:block/template_wall_post",
+  "textures": {
+    "wall": "pswg_gadgets:block/brown_pourstone"
+  }
 }

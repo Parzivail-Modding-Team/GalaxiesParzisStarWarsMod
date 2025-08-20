@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "pswg_gadgets:block/rusted_gray_imperial_panel_pattern_9"
-	}
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "pswg_gadgets:block/rusted_gray_imperial_panel_pattern_9"
+  }
 }

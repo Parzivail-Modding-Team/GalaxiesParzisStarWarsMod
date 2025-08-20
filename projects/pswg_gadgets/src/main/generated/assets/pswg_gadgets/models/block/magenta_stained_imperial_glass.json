@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "pswg_gadgets:block/magenta_stained_imperial_glass"
-	}
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "pswg_gadgets:block/magenta_stained_imperial_glass"
+  }
 }

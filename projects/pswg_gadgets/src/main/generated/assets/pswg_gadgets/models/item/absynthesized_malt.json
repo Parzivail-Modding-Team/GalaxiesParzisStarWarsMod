@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "pswg_gadgets:item/absynthesized_malt"
-	}
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pswg_gadgets:item/absynthesized_malt"
+  }
 }

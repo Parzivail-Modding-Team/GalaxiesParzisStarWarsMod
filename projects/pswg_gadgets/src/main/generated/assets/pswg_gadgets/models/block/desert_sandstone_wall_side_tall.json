@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/template_wall_side_tall",
-	"textures": {
-		"wall": "pswg_gadgets:block/desert_sandstone"
-	}
+  "parent": "minecraft:block/template_wall_side_tall",
+  "textures": {
+    "wall": "pswg_gadgets:block/desert_sandstone"
+  }
 }

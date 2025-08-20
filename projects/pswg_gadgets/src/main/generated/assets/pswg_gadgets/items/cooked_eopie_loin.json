@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/cooked_eopie_loin"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/cooked_eopie_loin"
+  }
 }

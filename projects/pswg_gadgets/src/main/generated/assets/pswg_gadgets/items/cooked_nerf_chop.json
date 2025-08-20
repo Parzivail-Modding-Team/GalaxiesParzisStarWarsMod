@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/cooked_nerf_chop"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/cooked_nerf_chop"
+  }
 }

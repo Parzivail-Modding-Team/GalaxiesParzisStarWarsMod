@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/citrus_soda"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/citrus_soda"
+  }
 }

@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/pink_cup"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/pink_cup"
+  }
 }

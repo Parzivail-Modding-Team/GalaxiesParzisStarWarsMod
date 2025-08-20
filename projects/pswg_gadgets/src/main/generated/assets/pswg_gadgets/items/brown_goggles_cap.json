@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/brown_goggles_cap"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/brown_goggles_cap"
+  }
 }

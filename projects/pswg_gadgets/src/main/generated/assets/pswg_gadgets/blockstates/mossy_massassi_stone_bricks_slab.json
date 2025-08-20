@@ -1,13 +1,13 @@
 {
-	"variants": {
-		"type=bottom": {
-			"model": "pswg_gadgets:block/mossy_massassi_stone_bricks_slab"
-		},
-		"type=double": {
-			"model": "pswg_gadgets:block/mossy_massassi_stone_bricks"
-		},
-		"type=top": {
-			"model": "pswg_gadgets:block/mossy_massassi_stone_bricks_slab_top"
-		}
-	}
+  "variants": {
+    "type=bottom": {
+      "model": "pswg_gadgets:block/mossy_massassi_stone_bricks_slab"
+    },
+    "type=double": {
+      "model": "pswg_gadgets:block/mossy_massassi_stone_bricks"
+    },
+    "type=top": {
+      "model": "pswg_gadgets:block/mossy_massassi_stone_bricks_slab_top"
+    }
+  }
 }

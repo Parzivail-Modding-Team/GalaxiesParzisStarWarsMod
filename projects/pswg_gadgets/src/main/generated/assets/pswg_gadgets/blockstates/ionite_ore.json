@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/ionite_ore"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/ionite_ore"
+    }
+  }
 }

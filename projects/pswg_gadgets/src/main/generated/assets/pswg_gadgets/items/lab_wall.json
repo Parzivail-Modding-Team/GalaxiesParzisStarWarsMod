@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/lab_wall"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/lab_wall"
+  }
 }

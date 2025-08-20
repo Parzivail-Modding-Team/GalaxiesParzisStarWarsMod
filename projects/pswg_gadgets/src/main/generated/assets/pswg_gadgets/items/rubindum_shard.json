@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/rubindum_shard"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/rubindum_shard"
+  }
 }

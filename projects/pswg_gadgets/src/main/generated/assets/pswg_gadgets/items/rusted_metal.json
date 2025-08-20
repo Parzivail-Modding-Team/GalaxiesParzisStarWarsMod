@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/rusted_metal"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/rusted_metal"
+  }
 }

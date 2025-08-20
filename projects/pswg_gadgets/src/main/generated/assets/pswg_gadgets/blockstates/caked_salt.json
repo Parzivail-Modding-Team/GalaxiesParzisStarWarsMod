@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/caked_salt"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/caked_salt"
+    }
+  }
 }

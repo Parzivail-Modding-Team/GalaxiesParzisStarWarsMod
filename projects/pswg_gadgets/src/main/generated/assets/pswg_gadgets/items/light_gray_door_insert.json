@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/light_gray_door_insert"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/light_gray_door_insert"
+  }
 }

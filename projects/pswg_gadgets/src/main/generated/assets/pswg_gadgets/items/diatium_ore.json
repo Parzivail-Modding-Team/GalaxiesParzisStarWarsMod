@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/diatium_ore"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/diatium_ore"
+  }
 }

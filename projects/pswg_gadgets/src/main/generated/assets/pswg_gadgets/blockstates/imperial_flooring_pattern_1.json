@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/imperial_flooring_pattern_1"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/imperial_flooring_pattern_1"
+    }
+  }
 }

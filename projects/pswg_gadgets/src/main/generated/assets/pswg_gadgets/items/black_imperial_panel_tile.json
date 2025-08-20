@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/black_imperial_panel_tile"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/black_imperial_panel_tile"
+  }
 }

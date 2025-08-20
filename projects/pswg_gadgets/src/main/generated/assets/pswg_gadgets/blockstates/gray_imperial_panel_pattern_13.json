@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/gray_imperial_panel_pattern_13"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/gray_imperial_panel_pattern_13"
+    }
+  }
 }

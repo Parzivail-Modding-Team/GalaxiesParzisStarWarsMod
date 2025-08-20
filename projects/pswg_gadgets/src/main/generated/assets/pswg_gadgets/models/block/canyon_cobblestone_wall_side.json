@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/template_wall_side",
-	"textures": {
-		"wall": "pswg_gadgets:block/canyon_cobblestone"
-	}
+  "parent": "minecraft:block/template_wall_side",
+  "textures": {
+    "wall": "pswg_gadgets:block/canyon_cobblestone"
+  }
 }

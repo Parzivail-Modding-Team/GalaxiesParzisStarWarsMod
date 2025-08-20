@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/wet_pourstone_slab"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/wet_pourstone_slab"
+    }
+  }
 }

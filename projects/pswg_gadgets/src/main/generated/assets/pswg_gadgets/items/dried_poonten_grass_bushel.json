@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/dried_poonten_grass_bushel"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/dried_poonten_grass_bushel"
+  }
 }

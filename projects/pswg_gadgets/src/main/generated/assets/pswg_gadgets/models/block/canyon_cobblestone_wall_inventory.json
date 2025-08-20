@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/wall_inventory",
-	"textures": {
-		"wall": "pswg_gadgets:block/canyon_cobblestone"
-	}
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "pswg_gadgets:block/canyon_cobblestone"
+  }
 }

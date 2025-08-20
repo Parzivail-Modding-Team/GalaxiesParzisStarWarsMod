@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/white_pourstone"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/white_pourstone"
+  }
 }

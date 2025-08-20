@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/death_stick_yellow"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/death_stick_yellow"
+  }
 }

@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/external_imperial_plating"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/external_imperial_plating"
+    }
+  }
 }

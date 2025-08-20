@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/white_imperial_flooring_4"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/white_imperial_flooring_4"
+  }
 }

@@ -1,8 +1,8 @@
 {
-	"parent": "minecraft:block/outer_stairs",
-	"textures": {
-		"bottom": "pswg_gadgets:block/orange_pourstone",
-		"side": "pswg_gadgets:block/orange_pourstone",
-		"top": "pswg_gadgets:block/orange_pourstone"
-	}
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "pswg_gadgets:block/orange_pourstone",
+    "side": "pswg_gadgets:block/orange_pourstone",
+    "top": "pswg_gadgets:block/orange_pourstone"
+  }
 }

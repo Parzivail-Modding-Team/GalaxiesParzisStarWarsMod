@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/brown_pourstone"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/brown_pourstone"
+    }
+  }
 }

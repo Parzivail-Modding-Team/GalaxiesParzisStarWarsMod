@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/magenta_corrugated_crate"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/magenta_corrugated_crate"
+    }
+  }
 }

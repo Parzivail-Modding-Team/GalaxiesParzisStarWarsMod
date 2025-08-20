@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/beskar_ore"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/beskar_ore"
+    }
+  }
 }

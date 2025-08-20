@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/smooth_ilum_stone_slab"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/smooth_ilum_stone_slab"
+  }
 }

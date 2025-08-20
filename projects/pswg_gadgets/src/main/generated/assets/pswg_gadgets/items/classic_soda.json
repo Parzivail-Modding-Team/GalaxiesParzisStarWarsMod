@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/classic_soda"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/classic_soda"
+  }
 }

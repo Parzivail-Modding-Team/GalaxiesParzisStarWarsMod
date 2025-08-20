@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "pswg_gadgets:block/pit_sand"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "pswg_gadgets:block/pit_sand"
+    }
+  }
 }

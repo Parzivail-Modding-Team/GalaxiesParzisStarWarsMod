@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:block/pit_sand"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:block/pit_sand"
+  }
 }

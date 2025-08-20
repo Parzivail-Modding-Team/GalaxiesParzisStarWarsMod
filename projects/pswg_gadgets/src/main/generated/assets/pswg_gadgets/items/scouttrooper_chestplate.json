@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_gadgets:item/scouttrooper_chestplate"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_gadgets:item/scouttrooper_chestplate"
+  }
 }
