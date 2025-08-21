@@ -7,5 +7,6 @@ public enum DataGenBlockModel
 	Connecting,
 	Cross,
 	DataGenModel,
+	InvertibleLightingPanel,
 	None
 }

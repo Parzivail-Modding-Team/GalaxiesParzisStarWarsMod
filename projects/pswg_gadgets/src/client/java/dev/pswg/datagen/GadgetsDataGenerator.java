@@ -24,6 +24,7 @@ import net.minecraft.client.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
@@ -117,12 +118,29 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 						case null, default:
 					}
 				}
+				case InvertibleLightingPanel -> registerLightingPanel(block, generator);
 			}
 		}
 
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
 			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);
+		}
+
+		private static void registerLightingPanel(Block block, BlockStateModelGenerator generator) {
+			Identifier identifier = lightingPanelFactory().upload(block, generator.modelCollector);
+			Identifier identifier2 = generator.createSubModel(block, "_on", Models.CUBE_COLUMN, ModelGenerator::createLightingPanelTextureMap);
+
+			generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(block).coordinate(BlockStateModelGenerator.createBooleanModelMap(Properties.LIT, identifier2, identifier)));
+		}
+		public static TexturedModel.Factory lightingPanelFactory(){
+			return TexturedModel.makeFactory(ModelGenerator::createLightingPanelTextureMap, Models.CUBE_COLUMN);
+		}
+		public static TextureMap createLightingPanelTextureMap(Block block){
+			return createLightingPanelTextureMap(TextureMap.getId(block));
+		}
+		public static TextureMap createLightingPanelTextureMap(Identifier identifier){
+			return  new TextureMap().put(TextureKey.SIDE, identifier).put(TextureKey.END, TextureMap.getId(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
 		}
 
 		public static final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)

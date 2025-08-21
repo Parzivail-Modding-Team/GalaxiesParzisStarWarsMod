@@ -15,6 +15,7 @@ import net.minecraft.block.*;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ColorCode;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.shape.VoxelShape;
@@ -267,7 +268,37 @@ public class GadgetsBlocks
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_1 = createSelfConnectingBlock("gray_imperial_tall_panel_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 	@DataGenBlock
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_2 = createSelfConnectingBlock("gray_imperial_tall_panel_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
-	// TODO: Implement lighting panels
+	// TODO: Implement connecting lighting panels
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_1 = createLightingPanelBlock("gray_imperial_light_half_1", 13);
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_2 = createLightingPanelBlock("gray_imperial_light_half_2", 13);
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_3 = createLightingPanelBlock("gray_imperial_light_half_3", 13);
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_4 = createLightingPanelBlock("gray_imperial_light_half_4", 13);
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_5 = createLightingPanelBlock("gray_imperial_light_half_5", 13);
+	//@RegistryName("gray_imperial_lighting_panel_slab")
+	//public static final InvertedLampSlab GRAY_IMPERIAL_LIGHTING_SLAB = createLightingPanelSlab(12, 15);
+
+	/*@RegistryName("gray_imperial_tall_light_1")
+	@TarkinBlock(state = TrState.None, model = TrModel.None)
+	public static final InteractableConnectingInvertedLampBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY, 14);
+	@RegistryName("gray_imperial_tall_light_2")
+	@TarkinBlock(state = TrState.None, model = TrModel.None)
+	public static final InteractableConnectingInvertedLampBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY, 14);*/
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_1 = createLightingPanelBlock("gray_imperial_light_panel_1", 11);
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_2 = createLightingPanelBlock("gray_imperial_light_panel_2", 9);
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_3 = createLightingPanelBlock("gray_imperial_light_panel_3", 14);
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_1 = createLightingPanelBlock("gray_imperial_light_1", 15);
+	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_2 = createLightingPanelBlock("gray_imperial_light_2", 15);
+
 	@DataGenBlock
 	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("light_gray_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 	@DataGenBlock
@@ -404,6 +435,14 @@ public class GadgetsBlocks
 	public static Block createBlock(String key, AbstractBlock.Settings settings)
 	{
 		return Registrar.block(Gadgets.id(key), Block::new, settings);
+	}
+	public static InteractableInvertedLampBlock createLightingPanelBlock(String key, int luminosity)
+	{
+		return Registrar.block(Gadgets.id(key), InteractableInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.luminance(value -> {
+			if(value.getNullable(Properties.LIT) != null && value.get(Properties.LIT))
+				return luminosity;
+			return 0;
+		}));
 	}
 
 	public static NumberedBlocks createNumberedBlocks(String key, int count, AbstractBlock.Settings settings)
