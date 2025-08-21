@@ -95,7 +95,7 @@ public class GadgetsItems
 	/// GRENADE
 	@DataGenItem(langOverride = "CLS-A Thermal Detonator", itemGroup = DataGenItemGroup.DemolitionsGadgets, genModel = false)
 	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(Gadgets.id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
-	@DataGenItem(wiz = true, langOverride = "C-25 Fragmentation Grenade", itemGroup = DataGenItemGroup.DemolitionsGadgets)
+	@DataGenItem(langOverride = "C-25 Fragmentation Grenade", itemGroup = DataGenItemGroup.DemolitionsGadgets, genModel = false)
 	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(Gadgets.id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Settings());
 	@DataGenItem(wiz = true, langOverride = "FEX-M3 Nerve Gas Grenade", itemGroup = DataGenItemGroup.DemolitionsGadgets)
 	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Settings());
