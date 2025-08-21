@@ -6,6 +6,7 @@ import dev.pswg.block.DyedStoneProducts;
 import dev.pswg.block.NumberedBlocks;
 import dev.pswg.block.StoneProducts;
 import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.container.GadgetsItemGroups;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
 import dev.pswg.item.ArmorItems;
@@ -269,6 +270,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Thermal Detonator Explosion");
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
+
+			translationBuilder.add(GadgetsItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY, "Construction Blocks");
+			translationBuilder.add(GadgetsItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "Worldgen Blocks");
+			translationBuilder.add(GadgetsItemGroups.DEMOLITIONS_ITEMS_GROUP_KEY, "Demolitions Gadgets");
+			translationBuilder.add(GadgetsItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG Items");
 
 		}
 
