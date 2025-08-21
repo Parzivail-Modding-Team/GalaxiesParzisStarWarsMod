@@ -1,10 +1,7 @@
 package dev.pswg.datagen;
 
 import dev.pswg.Gadgets;
-import dev.pswg.block.DyedBlocks;
-import dev.pswg.block.DyedStoneProducts;
-import dev.pswg.block.NumberedBlocks;
-import dev.pswg.block.StoneProducts;
+import dev.pswg.block.*;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItemGroups;
 import dev.pswg.container.GadgetsItems;
@@ -21,12 +18,14 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -99,8 +98,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			generator.registerCubeAllModelTexturePool(stoneProducts.block)
 			         .wall(stoneProducts.wall)
-			         .slab(stoneProducts.slab)
 			         .stairs(stoneProducts.stairs);
+			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
+
 		}
 
 		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
@@ -119,10 +119,35 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 						case null, default:
 					}
 				}
-				case InvertibleLightingPanel -> registerLightingPanel(block, generator);
+				case LightingPanel -> registerLightingPanel(block, generator);
+				case Slab -> registerVerticalSlab(block, generator);
 			}
 		}
 
+		private static void registerVerticalSlab(Block slab, BlockStateModelGenerator generator){
+			registerVerticalSlabAllTextures(slab, slab, generator);
+		}
+		private static void registerVerticalSlabAllTextures(Block textureBase, Block slab, BlockStateModelGenerator generator){
+			var textureId = TextureMap.getId(textureBase);
+			var textureMap = new TextureMap().put(TextureKey.SIDE, textureId).put(TextureKey.TOP, textureId).put(TextureKey.END, textureId);
+			Identifier bottomId = Models.SLAB.upload(slab, textureMap, generator.modelCollector);
+			Identifier topId =  Models.SLAB_TOP.upload(slab, "_top", textureMap, generator.modelCollector);
+			Identifier doubleId =  Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
+
+			var blockState = VariantsBlockStateSupplier.create(slab).
+			                          coordinate(BlockStateVariantMap.create(Properties.AXIS)
+			                                                         .register(Direction.Axis.Y, BlockStateVariant.create())
+			                                                         .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270))
+			                                                         .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90))).
+			                          coordinate(
+					                          BlockStateVariantMap.create(Properties.SLAB_TYPE)
+					                                              .register(SlabType.BOTTOM, BlockStateVariant.create().put(VariantSettings.MODEL, bottomId))
+					                                              .register(SlabType.TOP, BlockStateVariant.create().put(VariantSettings.MODEL, topId))
+					                                              .register(SlabType.DOUBLE, BlockStateVariant.create().put(VariantSettings.MODEL, doubleId))
+			                          );
+			generator.blockStateCollector.accept(blockState);
+
+		}
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
 			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);

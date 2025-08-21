@@ -269,15 +269,15 @@ public class GadgetsBlocks
 	@DataGenBlock
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_2 = createSelfConnectingBlock("gray_imperial_tall_panel_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 	// TODO: Implement connecting lighting panels
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_1 = createLightingPanelBlock("gray_imperial_light_half_1", 13);
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_2 = createLightingPanelBlock("gray_imperial_light_half_2", 13);
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_3 = createLightingPanelBlock("gray_imperial_light_half_3", 13);
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_4 = createLightingPanelBlock("gray_imperial_light_half_4", 13);
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_5 = createLightingPanelBlock("gray_imperial_light_half_5", 13);
 	//@RegistryName("gray_imperial_lighting_panel_slab")
 	//public static final InvertedLampSlab GRAY_IMPERIAL_LIGHTING_SLAB = createLightingPanelSlab(12, 15);
@@ -288,15 +288,15 @@ public class GadgetsBlocks
 	@RegistryName("gray_imperial_tall_light_2")
 	@TarkinBlock(state = TrState.None, model = TrModel.None)
 	public static final InteractableConnectingInvertedLampBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY, 14);*/
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_1 = createLightingPanelBlock("gray_imperial_light_panel_1", 11);
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_2 = createLightingPanelBlock("gray_imperial_light_panel_2", 9);
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_3 = createLightingPanelBlock("gray_imperial_light_panel_3", 14);
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_1 = createLightingPanelBlock("gray_imperial_light_1", 15);
-	@DataGenBlock(model = DataGenBlockModel.InvertibleLightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_2 = createLightingPanelBlock("gray_imperial_light_2", 15);
 
 	@DataGenBlock

@@ -1,13 +1,40 @@
 {
   "variants": {
-    "type=bottom": {
+    "axis=x,type=bottom": {
+      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,type=double": {
+      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab_double",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,type=top": {
+      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab_top_top",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,type=bottom": {
       "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab"
     },
-    "type=double": {
-      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank"
+    "axis=y,type=double": {
+      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab_double"
     },
-    "type=top": {
-      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab_top"
+    "axis=y,type=top": {
+      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab_top_top"
+    },
+    "axis=z,type=bottom": {
+      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab",
+      "x": 270
+    },
+    "axis=z,type=double": {
+      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab_double",
+      "x": 270
+    },
+    "axis=z,type=top": {
+      "model": "pswg_gadgets:block/light_gray_imperial_panel_blank_slab_top_top",
+      "x": 270
     }
   }
 }
