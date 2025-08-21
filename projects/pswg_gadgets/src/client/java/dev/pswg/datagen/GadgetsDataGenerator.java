@@ -137,8 +137,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			var blockState = VariantsBlockStateSupplier.create(slab).
 			                          coordinate(BlockStateVariantMap.create(Properties.AXIS)
 			                                                         .register(Direction.Axis.Y, BlockStateVariant.create())
-			                                                         .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270))
-			                                                         .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90))).
+			                                                         .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270).put(VariantSettings.UVLOCK, true))
+			                                                         .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90).put(VariantSettings.UVLOCK, true))).
 			                          coordinate(
 					                          BlockStateVariantMap.create(Properties.SLAB_TYPE)
 					                                              .register(SlabType.BOTTOM, BlockStateVariant.create().put(VariantSettings.MODEL, bottomId))
@@ -148,6 +148,29 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			generator.blockStateCollector.accept(blockState);
 
 		}
+		/*private static void registerVerticalLightingSlab( BlockStateModelGenerator generator){
+
+			var textureIdTopBottomTop = TextureMap.getId();
+			var textureIdSide = TextureMap.getId(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
+			var textureMap = new TextureMap().put(TextureKey.SIDE, textureId).put(TextureKey.TOP, textureId).put(TextureKey.END, textureId);
+			Identifier bottomId = Models.SLAB.upload(slab, textureMap, generator.modelCollector);
+			Identifier topId =  Models.SLAB_TOP.upload(slab, "_top", textureMap, generator.modelCollector);
+			Identifier doubleId =  Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
+
+			var blockState = VariantsBlockStateSupplier.create(slab).
+			                                           coordinate(BlockStateVariantMap.create(Properties.AXIS)
+			                                                                          .register(Direction.Axis.Y, BlockStateVariant.create())
+			                                                                          .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270))
+			                                                                          .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90))).
+			                                           coordinate(
+					                                           BlockStateVariantMap.create(Properties.SLAB_TYPE)
+					                                                               .register(SlabType.BOTTOM, BlockStateVariant.create().put(VariantSettings.MODEL, bottomId))
+					                                                               .register(SlabType.TOP, BlockStateVariant.create().put(VariantSettings.MODEL, topId))
+					                                                               .register(SlabType.DOUBLE, BlockStateVariant.create().put(VariantSettings.MODEL, doubleId))
+			                                           );
+			generator.blockStateCollector.accept(blockState);
+
+		}*/
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
 			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);

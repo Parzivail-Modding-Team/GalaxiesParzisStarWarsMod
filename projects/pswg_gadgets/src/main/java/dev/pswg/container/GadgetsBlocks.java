@@ -12,6 +12,7 @@ import dev.pswg.feature.scrapping.ScrappingTableBlock;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.BlockUtil;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.BlockSoundGroup;
@@ -279,8 +280,8 @@ public class GadgetsBlocks
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_4 = createLightingPanelBlock("gray_imperial_light_half_4", 13);
 	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_5 = createLightingPanelBlock("gray_imperial_light_half_5", 13);
-	//@RegistryName("gray_imperial_lighting_panel_slab")
-	//public static final InvertedLampSlab GRAY_IMPERIAL_LIGHTING_SLAB = createLightingPanelSlab(12, 15);
+	@DataGenBlock(model = DataGenBlockModel.None)
+	public static final InteractableInvertedLampSlab GRAY_IMPERIAL_LIGHTING_SLAB = createLightingPanelSlab("gray_imperial_lighting_panel_slab", 15, 12);
 
 	/*@RegistryName("gray_imperial_tall_light_1")
 	@TarkinBlock(state = TrState.None, model = TrModel.None)
@@ -441,6 +442,15 @@ public class GadgetsBlocks
 		return Registrar.block(Gadgets.id(key), InteractableInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.luminance(value -> {
 			if(value.getNullable(Properties.LIT) != null && value.get(Properties.LIT))
 				return luminosity;
+			return 0;
+		}));
+	}
+	public static InteractableInvertedLampSlab createLightingPanelSlab(String key, int luminositySingle, int luminosityDouble)
+	{
+		return Registrar.block(Gadgets.id(key), InteractableInvertedLampSlab::new, IMPERIAL_PANEL_SETTINGS.luminance(value -> {
+			if(value.getNullable(Properties.LIT) != null && value.get(Properties.LIT))
+				if(value.getNullable(Properties.SLAB_TYPE)!= null)
+					return  value.get(Properties.SLAB_TYPE) == SlabType.DOUBLE ? luminosityDouble : luminositySingle;
 			return 0;
 		}));
 	}
