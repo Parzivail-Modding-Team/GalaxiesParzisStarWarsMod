@@ -63,6 +63,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
 		{
+			registerVerticalLightingSlab(blockStateModelGenerator);
+
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (genBlock, dataGenBlock) -> {
 				registerDataGenBlock(genBlock, dataGenBlock, blockStateModelGenerator);
 			});
@@ -148,14 +150,19 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			generator.blockStateCollector.accept(blockState);
 
 		}
-		/*private static void registerVerticalLightingSlab( BlockStateModelGenerator generator){
+		private static void registerVerticalLightingSlab( BlockStateModelGenerator generator){
 
-			var textureIdTopBottomTop = TextureMap.getId();
-			var textureIdSide = TextureMap.getId(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
-			var textureMap = new TextureMap().put(TextureKey.SIDE, textureId).put(TextureKey.TOP, textureId).put(TextureKey.END, textureId);
+			var textureIdTopBottom = TextureMap.getId(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
+			var slab = GadgetsBlocks.GRAY_IMPERIAL_LIGHTING_SLAB;
+			var textureIdSide = TextureMap.getId(GadgetsBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
+			var textureMap = new TextureMap().put(TextureKey.SIDE, textureIdSide).put(TextureKey.TOP, textureIdTopBottom).put(TextureKey.END, textureIdTopBottom);
+			var textureMapOn = new TextureMap().put(TextureKey.SIDE, textureIdSide.withSuffixedPath("_on")).put(TextureKey.TOP, textureIdTopBottom).put(TextureKey.END, textureIdTopBottom);
 			Identifier bottomId = Models.SLAB.upload(slab, textureMap, generator.modelCollector);
-			Identifier topId =  Models.SLAB_TOP.upload(slab, "_top", textureMap, generator.modelCollector);
+			Identifier bottomIdOn = Models.SLAB.upload(slab, "_on", textureMapOn, generator.modelCollector);
+			Identifier topId =  Models.SLAB_TOP.upload(slab, "", textureMap, generator.modelCollector);
+			Identifier topIdOn =  Models.SLAB_TOP.upload(slab, "_on", textureMapOn, generator.modelCollector);
 			Identifier doubleId =  Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
+			Identifier doubleIdOn =  Models.CUBE_COLUMN.upload(slab, "_double_on", textureMapOn, generator.modelCollector);
 
 			var blockState = VariantsBlockStateSupplier.create(slab).
 			                                           coordinate(BlockStateVariantMap.create(Properties.AXIS)
@@ -163,14 +170,17 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			                                                                          .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270))
 			                                                                          .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90))).
 			                                           coordinate(
-					                                           BlockStateVariantMap.create(Properties.SLAB_TYPE)
-					                                                               .register(SlabType.BOTTOM, BlockStateVariant.create().put(VariantSettings.MODEL, bottomId))
-					                                                               .register(SlabType.TOP, BlockStateVariant.create().put(VariantSettings.MODEL, topId))
-					                                                               .register(SlabType.DOUBLE, BlockStateVariant.create().put(VariantSettings.MODEL, doubleId))
+					                                           BlockStateVariantMap.create(Properties.SLAB_TYPE, Properties.LIT)
+					                                                               .register(SlabType.BOTTOM, false, BlockStateVariant.create().put(VariantSettings.MODEL, bottomId))
+					                                                               .register(SlabType.BOTTOM, true, BlockStateVariant.create().put(VariantSettings.MODEL, bottomIdOn))
+					                                                               .register(SlabType.TOP, false, BlockStateVariant.create().put(VariantSettings.MODEL, topId))
+					                                                               .register(SlabType.TOP, true, BlockStateVariant.create().put(VariantSettings.MODEL, topIdOn))
+					                                                               .register(SlabType.DOUBLE, false, BlockStateVariant.create().put(VariantSettings.MODEL, doubleId))
+					                                                               .register(SlabType.DOUBLE, true, BlockStateVariant.create().put(VariantSettings.MODEL, doubleIdOn))
 			                                           );
 			generator.blockStateCollector.accept(blockState);
 
-		}*/
+		}
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
 			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);
@@ -234,7 +244,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
-			itemModelGenerator.register();
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
 				registerItem(itemModelGenerator, armorItems.helmet, dataGenItem);
