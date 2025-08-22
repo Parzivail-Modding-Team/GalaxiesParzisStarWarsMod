@@ -104,12 +104,24 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
 
 		}
+		private static void registerAccumulatingBlock(Block block, BlockStateModelGenerator generator) {
+			var id = TextureMap.getId(block);
+
+			generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(Properties.LAYERS).register(
+						 height -> {
+							Identifier modelId = TexturedModel.makeFactory(block1 -> TextureMap.all(id).put(TextureKey.PARTICLE, id), blockModel("template_accumulating_height" + height * 2, TextureKey.ALL, TextureKey.PARTICLE)).upload(block, "_height"+ height * 2, generator.modelCollector);
+							return BlockStateVariant.create().put(VariantSettings.MODEL, modelId);
+						 }))
+					);
+			generator.registerParentedItemModel(block, ModelIds.getBlockSubModelId(block, "_height2"));
+		}
 
 		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
 		{
 			switch (dataGenBlock.model())
 			{
 				case CubeAll -> generator.registerSimpleCubeAll(block);
+				case Accumulating -> registerAccumulatingBlock(block, generator);
 				case Column -> generator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
 				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
 				case DataGenModel ->

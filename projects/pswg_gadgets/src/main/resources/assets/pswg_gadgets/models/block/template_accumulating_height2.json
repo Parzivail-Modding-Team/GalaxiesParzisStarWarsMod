@@ -1,0 +1,19 @@
+{   "parent": "block/thin_block",
+    "textures": {
+        "particle": "block",
+        "all": "easter_egg_yay"
+    },
+    "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 16, 2, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#all", "cullface": "down" },
+                "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#all" },
+                "north": { "uv": [ 0, 14, 16, 16 ], "texture": "#all", "cullface": "north" },
+                "south": { "uv": [ 0, 14, 16, 16 ], "texture": "#all", "cullface": "south" },
+                "west":  { "uv": [ 0, 14, 16, 16 ], "texture": "#all", "cullface": "west" },
+                "east":  { "uv": [ 0, 14, 16, 16 ], "texture": "#all", "cullface": "east" }
+            }
+        }
+    ]
+}

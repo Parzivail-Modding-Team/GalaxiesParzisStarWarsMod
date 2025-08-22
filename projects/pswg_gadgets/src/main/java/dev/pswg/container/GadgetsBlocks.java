@@ -114,8 +114,8 @@ public class GadgetsBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock FINE_SAND = createFallingBlock("fine_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFE9C490));
 	// TODO: implement & add Datagen for "LOOSE_DESERT_SAND"
-	//@RegistryName("loose_desert_sand")
-	//public static final Block LooseDesert = new AccumulatingBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), Desert::getPlacementState);
+	@DataGenBlock(model =  DataGenBlockModel.Accumulating)
+	public static final AccumulatingBlock LOOSE_DESERT_SAND = createAccumulatingBlock("loose_desert_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), DESERT_SAND);
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
 	/// SALT
@@ -433,11 +433,14 @@ public class GadgetsBlocks
 	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
 	public static final DyedBlocks CORRUGATED_CRATE = new DyedBlocks(color -> createCorrugatedCrate(color.name().toLowerCase() + "_corrugated_crate"));
 
-	public static Block createBlock(String key, AbstractBlock.Settings settings)
+	private static Block createBlock(String key, AbstractBlock.Settings settings)
 	{
 		return Registrar.block(Gadgets.id(key), Block::new, settings);
 	}
-	public static InteractableInvertedLampBlock createLightingPanelBlock(String key, int luminosity)
+	private static AccumulatingBlock createAccumulatingBlock(String key, AbstractBlock.Settings settings, Block fullBlock){
+		return Registrar.block(Gadgets.id(key), blockSettings -> new AccumulatingBlock(settings, fullBlock::getPlacementState), settings);
+	}
+	private static InteractableInvertedLampBlock createLightingPanelBlock(String key, int luminosity)
 	{
 		return Registrar.block(Gadgets.id(key), InteractableInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.luminance(value -> {
 			if(value.getNullable(Properties.LIT) != null && value.get(Properties.LIT))
@@ -445,7 +448,7 @@ public class GadgetsBlocks
 			return 0;
 		}));
 	}
-	public static InteractableInvertedLampSlab createLightingPanelSlab(String key, int luminositySingle, int luminosityDouble)
+	private static InteractableInvertedLampSlab createLightingPanelSlab(String key, int luminositySingle, int luminosityDouble)
 	{
 		return Registrar.block(Gadgets.id(key), InteractableInvertedLampSlab::new, IMPERIAL_PANEL_SETTINGS.luminance(value -> {
 			if(value.getNullable(Properties.LIT) != null && value.get(Properties.LIT))
@@ -455,37 +458,35 @@ public class GadgetsBlocks
 		}));
 	}
 
-	public static NumberedBlocks createNumberedBlocks(String key, int count, AbstractBlock.Settings settings)
+	private static NumberedBlocks createNumberedBlocks(String key, int count, AbstractBlock.Settings settings)
 	{
 		return new NumberedBlocks(count, integer -> Registrar.block(Gadgets.id(key + "_" + integer), Block::new, settings));
 	}
 
-	public static WaterloggableRotatingBlockWithBoundsGuiEntity createCorrugatedCrate(String key)
+	private static WaterloggableRotatingBlockWithBoundsGuiEntity createCorrugatedCrate(String key)
 	{
 		return Registrar.block(Gadgets.id(key), blockSettings -> new WaterloggableRotatingBlockWithBoundsGuiEntity(CRATE_SHAPE, blockSettings, CrateCorrugatedBlockEntity::new), CORRUGATED_CRATE_SETTINGS);
 	}
-	public static SelfConnectingBlock createSelfConnectingBlock(String key, AbstractBlock.Settings settings)
+	private static SelfConnectingBlock createSelfConnectingBlock(String key, AbstractBlock.Settings settings)
 	{
 		return Registrar.block(Gadgets.id(key), SelfConnectingBlock::new, settings);
 	}
 
-	public static RuiningDryingBlock createRuiningDryingBlock(String key, AbstractBlock.Settings blockSettings, int transitionTime, Block dryingTarget, Block ruinedBlock, ColorCode colorCode)
+	private static RuiningDryingBlock createRuiningDryingBlock(String key, AbstractBlock.Settings blockSettings, int transitionTime, Block dryingTarget, Block ruinedBlock, ColorCode colorCode)
 	{
 		return Registrar.block(Gadgets.id(key), settings -> new RuiningDryingBlock(dryingTarget, transitionTime, () -> ruinedBlock, settings, colorCode), blockSettings);
 	}
 
-	public static ColoredFallingBlock createFallingBlock(String key, AbstractBlock.Settings blockSettings, ColorCode colorCode)
+	private static ColoredFallingBlock createFallingBlock(String key, AbstractBlock.Settings blockSettings, ColorCode colorCode)
 	{
 		return Registrar.block(Gadgets.id(key), settings -> new ColoredFallingBlock(colorCode, settings), blockSettings);
 	}
 
-	public static VerticalSlabBlock createSlab(String key, AbstractBlock.Settings settings)
+	private static VerticalSlabBlock createSlab(String key, AbstractBlock.Settings settings)
 	{
 		return Registrar.block(Gadgets.id(key), VerticalSlabBlock::new, settings);
 	}
-	public static void register()
-	{
-	}
+
 
 	private static SelfConnectingGlassBlock createSelfConnectingGlass(String key)
 	{
@@ -500,6 +501,9 @@ public class GadgetsBlocks
 	private static Block createPanel(String key, MapColor topMapColor)
 	{
 		return createBlock(key, AbstractBlock.Settings.create().strength(1.5F).requiresTool().sounds(BlockSoundGroup.COPPER).mapColor(topMapColor));
+	}
+	public static void register()
+	{
 	}
 
 }

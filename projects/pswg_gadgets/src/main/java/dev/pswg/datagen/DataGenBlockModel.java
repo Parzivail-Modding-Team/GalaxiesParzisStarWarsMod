@@ -9,5 +9,6 @@ public enum DataGenBlockModel
 	Slab,
 	DataGenModel,
 	LightingPanel,
+	Accumulating,
 	None
 }
