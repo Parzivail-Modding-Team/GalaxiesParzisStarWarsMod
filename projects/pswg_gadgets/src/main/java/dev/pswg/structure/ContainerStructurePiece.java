@@ -90,7 +90,7 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 					else if (crateBlock.equals(GadgetsBlocks.MINING_CORRUGATED_CRATE))
 						lootTable.setLootTable(GadgetsLootTables.MINING_CRATE);
 					else
-						lootTable.setLootTable(LootTables.ABANDONED_MINESHAFT_CHEST);
+						lootTable.setLootTable(GadgetsLootTables.GENERIC_CRATE);
 					lootTable.setLootTableSeed(random.nextLong());
 				}
 			}

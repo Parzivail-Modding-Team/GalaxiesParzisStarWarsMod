@@ -348,9 +348,9 @@ public class GadgetsItems
 	/// FOOD PREP
 
 	@DataGenItem
-	public static final Item DURASTEEL_CUP = registerSimpleItem("durasteel_cup");
+	public static final Item DURASTEEL_CUP = registerSimpleItem("durasteel_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
 	@DataGenItem
-	public static final Item DESH_CUP = registerSimpleItem("desh_cup");
+	public static final Item DESH_CUP = registerSimpleItem("desh_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
 	@DataGenItem
 	public static final DyedItems CUPS = new DyedItems(color -> registerSimpleItem(color.name().toLowerCase() + "_cup"));
 	@DataGenItem
