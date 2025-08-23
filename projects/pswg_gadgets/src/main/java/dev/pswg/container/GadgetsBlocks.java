@@ -139,7 +139,7 @@ public class GadgetsBlocks
 
 	// TODO: Implement tree & plant
 	/// Ores
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block BESKAR_ORE = createBlock("beskar_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
 	@DataGenBlock
 	public static final Block BESKAR_BLOCK = createBlock("beskar_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
