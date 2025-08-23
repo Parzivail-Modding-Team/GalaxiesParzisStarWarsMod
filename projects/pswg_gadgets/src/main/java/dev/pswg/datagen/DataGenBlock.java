@@ -20,4 +20,5 @@ public @interface DataGenBlock
 	String dataGenModelKey() default "";
 
 	DGBlockTag[] tags() default {};
+	DGBlockRotation rotation() default DGBlockRotation.Default;
 }

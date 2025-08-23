@@ -27,6 +27,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -120,7 +121,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			switch (dataGenBlock.model())
 			{
-				case CubeAll -> generator.registerSimpleCubeAll(block);
+				case CubeAll -> registerCubeAllWithRotation(block, dataGenBlock, generator);
 				case Accumulating -> registerAccumulatingBlock(block, generator);
 				case Column -> generator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
 				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
@@ -135,6 +136,22 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				}
 				case LightingPanel -> registerLightingPanel(block, generator);
 				case Slab -> registerVerticalSlab(block, generator);
+			}
+		}
+		private static void registerCubeAllWithRotation(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator){
+			switch (dataGenBlock.rotation()){
+				case Default -> generator.registerSimpleCubeAll(block);
+				case RandomRotationX -> {
+					Identifier id = TexturedModel.CUBE_ALL.upload(block, generator.modelCollector);
+					var blockStateVariants = new ArrayList<BlockStateVariant>(4);
+					blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R0));
+					         blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R90));
+							 blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
+					         blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270));
+
+					var blockStateSupplier = MultipartBlockStateSupplier.create(block).with(blockStateVariants);
+					generator.blockStateCollector.accept(blockStateSupplier);
+				}
 			}
 		}
 

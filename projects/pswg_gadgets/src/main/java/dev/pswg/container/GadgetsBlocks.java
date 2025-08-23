@@ -4,10 +4,7 @@ import dev.pswg.Gadgets;
 import dev.pswg.block.*;
 import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
-import dev.pswg.datagen.DataGenBlock;
-import dev.pswg.datagen.DataGenBlockModel;
-import dev.pswg.datagen.DataGenItemGroup;
-import dev.pswg.datagen.SVRenderLayer;
+import dev.pswg.datagen.*;
 import dev.pswg.feature.scrapping.ScrappingTableBlock;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.BlockUtil;
@@ -113,18 +110,15 @@ public class GadgetsBlocks
 	public static final ColoredFallingBlock PIT_SAND = createFallingBlock("pit_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFEAC795));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock FINE_SAND = createFallingBlock("fine_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFE9C490));
-	// TODO: implement & add Datagen for "LOOSE_DESERT_SAND"
 	@DataGenBlock(model =  DataGenBlockModel.Accumulating)
 	public static final AccumulatingBlock LOOSE_DESERT_SAND = createAccumulatingBlock("loose_desert_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), DESERT_SAND);
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
 	/// SALT
-	// TODO: implement "state = TrState.RandomRotation" for "CAKED_SALT"
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
 	public static final Block CAKED_SALT = createBlock("caked_salt", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	/// GRAVEL
-	// TODO: implement "state = TrState.RandomRotation" for "JUNDLAND_GRAVEL"
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
 	public static final FallingBlock JUNDLAND_GRAVEL = createFallingBlock("jundland_gravel", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F), new ColorCode(0xFF7A5346));
 	/// DIRT
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
@@ -139,8 +133,8 @@ public class GadgetsBlocks
 	public static final DryingSlabBlock RUINED_WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("ruined_wet_pourstone_slab"), settings -> new DryingSlabBlock(CRACKED_POURSTONE.slab, 10, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final RuiningDryingSlabBlock WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("wet_pourstone_slab"), settings -> new RuiningDryingSlabBlock(POURSTONE.slab, 10, () -> RUINED_WET_POURSTONE_SLAB, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	// TODO: implement "state = TrState.RandomRotation" & tags = { TrBlockTag.PickaxeMineable, TrBlockTag.DeadBushSubstrate } for "DESERT_LOAM"
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	// TODO: implement tags = { TrBlockTag.PickaxeMineable, TrBlockTag.DeadBushSubstrate } for "DESERT_LOAM"
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
 	// TODO: Implement tree & plant

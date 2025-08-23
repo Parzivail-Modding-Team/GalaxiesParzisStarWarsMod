@@ -1,7 +1,24 @@
 {
-  "variants": {
-    "": {
-      "model": "pswg_gadgets:block/caked_salt"
+  "multipart": [
+    {
+      "apply": [
+        {
+          "model": "pswg_gadgets:block/caked_salt",
+          "x": 0
+        },
+        {
+          "model": "pswg_gadgets:block/caked_salt",
+          "x": 90
+        },
+        {
+          "model": "pswg_gadgets:block/caked_salt",
+          "x": 180
+        },
+        {
+          "model": "pswg_gadgets:block/caked_salt",
+          "x": 270
+        }
+      ]
     }
-  }
+  ]
 }
