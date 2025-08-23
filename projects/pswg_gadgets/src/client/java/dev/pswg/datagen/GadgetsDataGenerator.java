@@ -324,23 +324,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					addDatagenItem(translationBuilder, item, dataGenItem);
 			});
 
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) -> {
-				addDataGenBlock(translationBuilder, block, dataGenBlock);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, NumberedBlocks.class, (numberedBlocks, dataGenBlock) -> {
-				for (Block block : numberedBlocks)
-					addDataGenBlock(translationBuilder, block, dataGenBlock);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (dyedBlocks, dataGenBlock) -> {
-				for (Block block : dyedBlocks.values())
-					addDataGenBlock(translationBuilder, block, dataGenBlock);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
-				addDataGenBlock(translationBuilder, stoneProducts.slab, dataGenBlock);
-				addDataGenBlock(translationBuilder, stoneProducts.block, dataGenBlock);
-				addDataGenBlock(translationBuilder, stoneProducts.stairs, dataGenBlock);
-				addDataGenBlock(translationBuilder, stoneProducts.wall, dataGenBlock);
-			});
+			AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> addDataGenBlock(translationBuilder, block, dataGenBlock));
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
