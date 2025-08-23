@@ -1,13 +1,17 @@
 package dev.pswg.container;
 
 import dev.pswg.Gadgets;
+import dev.pswg.autoreg.BlockClientRegistrationData;
+import dev.pswg.autoreg.BlockServerRegistrationData;
 import dev.pswg.block.*;
 import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.datagen.*;
 import dev.pswg.feature.scrapping.ScrappingTableBlock;
 import dev.pswg.registry.Registrar;
+import dev.pswg.util.AutoGenerateUtil;
 import dev.pswg.util.BlockUtil;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.registry.RegistryKeys;
@@ -196,39 +200,56 @@ public class GadgetsBlocks
 
 	/// GLASS
 
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@DataGenBlock
 	public static final SelfConnectingGlassBlock IMPERIAL_GLASS = createSelfConnectingGlass("imperial_glass");
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock WHITE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("white_stained_imperial_glass", DyeColor.WHITE);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock ORANGE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("orange_stained_imperial_glass", DyeColor.ORANGE);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock MAGENTA_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("magenta_stained_imperial_glass", DyeColor.MAGENTA);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIGHT_BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_blue_stained_imperial_glass", DyeColor.LIGHT_BLUE);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock YELLOW_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("yellow_stained_imperial_glass", DyeColor.YELLOW);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIME_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("lime_stained_imperial_glass", DyeColor.LIME);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock PINK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("pink_stained_imperial_glass", DyeColor.PINK);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("gray_stained_imperial_glass", DyeColor.GRAY);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIGHT_GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_gray_stained_imperial_glass", DyeColor.LIGHT_GRAY);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock CYAN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("cyan_stained_imperial_glass", DyeColor.CYAN);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock PURPLE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("purple_stained_imperial_glass", DyeColor.PURPLE);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("blue_stained_imperial_glass", DyeColor.BLUE);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BROWN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("brown_stained_imperial_glass", DyeColor.BROWN);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock GREEN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("green_stained_imperial_glass", DyeColor.GREEN);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock RED_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("red_stained_imperial_glass", DyeColor.RED);
-	@DataGenBlock(renderLayer = SVRenderLayer.Transparent)
+	@DataGenBlock
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BLACK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("black_stained_imperial_glass", DyeColor.BLACK);
 
 	/// PANEL
@@ -498,6 +519,14 @@ public class GadgetsBlocks
 	}
 	public static void register()
 	{
+
+		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(BlockServerRegistrationData.class, GadgetsBlocks::registerServerDataBlock);
+
+	}
+	private static void registerServerDataBlock(Block block, BlockServerRegistrationData serverData)
+	{
+		if(serverData.fireBurn() != 0 || serverData.fireSpread() !=0)
+			FlammableBlockRegistry.getDefaultInstance().add(block, serverData.fireBurn(), serverData.fireSpread());
 	}
 
 }

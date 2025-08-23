@@ -7,5 +7,19 @@ public enum DGBlockTag
 	Bouncy,
 	GasPassThrough,
 	InfernoChar,
-	InfernoDestroy
+	InfernoDestroy,
+	PickaxeMineable,
+	ShearsMineable,
+	ShovelMineable,
+	AxeMineable,
+	SlidingDoor,
+	Leaves,
+	DeadBushSubstrate,
+	BlasterDestroy,
+	BlasterExplode,
+	BlasterReflect,
+	Logs,
+	LogsThatBurn,
+	Sand,
+	Stairs
 }

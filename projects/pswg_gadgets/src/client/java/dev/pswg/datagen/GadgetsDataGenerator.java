@@ -23,6 +23,7 @@ import net.minecraft.client.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -504,6 +505,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			;
 
 
+
+		}
+		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag){
 
 		}
 	}

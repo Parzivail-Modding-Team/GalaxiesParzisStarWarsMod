@@ -1,6 +1,6 @@
 package dev.pswg.datagen;
 
-public enum SVRenderLayer
+public enum BlockRenderLayer
 {
 	Default,
 	Transparent
