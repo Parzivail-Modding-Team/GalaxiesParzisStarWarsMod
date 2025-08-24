@@ -126,7 +126,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				case Accumulating -> registerAccumulatingBlock(block, generator);
 				case Column -> generator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
 				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
-				case DataGenModel ->
+				case Custom ->
 				{
 					switch (dataGenBlock.dataGenModelKey())
 					{
@@ -337,7 +337,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_throw", "Grenade Thrown");
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_arm", "Grenade Armed");
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_disarm", "Grenade Disarmed");
-			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode", "C25 Grenade Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode", "C-25 Grenade Explosion");
 			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Thermal Detonator Explosion");
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");

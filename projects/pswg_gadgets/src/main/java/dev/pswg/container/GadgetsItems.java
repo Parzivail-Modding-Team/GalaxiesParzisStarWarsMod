@@ -118,11 +118,11 @@ public class GadgetsItems
 	public static final Item BROKEN_SMALL_POWER_PACK_ITEM = registerSimpleItem("broken_small_power_pack", new Item.Settings().component(Components.METAL_COMPONENT, 1).component(Components.ENERGY_COMPONENT, 3).component(Components.TECH_COMPONENT, 2).component(Components.SCRAP, true));
 
 	///  SCRAPPING TOOLS
-	@DataGenItem(wiz = true)
+	@DataGenItem(wiz = true, langOverride = "F-187 Fusioncutter")
 	public static final Item CUTTER_ITEM = registerSimpleItem("cutter", new Item.Settings().maxDamage(100));
-	@DataGenItem(wiz = true)
+	@DataGenItem(wiz = true, langOverride = "FastTurn-3 Hydrospanner")
 	public static final Item SPANNER_ITEM = registerSimpleItem("spanner", new Item.Settings().maxDamage(100));
-	@DataGenItem(wiz = true)
+	@DataGenItem(wiz = true, langOverride = "ReliaCharge Power Calibrator")
 	public static final Item CALIBRATOR_ITEM = registerSimpleItem("calibrator", new Item.Settings().maxDamage(100));
 
 	/// ARMOR | TODO: ADD TRINKET ARMOR PARTS

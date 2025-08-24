@@ -437,13 +437,13 @@ public class GadgetsBlocks
 	public static final VoxelShape CRATE_SHAPE = VoxelShapeUtil.getCenteredCube(14, 16);
 	public static final AbstractBlock.Settings CORRUGATED_CRATE_SETTINGS = AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F);
 
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.Custom)
 	public static final Block IMPERIAL_CORRUGATED_CRATE = createCorrugatedCrate("imperial_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.Custom)
 	public static final Block MEDICAL_CORRUGATED_CRATE = createCorrugatedCrate("medical_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.Custom)
 	public static final Block MINING_CORRUGATED_CRATE = createCorrugatedCrate("mining_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.DataGenModel)
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.Custom)
 	public static final DyedBlocks CORRUGATED_CRATE = new DyedBlocks(color -> createCorrugatedCrate(color.name().toLowerCase() + "_corrugated_crate"));
 
 	private static Block createBlock(String key, AbstractBlock.Settings settings)

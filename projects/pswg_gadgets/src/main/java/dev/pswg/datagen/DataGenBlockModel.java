@@ -7,7 +7,7 @@ public enum DataGenBlockModel
 	Connecting,
 	Cross,
 	Slab,
-	DataGenModel,
+	Custom,
 	LightingPanel,
 	Accumulating,
 	None
