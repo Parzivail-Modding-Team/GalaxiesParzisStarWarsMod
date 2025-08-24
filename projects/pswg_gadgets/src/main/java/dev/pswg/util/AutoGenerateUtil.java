@@ -14,9 +14,6 @@ import java.util.function.BiConsumer;
 public class AutoGenerateUtil
 {
 	public static <TA extends Annotation> void consumeAnnotatedGadgetsBlocks(Class<TA> annotationClazz, BiConsumer<Block, TA> consumer){
-
-		ArrayList<Block> list = new ArrayList<>(1024);
-
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, Block.class, consumer);
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, NumberedBlocks.class, (numberedBlocks, annotation) -> {
 			for(Block block : numberedBlocks)

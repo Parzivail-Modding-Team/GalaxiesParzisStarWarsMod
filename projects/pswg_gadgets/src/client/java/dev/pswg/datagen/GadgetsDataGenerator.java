@@ -488,11 +488,31 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(Blocks.CACTUS)
 			;
 
+			addBlocksToTag(GadgetsBlocks.Tags.BOUNCY, DGBlockTag.Bouncy, this);
+			addBlocksToTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DGBlockTag.DetonatesGrenade, this);
+			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_CHAR, DGBlockTag.InfernoChar, this);
+			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.InfernoDestroy, this);
+			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DGBlockTag.GasPassThrough, this);
+			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DGBlockTag.FragmentationGrenadeDestroy, this);
+			addBlocksToTag(BlockTags.DEAD_BUSH_MAY_PLACE_ON, DGBlockTag.DeadBushSubstrate, this);
+			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.Leaves, this);
+			addBlocksToTag(BlockTags.LOGS, DGBlockTag.Logs, this);
+			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AxeMineable, this);
+			addBlocksToTag(BlockTags.PICKAXE_MINEABLE, DGBlockTag.PickaxeMineable, this);
+			addBlocksToTag(BlockTags.SAND, DGBlockTag.Sand, this);
+			addBlocksToTag(BlockTags.SHOVEL_MINEABLE, DGBlockTag.ShovelMineable, this);
+			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LogsThatBurn, this);
+			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.Stairs, this);
 
 
 		}
-		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag){
+		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator){
 
+			AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+				if(Arrays.stream(dataGenBlock.tags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag)){
+					generator.getOrCreateTagBuilder(tag).add(block);
+				}
+			});
 		}
 	}
 	private static String generateDefaultLang(Identifier reg)

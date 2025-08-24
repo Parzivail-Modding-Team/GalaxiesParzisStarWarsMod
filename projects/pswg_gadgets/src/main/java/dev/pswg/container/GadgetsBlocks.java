@@ -137,8 +137,7 @@ public class GadgetsBlocks
 	public static final DryingSlabBlock RUINED_WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("ruined_wet_pourstone_slab"), settings -> new DryingSlabBlock(CRACKED_POURSTONE.slab, 10, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final RuiningDryingSlabBlock WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("wet_pourstone_slab"), settings -> new RuiningDryingSlabBlock(POURSTONE.slab, 10, () -> RUINED_WET_POURSTONE_SLAB, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	// TODO: implement tags = { TrBlockTag.PickaxeMineable, TrBlockTag.DeadBushSubstrate } for "DESERT_LOAM"
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, tags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
 	// TODO: Implement tree & plant
@@ -162,8 +161,7 @@ public class GadgetsBlocks
 	public static final Block DESH_BLOCK = createBlock("desh_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block DIATIUM_ORE = createBlock("diatium_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
-	@DataGenBlock
-	// TODO: Implement @TarkinBlock(tags = { TrBlockTag.BlasterReflect })
+	@DataGenBlock(tags = DGBlockTag.BlasterReflect)
 	public static final Block DIATIUM_BLOCK = createBlock("diatium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block IONITE_ORE = createBlock("ionite_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
