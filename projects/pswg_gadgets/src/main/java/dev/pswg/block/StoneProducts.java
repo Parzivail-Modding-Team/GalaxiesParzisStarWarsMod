@@ -17,11 +17,8 @@ public class StoneProducts
 	public StoneProducts(AbstractBlock.Settings settings, String key)
 	{
 		this.block = Registrar.block(Gadgets.id(key), Block::new, settings);
-		this.slab = Registrar.block(Gadgets.id(key + "_slab"), VerticalSlabBlock::new, AbstractBlock.Settings.copy(block));
+		this.slab = Registrar.block(Gadgets.id(key + "_slab"), VerticalSlabBlock::new, settings);
 		this.stairs = Registrar.block(Gadgets.id(key + "_stairs"), blockSettings -> new StairsBlock(block.getDefaultState(), blockSettings), settings);
 		this.wall = Registrar.block(Gadgets.id(key + "_wall"), WallBlock::new, settings);
-		//this.stairs = new StairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));
-		//this.slab = new VerticalSlabBlock(AbstractBlock.Settings.copy(block));
-		//this.wall = new WallBlock(AbstractBlock.Settings.copy(block));
 	}
 }

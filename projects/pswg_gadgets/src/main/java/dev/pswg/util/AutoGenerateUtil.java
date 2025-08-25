@@ -3,6 +3,7 @@ package dev.pswg.util;
 import dev.pswg.block.DyedBlocks;
 import dev.pswg.block.NumberedBlocks;
 import dev.pswg.block.StoneProducts;
+import dev.pswg.block.WoodProducts;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.item.ArmorItems;
@@ -49,6 +50,15 @@ public class AutoGenerateUtil
 			consumer.accept(stoneProducts.block, annotation);
 			consumer.accept(stoneProducts.stairs, annotation);
 			consumer.accept(stoneProducts.wall, annotation);
+		});
+		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, WoodProducts.class, (woodProducts, annotation) -> {
+			consumer.accept(woodProducts.plank, annotation);
+			consumer.accept(woodProducts.door, annotation);
+			consumer.accept(woodProducts.trapdoor, annotation);
+			consumer.accept(woodProducts.gate, annotation);
+			consumer.accept(woodProducts.fence, annotation);
+			consumer.accept(woodProducts.slab, annotation);
+			consumer.accept(woodProducts.stairs, annotation);
 		});
 	}
 

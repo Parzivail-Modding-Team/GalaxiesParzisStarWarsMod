@@ -1,12 +1,10 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
-import dev.pswg.autoreg.BlockClientRegistrationData;
-import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
 import dev.pswg.container.entity.GadgetsEntities;
-import dev.pswg.datagen.BlockRenderLayer;
 import dev.pswg.models.*;
 import dev.pswg.particles.*;
 import dev.pswg.renderer.grenades.*;
@@ -19,7 +17,6 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
@@ -66,7 +63,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 		HandledScreens.register(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, ScrappingTableScreen::new);
 		HandledScreens.register(GadgetsScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
 
-		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(BlockClientRegistrationData.class, (block, clientData) -> {
+		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
 			switch (clientData.renderLayer())
 			{
 				case Transparent:	BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent());

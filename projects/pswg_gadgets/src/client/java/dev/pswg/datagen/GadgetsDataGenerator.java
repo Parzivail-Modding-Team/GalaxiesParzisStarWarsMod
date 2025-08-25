@@ -86,6 +86,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					registerStoneProducts(stoneProducts, blockStateModelGenerator);
 				}
 			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, WoodProducts.class, (woodProducts, dataGenBlock) -> {
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					registerWoodProducts(woodProducts, blockStateModelGenerator);
+				}
+			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedStoneProducts.class, (dyedStoneProducts, dataGenBlock) -> {
 				if (dataGenBlock.model() != DataGenBlockModel.None)
 				{
@@ -107,6 +113,18 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
 
 		}
+		private static void registerWoodProducts(WoodProducts woodProducts, BlockStateModelGenerator generator)
+		{
+			generator.registerCubeAllModelTexturePool(woodProducts.plank)
+			         .fence(woodProducts.fence)
+					 .fenceGate(woodProducts.gate)
+			         .stairs(woodProducts.stairs);
+			generator.registerDoor(woodProducts.door);
+			generator.registerTrapdoor(woodProducts.trapdoor);
+
+			registerVerticalSlabAllTextures(woodProducts.plank, woodProducts.slab, generator);
+
+		}
 		private static void registerAccumulatingBlock(Block block, BlockStateModelGenerator generator) {
 			var id = TextureMap.getId(block);
 
@@ -123,9 +141,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			switch (dataGenBlock.model())
 			{
-				case CubeAll -> registerCubeAllWithRotation(block, dataGenBlock, generator);
+				case CubeAll -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.CUBE_ALL, generator);
 				case Accumulating -> registerAccumulatingBlock(block, generator);
-				case Column -> generator.registerSingleton(block, TexturedModel.CUBE_COLUMN);
+				case Column -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
 				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
 				case Custom ->
 				{
@@ -140,11 +158,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				case Slab -> registerVerticalSlab(block, generator);
 			}
 		}
-		private static void registerCubeAllWithRotation(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator){
+		private static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Factory modelFactory, BlockStateModelGenerator generator){
 			switch (dataGenBlock.rotation()){
-				case Default -> generator.registerSimpleCubeAll(block);
+				case Default -> generator.registerSingleton(block, modelFactory);
 				case RandomRotationX -> {
-					Identifier id = TexturedModel.CUBE_ALL.upload(block, generator.modelCollector);
+					Identifier id = modelFactory.upload(block, generator.modelCollector);
 					var blockStateVariants = new ArrayList<BlockStateVariant>(4);
 					blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R0));
 					         blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R90));
@@ -152,6 +170,18 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					         blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270));
 
 					var blockStateSupplier = MultipartBlockStateSupplier.create(block).with(blockStateVariants);
+					generator.blockStateCollector.accept(blockStateSupplier);
+				}
+				case AxisRotated -> {
+					Identifier id = modelFactory.upload(block, generator.modelCollector);
+					var blockStateSupplier = VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(Properties.AXIS)
+						.register(Direction.Axis.Y, BlockStateVariant.create().put(VariantSettings.MODEL, id))
+						.register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, id)
+							.put(VariantSettings.X, VariantSettings.Rotation.R90))
+						.register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.MODEL, id)
+							.put(VariantSettings.X, VariantSettings.Rotation.R90)
+							.put(VariantSettings.Y, VariantSettings.Rotation.R90)
+					));
 					generator.blockStateCollector.accept(blockStateSupplier);
 				}
 			}
@@ -389,17 +419,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.Grenade, this);
 			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.Mine, this);
 			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
-			/*getOrCreateTagBuilder(GadgetsItems.Tags.GRENADES_TAG)
-					.add(GadgetsItems.THERMAL_DETONATOR_ITEM)
-					.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM)
-					.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM)
-					.add(GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM)
-					.add(GadgetsItems.IMPACT_GRENADE_ITEM)
-					.add(GadgetsItems.INFERNO_GRENADE_ITEM);
-
-			getOrCreateTagBuilder(GadgetsItems.Tags.MINES_TAG)
-					.add(GadgetsItems.PRESSURE_MINE_ITEM)
-					.add(GadgetsItems.TRIPWIRE_MINE_ITEM);*/
 
 			getOrCreateTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
 					.add(GadgetsItems.BESKAR_INGOT);

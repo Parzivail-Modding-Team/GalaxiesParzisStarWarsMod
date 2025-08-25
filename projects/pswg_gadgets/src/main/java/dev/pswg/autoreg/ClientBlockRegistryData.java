@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BlockClientRegistrationData
+public @interface ClientBlockRegistryData
 {
 	BlockRenderLayer renderLayer() default BlockRenderLayer.Default;
 }

@@ -1,8 +1,8 @@
 package dev.pswg.container;
 
 import dev.pswg.Gadgets;
-import dev.pswg.autoreg.BlockClientRegistrationData;
-import dev.pswg.autoreg.BlockServerRegistrationData;
+import dev.pswg.autoreg.ClientBlockRegistryData;
+import dev.pswg.autoreg.ServerBlockRegistryData;
 import dev.pswg.block.*;
 import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
@@ -20,6 +20,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ColorCode;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 
 public class GadgetsBlocks
@@ -140,13 +141,49 @@ public class GadgetsBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, tags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
-	// TODO: Implement tree & plants & item tags
+	// TODO: Implement tree & plants
 	/// Tree
 
-	@BlockServerRegistrationData(fireBurn = 30, fireSpread = 60)
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.CutoutMipped)
+	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
 	@DataGenBlock(tags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves )
 	public static final LeavesBlock SEQUOIA_LEAVES = createLeavesBlock("sequoia_leaves");
+
+	@DataGenBlock
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+	public static final Block SEQUOIA_WOOD = createBlock("sequoia_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	public static final PillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	public static final PillarBlock STRIPPED_SEQUOIA_LOG = createLogBlock("stripped_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	public static final PillarBlock MOSSY_SEQUOIA_LOG = createLogBlock("mossy_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
+	@DataGenBlock
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
+	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
+	//TODO: Add Japor leaves & find a way to override datagen texture for japor & sequoia logs
+
+	@DataGenBlock
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+	public static final Block JAPOR_WOOD = createBlock("japor_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model =DataGenBlockModel.Column, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	public static final PillarBlock JAPOR_LOG = createLogBlock("japor_log", MapColor.OAK_TAN, MapColor.BROWN);
+	@DataGenBlock
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
+	public static final WoodProducts JAPOR_PRODUCTS = new WoodProducts("japor", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
+
+	@DataGenBlock
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+	public static final Block TATOOINE_WOOD = createBlock("tatooine_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	public static final PillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.OAK_TAN, MapColor.BROWN);
+
 
 	/// Ores
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
@@ -205,56 +242,56 @@ public class GadgetsBlocks
 
 	/// GLASS
 
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	@DataGenBlock
 	public static final SelfConnectingGlassBlock IMPERIAL_GLASS = createSelfConnectingGlass("imperial_glass");
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock WHITE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("white_stained_imperial_glass", DyeColor.WHITE);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock ORANGE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("orange_stained_imperial_glass", DyeColor.ORANGE);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock MAGENTA_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("magenta_stained_imperial_glass", DyeColor.MAGENTA);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIGHT_BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_blue_stained_imperial_glass", DyeColor.LIGHT_BLUE);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock YELLOW_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("yellow_stained_imperial_glass", DyeColor.YELLOW);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIME_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("lime_stained_imperial_glass", DyeColor.LIME);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock PINK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("pink_stained_imperial_glass", DyeColor.PINK);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("gray_stained_imperial_glass", DyeColor.GRAY);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock LIGHT_GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_gray_stained_imperial_glass", DyeColor.LIGHT_GRAY);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock CYAN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("cyan_stained_imperial_glass", DyeColor.CYAN);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock PURPLE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("purple_stained_imperial_glass", DyeColor.PURPLE);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("blue_stained_imperial_glass", DyeColor.BLUE);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BROWN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("brown_stained_imperial_glass", DyeColor.BROWN);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock GREEN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("green_stained_imperial_glass", DyeColor.GREEN);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock RED_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("red_stained_imperial_glass", DyeColor.RED);
 	@DataGenBlock
-	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
 	public static final SelfConnectingStainedGlassBlock BLACK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("black_stained_imperial_glass", DyeColor.BLACK);
 
 	/// PANEL
@@ -457,6 +494,10 @@ public class GadgetsBlocks
 	{
 		return Registrar.block(Gadgets.id(key), Block::new, settings);
 	}
+	private static PillarBlock createLogBlock(String key, MapColor topMapColor, MapColor sideMapColor)
+	{
+		return Registrar.block(Gadgets.id(key), PillarBlock::new, AbstractBlock.Settings.create().mapColor(blockState -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	}
 	private static LeavesBlock createLeavesBlock(String key)
 	{
 		return Registrar.block(Gadgets.id(key), LeavesBlock::new, AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
@@ -529,10 +570,10 @@ public class GadgetsBlocks
 	public static void register()
 	{
 
-		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(BlockServerRegistrationData.class, GadgetsBlocks::registerServerDataBlock);
+		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(ServerBlockRegistryData.class, GadgetsBlocks::registerServerDataBlock);
 
 	}
-	private static void registerServerDataBlock(Block block, BlockServerRegistrationData serverData)
+	private static void registerServerDataBlock(Block block, ServerBlockRegistryData serverData)
 	{
 		if(serverData.fireBurn() != 0 || serverData.fireSpread() !=0)
 			FlammableBlockRegistry.getDefaultInstance().add(block, serverData.fireBurn(), serverData.fireSpread());

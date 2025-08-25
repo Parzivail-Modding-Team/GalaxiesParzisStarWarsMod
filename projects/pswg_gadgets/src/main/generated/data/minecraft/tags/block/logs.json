@@ -1,0 +1,9 @@
+{
+  "values": [
+    "pswg_gadgets:sequoia_log",
+    "pswg_gadgets:stripped_sequoia_log",
+    "pswg_gadgets:mossy_sequoia_log",
+    "pswg_gadgets:japor_log",
+    "pswg_gadgets:tatooine_log"
+  ]
+}
