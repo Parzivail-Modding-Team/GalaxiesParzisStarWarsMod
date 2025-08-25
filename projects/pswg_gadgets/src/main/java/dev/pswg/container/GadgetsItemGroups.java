@@ -1,8 +1,6 @@
 package dev.pswg.container;
 
 import dev.pswg.Gadgets;
-import dev.pswg.block.DyedBlocks;
-import dev.pswg.block.StoneProducts;
 import dev.pswg.datagen.DataGenBlock;
 import dev.pswg.datagen.DataGenItem;
 import dev.pswg.datagen.DataGenItemGroup;
@@ -13,7 +11,6 @@ import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -85,30 +82,9 @@ public class GadgetsItemGroups
 
 	public static void addBlocks(FabricItemGroupEntries itemGroup, DataGenItemGroup group)
 	{
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (block, dataGenBlock) ->
-		{
-			if (dataGenBlock.itemGroup() == group)
+		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+			if(dataGenBlock.itemGroup() == group)
 				itemGroup.add(block);
-		});
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (products, dataGenBlock) ->
-		{
-			if (dataGenBlock.itemGroup() == group)
-			{
-				itemGroup.add(products.block);
-				itemGroup.add(products.slab);
-				itemGroup.add(products.stairs);
-				itemGroup.add(products.wall);
-			}
-		});
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (blocks, dataGenBlock) ->
-		{
-			if (dataGenBlock.itemGroup() == group)
-			{
-				for (Block block : blocks.values())
-				{
-					itemGroup.add(block);
-				}
-			}
 		});
 	}
 }
