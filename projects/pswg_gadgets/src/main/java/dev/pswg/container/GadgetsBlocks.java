@@ -140,7 +140,14 @@ public class GadgetsBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, tags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
-	// TODO: Implement tree & plant
+	// TODO: Implement tree & plants & item tags
+	/// Tree
+
+	@BlockServerRegistrationData(fireBurn = 30, fireSpread = 60)
+	@BlockClientRegistrationData(renderLayer = BlockRenderLayer.CutoutMipped)
+	@DataGenBlock(tags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves )
+	public static final LeavesBlock SEQUOIA_LEAVES = createLeavesBlock("sequoia_leaves");
+
 	/// Ores
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block BESKAR_ORE = createBlock("beskar_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
@@ -449,6 +456,10 @@ public class GadgetsBlocks
 	private static Block createBlock(String key, AbstractBlock.Settings settings)
 	{
 		return Registrar.block(Gadgets.id(key), Block::new, settings);
+	}
+	private static LeavesBlock createLeavesBlock(String key)
+	{
+		return Registrar.block(Gadgets.id(key), LeavesBlock::new, AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
 	}
 	private static AccumulatingBlock createAccumulatingBlock(String key, AbstractBlock.Settings settings, Block fullBlock){
 		return Registrar.block(Gadgets.id(key), blockSettings -> new AccumulatingBlock(settings, fullBlock::getPlacementState), settings);

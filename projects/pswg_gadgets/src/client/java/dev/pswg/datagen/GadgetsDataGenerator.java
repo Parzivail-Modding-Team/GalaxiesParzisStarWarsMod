@@ -23,6 +23,7 @@ import net.minecraft.client.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -385,7 +386,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			getOrCreateTagBuilder(GadgetsItems.Tags.GRENADES_TAG)
+			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.Grenade, this);
+			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.Mine, this);
+			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
+			/*getOrCreateTagBuilder(GadgetsItems.Tags.GRENADES_TAG)
 					.add(GadgetsItems.THERMAL_DETONATOR_ITEM)
 					.add(GadgetsItems.FRAGMENTATION_GRENADE_ITEM)
 					.add(GadgetsItems.NERVE_GAS_GRENADE_ITEM)
@@ -395,7 +399,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			getOrCreateTagBuilder(GadgetsItems.Tags.MINES_TAG)
 					.add(GadgetsItems.PRESSURE_MINE_ITEM)
-					.add(GadgetsItems.TRIPWIRE_MINE_ITEM);
+					.add(GadgetsItems.TRIPWIRE_MINE_ITEM);*/
 
 			getOrCreateTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
 					.add(GadgetsItems.BESKAR_INGOT);
@@ -403,6 +407,18 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(GadgetsItems.PLASTEEL_INGOT);
 			getOrCreateTagBuilder(GadgetsItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
 					.add(GadgetsItems.TITANIUM_INGOT);
+		}
+		private static void addItemsToTag(TagKey<Item> tag, DGItemTag datagenTag, ItemTagGenerator generator){
+
+			AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+				if(Arrays.stream(dataGenBlock.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
+					generator.getOrCreateTagBuilder(tag).add(block.asItem());
+
+			});
+			AutoGenerateUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
+				if(Arrays.stream(dataGenItem.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
+					generator.getOrCreateTagBuilder(tag).add(item);
+			});
 		}
 	}
 	/**

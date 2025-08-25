@@ -12,6 +12,7 @@ public @interface DataGenItem
 	boolean genModel() default true;
 
 	boolean wiz() default false;
+	DGItemTag[] itemTags() default {};
 
 	ItemModel model() default ItemModel.generated;
 

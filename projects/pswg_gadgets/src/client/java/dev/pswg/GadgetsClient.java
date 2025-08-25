@@ -67,8 +67,11 @@ public class GadgetsClient implements GalaxiesClientAddon
 		HandledScreens.register(GadgetsScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
 
 		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(BlockClientRegistrationData.class, (block, clientData) -> {
-			if (clientData.renderLayer() == BlockRenderLayer.Transparent)
-				BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent());
+			switch (clientData.renderLayer())
+			{
+				case Transparent:	BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent());
+				case CutoutMipped:  BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutoutMipped());
+			}
 		});
 
 		Gadgets.LOGGER.info("Client module initialized");

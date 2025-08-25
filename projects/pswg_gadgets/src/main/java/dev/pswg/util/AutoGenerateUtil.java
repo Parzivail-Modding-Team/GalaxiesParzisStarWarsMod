@@ -4,15 +4,36 @@ import dev.pswg.block.DyedBlocks;
 import dev.pswg.block.NumberedBlocks;
 import dev.pswg.block.StoneProducts;
 import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.container.GadgetsItems;
+import dev.pswg.item.ArmorItems;
+import dev.pswg.item.DyedItems;
+import dev.pswg.item.NumberedItems;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
 public class AutoGenerateUtil
 {
+	public static <TA extends Annotation> void consumeAnnotatedGadgetsItems(Class<TA> annotationClazz, BiConsumer<Item, TA> consumer){
+		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsItems.class, Item.class, consumer);
+		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsItems.class, DyedItems.class, (dyedItems, ta) ->{
+			for(Item item: dyedItems.values())
+				consumer.accept(item, ta);
+		});
+		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsItems.class, ArmorItems.class, (armorItems, ta) -> {
+			consumer.accept(armorItems.helmet, ta);
+			consumer.accept(armorItems.chestplate, ta);
+			consumer.accept(armorItems.leggings, ta);
+			consumer.accept(armorItems.boots, ta);
+		});
+		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsItems.class, NumberedItems.class, (items, ta) -> {
+			for(Item item: items)
+				consumer.accept(item, ta);
+		});
+	}
 	public static <TA extends Annotation> void consumeAnnotatedGadgetsBlocks(Class<TA> annotationClazz, BiConsumer<Block, TA> consumer){
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, Block.class, consumer);
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, NumberedBlocks.class, (numberedBlocks, annotation) -> {

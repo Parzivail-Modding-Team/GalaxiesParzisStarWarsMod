@@ -3,5 +3,6 @@ package dev.pswg.datagen;
 public enum BlockRenderLayer
 {
 	Default,
-	Transparent
+	Transparent,
+	CutoutMipped
 }
