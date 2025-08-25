@@ -346,7 +346,7 @@ public class GadgetsBlocks
 	@DataGenBlock
 	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_B = createNumberedBlocks("black_imperial_panel_pattern_b", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 	@DataGenBlock
-	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_C = createNumberedBlocks("black_imperial_panel_pattern_c", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_C = createNumberedBlocks("black_imperial_panel_pattern_c", 2, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 	@DataGenBlock
 	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_D = createNumberedBlocks("black_imperial_panel_pattern_d", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 	@DataGenBlock
