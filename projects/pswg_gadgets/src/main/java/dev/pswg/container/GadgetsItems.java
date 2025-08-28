@@ -53,6 +53,7 @@ public class GadgetsItems
 				Identifier.of(Gadgets.MODID, "priming_time"),
 				ComponentType.<Long>builder().codec(Codec.LONG).build()
 		);
+
 		public static final ComponentType<Integer> METAL_COMPONENT = Registry.register(
 				Registries.DATA_COMPONENT_TYPE,
 				Identifier.of(Gadgets.MODID, "metal_component"),
@@ -77,6 +78,11 @@ public class GadgetsItems
 				Registries.DATA_COMPONENT_TYPE,
 				Identifier.of(Gadgets.MODID, "scrap"),
 				ComponentType.<Boolean>builder().codec(Codec.BOOL).build()
+		);
+		public static final ComponentType<Integer> CUTTING_PROGRESS = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "cutting_progress"),
+				ComponentType.<Integer>builder().codec(Codec.INT).build()
 		);
 		public static final ConsumableComponent DEATH_STICK_RED = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 1), 0.99F)).consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200, 1), 1F)).build();
 		public static final ConsumableComponent DEATH_STICK_YELLOW = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.99F)).build();
@@ -120,7 +126,7 @@ public class GadgetsItems
 
 	///  SCRAPPING TOOLS
 	@DataGenItem(wiz = true, langOverride = "F-187 Fusioncutter")
-	public static final Item CUTTER_ITEM = registerSimpleItem("cutter", new Item.Settings().maxDamage(100));
+	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), LaserCutterItem::new, new Item.Settings().maxDamage(100));
 	@DataGenItem(wiz = true, langOverride = "FastTurn-3 Hydrospanner")
 	public static final Item SPANNER_ITEM = registerSimpleItem("spanner", new Item.Settings().maxDamage(100));
 	@DataGenItem(wiz = true, langOverride = "ReliaCharge Power Calibrator")

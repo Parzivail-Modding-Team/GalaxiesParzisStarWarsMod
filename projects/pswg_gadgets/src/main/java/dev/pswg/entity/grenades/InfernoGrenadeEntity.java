@@ -89,7 +89,6 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		world.addParticle(scorchParticleType,
 		                  true,
 		                  true,
-
 		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (1 / 4f),
 		                  pos.getY() + 0.5f + unitVec.y / 2f + (unitVec.x + unitVec.z) * (1 / 4f),
 		                  pos.getZ() + 0.5f + unitVec.z / 2f + (unitVec.x + unitVec.y) * (1 / 4f),
@@ -100,7 +99,6 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		world.addParticle(scorchParticleType,
 		                  true,
 		                  true,
-
 		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (1 / 4f),
 		                  pos.getY() + 0.5f + unitVec.y / 2f + (unitVec.x + unitVec.z) * (-1 / 4f),
 		                  pos.getZ() + 0.5f + unitVec.z / 2f + (unitVec.x + unitVec.y) * (-1 / 4f),
@@ -111,7 +109,6 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		world.addParticle(scorchParticleType,
 		                  true,
 		                  true,
-
 		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (-1 / 4f),
 		                  pos.getY() + 0.5f + unitVec.y / 2f + (unitVec.x + unitVec.z) * (1 / 4f),
 		                  pos.getZ() + 0.5f + unitVec.z / 2f + (unitVec.x + unitVec.y) * (-1 / 4f),
@@ -122,7 +119,6 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		world.addParticle(scorchParticleType,
 		                  true,
 		                  true,
-
 		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (-1 / 4f),
 		                  pos.getY() + 0.5f + unitVec.y / 2f + (unitVec.x + unitVec.z) * (-1 / 4f),
 		                  pos.getZ() + 0.5f + unitVec.z / 2f + (unitVec.x + unitVec.y) * (1 / 4f),

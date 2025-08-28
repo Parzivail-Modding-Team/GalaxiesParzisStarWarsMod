@@ -22,6 +22,8 @@ public class GadgetsParticleTypes
 	public static final SimpleParticleType SHORT_FLAME_PARTICLE = registerSimple("short_flame");
 	public static final SimpleParticleType SMALL_SHORT_FLAME_PARTICLE = registerSimple("small_short_flame");
 
+	public static final SimpleParticleType LASER_CUT_PARTICLE = registerSimple("laser_cut");
+
 	public static final ParticleType<GasParticleEffect> SMOKE_PARTICLE = registerGas("smoke");
 	public static final ParticleType<GasParticleEffect> NERVE_GAS_PARTICLE = registerGas("nerve_gas");
 

@@ -75,7 +75,7 @@ public class GadgetsBlocks
 	public static final StoneProducts MASSASSI = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone");
 	@DataGenBlock
 	public static final Block MASSASSI_SMOOTH = createBlock("smooth_massassi_stone", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.Slab)
 	public static final VerticalSlabBlock MASSASSI_SMOOTH_SLAB = createSlab("smooth_massassi_stone_slab", AbstractBlock.Settings.copy(MASSASSI_SMOOTH));
 	@DataGenBlock
 	public static final StoneProducts MASSASSI_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone_bricks");
@@ -83,7 +83,7 @@ public class GadgetsBlocks
 	public static final Block MASSASSI_CHISELED_BRICKS = createBlock("chiseled_massassi_stone_bricks", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
 	@DataGenBlock
 	public static final Block MOSSY_MASSASSI_SMOOTH = createBlock("mossy_smooth_massassi_stone", AbstractBlock.Settings.create().strength(2F).requiresTool());
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.Slab)
 	public static final VerticalSlabBlock MOSSY_MASSASSI_SMOOTH_SLAB = createSlab("mossy_smooth_massassi_stone_slab", AbstractBlock.Settings.copy(MOSSY_MASSASSI_SMOOTH));
 	@DataGenBlock
 	public static final StoneProducts MOSSY_MASSASSI_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "mossy_massassi_stone_bricks");

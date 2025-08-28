@@ -156,6 +156,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				}
 				case LightingPanel -> registerLightingPanel(block, generator);
 				case Slab -> registerVerticalSlab(block, generator);
+				case Stairs -> registerStairs(block, generator);
 			}
 		}
 		private static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Factory modelFactory, BlockStateModelGenerator generator){
@@ -185,6 +186,15 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					generator.blockStateCollector.accept(blockStateSupplier);
 				}
 			}
+		}
+		private static void registerStairs(Block stairs, BlockStateModelGenerator generator){
+			Identifier stairsId = Models.STAIRS.upload(stairs, TextureMap.all(stairs), generator.modelCollector);
+			Identifier stairsOuterId = Models.OUTER_STAIRS.upload(stairs, TextureMap.all(stairs), generator.modelCollector);
+			Identifier stairsInnerId = Models.INNER_STAIRS.upload(stairs, TextureMap.all(stairs), generator.modelCollector);
+
+			generator.blockStateCollector.accept(BlockStateModelGenerator.createStairsBlockState(stairs, stairsInnerId, stairsId, stairsOuterId));
+			generator.registerItemModel(stairs);
+
 		}
 
 		private static void registerVerticalSlab(Block slab, BlockStateModelGenerator generator){
