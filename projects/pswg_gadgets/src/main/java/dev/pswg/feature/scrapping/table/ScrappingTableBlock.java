@@ -1,4 +1,4 @@
-package dev.pswg.feature.scrapping;
+package dev.pswg.feature.scrapping.table;
 
 import com.mojang.serialization.MapCodec;
 import dev.pswg.container.GadgetsBlockEntities;

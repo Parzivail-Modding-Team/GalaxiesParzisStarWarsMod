@@ -1,13 +1,15 @@
 package dev.pswg.container;
 
 import dev.pswg.Gadgets;
-import dev.pswg.feature.scrapping.ScrappingTableRecipe;
+import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipe;
+import dev.pswg.feature.scrapping.table.ScrappingTableRecipe;
 import dev.pswg.registry.Registrar;
 import net.minecraft.recipe.RecipeSerializer;
 
 public class GadgetsRecipeSerializers
 {
 	public static final RecipeSerializer<ScrappingTableRecipe> SCRAPPING_SERIALIZER = Registrar.recipeSerializer(Gadgets.id("scrapping"), new ScrappingTableRecipe.Serializer<>(ScrappingTableRecipe::new));
+	public static final RecipeSerializer<LaserCuttingRecipe> LASER_CUTTING_SERIALIZER = Registrar.recipeSerializer(Gadgets.id("laser_cutting"), new LaserCuttingRecipe.Serializer<>(LaserCuttingRecipe::new));
 
 	public static void register()
 	{

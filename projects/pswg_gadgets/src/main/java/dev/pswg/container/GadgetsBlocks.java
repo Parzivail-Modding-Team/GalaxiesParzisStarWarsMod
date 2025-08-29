@@ -7,7 +7,7 @@ import dev.pswg.block.*;
 import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.datagen.*;
-import dev.pswg.feature.scrapping.ScrappingTableBlock;
+import dev.pswg.feature.scrapping.table.ScrappingTableBlock;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.AutoGenerateUtil;
 import dev.pswg.util.BlockUtil;

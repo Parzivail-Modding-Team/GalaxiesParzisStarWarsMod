@@ -1,4 +1,4 @@
-package dev.pswg.feature.scrapping;
+package dev.pswg.feature.scrapping.table;
 
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;

@@ -6,6 +6,7 @@ import dev.pswg.datagen.DGItemTag;
 import dev.pswg.datagen.DataGenItem;
 import dev.pswg.datagen.DataGenItemGroup;
 import dev.pswg.datagen.ItemModel;
+import dev.pswg.feature.scrapping.cutter.LaserCutterItem;
 import dev.pswg.item.*;
 import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;

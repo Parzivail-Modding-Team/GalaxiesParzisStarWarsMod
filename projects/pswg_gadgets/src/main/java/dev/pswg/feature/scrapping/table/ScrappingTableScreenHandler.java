@@ -1,4 +1,4 @@
-package dev.pswg.feature.scrapping;
+package dev.pswg.feature.scrapping.table;
 
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsScreenHandlerTypes;

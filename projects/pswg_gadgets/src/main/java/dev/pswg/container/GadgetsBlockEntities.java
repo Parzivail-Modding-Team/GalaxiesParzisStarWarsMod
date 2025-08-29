@@ -2,10 +2,9 @@ package dev.pswg.container;
 
 import dev.pswg.Gadgets;
 import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
-import dev.pswg.feature.scrapping.ScrappingTableBlockEntity;
+import dev.pswg.feature.scrapping.table.ScrappingTableBlockEntity;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.BlockUtil;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 
 public class GadgetsBlockEntities

@@ -1,4 +1,4 @@
-package dev.pswg.feature.scrapping;
+package dev.pswg.feature.scrapping.table;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.input.RecipeInput;

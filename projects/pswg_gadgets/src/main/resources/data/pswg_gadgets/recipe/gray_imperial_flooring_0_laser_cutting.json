@@ -1,0 +1,12 @@
+{
+    "type": "pswg_gadgets:laser_cutting",
+    "ingredient": "pswg_gadgets:gray_imperial_flooring_0",
+    "primary_result": {
+        "id": "pswg_gadgets:durasteel_ingot"
+    },
+    "secondary_result": {
+                "id": "pswg_gadgets:durasteel_nugget",
+                "count": 3
+    },
+    "secondary_chance": 0.35
+}

@@ -1,7 +1,7 @@
 package dev.pswg.container;
 
 import dev.pswg.Gadgets;
-import dev.pswg.feature.scrapping.ScrappingTableScreenHandler;
+import dev.pswg.feature.scrapping.table.ScrappingTableScreenHandler;
 import dev.pswg.registry.Registrar;
 import dev.pswg.screenHandler.CorrugatedCrateHandler;
 import dev.pswg.screenHandler.CrateGenericSmallScreenHandler;

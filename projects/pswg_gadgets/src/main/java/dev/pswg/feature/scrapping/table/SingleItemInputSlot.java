@@ -1,7 +1,6 @@
-package dev.pswg.feature.scrapping;
+package dev.pswg.feature.scrapping.table;
 
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
 public class SingleItemInputSlot extends Slot

@@ -2,7 +2,7 @@ package dev.pswg.screens;
 
 import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
-import dev.pswg.feature.scrapping.ScrappingTableScreenHandler;
+import dev.pswg.feature.scrapping.table.ScrappingTableScreenHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.RenderLayer;
