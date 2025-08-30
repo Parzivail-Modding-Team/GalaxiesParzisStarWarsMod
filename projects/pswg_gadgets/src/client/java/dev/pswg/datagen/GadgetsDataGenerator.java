@@ -7,6 +7,8 @@ import dev.pswg.container.GadgetsItemGroups;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
 import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
+import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
+import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
@@ -27,6 +29,7 @@ import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -668,8 +671,25 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_FLOORING_PATTERN_2);
 					createPanelCuttingRecipe(GadgetsBlocks.LAB_WALL);
 
-
-
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DURASTEEL_ROD, new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 6), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.PLASTEEL_ROD, new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 6), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.BALL_BEARING, new ItemStack(GadgetsItems.DURASTEEL_INGOT), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DESH_CUP, new ItemStack(GadgetsItems.DESH_NUGGET, 6), new ItemStack(GadgetsItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DURASTEEL_CUP, new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 6), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DESH_WIRE, new ItemStack(GadgetsItems.DESH_NUGGET, 6), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DESH_COIL, new ItemStack(GadgetsItems.DESH_INGOT, 2), new ItemStack(GadgetsItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GadgetsItems.DESH_WIRE, new ItemStack(GadgetsItems.DESH_INGOT), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 6), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GadgetsItems.DESH_INGOT), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GadgetsItems.DESH_WIRE), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GadgetsItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GadgetsItems.IONITE_INGOT), new ItemStack(GadgetsItems.IONITE_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DISPLAY_PANEL, new ItemStack(GadgetsItems.PLASTEEL_INGOT), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.DISPLAY_PANEL, new ItemStack(GadgetsItems.CHROMIUM_INGOT), new ItemStack(GadgetsItems.CHROMIUM_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GadgetsItems.DISPLAY_PANEL, new ItemStack(GadgetsItems.DESH_WIRE), new ItemStack(GadgetsItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.ELECTRIC_MOTOR, new ItemStack(GadgetsItems.TURBINE), new ItemStack(GadgetsItems.DURASTEEL_ROD, 2), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GadgetsItems.ELECTRIC_MOTOR, new ItemStack(GadgetsItems.DESH_COIL), new ItemStack(GadgetsItems.DESH_WIRE, 3), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.LIGHT_PANEL, new ItemStack(GadgetsItems.PLASTEEL_INGOT), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.LIGHT_PANEL, new ItemStack(GadgetsItems.DESH_WIRE), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.TURBINE, new ItemStack(GadgetsItems.DURASTEEL_INGOT, 2), new ItemStack(GadgetsItems.DURASTEEL_INGOT), 0.25f);
 
 				}
 
@@ -696,6 +716,32 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				{
 					RegistryWrapper.Impl<Item> itemLookup = registries.getOrThrow(RegistryKeys.ITEM);
 					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.ofItem(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(input.asItem().toString() + "_cutting")));
+				}
+
+				public void createScrappingRecipe(ScrappingToolType tool, ItemConvertible input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+				{
+					RegistryWrapper.Impl<Item> itemLookup = registries.getOrThrow(RegistryKeys.ITEM);
+					Ingredient toolIngredient = null;
+					String suffix = "";
+					switch (tool)
+					{
+						case Cutter ->
+						{
+							toolIngredient = Ingredient.ofItem(GadgetsItems.CUTTER_ITEM);
+							suffix = "_cutter";
+						}
+						case Spanner ->
+						{
+							toolIngredient = Ingredient.ofItem(GadgetsItems.SPANNER_ITEM);
+							suffix = "_spanner";
+						}
+						case Calibrator ->
+						{
+							toolIngredient = Ingredient.ofItem(GadgetsItems.CALIBRATOR_ITEM);
+							suffix = "_calibrator";
+						}
+					}
+					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.ofItem(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(input.asItem().toString() + "_scrapping" + suffix)));
 				}
 			};
 		}

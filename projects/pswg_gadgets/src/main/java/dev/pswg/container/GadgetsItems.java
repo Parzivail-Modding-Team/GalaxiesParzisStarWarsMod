@@ -121,8 +121,6 @@ public class GadgetsItems
 	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Settings());
 
 	@DataGenItem
-	public static final Item SCRAP_ITEM = registerSimpleItem("scrap", new Item.Settings().component(Components.METAL_COMPONENT, 4).component(Components.PLASTIC_COMPONENT, 3).component(Components.TECH_COMPONENT, 1).component(Components.SCRAP, true));
-	@DataGenItem
 	public static final Item BROKEN_SMALL_POWER_PACK_ITEM = registerSimpleItem("broken_small_power_pack", new Item.Settings().component(Components.METAL_COMPONENT, 1).component(Components.ENERGY_COMPONENT, 3).component(Components.TECH_COMPONENT, 2).component(Components.SCRAP, true));
 
 	///  SCRAPPING TOOLS
