@@ -80,10 +80,10 @@ public class GadgetsItems
 				Identifier.of(Gadgets.MODID, "scrap"),
 				ComponentType.<Boolean>builder().codec(Codec.BOOL).build()
 		);
-		public static final ComponentType<Integer> CUTTING_PROGRESS = Registry.register(
+		public static final ComponentType<Float> CUTTING_PROGRESS = Registry.register(
 				Registries.DATA_COMPONENT_TYPE,
 				Identifier.of(Gadgets.MODID, "cutting_progress"),
-				ComponentType.<Integer>builder().codec(Codec.INT).build()
+				ComponentType.<Float>builder().codec(Codec.FLOAT).build()
 		);
 		public static final ConsumableComponent DEATH_STICK_RED = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 1), 0.99F)).consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200, 1), 1F)).build();
 		public static final ConsumableComponent DEATH_STICK_YELLOW = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.99F)).build();

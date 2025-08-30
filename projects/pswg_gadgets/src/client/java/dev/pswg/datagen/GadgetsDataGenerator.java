@@ -6,6 +6,7 @@ import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItemGroups;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.Galaxies;
+import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
@@ -14,13 +15,21 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.data.*;
+import net.minecraft.data.recipe.RecipeExporter;
+import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
@@ -50,6 +59,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		pack.addProvider(ItemTagGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ModelGenerator::new);
+		pack.addProvider(RecipesGenerator::new);
 	}
 
 	/**
@@ -560,6 +570,57 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			});
 		}
 	}
+
+	private static class RecipesGenerator extends FabricRecipeProvider
+	{
+		public RecipesGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture)
+		{
+			super(output, registriesFuture);
+		}
+
+		@Override
+		protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter)
+		{
+			return new RecipeGenerator(registryLookup, exporter)
+			{
+
+				@Override
+				public void generate()
+				{
+					RegistryWrapper.Impl<Item> itemLookup = registries.getOrThrow(RegistryKeys.ITEM);
+					createPanelStoneProductsCuttingRecipes(itemLookup, GadgetsBlocks.BLACK_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(itemLookup, GadgetsBlocks.GRAY_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(itemLookup, GadgetsBlocks.WHITE_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(itemLookup, GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_BLANK);
+				}
+
+				public void createPanelStoneProductsCuttingRecipes(RegistryWrapper.Impl<Item> itemLookup, StoneProducts panelProducts)
+				{
+					createPanelCuttingRecipe(itemLookup, panelProducts.block);
+					createPanelCuttingRecipe(itemLookup, panelProducts.stairs);
+					createPanelCuttingRecipe(itemLookup, panelProducts.slab);
+					createPanelCuttingRecipe(itemLookup, panelProducts.wall);
+				}
+
+				public void createPanelCuttingRecipe(RegistryWrapper.Impl<Item> itemLookup, ItemConvertible panel)
+				{
+					createLaserCuttingRecipe(itemLookup, panel, new ItemStack(GadgetsItems.DURASTEEL_INGOT), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
+				}
+
+				public void createLaserCuttingRecipe(RegistryWrapper.Impl<Item> itemLookup, ItemConvertible input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+				{
+					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.ofItem(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(input.asItem().toString() + "_cutting")));
+				}
+			};
+		}
+
+		@Override
+		public String getName()
+		{
+			return "PSWGGadgetsRecipeProvider";
+		}
+	}
+
 	private static String generateDefaultLang(Identifier reg)
 	{
 		var path = reg.getPath();

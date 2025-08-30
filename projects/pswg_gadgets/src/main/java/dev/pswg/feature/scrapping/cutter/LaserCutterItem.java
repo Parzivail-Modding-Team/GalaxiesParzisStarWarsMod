@@ -6,6 +6,8 @@ import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsRecipeTypes;
 import dev.pswg.feature.scrapping.table.ScrappingTableRecipe;
 import dev.pswg.feature.scrapping.table.ScrappingTableRecipeInput;
+import net.minecraft.block.SideShapeType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,15 +42,17 @@ public class LaserCutterItem extends Item
 		World world = context.getWorld();
 		BlockPos blockPos = context.getBlockPos();
 		Vec3d centerBlockPos = blockPos.toCenterPos();
-		stack.set(GadgetsItems.Components.CUTTING_PROGRESS, stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 0) + 1);
+		boolean isSolidFace = world.getBlockState(blockPos).isSideSolid(world, blockPos, context.getSide(), SideShapeType.CENTER);
+		stack.set(GadgetsItems.Components.CUTTING_PROGRESS, stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 0f) + (stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1)));
 
-		int cuttingProgress = stack.get(GadgetsItems.Components.CUTTING_PROGRESS);
+		float cuttingProgress = stack.get(GadgetsItems.Components.CUTTING_PROGRESS);
 		if(cuttingProgress % (MAX_CUTTING_PROGRESS/16f) == 0){
 			Direction dir = context.getSide();
 			Vector3f unitVector = dir.getUnitVector();
 			Vec3d pos = blockPos.toCenterPos();
 
-			world.addParticle(
+			if (isSolidFace)
+				world.addParticle(
 					GadgetsParticleTypes.LASER_CUT_PARTICLE,
 					true,
 					true,
@@ -59,7 +63,8 @@ public class LaserCutterItem extends Item
 					unitVector.y,
 					unitVector.z);
 		}
-		if(cuttingProgress >= MAX_CUTTING_PROGRESS - 1 ){
+		if (cuttingProgress >= MAX_CUTTING_PROGRESS - 1)
+		{
 
 			if (world instanceof ServerWorld serverWorld)
 			{
@@ -71,12 +76,8 @@ public class LaserCutterItem extends Item
 					if (player != null)
 					{
 						world.spawnEntity(new ItemEntity(world, centerBlockPos.getX(), centerBlockPos.getY(), centerBlockPos.getZ(), recipeEntry.value().getPrimaryResult().copy()));
-						//player.giveItemStack(recipeEntry.value().getPrimaryResult().copy());
 						if (Math.abs(world.random.nextFloat()) <= recipeEntry.value().getSecondaryChance())
-						{
 							world.spawnEntity(new ItemEntity(world, centerBlockPos.getX(), centerBlockPos.getY(), centerBlockPos.getZ(), recipeEntry.value().craftSecondary()));
-							//player.giveItemStack(recipeEntry.value().craftSecondary());
-						}
 						world.breakBlock(blockPos, false);
 					}
 				}
@@ -84,8 +85,10 @@ public class LaserCutterItem extends Item
 					world.breakBlock(blockPos, true);
 				stack.remove(GadgetsItems.Components.CUTTING_PROGRESS);
 			}
+			if (stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1 < stack.get(DataComponentTypes.MAX_DAMAGE))
+				stack.set(DataComponentTypes.DAMAGE, stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1);
 		}
-		return ActionResult.SUCCESS;
+		return ActionResult.CONSUME;
 	}
 
 	@Override
