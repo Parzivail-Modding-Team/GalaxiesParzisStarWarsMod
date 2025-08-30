@@ -587,28 +587,114 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				@Override
 				public void generate()
 				{
+					createPanelStoneProductsCuttingRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(GadgetsBlocks.GRAY_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(GadgetsBlocks.WHITE_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_BLANK);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_TILE);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL_1);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL_2);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL_1);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL_2);
+					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_PANEL_TALL_1);
+					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_PANEL_TALL_2);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_1);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_2);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_3);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_4);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_5);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_PANEL_1);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_PANEL_2);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_PANEL_3);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_1);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_2);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_1);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_2);
+					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL);
+					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL_1);
+					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL_2);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_BORDERED);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_SPLIT);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_THIN_BORDERED);
+					createPanelCuttingRecipe(GadgetsBlocks.EXTERNAL_IMPERIAL_PLATING);
+					createPanelCuttingRecipe(GadgetsBlocks.LARGE_IMPERIAL_PLATING);
+					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_LARGE_IMPERIAL_PLATING);
+					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_LARGE_IMPERIAL_PLATING);
+					createPanelCuttingRecipe(GadgetsBlocks.LARGE_LIGHT_GRAY_IMPERIAL_PLATING);
+					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_A);
+					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_B);
+					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_C);
+					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_D);
+					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_E);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_3);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_4);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_5);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
+					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_3);
+					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_3);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_4);
+					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_4);
+					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_4);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_5);
+					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_5);
+					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_5);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_6);
+					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_6);
+					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_6);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_7);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_8);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_9);
+					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_9);
+					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_9);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_10);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_11);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_12);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_13);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_FLOORING_0);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_FLOORING_3);
+					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_FLOORING_4);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_0);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_3);
+					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_4);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_FLOORING_3);
+					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_FLOORING_4);
+					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_FLOORING_3);
+					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_FLOORING_4);
+					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_FLOORING_PATTERN_1);
+					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_FLOORING_PATTERN_2);
+					createPanelCuttingRecipe(GadgetsBlocks.LAB_WALL);
+
+
+
+
+				}
+
+				public void createNumberedPanelsRecipes(NumberedBlocks numberedPanels)
+				{
+					for (Block panel : numberedPanels)
+						createPanelCuttingRecipe(panel);
+				}
+
+				public void createPanelStoneProductsCuttingRecipes(StoneProducts panelProducts)
+				{
+					createPanelCuttingRecipe(panelProducts.block);
+					createPanelCuttingRecipe(panelProducts.stairs);
+					createPanelCuttingRecipe(panelProducts.slab);
+					createPanelCuttingRecipe(panelProducts.wall);
+				}
+
+				public void createPanelCuttingRecipe(ItemConvertible panel)
+				{
+					createLaserCuttingRecipe(panel, new ItemStack(GadgetsItems.DURASTEEL_INGOT), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
+				}
+
+				public void createLaserCuttingRecipe(ItemConvertible input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+				{
 					RegistryWrapper.Impl<Item> itemLookup = registries.getOrThrow(RegistryKeys.ITEM);
-					createPanelStoneProductsCuttingRecipes(itemLookup, GadgetsBlocks.BLACK_IMPERIAL_PANEL_BLANK);
-					createPanelStoneProductsCuttingRecipes(itemLookup, GadgetsBlocks.GRAY_IMPERIAL_PANEL_BLANK);
-					createPanelStoneProductsCuttingRecipes(itemLookup, GadgetsBlocks.WHITE_IMPERIAL_PANEL_BLANK);
-					createPanelStoneProductsCuttingRecipes(itemLookup, GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_BLANK);
-				}
-
-				public void createPanelStoneProductsCuttingRecipes(RegistryWrapper.Impl<Item> itemLookup, StoneProducts panelProducts)
-				{
-					createPanelCuttingRecipe(itemLookup, panelProducts.block);
-					createPanelCuttingRecipe(itemLookup, panelProducts.stairs);
-					createPanelCuttingRecipe(itemLookup, panelProducts.slab);
-					createPanelCuttingRecipe(itemLookup, panelProducts.wall);
-				}
-
-				public void createPanelCuttingRecipe(RegistryWrapper.Impl<Item> itemLookup, ItemConvertible panel)
-				{
-					createLaserCuttingRecipe(itemLookup, panel, new ItemStack(GadgetsItems.DURASTEEL_INGOT), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
-				}
-
-				public void createLaserCuttingRecipe(RegistryWrapper.Impl<Item> itemLookup, ItemConvertible input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
-				{
 					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.ofItem(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(input.asItem().toString() + "_cutting")));
 				}
 			};

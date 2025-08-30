@@ -404,7 +404,7 @@ public class GadgetsBlocks
 	@DataGenBlock
 	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("light_gray_imperial_panel_pattern_5", MapColor.LIGHT_GRAY);
 	@DataGenBlock
-	public static final Block RustedGrayImperialPanelPattern3 = createPanel("rusted_gray_imperial_panel_pattern_3", MapColor.GRAY);
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("rusted_gray_imperial_panel_pattern_3", MapColor.GRAY);
 	//@RegistryName("rusted_gray_imperial_panel_pattern_3_stairs")
 	//public static final Block RustedGrayImperialPanelPattern3Stairs = new StairsBlock(RustedGrayImperialPanelPattern3.getDefaultState(), FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
 	//@RegistryName("rusted_gray_imperial_panel_pattern_3_slab")

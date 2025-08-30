@@ -42,23 +42,25 @@ public class LaserCutterItem extends Item
 		World world = context.getWorld();
 		BlockPos blockPos = context.getBlockPos();
 		Vec3d centerBlockPos = blockPos.toCenterPos();
-		boolean isSolidFace = world.getBlockState(blockPos).isSideSolid(world, blockPos, context.getSide(), SideShapeType.CENTER);
-		stack.set(GadgetsItems.Components.CUTTING_PROGRESS, stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 0f) + (stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1)));
-
+		boolean isSolidFace = world.getBlockState(blockPos).isSideSolidFullSquare(world, blockPos, context.getSide());
+		stack.set(GadgetsItems.Components.CUTTING_PROGRESS, stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 0f) + 1 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1)));
+		Gadgets.LOGGER.info(String.valueOf(1 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1))));
 		float cuttingProgress = stack.get(GadgetsItems.Components.CUTTING_PROGRESS);
-		if(cuttingProgress % (MAX_CUTTING_PROGRESS/16f) == 0){
+		if (cuttingProgress % (MAX_CUTTING_PROGRESS / 16f) < 1f)
+		{
 			Direction dir = context.getSide();
 			Vector3f unitVector = dir.getUnitVector();
 			Vec3d pos = blockPos.toCenterPos();
+			double cuttingProgressReduced = cuttingProgress - (cuttingProgress % (MAX_CUTTING_PROGRESS / 16f));
 
 			if (isSolidFace)
 				world.addParticle(
 					GadgetsParticleTypes.LASER_CUT_PARTICLE,
 					true,
 					true,
-					pos.getX() + unitVector.x / 2f + (unitVector.y + unitVector.z) * ((double)cuttingProgress / MAX_CUTTING_PROGRESS - 0.53125f),
-					pos.getY() + unitVector.y / 2f + (unitVector.x + unitVector.z) * ((double)cuttingProgress / MAX_CUTTING_PROGRESS - 0.53125f),
-					pos.getZ() + unitVector.z / 2f + (unitVector.x + unitVector.y) * ((double)cuttingProgress / MAX_CUTTING_PROGRESS - 0.53125f),
+					pos.getX() + unitVector.x / 2f + (unitVector.y + unitVector.z) * (cuttingProgressReduced / MAX_CUTTING_PROGRESS - 0.53125f),
+					pos.getY() + unitVector.y / 2f + (unitVector.x + unitVector.z) * (cuttingProgressReduced / MAX_CUTTING_PROGRESS - 0.53125f),
+					pos.getZ() + unitVector.z / 2f + (unitVector.x + unitVector.y) * (cuttingProgressReduced / MAX_CUTTING_PROGRESS - 0.53125f),
 					unitVector.x,
 					unitVector.y,
 					unitVector.z);
