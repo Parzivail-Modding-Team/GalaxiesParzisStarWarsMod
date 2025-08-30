@@ -44,7 +44,6 @@ public class LaserCutterItem extends Item
 		Vec3d centerBlockPos = blockPos.toCenterPos();
 		boolean isSolidFace = world.getBlockState(blockPos).isSideSolidFullSquare(world, blockPos, context.getSide());
 		stack.set(GadgetsItems.Components.CUTTING_PROGRESS, stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 0f) + 1 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1)));
-		Gadgets.LOGGER.info(String.valueOf(1 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1))));
 		float cuttingProgress = stack.get(GadgetsItems.Components.CUTTING_PROGRESS);
 		if (cuttingProgress % (MAX_CUTTING_PROGRESS / 16f) < 1f)
 		{
