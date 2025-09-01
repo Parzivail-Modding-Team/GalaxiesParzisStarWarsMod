@@ -28,6 +28,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import static net.minecraft.component.type.ConsumableComponents.food;
 
@@ -84,6 +85,11 @@ public class GadgetsItems
 				Registries.DATA_COMPONENT_TYPE,
 				Identifier.of(Gadgets.MODID, "cutting_progress"),
 				ComponentType.<Float>builder().codec(Codec.FLOAT).build()
+		);
+		public static final ComponentType<BlockPos> CURRENT_BLOCK = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "current_block"),
+				ComponentType.<BlockPos>builder().codec(BlockPos.CODEC).build()
 		);
 		public static final ConsumableComponent DEATH_STICK_RED = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 1), 0.99F)).consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200, 1), 1F)).build();
 		public static final ConsumableComponent DEATH_STICK_YELLOW = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.99F)).build();

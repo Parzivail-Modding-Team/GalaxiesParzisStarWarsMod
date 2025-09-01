@@ -41,11 +41,16 @@ public class LaserCutterItem extends Item
 		ItemStack stack = context.getStack();
 		World world = context.getWorld();
 		BlockPos blockPos = context.getBlockPos();
+		boolean isOldBlock = stack.contains(GadgetsItems.Components.CURRENT_BLOCK) && stack.get(GadgetsItems.Components.CURRENT_BLOCK).equals( blockPos);
+		float newProgress = stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 0f) + 1 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1));
+		if(!isOldBlock){
+			newProgress = 0;
+		}
 		Vec3d centerBlockPos = blockPos.toCenterPos();
 		boolean isSolidFace = world.getBlockState(blockPos).isSideSolidFullSquare(world, blockPos, context.getSide());
-		stack.set(GadgetsItems.Components.CUTTING_PROGRESS, stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 0f) + 1 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1)));
+		stack.set(GadgetsItems.Components.CUTTING_PROGRESS, newProgress);
 		float cuttingProgress = stack.get(GadgetsItems.Components.CUTTING_PROGRESS);
-		if (cuttingProgress % (MAX_CUTTING_PROGRESS / 16f) < 1f)
+		if (cuttingProgress % (MAX_CUTTING_PROGRESS / 16f) < 1f && isOldBlock)
 		{
 			Direction dir = context.getSide();
 			Vector3f unitVector = dir.getUnitVector();
@@ -89,6 +94,7 @@ public class LaserCutterItem extends Item
 			if (stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1 < stack.get(DataComponentTypes.MAX_DAMAGE))
 				stack.set(DataComponentTypes.DAMAGE, stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1);
 		}
+		stack.set(GadgetsItems.Components.CURRENT_BLOCK, blockPos);
 		return ActionResult.CONSUME;
 	}
 
