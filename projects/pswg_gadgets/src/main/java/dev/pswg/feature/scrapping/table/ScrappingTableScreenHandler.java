@@ -1,7 +1,9 @@
 package dev.pswg.feature.scrapping.table;
 
+import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -23,7 +25,7 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 	private final PlayerInventory playerInventory;
 	private final PropertyDelegate propertyDelegate;
 	protected final World world;
-	public final int MAX_TOOL_PROGRESS = 48;
+	public final int MAX_TOOL_PROGRESS = 480;
 
 	public ScrappingTableScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
@@ -88,19 +90,21 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 	{
 		if (id >= 0 && id < 3)
 		{
+			ItemStack stack = inventory.getStack(id);
+			int efficiency = (int)(100 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 0) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1) * 75));
 			switch (id)
 			{
 				case 0:
 					if (propertyDelegate.get(0) > -1)
-						propertyDelegate.set(0, Math.min(getCutterProgress() + 10, MAX_TOOL_PROGRESS));
+						propertyDelegate.set(0, Math.min(getCutterProgress() + efficiency, MAX_TOOL_PROGRESS));
 					break;
 				case 1:
 					if (propertyDelegate.get(1) > -1)
-						propertyDelegate.set(1, Math.min(getSpannerProgress() + 10, MAX_TOOL_PROGRESS));
+						propertyDelegate.set(1, Math.min(getSpannerProgress() + efficiency, MAX_TOOL_PROGRESS));
 					break;
 				case 2:
 					if (propertyDelegate.get(2) > -1)
-						propertyDelegate.set(2, Math.min(getCalibratorProgress() + 10, MAX_TOOL_PROGRESS));
+						propertyDelegate.set(2, Math.min(getCalibratorProgress() + efficiency, MAX_TOOL_PROGRESS));
 			}
 			return true;
 		}
