@@ -27,7 +27,7 @@ public class LaserCutParticle extends DecalParticle
 		this.setAlpha(1F);
 		var a = MathHelper.lerp(heat, 1, MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1));
 		this.setColor(MathHelper.clamp(getRed(a), 0, 1), MathHelper.clamp(getGreen(a), 0, 1), MathHelper.clamp(getBlue(a), 0, 1));
-		this.maxAge = clientWorld.random.nextBetween(250, 300);
+		this.maxAge = clientWorld.random.nextBetween(350, 400);
 		this.setSpriteForAge(spriteProvider);
 		this.collidesWithWorld = false;
 		this.velocityX = vX;

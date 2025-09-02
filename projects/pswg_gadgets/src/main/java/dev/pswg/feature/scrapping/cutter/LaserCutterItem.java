@@ -42,7 +42,7 @@ public class LaserCutterItem extends Item
 		World world = context.getWorld();
 		BlockPos blockPos = context.getBlockPos();
 		boolean isOldBlock = stack.contains(GadgetsItems.Components.CURRENT_BLOCK) && stack.get(GadgetsItems.Components.CURRENT_BLOCK).equals( blockPos);
-		float newProgress = stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 0f) + 1 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1));
+		float newProgress = stack.getOrDefault(GadgetsItems.Components.CUTTING_PROGRESS, 1f) + 1 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 1) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1) / 2f);
 		if(!isOldBlock){
 			newProgress = 0;
 		}
@@ -50,7 +50,7 @@ public class LaserCutterItem extends Item
 		boolean isSolidFace = world.getBlockState(blockPos).isSideSolidFullSquare(world, blockPos, context.getSide());
 		stack.set(GadgetsItems.Components.CUTTING_PROGRESS, newProgress);
 		float cuttingProgress = stack.get(GadgetsItems.Components.CUTTING_PROGRESS);
-		if (cuttingProgress % (MAX_CUTTING_PROGRESS / 16f) < 1f && isOldBlock)
+		if (cuttingProgress % (MAX_CUTTING_PROGRESS / 16f) < 1f && isOldBlock && cuttingProgress >= MAX_CUTTING_PROGRESS / 32f)
 		{
 			Direction dir = context.getSide();
 			Vector3f unitVector = dir.getUnitVector();
@@ -69,9 +69,9 @@ public class LaserCutterItem extends Item
 					unitVector.y,
 					unitVector.z);
 		}
+		stack.set(GadgetsItems.Components.CURRENT_BLOCK, blockPos);
 		if (cuttingProgress >= MAX_CUTTING_PROGRESS - 1)
 		{
-
 			if (world instanceof ServerWorld serverWorld)
 			{
 				SingleStackRecipeInput recipeInput = new SingleStackRecipeInput(new ItemStack(world.getBlockState(blockPos).getBlock()));
@@ -93,8 +93,8 @@ public class LaserCutterItem extends Item
 			}
 			if (stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1 < stack.get(DataComponentTypes.MAX_DAMAGE))
 				stack.set(DataComponentTypes.DAMAGE, stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1);
+			return ActionResult.SUCCESS;
 		}
-		stack.set(GadgetsItems.Components.CURRENT_BLOCK, blockPos);
 		return ActionResult.CONSUME;
 	}
 
