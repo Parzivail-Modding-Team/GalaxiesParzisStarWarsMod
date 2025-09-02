@@ -70,7 +70,7 @@ public class LaserCutterItem extends Item
 					unitVector.z);
 		}
 		stack.set(GadgetsItems.Components.CURRENT_BLOCK, blockPos);
-		if (cuttingProgress >= MAX_CUTTING_PROGRESS - 1)
+		if (cuttingProgress >= MAX_CUTTING_PROGRESS - 1 || world.getBlockState(blockPos).getBlock().getHardness() < 0.1f)
 		{
 			if (world instanceof ServerWorld serverWorld)
 			{
