@@ -8,17 +8,22 @@ import dev.pswg.feature.scrapping.table.ScrappingTableRecipe;
 import dev.pswg.feature.scrapping.table.ScrappingTableRecipeInput;
 import net.minecraft.block.SideShapeType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.consume.UseAction;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.recipe.ServerRecipeManager;
 import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -38,7 +43,9 @@ public class LaserCutterItem extends Item
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context)
 	{
-		ItemStack stack = context.getStack();
+		context.getStack().set(GadgetsItems.Components.CURRENT_BLOCK, context.getBlockPos());
+		context.getPlayer().setCurrentHand(context.getHand());
+		/*ItemStack stack = context.getStack();
 		World world = context.getWorld();
 		BlockPos blockPos = context.getBlockPos();
 		boolean isOldBlock = stack.contains(GadgetsItems.Components.CURRENT_BLOCK) && stack.get(GadgetsItems.Components.CURRENT_BLOCK).equals( blockPos);
@@ -94,23 +101,30 @@ public class LaserCutterItem extends Item
 			if (stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1 < stack.get(DataComponentTypes.MAX_DAMAGE))
 				stack.set(DataComponentTypes.DAMAGE, stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1);
 			return ActionResult.SUCCESS;
-		}
+		}*/
 		return ActionResult.CONSUME;
 	}
 
 	@Override
 	public UseAction getUseAction(ItemStack stack)
 	{
-		return UseAction.BRUSH;
+		return UseAction.EAT;
 	}
 
 	@Override
 	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user)
 	{
-		Gadgets.LOGGER.info("FINISH USING");
+		//Gadgets.LOGGER.info("FINISH USING");
 		var newStack = super.finishUsing(stack, world, user);
 		newStack.remove(GadgetsItems.Components.CUTTING_PROGRESS);
 		return newStack;
+	}
+
+	@Override
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
+	{
+		//if(stack.contains(GadgetsItems.Components.CUTTING_PROGRESS))
+		super.inventoryTick(stack, world, entity, slot, selected);
 	}
 
 	@Override
@@ -122,13 +136,49 @@ public class LaserCutterItem extends Item
 	@Override
 	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
 	{
+		if (getHitResult(user) instanceof BlockHitResult blockHitResult)
+		{
+			Vec3d pos = blockHitResult.getPos();
+			if (stack.contains(GadgetsItems.Components.CURRENT_BLOCK) && stack.get(GadgetsItems.Components.CURRENT_BLOCK) != blockHitResult.getBlockPos())
+			{
+				stack.remove(GadgetsItems.Components.MIN_POS);
+				stack.remove(GadgetsItems.Components.MAX_POS);
+			}
+			stack.set(GadgetsItems.Components.CURRENT_BLOCK, blockHitResult.getBlockPos());
+			if (!stack.contains(GadgetsItems.Components.MIN_POS))
+				stack.set(GadgetsItems.Components.MIN_POS, pos);
+			Vec3d minPos = stack.get(GadgetsItems.Components.MIN_POS);
+
+			if (!stack.contains(GadgetsItems.Components.MAX_POS))
+				stack.set(GadgetsItems.Components.MAX_POS, minPos);
+			Vec3d maxPos = stack.get(GadgetsItems.Components.MAX_POS);
+
+			Vec3d normalVec = blockHitResult.getSide().getDoubleVector();
+			Vec3d modVec = new Vec3d(Math.abs(normalVec.x), Math.abs(normalVec.y), Math.abs(normalVec.z));
+			if (minPos.multiply(modVec).distanceTo(pos) < maxPos.multiply(modVec).distanceTo(pos))
+			{
+				if (maxPos.distanceTo(pos) > maxPos.distanceTo(minPos))
+				{
+					stack.set(GadgetsItems.Components.MIN_POS, pos);
+				}
+			}
+			else if (minPos.distanceTo(pos) > minPos.distanceTo(maxPos))
+			{
+				stack.set(GadgetsItems.Components.MAX_POS, pos);
+			}
+		}
 		super.usageTick(world, user, stack, remainingUseTicks);
+	}
+
+	private HitResult getHitResult(LivingEntity user)
+	{
+		return ProjectileUtil.getCollision(user, EntityPredicates.CAN_HIT, 2);
 	}
 
 	@Override
 	public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
 	{
-		Gadgets.LOGGER.info("STOPPED USING");
+		//Gadgets.LOGGER.info("STOPPED USING");
 		stack.remove(GadgetsItems.Components.CUTTING_PROGRESS);
 		//return super.onStoppedUsing(stack, world, user, remainingUseTicks);
 		return true;

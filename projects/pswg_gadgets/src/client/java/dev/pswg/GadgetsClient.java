@@ -14,6 +14,7 @@ import dev.pswg.screens.CrateGenericSmallScreen;
 import dev.pswg.screens.ScrappingTableScreen;
 import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -71,6 +72,8 @@ public class GadgetsClient implements GalaxiesClientAddon
 				case CutoutMipped:  BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutoutMipped());
 			}
 		});
+
+		ClientTickEvents.END_CLIENT_TICK.register(LaserCutterHandler::tick);
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

@@ -29,6 +29,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import static net.minecraft.component.type.ConsumableComponents.food;
 
@@ -91,14 +92,44 @@ public class GadgetsItems
 				Identifier.of(Gadgets.MODID, "current_block"),
 				ComponentType.<BlockPos>builder().codec(BlockPos.CODEC).build()
 		);
-		public static final ConsumableComponent DEATH_STICK_RED = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 1), 0.99F)).consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200, 1), 1F)).build();
-		public static final ConsumableComponent DEATH_STICK_YELLOW = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.99F)).build();
-		public static final ConsumableComponent MYSTERIOUS_SMOOTHIE = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F)).consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 200, 1), 1F)).build();
-		public static final ConsumableComponent KREETLE_JUICE = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 200, 1), 1F)).build();
-		public static final ConsumableComponent ABSYNTHESIZED_MALT = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F)).consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.LUCK, 200, 1), 1F)).build();
-		public static final ConsumableComponent CORONET_COCKTAIL = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F)).consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200, 1), 1F)).build();
-		public static final ConsumableComponent SODA = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.SPEED, 200, 1), 1F)).build();
-		public static final ConsumableComponent WATER = food().consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.SATURATION, 200, 1), 1F)).build();
+		public static final ComponentType<Vec3d> MIN_POS = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "min_pos"),
+				ComponentType.<Vec3d>builder().codec(Vec3d.CODEC).build()
+		);
+		public static final ComponentType<Vec3d> MAX_POS = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "max_pos"),
+				ComponentType.<Vec3d>builder().codec(Vec3d.CODEC).build()
+		);
+		public static final ConsumableComponent DEATH_STICK_RED = food()
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 1), 0.99F))
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200, 1), 1F))
+				.build();
+		public static final ConsumableComponent DEATH_STICK_YELLOW = food()
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.99F))
+				.build();
+		public static final ConsumableComponent MYSTERIOUS_SMOOTHIE = food()
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F))
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 200, 1), 1F))
+				.build();
+		public static final ConsumableComponent KREETLE_JUICE = food()
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 200, 1), 1F))
+				.build();
+		public static final ConsumableComponent ABSYNTHESIZED_MALT = food()
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F))
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.LUCK, 200, 1), 1F))
+				.build();
+		public static final ConsumableComponent CORONET_COCKTAIL = food()
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F))
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200, 1), 1F))
+				.build();
+		public static final ConsumableComponent SODA = food()
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.SPEED, 200, 1), 1F))
+				.build();
+		public static final ConsumableComponent WATER = food()
+				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.SATURATION, 200, 1), 1F))
+				.build();
 
 
 		public static void register()

@@ -2,7 +2,9 @@
 	"required": true,
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
-	"client": [],
+	"client": [
+		"MouseMixin"
+	],
 	"injectors": {
 		"defaultRequire": 1
 	}
