@@ -1,6 +1,7 @@
 package dev.pswg.feature.scrapping.cutter;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsRecipeTypes;
@@ -39,8 +40,15 @@ public class LaserCutterItem extends Item
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context)
 	{
+		World world = context.getWorld();
+		if (context.getWorld().getBlockState(context.getBlockPos()).getHardness(context.getWorld(), context.getBlockPos()) <= 0.1f)
+		{
+			breakBlock(world, context.getStack(), context.getPlayer(), context.getBlockPos());
+			return ActionResult.SUCCESS;
+		}
 		context.getStack().set(GadgetsItems.Components.CURRENT_BLOCK, context.getBlockPos());
 		context.getPlayer().setCurrentHand(context.getHand());
+
 		return ActionResult.CONSUME;
 	}
 
