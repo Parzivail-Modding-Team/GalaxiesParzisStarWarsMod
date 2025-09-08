@@ -6,20 +6,18 @@ import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.container.entity.LivingEntities;
-import dev.pswg.structure.StructUtil;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import dev.pswg.feature.brewing.BrewingMap;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.profiling.jfr.event.StructureGenerationEvent;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.Structures;
 import org.slf4j.Logger;
+
+import java.io.InputStream;
 
 /**
  * The main entrypoint for PSWG common-side gadget features
@@ -71,6 +69,31 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsStructureKeys.register();
 		GadgetsLootTables.register();
 		LivingEntities.register();
+
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener()
+		{
+			@Override
+			public Identifier getFabricId()
+			{
+				return Gadgets.id("brewing_maps");
+			}
+
+			@Override
+			public void reload(ResourceManager manager)
+			{
+				for (Identifier id : manager.findResources("brewing_map", path -> true).keySet())
+				{
+					try (InputStream stream = manager.getResource(id).get().getInputStream())
+					{
+						BrewingMap.init(stream);
+					}
+					catch (Exception e)
+					{
+						Gadgets.LOGGER.error("Error occurred while loading brewing map " + id.toString(), e);
+					}
+				}
+			}
+		});
 
 		// TODO: how to differentiate different modules' versions?
 
