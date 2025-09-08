@@ -116,7 +116,7 @@ public class LaserCutterItem extends Item
 			if (surfaceArea >= 100)
 				breakBlock(world, stack, user, blockHitResult.getBlockPos());
 
-			if (world.getTime() % 5 == 0)
+			if (world.getTime() % 4 == 0)
 			{
 				Vec3d particlePos = new Vec3d(pos.x - pos.x % (1f / 16f) - 0.03125f * (normalVec.y + normalVec.z), pos.y - pos.y % (1f / 16f) - 0.03125f * (normalVec.x + normalVec.z), pos.z - pos.z % (1f / 16f) - 0.03125f * (normalVec.y + normalVec.x));
 				world.addParticle(
