@@ -4,12 +4,9 @@ import dev.pswg.container.GadgetsBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.FuelRegistry;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -55,11 +52,11 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			{
 				return switch (index)
 				{
-					case 1 -> currentMapX;
-					case 2 -> currentMapY;
-					case 3 -> litTimeRemaining;
-					case 4 -> litTotalTime;
-					case 5 -> bellowProgress;
+					case 0 -> currentMapX;
+					case 1 -> currentMapY;
+					case 2 -> litTimeRemaining;
+					case 3 -> litTotalTime;
+					case 4 -> bellowProgress;
 					default -> 0;
 				};
 			}
@@ -69,11 +66,11 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			{
 				switch (index)
 				{
-					case 1 -> currentMapX = value;
-					case 2 -> currentMapY = value;
-					case 3 -> litTimeRemaining = value;
-					case 4 -> litTotalTime = value;
-					case 5 -> bellowProgress = value;
+					case 0 -> currentMapX = value;
+					case 1 -> currentMapY = value;
+					case 2 -> litTimeRemaining = value;
+					case 3 -> litTotalTime = value;
+					case 4 -> bellowProgress = value;
 				}
 			}
 

@@ -53,6 +53,8 @@ public class MixerBlock extends BlockWithEntity
 	@Override
 	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
 	{
+		if (!world.isClient)
+			player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
 		return super.onUse(state, world, pos, player, hit);
 	}
 }

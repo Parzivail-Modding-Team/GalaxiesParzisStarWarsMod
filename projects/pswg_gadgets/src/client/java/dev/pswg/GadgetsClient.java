@@ -11,6 +11,7 @@ import dev.pswg.renderer.grenades.*;
 import dev.pswg.renderer.mines.PressureMineEntityRenderer;
 import dev.pswg.renderer.mines.TripwireMineEntityRenderer;
 import dev.pswg.screens.CrateGenericSmallScreen;
+import dev.pswg.screens.MixerScreen;
 import dev.pswg.screens.ScrappingTableScreen;
 import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -64,6 +65,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 
 		HandledScreens.register(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, ScrappingTableScreen::new);
 		HandledScreens.register(GadgetsScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
+		HandledScreens.register(GadgetsScreenHandlerTypes.MIXER, MixerScreen::new);
 
 		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
 			switch (clientData.renderLayer())

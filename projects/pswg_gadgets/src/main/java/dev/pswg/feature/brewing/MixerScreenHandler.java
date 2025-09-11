@@ -22,7 +22,7 @@ public class MixerScreenHandler extends ScreenHandler
 
 	public MixerScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		this(syncId, playerInventory, new SimpleInventory(10), new ArrayPropertyDelegate(3));
+		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(5));
 	}
 
 	public MixerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate)
@@ -34,13 +34,13 @@ public class MixerScreenHandler extends ScreenHandler
 		this.propertyDelegate = propertyDelegate;
 
 		/// FUEL
-		this.addSlot(new Slot(inventory, 0, 139, 130));
+		this.addSlot(new Slot(inventory, 0, 140, 131));
 		/// INPUT
-		this.addSlot(new Slot(inventory, 1, 139, 71));
+		this.addSlot(new Slot(inventory, 1, 140, 72));
 		/// OUTPUT
-		this.addSlot(new OutputSlot(inventory, 2, 139, 25));
+		this.addSlot(new OutputSlot(inventory, 2, 140, 26));
 
-		this.addPlayerSlots(playerInventory, 8, 124);
+		this.addPlayerSlots(playerInventory, 8, 174);
 		this.addProperties(propertyDelegate);
 	}
 
@@ -49,7 +49,7 @@ public class MixerScreenHandler extends ScreenHandler
 	{
 		if (id == 0)
 		{
-			propertyDelegate.set(5, Math.min(propertyDelegate.get(5) + 8, MixerBlockEntity.MAX_BELLOW_PROGRESS));
+			propertyDelegate.set(4, Math.min(propertyDelegate.get(4) + 8, MixerBlockEntity.MAX_BELLOW_PROGRESS));
 			return true;
 		}
 		return super.onButtonClick(player, id);
@@ -58,7 +58,7 @@ public class MixerScreenHandler extends ScreenHandler
 	@Override
 	public ItemStack quickMove(PlayerEntity player, int slot)
 	{
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
