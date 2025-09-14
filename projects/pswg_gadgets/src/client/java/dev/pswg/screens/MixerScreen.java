@@ -51,5 +51,21 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
 		super.render(context, mouseX, mouseY, delta);
+		var backgroundX = (this.width - this.backgroundWidth) / 2;
+		var backgroundY = (this.height - this.backgroundHeight) / 2;
+		Gadgets.LOGGER.info("C|  x: " + handler.getMapX() / 16f + " y: " + handler.getMapY() / 16f);
+		context.drawTexture(RenderLayer::getGuiTextured, MAP_TEXTURE, backgroundX + 6, backgroundY + 19, Math.clamp(handler.getMapX() - 64, 0, 512 - 128), Math.clamp(handler.getMapY() - 64, 0, 512 - 128), 128, 128, 512, 512);
+		//Gadgets.LOGGER.info("x: "+handler.getMapX()+ " y: "+handler.getMapY());
+		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 67, backgroundY + 81, 177, 61, 5, 5, 256, 256);
+
+		float litMod = 14 - (float)(handler.getLitTimeRemaining() * 14) / Math.max(handler.getLitTimeTotal(), 1);
+		if (handler.getLitTimeRemaining() != 0)
+		{
+			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 143, backgroundY + 95, 176, 43, 10, 17, 256, 256);
+			if (mouseX > 142 + backgroundX && mouseX < 153 + backgroundX && mouseY > 94 + backgroundY && mouseY < 112 + backgroundY)
+				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 143, backgroundY + 95, 176, 26, 10, 17, 256, 256);
+		}
+		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 145, backgroundY + 98, 177, 0, 6, handler.getBellowProgress() / 8, 256, 256);
+		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 141, (int)(backgroundY + 115 + litMod), 177, (int)(12 + litMod), 14, handler.getLitTimeRemaining() * 14 / Math.max(handler.getLitTimeTotal(), 1), 256, 256);
 	}
 }

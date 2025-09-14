@@ -1,5 +1,6 @@
 package dev.pswg.container;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import dev.pswg.Gadgets;
 import dev.pswg.datagen.DGItemTag;
@@ -29,7 +30,12 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static net.minecraft.component.type.ConsumableComponents.food;
 
@@ -101,6 +107,12 @@ public class GadgetsItems
 				Registries.DATA_COMPONENT_TYPE,
 				Identifier.of(Gadgets.MODID, "max_pos"),
 				ComponentType.<Vec3d>builder().codec(Vec3d.CODEC).build()
+		);
+		/// FIRST ARGUMENT IS AN ANGLE, SECOND IS THE LENGTH
+		public static final ComponentType<List<Pair<Float, Float>>> BREWING_PATH = Registry.register(
+				Registries.DATA_COMPONENT_TYPE,
+				Identifier.of(Gadgets.MODID, "brewing_path"),
+				ComponentType.<List<Pair<Float, Float>>>builder().codec(Codec.list(Codec.pair(Codec.FLOAT, Codec.FLOAT))).build()
 		);
 		public static final ConsumableComponent DEATH_STICK_RED = food()
 				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 1), 0.99F))
@@ -549,7 +561,7 @@ public class GadgetsItems
 	@DataGenItem
 	public static final Item SQUILL_LIVER = registerSimpleItem("squill_liver");
 	@DataGenItem
-	public static final Item TONGUE_OF_WORRT = registerSimpleItem("tongue_of_worrt");
+	public static final Item TONGUE_OF_WORRT = registerSimpleItem("tongue_of_worrt", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 1.1f, 10f)))));
 	@DataGenItem
 	public static final Item TOUGH_HIDE = registerSimpleItem("tough_hide");
 

@@ -38,9 +38,10 @@ public class BrewingMap
 		}
 	}
 
-	public static BrewingCell getCell(int x, int y)
+	public static BrewingCell getCell(float x, float y)
 	{
-		return map.get(y / 8).get(x / 8);
+
+		return map.get((int)y / 16).get((int)x / 16);
 	}
 
 	private static BrewingCell parseCell(String string)
