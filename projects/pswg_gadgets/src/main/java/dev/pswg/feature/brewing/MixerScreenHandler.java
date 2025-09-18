@@ -1,5 +1,6 @@
 package dev.pswg.feature.brewing;
 
+import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
 import dev.pswg.feature.scrapping.table.OutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,9 +35,9 @@ public class MixerScreenHandler extends ScreenHandler
 		this.propertyDelegate = propertyDelegate;
 
 		/// FUEL
-		this.addSlot(new Slot(inventory, 0, 140, 131));
+		this.addSlot(new FuelSlot(inventory, 0, 140, 131, this));
 		/// INPUT
-		this.addSlot(new Slot(inventory, 1, 140, 72));
+		this.addSlot(new BrewingIngredientSlot(inventory, 1, 140, 72));
 		/// OUTPUT
 		this.addSlot(new OutputSlot(inventory, 2, 140, 26));
 
@@ -47,12 +48,24 @@ public class MixerScreenHandler extends ScreenHandler
 
 	public float getMapX()
 	{
-		return propertyDelegate.get(0) / 100f;
+		float val = propertyDelegate.get(0) / 10f;
+		if (val < 0)
+		{
+			Gadgets.LOGGER.warn("map X lower then 0, val equal to: " + val + " delegated prop equal: " + propertyDelegate.get(0));
+			val = val * -1;
+		}
+		return val;
 	}
 
 	public float getMapY()
 	{
-		return propertyDelegate.get(1) / 100f;
+		float val = propertyDelegate.get(1) / 10f;
+		if (val < 0)
+		{
+			Gadgets.LOGGER.warn("map Y lower then 0, val equal to: " + val + " delegated prop equal: " + propertyDelegate.get(1));
+			val = val * -1;
+		}
+		return val;
 	}
 
 	public int getLitTimeRemaining()
@@ -83,9 +96,36 @@ public class MixerScreenHandler extends ScreenHandler
 	}
 
 	@Override
-	public ItemStack quickMove(PlayerEntity player, int slot)
+	public ItemStack quickMove(PlayerEntity player, int index)
 	{
-		return ItemStack.EMPTY;
+		var itemStack = ItemStack.EMPTY;
+		var slot = this.slots.get(index);
+		if (slot != null && slot.hasStack())
+		{
+			var slotStack = slot.getStack();
+			itemStack = slotStack.copy();
+			if (index < this.inventory.size())
+			{
+				if (!this.insertItem(slotStack, this.inventory.size(), this.slots.size(), true))
+				{
+					return ItemStack.EMPTY;
+				}
+			}
+			else if (!this.insertItem(slotStack, 0, this.inventory.size(), false))
+			{
+				return ItemStack.EMPTY;
+			}
+
+			if (slotStack.isEmpty())
+			{
+				slot.setStack(ItemStack.EMPTY);
+			}
+			else
+			{
+				slot.markDirty();
+			}
+		}
+		return itemStack;
 	}
 
 	@Override
