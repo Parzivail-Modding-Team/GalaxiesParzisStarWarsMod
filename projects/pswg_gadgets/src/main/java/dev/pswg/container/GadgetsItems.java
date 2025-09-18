@@ -561,7 +561,7 @@ public class GadgetsItems
 	@DataGenItem
 	public static final Item SQUILL_LIVER = registerSimpleItem("squill_liver");
 	@DataGenItem
-	public static final Item TONGUE_OF_WORRT = registerSimpleItem("tongue_of_worrt", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 1.1f, 10f)))));
+	public static final Item TONGUE_OF_WORRT = registerSimpleItem("tongue_of_worrt", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 1.35f, 10f)))));
 	@DataGenItem
 	public static final Item TOUGH_HIDE = registerSimpleItem("tough_hide");
 

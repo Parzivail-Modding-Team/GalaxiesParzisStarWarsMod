@@ -97,6 +97,15 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		};
 	}
 
+	public static void resetMixer(MixerBlockEntity mixer)
+	{
+		mixer.currentMapX = 256;
+		mixer.currentMapY = 256;
+		mixer.dangerProgress = 0;
+		mixer.bellowProgress = 0;
+		mixer.path.clear();
+	}
+
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity)
 	{
 		if (blockEntity instanceof MixerBlockEntity mixer)
@@ -108,20 +117,18 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				inputStack.decrement(1);
 			}
 			BrewingCell currentCell = BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY);
-			///    if (!world.isClient)
-			///		Gadgets.LOGGER.info("S|  x: " + mixer.currentMapX / 16f + " y: " + mixer.currentMapY / 16f);
 			if (currentCell instanceof DangerCell dangerCell)
 			{
 				mixer.dangerProgress++;
-				Gadgets.LOGGER.info("danger: " + dangerCell);
-				if (mixer.dangerProgress >= 25)
+				if (mixer.dangerProgress >= 12)
 				{
 					ItemStack stack = new ItemStack(GadgetsItems.BANTHA_COOKIE);
 					stack.set(DataComponentTypes.CONSUMABLE, ConsumableComponent.builder().consumeEffect(new ApplyEffectsConsumeEffect(dangerCell.statusEffect)).build());
 					mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
+					resetMixer(mixer);
 				}
 			}
-			mixer.dangerProgress--;
+			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
 			if (!mixer.path.empty() && mixer.bellowProgress > 0)
 			{
 				if (currentCell instanceof DangerCell dangerCell)
@@ -129,8 +136,8 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 					mixer.dangerProgress++;
 				}
 				float value = mixer.path.peek().getFirst() * Math.clamp(mixer.path.peek().getSecond(), 0, 0.5f);
-				mixer.currentMapY = Math.clamp(Math.max(0, mixer.currentMapY + (float)Math.cos(value)), 1, 511);
-				mixer.currentMapX = Math.clamp(Math.max(0, mixer.currentMapX + (float)Math.sin(value)), 1, 511);
+				mixer.currentMapY = Math.clamp(mixer.currentMapY - (float)Math.cos(value), 1, 511);
+				mixer.currentMapX = Math.clamp(mixer.currentMapX - (float)Math.sin(value), 1, 511);
 
 				var lastElem = mixer.path.pop();
 				lastElem = new Pair<>(lastElem.getFirst(), lastElem.getSecond() - 0.5f);
