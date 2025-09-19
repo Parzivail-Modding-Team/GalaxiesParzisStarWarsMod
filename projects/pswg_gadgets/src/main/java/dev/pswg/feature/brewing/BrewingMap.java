@@ -60,14 +60,14 @@ public class BrewingMap
 			{
 				List<String> args = Arrays.stream(string.split("\\.")).toList();
 				var effect = Registries.STATUS_EFFECT.getEntry(Identifier.of(args.get(1))).get();
-				cell = new EffectCell(new StatusEffectInstance(effect, 100, args.get(2).charAt(0) - '0'));
+				cell = new EffectCell(new StatusEffectInstance(effect, 20 * 15, args.get(2).charAt(0) - '0'));
 				break;
 			}
 			case 'd':
 			{
 				List<String> args = Arrays.stream(string.split("\\.")).toList();
 				var effect = Registries.STATUS_EFFECT.getEntry(Identifier.of(args.get(1))).get();
-				cell = new DangerCell(new StatusEffectInstance(effect, 100, args.get(2).charAt(0) - '0'));
+				cell = new DangerCell(new StatusEffectInstance(effect, 20 * 15, args.get(2).charAt(0) - '0'));
 				break;
 			}
 			default:
