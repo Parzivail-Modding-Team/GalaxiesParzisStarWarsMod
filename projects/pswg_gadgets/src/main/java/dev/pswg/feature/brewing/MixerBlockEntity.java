@@ -9,7 +9,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ConsumableComponent;
-import net.minecraft.component.type.FoodComponents;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
@@ -24,7 +23,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Stack;
 
 public class MixerBlockEntity extends LockableContainerBlockEntity implements SidedInventory, NamedScreenHandlerFactory
@@ -32,7 +30,6 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	protected static final int FUEL_SLOT_INDEX = 0;
 	protected static final int INPUT_SLOT_INDEX = 1;
 	protected static final int OUTPUT_SLOT_INDEX = 2;
-
 	protected static final int MAX_BELLOW_PROGRESS = 88;
 
 	protected static final int MAX_MAP_X = 512;
@@ -116,8 +113,8 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				mixer.path.addAll(inputStack.get(GadgetsItems.Components.BREWING_PATH));
 				inputStack.decrement(1);
 			}
-			BrewingCell currentCell = BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY);
-			if (currentCell instanceof DangerCell dangerCell)
+			BrewingCell cell = BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY);
+			if (cell instanceof DangerCell dangerCell)
 			{
 				mixer.dangerProgress++;
 				if (mixer.dangerProgress >= 12)
@@ -128,18 +125,36 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 					resetMixer(mixer);
 				}
 			}
+			if (cell instanceof CornerCell){
+				mixer.dangerProgress++;
+				if(mixer.dangerProgress >= 8)
+					resetMixer(mixer);
+			}
 			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
 			if (!mixer.path.empty() && mixer.bellowProgress > 0)
 			{
-				if (currentCell instanceof DangerCell)
+				float mod = 1f;
+				if (cell instanceof DangerCell)
+				{
 					mixer.dangerProgress++;
+					mod = 1.25f;
+				}
+				if(cell instanceof EffectCell)
+					mod = 0.25f;
+				if(cell instanceof CornerCell)
+				{
+					mixer.dangerProgress++;
+					mod = 0.75f;
+				}
 
 				float value = mixer.path.peek().getFirst() * Math.clamp(mixer.path.peek().getSecond(), 0, 0.5f);
-				mixer.currentMapY = Math.clamp(mixer.currentMapY - (float)Math.cos(value), 1, 511);
-				mixer.currentMapX = Math.clamp(mixer.currentMapX - (float)Math.sin(value), 1, 511);
+				mixer.currentMapY = Math.clamp(mixer.currentMapY - mod * (float)Math.cos(value), 1, 511);
+				mixer.currentMapX = Math.clamp(mixer.currentMapX - mod * (float)Math.sin(value), 1, 511);
 
+				float reducedLength = (float)Math.sqrt(mod * mod * (float)Math.cos(value) * (float)Math.cos(value) + (float)Math.sin(value) * (float)Math.sin(value));
 				var lastElem = mixer.path.pop();
-				lastElem = new Pair<>(lastElem.getFirst(), lastElem.getSecond() - 0.5f);
+				Gadgets.LOGGER.info("reduced lenght: "+reducedLength);
+				lastElem = new Pair<>(lastElem.getFirst(), lastElem.getSecond() - reducedLength);
 				if (lastElem.getSecond() > 0)
 					mixer.path.push(lastElem);
 			}
