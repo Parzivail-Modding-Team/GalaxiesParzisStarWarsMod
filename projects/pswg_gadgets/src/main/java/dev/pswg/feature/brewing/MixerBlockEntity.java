@@ -133,28 +133,28 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
 			if (!mixer.path.empty() && mixer.bellowProgress > 0)
 			{
-				float mod = 1f;
+				float mod = 0.75f;
 				if (cell instanceof DangerCell)
 				{
 					mixer.dangerProgress++;
-					mod = 1.25f;
+					mod = 1f;
 				}
 				if(cell instanceof EffectCell)
-					mod = 0.25f;
+					mod = 0.4f;
 				if(cell instanceof CornerCell)
 				{
 					mixer.dangerProgress++;
-					mod = 0.75f;
+					mod = 0.6f;
 				}
+				mod = Math.min(mod, mixer.path.peek().getSecond());
+				float value = mixer.path.peek().getFirst();
+				float deltaY = -mod * (float)Math.sin(value);
+				float deltaX = mod * (float)Math.cos(value);
+				mixer.currentMapY = Math.clamp(mixer.currentMapY + deltaY, 0, 512);
+				mixer.currentMapX = Math.clamp(mixer.currentMapX + deltaX, 0, 512);
 
-				float value = mixer.path.peek().getFirst() * Math.clamp(mixer.path.peek().getSecond(), 0, 0.5f);
-				mixer.currentMapY = Math.clamp(mixer.currentMapY - mod * (float)Math.cos(value), 1, 511);
-				mixer.currentMapX = Math.clamp(mixer.currentMapX - mod * (float)Math.sin(value), 1, 511);
-
-				float reducedLength = (float)Math.sqrt(mod * mod * (float)Math.cos(value) * (float)Math.cos(value) + (float)Math.sin(value) * (float)Math.sin(value));
 				var lastElem = mixer.path.pop();
-				Gadgets.LOGGER.info("reduced lenght: "+reducedLength);
-				lastElem = new Pair<>(lastElem.getFirst(), lastElem.getSecond() - reducedLength);
+				lastElem = new Pair<>(lastElem.getFirst(), lastElem.getSecond() - mod);
 				if (lastElem.getSecond() > 0)
 					mixer.path.push(lastElem);
 			}
