@@ -130,6 +130,16 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				if(mixer.dangerProgress >= 8)
 					resetMixer(mixer);
 			}
+			if (cell instanceof EffectCell effectCell)
+			{
+				if (mixer.bellowProgress >= MAX_BELLOW_PROGRESS - 8)
+				{
+					ItemStack stack = new ItemStack(GadgetsItems.BANTHA_COOKIE);
+					stack.set(DataComponentTypes.CONSUMABLE, ConsumableComponent.builder().consumeEffect(new ApplyEffectsConsumeEffect(effectCell.statusEffect)).build());
+					mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
+					resetMixer(mixer);
+				}
+			}
 			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
 			if (!mixer.path.empty() && mixer.bellowProgress > 0)
 			{

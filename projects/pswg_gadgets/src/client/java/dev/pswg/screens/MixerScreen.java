@@ -53,10 +53,9 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		super.render(context, mouseX, mouseY, delta);
 		var backgroundX = (this.width - this.backgroundWidth) / 2;
 		var backgroundY = (this.height - this.backgroundHeight) / 2;
-		///Gadgets.LOGGER.info("C|  x: " + handler.getMapX() / 16f + " y: " + handler.getMapY() / 16f);
 		context.drawTexture(RenderLayer::getGuiTextured, MAP_TEXTURE, backgroundX + 6, backgroundY + 19, Math.clamp(handler.getMapX() - 64, 0, 512 - 128), Math.clamp(handler.getMapY() - 64, 0, 512 - 128), 128, 128, 512, 512);
-		//Gadgets.LOGGER.info("x: "+handler.getMapX()+ " y: "+handler.getMapY());
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 67, backgroundY + 81, 177, 61, 5, 5, 256, 256);
+
+		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 67, backgroundY + 81 + (Math.min((int)handler.getMapY(), 64) - 64) + (Math.max((int)handler.getMapY(), 512 - 64) - 448), 177, 61, 5, 5, 256, 256);
 
 		float litMod = 14 - (float)(handler.getLitTimeRemaining() * 14) / Math.max(handler.getLitTimeTotal(), 1);
 		if (handler.getLitTimeRemaining() != 0)
