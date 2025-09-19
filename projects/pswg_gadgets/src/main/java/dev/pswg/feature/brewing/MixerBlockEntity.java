@@ -131,10 +131,9 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
 			if (!mixer.path.empty() && mixer.bellowProgress > 0)
 			{
-				if (currentCell instanceof DangerCell dangerCell)
-				{
+				if (currentCell instanceof DangerCell)
 					mixer.dangerProgress++;
-				}
+
 				float value = mixer.path.peek().getFirst() * Math.clamp(mixer.path.peek().getSecond(), 0, 0.5f);
 				mixer.currentMapY = Math.clamp(mixer.currentMapY - (float)Math.cos(value), 1, 511);
 				mixer.currentMapX = Math.clamp(mixer.currentMapX - (float)Math.sin(value), 1, 511);
