@@ -570,7 +570,7 @@ public class GadgetsItems
 	@DataGenItem
 	public static final Item KRAYT_TOOTH = registerSimpleItem("krayt_tooth");
 	@DataGenItem
-	public static final Item KREETLE_HUSK = registerSimpleItem("kreetle_husk", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 1 / 4f, 28f), Pair.of((float)Math.PI * -2 / 9f, 35f)))));
+	public static final Item KREETLE_HUSK = registerSimpleItem("kreetle_husk", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI / -4f, 45f), Pair.of((float)Math.PI / 6f, 45f)))));
 	@DataGenItem
 	public static final Item LIZARD_GIZZARD = registerSimpleItem("lizard_gizzard", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 10 / 7f, 40f), Pair.of((float)Math.PI / -9f, 8f), Pair.of((float)Math.PI * 9f / 8f, 15f)))));
 	@DataGenItem
