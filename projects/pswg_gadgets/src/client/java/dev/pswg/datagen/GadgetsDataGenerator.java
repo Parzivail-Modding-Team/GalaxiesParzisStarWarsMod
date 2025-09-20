@@ -24,12 +24,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.item.tint.ConstantTintSource;
+import net.minecraft.client.render.item.tint.PotionTintSource;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -304,27 +305,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			return Identifier.of(string.substring(0, string.indexOf("_corrugated_crate")));
 		}
 
-		public static Identifier createItemKey(Item item)
-		{
-
-			return item.getRegistryEntry().getKey().get().getValue().withPrefixedPath("item/");
-		}
-
-		public void registerItem(ItemModelGenerator itemModelGenerator, Item item, DataGenItem dataGenItem)
-		{
-			if (dataGenItem.genModel())
-			{
-				if (dataGenItem.wiz())
-					register(itemModelGenerator, item, Galaxies.id("item/wizard"), Models.GENERATED);
-				else
-					switch (dataGenItem.model())
-					{
-						case generated -> register(itemModelGenerator, item, createItemKey(item), Models.GENERATED);
-						case handheld -> register(itemModelGenerator, item, createItemKey(item), Models.HANDHELD);
-					}
-			}
-		}
-
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
@@ -344,7 +324,47 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					registerItem(itemModelGenerator, item, dataGenItem);
 			});
 
+		}
 
+		public static Identifier createItemKey(Item item, DataGenItem dataGenItem)
+		{
+			if (dataGenItem.textureOverride().equals(""))
+				return item.getRegistryEntry().getKey().get().getValue().withPrefixedPath("item/");
+			return Gadgets.id(dataGenItem.textureOverride()).withPrefixedPath("item/");
+		}
+
+		public void registerItem(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
+		{
+			if (dataGenItem.genModel())
+			{
+				if (dataGenItem.wiz())
+					register(generator, item, Galaxies.id("item/wizard"), Models.GENERATED);
+				else
+					switch (dataGenItem.model())
+					{
+						case generated -> register(generator, item, createItemKey(item, dataGenItem), Models.GENERATED);
+						case handheld -> register(generator, item, createItemKey(item, dataGenItem), Models.HANDHELD);
+						case potion -> registerPotion(generator, item, dataGenItem);
+					}
+			}
+		}
+
+		public void registerPotion(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
+		{
+			Identifier modelId;
+			Identifier overlay = (dataGenItem.overlayTextureOverride().equals("")) ? createItemKey(item, dataGenItem).withSuffixedPath("_overlay") : Gadgets.id(dataGenItem.overlayTextureOverride()).withPrefixedPath("item/");
+			Identifier base = Identifier.of(ModelIds.getItemModelId(item).toString().replace("_filled", ""));
+
+			if (dataGenItem.invertLayer())
+			{
+				modelId = generator.uploadTwoLayers(item, base, overlay);
+				generator.output.accept(item, ItemModels.tinted(modelId, new ConstantTintSource(16777215), new PotionTintSource()));
+			}
+			else
+			{
+				modelId = generator.uploadTwoLayers(item, overlay, base);
+				generator.output.accept(item, ItemModels.tinted(modelId, new PotionTintSource()));
+			}
 		}
 	}
 

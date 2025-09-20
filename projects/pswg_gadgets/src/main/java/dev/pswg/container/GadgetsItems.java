@@ -408,12 +408,20 @@ public class GadgetsItems
 	public static final Item DESH_CUP = registerSimpleItem("desh_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
 	@DataGenItem
 	public static final DyedItems CUPS = new DyedItems(color -> registerSimpleItem(color.name().toLowerCase() + "_cup"));
-	@DataGenItem
+	@DataGenItem(model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
+	public static final DyedItems FILLED_CUPS = new DyedItems(color -> registerSimpleItem(color.name().toLowerCase() + "_cup_filled"));
+	@DataGenItem(langOverride = "Glass")
 	public static final NumberedItems GLASSES = new NumberedItems(10, i -> registerSimpleItem("glass_" + i));
-	@DataGenItem
+	@DataGenItem(langOverride = "Glass", model = ItemModel.potion)
+	public static final NumberedItems FILLED_GLASSES = new NumberedItems(10, i -> registerSimpleItem("glass_" + i + "_filled"));
+	@DataGenItem(langOverride = "Glass Bottle")
 	public static final NumberedItems GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i));
-	@DataGenItem
+	@DataGenItem(langOverride = "Glass Bottle", model = ItemModel.potion)
+	public static final NumberedItems FILLED_GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i + "_filled"));
+	@DataGenItem(langOverride = "Plastic Bottle")
 	public static final NumberedItems PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i));
+	@DataGenItem(langOverride = "Plastic Bottle", model = ItemModel.potion)
+	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i + "_filled"));
 
 	///  FOOD
 

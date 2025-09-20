@@ -19,4 +19,10 @@ public @interface DataGenItem
 	DataGenItemGroup itemGroup() default DataGenItemGroup.Items;
 
 	String langOverride() default "";
+
+	String textureOverride() default "";
+
+	String overlayTextureOverride() default "";
+
+	boolean invertLayer() default false;
 }
