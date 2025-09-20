@@ -17,6 +17,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ConsumableComponent;
 import net.minecraft.component.type.ConsumableComponents;
 import net.minecraft.component.type.FoodComponent;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
@@ -406,23 +407,29 @@ public class GadgetsItems
 	public static final Item DURASTEEL_CUP = registerSimpleItem("durasteel_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DESH_CUP = registerSimpleItem("desh_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
+	public static final Item FILLED_DURASTEEL_CUP = registerDefaultPotionItem("durasteel_cup_filled", new Item.Settings().useRemainder(DURASTEEL_CUP));
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
+	public static final Item FILLED_DESH_CUP = registerDefaultPotionItem("desh_cup_filled", new Item.Settings().useRemainder(DESH_CUP));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final DyedItems CUPS = new DyedItems(color -> registerSimpleItem(color.name().toLowerCase() + "_cup"));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
-	public static final DyedItems FILLED_CUPS = new DyedItems(color -> registerSimpleItem(color.name().toLowerCase() + "_cup_filled"));
+	public static final DyedItems FILLED_CUPS = new DyedItems(color -> registerDefaultPotionItem(color.name().toLowerCase() + "_cup_filled", new Item.Settings().useRemainder(CUPS.get(color))));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass")
 	public static final NumberedItems GLASSES = new NumberedItems(10, i -> registerSimpleItem("glass_" + i));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass", model = ItemModel.potion)
-	public static final NumberedItems FILLED_GLASSES = new NumberedItems(10, i -> registerSimpleItem("glass_" + i + "_filled"));
+	public static final NumberedItems FILLED_GLASSES = new NumberedItems(10, i -> registerDefaultPotionItem("glass_" + i + "_filled", new Item.Settings().useRemainder(GLASSES.get(i - 1))));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass Bottle")
 	public static final NumberedItems GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass Bottle", model = ItemModel.potion)
-	public static final NumberedItems FILLED_GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i + "_filled"));
+	public static final NumberedItems FILLED_GLASS_BOTTLES = new NumberedItems(3, i -> registerDefaultPotionItem("glass_bottle_" + i + "_filled", new Item.Settings().useRemainder(GLASS_BOTTLES.get(i - 1))));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Plastic Bottle")
 	public static final NumberedItems PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Plastic Bottle", model = ItemModel.potion)
-	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i + "_filled"));
-
+	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerDefaultPotionItem("plastic_bottle_" + i + "_filled", new Item.Settings().useRemainder(PLASTIC_BOTTLES.get(i - 1))));
+	//.component(DataComponentTypes.POTION_CONTENTS, PotionContentsComponent.DEFAULT)
+	//			.component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK)
+	//			.useRemainder(GLASS_BOTTLE)
 	///  FOOD
 
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
@@ -582,6 +589,11 @@ public class GadgetsItems
 	public static Item registerSimpleItem(String key, Item.Settings settings)
 	{
 		return Registrar.item(Gadgets.id(key), Item::new, settings);
+	}
+
+	public static Item registerDefaultPotionItem(String key, Item.Settings settings)
+	{
+		return registerSimpleItem(key, settings.component(DataComponentTypes.POTION_CONTENTS, PotionContentsComponent.DEFAULT).component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK));
 	}
 
 	public static ArmorItem registerArmorItem(String key, ArmorMaterial material, EquipmentType type)
