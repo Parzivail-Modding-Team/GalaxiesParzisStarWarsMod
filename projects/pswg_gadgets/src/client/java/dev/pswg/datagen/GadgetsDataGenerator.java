@@ -353,7 +353,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void registerPotion(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
 		{
 			Identifier modelId;
-			Identifier overlay = (dataGenItem.overlayTextureOverride().equals("")) ? createItemKey(item, dataGenItem).withSuffixedPath("_overlay") : Gadgets.id(dataGenItem.overlayTextureOverride()).withPrefixedPath("item/");
+			Identifier overlay = (dataGenItem.overlayTextureOverride().equals("")) ? Identifier.of(createItemKey(item, dataGenItem).withSuffixedPath("_overlay").toString().replace("_filled", "")) : Gadgets.id(dataGenItem.overlayTextureOverride()).withPrefixedPath("item/");
 			Identifier base = Identifier.of(ModelIds.getItemModelId(item).toString().replace("_filled", ""));
 
 			if (dataGenItem.invertLayer())
