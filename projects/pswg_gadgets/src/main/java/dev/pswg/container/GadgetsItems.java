@@ -402,146 +402,146 @@ public class GadgetsItems
 
 	/// FOOD PREP
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DURASTEEL_CUP = registerSimpleItem("durasteel_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DESH_CUP = registerSimpleItem("desh_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final DyedItems CUPS = new DyedItems(color -> registerSimpleItem(color.name().toLowerCase() + "_cup"));
-	@DataGenItem(model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
 	public static final DyedItems FILLED_CUPS = new DyedItems(color -> registerSimpleItem(color.name().toLowerCase() + "_cup_filled"));
-	@DataGenItem(langOverride = "Glass")
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass")
 	public static final NumberedItems GLASSES = new NumberedItems(10, i -> registerSimpleItem("glass_" + i));
-	@DataGenItem(langOverride = "Glass", model = ItemModel.potion)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass", model = ItemModel.potion)
 	public static final NumberedItems FILLED_GLASSES = new NumberedItems(10, i -> registerSimpleItem("glass_" + i + "_filled"));
-	@DataGenItem(langOverride = "Glass Bottle")
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass Bottle")
 	public static final NumberedItems GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i));
-	@DataGenItem(langOverride = "Glass Bottle", model = ItemModel.potion)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass Bottle", model = ItemModel.potion)
 	public static final NumberedItems FILLED_GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i + "_filled"));
-	@DataGenItem(langOverride = "Plastic Bottle")
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Plastic Bottle")
 	public static final NumberedItems PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i));
-	@DataGenItem(langOverride = "Plastic Bottle", model = ItemModel.potion)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Plastic Bottle", model = ItemModel.potion)
 	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i + "_filled"));
 
 	///  FOOD
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item JOGAN_FRUIT = registerSimpleItem("jogan_fruit", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item CHASUKA_LEAF = registerSimpleItem("chasuka_leaf", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item MEILOORUN = registerSimpleItem("meiloorun", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item MYNOCK_WING = registerSimpleItem("mynock_wing", new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item FRIED_MYNOCK_WING = registerSimpleItem("cooked_mynock_wing", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BANTHA_CHOP = registerSimpleItem("bantha_chop", new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BANTHA_STEAK = registerSimpleItem("cooked_bantha_chop", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item NERF_CHOP = registerSimpleItem("nerf_chop", new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item NERF_STEAK = registerSimpleItem("cooked_nerf_chop", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item GIZKA_CHOP = registerSimpleItem("gizka_chop", new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item GIZKA_STEAK = registerSimpleItem("cooked_gizka_chop", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item FLANGTH_TAKEOUT = registerSimpleItem("flangth_takeout", new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item FLANGTH_PLATE = registerSimpleItem("flangth_plate", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.8F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DEATH_STICK_RED = registerSimpleItem("death_stick_red", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.DEATH_STICK_RED).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DEATH_STICK_YELLOW = registerSimpleItem("death_stick_yellow", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.DEATH_STICK_YELLOW).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item MYSTERIOUS_SMOOTHIE = registerSimpleItem("mysterious_smoothie", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.MYSTERIOUS_SMOOTHIE).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item KREETLE_JUICE = registerSimpleItem("kreetlejuice", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.KREETLE_JUICE).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item ABSYNTHESIZED_MALT = registerSimpleItem("absynthesized_malt", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.ABSYNTHESIZED_MALT).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item CORONET_COCKTAIL = registerSimpleItem("coronet_cocktail", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.CORONET_COCKTAIL).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item CLASSIC_SODA = registerSimpleItem("classic_soda", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.SODA).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DIET_SODA = registerSimpleItem("diet_soda", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.SODA).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item CITRUS_SODA = registerSimpleItem("citrus_soda", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.SODA).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BOTTLED_WATER = registerSimpleItem("bottled_water", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.WATER).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
 
 	// TODO: consider turning this into a Fluid
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BLUE_MILK = registerSimpleItem("blue_milk", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BLUE_MILK_GLASS = registerSimpleItem("blue_milk_glass", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BLUE_YOGURT = registerSimpleItem("blue_yogurt", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BANTHA_COOKIE = registerSimpleItem("bantha_cookie", new Item.Settings().food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.6F).build()));
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item QRIKKI_BREAD = registerSimpleItem("qrikki_bread", new Item.Settings().food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.6F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item QRIKKI_WAFFLE = registerSimpleItem("qrikki_waffle", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.7F).build()));
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item AHRISA_BOWL = registerSimpleItem("ahrisa_bowl", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BLACK_MELON = registerSimpleItem("black_melon", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DESERT_PLUMS = registerSimpleItem("desert_plums", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DRIED_POONTEN_GRASS = registerSimpleItem("dried_poonten_grass_bushel", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item HAROUN_BREAD = registerSimpleItem("haroun_bread", new Item.Settings().food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item HKAK_BEAN = registerSimpleItem("hkak_bean", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item PALLIE_FRUIT = registerSimpleItem("pallie_fruit", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item PIKA_FRUIT = registerSimpleItem("pika_fruit", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item TUBER = registerSimpleItem("tuber", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item COOKED_EOPIE_LOIN = registerSimpleItem("cooked_eopie_loin", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item CRISPY_GORG = registerSimpleItem("crispy_gorg", new Item.Settings().food(new FoodComponent.Builder().nutrition(6).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DEWBACK_EGG = registerSimpleItem("dewback_egg", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DEWBACK_OMELETTE = registerSimpleItem("dewback_omelette", new Item.Settings().food(new FoodComponent.Builder().nutrition(6).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item JERBA_RACK = registerSimpleItem("jerba_rack", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item JERBA_RIB = registerSimpleItem("jerba_rib", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item KRAYT_MEAT = registerSimpleItem("krayt_meat", new Item.Settings().food(new FoodComponent.Builder().nutrition(6).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item RAW_SKETTO_NUGGET = registerSimpleItem("raw_sketto_nugget", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item ROAST_KRAYT = registerSimpleItem("roast_krayt", new Item.Settings().food(new FoodComponent.Builder().nutrition(8).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item RONTO_CHUCK = registerSimpleItem("ronto_chuck", new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item TUBER_MASH = registerSimpleItem("tuber_mash", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item VAPORATOR_MUSHROOM = registerSimpleItem("vaporator_mushroom", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item WORRT_EGG = registerSimpleItem("worrt_egg", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DEB_DEB = registerSimpleItem("deb_deb", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item EOPIE_LOIN = registerSimpleItem("eopie_loin", new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item HUBBA_GOURD = registerSimpleItem("hubba_gourd", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 
 	/// MOB DROPS

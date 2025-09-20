@@ -31,6 +31,7 @@ import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -416,10 +417,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
-			translationBuilder.add(GadgetsItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY, "Construction Blocks");
-			translationBuilder.add(GadgetsItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "Worldgen Blocks");
-			translationBuilder.add(GadgetsItemGroups.DEMOLITIONS_ITEMS_GROUP_KEY, "Demolitions Gadgets");
-			translationBuilder.add(GadgetsItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG Items");
+			translationBuilder.add(GadgetsItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY, "PSWG - Construction Blocks");
+			translationBuilder.add(GadgetsItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "PSWG - Worldgen Blocks");
+			translationBuilder.add(GadgetsItemGroups.DEMOLITIONS_ITEMS_GROUP_KEY, "PSWG - Demolitions Gadgets");
+			translationBuilder.add(GadgetsItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG - Items");
+			translationBuilder.add(GadgetsItemGroups.FOOD_ITEMS_GROUP_KEY, "PSWG - Food");
 
 		}
 

@@ -4,7 +4,8 @@ public enum DataGenItemGroup
 {
 	ConstructionBlock,
 	WorldGenBlock,
-	Items,
 	DemolitionsGadgets,
+	Items,
+	Food,
 	None
 }
