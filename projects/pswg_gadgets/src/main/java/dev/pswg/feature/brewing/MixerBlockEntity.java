@@ -10,9 +10,15 @@ import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ConsumableComponent;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtFloat;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -23,6 +29,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class MixerBlockEntity extends LockableContainerBlockEntity implements SidedInventory, NamedScreenHandlerFactory
@@ -178,6 +185,46 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				fuelStack.decrement(1);
 			}
 		}
+	}
+
+	@Override
+	protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
+	{
+		currentMapX = nbt.getInt("current_map_x");
+		currentMapY = nbt.getInt("current_map_y");
+		litTimeRemaining = nbt.getInt("lit_time_remaining");
+		litTotalTime = nbt.getInt("lit_time_total");
+		bellowProgress = nbt.getInt("bellow_progress");
+		dangerProgress = nbt.getInt("danger_progress");
+		Inventories.readNbt(nbt, inventory, registries);
+		NbtList angleList = nbt.getList("path_angles", NbtElement.FLOAT_TYPE);
+		NbtList lengthList = nbt.getList("path_lengths", NbtElement.FLOAT_TYPE);
+		for (int i = 0; i < angleList.size(); i++)
+			path.push(Pair.of(angleList.getFloat(i), lengthList.getFloat(i)));
+		super.readNbt(nbt, registries);
+	}
+
+	@Override
+	protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
+	{
+		nbt.putFloat("current_map_x", currentMapX);
+		nbt.putFloat("current_map_y", currentMapY);
+		nbt.putInt("lit_time_remaining", litTimeRemaining);
+		nbt.putInt("lit_time_total", litTotalTime);
+		nbt.putInt("bellow_progress", bellowProgress);
+		nbt.putInt("danger_progress", dangerProgress);
+		Inventories.writeNbt(nbt, inventory, registries);
+		NbtList angleList = new NbtList();
+		NbtList lengthList = new NbtList();
+		for (Pair<Float, Float> pair : path.stream().toList())
+		{
+			angleList.add(NbtFloat.of(pair.getFirst()));
+			lengthList.add(NbtFloat.of(pair.getSecond()));
+		}
+		nbt.put("path_angles", angleList);
+		nbt.put("path_lengths", lengthList);
+
+		super.writeNbt(nbt, registries);
 	}
 
 	@Override
