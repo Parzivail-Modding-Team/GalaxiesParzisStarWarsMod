@@ -115,6 +115,16 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		if (blockEntity instanceof MixerBlockEntity mixer)
 		{
 			ItemStack inputStack = mixer.getStack(INPUT_SLOT_INDEX);
+			mixer.litTimeRemaining = Math.max(mixer.litTimeRemaining - 1, 0);
+			mixer.bellowProgress = Math.max(mixer.bellowProgress - 1, 0);
+			ItemStack fuelStack = mixer.getStack(FUEL_SLOT_INDEX);
+			if (mixer.litTimeRemaining == 0 && !fuelStack.isEmpty() && world.getFuelRegistry().isFuel(fuelStack) && (!mixer.path.empty() || !mixer.getStack(INPUT_SLOT_INDEX).isEmpty()))
+			{
+				mixer.litTotalTime = world.getFuelRegistry().getFuelTicks(fuelStack);
+				mixer.litTimeRemaining = world.getFuelRegistry().getFuelTicks(fuelStack);
+				fuelStack.decrement(1);
+			}
+
 			if (inputStack.contains(GadgetsItems.Components.BREWING_PATH) && mixer.path.empty() && mixer.litTimeRemaining > 0)
 			{
 				mixer.path.addAll(inputStack.get(GadgetsItems.Components.BREWING_PATH));
@@ -174,15 +184,6 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				lastElem = new Pair<>(lastElem.getFirst(), lastElem.getSecond() - mod);
 				if (lastElem.getSecond() > 0)
 					mixer.path.push(lastElem);
-			}
-			mixer.litTimeRemaining = Math.max(mixer.litTimeRemaining - 1, 0);
-			mixer.bellowProgress = Math.max(mixer.bellowProgress - 1, 0);
-			ItemStack fuelStack = mixer.getStack(FUEL_SLOT_INDEX);
-			if (mixer.litTimeRemaining == 0 && !fuelStack.isEmpty() && world.getFuelRegistry().isFuel(fuelStack))
-			{
-				mixer.litTotalTime = world.getFuelRegistry().getFuelTicks(fuelStack);
-				mixer.litTimeRemaining = world.getFuelRegistry().getFuelTicks(fuelStack);
-				fuelStack.decrement(1);
 			}
 		}
 	}
