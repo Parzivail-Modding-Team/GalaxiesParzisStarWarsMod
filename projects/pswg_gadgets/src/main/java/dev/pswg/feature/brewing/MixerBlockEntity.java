@@ -1,7 +1,6 @@
 package dev.pswg.feature.brewing;
 
 import com.mojang.datafixers.util.Pair;
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
 import net.minecraft.block.BlockState;
@@ -9,15 +8,20 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ConsumableComponent;
+import net.minecraft.component.type.PotionContentsComponent;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
@@ -29,7 +33,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
 
 public class MixerBlockEntity extends LockableContainerBlockEntity implements SidedInventory, NamedScreenHandlerFactory
@@ -110,22 +115,46 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		mixer.path.clear();
 	}
 
+	public static void craftPotion(MixerBlockEntity mixer, StatusEffectInstance effect)
+	{
+		ItemStack stack;
+		ItemStack outputStack = mixer.inventory.get(OUTPUT_SLOT_INDEX);
+		if (outputStack.isOf(Items.GLASS_BOTTLE))
+			stack = new ItemStack(Items.POTION);
+		else
+		{
+			Item item = Registries.ITEM.get(Registries.ITEM.getId(outputStack.getItem()).withSuffixedPath("_filled"));
+			if (item != null)
+				stack = new ItemStack(item);
+			else
+				stack = outputStack;
+		}
+
+		stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Optional.empty(), Optional.empty(), List.of(effect), Optional.empty()));
+		mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
+		resetMixer(mixer);
+	}
+
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity)
 	{
 		if (blockEntity instanceof MixerBlockEntity mixer)
 		{
+			boolean drinkContainerPresent = !mixer.getStack(OUTPUT_SLOT_INDEX).isEmpty() && mixer.getStack(OUTPUT_SLOT_INDEX).isIn(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
+			if (!drinkContainerPresent)
+				resetMixer(mixer);
+
 			ItemStack inputStack = mixer.getStack(INPUT_SLOT_INDEX);
 			mixer.litTimeRemaining = Math.max(mixer.litTimeRemaining - 1, 0);
 			mixer.bellowProgress = Math.max(mixer.bellowProgress - 1, 0);
 			ItemStack fuelStack = mixer.getStack(FUEL_SLOT_INDEX);
-			if (mixer.litTimeRemaining == 0 && !fuelStack.isEmpty() && world.getFuelRegistry().isFuel(fuelStack) && (!mixer.path.empty() || !mixer.getStack(INPUT_SLOT_INDEX).isEmpty()))
+			if (mixer.litTimeRemaining == 0 && drinkContainerPresent && !fuelStack.isEmpty() && world.getFuelRegistry().isFuel(fuelStack) && (!mixer.path.empty() || !mixer.getStack(INPUT_SLOT_INDEX).isEmpty()))
 			{
 				mixer.litTotalTime = world.getFuelRegistry().getFuelTicks(fuelStack);
 				mixer.litTimeRemaining = world.getFuelRegistry().getFuelTicks(fuelStack);
 				fuelStack.decrement(1);
 			}
 
-			if (inputStack.contains(GadgetsItems.Components.BREWING_PATH) && mixer.path.empty() && mixer.litTimeRemaining > 0)
+			if (inputStack.contains(GadgetsItems.Components.BREWING_PATH) && mixer.path.empty() && mixer.litTimeRemaining > 0 && drinkContainerPresent)
 			{
 				mixer.path.addAll(inputStack.get(GadgetsItems.Components.BREWING_PATH));
 				inputStack.decrement(1);
@@ -135,12 +164,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			{
 				mixer.dangerProgress++;
 				if (mixer.dangerProgress >= 12)
-				{
-					ItemStack stack = new ItemStack(GadgetsItems.BANTHA_COOKIE);
-					stack.set(DataComponentTypes.CONSUMABLE, ConsumableComponent.builder().consumeEffect(new ApplyEffectsConsumeEffect(dangerCell.statusEffect)).build());
-					mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
-					resetMixer(mixer);
-				}
+					craftPotion(mixer, dangerCell.statusEffect);
 			}
 			if (cell instanceof CornerCell){
 				mixer.dangerProgress++;
@@ -150,12 +174,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			if (cell instanceof EffectCell effectCell)
 			{
 				if (mixer.bellowProgress >= MAX_BELLOW_PROGRESS - 8)
-				{
-					ItemStack stack = new ItemStack(GadgetsItems.BANTHA_COOKIE);
-					stack.set(DataComponentTypes.CONSUMABLE, ConsumableComponent.builder().consumeEffect(new ApplyEffectsConsumeEffect(effectCell.statusEffect)).build());
-					mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
-					resetMixer(mixer);
-				}
+					craftPotion(mixer, effectCell.statusEffect);
 			}
 			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
 			if (!mixer.path.empty() && mixer.bellowProgress > 0)

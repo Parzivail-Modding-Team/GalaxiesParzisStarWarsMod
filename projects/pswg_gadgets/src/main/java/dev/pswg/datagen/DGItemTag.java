@@ -8,5 +8,6 @@ public enum DGItemTag
 	LogsThatBurn,
 	Sand,
 	Grenade,
-	Mine
+	Mine,
+	DrinkContainer
 }

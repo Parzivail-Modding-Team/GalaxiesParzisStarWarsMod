@@ -463,7 +463,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.Grenade, this);
 			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.Mine, this);
+			addItemsToTag(GadgetsItems.Tags.DRINK_CONTAINER_TAG, DGItemTag.DrinkContainer, this);
 			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
+
+			getOrCreateTagBuilder(GadgetsItems.Tags.DRINK_CONTAINER_TAG)
+					.add(Items.GLASS_BOTTLE);
 
 			getOrCreateTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
 					.add(GadgetsItems.BESKAR_INGOT);

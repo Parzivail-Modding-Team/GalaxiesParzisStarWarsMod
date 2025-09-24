@@ -38,8 +38,8 @@ public class MixerScreenHandler extends ScreenHandler
 		this.addSlot(new FuelSlot(inventory, 0, 140, 131, this));
 		/// INPUT
 		this.addSlot(new BrewingIngredientSlot(inventory, 1, 140, 72));
-		/// OUTPUT
-		this.addSlot(new OutputSlot(inventory, 2, 140, 26));
+		/// OUTPUT / DRINK CONTAINER INPUT
+		this.addSlot(new DrinkContainerSlot(inventory, 2, 140, 26));
 
 		this.addPlayerSlots(playerInventory, 8, 174);
 
