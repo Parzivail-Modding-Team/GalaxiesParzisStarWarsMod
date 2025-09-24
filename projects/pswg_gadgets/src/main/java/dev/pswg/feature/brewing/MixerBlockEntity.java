@@ -21,11 +21,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -115,7 +117,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		mixer.path.clear();
 	}
 
-	public static void craftPotion(MixerBlockEntity mixer, StatusEffectInstance effect)
+	public static void craftPotion(MixerBlockEntity mixer, StatusEffectInstance... effects)
 	{
 		ItemStack stack;
 		ItemStack outputStack = mixer.inventory.get(OUTPUT_SLOT_INDEX);
@@ -129,10 +131,27 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			else
 				stack = outputStack;
 		}
-
-		stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Optional.empty(), Optional.empty(), List.of(effect), Optional.empty()));
+		stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Optional.empty(), Optional.empty(), List.of(effects), Optional.empty()));
 		mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
 		resetMixer(mixer);
+	}
+
+	public static void spawnFailParticles(World world, BlockPos pos)
+	{
+		if (world instanceof ServerWorld serverWorld)
+			serverWorld.spawnParticles(
+					ParticleTypes.SMOKE,
+					false,
+					false,
+					pos.toCenterPos().getX(),
+					pos.toCenterPos().getY(),
+					pos.toCenterPos().getZ(),
+					20,
+					0,
+					0,
+					0,
+					0.05f
+			);
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity)
@@ -164,12 +183,21 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			{
 				mixer.dangerProgress++;
 				if (mixer.dangerProgress >= 12)
+				{
+					resetMixer(mixer);
+					spawnFailParticles(world, pos);
 					craftPotion(mixer, dangerCell.statusEffect);
+				}
+
 			}
 			if (cell instanceof CornerCell){
 				mixer.dangerProgress++;
 				if(mixer.dangerProgress >= 8)
+				{
 					resetMixer(mixer);
+					craftPotion(mixer);
+					spawnFailParticles(world, pos);
+				}
 			}
 			if (cell instanceof EffectCell effectCell)
 			{
