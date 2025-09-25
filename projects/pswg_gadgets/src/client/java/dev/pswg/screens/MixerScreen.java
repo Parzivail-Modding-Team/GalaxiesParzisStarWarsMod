@@ -69,7 +69,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 
 
 		float litMod = 14 - (float)(handler.getLitTimeRemaining() * 14) / Math.max(handler.getLitTimeTotal(), 1);
-		if (handler.getLitTimeRemaining() != 0)
+		if (handler.getLitTimeRemaining() != 0 && handler.isDrinkContainerPresent())
 		{
 			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 143, backgroundY + 95, 176, 43, 10, 17, 256, 256);
 			if (mouseX > 142 + backgroundX && mouseX < 153 + backgroundX && mouseY > 94 + backgroundY && mouseY < 112 + backgroundY)

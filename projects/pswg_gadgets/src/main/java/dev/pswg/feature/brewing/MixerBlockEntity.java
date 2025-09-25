@@ -182,7 +182,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			if (cell instanceof DangerCell dangerCell)
 			{
 				mixer.dangerProgress++;
-				if (mixer.dangerProgress >= 12)
+				if (mixer.dangerProgress >= 16)
 				{
 					resetMixer(mixer);
 					spawnFailParticles(world, pos);
@@ -192,7 +192,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			}
 			if (cell instanceof CornerCell){
 				mixer.dangerProgress++;
-				if(mixer.dangerProgress >= 8)
+				if(mixer.dangerProgress >= 12)
 				{
 					resetMixer(mixer);
 					craftPotion(mixer);

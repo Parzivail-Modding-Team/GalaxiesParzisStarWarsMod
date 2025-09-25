@@ -556,7 +556,7 @@ public class GadgetsItems
 	/// MOB DROPS
 	// TODO: FAA AND LAA BUCKETS WHEN THEY'RE IMPLEMENTED
 	@DataGenItem
-	public static final Item CORPSE_OF_GORG = registerSimpleItem("corpse_of_gorg");
+	public static final Item CORPSE_OF_GORG = registerSimpleItem("corpse_of_gorg", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 7 / 4f, 100f), Pair.of((float)Math.PI * 5 / 4f, 25f)))));
 	@DataGenItem
 	public static final Item BANTHA_HORN = registerSimpleItem("bantha_horn");
 	@DataGenItem
@@ -574,11 +574,11 @@ public class GadgetsItems
 	@DataGenItem
 	public static final Item KREETLE_HUSK = registerSimpleItem("kreetle_husk", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI / -4f, 45f), Pair.of((float)Math.PI / 6f, 45f)))));
 	@DataGenItem
-	public static final Item LIZARD_GIZZARD = registerSimpleItem("lizard_gizzard", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 10 / 7f, 40f), Pair.of((float)Math.PI / -9f, 8f), Pair.of((float)Math.PI * 9f / 8f, 15f)))));
+	public static final Item LIZARD_GIZZARD = registerSimpleItem("lizard_gizzard", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 10 / 7f, 45f), Pair.of((float)Math.PI * 9f / 8f, 22f),  Pair.of((float)Math.PI / -9f, 12f)))));
 	@DataGenItem
-	public static final Item SQUILL_LIVER = registerSimpleItem("squill_liver", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 5 / 3f, 22f), Pair.of((float)Math.PI * 7 / 6f, 32f)))));
+	public static final Item SQUILL_LIVER = registerSimpleItem("squill_liver", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 11 / 12f, 30f), Pair.of((float)Math.PI * 3 / 4f, 40f)))));
 	@DataGenItem
-	public static final Item TONGUE_OF_WORRT = registerSimpleItem("tongue_of_worrt", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 2 / 3f, 28f), Pair.of((float)Math.PI / 6f, 24f)))));
+	public static final Item TONGUE_OF_WORRT = registerSimpleItem("tongue_of_worrt", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(Arrays.asList(Pair.of((float)Math.PI * 2 / 3f, 26f), Pair.of((float)Math.PI / 6f, 34f)))));
 	@DataGenItem
 	public static final Item TOUGH_HIDE = registerSimpleItem("tough_hide");
 

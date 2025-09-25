@@ -1,8 +1,8 @@
 package dev.pswg.feature.brewing;
 
 import dev.pswg.Gadgets;
+import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
-import dev.pswg.feature.scrapping.table.OutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -11,8 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
+
+import static dev.pswg.feature.brewing.MixerBlockEntity.OUTPUT_SLOT_INDEX;
 
 public class MixerScreenHandler extends ScreenHandler
 {
@@ -83,12 +84,16 @@ public class MixerScreenHandler extends ScreenHandler
 		return propertyDelegate.get(4);
 	}
 
+	public boolean isDrinkContainerPresent() {
+		return !inventory.getStack(OUTPUT_SLOT_INDEX).isEmpty() && inventory.getStack(OUTPUT_SLOT_INDEX).isIn(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
+	}
+
 	@Override
 	public boolean onButtonClick(PlayerEntity player, int id)
 	{
 		if (id == 0)
 		{
-			if (getLitTimeRemaining() != 0)
+			if (getLitTimeRemaining() != 0 && isDrinkContainerPresent())
 				propertyDelegate.set(4, Math.min(getBellowProgress() + 15, MixerBlockEntity.MAX_BELLOW_PROGRESS));
 			return true;
 		}
