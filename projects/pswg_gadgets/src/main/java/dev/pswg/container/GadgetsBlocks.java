@@ -50,7 +50,6 @@ public class GadgetsBlocks
 	public static final Block SCRAPPING_TABLE_BLOCK = Registrar.block(Gadgets.id("scrapping_table"), ScrappingTableBlock::new, AbstractBlock.Settings.create());
 	@DataGenBlock(model = DataGenBlockModel.None)
 	public static final Block MIXER_BLOCK = Registrar.block(Gadgets.id("mixer"), MixerBlock::new, AbstractBlock.Settings.create());
-	//public static final StairsBlock CHARRED_STAIRS = Registrar.block(Gadgets.id("charred_stairs"), Block::new, Block.Settings.create().dropsNothing().breakInstantly());
 
 	/// STONE
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)

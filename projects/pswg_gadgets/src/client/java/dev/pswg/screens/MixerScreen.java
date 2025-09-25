@@ -94,7 +94,6 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 
 			if (Math.abs(handler.getMapX() - x) < 63 + (64 - Math.min(handler.getMapX(), 64)) && Math.abs(handler.getMapY() - y) < 63 + (64 - Math.min(handler.getMapY(), 64)))
 			{
-				//context.fill(x1, y1, x2, y2, -1);
 				Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
 
 				if (x1 < x2)

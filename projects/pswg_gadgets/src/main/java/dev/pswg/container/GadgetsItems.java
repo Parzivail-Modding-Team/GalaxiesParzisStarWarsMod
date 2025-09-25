@@ -429,9 +429,6 @@ public class GadgetsItems
 	public static final NumberedItems PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Plastic Bottle", model = ItemModel.potion)
 	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerDefaultPotionItem("plastic_bottle_" + i + "_filled", new Item.Settings().useRemainder(PLASTIC_BOTTLES.get(i - 1))));
-	//.component(DataComponentTypes.POTION_CONTENTS, PotionContentsComponent.DEFAULT)
-	//			.component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK)
-	//			.useRemainder(GLASS_BOTTLE)
 	///  FOOD
 
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
@@ -582,7 +579,6 @@ public class GadgetsItems
 	@DataGenItem
 	public static final Item TOUGH_HIDE = registerSimpleItem("tough_hide");
 
-	//.component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK)
 	public static Item registerSimpleItem(String key)
 	{
 		return registerSimpleItem(key, new Item.Settings());

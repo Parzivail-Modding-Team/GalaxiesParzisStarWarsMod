@@ -115,9 +115,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				}
 			});
 
-			//String blockKey = genBlock.getRegistryEntry().getKey().get().getValue().toString().substring(Gadgets.MODID.length()+1);
-			//TexturedModel.makeFactory(item -> TextureMap.texture(Gadgets.id("item/"+blockKey)), blockModel("corrugated_crate", TextureKey.of(blockKey)));
-
 		}
 
 		private static void registerStoneProducts(StoneProducts stoneProducts, BlockStateModelGenerator generator)
