@@ -392,7 +392,7 @@ public class GadgetsItems
 
 	/// NATURAL
 	@DataGenItem
-	public static final Item STRIPPED_JAPOR_BRANCH = registerSimpleItem("stripped_japor_branch");
+	public static final Item STRIPPED_JAPOR_BRANCH = registerSimpleItem("stripped_japor_branch", new Item.Settings().component(Components.BREWING_PATH, new ArrayList<>(List.of(Pair.of((float)Math.PI * 7 / 4f, 20f), Pair.of((float)Math.PI * 1 / 3f, 65f)))));
 	@DataGenItem
 	public static final Item MOLO_FLOWER = registerSimpleItem("molo_flower");
 	@DataGenItem
@@ -434,7 +434,7 @@ public class GadgetsItems
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item JOGAN_FRUIT = registerSimpleItem("jogan_fruit", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
-	public static final Item CHASUKA_LEAF = registerSimpleItem("chasuka_leaf", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
+	public static final Item CHASUKA_LEAF = registerSimpleItem("chasuka_leaf", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()).component(Components.BREWING_PATH, new ArrayList<>(List.of(Pair.of((float)Math.PI * 7 / 12f, 25f), Pair.of((float)Math.PI * 3 / 4f, 20f), Pair.of((float)Math.PI * 11 / 12f, 15f)))));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item MEILOORUN = registerSimpleItem("meiloorun", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 
@@ -510,7 +510,7 @@ public class GadgetsItems
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item HAROUN_BREAD = registerSimpleItem("haroun_bread", new Item.Settings().food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
-	public static final Item HKAK_BEAN = registerSimpleItem("hkak_bean", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
+	public static final Item HKAK_BEAN = registerSimpleItem("hkak_bean", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()).component(Components.BREWING_PATH, new ArrayList<>(List.of(Pair.of((float)Math.PI * 11 / 6f, 36f), Pair.of((float)Math.PI * 19 / 12f, 50f), Pair.of((float)Math.PI * 5 / 4f, 50f)))));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item PALLIE_FRUIT = registerSimpleItem("pallie_fruit", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
