@@ -8,7 +8,7 @@
         "value": -1
       },
       {
-        "type": "minecraft:potion",
+        "type": "pswg_gadgets:drink",
         "default": -13083194
       }
     ]

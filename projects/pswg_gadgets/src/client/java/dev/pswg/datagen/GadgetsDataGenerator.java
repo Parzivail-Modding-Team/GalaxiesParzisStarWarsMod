@@ -12,6 +12,7 @@ import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
+import dev.pswg.tints.SwgDrinkTintSource;
 import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -342,12 +343,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					{
 						case generated -> register(generator, item, createItemKey(item, dataGenItem), Models.GENERATED);
 						case handheld -> register(generator, item, createItemKey(item, dataGenItem), Models.HANDHELD);
-						case potion -> registerPotion(generator, item, dataGenItem);
+						case drink -> registerDrink(generator, item, dataGenItem);
 					}
 			}
 		}
 
-		public void registerPotion(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
+		public void registerDrink(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
 		{
 			Identifier modelId;
 			Identifier overlay = (dataGenItem.overlayTextureOverride().equals("")) ? Identifier.of(createItemKey(item, dataGenItem).withSuffixedPath("_overlay").toString().replace("_filled", "")) : Gadgets.id(dataGenItem.overlayTextureOverride()).withPrefixedPath("item/");
@@ -356,12 +357,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			if (dataGenItem.invertLayer())
 			{
 				modelId = generator.uploadTwoLayers(item, base, overlay);
-				generator.output.accept(item, ItemModels.tinted(modelId, new ConstantTintSource(16777215), new PotionTintSource()));
+				generator.output.accept(item, ItemModels.tinted(modelId, new ConstantTintSource(16777215), new SwgDrinkTintSource()));
 			}
 			else
 			{
 				modelId = generator.uploadTwoLayers(item, overlay, base);
-				generator.output.accept(item, ItemModels.tinted(modelId, new PotionTintSource()));
+				generator.output.accept(item, ItemModels.tinted(modelId, new SwgDrinkTintSource()));
 			}
 		}
 	}

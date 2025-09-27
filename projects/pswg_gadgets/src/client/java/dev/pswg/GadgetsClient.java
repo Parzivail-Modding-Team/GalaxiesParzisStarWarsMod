@@ -13,6 +13,7 @@ import dev.pswg.renderer.mines.TripwireMineEntityRenderer;
 import dev.pswg.screens.CrateGenericSmallScreen;
 import dev.pswg.screens.MixerScreen;
 import dev.pswg.screens.ScrappingTableScreen;
+import dev.pswg.tints.SwgDrinkTintSource;
 import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -22,6 +23,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
+import net.minecraft.client.render.item.tint.TintSourceTypes;
 
 /**
  * The main entrypoint for PSWG client-side gadget features
@@ -76,6 +78,8 @@ public class GadgetsClient implements GalaxiesClientAddon
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(LaserCutterHandler::tick);
+
+		TintSourceTypes.ID_MAPPER.put(Gadgets.id("drink"), SwgDrinkTintSource.CODEC);
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

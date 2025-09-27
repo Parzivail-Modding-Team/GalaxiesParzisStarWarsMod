@@ -31,12 +31,10 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static net.minecraft.component.type.ConsumableComponents.food;
@@ -409,25 +407,25 @@ public class GadgetsItems
 	public static final Item DURASTEEL_CUP = registerSimpleItem("durasteel_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.DrinkContainer)
 	public static final Item DESH_CUP = registerSimpleItem("desh_cup", new Item.Settings().component(Components.METAL_COMPONENT, 1));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.drink, overlayTextureOverride = "cup_overlay", invertLayer = true)
 	public static final Item FILLED_DURASTEEL_CUP = registerDefaultPotionItem("durasteel_cup_filled", new Item.Settings().useRemainder(DURASTEEL_CUP));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.drink, overlayTextureOverride = "cup_overlay", invertLayer = true)
 	public static final Item FILLED_DESH_CUP = registerDefaultPotionItem("desh_cup_filled", new Item.Settings().useRemainder(DESH_CUP));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.DrinkContainer)
 	public static final DyedItems CUPS = new DyedItems(color -> registerSimpleItem(color.name().toLowerCase() + "_cup"));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.potion, overlayTextureOverride = "cup_overlay", invertLayer = true)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, model = ItemModel.drink, overlayTextureOverride = "cup_overlay", invertLayer = true)
 	public static final DyedItems FILLED_CUPS = new DyedItems(color -> registerDefaultPotionItem(color.name().toLowerCase() + "_cup_filled", new Item.Settings().useRemainder(CUPS.get(color))));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.DrinkContainer, langOverride = "Glass")
 	public static final NumberedItems GLASSES = new NumberedItems(10, i -> registerSimpleItem("glass_" + i));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass", model = ItemModel.potion)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass", model = ItemModel.drink)
 	public static final NumberedItems FILLED_GLASSES = new NumberedItems(10, i -> registerDefaultPotionItem("glass_" + i + "_filled", new Item.Settings().useRemainder(GLASSES.get(i - 1))));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.DrinkContainer, langOverride = "Glass Bottle")
 	public static final NumberedItems GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass Bottle", model = ItemModel.potion)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Glass Bottle", model = ItemModel.drink)
 	public static final NumberedItems FILLED_GLASS_BOTTLES = new NumberedItems(3, i -> registerDefaultPotionItem("glass_bottle_" + i + "_filled", new Item.Settings().useRemainder(GLASS_BOTTLES.get(i - 1))));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.DrinkContainer, langOverride = "Plastic Bottle")
 	public static final NumberedItems PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Plastic Bottle", model = ItemModel.potion)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, langOverride = "Plastic Bottle", model = ItemModel.drink)
 	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerDefaultPotionItem("plastic_bottle_" + i + "_filled", new Item.Settings().useRemainder(PLASTIC_BOTTLES.get(i - 1))));
 	///  FOOD
 

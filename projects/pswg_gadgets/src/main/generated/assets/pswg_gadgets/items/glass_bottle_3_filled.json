@@ -4,7 +4,7 @@
     "model": "pswg_gadgets:item/glass_bottle_3_filled",
     "tints": [
       {
-        "type": "minecraft:potion",
+        "type": "pswg_gadgets:drink",
         "default": -13083194
       }
     ]
