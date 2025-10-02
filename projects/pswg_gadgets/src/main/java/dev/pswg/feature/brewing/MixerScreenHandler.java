@@ -52,7 +52,7 @@ public class MixerScreenHandler extends ScreenHandler
 		float val = propertyDelegate.get(0) / 10f;
 		if (val < 0)
 		{
-			Gadgets.LOGGER.warn("map X lower then 0, val equal to: " + val + " delegated prop equal: " + propertyDelegate.get(0));
+			Gadgets.LOGGER.warn("map X lower then 0, val equal to: " + val + " delegated prop equal: " + propertyDelegate.get(0) + ", setting to: " + val * -1);
 			val = val * -1;
 		}
 		return val;
@@ -63,7 +63,7 @@ public class MixerScreenHandler extends ScreenHandler
 		float val = propertyDelegate.get(1) / 10f;
 		if (val < 0)
 		{
-			Gadgets.LOGGER.warn("map Y lower then 0, val equal to: " + val + " delegated prop equal: " + propertyDelegate.get(1));
+			Gadgets.LOGGER.warn("map Y lower then 0, val equal to: " + val + " delegated prop equal: " + propertyDelegate.get(1) + ", setting to: " + val * -1);
 			val = val * -1;
 		}
 		return val;
