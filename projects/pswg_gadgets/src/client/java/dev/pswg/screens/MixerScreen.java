@@ -3,15 +3,18 @@ package dev.pswg.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.pswg.Gadgets;
 import dev.pswg.feature.brewing.MixerScreenHandler;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		this.backgroundHeight = 255;
 		this.backgroundWidth = 175;
 		this.playerInventoryTitleX = 8;
-		this.playerInventoryTitleY = 152;
+		this.playerInventoryTitleY = 160;
 	}
 
 	@Override
@@ -53,6 +56,17 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
+	public boolean isMouseHeld()
+	{
+		return isKeyPressed(GLFW.GLFW_MOUSE_BUTTON_1) || isKeyPressed(GLFW.GLFW_MOUSE_BUTTON_2);
+	}
+
+	public boolean isKeyPressed(int keyId)
+	{
+		return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), keyId);
+	}
+
+
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
@@ -61,26 +75,31 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		var backgroundX = (this.width - this.backgroundWidth) / 2;
 		var backgroundY = (this.height - this.backgroundHeight) / 2;
 
-		context.drawTexture(RenderLayer::getGuiTextured, MAP_TEXTURE, backgroundX + 6, backgroundY + 19, Math.clamp(handler.getMapX() - 64, 0, 512 - 128), Math.clamp(handler.getMapY() - 64, 0, 512 - 128), 128, 128, 512, 512);
+		///  MAP
+		context.drawTexture(RenderLayer::getGuiTextured, MAP_TEXTURE, backgroundX + 7, backgroundY + 19, Math.clamp(handler.getMapX() - 64, 0, 512 - 128), Math.clamp(handler.getMapY() - 64, 0, 512 - 128), 128 - 1, 128 - 1, 512, 512);
 
-		float markerX = backgroundX + 67 + (Math.min(handler.getMapX(), 64) - 64) + (Math.max(handler.getMapX(), 512 - 64) - 448);
+		///  MARKER
+		float markerX = backgroundX + 68 + (Math.min(handler.getMapX(), 64) - 64) + (Math.max(handler.getMapX(), 512 - 64) - 448);
 		float markerY = backgroundY + 81 + (Math.min(handler.getMapY(), 64) - 64) + (Math.max(handler.getMapY(), 512 - 64) - 448);
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, (int)markerX, (int)markerY, 177, 61, 5, 5, 256, 256);
+		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, (int)markerX, (int)markerY, 177, 69, 5, 5, 256, 256);
 
-
-		float litMod = 14 - (float)(handler.getLitTimeRemaining() * 14) / Math.max(handler.getLitTimeTotal(), 1);
+		/// BELLOW BUTTON
 		if (handler.getLitTimeRemaining() != 0 && handler.isDrinkContainerPresent())
 		{
 			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 143, backgroundY + 95, 176, 43, 10, 17, 256, 256);
 			if (mouseX > 142 + backgroundX && mouseX < 153 + backgroundX && mouseY > 94 + backgroundY && mouseY < 112 + backgroundY)
 				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 143, backgroundY + 95, 176, 26, 10, 17, 256, 256);
 		}
+		///  BELLOW FILL AMOUNT
 		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 145, backgroundY + 98, 177, 0, 6, handler.getBellowProgress() / 8, 256, 256);
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 141, (int)(backgroundY + 115 + litMod), 177, (int)(12 + litMod), 14, handler.getLitTimeRemaining() * 14 / Math.max(handler.getLitTimeTotal(), 1), 256, 256);
 
+		///  LIT TIME INDICATOR
+		float litMod = 14 - (float)(handler.getLitTimeRemaining() * 14) / Math.max(handler.getLitTimeTotal(), 1);
+		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 146, (int)(backgroundY + 106 + litMod), 177, (int)(12 + litMod), 14, handler.getLitTimeRemaining() * 14 / Math.max(handler.getLitTimeTotal(), 1), 256, 256);
+
+		///  PAST POSITIONS TRAIL
 		if (handler.getMapX() == 256 && handler.getMapY() == 256)
 			previousMousePosition.clear();
-		;
 
 		for (int i = 1; i < previousMousePosition.size(); i++)
 		{

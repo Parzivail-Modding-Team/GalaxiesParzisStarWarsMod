@@ -36,11 +36,11 @@ public class MixerScreenHandler extends ScreenHandler
 		this.propertyDelegate = propertyDelegate;
 
 		/// FUEL
-		this.addSlot(new FuelSlot(inventory, 0, 146, 128, this));
+		this.addSlot(new FuelSlot(inventory, 0, 146, 122, this));
 		/// INPUT
-		this.addSlot(new BrewingIngredientSlot(inventory, 1, 146, 75));
+		this.addSlot(new BrewingIngredientSlot(inventory, 1, 146, 69));
 		/// OUTPUT / DRINK CONTAINER INPUT
-		this.addSlot(new DrinkContainerSlot(inventory, 2, 146, 31));
+		this.addSlot(new DrinkContainerSlot(inventory, 2, 146, 29));
 
 		this.addPlayerSlots(playerInventory, 8, 174);
 
@@ -91,11 +91,30 @@ public class MixerScreenHandler extends ScreenHandler
 	@Override
 	public boolean onButtonClick(PlayerEntity player, int id)
 	{
-		if (id == 0)
+		switch (id)
 		{
-			if (getLitTimeRemaining() != 0 && isDrinkContainerPresent())
-				propertyDelegate.set(4, Math.min(getBellowProgress() + 15, MixerBlockEntity.MAX_BELLOW_PROGRESS));
-			return true;
+			case 0:
+			{
+				/// BELLOW
+				if (getLitTimeRemaining() != 0 && isDrinkContainerPresent())
+					propertyDelegate.set(4, Math.min(getBellowProgress() + 15, MixerBlockEntity.MAX_BELLOW_PROGRESS));
+				return true;
+			}
+			case 1:
+			{
+				///  CONFIRM
+
+			}
+			case 2:
+			{
+				///  ADD EFFECT
+
+			}
+			case 3:
+			{
+				/// CANCEL
+
+			}
 		}
 		return super.onButtonClick(player, id);
 	}
