@@ -7,7 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ConsumableComponent;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,7 +15,6 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtFloat;
@@ -44,7 +42,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	protected static final int FUEL_SLOT_INDEX = 0;
 	protected static final int INPUT_SLOT_INDEX = 1;
 	protected static final int OUTPUT_SLOT_INDEX = 2;
-	protected static final int MAX_BELLOW_PROGRESS = 88;
+	protected static final int MAX_BELLOW_PROGRESS = 90;
 
 	protected static final int MAX_MAP_X = 512;
 	protected static final int MAX_MAP_Y = 512;
