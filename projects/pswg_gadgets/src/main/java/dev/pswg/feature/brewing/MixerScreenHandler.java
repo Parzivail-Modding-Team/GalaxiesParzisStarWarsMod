@@ -36,11 +36,11 @@ public class MixerScreenHandler extends ScreenHandler
 		this.propertyDelegate = propertyDelegate;
 
 		/// FUEL
-		this.addSlot(new FuelSlot(inventory, 0, 140, 131, this));
+		this.addSlot(new FuelSlot(inventory, 0, 146, 128, this));
 		/// INPUT
-		this.addSlot(new BrewingIngredientSlot(inventory, 1, 140, 72));
+		this.addSlot(new BrewingIngredientSlot(inventory, 1, 146, 75));
 		/// OUTPUT / DRINK CONTAINER INPUT
-		this.addSlot(new DrinkContainerSlot(inventory, 2, 140, 26));
+		this.addSlot(new DrinkContainerSlot(inventory, 2, 146, 31));
 
 		this.addPlayerSlots(playerInventory, 8, 174);
 
