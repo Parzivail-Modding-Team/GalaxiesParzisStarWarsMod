@@ -24,7 +24,7 @@ public class MixerScreenHandler extends ScreenHandler
 
 	public MixerScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(6));
+		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(7));
 	}
 
 	public MixerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate)
@@ -96,8 +96,11 @@ public class MixerScreenHandler extends ScreenHandler
 			case 0:
 			{
 				/// BELLOW
-				if (getLitTimeRemaining() != 0 && isDrinkContainerPresent())
-					propertyDelegate.set(4, Math.min(getBellowProgress() + 15, MixerBlockEntity.MAX_BELLOW_PROGRESS));
+				if (true)
+				{
+					propertyDelegate.set(6, Math.min(getBellowProgress(), 4));
+					propertyDelegate.set(4, Math.max(getBellowProgress() - 3, 0));
+				}
 				return true;
 			}
 			case 1:

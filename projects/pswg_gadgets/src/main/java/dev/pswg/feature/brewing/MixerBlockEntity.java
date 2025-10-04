@@ -1,6 +1,7 @@
 package dev.pswg.feature.brewing;
 
 import com.mojang.datafixers.util.Pair;
+import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
 import net.minecraft.block.BlockState;
@@ -42,7 +43,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	protected static final int FUEL_SLOT_INDEX = 0;
 	protected static final int INPUT_SLOT_INDEX = 1;
 	protected static final int OUTPUT_SLOT_INDEX = 2;
-	protected static final int MAX_BELLOW_PROGRESS = 90;
+	protected static final int MAX_BELLOW_PROGRESS = 180;
 
 	protected static final int MAX_MAP_X = 512;
 	protected static final int MAX_MAP_Y = 512;
@@ -54,6 +55,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	int litTotalTime;
 	int bellowProgress;
 	int dangerProgress;
+	int bellowBacklog;
 	public Stack<Pair<Float, Float>> path = new Stack<>();
 
 	protected final PropertyDelegate propertyDelegate;
@@ -67,6 +69,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		litTotalTime = 1;
 		bellowProgress = 0;
 		dangerProgress = 0;
+		bellowBacklog = 0;
 		propertyDelegate = new PropertyDelegate()
 		{
 			@Override
@@ -80,6 +83,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 					case 3 -> litTotalTime;
 					case 4 -> bellowProgress;
 					case 5 -> dangerProgress;
+					case 6 -> bellowBacklog;
 					default -> 0;
 				};
 			}
@@ -95,13 +99,14 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 					case 3 -> litTotalTime = value;
 					case 4 -> bellowProgress = value;
 					case 5 -> dangerProgress = value;
+					case 6 -> bellowBacklog = value;
 				}
 			}
 
 			@Override
 			public int size()
 			{
-				return 6;
+				return 7;
 			}
 		};
 	}
@@ -161,8 +166,20 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				resetMixer(mixer);
 
 			ItemStack inputStack = mixer.getStack(INPUT_SLOT_INDEX);
+			mixer.bellowBacklog = Math.max(mixer.bellowBacklog - 1, 0);
 			mixer.litTimeRemaining = Math.max(mixer.litTimeRemaining - 1, 0);
-			mixer.bellowProgress = Math.max(mixer.bellowProgress - 1, 0);
+
+			if (mixer.litTimeRemaining > 0)
+			{
+				if (mixer.bellowBacklog == 0)
+				{
+
+					mixer.bellowProgress = Math.min(mixer.bellowProgress + 5, MAX_BELLOW_PROGRESS);
+				}
+			}
+			else
+				mixer.bellowProgress = Math.max(mixer.bellowProgress - 2, 0);
+
 			ItemStack fuelStack = mixer.getStack(FUEL_SLOT_INDEX);
 			if (mixer.litTimeRemaining == 0 && drinkContainerPresent && !fuelStack.isEmpty() && world.getFuelRegistry().isFuel(fuelStack) && (!mixer.path.empty() || !mixer.getStack(INPUT_SLOT_INDEX).isEmpty()))
 			{
@@ -180,7 +197,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			if (cell instanceof DangerCell dangerCell)
 			{
 				mixer.dangerProgress++;
-				if (mixer.dangerProgress >= 16)
+				if (mixer.dangerProgress >= 12)
 				{
 					resetMixer(mixer);
 					spawnFailParticles(world, pos);
@@ -190,7 +207,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			}
 			if (cell instanceof CornerCell){
 				mixer.dangerProgress++;
-				if(mixer.dangerProgress >= 12)
+				if (mixer.dangerProgress >= 8)
 				{
 					resetMixer(mixer);
 					craftPotion(mixer);
@@ -203,20 +220,20 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 					craftPotion(mixer, effectCell.statusEffect);
 			}
 			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
-			if (!mixer.path.empty() && mixer.bellowProgress > 0)
+			if (!mixer.path.empty() && mixer.bellowBacklog > 0 && mixer.bellowProgress > 5)
 			{
-				float mod = 0.75f;
+				float mod = 1f;
 				if (cell instanceof DangerCell)
 				{
 					mixer.dangerProgress++;
-					mod = 1f;
+					mod = 1.25f;
 				}
 				if(cell instanceof EffectCell)
-					mod = 0.4f;
+					mod = 0.9f;
 				if(cell instanceof CornerCell)
 				{
 					mixer.dangerProgress++;
-					mod = 0.6f;
+					mod = 0.95f;
 				}
 				mod = Math.min(mod, mixer.path.peek().getSecond());
 				float value = mixer.path.peek().getFirst();

@@ -43,26 +43,35 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 	}
 
 	@Override
+	protected void handledScreenTick()
+	{
+		if (isMouseHeld() && isHoveringBellow((int)(client.mouse.getX() / client.getWindow().getScaleFactor()), (int)(client.mouse.getY() / client.getWindow().getScaleFactor())) && this.handler.onButtonClick(this.client.player, 0))
+			this.client.interactionManager.clickButton(this.handler.syncId, 0);
+		super.handledScreenTick();
+	}
+
+	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button)
 	{
 		int backgroundX = (this.width - this.backgroundWidth) / 2;
 		int backgroundY = (this.height - this.backgroundHeight) / 2;
-
-		if (isHoveringBellow((int)mouseX, (int)mouseY) && this.handler.onButtonClick(this.client.player, 0))
+		/*if (isHoveringBellow((int)mouseX, (int)mouseY) && this.handler.onButtonClick(this.client.player, 0))
 		{
 			this.client.interactionManager.clickButton(this.handler.syncId, 0);
 			return true;
-		}
+		}*/
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
 	public boolean isMouseHeld()
 	{
-		return isKeyPressed(GLFW.GLFW_MOUSE_BUTTON_1) || isKeyPressed(GLFW.GLFW_MOUSE_BUTTON_2);
+		return GLFW.glfwGetMouseButton(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+
 	}
 
 	public boolean isKeyPressed(int keyId)
 	{
+
 		return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), keyId);
 	}
 
@@ -106,16 +115,16 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, (int)markerX, (int)markerY, 177, 69, 5, 5, 256, 256);
 
 		/// BELLOW BUTTON
-		if (handler.getLitTimeRemaining() != 0 && handler.isDrinkContainerPresent() || handler.getBellowProgress() > 0)
+		if (handler.getLitTimeRemaining() != 0 && handler.isDrinkContainerPresent())
 		{
 			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 47, 10, 10, 256, 256);
 			if (isHoveringBellow(mouseX, mouseY))
 				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 27, 10, 10, 256, 256);
 		}
 		///  BELLOW FILL AMOUNT
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 57, 10, handler.getBellowProgress() / 9, 256, 256);
+		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 57, 10, handler.getBellowProgress() / 18, 256, 256);
 		if (isHoveringBellow(mouseX, mouseY))
-			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 37, 10, handler.getBellowProgress() / 9, 256, 256);
+			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 37, 10, handler.getBellowProgress() / 18, 256, 256);
 
 		///  LIT TIME INDICATOR
 		float litMod = 14 - (float)(handler.getLitTimeRemaining() * 14) / Math.max(handler.getLitTimeTotal(), 1);
