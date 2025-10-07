@@ -1,39 +1,47 @@
 package dev.pswg.feature.brewing;
 
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicLike;
 import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
+import dev.pswg.packet.MixerSyncS2CPayload;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtFloat;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.*;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.dynamic.ForwardingDynamicOps;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
@@ -56,7 +64,13 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	int bellowProgress;
 	int dangerProgress;
 	int bellowBacklog;
+	int foodItemCount;
+	int drinkSaturation;
+	int drinkNutrition;
+	int drinkColor;
 	public Stack<Pair<Float, Float>> path = new Stack<>();
+	public ArrayList<StatusEffectInstance> drinkEffects = new ArrayList<>();
+	public ArrayList<Integer> drinkColors = new ArrayList<>();
 
 	protected final PropertyDelegate propertyDelegate;
 
@@ -111,13 +125,40 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		};
 	}
 
+	public static boolean isMixerReset(MixerBlockEntity mixer)
+	{
+		return
+				mixer.currentMapX == 256
+				&& mixer.currentMapY == 256
+				&& mixer.dangerProgress == 0
+				&& mixer.bellowProgress == 0
+				&& mixer.bellowBacklog == 0
+				&& mixer.foodItemCount == 0
+				&& mixer.drinkSaturation == 0
+				&& mixer.drinkNutrition == 0
+				&& mixer.drinkColor == 0
+				&& mixer.path.empty()
+				&& mixer.drinkEffects.isEmpty()
+				&& mixer.drinkColors.isEmpty();
+	}
 	public static void resetMixer(MixerBlockEntity mixer)
 	{
-		mixer.currentMapX = 256;
-		mixer.currentMapY = 256;
-		mixer.dangerProgress = 0;
-		mixer.bellowProgress = 0;
-		mixer.path.clear();
+		if (!isMixerReset(mixer))
+		{
+			mixer.currentMapX = 256;
+			mixer.currentMapY = 256;
+			mixer.dangerProgress = 0;
+			mixer.bellowProgress = 0;
+			mixer.bellowBacklog = 0;
+			mixer.foodItemCount = 0;
+			mixer.drinkSaturation = 0;
+			mixer.drinkNutrition = 0;
+			mixer.drinkColor = 0;
+			mixer.path.clear();
+			mixer.drinkEffects.clear();
+			mixer.drinkColors.clear();
+			sendSyncPacket(mixer);
+		}
 	}
 
 	public static void craftPotion(MixerBlockEntity mixer, StatusEffectInstance... effects)
@@ -155,6 +196,25 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 					0,
 					0.05f
 			);
+	}
+
+	public static void sendSyncPacket(MixerBlockEntity mixer)
+	{
+		var payload = new MixerSyncS2CPayload(mixer.drinkEffects);
+		if (!mixer.world.isClient)
+		{
+			for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld)mixer.world, mixer.pos.toCenterPos(), 6))
+			{
+				ServerPlayNetworking.send(player, payload);
+			}
+		}
+	}
+
+	public static void tryAddEffect(MixerBlockEntity mixer)
+	{
+		if (mixer.drinkEffects.size() < 3 && BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell)
+			mixer.drinkEffects.add(effectCell.statusEffect);
+		sendSyncPacket(mixer);
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity)
@@ -216,8 +276,8 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			}
 			if (cell instanceof EffectCell effectCell)
 			{
-				if (mixer.bellowProgress >= MAX_BELLOW_PROGRESS - 8)
-					craftPotion(mixer, effectCell.statusEffect);
+				//if (mixer.bellowProgress >= MAX_BELLOW_PROGRESS - 8)
+				//	craftPotion(mixer, effectCell.statusEffect);
 			}
 			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
 			if (!mixer.path.empty() && mixer.bellowBacklog > 0 && mixer.bellowProgress > 5)
@@ -247,14 +307,15 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				if (lastElem.getSecond() > 0)
 					mixer.path.push(lastElem);
 			}
+			mixer.markDirty();
 		}
 	}
 
 	@Override
 	protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
 	{
-		currentMapX = nbt.getInt("current_map_x");
-		currentMapY = nbt.getInt("current_map_y");
+		currentMapX = nbt.getFloat("current_map_x");
+		currentMapY = nbt.getFloat("current_map_y");
 		litTimeRemaining = nbt.getInt("lit_time_remaining");
 		litTotalTime = nbt.getInt("lit_time_total");
 		bellowProgress = nbt.getInt("bellow_progress");
@@ -264,7 +325,15 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		NbtList lengthList = nbt.getList("path_lengths", NbtElement.FLOAT_TYPE);
 		for (int i = 0; i < angleList.size(); i++)
 			path.push(Pair.of(angleList.getFloat(i), lengthList.getFloat(i)));
+		drinkEffects = new ArrayList<>(StatusEffectInstance.CODEC.listOf().parse(NbtOps.INSTANCE, nbt.get("drink_effects")).getOrThrow());
 		super.readNbt(nbt, registries);
+	}
+
+	@Override
+	public void onOpen(PlayerEntity player)
+	{
+		super.onOpen(player);
+		sendSyncPacket(this);
 	}
 
 	@Override
@@ -286,6 +355,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		}
 		nbt.put("path_angles", angleList);
 		nbt.put("path_lengths", lengthList);
+		nbt.put("drink_effects", StatusEffectInstance.CODEC.listOf().encodeStart(NbtOps.INSTANCE, drinkEffects).getOrThrow());
 
 		super.writeNbt(nbt, registries);
 	}
@@ -311,7 +381,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	@Override
 	protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		return new MixerScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+		return new MixerScreenHandler(syncId, playerInventory, this, this.propertyDelegate, pos, drinkEffects);
 	}
 
 	@Override

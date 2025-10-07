@@ -5,7 +5,9 @@ import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
 import dev.pswg.container.entity.GadgetsEntities;
+import dev.pswg.feature.brewing.MixerScreenHandler;
 import dev.pswg.models.*;
+import dev.pswg.packet.MixerSyncS2CPayload;
 import dev.pswg.particles.*;
 import dev.pswg.renderer.grenades.*;
 import dev.pswg.renderer.mines.PressureMineEntityRenderer;
@@ -17,9 +19,11 @@ import dev.pswg.tints.SwgDrinkTintSource;
 import dev.pswg.util.AutoGenerateUtil;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
@@ -80,6 +84,12 @@ public class GadgetsClient implements GalaxiesClientAddon
 		ClientTickEvents.END_CLIENT_TICK.register(LaserCutterHandler::tick);
 
 		TintSourceTypes.ID_MAPPER.put(Gadgets.id("drink"), SwgDrinkTintSource.CODEC);
+
+		ClientPlayNetworking.registerGlobalReceiver(MixerSyncS2CPayload.ID, (mixerSyncS2CPayload, context) -> {
+			if (context.player().currentScreenHandler instanceof MixerScreenHandler mixerScreenHandler)
+				mixerScreenHandler.drinkEffects = mixerSyncS2CPayload.drinkEffects();
+		});
+
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

@@ -3,6 +3,7 @@ package dev.pswg.feature.brewing;
 import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -11,7 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
 
 import static dev.pswg.feature.brewing.MixerBlockEntity.OUTPUT_SLOT_INDEX;
 
@@ -20,20 +24,26 @@ public class MixerScreenHandler extends ScreenHandler
 	private final Inventory inventory;
 	private final PlayerInventory playerInventory;
 	private final PropertyDelegate propertyDelegate;
+	private final BlockPos blockPos;
 	protected final World world;
+	public ArrayList<StatusEffectInstance> drinkEffects;
 
 	public MixerScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(7));
+		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(11), BlockPos.ORIGIN, new ArrayList<>());
 	}
 
-	public MixerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate)
+	public MixerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate, BlockPos pos, ArrayList<StatusEffectInstance> drinkEffects)
 	{
 		super(GadgetsScreenHandlerTypes.MIXER, syncId);
 		this.inventory = inventory;
 		this.playerInventory = playerInventory;
 		this.world = playerInventory.player.getWorld();
 		this.propertyDelegate = propertyDelegate;
+		this.blockPos = pos;
+		this.drinkEffects = drinkEffects;
+		if (world.getBlockEntity(blockPos) instanceof MixerBlockEntity mixer)
+			MixerBlockEntity.sendSyncPacket(mixer);
 
 		/// FUEL
 		this.addSlot(new FuelSlot(inventory, 0, 146, 122, this));
@@ -84,8 +94,23 @@ public class MixerScreenHandler extends ScreenHandler
 		return propertyDelegate.get(4);
 	}
 
+	public int getEffectCount()
+	{
+		return drinkEffects.size();
+	}
+
+	public int getEffectColor(int i)
+	{
+		return drinkEffects.get(i).getEffectType().value().getColor();
+	}
+
 	public boolean isDrinkContainerPresent() {
 		return !inventory.getStack(OUTPUT_SLOT_INDEX).isEmpty() && inventory.getStack(OUTPUT_SLOT_INDEX).isIn(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
+	}
+
+	public boolean isOnEffectCell()
+	{
+		return BrewingMap.getCell(getMapX(), getMapY()) instanceof EffectCell;
 	}
 
 	@Override
@@ -96,11 +121,8 @@ public class MixerScreenHandler extends ScreenHandler
 			case 0:
 			{
 				/// BELLOW
-				if (true)
-				{
-					propertyDelegate.set(6, Math.min(getBellowProgress(), 4));
-					propertyDelegate.set(4, Math.max(getBellowProgress() - 3, 0));
-				}
+				propertyDelegate.set(6, Math.min(getBellowProgress(), 4));
+				propertyDelegate.set(4, Math.max(getBellowProgress() - 3, 0));
 				return true;
 			}
 			case 1:
@@ -111,7 +133,9 @@ public class MixerScreenHandler extends ScreenHandler
 			case 2:
 			{
 				///  ADD EFFECT
-
+				if (world.getBlockEntity(blockPos) instanceof MixerBlockEntity mixer)
+					MixerBlockEntity.tryAddEffect(mixer);
+				return true;
 			}
 			case 3:
 			{
