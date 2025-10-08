@@ -37,7 +37,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
@@ -156,23 +155,27 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		}
 	}
 
-	public static void craftPotion(MixerBlockEntity mixer, StatusEffectInstance... effects)
+	public static void craftPotion(MixerBlockEntity mixer)
 	{
-		ItemStack stack;
-		ItemStack outputStack = mixer.inventory.get(OUTPUT_SLOT_INDEX);
-		if (outputStack.isOf(Items.GLASS_BOTTLE))
-			stack = new ItemStack(Items.POTION);
-		else
+		if (!mixer.drinkEffects.isEmpty())
 		{
-			Item item = Registries.ITEM.get(Registries.ITEM.getId(outputStack.getItem()).withSuffixedPath("_filled"));
-			if (item != null)
-				stack = new ItemStack(item);
+			ItemStack stack;
+			ItemStack outputStack = mixer.inventory.get(OUTPUT_SLOT_INDEX);
+			if (outputStack.isOf(Items.GLASS_BOTTLE))
+				stack = new ItemStack(Items.POTION);
 			else
-				stack = outputStack;
+			{
+				Item item = Registries.ITEM.get(Registries.ITEM.getId(outputStack.getItem()).withSuffixedPath("_filled"));
+				if (item != null)
+					stack = new ItemStack(item);
+				else
+					stack = outputStack;
+			}
+			stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Optional.empty(), Optional.empty(), mixer.drinkEffects.stream().toList(), Optional.empty()));
+			mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
+
+			resetMixer(mixer);
 		}
-		stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Optional.empty(), Optional.empty(), List.of(effects), Optional.empty()));
-		mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
-		resetMixer(mixer);
 	}
 
 	public static void spawnFailParticles(World world, BlockPos pos)
@@ -206,7 +209,9 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	public static void tryAddEffect(MixerBlockEntity mixer)
 	{
 		if (mixer.drinkEffects.size() < 3 && BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell)
+		{
 			mixer.drinkEffects.add(effectCell.statusEffect);
+		}
 		sendSyncPacket(mixer);
 	}
 
@@ -252,9 +257,9 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				mixer.dangerProgress++;
 				if (mixer.dangerProgress >= 12)
 				{
-					resetMixer(mixer);
 					spawnFailParticles(world, pos);
-					craftPotion(mixer, dangerCell.statusEffect);
+					mixer.drinkEffects.set(0, dangerCell.statusEffect);
+					craftPotion(mixer);
 				}
 
 			}

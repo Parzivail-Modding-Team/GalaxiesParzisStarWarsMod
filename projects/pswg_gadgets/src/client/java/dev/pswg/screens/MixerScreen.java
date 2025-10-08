@@ -62,6 +62,11 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 			this.client.interactionManager.clickButton(this.handler.syncId, 2);
 			return true;
 		}
+		if (within((int)mouseX, (int)mouseY, 132, 145, 53, 60) && this.handler.onButtonClick(this.client.player, 1))
+		{
+			this.client.interactionManager.clickButton(this.handler.syncId, 1);
+			return true;
+		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
@@ -124,6 +129,13 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 97 + i * 11, backgroundY + 150, 177, 145, 11, 5, 256, 256, color);
 			if (i == 2)
 				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 130, backgroundY + 151, 188, 146, 11, 5, 256, 256, color);
+		}
+		/// CONFIRM DRINK BUTTON
+		if (!handler.drinkEffects.isEmpty())
+		{
+			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 138, backgroundY + 53, 177, 83, 8, 8, 256, 256);
+			if (within(mouseX, mouseY, 138, 145, 53, 60))
+				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 138, backgroundY + 53, 177, 75, 8, 8, 256, 256);
 		}
 
 		/// ADD EFFECT BUTTON

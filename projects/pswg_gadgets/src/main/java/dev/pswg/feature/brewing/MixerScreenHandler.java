@@ -127,13 +127,15 @@ public class MixerScreenHandler extends ScreenHandler
 			{
 				/// BELLOW
 				propertyDelegate.set(6, Math.min(getBellowProgress(), 4));
-				propertyDelegate.set(4, Math.max(getBellowProgress() - 3, 0));
+				propertyDelegate.set(4, Math.max(getBellowProgress() - 2, 0));
 				return true;
 			}
 			case 1:
 			{
 				///  CONFIRM
-
+				if (world.getBlockEntity(blockPos) instanceof MixerBlockEntity mixer)
+					MixerBlockEntity.craftPotion(mixer);
+				return true;
 			}
 			case 2:
 			{
