@@ -57,14 +57,19 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 	{
 		int backgroundX = (this.width - this.backgroundWidth) / 2;
 		int backgroundY = (this.height - this.backgroundHeight) / 2;
+		if (within((int)mouseX, (int)mouseY, 138, 145, 53, 60) && this.handler.onButtonClick(this.client.player, 1))
+		{
+			this.client.interactionManager.clickButton(this.handler.syncId, 1);
+			return true;
+		}
 		if (within((int)mouseX, (int)mouseY, 150, 157, 53, 60) && this.handler.onButtonClick(this.client.player, 2))
 		{
 			this.client.interactionManager.clickButton(this.handler.syncId, 2);
 			return true;
 		}
-		if (within((int)mouseX, (int)mouseY, 132, 145, 53, 60) && this.handler.onButtonClick(this.client.player, 1))
+		if (within((int)mouseX, (int)mouseY, 162, 169, 53, 60) && this.handler.onButtonClick(this.client.player, 3))
 		{
-			this.client.interactionManager.clickButton(this.handler.syncId, 1);
+			this.client.interactionManager.clickButton(this.handler.syncId, 3);
 			return true;
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
@@ -144,6 +149,13 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 150, backgroundY + 53, 177, 99, 8, 8, 256, 256);
 			if (within(mouseX, mouseY, 150, 157, 53, 60))
 				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 150, backgroundY + 53, 177, 91, 8, 8, 256, 256);
+		}
+		/// CANCEL DRINK BUTTON
+		if (!handler.wasReset())
+		{
+			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 162, backgroundY + 53, 177, 115, 8, 8, 256, 256);
+			if (within(mouseX, mouseY, 162, 169, 53, 60))
+				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 162, backgroundY + 53, 177, 107, 8, 8, 256, 256);
 		}
 
 		/// BELLOW BUTTON

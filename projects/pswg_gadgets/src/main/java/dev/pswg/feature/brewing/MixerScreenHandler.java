@@ -118,6 +118,11 @@ public class MixerScreenHandler extends ScreenHandler
 		return BrewingMap.getCell(getMapX(), getMapY()) instanceof EffectCell;
 	}
 
+	public boolean wasReset()
+	{
+		return getMapX() == 256 && getMapY() == 256 && drinkEffects.isEmpty();
+	}
+
 	@Override
 	public boolean onButtonClick(PlayerEntity player, int id)
 	{
@@ -147,6 +152,9 @@ public class MixerScreenHandler extends ScreenHandler
 			case 3:
 			{
 				/// CANCEL
+				if (world.getBlockEntity(blockPos) instanceof MixerBlockEntity mixer)
+					MixerBlockEntity.resetMixer(mixer);
+				return true;
 
 			}
 		}
