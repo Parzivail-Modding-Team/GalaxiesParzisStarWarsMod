@@ -49,16 +49,6 @@ public class MixerScreenHandler extends ScreenHandler
 		this.drinkEffects = drinkEffects;
 		if (world.getBlockEntity(blockPos) instanceof MixerBlockEntity mixer)
 			MixerBlockEntity.sendSyncPacket(mixer);
-		if (world.isClient)
-		{
-			Gadgets.LOGGER.info("C:");
-			drinkEffects.forEach(statusEffectInstance -> Gadgets.LOGGER.info(statusEffectInstance.toString()));
-		}
-		else
-		{
-			Gadgets.LOGGER.info("S:");
-			drinkEffects.forEach(statusEffectInstance -> Gadgets.LOGGER.info(statusEffectInstance.toString()));
-		}
 
 		/// FUEL
 		this.addSlot(new FuelSlot(inventory, 0, 146, 122, this));

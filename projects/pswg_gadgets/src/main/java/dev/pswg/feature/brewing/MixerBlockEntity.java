@@ -1,9 +1,6 @@
 package dev.pswg.feature.brewing;
 
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.DynamicLike;
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.packet.MixerSyncS2CPayload;
@@ -24,8 +21,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.*;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
@@ -36,7 +31,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.dynamic.ForwardingDynamicOps;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -204,12 +198,8 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		var payload = new MixerSyncS2CPayload(mixer.drinkEffects);
 		if (!mixer.world.isClient)
 		{
-			//Gadgets.LOGGER.info("synced from server");
 			for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld)mixer.world, mixer.pos.toCenterPos(), 6))
-			{
-				//Gadgets.LOGGER.info(mixer.pos.toShortString());
 				ServerPlayNetworking.send(player, payload);
-			}
 		}
 	}
 
