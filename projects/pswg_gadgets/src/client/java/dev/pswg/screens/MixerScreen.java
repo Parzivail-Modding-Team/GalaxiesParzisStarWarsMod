@@ -119,25 +119,15 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		///  EFFECT BAR
 		for (int i = 0; i < handler.getEffectCount(); i++)
 		{
-			//Gadgets.LOGGER.info("i = " + i + "     r: " + ColorHelper.getRed(handler.getEffectColor(i)) + "    b: "+ColorHelper.getBlue(handler.getEffectColor(i))  + "     g:" + ColorHelper.getGreen(handler.getEffectColor(i)) + "       a" + ColorHelper.getAlpha(handler.getEffectColor(i)));
-			//int effectColor = ColorHelper.withAlpha(255, handler.getEffectColor(i));
-			int effectColor = handler.getEffectColor(i);
-			//int red = (effectColor >> 16) & 0xFF;
-			//int green = (effectColor >> 8) & 0xFF;
-			//int blue = effectColor & 0xFF;
-			//int color = ColorHelper.getArgb(255, red, green, blue);
-			//Gadgets.LOGGER.info("a: " + ColorHelper.getAlpha(effectColor) + "       r : " + ColorHelper.getRed(effectColor) + "    g: " + ColorHelper.getGreen(effectColor) + "     b: " + ColorHelper.getBlue(effectColor));
-			//int color = ColorHelper.getArgb(ColorHelper.getAlpha(effectColor), ColorHelper.getRed(effectColor), ColorHelper.getGreen(effectColor), ColorHelper.getBlue(effectColor));
-			int color = ColorHelper.fullAlpha(effectColor);
+			int color = ColorHelper.fullAlpha(handler.getEffectColor(i));
 			color = ColorHelper.getArgb(ColorHelper.getRed(color), ColorHelper.getGreen(color), ColorHelper.getBlue(color));
-			//color = ColorHelper.fullAlpha(-13083194);
 			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 97 + i * 11, backgroundY + 150, 177, 145, 11, 5, 256, 256, color);
 			if (i == 2)
 				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 130, backgroundY + 151, 188, 146, 11, 5, 256, 256, color);
 		}
 
 		/// ADD EFFECT BUTTON
-		if (handler.isOnEffectCell())
+		if (handler.isOnEffectCell() && handler.drinkEffects.size() < 3)
 		{
 			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 150, backgroundY + 53, 177, 99, 8, 8, 256, 256);
 			if (within(mouseX, mouseY, 150, 157, 53, 60))
