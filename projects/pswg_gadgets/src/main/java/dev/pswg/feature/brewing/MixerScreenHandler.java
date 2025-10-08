@@ -33,6 +33,11 @@ public class MixerScreenHandler extends ScreenHandler
 		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(11), BlockPos.ORIGIN, new ArrayList<>());
 	}
 
+	public MixerScreenHandler(int syncId, PlayerInventory playerInventory, ArrayList<StatusEffectInstance> drinkEffects)
+	{
+		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(11), BlockPos.ORIGIN, drinkEffects);
+	}
+
 	public MixerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate, BlockPos pos, ArrayList<StatusEffectInstance> drinkEffects)
 	{
 		super(GadgetsScreenHandlerTypes.MIXER, syncId);
@@ -44,6 +49,16 @@ public class MixerScreenHandler extends ScreenHandler
 		this.drinkEffects = drinkEffects;
 		if (world.getBlockEntity(blockPos) instanceof MixerBlockEntity mixer)
 			MixerBlockEntity.sendSyncPacket(mixer);
+		if (world.isClient)
+		{
+			Gadgets.LOGGER.info("C:");
+			drinkEffects.forEach(statusEffectInstance -> Gadgets.LOGGER.info(statusEffectInstance.toString()));
+		}
+		else
+		{
+			Gadgets.LOGGER.info("S:");
+			drinkEffects.forEach(statusEffectInstance -> Gadgets.LOGGER.info(statusEffectInstance.toString()));
+		}
 
 		/// FUEL
 		this.addSlot(new FuelSlot(inventory, 0, 146, 122, this));

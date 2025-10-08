@@ -9,6 +9,7 @@ import dev.pswg.container.GadgetsItems;
 import dev.pswg.packet.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
@@ -203,8 +204,10 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		var payload = new MixerSyncS2CPayload(mixer.drinkEffects);
 		if (!mixer.world.isClient)
 		{
+			//Gadgets.LOGGER.info("synced from server");
 			for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld)mixer.world, mixer.pos.toCenterPos(), 6))
 			{
+				//Gadgets.LOGGER.info(mixer.pos.toShortString());
 				ServerPlayNetworking.send(player, payload);
 			}
 		}
@@ -381,7 +384,31 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	@Override
 	protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		return new MixerScreenHandler(syncId, playerInventory, this, this.propertyDelegate, pos, drinkEffects);
+		MixerBlockEntity mixer = this;
+		var factory = new ExtendedScreenHandlerFactory()
+		{
+			@Override
+			public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player)
+			{
+				return new MixerScreenHandler(syncId, playerInventory, mixer, propertyDelegate, pos, drinkEffects);
+			}
+
+			@Override
+			public Text getDisplayName()
+			{
+				return Text.of("Mixer");
+			}
+
+			@Override
+			public Object getScreenOpeningData(ServerPlayerEntity player)
+			{
+				return new MixerSyncS2CPayload(drinkEffects);
+			}
+		};
+		if (playerInventory.player instanceof ServerPlayerEntity serverPlayer)
+			serverPlayer.openHandledScreen(factory);
+		return null;
+		//return new MixerScreenHandler(syncId, playerInventory, this, this.propertyDelegate, pos, drinkEffects);
 	}
 
 	@Override
