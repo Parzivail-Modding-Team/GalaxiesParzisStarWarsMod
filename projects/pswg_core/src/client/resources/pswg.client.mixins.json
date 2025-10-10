@@ -3,10 +3,11 @@
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
+		"events.DrawContextMixin",
 		"accessors.ClientPlayerInteractionManagerAccessor",
-		"accessors.DrawContextAccessor",
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
+		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
 		"attributes.ItemStackMixin",
 		"events.DrawContextMixin",
 		"events.GameRendererMixin",
