@@ -13,6 +13,7 @@ import dev.pswg.registry.Registrar;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
@@ -98,7 +99,7 @@ public final class Blasters implements GalaxiesAddon
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
 		               .register(Blasters::addBlastersToTab);
 
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(DATAPACK_LOADER);
+		ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(DATAPACK_LOADER.getId(), DATAPACK_LOADER);
 
 		// TODO: how to differentiate different modules' versions?
 		LOGGER.info("Module initialized");

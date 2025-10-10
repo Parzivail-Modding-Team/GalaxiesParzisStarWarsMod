@@ -4,8 +4,8 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import dev.pswg.Galaxies;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.SynchronousResourceReloader;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ import java.util.function.Predicate;
  * <br />
  * TODO: update to use {@link net.minecraft.resource.SynchronousResourceReloader} directly
  */
-public class CodecDataLoader<T> implements SimpleSynchronousResourceReloadListener
+public class CodecDataLoader<T> implements SynchronousResourceReloader
 {
 	/**
 	 * The logger used while loading data
@@ -78,8 +78,7 @@ public class CodecDataLoader<T> implements SimpleSynchronousResourceReloadListen
 		return definitions;
 	}
 
-	@Override
-	public Identifier getFabricId()
+	public Identifier getId()
 	{
 		return id;
 	}

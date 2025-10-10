@@ -32,7 +32,7 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java }}
       - name: setup python for uploader
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/develop'
         uses: actions/setup-python@v5
         with:
           python-version : '3.12'
@@ -48,7 +48,7 @@ jobs:
         id: gradle
         run: ./gradlew --stacktrace --parallel clean build
       - name: Get Id Token
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/develop'
         uses: actions/github-script@v7
         id: idtoken
         with:
@@ -56,7 +56,7 @@ jobs:
             let id_token = await core.getIDToken("https://mc.pswg.dev")
             core.setOutput('id_token', id_token)
       - name: upload
-        if: always() && github.ref == 'refs/heads/master' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
+        if: always() && github.ref == 'refs/heads/develop' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
         continue-on-error: true
         run: |
           pip install -r scripts/requirements.txt
