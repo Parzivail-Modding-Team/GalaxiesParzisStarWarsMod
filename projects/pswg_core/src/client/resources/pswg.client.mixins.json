@@ -8,7 +8,6 @@
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
-		"attributes.ItemStackMixin",
 		"events.DrawContextMixin",
 		"events.GameRendererMixin",
 		"events.InGameHudMixin",
