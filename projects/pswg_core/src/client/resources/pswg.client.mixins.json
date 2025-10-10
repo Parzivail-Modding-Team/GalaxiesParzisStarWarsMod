@@ -7,7 +7,7 @@
 		"accessors.ClientPlayerInteractionManagerAccessor",
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
-		"attributes.ItemStackMixin",
+		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
 		"events.InGameHudMixin",
 		"leftuse.MinecraftClientMixin"
 	],
