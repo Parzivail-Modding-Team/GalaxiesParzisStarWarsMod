@@ -18,6 +18,7 @@ PSWG builds using the Gradle build system. I recommend you use IntelliJ as an ID
 * Set up your development workspace by importing the Gradle project
 * Decompile Minecraft sources: `gradlew genSources`
 * All dependencies are met with Maven and are subsequently compiled into the resulting jarfile.
+* Enable annotation processing in IntelliJ under `File > Settings > Build, Execution, Deployment > Compiler > Annotation Processors`
 * Build a jarfile with `gradlew build` to produce `pswg-<version>.jar` in `./build/libs`. 
 
 Recommended:
