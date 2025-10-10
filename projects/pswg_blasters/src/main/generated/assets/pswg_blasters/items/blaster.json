@@ -1,6 +1,6 @@
 {
-	"model": {
-		"type": "minecraft:model",
-		"model": "pswg_blasters:item/blaster"
-	}
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg_blasters:item/blaster"
+  }
 }
