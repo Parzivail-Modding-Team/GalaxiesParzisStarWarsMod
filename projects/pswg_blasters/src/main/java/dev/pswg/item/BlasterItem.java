@@ -19,6 +19,7 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -45,6 +46,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class BlasterItem extends Item implements ILeftClickUsable
@@ -277,7 +279,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		}
 	}
 
-	protected static final Identifier MISSING_ID = Blasters.id("missingno");
+	public static final Identifier MISSING_ID = Blasters.id("missingno");
 
 	/**
 	 * If a blaster us "used" for longer than this time, in ticks, then
@@ -309,7 +311,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	/**
 	 * The component that contains the datapack registrar ID of the blaster
 	 */
-	private static final ComponentType<Identifier> ID = Registry.register(
+	public static final ComponentType<Identifier> ID = Registry.register(
 			Registries.DATA_COMPONENT_TYPE,
 			Blasters.id("id"),
 			ComponentType.<Identifier>builder().codec(Identifier.CODEC).packetCodec(Identifier.PACKET_CODEC).build()
@@ -528,12 +530,6 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		return true;
 	}
 
-	@Override
-	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type)
-	{
-		tooltip.add(Text.of(stack.getOrDefault(ID, MISSING_ID)));
-	}
-
 	/**
 	 * Calculates the current accumulated heat of the blaster based on the dissipation rate and the time passed since the last shot.
 	 *
@@ -690,7 +686,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	@Override
-	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
+	public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user)
 	{
 		return false;
 	}

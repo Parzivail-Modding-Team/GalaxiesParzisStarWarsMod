@@ -32,6 +32,6 @@ public final class AttributeUtil
 			}
 		}
 
-		return new AttributeModifiersComponent(builder.build(), base.showInTooltip());
+		return new AttributeModifiersComponent(builder.build());
 	}
 }

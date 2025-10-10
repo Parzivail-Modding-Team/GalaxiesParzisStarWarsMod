@@ -50,12 +50,17 @@ public final class NbtEntityModel
 	 */
 	private static DataResolution<NbtCompound> resolveDependencies(NbtCompound nbt, Function<Identifier, NbtCompound> dependencyResolver)
 	{
-		var parts = nbt.getCompound("parts");
+		var partsOpt = nbt.getCompound("parts");
+
+		if (partsOpt.isEmpty())
+			return DataResolution.success(nbt);
+
+		var parts = partsOpt.get();
 
 		var base = nbt.getString("base");
-		if (!base.isEmpty())
+		if (base.isPresent())
 		{
-			var baseId = Identifier.of(base);
+			var baseId = Identifier.of(base.get());
 
 			// resolve the serialized data of the dependency
 			var overrideNbt = dependencyResolver.apply(baseId);
@@ -72,14 +77,18 @@ public final class NbtEntityModel
 			// consider the dep resolved
 			overrideNbt = overrideNbtResult.getValue();
 
-			var overrideParts = overrideNbt.getCompound("parts");
+			var overridePartsOpt = overrideNbt.getCompound("parts");
+			if (overridePartsOpt.isPresent())
+			{
+				var overrideParts = overridePartsOpt.get();
 
-			for (var entry : overrideParts.getKeys())
-				if (!parts.contains(entry))
-					parts.put(entry, overrideParts.getCompound(entry));
+				for (var entry : overrideParts.getKeys())
+					if (!parts.contains(entry))
+						parts.put(entry, overrideParts.getCompound(entry).orElseThrow());
+			}
 		}
 
-		if (nbt.getBoolean("expand_biped"))
+		if (nbt.getBoolean("expand_biped", false))
 		{
 			for (var part : REQUIRED_BIPED_PARTS)
 				if (!parts.contains(part))
@@ -101,10 +110,10 @@ public final class NbtEntityModel
 		var modelData = new ModelData();
 		var root = modelData.getRoot();
 
-		addChildren(root, nbt.getCompound("parts"));
+		addChildren(root, nbt.getCompoundOrEmpty("parts"));
 
-		var texTag = nbt.getCompound("tex");
-		return TexturedModelData.of(modelData, texTag.getInt("w"), texTag.getInt("h"));
+		var texTag = nbt.getCompound("tex").orElseThrow();
+		return TexturedModelData.of(modelData, texTag.getInt("w", 0), texTag.getInt("h", 0));
 	}
 
 	/**
@@ -116,7 +125,7 @@ public final class NbtEntityModel
 	private static void addChildren(ModelPartData root, NbtCompound parts)
 	{
 		for (var key : parts.getKeys())
-			addChild(root, key, parts.getCompound(key));
+			addChild(root, key, parts.getCompound(key).orElseThrow());
 	}
 
 	/**
@@ -134,47 +143,47 @@ public final class NbtEntityModel
 			parent.addChild(partName, partBuilder, ModelTransform.NONE);
 		else
 		{
-			var tex = part.getCompound("tex");
-			var partU = tex.getInt("u");
-			var partV = tex.getInt("v");
-			var mirrored = tex.getBoolean("mirrored");
+			var tex = part.getCompoundOrEmpty("tex");
+			var partU = tex.getInt("u", 0);
+			var partV = tex.getInt("v", 0);
+			var mirrored = tex.getBoolean("mirrored", false);
 
-			var pos = part.getCompound("pos");
-			var x = pos.getFloat("x");
-			var y = pos.getFloat("y");
-			var z = pos.getFloat("z");
+			var pos = part.getCompoundOrEmpty("pos");
+			var x = pos.getFloat("x", 0);
+			var y = pos.getFloat("y", 0);
+			var z = pos.getFloat("z", 0);
 
-			var rot = part.getCompound("rot");
-			var pitch = rot.getFloat("pitch");
-			var yaw = rot.getFloat("yaw");
-			var roll = rot.getFloat("roll");
+			var rot = part.getCompoundOrEmpty("rot");
+			var pitch = rot.getFloat("pitch", 0);
+			var yaw = rot.getFloat("yaw", 0);
+			var roll = rot.getFloat("roll", 0);
 
 			var transform = ModelTransform.of(x, y, z, pitch, yaw, roll);
 
-			var cuboids = part.getList("cuboids", NbtElement.COMPOUND_TYPE);
+			var cuboids = part.getListOrEmpty("cuboids");
 			for (var i = 0; i < cuboids.size(); i++)
 			{
-				var cuboid = cuboids.getCompound(i);
+				var cuboid = cuboids.getCompoundOrEmpty(i);
 
-				var cPos = cuboid.getCompound("pos");
-				var cX = cPos.getFloat("x");
-				var cY = cPos.getFloat("y");
-				var cZ = cPos.getFloat("z");
+				var cPos = cuboid.getCompoundOrEmpty("pos");
+				var cX = cPos.getFloat("x", 0);
+				var cY = cPos.getFloat("y", 0);
+				var cZ = cPos.getFloat("z", 0);
 
-				var cSize = cuboid.getCompound("size");
-				var cSX = cSize.getInt("x");
-				var cSY = cSize.getInt("y");
-				var cSZ = cSize.getInt("z");
+				var cSize = cuboid.getCompoundOrEmpty("size");
+				var cSX = cSize.getInt("x", 0);
+				var cSY = cSize.getInt("y", 0);
+				var cSZ = cSize.getInt("z", 0);
 
-				var cExpand = cuboid.getCompound("expand");
-				var cEX = cExpand.getFloat("x");
-				var cEY = cExpand.getFloat("y");
-				var cEZ = cExpand.getFloat("z");
+				var cExpand = cuboid.getCompoundOrEmpty("expand");
+				var cEX = cExpand.getFloat("x", 0);
+				var cEY = cExpand.getFloat("y", 0);
+				var cEZ = cExpand.getFloat("z", 0);
 
-				var cTex = cuboid.getCompound("tex");
-				var cU = cTex.getInt("u");
-				var cV = cTex.getInt("v");
-				var cMirrored = cTex.getBoolean("mirrored");
+				var cTex = cuboid.getCompoundOrEmpty("tex");
+				var cU = cTex.getInt("u", 0);
+				var cV = cTex.getInt("v", 0);
+				var cMirrored = cTex.getBoolean("mirrored", false);
 
 				partBuilder = partBuilder.mirrored(cMirrored ^ mirrored).cuboid(
 						"",
@@ -188,7 +197,7 @@ public final class NbtEntityModel
 			var childPart = parent.addChild(partName, partBuilder, transform);
 
 			if (part.contains("children"))
-				addChildren(childPart, part.getCompound("children"));
+				addChildren(childPart, part.getCompound("children").orElseThrow());
 		}
 	}
 }

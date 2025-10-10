@@ -19,8 +19,8 @@ public abstract class DrawContextMixin
 
 		var matrix = self.getMatrices();
 
-		matrix.push();
+		matrix.pushMatrix();
 		ItemRenderEvents.STACK.invoker().render(self, textRenderer, stack, x, y);
-		matrix.pop();
+		matrix.popMatrix();
 	}
 }

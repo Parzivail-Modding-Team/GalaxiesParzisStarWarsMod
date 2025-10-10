@@ -5,6 +5,7 @@ import dev.pswg.item.BlasterItem;
 import dev.pswg.rendering.BlittableTexture;
 import dev.pswg.rendering.ItemHudRenderer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
@@ -26,7 +27,7 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 
 	private static final BlittableTexture HUD_ELEMENTS = new BlittableTexture(
 			Blasters.id("textures/gui/hud_elements.png"),
-			RenderLayer::getGuiTexturedOverlay,
+			RenderPipelines.GUI_TEXTURED,
 			256, 256
 	);
 
@@ -47,10 +48,10 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 
 		var stats = BlasterItem.getStats(stack);
 		var state = BlasterItem.getState(stack);
-		var coolingStatus = BlasterItem.getCoolingStatus(client.world, stack, tickCounter.getTickDelta(false));
+		var coolingStatus = BlasterItem.getCoolingStatus(client.world, stack, tickCounter.getTickProgress(false));
 
 		var m = context.getMatrices();
-		m.push();
+		m.pushMatrix();
 
 		var left = (int)(context.getScaledWindowWidth() / 2f);
 		var top = (int)(context.getScaledWindowHeight() / 2f);
@@ -107,15 +108,15 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 			var heat = coolingStatus.totalHeat() / state.lastVentingHeat();
 
 			// cursor
-			m.push();
-			m.translate(cooldownBarX + heat * (COOLDOWN_WIDTH - 3), 0, 0);
+			m.pushMatrix();
+			m.translate(cooldownBarX + heat * (COOLDOWN_WIDTH - 3), 0);
 			CURSOR.blit(context, 0, top + COOLDOWN_OFFSET - 2, -1);
-			m.pop();
+			m.popMatrix();
 		}
 
 		// endcaps
 		ENDCAPS.blit(context, cooldownBarX, top + COOLDOWN_OFFSET, -1);
 
-		m.pop();
+		m.popMatrix();
 	}
 }

@@ -86,8 +86,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			getOrCreateTagBuilder(Blasters.BLASTERS_TAG)
-					.add(Blasters.BLASTER_ITEM);
+			getTagBuilder(Blasters.BLASTERS_TAG)
+					.add(Blasters.BLASTER_ITEM_ID);
 		}
 	}
 }

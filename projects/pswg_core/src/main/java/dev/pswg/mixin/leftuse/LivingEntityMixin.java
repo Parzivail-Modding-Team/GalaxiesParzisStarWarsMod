@@ -121,7 +121,7 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 			if (!(activeStack.getItem() instanceof ILeftClickUsable leftClickingItem))
 				throw new RuntimeException("Attempted to stop using non-left-clicking item");
 
-			leftClickingItem.onStoppedUsingLeft(activeStack, self.getWorld(), self, this.pswg$getItemLeftUseTimeLeft());
+			leftClickingItem.onStoppedUsingLeft(activeStack, self.getEntityWorld(), self, this.pswg$getItemLeftUseTimeLeft());
 			if (leftClickingItem.isUsedOnLeftRelease(activeStack))
 			{
 				this.pswg$tickLeftActiveItemStack();
@@ -158,10 +158,10 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 		if (!(stack.getItem() instanceof ILeftClickUsable leftClickingItem))
 			throw new RuntimeException("Attempted to tick usage of non-left-clicking item");
 
-		leftClickingItem.usageTickLeft(self.getWorld(), self, stack, this.pswg$getItemLeftUseTimeLeft());
+		leftClickingItem.usageTickLeft(self.getEntityWorld(), self, stack, this.pswg$getItemLeftUseTimeLeft());
 		this.pswg$setItemLeftUseTimeLeft(this.pswg$getItemLeftUseTimeLeft() - 1);
 
-		if (this.pswg$getItemLeftUseTimeLeft() == 0 && !self.getWorld().isClient() && !leftClickingItem.isUsedOnLeftRelease(stack))
+		if (this.pswg$getItemLeftUseTimeLeft() == 0 && !self.getEntityWorld().isClient() && !leftClickingItem.isUsedOnLeftRelease(stack))
 		{
 			this.pswg$consumeLeftItem();
 		}
@@ -189,7 +189,7 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 	{
 		var self = (LivingEntity)(Object)this;
 
-		if (!self.getWorld().isClient() || this.pswg$isLeftUsingItem())
+		if (!self.getEntityWorld().isClient() || this.pswg$isLeftUsingItem())
 		{
 			Hand hand = self.getActiveHand();
 			if (!ItemStack.areEqual(this.pswg$getLeftActiveItemStack(), self.getStackInHand(hand)))
@@ -204,7 +204,7 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 					if (!(activeStack.getItem() instanceof ILeftClickUsable leftClickingItem))
 						throw new RuntimeException("Attempted to finish usage of non-left-clicking item");
 
-					ItemStack itemStack = leftClickingItem.finishUsingLeft(activeStack, self.getWorld(), self);
+					ItemStack itemStack = leftClickingItem.finishUsingLeft(activeStack, self.getEntityWorld(), self);
 					if (itemStack != this.pswg$getLeftActiveItemStack())
 					{
 						self.setStackInHand(hand, itemStack);
@@ -231,7 +231,7 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 
 			this.pswg$setItemLeftUseTimeLeft(leftClickingItem.getMaxUseLeftTime(itemStack, self));
 
-			if (!self.getWorld().isClient())
+			if (!self.getEntityWorld().isClient())
 			{
 				this.pswg$setLeftUsingItem(true);
 
@@ -248,7 +248,7 @@ public abstract class LivingEntityMixin implements ILeftClickingEntity
 	{
 		var self = (LivingEntity)(Object)this;
 
-		if (!self.getWorld().isClient())
+		if (!self.getEntityWorld().isClient())
 		{
 			boolean wasUsingItem = this.pswg$isLeftUsingItem();
 			this.pswg$setLeftUsingItem(false);

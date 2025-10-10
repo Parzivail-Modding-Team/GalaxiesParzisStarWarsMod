@@ -13,16 +13,7 @@ If you'd like to help support and sustain the mod, please consider becoming a do
 [![Become a donor!](https://storage.ko-fi.com/cdn/brandasset/kofi_bg_tag_white.png)](https://ko-fi.com/parzivail/tiers)
 
 ## Building
-PSWG builds using the Gradle build system. I recommend you use IntelliJ as an IDE. Simply import the gradle project, setup your development workspace, and build.
-
-* Set up your development workspace by importing the Gradle project
-* Decompile Minecraft sources: `gradlew genSources`
-* All dependencies are met with Maven and are subsequently compiled into the resulting jarfile.
-* Build a jarfile with `gradlew build` to produce `pswg-<version>.jar` in `./build/libs`. 
-
-Recommended:
-
-* [MinecraftDev IntelliJ IDEA Plugin](https://plugins.jetbrains.com/plugin/8327)
+See [the development guide](DEVELOPMENT.md).
 
 ## Contributing
 Please only create pull requests for content additions or bugfixes (i.e. not as a way to report issues or post suggestions).
