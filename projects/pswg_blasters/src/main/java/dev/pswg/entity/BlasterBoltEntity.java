@@ -13,6 +13,11 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.NbtReadView;
+import net.minecraft.storage.NbtWriteView;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
@@ -45,7 +50,7 @@ public class BlasterBoltEntity extends Entity
 		if (hitResult.getType() != HitResult.Type.MISS)
 			nextPos = hitResult.getPos();
 		else
-			nextPos = this.getPos().add(this.getVelocity());
+			nextPos = this.getEntityPos().add(this.getVelocity());
 
 		this.setPosition(nextPos);
 
@@ -115,31 +120,36 @@ public class BlasterBoltEntity extends Entity
 		if (packet instanceof GalaxiesEntitySpawnS2CPacket precisePacket)
 		{
 			setVelocity(precisePacket.getVelocity());
-			readCustomDataFromNbt(precisePacket.getCustomData(this, NbtCompound.CODEC).getOrThrow());
+
+			var nbt = precisePacket.getCustomData(this, NbtCompound.CODEC).getOrThrow();
+			var readView = NbtReadView.create(ErrorReporter.EMPTY, getEntityWorld().getRegistryManager(), nbt);
+			readCustomData(readView);
 		}
 	}
 
 	@Override
 	public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entityTrackerEntry)
 	{
-		var nbt = new NbtCompound();
-		writeCustomDataToNbt(nbt);
+		var nbt = NbtWriteView.create(ErrorReporter.EMPTY);
+		writeCustomData(nbt);
 
 		return GalaxiesNetworking.createPlayS2CPacket(new GalaxiesEntitySpawnS2CPacket(
 				this,
 				entityTrackerEntry,
 				NbtCompound.CODEC,
-				nbt
+				nbt.getNbt()
 		));
 	}
 
 	@Override
-	protected void readCustomDataFromNbt(NbtCompound nbt)
+	protected void readCustomData(ReadView view)
 	{
+
 	}
 
 	@Override
-	protected void writeCustomDataToNbt(NbtCompound nbt)
+	protected void writeCustomData(WriteView view)
 	{
+
 	}
 }

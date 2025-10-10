@@ -1,15 +1,13 @@
 package dev.pswg.rendering;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Function;
 
 /**
  * Represents a texture that can be drawn onto the screen.
  */
-public record BlittableTexture(Identifier identifier, Function<Identifier, RenderLayer> renderLayers, int width, int height)
+public record BlittableTexture(Identifier identifier, RenderPipeline renderPipeline, int width, int height)
 {
 	/**
 	 * A region of the {@link BlittableTexture} that has a pre-defined
@@ -89,7 +87,7 @@ public record BlittableTexture(Identifier identifier, Function<Identifier, Rende
 	public void blit(DrawContext context, int screenX, int screenY, int texU, int texV, int patchWidth, int patchHeight, int color)
 	{
 		context.drawTexture(
-				renderLayers,
+				renderPipeline,
 				identifier,
 				screenX, screenY,
 				texU, texV,

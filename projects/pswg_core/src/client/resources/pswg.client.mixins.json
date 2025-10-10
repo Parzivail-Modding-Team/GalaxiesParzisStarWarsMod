@@ -3,9 +3,8 @@
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"DrawContextMixin",
+		"events.DrawContextMixin",
 		"accessors.ClientPlayerInteractionManagerAccessor",
-		"accessors.DrawContextAccessor",
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.ItemStackMixin",

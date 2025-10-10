@@ -12,13 +12,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public class InGameHudMixin
 {
-	@Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIII)V", ordinal = 0))
-	void renderCrosshair(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci)
-	{
-		var matrix = context.getMatrices();
-
-		matrix.push();
-		HudRenderEvents.CROSSHAIR.invoker().render(context, tickCounter);
-		matrix.pop();
-	}
+	// TODO
+//	@Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIII)V", ordinal = 0))
+//	void renderCrosshair(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci)
+//	{
+//		var matrix = context.getMatrices();
+//
+//		matrix.push();
+//		HudRenderEvents.CROSSHAIR.invoker().render(context, tickCounter);
+//		matrix.pop();
+//	}
 }

@@ -5,9 +5,11 @@ import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 
 import java.util.Optional;
 
@@ -26,7 +28,7 @@ public class GalaxiesClient implements ClientModInitializer
 	 */
 	public static float getTickDelta()
 	{
-		return client.getRenderTickCounter().getTickDelta(false);
+		return client.getRenderTickCounter().getTickProgress(false);
 	}
 
 	@Override

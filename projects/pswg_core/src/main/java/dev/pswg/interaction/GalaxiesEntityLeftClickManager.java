@@ -37,7 +37,7 @@ public final class GalaxiesEntityLeftClickManager
 		context.server().execute(() -> {
 			var player = context.player();
 
-			ServerWorld serverWorld = player.getServerWorld();
+			ServerWorld serverWorld = player.getEntityWorld();
 			Hand hand = packet.hand();
 			ItemStack itemStack = player.getStackInHand(hand);
 			player.updateLastActionTime();
