@@ -1,13 +1,14 @@
 {
 	"schemaVersion": 1,
-	"id": "pswg_entrypoint",
+	"id": "pswg_bundle",
 	"version": "${version}",
-	"name": "PSWG Entrypoint",
-	"description": "Dummy entrypoint mod",
+	"name": "Galaxies: Parzi's Star Wars Mod (bundle)",
+	"description": "Contains all components of PSWG.",
 	"authors": [
 		"parzivail",
 		"Sindavar",
-		"kb1000"
+		"kb1000",
+		"deltahelios"
 	],
 	"license": "LGPL-3.0",
 	"icon": "assets/pswg/icon.png",
