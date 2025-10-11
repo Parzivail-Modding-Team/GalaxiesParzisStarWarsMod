@@ -5,12 +5,12 @@ import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.codec.GalaxiesCodecs;
-import dev.pswg.codecgenerator.GenerateCodec;
-import dev.pswg.codecgenerator.SelfCodec;
+import dev.pswg.codecgenerator.*;
 import dev.pswg.data.BlasterDatapackDefinition;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
+import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
 import dev.pswg.world.TickConstants;
@@ -44,6 +44,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -218,11 +219,19 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			float damage,
 			int range,
 			int automaticRepeatDelay,
+			Identifier fireSound,
 			@SelfCodec Heat heat,
 			@SelfCodec Cooling cooling
 	) implements IStatsComponentCodec
 	{
-		public static final StatsComponent DEFAULT = new StatsComponent(8, 48, 4, Heat.DEFAULT, Cooling.DEFAULT);
+		public static final StatsComponent DEFAULT = new StatsComponent(
+				8,
+				48,
+				4,
+				Identifier.ofVanilla("entity.snowball.throw"),
+				Heat.DEFAULT,
+				Cooling.DEFAULT
+		);
 	}
 
 	/**
@@ -484,6 +493,16 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		return Optional.of(cooldownProgress);
 	}
 
+	/**
+	 * If currently venting heat, gets the current bypass segment that the
+	 * cooldown cursor is intersecting.
+	 *
+	 * @param world     The world to the stack's timestamps are referenced
+	 * @param stack     The stack to query
+	 * @param tickDelta The partial tick to evaluate at
+	 *
+	 * @return A CoolingBypass if currently intersecting one, empty otherwise
+	 */
 	public static Optional<CoolingBypass> getCoolingBypass(World world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
@@ -514,7 +533,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 	/**
 	 * Determines if the blaster is currently able to be fired based on
-	 * the blaster's own properties (e.g. ignoring player eligibility)
+	 * the blaster's own properties (e.g., ignoring player eligibility)
 	 *
 	 * @param world The world to the stack's timestamps are referenced
 	 * @param user  The entity that is requesting to fire the blaster
@@ -686,7 +705,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 	public static float overchargeTimeRemaining(World world, ItemStack itemStack, float tickDelta)
 	{
-		// TODO
+		// TODO: overcharge feature
 		return 0;
 	}
 
@@ -831,8 +850,10 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				user.getX(),
 				user.getY(),
 				user.getZ(),
-				SoundEvents.ENTITY_SNOWBALL_THROW,
-				SoundCategory.NEUTRAL,
+				Registries.SOUND_EVENT
+						.getOptionalValue(stats.fireSound())
+						.orElse(SoundEvents.ENTITY_SNOWBALL_THROW),
+				SoundCategory.PLAYERS,
 				0.5F,
 				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
 		);
@@ -860,7 +881,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
 
 		// TODO: abstract into bolt-creating factory
-		projectile.setPosition(user.getX(), user.getEyeY() - 0.2f, user.getZ());
+		projectile.setPosition(user.getX(), user.getY() + user.getEyeHeight(user.getPose()), user.getZ());
 
 		var pitch = user.getPitch();
 		var yaw = user.getHeadYaw();

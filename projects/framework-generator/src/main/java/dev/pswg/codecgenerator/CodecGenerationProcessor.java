@@ -236,13 +236,6 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				)
 		);
 		registerCodecsForType(
-				"com.mojang.authlib.GameProfile",
-				GenStandardCodec.GAME_PROFILE_WITH_PROPERTIES,
-				Map.of(
-						GenStandardCodec.GAME_PROFILE_WITH_PROPERTIES, new CodecType(mcTypes, "GAME_PROFILE_WITH_PROPERTIES")
-				)
-		);
-		registerCodecsForType(
 				"net.minecraft.util.Identifier",
 				GenStandardCodec.IDENTIFIER,
 				Map.of(

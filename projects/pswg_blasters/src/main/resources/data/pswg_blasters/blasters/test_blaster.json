@@ -3,6 +3,7 @@
     "damage": 8,
     "range": 48,
     "automaticRepeatDelay": 4,
+    "fireSound": "minecraft:block.anvil.land",
     "heat": {
       "capacity": 100,
       "perRound": 20,

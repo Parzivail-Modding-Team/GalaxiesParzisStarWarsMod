@@ -2,10 +2,16 @@ package dev.pswg.networking;
 
 import dev.pswg.interaction.ClientPlayerAction;
 import dev.pswg.interaction.ServerPlayerAction;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.codec.PacketDecoder;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines packet codecs and related utilities for common data types
@@ -17,6 +23,10 @@ public final class GalaxiesPacketCodecs
 	 */
 	public static final PacketCodec<RegistryByteBuf, Hand> HAND = forEnum(Hand.class);
 
+	/**
+	 * A packet codec that can serialize and deserialize {@link Identifier} lists
+	 */
+	public static final PacketCodec<ByteBuf, List<Identifier>> IDENTIFIER_LIST  = Identifier.PACKET_CODEC.collect(PacketCodecs.toList());
 
 	/**
 	 * A packet codec that can serialize and deserialize {@link ClientPlayerAction} enum values

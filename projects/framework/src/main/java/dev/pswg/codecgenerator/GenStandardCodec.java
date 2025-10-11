@@ -221,12 +221,6 @@ public enum GenStandardCodec
 	GAME_PROFILE_PROPERTY_MAP,
 
 	/**
-	 * An available codec for the {@link com.mojang.authlib.GameProfile} type.
-	 * Delegates to {@link net.minecraft.util.dynamic.Codecs#GAME_PROFILE_WITH_PROPERTIES}
-	 */
-	GAME_PROFILE_WITH_PROPERTIES,
-
-	/**
 	 * An available codec for the byte[] type.
 	 * Delegates to {@link net.minecraft.util.dynamic.Codecs#BASE_64}
 	 */
