@@ -1,0 +1,8 @@
+{
+	"blaster.fire.e11":{
+		"subtitle":"subtitle.pswg_blasters.blaster.fire",
+		"sounds":[
+			"pswg_blasters:blaster/fire/e11"
+		]
+	}
+}

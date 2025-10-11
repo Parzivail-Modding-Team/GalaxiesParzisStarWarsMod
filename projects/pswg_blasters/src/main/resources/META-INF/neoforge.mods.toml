@@ -22,7 +22,7 @@ side = "BOTH"
 [[dependencies.pswg]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.21.2]"
+versionRange = "[1.21.10]"
 ordering = "NONE"
 side = "BOTH"
 

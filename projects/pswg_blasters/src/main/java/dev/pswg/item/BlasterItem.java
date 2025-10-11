@@ -35,6 +35,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;

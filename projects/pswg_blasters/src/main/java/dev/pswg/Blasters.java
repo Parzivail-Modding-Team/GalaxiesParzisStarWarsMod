@@ -10,6 +10,7 @@ import dev.pswg.data.IdentifierUtil;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.registry.Registrar;
+import dev.pswg.sound.BlasterSounds;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -100,6 +101,8 @@ public final class Blasters implements GalaxiesAddon
 		               .register(Blasters::addBlastersToTab);
 
 		ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(DATAPACK_LOADER.getId(), DATAPACK_LOADER);
+
+		BlasterSounds.register();
 
 		LOGGER.info("Module initialized");
 	}
