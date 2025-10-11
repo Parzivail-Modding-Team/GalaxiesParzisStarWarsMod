@@ -17,8 +17,6 @@ import java.util.function.Predicate;
 
 /**
  * A datapack loader for codec-backed data
- * <br />
- * TODO: update to use {@link net.minecraft.resource.SynchronousResourceReloader} directly
  */
 public class CodecDataLoader<T> implements SynchronousResourceReloader
 {

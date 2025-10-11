@@ -2,6 +2,7 @@ package dev.pswg.datagen;
 
 import dev.pswg.Blasters;
 import dev.pswg.Galaxies;
+import dev.pswg.item.BlasterItem;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -66,9 +67,15 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
+			// Tag that contains the blasters
 			translationBuilder.add(Blasters.BLASTERS_TAG, "Blasters");
 
+			// Item name
 			translationBuilder.add(Blasters.BLASTER_ITEM, "Blaster");
+
+			// Model number of each blaster
+			translationBuilder.add(BlasterItem.MISSING_ID, "[unknown model]");
+			translationBuilder.add(Blasters.id("test_blaster"), "Test Blaster");
 		}
 	}
 

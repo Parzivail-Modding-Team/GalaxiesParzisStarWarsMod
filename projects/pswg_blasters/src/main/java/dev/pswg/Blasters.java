@@ -50,7 +50,7 @@ public final class Blasters implements GalaxiesAddon
 	/**
 	 * A logger available only to PSWG module and addon blasters
 	 */
-	public static final Logger LOGGER = Galaxies.createSubLogger("blasters");
+	public static final Logger LOGGER = Galaxies.createSubLogger(MODID);
 
 	/**
 	 * The configuration file that controls the behavior of PSWG core
@@ -101,7 +101,6 @@ public final class Blasters implements GalaxiesAddon
 
 		ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(DATAPACK_LOADER.getId(), DATAPACK_LOADER);
 
-		// TODO: how to differentiate different modules' versions?
 		LOGGER.info("Module initialized");
 	}
 }

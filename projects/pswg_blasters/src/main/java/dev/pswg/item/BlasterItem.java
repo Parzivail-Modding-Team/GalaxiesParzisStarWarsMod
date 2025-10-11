@@ -32,6 +32,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -45,6 +46,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -367,6 +369,9 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public static ItemStack createStack(Identifier id, BlasterDatapackDefinition definition)
 	{
 		var stack = new ItemStack(Blasters.BLASTER_ITEM);
+
+		// Set the item name to the model name by default
+		stack.set(DataComponentTypes.ITEM_NAME, Text.translatable(id.toTranslationKey()));
 
 		stack.set(ID, id);
 		stack.set(STATS, definition.stats());

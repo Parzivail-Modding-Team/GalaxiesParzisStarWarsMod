@@ -1,4 +1,6 @@
 {
   "item.pswg_blasters.blaster": "Blaster",
+  "pswg_blasters.missingno": "[unknown model]",
+  "pswg_blasters.test_blaster": "Test Blaster",
   "tag.item.pswg_blasters.blasters": "Blasters"
 }
