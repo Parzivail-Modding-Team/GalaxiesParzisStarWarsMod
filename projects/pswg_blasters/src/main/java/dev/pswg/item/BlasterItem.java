@@ -32,6 +32,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -851,9 +852,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				user.getX(),
 				user.getY(),
 				user.getZ(),
-				Registries.SOUND_EVENT
-						.getOptionalValue(stats.fireSound())
-						.orElse(SoundEvents.ENTITY_SNOWBALL_THROW),
+				RegistryEntry.of(SoundEvent.of(stats.fireSound())),
 				SoundCategory.PLAYERS,
 				0.5F,
 				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)

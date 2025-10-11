@@ -11,9 +11,6 @@ import net.minecraft.util.Identifier;
  */
 public final class BlasterSounds
 {
-	// TODO: register these based off a datapack somehow
-	public static final SoundEvent FIRE_E11 = registerSound("blaster.fire.e11");
-
 	/**
 	 * Registers a sound event
 	 *
