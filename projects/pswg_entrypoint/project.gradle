@@ -8,3 +8,5 @@ dependencies {
 	include(project(path: ":projects:pswg_blasters"))
 	include(project(path: ":projects:pswg_gadgets"))
 }
+
+base.archivesName = 'pswg'
