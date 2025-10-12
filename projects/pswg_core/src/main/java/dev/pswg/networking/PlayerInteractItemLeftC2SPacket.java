@@ -10,11 +10,12 @@ import net.minecraft.util.Hand;
 /**
  * Encapsulates a fire-and-forget C2S player use-left item interaction
  *
- * @param hand  The hand that used an item
- * @param yaw   The player's yaw at the time of the interaction
- * @param pitch The player's pitch at the time of the interaction
+ * @param hand   The hand that used an item
+ * @param yaw    The player's yaw at the time of the interaction
+ * @param pitch  The player's pitch at the time of the interaction
+ * @param repeat Whether the input event was a repeat event
  */
-public record PlayerInteractItemLeftC2SPacket(Hand hand, float yaw, float pitch) implements CustomPayload
+public record PlayerInteractItemLeftC2SPacket(Hand hand, float yaw, float pitch, boolean repeat) implements CustomPayload
 {
 	public static final CustomPayload.Id<PlayerInteractItemLeftC2SPacket> ID = new CustomPayload.Id<>(Galaxies.id("use_item_left"));
 
@@ -25,6 +26,8 @@ public record PlayerInteractItemLeftC2SPacket(Hand hand, float yaw, float pitch)
 			PlayerInteractItemLeftC2SPacket::yaw,
 			PacketCodecs.FLOAT,
 			PlayerInteractItemLeftC2SPacket::pitch,
+			PacketCodecs.BOOLEAN,
+			PlayerInteractItemLeftC2SPacket::repeat,
 			PlayerInteractItemLeftC2SPacket::new
 	);
 

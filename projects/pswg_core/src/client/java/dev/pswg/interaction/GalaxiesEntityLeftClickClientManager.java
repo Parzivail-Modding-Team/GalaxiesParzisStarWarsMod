@@ -14,6 +14,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.GameMode;
 
+import java.lang.constant.Constable;
 import java.util.Objects;
 
 /**
@@ -25,6 +26,11 @@ public final class GalaxiesEntityLeftClickClientManager
 	 * The number of ticks until a player can left-use an item again
 	 */
 	private static int itemUseCooldownLeft;
+
+	/**
+	 * Whether left-click has been held since the last event was fired
+	 */
+	private static boolean repeatEvent;
 
 	/**
 	 * Initializes this manager
@@ -66,10 +72,22 @@ public final class GalaxiesEntityLeftClickClientManager
 		}
 		else
 		{
+			var startedUsing = false;
+
 			while (client.options.attackKey.wasPressed())
 			{
 				doItemUseLeft(client);
+				startedUsing = true;
 			}
+
+			if (startedUsing)
+				repeatEvent = true;
+		}
+
+		if (!client.options.attackKey.isPressed())
+		{
+			itemUseCooldownLeft = 0;
+			repeatEvent = false;
 		}
 
 		if (client.options.attackKey.isPressed() && itemUseCooldownLeft == 0 && !leftClickingEntity.pswg$isLeftUsingItem())
@@ -147,11 +165,11 @@ public final class GalaxiesEntityLeftClickClientManager
 		{
 			((ClientPlayerInteractionManagerAccessor)interactionManager).invokeSyncSelectedSlot();
 
-			var packet = new PlayerInteractItemLeftC2SPacket(hand, player.getYaw(), player.getPitch());
+			var packet = new PlayerInteractItemLeftC2SPacket(hand, player.getYaw(), player.getPitch(), repeatEvent);
 
 			var itemStack = player.getStackInHand(hand);
 
-			var actionResult = GalaxiesEntityLeftClickManager.useLeft(client.world, player, hand, itemStack);
+			var actionResult = GalaxiesEntityLeftClickManager.useLeft(client.world, player, hand, itemStack, repeatEvent);
 			ItemStack resultStack;
 			if (actionResult instanceof ActionResult.Success success)
 			{

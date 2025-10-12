@@ -775,7 +775,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	@Override
-	public ActionResult useLeft(World world, LivingEntity user, Hand hand)
+	public ActionResult useLeft(World world, LivingEntity user, Hand hand, boolean repeatEvent)
 	{
 		// TODO: manual reload
 		// TODO: dryfire sound when no ammunition
@@ -799,8 +799,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		if (state.coolingMode().isCooling())
 		{
-			var isRepeatEvent = false; // TODO: value ultimately comes from #usageTickLeft
-			if (!state.coolingMode().canBypass() || isRepeatEvent)
+			if (!state.coolingMode().canBypass() || repeatEvent)
 			{
 				itemStack.set(STATE, state);
 				return ActionResult.FAIL;

@@ -28,10 +28,11 @@ public interface ILeftClickUsable
 	 * @param world  The world the item was used in
 	 * @param user The user who used the item
 	 * @param hand   The hand used
+	 * @param repeatEvent Whether the input event was a repeat event
 	 *
 	 * @return An action result that specifies whether using the item was successful.
 	 */
-	default ActionResult useLeft(World world, LivingEntity user, Hand hand)
+	default ActionResult useLeft(World world, LivingEntity user, Hand hand, boolean repeatEvent)
 	{
 		return ActionResult.PASS;
 	}
