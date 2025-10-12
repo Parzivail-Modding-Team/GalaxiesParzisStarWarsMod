@@ -252,7 +252,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * @param lastVentingHeat     The amount of heat at the time of cooling start. Can be different
 	 *                            from {@link StateComponent#lastTotalHeat()} if e.g. a heat penalty was applied
 	 * @param coolingMode         The cooling mode of the blaster, if any
-	 * @param burstBoltsRemaining The amount of bolts remaining in this burst
+	 * @param burstBoltsRemaining The number of bolts remaining in this burst
+	 * @param overchargeStart     The timestamp when the blaster began its overcharge perk
 	 */
 	@MutableRecord
 	@GenerateCodec
@@ -264,7 +265,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			float lastTotalHeat,
 			float lastVentingHeat,
 			@SelfCodec CoolingMode coolingMode,
-			int burstBoltsRemaining
+			int burstBoltsRemaining,
+			long overchargeStart
 	) implements IStateComponentBuilder, IStateComponentCodec
 	{
 		public static final StateComponent DEFAULT = new StateComponent(
@@ -275,6 +277,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				0,
 				0,
 				CoolingMode.PASSIVE,
+				0,
 				0
 		);
 
@@ -474,7 +477,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * If currently waiting to be able to fire again, gets the current
 	 * progress [0,1) of the cooldown process
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -500,7 +503,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * If currently venting heat, gets the current bypass segment that the
 	 * cooldown cursor is intersecting.
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -538,7 +541,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * Determines if the blaster is currently able to be fired based on
 	 * the blaster's own properties (e.g., ignoring player eligibility)
 	 *
-	 * @param world The world to the stack's timestamps are referenced
+	 * @param world The world to which the stack's timestamps are referenced
 	 * @param user  The entity that is requesting to fire the blaster
 	 * @param stack The stack to query
 	 *
@@ -558,9 +561,37 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	/**
+	 * If currently overcharged, gets the current proportion [0,1] of the bonus remaining
+	 *
+	 * @param world     The world to which the stack's timestamps are referenced
+	 * @param stack     The stack to query
+	 * @param tickDelta The partial tick to evaluate at
+	 *
+	 * @return The current remaining overcharge proportion
+	 */
+	public static Optional<Float> getOverchargeTimeRemaining(World world, ItemStack stack, float tickDelta)
+	{
+		var state = getState(stack);
+		var stats = getStats(stack);
+
+		var overchargeStart = state.overchargeStart();
+		var overchargeLength = stats.heat.overchargeBonus();
+		var time = world.getTime() + tickDelta;
+
+		if (time > overchargeStart + overchargeLength)
+			return Optional.empty();
+
+		if (time < overchargeStart)
+			return Optional.of(1f);
+
+		var overchargeProgress = (time - overchargeStart) / overchargeLength;
+		return Optional.of(1 - overchargeProgress);
+	}
+
+	/**
 	 * Calculates the current accumulated heat of the blaster based on the dissipation rate and the time passed since the last shot.
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -590,7 +621,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	/**
 	 * Calculates the current venting heat of the blaster based on the dissipation rate and the time passed since venting started.
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -620,7 +651,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	/**
 	 * Determines the cooling status of a blaster, whether passively or actively cooling
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -704,12 +735,6 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	{
 		// TODO: attachment mutations
 		return stats.heat().overheatDrainSpeed();
-	}
-
-	public static float overchargeTimeRemaining(World world, ItemStack itemStack, float tickDelta)
-	{
-		// TODO: overcharge feature
-		return 0;
 	}
 
 	@Override
@@ -856,7 +881,6 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			}
 			else if (bypass.get() == CoolingBypass.SECONDARY)
 			{
-				// TODO: overcharge bonus
 				// TODO: overcharge end sound
 
 				world.playSound(
@@ -879,6 +903,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				itemStack.set(
 						STATE,
 						state.withLastTotalHeat(0)
+						     .withOverchargeStart(timestamp)
 						     .withCooling(CoolingMode.PASSIVE, timestamp)
 				);
 				return ActionResult.SUCCESS;
@@ -891,7 +916,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		var totalHeat = coolingStatus.totalHeat();
 
-		if (overchargeTimeRemaining(world, itemStack, 0) == 0)
+		if (getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
 
 		if (world instanceof ServerWorld serverWorld)

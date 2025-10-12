@@ -97,6 +97,9 @@ public class BlastersClient implements GalaxiesClientAddon
 					           Drawables.itemDurability(context, heat / stats.heat().capacity(), x, y - 10, 13, 0xFF3000);
 				           });
 			}
+
+			BlasterItem.getOverchargeTimeRemaining(client.world, stack, GalaxiesClient.getTickDelta())
+			           .ifPresent(value -> Drawables.itemDurability(context, value, x, y - 7, 13, 0xFFFF00));
 		}
 	}
 
