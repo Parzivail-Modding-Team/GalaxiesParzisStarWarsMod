@@ -13,6 +13,7 @@ import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
+import dev.pswg.sound.BlasterSounds;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
@@ -547,7 +548,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	{
 		var state = getState(stack);
 
-		var isWaitingToFire = state.fireCooldown() > world.getTime();
+		var isWaitingToFire = state.fireCooldown() >= world.getTime();
 		if (isWaitingToFire)
 			return false;
 
@@ -776,6 +777,10 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	@Override
 	public ActionResult useLeft(World world, LivingEntity user, Hand hand)
 	{
+		// TODO: manual reload
+		// TODO: dryfire sound when no ammunition
+		// TODO: manual vent
+
 		ItemStack itemStack = user.getStackInHand(hand);
 
 		if (!canFire(world, user, itemStack))
@@ -795,7 +800,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		if (state.coolingMode().isCooling())
 		{
 			var isRepeatEvent = false; // TODO: value ultimately comes from #usageTickLeft
-			if (world.isClient() || !state.coolingMode().canBypass() || isRepeatEvent)
+			if (!state.coolingMode().canBypass() || isRepeatEvent)
 			{
 				itemStack.set(STATE, state);
 				return ActionResult.FAIL;
@@ -804,33 +809,79 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			var bypass = getCoolingBypass(world, itemStack, 0);
 			if (bypass.isEmpty())
 			{
-				state = state.withCoolingMode(CoolingMode.FAILED_OVERCHARGE);
+				world.playSound(
+						user,
+						user.getX(),
+						user.getY(),
+						user.getZ(),
+						BlasterSounds.BYPASS_FAILED,
+						SoundCategory.PLAYERS,
+						0.5F,
+						0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+				);
 
-				// TODO: play sound - failed bypass
+				if (world.isClient())
+				{
+					itemStack.set(STATE, state);
+					return ActionResult.FAIL;
+				}
 
-				itemStack.set(STATE, state);
+				itemStack.set(STATE, state.withCoolingMode(CoolingMode.FAILED_OVERCHARGE));
 				return ActionResult.SUCCESS;
 			}
 			else if (bypass.get() == CoolingBypass.PRIMARY)
 			{
-				state = state.withLastTotalHeat(0)
-				             .withCooling(CoolingMode.PASSIVE, timestamp);
+				world.playSound(
+						user,
+						user.getX(),
+						user.getY(),
+						user.getZ(),
+						BlasterSounds.BYPASS_PRIMARY,
+						SoundCategory.PLAYERS,
+						0.5F,
+						0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+				);
 
-				// TODO: play sound - primary bypass
+				if (world.isClient())
+				{
+					itemStack.set(STATE, state);
+					return ActionResult.FAIL;
+				}
 
-				itemStack.set(STATE, state);
+				itemStack.set(
+						STATE,
+						state.withLastTotalHeat(0)
+						     .withCooling(CoolingMode.PASSIVE, timestamp)
+				);
 				return ActionResult.SUCCESS;
 			}
 			else if (bypass.get() == CoolingBypass.SECONDARY)
 			{
-				state = state.withLastTotalHeat(0)
-				             .withCooling(CoolingMode.PASSIVE, timestamp);
-
 				// TODO: overcharge bonus
+				// TODO: overcharge end sound
 
-				// TODO: play sound - secondary bypass
+				world.playSound(
+						user,
+						user.getX(),
+						user.getY(),
+						user.getZ(),
+						BlasterSounds.BYPASS_SECONDARY,
+						SoundCategory.PLAYERS,
+						0.5F,
+						0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+				);
 
-				itemStack.set(STATE, state);
+				if (world.isClient())
+				{
+					itemStack.set(STATE, state);
+					return ActionResult.FAIL;
+				}
+
+				itemStack.set(
+						STATE,
+						state.withLastTotalHeat(0)
+						     .withCooling(CoolingMode.PASSIVE, timestamp)
+				);
 				return ActionResult.SUCCESS;
 			}
 		}
@@ -848,19 +899,28 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			fireBolt(user, serverWorld);
 
 		world.playSound(
-				null,
+				user,
 				user.getX(),
 				user.getY(),
 				user.getZ(),
 				RegistryEntry.of(SoundEvent.of(stats.fireSound())),
-				SoundCategory.PLAYERS,
+				SoundCategory.NEUTRAL,
 				0.5F,
 				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
 		);
 
 		if (totalHeat > stats.heat().capacity())
 		{
-			// TODO: play sound - overheat
+			world.playSound(
+					user,
+					user.getX(),
+					user.getY(),
+					user.getZ(),
+					BlasterSounds.OVERHEAT,
+					SoundCategory.PLAYERS,
+					0.5F,
+					0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+			);
 
 			state = state.withLastVentingHeat(totalHeat + stats.heat().overheatPenalty())
 			             .withCooling(CoolingMode.OVERHEAT, timestamp)

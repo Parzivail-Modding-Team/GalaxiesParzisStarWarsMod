@@ -76,6 +76,16 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			// Model number of each blaster
 			translationBuilder.add(BlasterItem.MISSING_ID, "[unknown model]");
 			translationBuilder.add(Blasters.id("test_blaster"), "Test Blaster");
+
+			// Sound subtitles
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.fire"), "Blaster Firing");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.reload"), "Blaster Reloading");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.dryfire"), "Blaster Dry-firing");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.primary"), "Blaster Cooling");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.secondary"), "Blaster Overcharging");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.failed"), "Blaster Cooling Fail");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.vent"), "Blaster Venting");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.overheat"), "Blaster Overheating");
 		}
 	}
 
