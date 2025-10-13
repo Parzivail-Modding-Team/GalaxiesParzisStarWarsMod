@@ -3,13 +3,14 @@
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"events.DrawContextMixin",
 		"accessors.ClientPlayerInteractionManagerAccessor",
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
+		"events.DrawContextMixin",
 		"events.InGameHudMixin",
-		"leftuse.MinecraftClientMixin"
+		"leftuse.MinecraftClientMixin",
+		"recoil.ClientPlayerEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

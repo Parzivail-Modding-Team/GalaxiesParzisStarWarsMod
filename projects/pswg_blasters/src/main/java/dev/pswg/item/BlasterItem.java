@@ -10,6 +10,8 @@ import dev.pswg.data.BlasterDatapackDefinition;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
+import dev.pswg.interaction.RecoilEntityAttachment;
+import dev.pswg.math.GMath;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
@@ -48,6 +50,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.RandomUtils;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
@@ -920,7 +923,21 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			totalHeat += stats.heat().perRound();
 
 		if (world instanceof ServerWorld serverWorld)
+		{
 			fireBolt(user, serverWorld);
+
+			// TODO: fixed recoil mean/std pattern for first n shots
+			var recoil = new Vector3f(
+					-(float)RandomHelper.nextGaussian(world.getRandom(), 3.6, 0.2),
+					-(float)RandomHelper.nextGaussian(world.getRandom(), -0.2, 0.2),
+					0
+			);
+
+			RecoilEntityAttachment
+					.get(user)
+					.withRecoilVelocity(recoil)
+					.set(user);
+		}
 
 		world.playSound(
 				user,
@@ -969,12 +986,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		var pitch = user.getPitch();
 		var yaw = user.getHeadYaw();
-		var roll = 0;
 
-		float f = -MathHelper.sin(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
-		float g = -MathHelper.sin((pitch + roll) * MathHelper.RADIANS_PER_DEGREE);
-		float h = MathHelper.cos(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
-		projectile.setVelocity(new Vec3d(f, g, h).multiply(5));
+		projectile.setVelocity(GMath.getForwardVector(yaw, pitch).multiply(5));
 		projectile.setAngles(yaw, pitch);
 
 		//			Vec3d vec3d = user.getMovement();

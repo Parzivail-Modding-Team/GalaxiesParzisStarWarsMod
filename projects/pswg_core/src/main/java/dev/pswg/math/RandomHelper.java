@@ -34,4 +34,20 @@ public final class RandomHelper
 	{
 		return values.get(random.nextInt(values.size()));
 	}
+
+	/**
+	 * Generates a random value from a normal distribution with the
+	 * given mean and standard deviation
+	 *
+	 * @param random The random number generator to use
+	 * @param mean   The mean of the distribution
+	 * @param std    The standard deviation of the distribution
+	 *
+	 * @return A random value from the distribution
+	 */
+	public static double nextGaussian(Random random, double mean, double std)
+	{
+		var normalizedGaussian = random.nextGaussian();
+		return normalizedGaussian * std + mean;
+	}
 }

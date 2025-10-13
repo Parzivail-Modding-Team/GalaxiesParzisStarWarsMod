@@ -165,14 +165,14 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				)
 		);
 		registerCodecsForType(
-				"net.minecraft.util.dynamic.Codecs.VECTOR_3F",
+				"org.joml.Vector3f",
 				GenStandardCodec.VECTOR_3F,
 				Map.of(
 						GenStandardCodec.VECTOR_3F, new CodecType(mcTypes, "VECTOR_3F")
 				)
 		);
 		registerCodecsForType(
-				"net.minecraft.util.dynamic.Codecs.VECTOR_4F",
+				"org.joml.Vector4f",
 				GenStandardCodec.VECTOR_4F,
 				Map.of(
 						GenStandardCodec.VECTOR_4F, new CodecType(mcTypes, "VECTOR_4F")

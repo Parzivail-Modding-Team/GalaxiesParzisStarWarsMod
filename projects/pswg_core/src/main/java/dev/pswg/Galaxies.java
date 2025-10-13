@@ -7,6 +7,7 @@ import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
 import dev.pswg.interaction.LeftClickingEntityAttachment;
+import dev.pswg.interaction.RecoilEntityAttachment;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import dev.pswg.networking.GalaxiesPlayerActionS2CPacket;
@@ -114,7 +115,8 @@ public final class Galaxies implements ModInitializer
 		GalaxiesPlayerActionManager.initialize();
 
 		LeftClickingEntityAttachment.register();
-		GalaxiesEntityLeftClickManager.initialize();
+
+		RecoilEntityAttachment.register();
 
 		LOGGER.info("Loading PSWG modules and addons via pswg-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesStarting);

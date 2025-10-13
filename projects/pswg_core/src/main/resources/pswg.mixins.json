@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"attributes.PlayerEntityMixin",
-		"leftuse.LivingEntityMixin"
+		"leftuse.LivingEntityMixin",
+		"recoil.LivingEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
