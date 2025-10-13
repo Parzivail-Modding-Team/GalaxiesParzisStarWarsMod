@@ -37,6 +37,19 @@ public abstract class LivingEntityMixin implements IRecoilEntity
 				.set(self);
 	}
 
+	@Override
+	public void pswg$addRecoilVelocity(Vector3f velocity)
+	{
+		var self = (LivingEntity)(Object)this;
+
+		var recoil = RecoilEntityAttachment.get(self);
+
+		var newRecoil = recoil.recoilVelocity().add(velocity, new Vector3f());
+
+		recoil.withRecoilVelocity(newRecoil)
+		      .set(self);
+	}
+
 	@Inject(method = "tickMovement()V", at = @At(value = "TAIL"))
 	private void tick(CallbackInfo ci)
 	{
@@ -44,13 +57,14 @@ public abstract class LivingEntityMixin implements IRecoilEntity
 
 		var recoilVelocity = this.pswg$getRecoilVelocity();
 
-		// Apply the recoil to the entity's angle
-		self.setPitch(self.getPitch() + recoilVelocity.x);
-		self.setYaw(self.getYaw() + recoilVelocity.y);
-
 		// Decelerate the recoil velocity
 		if (recoilVelocity.lengthSquared() > 1e-2)
 		{
+			// Apply the recoil to the entity's angle
+			self.setPitch(self.getPitch() + recoilVelocity.x);
+			self.setYaw(self.getYaw() + recoilVelocity.y);
+
+			// TODO: tune recoil decay
 			this.pswg$setRecoilVelocity(recoilVelocity.mul(0.6f));
 		}
 		else

@@ -5,13 +5,10 @@ import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerLikeEntity;
-import net.minecraft.text.Text;
+import org.joml.Vector3f;
 
 import java.util.Optional;
 
@@ -23,10 +20,10 @@ public class GalaxiesClient implements ClientModInitializer
 	private static final MinecraftClient client = MinecraftClient.getInstance();
 
 	/**
-	 * Gets the fractional amount of ticks accumulated in the frames rendered
+	 * Gets the fractional number of ticks accumulated in the frames rendered
 	 * since the last game tick
 	 *
-	 * @return The fractional amount of ticks [0,1)
+	 * @return The fractional number of ticks [0,1)
 	 */
 	public static float getTickDelta()
 	{
