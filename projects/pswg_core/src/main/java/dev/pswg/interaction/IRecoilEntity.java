@@ -8,6 +8,8 @@ import org.joml.Vector3f;
  */
 public interface IRecoilEntity
 {
+	float RECOIL_DAMPENING = 0.6f;
+
 	/**
 	 * Gets the angular velocity of the entity's look vector due to recoil,
 	 * in degrees per tick, where (x, y, z) is (pitch, yaw, roll).

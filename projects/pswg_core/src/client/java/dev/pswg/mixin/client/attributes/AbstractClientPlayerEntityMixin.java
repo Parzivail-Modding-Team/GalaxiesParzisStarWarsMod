@@ -20,8 +20,6 @@ public abstract class AbstractClientPlayerEntityMixin
 	@ModifyArg(method = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getFovMultiplier(ZF)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;lerp(FFF)F"), index = 2)
 	public float getFovMultiplier(float fieldOfView)
 	{
-		// TODO: slow down mouse input
-
 		var self = (PlayerEntity)(Object)this;
 		return fieldOfView / (float)self.getAttributeValue(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM);
 	}

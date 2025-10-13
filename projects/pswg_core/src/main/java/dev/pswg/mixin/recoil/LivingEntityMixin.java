@@ -58,14 +58,14 @@ public abstract class LivingEntityMixin implements IRecoilEntity
 		var recoilVelocity = this.pswg$getRecoilVelocity();
 
 		// Decelerate the recoil velocity
-		if (recoilVelocity.lengthSquared() > 1e-2)
+		if (recoilVelocity.lengthSquared() > 1e-3)
 		{
 			// Apply the recoil to the entity's angle
 			self.setPitch(self.getPitch() + recoilVelocity.x);
 			self.setYaw(self.getYaw() + recoilVelocity.y);
 
 			// TODO: tune recoil decay
-			this.pswg$setRecoilVelocity(recoilVelocity.mul(0.6f));
+			this.pswg$setRecoilVelocity(recoilVelocity.mul(IRecoilEntity.RECOIL_DAMPENING, new Vector3f()));
 		}
 		else
 			this.pswg$setRecoilVelocity(new Vector3f());

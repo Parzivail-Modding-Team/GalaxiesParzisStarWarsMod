@@ -6,6 +6,7 @@
 		"accessors.ClientPlayerInteractionManagerAccessor",
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
+		"attributes.MouseMixin",
 		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
 		"events.DrawContextMixin",
 		"events.InGameHudMixin",

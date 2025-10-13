@@ -10,6 +10,7 @@ import dev.pswg.data.BlasterDatapackDefinition;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
+import dev.pswg.interaction.IRecoilEntity;
 import dev.pswg.interaction.RecoilEntityAttachment;
 import dev.pswg.math.GMath;
 import dev.pswg.math.RandomHelper;
@@ -933,10 +934,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 					0
 			);
 
-			RecoilEntityAttachment
-					.get(user)
-					.withRecoilVelocity(recoil)
-					.set(user);
+			if (user instanceof IRecoilEntity recoilEntity)
+				recoilEntity.pswg$addRecoilVelocity(recoil);
 		}
 
 		world.playSound(
