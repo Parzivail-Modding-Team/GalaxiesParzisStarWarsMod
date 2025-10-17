@@ -22,9 +22,6 @@ public final class GalaxiesKeybinds
 	 */
 	public static void initialize()
 	{
-		// TODO: lang
-		// TODO: put in blaster tooltip
-
 		primaryAction = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				"key.pswg.primary_action",
 				InputUtil.Type.KEYSYM,

@@ -1,5 +1,6 @@
 package dev.pswg.interaction;
 
+import net.minecraft.entity.LivingEntity;
 import org.joml.Vector3f;
 
 /**
@@ -9,6 +10,30 @@ import org.joml.Vector3f;
 public interface IRecoilEntity
 {
 	float RECOIL_DAMPENING = 0.6f;
+
+	/**
+	 * Gets the FOV multiplier for this entity due to recoil
+	 *
+	 * @param entity    The entity being recoiled
+	 * @param tickDelta The fractional ticks
+	 *
+	 * @return The FOV multiplier, where 1 is normal and smaller values increase FOV
+	 */
+	float pswg$getRecoilFovMultiplier(LivingEntity entity, float tickDelta);
+
+	/**
+	 * Gets the timestamp, in ticks, of the last recoil event
+	 *
+	 * @return The timestamp
+	 */
+	long pswg$getRecoilTime();
+
+	/**
+	 * Sets the timestamp, in ticks, of the last recoil event
+	 *
+	 * @param time The timestamp
+	 */
+	void pswg$setRecoilTime(long time);
 
 	/**
 	 * Gets the angular velocity of the entity's look vector due to recoil,

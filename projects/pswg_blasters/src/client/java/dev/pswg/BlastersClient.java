@@ -42,8 +42,6 @@ public class BlastersClient implements GalaxiesClientAddon
 	@Override
 	public void onGalaxiesClientReady()
 	{
-		// TODO: recoil rendering
-
 		EntityRendererFactories.register(Blasters.BLASTER_BOLT_ENTITY, BlasterBoltEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(BlasterBoltEntityRenderer.MODEL_LAYER, BlasterBoltEntityRenderer.Model::getTexturedModelData);
 

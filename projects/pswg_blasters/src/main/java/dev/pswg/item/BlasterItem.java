@@ -937,6 +937,9 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				recoilEntity.pswg$addRecoilVelocity(recoil);
 		}
 
+		if (user instanceof IRecoilEntity recoilEntity)
+			recoilEntity.pswg$setRecoilTime(timestamp);
+
 		world.playSound(
 				user,
 				user.getX(),

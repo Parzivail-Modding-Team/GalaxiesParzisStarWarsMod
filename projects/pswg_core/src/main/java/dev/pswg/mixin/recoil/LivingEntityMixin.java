@@ -5,6 +5,7 @@ import dev.pswg.interaction.RecoilEntityAttachment;
 import net.minecraft.entity.LivingEntity;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,6 +17,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements IRecoilEntity
 {
+	@Unique
+	private long pswg$recoilTime = 0;
+
+	@Override
+	public long pswg$getRecoilTime()
+	{
+		return pswg$recoilTime;
+	}
+
+	@Override
+	public void pswg$setRecoilTime(long time)
+	{
+		pswg$recoilTime = time;
+	}
+
+	@Override
+	public float pswg$getRecoilFovMultiplier(LivingEntity entity, float tickDelta)
+	{
+		var recoilTime = entity.getEntityWorld().getTime() - this.pswg$getRecoilTime() + tickDelta;
+		if (recoilTime <= 0 || recoilTime >= 20)
+			return 1;
+
+		var effectDepth = 0.1;
+		var effectSpeed = 5;
+		return (float)(1 - effectDepth * Math.exp(-effectSpeed * recoilTime));
+	}
+
 	@Override
 	public Vector3f pswg$getRecoilVelocity()
 	{
