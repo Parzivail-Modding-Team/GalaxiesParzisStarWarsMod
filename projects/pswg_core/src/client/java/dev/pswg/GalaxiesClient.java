@@ -1,6 +1,7 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
+import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
@@ -33,6 +34,8 @@ public class GalaxiesClient implements ClientModInitializer
 	@Override
 	public void onInitializeClient()
 	{
+		GalaxiesKeybinds.initialize();
+
 		GalaxiesEntityLeftClickClientManager.initialize();
 		GalaxiesPlayerClientActionManager.initialize();
 

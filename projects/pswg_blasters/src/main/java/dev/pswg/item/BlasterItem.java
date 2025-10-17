@@ -59,7 +59,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
-public class BlasterItem extends Item implements ILeftClickUsable
+public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler
 {
 	/**
 	 * The reason, if any, for a blaster to be cooling.
@@ -808,7 +808,6 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	{
 		// TODO: manual reload
 		// TODO: dryfire sound when no ammunition
-		// TODO: manual vent
 
 		ItemStack itemStack = user.getStackInHand(hand);
 
@@ -974,6 +973,39 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		itemStack.set(STATE, state);
 
 		return ActionResult.SUCCESS;
+	}
+
+	@Override
+	public ItemStack invokePrimaryAction(ItemStack stack, World world, LivingEntity user)
+	{
+		var timestamp = world.getTime();
+
+		var coolingStatus = getCoolingStatus(world, stack, 0);
+		if (coolingStatus.coolingMode().isCooling())
+			return stack;
+
+		var state = getState(stack);
+		stack.set(STATE,
+		          state.withLastVentingHeat(coolingStatus.totalHeat())
+		               .withCooling(CoolingMode.REQUESTED_BYPASS, timestamp)
+		               .withBurstBoltsRemaining(0)
+		);
+
+		if (!world.isClient())
+		{
+			world.playSound(
+					user,
+					user.getX(),
+					user.getY(),
+					user.getZ(),
+					BlasterSounds.VENT,
+					SoundCategory.PLAYERS,
+					0.5F,
+					0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+			);
+		}
+
+		return stack;
 	}
 
 	private static void fireBolt(LivingEntity user, ServerWorld serverWorld)

@@ -26,6 +26,7 @@ public final class GalaxiesPlayerActionManager
 		{
 			case INVALID -> Galaxies.LOGGER.warn("Received invalid player action packet!");
 			case RELEASE_USE_LEFT_ITEM -> GalaxiesEntityLeftClickManager.handleReleaseUseItem(context);
+			case PRIMARY_ITEM_ACTION -> GalaxiesEntityItemActionManager.handlePrimaryItemAction(context);
 		}
 	}
 }
