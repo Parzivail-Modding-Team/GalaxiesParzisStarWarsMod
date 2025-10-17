@@ -1,6 +1,7 @@
 package dev.pswg.datagen;
 
 import dev.pswg.Blasters;
+import dev.pswg.BlastersClient;
 import dev.pswg.Galaxies;
 import dev.pswg.item.BlasterItem;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -86,6 +87,9 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.failed"), "Blaster Cooling Fail");
 			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.vent"), "Blaster Venting");
 			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.overheat"), "Blaster Overheating");
+
+			// Tooltips
+			translationBuilder.add(BlastersClient.I18N_VENT_BLASTER, "Vent Heat");
 		}
 	}
 

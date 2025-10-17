@@ -10,5 +10,6 @@
   "subtitle.pswg_blasters.blaster.overheat": "Blaster Overheating",
   "subtitle.pswg_blasters.blaster.reload": "Blaster Reloading",
   "subtitle.pswg_blasters.blaster.vent": "Blaster Venting",
-  "tag.item.pswg_blasters.blasters": "Blasters"
+  "tag.item.pswg_blasters.blasters": "Blasters",
+  "text.pswg_blasters.vent_blaster": "Vent Heat"
 }

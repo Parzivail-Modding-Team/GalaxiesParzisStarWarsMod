@@ -22,6 +22,9 @@ public final class GalaxiesKeybinds
 	 */
 	public static void initialize()
 	{
+		// TODO: lang
+		// TODO: put in blaster tooltip
+
 		primaryAction = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				"key.pswg.primary_action",
 				InputUtil.Type.KEYSYM,
@@ -33,5 +36,15 @@ public final class GalaxiesKeybinds
 			while (primaryAction.wasPressed())
 				GalaxiesEntityItemActionClientManager.handlePrimaryItemAction();
 		});
+	}
+
+	/**
+	 * Gets the primary action keybind
+	 *
+	 * @return The primary action keybind
+	 */
+	public static KeyBinding getPrimaryAction()
+	{
+		return primaryAction;
 	}
 }

@@ -50,4 +50,18 @@ public final class RandomHelper
 		var normalizedGaussian = random.nextGaussian();
 		return normalizedGaussian * std + mean;
 	}
+
+	/**
+	 * Returns a uniform float between the given min and max
+	 *
+	 * @param random The random number generator to use
+	 * @param min    The minimum value to return
+	 * @param max    The maximum value to return
+	 *
+	 * @return A uniform float between the given min and max
+	 */
+	public static float floatBetween(Random random, float min, float max)
+	{
+		return min + random.nextFloat() * (max - min);
+	}
 }

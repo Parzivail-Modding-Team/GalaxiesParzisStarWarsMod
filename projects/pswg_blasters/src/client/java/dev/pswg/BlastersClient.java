@@ -5,19 +5,17 @@ import dev.pswg.data.SlimRegistry;
 import dev.pswg.events.HudRenderEvents;
 import dev.pswg.events.ItemRenderEvents;
 import dev.pswg.hud.DefaultBlasterHudRenderer;
+import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.item.ItemTooltipHelper;
 import dev.pswg.renderer.BlasterBoltEntityRenderer;
 import dev.pswg.rendering.Drawables;
 import dev.pswg.rendering.ItemHudRenderer;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactories;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,6 +33,11 @@ public class BlastersClient implements GalaxiesClientAddon
 	 * The registry for blaster information HUD renderers
 	 */
 	public static final SlimRegistry<ItemHudRenderer> BLASTER_HUD_REGISTRY = new SlimRegistry<>();
+
+	/**
+	 * A translatable text with two parameters: the keybind value, and the hint text
+	 */
+	public static final String I18N_VENT_BLASTER = GalaxiesClient.getI18nKey(Blasters.id("vent_blaster"));
 
 	@Override
 	public void onGalaxiesClientReady()
@@ -70,6 +73,7 @@ public class BlastersClient implements GalaxiesClientAddon
 	private static void getTooltip(ItemStack itemStack, Item.TooltipContext ctx, TooltipType type, List<Text> list)
 	{
 		list.add(Text.translatable(itemStack.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID).toTranslationKey()));
+		list.add(GalaxiesClient.getKeybindHint(GalaxiesKeybinds.getPrimaryAction(), Text.translatable(I18N_VENT_BLASTER)));
 	}
 
 	private static void renderItemBars(DrawContext context, TextRenderer textRenderer, ItemStack stack, int x, int y)

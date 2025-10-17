@@ -1,6 +1,7 @@
 package dev.pswg.datagen;
 
-import dev.pswg.attributes.GalaxiesEntityAttributes;
+import dev.pswg.GalaxiesClient;
+import dev.pswg.input.GalaxiesKeybinds;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -12,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * The base data generator
  */
-public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
+public class GalaxiesClientDataGenerator implements DataGeneratorEntrypoint
 {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator)
@@ -36,9 +37,13 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
 		{
-			// Attributes
-			translationBuilder.add(GalaxiesEntityAttributes.I18N_ATTR_MULTIPLIER, "%sx %s");
-			translationBuilder.add(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, "Zoom");
+			// Hints
+			translationBuilder.add(GalaxiesClient.I18N_KEYBIND_HINT_KEY, "§9[§f%s§9]§r %s");
+
+			// Keybinds
+			ClientLangGenHelper.keybindCategory(translationBuilder, GalaxiesKeybinds.CATEGORY, "Galaxies: Parzi's Star Wars Mod");
+
+			ClientLangGenHelper.keybind(translationBuilder, GalaxiesKeybinds.getPrimaryAction(), "Primary Item Action");
 		}
 	}
 }

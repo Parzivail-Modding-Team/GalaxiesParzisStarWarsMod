@@ -843,8 +843,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						user.getZ(),
 						BlasterSounds.BYPASS_FAILED,
 						SoundCategory.PLAYERS,
-						0.5F,
-						0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+						1,
+						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 				);
 
 				if (world.isClient())
@@ -865,8 +865,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						user.getZ(),
 						BlasterSounds.BYPASS_PRIMARY,
 						SoundCategory.PLAYERS,
-						0.5F,
-						0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+						1,
+						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 				);
 
 				if (world.isClient())
@@ -893,8 +893,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						user.getZ(),
 						BlasterSounds.BYPASS_SECONDARY,
 						SoundCategory.PLAYERS,
-						0.5F,
-						0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+						1,
+						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 				);
 
 				if (world.isClient())
@@ -944,8 +944,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				user.getZ(),
 				RegistryEntry.of(SoundEvent.of(stats.fireSound())),
 				SoundCategory.NEUTRAL,
-				0.5F,
-				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+				1,
+				RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 		);
 
 		if (totalHeat > stats.heat().capacity())
@@ -957,8 +957,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 					user.getZ(),
 					BlasterSounds.OVERHEAT,
 					SoundCategory.PLAYERS,
-					0.5F,
-					0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+					1,
+					RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 			);
 
 			state = state.withLastVentingHeat(totalHeat + stats.heat().overheatPenalty())
@@ -991,19 +991,16 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		               .withBurstBoltsRemaining(0)
 		);
 
-		if (!world.isClient())
-		{
-			world.playSound(
-					user,
-					user.getX(),
-					user.getY(),
-					user.getZ(),
-					BlasterSounds.VENT,
-					SoundCategory.PLAYERS,
-					0.5F,
-					0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
-			);
-		}
+		world.playSound(
+				user,
+				user.getX(),
+				user.getY(),
+				user.getZ(),
+				BlasterSounds.VENT,
+				SoundCategory.PLAYERS,
+				1,
+				RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
+		);
 
 		return stack;
 	}
