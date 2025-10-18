@@ -53,7 +53,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 
 	public void burnBlock(BlockState state, BlockPos pos)
 	{
-		var world = getWorld();
+		var world = getEntityWorld();
 		if (state.isIn(GadgetsBlocks.Tags.INFERNO_CHAR))
 		{
 			world.setBlockState(pos, GadgetsBlocks.CHARRED_BLOCK.getDefaultState());
@@ -62,7 +62,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		{
 			for (int i = 0; i < 8; i++)
 			{
-				world.addParticle(ParticleTypes.SMOKE,
+				world.addParticleClient(ParticleTypes.SMOKE,
 				                  true,
 				                  true,
 				                  pos.getX() + world.random.nextGaussian() * 0.1f,
@@ -76,7 +76,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 			}
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
-		else if (state.isIn(BlockTags.DIRT) && pos.isWithinDistance(getPos(), INNER_AREA_DISTANCE))
+		else if (state.isIn(BlockTags.DIRT) && pos.isWithinDistance(getEntityPos(), INNER_AREA_DISTANCE))
 		{
 			world.setBlockState(pos, GadgetsBlocks.FERTILE_DIRT_BLOCK.getDefaultState());
 		}
@@ -84,9 +84,9 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 
 	public void spawnScorchParticles(Vector3f unitVec, BlockPos pos)
 	{
-		var world = getWorld();
-		SimpleParticleType scorchParticleType = pos.isWithinDistance(getPos(), INNER_AREA_DISTANCE) ? GadgetsParticleTypes.DENSE_INFERNO_SCORCH_PARTICLE : GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE;
-		world.addParticle(scorchParticleType,
+		var world = getEntityWorld();
+		SimpleParticleType scorchParticleType = pos.isWithinDistance(getEntityPos(), INNER_AREA_DISTANCE) ? GadgetsParticleTypes.DENSE_INFERNO_SCORCH_PARTICLE : GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE;
+		world.addParticleClient(scorchParticleType,
 		                  true,
 		                  true,
 		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (1 / 4f),
@@ -96,7 +96,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		                  unitVec.y,
 		                  unitVec.z
 		);
-		world.addParticle(scorchParticleType,
+		world.addParticleClient(scorchParticleType,
 		                  true,
 		                  true,
 		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (1 / 4f),
@@ -106,7 +106,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		                  unitVec.y,
 		                  unitVec.z
 		);
-		world.addParticle(scorchParticleType,
+		world.addParticleClient(scorchParticleType,
 		                  true,
 		                  true,
 		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (-1 / 4f),
@@ -116,7 +116,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		                  unitVec.y,
 		                  unitVec.z
 		);
-		world.addParticle(scorchParticleType,
+		world.addParticleClient(scorchParticleType,
 		                  true,
 		                  true,
 		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (-1 / 4f),
@@ -140,13 +140,13 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 			setVelocity(Vec3d.ZERO);
 			velocityModified = true;
 		}
-		var world = getWorld();
+		var world = getEntityWorld();
 		if (detonationTicks == 1)
 		{
 			var oPos = getBlockPos();
 			this.burntBlocks.add(oPos);
 			burnBlock(world.getBlockState(oPos), oPos);
-			for (LivingEntity entity : world.getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(INNER_AREA_DISTANCE), livingEntity -> livingEntity.getPos().distanceTo(getPos()) <= INNER_AREA_DISTANCE))
+			for (LivingEntity entity : world.getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(INNER_AREA_DISTANCE), livingEntity -> livingEntity.getEntityPos().distanceTo(getEntityPos()) <= INNER_AREA_DISTANCE))
 			{
 				if (!entity.isFireImmune())
 				{
@@ -160,7 +160,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		}
 		if (detonationTicks == 12)
 		{
-			for (LivingEntity entity : world.getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(MAX_DISTANCE), livingEntity -> livingEntity.getPos().distanceTo(getPos()) <= MAX_DISTANCE))
+			for (LivingEntity entity : world.getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(MAX_DISTANCE), livingEntity -> livingEntity.getEntityPos().distanceTo(getEntityPos()) <= MAX_DISTANCE))
 			{
 				if (!entity.isFireImmune())
 				{
@@ -213,7 +213,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 				}
 			}
 		}
-		var flameWaveList = burntBlocks.stream().filter(pos -> pos.isWithinDistance(getPos(), (float)firewaveTicks / MAX_FIRE_WAVE_TICKS * MAX_DISTANCE + 1) && !pos.isWithinDistance(getPos(), (float)firewaveTicks / MAX_FIRE_WAVE_TICKS * MAX_DISTANCE)).toList();
+		var flameWaveList = burntBlocks.stream().filter(pos -> pos.isWithinDistance(getEntityPos(), (float)firewaveTicks / MAX_FIRE_WAVE_TICKS * MAX_DISTANCE + 1) && !pos.isWithinDistance(getEntityPos(), (float)firewaveTicks / MAX_FIRE_WAVE_TICKS * MAX_DISTANCE)).toList();
 		for (BlockPos pos : flameWaveList)
 		{
 			var state = world.getBlockState(pos);
@@ -229,7 +229,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 						double offsetX = this.random.nextGaussian() * (normal.y + normal.z) / 2f;
 						double offsetY = this.random.nextGaussian() * (normal.x + normal.z) / 2f;
 						double offsetZ = this.random.nextGaussian() * (normal.y + normal.x) / 2f;
-						world.addParticle(
+						world.addParticleClient(
 								GadgetsParticleTypes.SHORT_FLAME_PARTICLE,
 								pos.getX() + 0.5 + normal.x + offsetX,
 								pos.getY() + 0.5 + normal.y + offsetY,
@@ -244,7 +244,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 						double offsetX = this.random.nextGaussian() * (normal.y + normal.z);
 						double offsetY = this.random.nextGaussian() * (normal.x + normal.z);
 						double offsetZ = this.random.nextGaussian() * (normal.y + normal.x);
-						world.addParticle(
+						world.addParticleClient(
 								GadgetsParticleTypes.SMALL_SHORT_FLAME_PARTICLE,
 								pos.getX() + 0.5 + normal.x + offsetX,
 								pos.getY() + 0.5 + normal.y + offsetY,

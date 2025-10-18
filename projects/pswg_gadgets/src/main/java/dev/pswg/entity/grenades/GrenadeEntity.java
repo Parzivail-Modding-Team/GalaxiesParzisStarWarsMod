@@ -22,6 +22,8 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -126,7 +128,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 	{
 		BlockState blockState = getBlockStateAtPos();
 
-		if (this.inBlockState != blockState && !this.getWorld().isClient() && this.isInGround())
+		if (this.inBlockState != blockState && !this.getEntityWorld().isClient() && this.isInGround())
 			this.fall();
 
 		if (shouldExplode)
@@ -188,19 +190,19 @@ public abstract class GrenadeEntity extends ThrownEntity
 			var velocity = this.getVelocity();
 			BlockHitResult blockHit = (BlockHitResult)hit;
 
-			var hitState = this.getWorld().getBlockState(blockHit.getBlockPos());
-			var hardness = hitState.getHardness(getWorld(), blockHit.getBlockPos());
+			var hitState = this.getEntityWorld().getBlockState(blockHit.getBlockPos());
+			var hardness = hitState.getHardness(getEntityWorld(), blockHit.getBlockPos());
 			var restitution = MathHelper.clamp(0.4 - 0.25 / hardness, 0.1, 1);
 			var blockMultiplier = 1.;
 
-			if (getWorld().getBlockState(blockHit.getBlockPos()).isIn(GadgetsBlocks.Tags.BOUNCY))
+			if (getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(GadgetsBlocks.Tags.BOUNCY))
 				blockMultiplier = 2.5;
-			if (getWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.WOOL) || getWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.LEAVES))
+			if (getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.WOOL) || getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.LEAVES))
 				blockMultiplier = 0.75;
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
 			{
-				inBlockState = getWorld().getBlockState(blockHit.getBlockPos());
+				inBlockState = getEntityWorld().getBlockState(blockHit.getBlockPos());
 				setInGround(true);
 				setVelocity(Vec3d.ZERO);
 				return;
@@ -218,7 +220,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 
 	public void playCollisionSound(BlockHitResult blockHitResult)
 	{
-		BlockState state = getWorld().getBlockState(blockHitResult.getBlockPos());
+		BlockState state = getEntityWorld().getBlockState(blockHitResult.getBlockPos());
 		if (getVelocity().length() > 0.05f)
 			this.playSound(state.getSoundGroup().getHitSound(), 0.5f, 1f);
 	}
@@ -276,8 +278,8 @@ public abstract class GrenadeEntity extends ThrownEntity
 			if (!this.shouldExplode)
 				this.explode();
 
-			if(!getWorld().isClient())
-				return super.damage((ServerWorld)getWorld(), source, amount);
+		if (!getEntityWorld().isClient())
+			return super.damage((ServerWorld)getEntityWorld(), source, amount);
 			else
 				return false;
 	}
@@ -308,7 +310,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 
 	public void explode(Vec3d pos)
 	{
-		if (getWorld() instanceof ServerWorld serverWorld)
+		if (getEntityWorld() instanceof ServerWorld serverWorld)
 		{
 			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, pos.add(0, 0.05f, 0), getExplosionPower(), false, Explosion.DestructionType.DESTROY_WITH_DECAY);
 			explosion.explode();
@@ -316,26 +318,28 @@ public abstract class GrenadeEntity extends ThrownEntity
 		}
 		this.discard();
 	}
+
 	@Override
-	public void writeCustomDataToNbt(NbtCompound tag)
+	protected void writeCustomData(WriteView view)
 	{
-		super.writeCustomDataToNbt(tag);
-		tag.putInt("life", getLife());
-		tag.putBoolean("primed", isPrimed());
-		tag.putBoolean("in_ground", isInGround());
+		super.writeCustomData(view);
+
+		view.putInt("life", getLife());
+		view.putBoolean("primed", isPrimed());
+		view.putBoolean("in_ground", isInGround());
 		if (this.inBlockState != null)
-			tag.put("inBlockState", NbtHelper.fromBlockState(this.inBlockState));
+			view.put("inBlockState", BlockState.CODEC, this.inBlockState);
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound tag)
+	protected void readCustomData(ReadView view)
 	{
-		super.readCustomDataFromNbt(tag);
-		setLife(tag.getInt("life"));
-		setPrimed(tag.getBoolean("primed"));
-		setInGround(tag.getBoolean("in_ground"));
-		if (tag.contains("inBlockState", NbtElement.COMPOUND_TYPE))
-			this.inBlockState = NbtHelper.toBlockState(this.getWorld().createCommandRegistryWrapper(RegistryKeys.BLOCK), tag.getCompound("inBlockState"));
+		super.readCustomData(view);
+		setLife(view.getInt("life", 1));
+		setPrimed(view.getBoolean("primed", false));
+		setInGround(view.getBoolean("in_ground", false));
+		if (view.contains("inBlockState"))
+			this.inBlockState = view.read("inBlockState", BlockState.CODEC).get();
 	}
 	public boolean isVisible()
 	{

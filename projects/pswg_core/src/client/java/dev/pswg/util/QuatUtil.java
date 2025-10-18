@@ -72,8 +72,8 @@ public class QuatUtil
 
 	public static Quaternionf getQuaternion(NbtCompound tag, String key)
 	{
-		var list = tag.getList(key, NbtElement.FLOAT_TYPE);
-		return new Quaternionf(list.getFloat(1), list.getFloat(2), list.getFloat(3), list.getFloat(0));
+		var list = tag.getList(key).get();
+		return new Quaternionf(list.getFloat(1).get(), list.getFloat(2).get(), list.getFloat(3).get(), list.getFloat(0).get());
 	}
 
 	public static void rotateTowards(Quaternionf self, Vec3d orientation, float speed)

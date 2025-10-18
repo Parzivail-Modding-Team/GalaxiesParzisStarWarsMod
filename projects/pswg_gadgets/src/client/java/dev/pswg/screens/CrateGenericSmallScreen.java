@@ -2,6 +2,7 @@ package dev.pswg.screens;
 
 import dev.pswg.Gadgets;
 import dev.pswg.screenHandler.CrateGenericSmallScreenHandler;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.RenderLayer;
@@ -42,6 +43,6 @@ public class CrateGenericSmallScreen extends HandledScreen<CrateGenericSmallScre
 	{
 		var i = (this.width - this.backgroundWidth) / 2;
 		var j = (this.height - this.backgroundHeight) / 2;
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
+		context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
 	}
 }

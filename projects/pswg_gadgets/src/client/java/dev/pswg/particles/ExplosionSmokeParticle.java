@@ -5,16 +5,17 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(value= EnvType.CLIENT)
-public class ExplosionSmokeParticle extends SpriteBillboardParticle
+public class ExplosionSmokeParticle extends BillboardParticle
 {
 	private final int variant;
 	final int NUM_VARIANTS = 9;
 	protected ExplosionSmokeParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
-		super(clientWorld, x, y, z);
+		super(clientWorld, x, y, z, spriteProvider.getFirst());
 		scale(7.5f);
 		setBoundingBoxSpacing(0.25f, 0.25f);
 		maxAge = random.nextInt(120) + 1280;
@@ -26,21 +27,26 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		variant = random.nextInt(NUM_VARIANTS);
 	}
 
+	@Override
+	protected RenderType getRenderType()
+	{
+		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
+	}
 
 	@Override
 	public void tick()
 	{
 
-		prevPosX = x;
-		prevPosY = y;
-		prevPosZ = z;
+		lastX = x;
+		lastY = y;
+		lastZ = z;
 		age++;
 		if (alpha <= 0.0f||age>=maxAge) {
 			markDead();
 			return;
 		}
-		velocityX += (double)(random.nextFloat() / 500.0f * (float)(random.nextBoolean() ? 1 : -1));
-		velocityZ += (double)(random.nextFloat() / 500.0f * (float)(random.nextBoolean() ? 1 : -1));
+		velocityX += random.nextFloat() / 500.0f * (float)(random.nextBoolean() ? 1 : -1);
+		velocityZ += random.nextFloat() / 500.0f * (float)(random.nextBoolean() ? 1 : -1);
 		velocityY += 0.001;
 		move(velocityX, velocityY, velocityZ);
 		if(age >=  50 && this.alpha > 0.005f) {
@@ -48,11 +54,6 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 		}
 	}
 
-	@Override
-	public ParticleTextureSheet getType()
-	{
-		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
-	}
 	@Environment(value=EnvType.CLIENT)
 	public static class Factory implements ParticleFactory<SimpleParticleType>
 	{
@@ -62,12 +63,11 @@ public class ExplosionSmokeParticle extends SpriteBillboardParticle
 			this.spriteProvider = spriteProvider;
 		}
 
-		@Nullable
 		@Override
-		public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
+		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
 		{
 			ExplosionSmokeParticle explosionSmokeParticle = new ExplosionSmokeParticle(world, x, y, z, velocityX,velocityY,velocityZ,  spriteProvider);
-			explosionSmokeParticle.setSprite(spriteProvider);
+			explosionSmokeParticle.setSprite(spriteProvider.getFirst());
 			return explosionSmokeParticle;
 		}
 	}

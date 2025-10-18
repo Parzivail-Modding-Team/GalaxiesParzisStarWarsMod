@@ -19,6 +19,8 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -99,18 +101,18 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 	}
 
 	@Override
-	protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
+	protected void readData(ReadView view)
 	{
-		super.readNbt(nbt, registries);
+		super.readData(view);
 		this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-		Inventories.readNbt(nbt, this.inventory, registries);
+		Inventories.readData(view, this.inventory);
 	}
 
 	@Override
-	protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
+	protected void writeData(WriteView view)
 	{
-		super.writeNbt(nbt, registries);
-		Inventories.writeNbt(nbt, this.inventory, registries);
+		super.writeData(view);
+		Inventories.writeData(view, this.inventory);
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity)

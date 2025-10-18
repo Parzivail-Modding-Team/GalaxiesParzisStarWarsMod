@@ -5,15 +5,13 @@ import dev.pswg.entity.grenades.GrenadeEntity;
 import dev.pswg.item.ExplosionSoundGroup;
 import dev.pswg.item.ILeftClickUsable;
 import dev.pswg.world.TickConstants;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -22,6 +20,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class GrenadeItem extends Item implements ILeftClickUsable, ProjectileItem
 {
@@ -92,7 +91,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
+	public void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, @Nullable EquipmentSlot slot)
 	{
 		if (entity instanceof PlayerEntity player && stack.contains(GadgetsItems.Components.PRIMING_TIME))
 		{
@@ -120,8 +119,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 			}
 			stack.remove(GadgetsItems.Components.PRIMING_TIME);
 		}
-		
-		super.inventoryTick(stack, world, entity, slot, selected);
+		super.inventoryTick(stack, world, entity, slot);
 	}
 	/*
 	@Override

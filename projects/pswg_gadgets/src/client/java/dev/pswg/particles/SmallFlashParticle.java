@@ -7,30 +7,34 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.particle.TintedParticleEffect;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 
 @Environment(EnvType.CLIENT)
-public class SmallFlashParticle extends SpriteBillboardParticle
+public class SmallFlashParticle extends BillboardParticle
 {
 	SmallFlashParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
-		super(clientWorld, x, y, z);
+		super(clientWorld, x, y, z, spriteProvider.getFirst());
 		this.maxAge = 4;
-		this.setSprite(spriteProvider);
+		this.updateSprite(spriteProvider);
 	}
 
 	@Override
-	public ParticleTextureSheet getType()
+	protected RenderType getRenderType()
 	{
-		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
 	}
 
 	@Override
-	public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta)
+	protected void render(BillboardParticleSubmittable submittable, Camera camera, Quaternionf rotation, float tickProgress)
 	{
-		this.setAlpha(0.6F - ((float)this.age + tickDelta - 1.0F) * 0.25F * 0.5F);
-		super.render(vertexConsumer, camera, tickDelta);
+		this.setAlpha(0.6F - ((float)this.age + tickProgress - 1.0F) * 0.25F * 0.5F);
+		super.render(submittable, camera, rotation, tickProgress);
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public class SmallFlashParticle extends SpriteBillboardParticle
 	}
 
 	@Environment(value = EnvType.CLIENT)
-	public static class Factory implements ParticleFactory<SimpleParticleType>
+	public static class Factory implements ParticleFactory<TintedParticleEffect>
 	{
 		private final SpriteProvider spriteProvider;
 
@@ -49,12 +53,12 @@ public class SmallFlashParticle extends SpriteBillboardParticle
 			this.spriteProvider = spriteProvider;
 		}
 
-		@Nullable
 		@Override
-		public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
+		public @Nullable Particle createParticle(TintedParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
 		{
 			SmallFlashParticle flashParticle = new SmallFlashParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
-			flashParticle.setSprite(spriteProvider);
+			flashParticle.setColor(parameters.getRed(), parameters.getGreen(), parameters.getBlue());
+			flashParticle.setSprite(spriteProvider.getFirst());
 			return flashParticle;
 		}
 	}

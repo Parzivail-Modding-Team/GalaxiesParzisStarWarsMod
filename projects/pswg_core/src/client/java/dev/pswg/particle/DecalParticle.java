@@ -5,11 +5,13 @@ import dev.pswg.util.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.AnimatedParticle;
+import net.minecraft.client.particle.BillboardParticleSubmittable;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
@@ -29,7 +31,7 @@ public class DecalParticle extends AnimatedParticle
 		if (this.age++ >= this.maxAge)
 			this.markDead();
 
-		this.setSpriteForAge(this.spriteProvider);
+		this.updateSprite(this.spriteProvider);
 		if (this.age > this.maxAge / 2)
 			this.setAlpha(1.0F - ((float)this.age - (float)(this.maxAge / 2)) / (float)this.maxAge);
 
@@ -42,18 +44,18 @@ public class DecalParticle extends AnimatedParticle
 	}
 
 	@Override
-	public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta)
+	protected void render(BillboardParticleSubmittable submittable, Camera camera, Quaternionf rotation, float tickProgress)
 	{
 		var vec3d = camera.getPos();
-		var f = (float)(MathHelper.lerp(tickDelta, this.prevPosX, this.x) - vec3d.getX());
-		var g = (float)(MathHelper.lerp(tickDelta, this.prevPosY, this.y) - vec3d.getY());
-		var h = (float)(MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - vec3d.getZ());
+		var f = (float)(MathHelper.lerp(tickProgress, this.lastX, this.x) - vec3d.getX());
+		var g = (float)(MathHelper.lerp(tickProgress, this.lastY, this.y) - vec3d.getY());
+		var h = (float)(MathHelper.lerp(tickProgress, this.lastZ, this.z) - vec3d.getZ());
 
 		// We're abusing the velocity component as a normal vector
 		var normal = new Vec3d(velocityX, velocityY, velocityZ).normalize();
 
-		Quaternionf rotation = QuatUtil.lookAt(Vec3d.ZERO, normal);
-		rotation.rotateZ(angle);
+		Quaternionf rot = QuatUtil.lookAt(Vec3d.ZERO, normal);
+		rot.rotateZ(rot.angle());
 
 		var z = (1 - this.age / (float)this.maxAge) * 0.005f;
 
@@ -64,25 +66,27 @@ public class DecalParticle extends AnimatedParticle
 				new Vector3f(1.0F, -1.0F, z)
 		};
 
-		var j = this.getSize(tickDelta);
+		var j = this.getSize(tickProgress);
 
 		var l = this.getMinU();
 		var m = this.getMaxU();
 		var n = this.getMinV();
 		var o = this.getMaxV();
-		var p = this.getBrightness(tickDelta);
+		var p = this.getBrightness(tickProgress);
 
 		for (var k = 0; k < 4; ++k)
 		{
 			var vec3f2 = corners[k];
-			vec3f2.rotate(rotation);
+			vec3f2.rotate(rot);
 			vec3f2.mul(j);
 			vec3f2.add(f, g, h);
 		}
 
-		vertexConsumer.vertex(corners[3].x, corners[3].y, corners[3].z).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p);
+		submittable.render(this.getRenderType(), corners[0].x, corners[0].y, corners[0].z, rotation.x, rotation.y, rotation.z, rotation.w, this.getSize(tickProgress), this.getMinU(), this.getMaxU(), this.getMinV(), this.getMaxV(), ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue), this.getBrightness(tickProgress));
+		/*vertexConsumer.vertex(corners[3].x, corners[3].y, corners[3].z).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[2].x, corners[2].y, corners[2].z).texture(m, n).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[1].x, corners[1].y, corners[1].z).texture(l, n).color(this.red, this.green, this.blue, this.alpha).light(p);
-		vertexConsumer.vertex(corners[0].x, corners[0].y, corners[0].z).texture(l, o).color(this.red, this.green, this.blue, this.alpha).light(p);
+		vertexConsumer.vertex(corners[0].x, corners[0].y, corners[0].z).texture(l, o).color(this.red, this.green, this.blue, this.alpha).light(p);*/
+		//super.render(submittable, camera, rotation, tickProgress);
 	}
 }

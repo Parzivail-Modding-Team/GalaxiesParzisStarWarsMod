@@ -6,6 +6,7 @@ import dev.pswg.container.GadgetsScreenHandlerTypes;
 import dev.pswg.screenHandler.CrateGenericSmallScreenHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -14,6 +15,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -51,23 +54,23 @@ public class CrateCorrugatedBlockEntity extends LootableContainerBlockEntity imp
 	}
 
 	@Override
-	protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
+	protected void writeData(WriteView view)
 	{
-		super.writeNbt(nbt, registries);
-		if (!this.writeLootTable(nbt))
+		super.writeData(view);
+		if (!this.writeLootTable(view))
 		{
-			Inventories.writeNbt(nbt, this.inventory, registries);
+			Inventories.writeData(view, this.inventory);
 		}
 	}
 
 	@Override
-	protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
+	protected void readData(ReadView view)
 	{
-		super.readNbt(nbt, registries);
+		super.readData(view);
 		this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-		if (!this.readLootTable(nbt))
+		if (!this.readLootTable(view))
 		{
-			Inventories.readNbt(nbt, this.inventory, registries);
+			Inventories.readData(view, this.inventory);
 		}
 	}
 
@@ -90,9 +93,12 @@ public class CrateCorrugatedBlockEntity extends LootableContainerBlockEntity imp
 	}
 
 	@Override
-	public void onOpen(PlayerEntity player)
+	public void onOpen(ContainerUser user)
 	{
-		generateLoot(player);
-		super.onOpen(player);
+		if (user instanceof PlayerEntity player)
+			generateLoot(player);
+		else
+			generateLoot(null);
+		super.onOpen(user);
 	}
 }

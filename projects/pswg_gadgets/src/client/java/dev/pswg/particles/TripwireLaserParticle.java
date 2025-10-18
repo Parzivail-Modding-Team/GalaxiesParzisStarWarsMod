@@ -12,6 +12,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
+import org.jetbrains.annotations.Nullable;
 
 public class TripwireLaserParticle extends CrossPointingParticle
 {
@@ -22,13 +24,13 @@ public class TripwireLaserParticle extends CrossPointingParticle
 		this.maxAge = 3;
 		this.scale = 0.0625f;
 		this.setColor(0.05f + (float)clientWorld.random.nextBetween(0, 100) / 1000f, 0.65f + (float)clientWorld.random.nextBetween(0, 100) / 1000f, 0.9f + (float)clientWorld.random.nextBetween(0, 100) / 1000f);
-		this.setSpriteForAge(spriteProvider);
+		this.updateSprite(spriteProvider);
 	}
 
 	@Override
-	public ParticleTextureSheet getType()
+	public RenderType getRenderType()
 	{
-		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class TripwireLaserParticle extends CrossPointingParticle
 		super.tick();
 		if (!this.dead)
 		{
-			this.setSpriteForAge(this.spriteProvider);
+			this.updateSprite(this.spriteProvider);
 			this.velocityY -= 0.00001;
 		}
 	}
@@ -53,9 +55,9 @@ public class TripwireLaserParticle extends CrossPointingParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
+		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
 		{
-			return new TripwireLaserParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
+			return new TripwireLaserParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.spriteProvider);
 		}
 	}
 }

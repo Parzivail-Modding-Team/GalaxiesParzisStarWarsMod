@@ -7,8 +7,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.TintedParticleEffect;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Colors;
 import net.minecraft.world.World;
 
 public class ImpactGrenadeEntity extends GrenadeEntity
@@ -44,7 +46,9 @@ public class ImpactGrenadeEntity extends GrenadeEntity
 
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 		{
-			serverWorld.spawnParticles(serverPlayerEntity, (power > 2 ? ParticleTypes.FLASH : GadgetsParticleTypes.SMALL_FLASH_PARTICLE), true, true, x, y, z, 1, 0, 0, 0, 0);
+			TintedParticleEffect flashParticle = TintedParticleEffect.create((power > 2 ? ParticleTypes.FLASH : GadgetsParticleTypes.SMALL_FLASH_PARTICLE), Colors.WHITE);
+
+			serverWorld.spawnParticles(serverPlayerEntity, flashParticle, true, true, x, y, z, 1, 0, 0, 0, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, GadgetsParticleTypes.EXPLOSION_SMOKE_PARTICLE, true, true, x, y, z, m2 * 6, m, m, m, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.FLAME, true, true, x, y, z, m2 * 2, m3, m3, m3, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, ParticleTypes.SMALL_FLAME, true, true, x, y, z, m2 * 3, m4, m4, m4, 0);

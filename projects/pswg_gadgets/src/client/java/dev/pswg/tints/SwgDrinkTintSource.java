@@ -2,7 +2,6 @@ package dev.pswg.tints;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.render.item.tint.PotionTintSource;
 import net.minecraft.client.render.item.tint.TintSource;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.DataComponentTypes;

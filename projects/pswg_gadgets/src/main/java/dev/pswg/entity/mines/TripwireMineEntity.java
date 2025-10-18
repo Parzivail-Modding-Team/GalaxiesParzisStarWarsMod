@@ -17,9 +17,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.TintedParticleEffect;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import net.minecraft.util.Colors;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
@@ -73,9 +77,9 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 	public void explode()
 	{
-		if (getWorld() instanceof ServerWorld serverWorld)
+		if (getEntityWorld() instanceof ServerWorld serverWorld)
 		{
-			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, this.getPos().add(0, 0.05f, 0), 2.5f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), null, this.getEntityPos().add(0, 0.05f, 0), 2.5f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
 			explosion.explode();
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
@@ -95,22 +99,22 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 		{
-			serverWorld.spawnParticles(serverPlayerEntity, GadgetsParticleTypes.SMALL_FLASH_PARTICLE, true, true, x, y, z, 1, 0, 0, 0, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, TintedParticleEffect.create(GadgetsParticleTypes.SMALL_FLASH_PARTICLE, Colors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
 		}
 	}
 
 	private void applyDrag()
 	{
 		Vec3d vec3d = this.getVelocity();
-		Vec3d vec3d2 = this.getPos();
+		Vec3d vec3d2 = this.getEntityPos();
 		float g;
 		if (this.isTouchingWater())
 		{
 			for (int i = 0; i < 4; i++)
 			{
 				float f = 0.25F;
-				this.getWorld()
-				    .addParticle(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
+				this.getEntityWorld()
+				    .addParticleClient(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
 			}
 
 			g = 0.8F;
@@ -158,7 +162,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 		BlockState blockState = getBlockStateAtPos();
 
-		if (this.inBlockState != blockState && !this.getWorld().isClient() && this.isInGround())
+		if (this.inBlockState != blockState && !this.getEntityWorld().isClient() && this.isInGround())
 					this.fall();
 
 		if (!isInGround())
@@ -181,7 +185,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
 
-		Vec3d newPos = this.getPos();
+		Vec3d newPos = this.getEntityPos();
 		if (hitResult.getType() != HitResult.Type.MISS)
 		{
 			newPos = hitResult.getPos().add(getVelocity().multiply(0.005));
@@ -190,9 +194,9 @@ public class TripwireMineEntity extends Entity implements Ownable
 				var blockHit = (BlockHitResult)hitResult;
 				var normal = new Vec3d(blockHit.getSide().getUnitVector());
 
-				if (!getWorld().getBlockState(blockHit.getBlockPos()).isAir())
+				if (!getEntityWorld().getBlockState(blockHit.getBlockPos()).isAir())
 				{
-					inBlockState = getWorld().getBlockState(blockHit.getBlockPos());
+					inBlockState = getEntityWorld().getBlockState(blockHit.getBlockPos());
 					setRotation(normal);
 					setInGround(true);
 					this.velocityModified = true;
@@ -201,24 +205,24 @@ public class TripwireMineEntity extends Entity implements Ownable
 		}
 		else
 		{
-			newPos = this.getPos().add(this.getVelocity());
+			newPos = this.getEntityPos().add(this.getVelocity());
 		}
 		this.setPosition(newPos);
 		this.tickBlockCollision();
 
 		var rotVec = getRotationVector();
 
-		var blockRaycast = getWorld().raycast(new RaycastContext(
-				this.getPos().add(rotVec.multiply(0.05d)),
-				this.getPos().add(rotVec.multiply(maxDist)),
+		var blockRaycast = getEntityWorld().raycast(new RaycastContext(
+				this.getEntityPos().add(rotVec.multiply(0.05d)),
+				this.getEntityPos().add(rotVec.multiply(maxDist)),
 				RaycastContext.ShapeType.COLLIDER,
 				RaycastContext.FluidHandling.ANY,
 				this
 		));
 		var entityRaycast = ProjectileUtil.raycast(
 				this,
-				this.getPos(),
-				this.getPos().add(rotVec.multiply(tripwireDistance)),
+				this.getEntityPos(),
+				this.getEntityPos().add(rotVec.multiply(tripwireDistance)),
 				this.getBoundingBox().stretch(rotVec.multiply(tripwireDistance)).expand(1.0, 1.0, 1.0),
 				entity -> true,
 				tripwireDistance);
@@ -226,15 +230,15 @@ public class TripwireMineEntity extends Entity implements Ownable
 		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && this.primed)
 			explode();
 
-		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getPos().distanceTo(getPos()));
+		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getPos().distanceTo(getEntityPos()));
 
 		if (this.primed)
 		{
 			for (float f = 0.015f; f < tripwireDistance; f += 0.015f)
 			{
-				if (getWorld() instanceof ServerWorld serverWorld)
+				if (getEntityWorld() instanceof ServerWorld serverWorld)
 				{
-					serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX() + getRotationVector().multiply(f).x, getY() + getRotationVector().multiply(f).y, getZ() + getRotationVector().multiply(f).z, 1, getWorld().random.nextBetween(1, 100) / 30000f, 0, getWorld().random.nextBetween(1, 100) / 30000f, 0);
+					serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX() + getRotationVector().multiply(f).x, getY() + getRotationVector().multiply(f).y, getZ() + getRotationVector().multiply(f).z, 1, getEntityWorld().random.nextBetween(1, 100) / 30000f, 0, getEntityWorld().random.nextBetween(1, 100) / 30000f, 0);
 					//serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX(), getY() + f, getZ(), 1, getWorld().random.nextBetween(1, 100) / 30000f, 0, getWorld().random.nextBetween(1, 100) / 30000f, 0);
 				}
 			}
@@ -274,34 +278,39 @@ public class TripwireMineEntity extends Entity implements Ownable
 		return true;
 	}
 
+	// TODO: MAKE "OWNER" PART OF A BASE CLASS COMMON FOR MINES
 	@Override
-	protected void readCustomDataFromNbt(NbtCompound nbt)
+	protected void readCustomData(ReadView view)
 	{
-		if (nbt.containsUuid("Owner"))
-			this.setOwner(nbt.getUuid("Owner"));
-		this.setInGround(nbt.getBoolean("inGround"));
-		if (nbt.contains("inBlockState", NbtElement.COMPOUND_TYPE))
-			this.inBlockState = NbtHelper.toBlockState(this.getWorld().createCommandRegistryWrapper(RegistryKeys.BLOCK), nbt.getCompound("inBlockState"));
+		if (view.contains("owner"))
+		{
+			this.setOwner(UUID.fromString(view.getString("owner", "")));
+		}
+		this.setInGround(view.getBoolean("inGround", false));
+		if (view.contains("inBlockState"))
+		{
+			this.inBlockState = view.read("inBlockState", BlockState.CODEC).get();
+		}
 	}
 
 	@Override
-	protected void writeCustomDataToNbt(NbtCompound nbt)
+	protected void writeCustomData(WriteView view)
 	{
 		if (this.ownerUuid != null)
 		{
-			nbt.putUuid("Owner", this.ownerUuid);
+			view.putString("owner", this.ownerUuid.toString());
 		}
-		nbt.putBoolean("inGround", this.isInGround());
+		view.putBoolean("inGround", this.isInGround());
 		if (this.inBlockState != null)
 		{
-			nbt.put("inBlockState", NbtHelper.fromBlockState(this.inBlockState));
+			view.put("inBlockState", BlockState.CODEC, inBlockState);
 		}
 	}
 
 	@Nullable
 	protected Entity getEntity(UUID uuid)
 	{
-		return this.getWorld() instanceof ServerWorld serverWorld ? serverWorld.getEntity(uuid) : null;
+		return this.getEntityWorld() instanceof ServerWorld serverWorld ? serverWorld.getEntity(uuid) : null;
 	}
 
 	@Override

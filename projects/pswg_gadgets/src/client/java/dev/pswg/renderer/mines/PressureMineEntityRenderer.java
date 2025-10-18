@@ -8,11 +8,13 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.state.EntityRenderState;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -46,17 +48,14 @@ public class PressureMineEntityRenderer extends EntityRenderer<PressureMineEntit
 	}
 
 	@Override
-	public void render(State state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light)
+	public void render(State state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState)
 	{
-		matrixStack.push();
-		VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(TEXTURE));
-
-		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw));
-
+		matrices.push();
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw));
 		this.model.setAngles(state);
-		this.model.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-		matrixStack.pop();
-		super.render(state, matrixStack, vertexConsumerProvider, light);
+		queue.submitModel(this.model, state, matrices, RenderLayer.getEntityCutout(TEXTURE), state.light, OverlayTexture.DEFAULT_UV, state.outlineColor, null);
+		matrices.pop();
+		super.render(state, matrices, queue, cameraState);
 	}
 
 	@Override

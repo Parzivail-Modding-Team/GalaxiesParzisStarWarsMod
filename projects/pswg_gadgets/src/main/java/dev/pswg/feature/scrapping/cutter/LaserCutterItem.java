@@ -7,6 +7,7 @@ import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsRecipeTypes;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,6 +26,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 public class LaserCutterItem extends Item
@@ -68,13 +70,6 @@ public class LaserCutterItem extends Item
 		newStack.remove(GadgetsItems.Components.CURRENT_BLOCK);
 		return newStack;
 	}
-
-	@Override
-	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
-	{
-		super.inventoryTick(stack, world, entity, slot, selected);
-	}
-
 	@Override
 	public int getMaxUseTime(ItemStack stack, LivingEntity user)
 	{
@@ -119,7 +114,7 @@ public class LaserCutterItem extends Item
 			if (world.getTime() % 4 == 0)
 			{
 				Vec3d particlePos = new Vec3d(pos.x - pos.x % (1f / 16f) - 0.03125f * (normalVec.y + normalVec.z), pos.y - pos.y % (1f / 16f) - 0.03125f * (normalVec.x + normalVec.z), pos.z - pos.z % (1f / 16f) - 0.03125f * (normalVec.y + normalVec.x));
-				world.addParticle(
+				world.addParticleClient(
 						GadgetsParticleTypes.LASER_CUT_PARTICLE,
 						true,
 						true,

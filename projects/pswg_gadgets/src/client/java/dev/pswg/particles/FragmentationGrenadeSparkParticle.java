@@ -12,6 +12,9 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Random;
 
 public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 {
@@ -23,7 +26,7 @@ public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 		this.setColor(0, 0, 1);
 		this.maxAge = (int)(this.random.nextFloat() * 20 + 10);
 		this.scale = (float)(this.random.nextFloat() * 0.25 + 0.15);
-		this.setSpriteForAge(spriteProvider);
+		this.updateSprite(spriteProvider);
 		this.collidesWithWorld = true;
 		this.velocityX = vX;
 		this.velocityY = vY;
@@ -31,9 +34,9 @@ public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 	}
 
 	@Override
-	public ParticleTextureSheet getType()
+	public RenderType getRenderType()
 	{
-		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+		return RenderType.BLOCK_ATLAS_TRANSLUCENT;
 	}
 
 	@Override
@@ -59,7 +62,7 @@ public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 		super.tick();
 		if (!this.dead)
 		{
-			this.setSpriteForAge(this.spriteProvider);
+			this.updateSprite(this.spriteProvider);
 			if (this.age > this.maxAge / 2)
 			{
 				this.setAlpha(1.0F - ((float)this.age - (float)(this.maxAge / 2)) / (float)this.maxAge);
@@ -86,9 +89,9 @@ public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
+		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, net.minecraft.util.math.random.Random random)
 		{
-			return new FragmentationGrenadeSparkParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
+			return new FragmentationGrenadeSparkParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.spriteProvider);
 		}
 	}
 }

@@ -34,7 +34,7 @@ public abstract class GasGrenadeEntity extends GrenadeEntity
 	{
 		if (!expellingGas)
 		{
-			var world = getWorld();
+			var world = getEntityWorld();
 			var gasEntity = gasEntityType.create(world, SpawnReason.TRIGGERED);
 			gasEntity.setPosition(getX(), getY(), getZ());
 

@@ -1,5 +1,6 @@
 package dev.pswg.entity.gas;
 
+import com.mojang.serialization.Codec;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.particle.GasParticleEffect;
 import net.minecraft.block.BlockState;
@@ -11,6 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -69,38 +72,43 @@ public class GasEntity extends Entity
 	}
 
 	@Override
-	protected void readCustomDataFromNbt(NbtCompound nbt)
+	protected void readCustomData(ReadView view)
 	{
-
-		var xList = nbt.getList("xList", 1);
-		var yList = nbt.getList("yList", 1);
-		var zList = nbt.getList("zList", 1);
-		var conList = nbt.getList("concentrationList", 1);
-		int s = xList.size();
+		var xList = view.getOptionalIntArray("xList").get();
+		var yList = view.getOptionalIntArray("yList").get();
+		var zList = view.getOptionalIntArray("ZList").get();
+		var conList = view.read("concentrationList", Codec.FLOAT.listOf());
+		int s = xList.length;
 		for (int i = 0; i < s; i++)
-			massMap.put(new BlockPos(xList.getInt(i), yList.getInt(i), zList.getInt(i)), conList.getFloat(i));
+			massMap.put(new BlockPos(xList[i], yList[i], zList[i]), conList.get().get(i));
 	}
 
 	@Override
-	protected void writeCustomDataToNbt(NbtCompound nbt)
+	protected void writeCustomData(WriteView view)
 	{
+		int[] xList = new int[1024];
+		int[] yList = new int[1024];
+		int[] zList = new int[1024];
 
-		List<Integer> xList = new ArrayList<>(List.of());
-		List<Integer> yList = new ArrayList<>(List.of());
-		List<Integer> zList = new ArrayList<>(List.of());
-
-		massMap.keySet().forEach(blockPos -> {
-			xList.add(blockPos.getX());
-			yList.add(blockPos.getY());
-			zList.add(blockPos.getZ());
-		});
-		List<Byte> concentrationList = new ArrayList<>();
+		int i = 0;
+		for (BlockPos blockPos : massMap.keySet())
+		{
+			xList[i] = blockPos.getX();
+			yList[i] = blockPos.getY();
+			zList[i] = blockPos.getZ();
+			i++;
+		}
+		byte[] concentrationList = new byte[1024];
+		i = 0;
 		for (Float f : massMap.values())
-			concentrationList.add(f.byteValue());
-		nbt.putIntArray("xList", xList);
-		nbt.putIntArray("yList", yList);
-		nbt.putIntArray("zList", zList);
-		nbt.putByteArray("concentrationList", concentrationList);
+		{
+			concentrationList[i] = f.byteValue();
+			i++;
+		}
+		view.putIntArray("xList", xList);
+		view.putIntArray("yList", yList);
+		view.putIntArray("zList", zList);
+		view.putByteArray("concentrationList", concentrationList);
 	}
 
 	@Override
@@ -117,7 +125,7 @@ public class GasEntity extends Entity
 
 	public void debug()
 	{
-		var world = getWorld();
+		var world = getEntityWorld();
 		float totalVolume = 0;
 		float maxConcentration = -1;
 		float minConcentration = Math.max(maxConcentration, DEFAULT_VOLUME);
@@ -147,7 +155,7 @@ public class GasEntity extends Entity
 	public void setOriginalPos()
 	{
 		boolean foundPos = false;
-		var world = getWorld();
+		var world = getEntityWorld();
 		var state = world.getBlockState(getBlockPos().up());
 		if (state.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !state.isSolid())
 			this.addDefaultPos(this.getBlockPos().up());
@@ -167,7 +175,7 @@ public class GasEntity extends Entity
 
 	public void updateFlowMap()
 	{
-		var world = getWorld();
+		var world = getEntityWorld();
 		float totalNeighborPermeability = 0f;
 		for (Map.Entry<BlockPos, Float> entry : massMap.entrySet())
 		{
@@ -203,8 +211,8 @@ public class GasEntity extends Entity
 					{
 						if ((massMap.get(offsetPos) - massDifferential) / 0.5f != massMap.get(offsetPos) / 0.5f && massDifferential > 0)
 						{
-							if (world.isClient)
-								world.addParticle(new GasParticleEffect(PARTICLE_TYPE, this.getId(), massMap.getOrDefault(offsetPos, 0.5f) - (massMap.getOrDefault(offsetPos, 0.5f) % 0.5f)),
+							if (world.isClient())
+								world.addParticleClient(new GasParticleEffect(PARTICLE_TYPE, this.getId(), massMap.getOrDefault(offsetPos, 0.5f) - (massMap.getOrDefault(offsetPos, 0.5f) % 0.5f)),
 								                  true,
 								                  true,
 								                  offsetPos.getX() + 0.5 + (world.random.nextBetween(-450, 450) / 1000f),

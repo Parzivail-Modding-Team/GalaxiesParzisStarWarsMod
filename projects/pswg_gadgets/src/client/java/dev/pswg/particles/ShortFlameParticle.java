@@ -7,24 +7,26 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class ShortFlameParticle extends AbstractSlowingParticle
 {
-	ShortFlameParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
+	ShortFlameParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i, Sprite sprite)
 	{
-		super(clientWorld, d, e, f, g, h, i);
+		super(clientWorld, d, e, f, g, h, i, sprite);
 		this.maxAge = clientWorld.random.nextBetween(2, 5);
 	}
 
 	@Override
-	public ParticleTextureSheet getType()
+	protected RenderType getRenderType()
 	{
-		return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
 	}
 
 	@Override
@@ -69,10 +71,10 @@ public class ShortFlameParticle extends AbstractSlowingParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType simpleParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
+		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
 		{
-			ShortFlameParticle flameParticle = new ShortFlameParticle(clientWorld, d, e, f, g, h, i);
-			flameParticle.setSprite(this.spriteProvider);
+			ShortFlameParticle flameParticle = new ShortFlameParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider.getFirst());
+			flameParticle.setSprite(this.spriteProvider.getFirst());
 			return flameParticle;
 		}
 	}
@@ -88,10 +90,10 @@ public class ShortFlameParticle extends AbstractSlowingParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType simpleParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
+		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
 		{
-			ShortFlameParticle flameParticle = new ShortFlameParticle(clientWorld, d, e, f, g, h, i);
-			flameParticle.setSprite(this.spriteProvider);
+			ShortFlameParticle flameParticle = new ShortFlameParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider.getFirst());
+			flameParticle.setSprite(this.spriteProvider.getFirst());
 			flameParticle.scale(0.5F);
 			return flameParticle;
 		}

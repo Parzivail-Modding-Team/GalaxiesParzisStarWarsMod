@@ -1,6 +1,7 @@
 package dev.pswg.feature.brewing;
 
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.packet.MixerSyncS2CPayload;
@@ -12,6 +13,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.PotionContentsComponent;
+import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,15 +22,15 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.*;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +39,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
@@ -199,7 +202,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	public static void sendSyncPacket(MixerBlockEntity mixer)
 	{
 		var payload = new MixerSyncS2CPayload(mixer.drinkEffects);
-		if (!mixer.world.isClient)
+		if (!mixer.world.isClient())
 		{
 			for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld)mixer.world, mixer.pos.toCenterPos(), 6))
 				ServerPlayNetworking.send(player, payload);
@@ -310,52 +313,53 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	}
 
 	@Override
-	protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
+	protected void readData(ReadView view)
 	{
-		currentMapX = nbt.getFloat("current_map_x");
-		currentMapY = nbt.getFloat("current_map_y");
-		litTimeRemaining = nbt.getInt("lit_time_remaining");
-		litTotalTime = nbt.getInt("lit_time_total");
-		bellowProgress = nbt.getInt("bellow_progress");
-		dangerProgress = nbt.getInt("danger_progress");
-		Inventories.readNbt(nbt, inventory, registries);
-		NbtList angleList = nbt.getList("path_angles", NbtElement.FLOAT_TYPE);
-		NbtList lengthList = nbt.getList("path_lengths", NbtElement.FLOAT_TYPE);
+		currentMapX = view.getFloat("current_map_x", 256);
+		currentMapY = view.getFloat("current_map_y", 256);
+		litTimeRemaining = view.getInt("lit_time_remaining", 0);
+		litTotalTime = view.getInt("lit_time_total", 1);
+		bellowProgress = view.getInt("bellow_progress", 0);
+		dangerProgress = view.getInt("danger_progress", 0);
+		Inventories.readData(view, inventory);
+		List<Float> angleList = view.read("path_angles", Codec.FLOAT.listOf()).get();
+		List<Float> lengthList = view.read("path_lengths", Codec.FLOAT.listOf()).get();
 		for (int i = 0; i < angleList.size(); i++)
-			path.push(Pair.of(angleList.getFloat(i), lengthList.getFloat(i)));
-		drinkEffects = new ArrayList<>(StatusEffectInstance.CODEC.listOf().parse(NbtOps.INSTANCE, nbt.get("drink_effects")).getOrThrow());
-		super.readNbt(nbt, registries);
+			path.push(Pair.of(angleList.get(i), lengthList.get(i)));
+		drinkEffects = new ArrayList<>(view.read("drink_effects", StatusEffectInstance.CODEC.listOf()).get());
+		super.readData(view);
 	}
 
 	@Override
-	public void onOpen(PlayerEntity player)
+	protected void writeData(WriteView view)
 	{
-		super.onOpen(player);
-		sendSyncPacket(this);
-	}
 
-	@Override
-	protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries)
-	{
-		nbt.putFloat("current_map_x", currentMapX);
-		nbt.putFloat("current_map_y", currentMapY);
-		nbt.putInt("lit_time_remaining", litTimeRemaining);
-		nbt.putInt("lit_time_total", litTotalTime);
-		nbt.putInt("bellow_progress", bellowProgress);
-		nbt.putInt("danger_progress", dangerProgress);
-		Inventories.writeNbt(nbt, inventory, registries);
-		NbtList angleList = new NbtList();
-		NbtList lengthList = new NbtList();
+		view.putFloat("current_map_x", currentMapX);
+		view.putFloat("current_map_y", currentMapY);
+		view.putInt("lit_time_remaining", litTimeRemaining);
+		view.putInt("lit_time_total", litTotalTime);
+		view.putInt("bellow_progress", bellowProgress);
+		view.putInt("danger_progress", dangerProgress);
+		Inventories.writeData(view, inventory);
+		ArrayList<Float> angleList = new ArrayList<>();
+		ArrayList<Float> lengthList = new ArrayList<>();
 		for (Pair<Float, Float> pair : path.stream().toList())
 		{
-			angleList.add(NbtFloat.of(pair.getFirst()));
-			lengthList.add(NbtFloat.of(pair.getSecond()));
+			angleList.add(pair.getFirst());
+			lengthList.add(pair.getSecond());
 		}
-		nbt.put("path_angles", angleList);
-		nbt.put("path_lengths", lengthList);
-		nbt.put("drink_effects", StatusEffectInstance.CODEC.listOf().encodeStart(NbtOps.INSTANCE, drinkEffects).getOrThrow());
+		view.put("path_angles", Codec.FLOAT.listOf(), angleList);
+		view.put("path_lengths", Codec.FLOAT.listOf(), lengthList);
+		view.put("drink_effects", StatusEffectInstance.CODEC.listOf(), drinkEffects);
 
-		super.writeNbt(nbt, registries);
+		super.writeData(view);
+	}
+
+	@Override
+	public void onOpen(ContainerUser user)
+	{
+		super.onOpen(user);
+		sendSyncPacket(this);
 	}
 
 	@Override

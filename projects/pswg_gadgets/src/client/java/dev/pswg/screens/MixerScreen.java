@@ -1,11 +1,16 @@
 package dev.pswg.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.pswg.Gadgets;
 import dev.pswg.feature.brewing.MixerScreenHandler;
+import dev.pswg.rendering.Drawables;
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.gui.Click;
+import net.minecraft.util.Colors;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.*;
@@ -41,7 +46,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 	{
 		var backgroundX = (this.width - this.backgroundWidth) / 2;
 		var backgroundY = (this.height - this.backgroundHeight) / 2;
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX, backgroundY, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
+		context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX, backgroundY, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
 	}
 
 	@Override
@@ -53,26 +58,28 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button)
+	public boolean mouseClicked(Click click, boolean doubled)
 	{
 		int backgroundX = (this.width - this.backgroundWidth) / 2;
 		int backgroundY = (this.height - this.backgroundHeight) / 2;
-		if (within((int)mouseX, (int)mouseY, 138, 145, 53, 60) && this.handler.onButtonClick(this.client.player, 1))
+		int mouseX = (int)click.x();
+		int mouseY = (int)click.y();
+		if (within(mouseX, mouseY, 138, 145, 53, 60) && this.handler.onButtonClick(this.client.player, 1))
 		{
 			this.client.interactionManager.clickButton(this.handler.syncId, 1);
 			return true;
 		}
-		if (within((int)mouseX, (int)mouseY, 150, 157, 53, 60) && this.handler.onButtonClick(this.client.player, 2))
+		if (within(mouseX, mouseY, 150, 157, 53, 60) && this.handler.onButtonClick(this.client.player, 2))
 		{
 			this.client.interactionManager.clickButton(this.handler.syncId, 2);
 			return true;
 		}
-		if (within((int)mouseX, (int)mouseY, 162, 169, 53, 60) && this.handler.onButtonClick(this.client.player, 3))
+		if (within(mouseX, mouseY, 162, 169, 53, 60) && this.handler.onButtonClick(this.client.player, 3))
 		{
 			this.client.interactionManager.clickButton(this.handler.syncId, 3);
 			return true;
 		}
-		return super.mouseClicked(mouseX, mouseY, button);
+		return super.mouseClicked(click, doubled);
 	}
 
 	public boolean isMouseHeld()
@@ -84,7 +91,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 	public boolean isKeyPressed(int keyId)
 	{
 
-		return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), keyId);
+		return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow(), keyId);
 	}
 
 	public boolean isHoveringBellow(int mouseX, int mouseY)
@@ -119,60 +126,60 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		var backgroundY = (this.height - this.backgroundHeight) / 2;
 
 		///  MAP
-		context.drawTexture(RenderLayer::getGuiTextured, MAP_TEXTURE, backgroundX + 7, backgroundY + 19, Math.clamp(handler.getMapX() - 64, 0, 512 - 128), Math.clamp(handler.getMapY() - 64, 0, 512 - 128), 128 - 1, 128 - 1, 512, 512);
+		context.drawTexture(RenderPipelines.GUI_TEXTURED, MAP_TEXTURE, backgroundX + 7, backgroundY + 19, Math.clamp(handler.getMapX() - 64, 0, 512 - 128), Math.clamp(handler.getMapY() - 64, 0, 512 - 128), 128 - 1, 128 - 1, 512, 512);
 
 		///  MARKER
 		float markerX = backgroundX + 68 + (Math.min(handler.getMapX(), 64) - 64) + (Math.max(handler.getMapX(), 512 - 64) - 448);
 		float markerY = backgroundY + 81 + (Math.min(handler.getMapY(), 64) - 64) + (Math.max(handler.getMapY(), 512 - 64) - 448);
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, (int)markerX, (int)markerY, 177, 69, 5, 5, 256, 256);
+		context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, (int)markerX, (int)markerY, 177, 69, 5, 5, 256, 256);
 
 		///  EFFECT BAR
 		for (int i = 0; i < handler.getEffectCount(); i++)
 		{
 			int color = ColorHelper.fullAlpha(handler.getEffectColor(i));
 			color = ColorHelper.getArgb(ColorHelper.getRed(color), ColorHelper.getGreen(color), ColorHelper.getBlue(color));
-			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 97 + i * 11, backgroundY + 150, 177, 145, 11, 5, 256, 256, color);
+			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 97 + i * 11, backgroundY + 150, 177, 145, 11, 5, 256, 256, color);
 			if (i == 2)
-				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 130, backgroundY + 151, 188, 146, 11, 5, 256, 256, color);
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 130, backgroundY + 151, 188, 146, 11, 5, 256, 256, color);
 		}
 		/// CONFIRM DRINK BUTTON
 		if (!handler.drinkEffects.isEmpty())
 		{
-			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 138, backgroundY + 53, 177, 83, 8, 8, 256, 256);
+			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 138, backgroundY + 53, 177, 83, 8, 8, 256, 256);
 			if (within(mouseX, mouseY, 138, 145, 53, 60))
-				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 138, backgroundY + 53, 177, 75, 8, 8, 256, 256);
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 138, backgroundY + 53, 177, 75, 8, 8, 256, 256);
 		}
 
 		/// ADD EFFECT BUTTON
 		if (handler.isOnEffectCell() && handler.drinkEffects.size() < 3)
 		{
-			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 150, backgroundY + 53, 177, 99, 8, 8, 256, 256);
+			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 150, backgroundY + 53, 177, 99, 8, 8, 256, 256);
 			if (within(mouseX, mouseY, 150, 157, 53, 60))
-				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 150, backgroundY + 53, 177, 91, 8, 8, 256, 256);
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 150, backgroundY + 53, 177, 91, 8, 8, 256, 256);
 		}
 		/// CANCEL DRINK BUTTON
 		if (!handler.wasReset())
 		{
-			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 162, backgroundY + 53, 177, 115, 8, 8, 256, 256);
+			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 162, backgroundY + 53, 177, 115, 8, 8, 256, 256);
 			if (within(mouseX, mouseY, 162, 169, 53, 60))
-				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 162, backgroundY + 53, 177, 107, 8, 8, 256, 256);
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 162, backgroundY + 53, 177, 107, 8, 8, 256, 256);
 		}
 
 		/// BELLOW BUTTON
 		if (handler.getLitTimeRemaining() != 0 && handler.isDrinkContainerPresent())
 		{
-			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 47, 10, 10, 256, 256);
+			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 47, 10, 10, 256, 256);
 			if (isHoveringBellow(mouseX, mouseY))
-				context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 27, 10, 10, 256, 256);
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 27, 10, 10, 256, 256);
 		}
 		///  BELLOW FILL AMOUNT
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 57, 10, handler.getBellowProgress() / 18, 256, 256);
+		context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 57, 10, handler.getBellowProgress() / 18, 256, 256);
 		if (isHoveringBellow(mouseX, mouseY))
-			context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 37, 10, handler.getBellowProgress() / 18, 256, 256);
+			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 149, backgroundY + 92, 177, 37, 10, handler.getBellowProgress() / 18, 256, 256);
 
 		///  LIT TIME INDICATOR
 		float litMod = 14 - (float)(handler.getLitTimeRemaining() * 14) / Math.max(handler.getLitTimeTotal(), 1);
-		context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, backgroundX + 146, (int)(backgroundY + 106 + litMod), 177, (int)(12 + litMod), 14, handler.getLitTimeRemaining() * 14 / Math.max(handler.getLitTimeTotal(), 1), 256, 256);
+		context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 146, (int)(backgroundY + 106 + litMod), 177, (int)(12 + litMod), 14, handler.getLitTimeRemaining() * 14 / Math.max(handler.getLitTimeTotal(), 1), 256, 256);
 
 		///  PAST POSITIONS TRAIL
 		if (handler.getMapX() == 256 && handler.getMapY() == 256)
@@ -190,7 +197,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 
 			if (Math.abs(handler.getMapX() - x) < 63 + (64 - Math.min(handler.getMapX(), 64)) && Math.abs(handler.getMapY() - y) < 63 + (64 - Math.min(handler.getMapY(), 64)))
 			{
-				Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
+				//Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
 
 				if (x1 < x2)
 				{
@@ -209,13 +216,15 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 				Tessellator tessellator = Tessellator.getInstance();
 				BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
-				bufferBuilder.vertex(matrix4f, x1, y1, 0).color(255, 255, 255, 255);
-				bufferBuilder.vertex(matrix4f, x1, y2, 0).color(255, 255, 255, 255);
-				bufferBuilder.vertex(matrix4f, x2, y2, 0).color(255, 255, 255, 255);
-				bufferBuilder.vertex(matrix4f, x2, y1, 0).color(255, 255, 255, 255);
+				Drawables.fill(context, RenderPipelines.GUI, x1, y1, x2, y2, 0, Colors.WHITE);
+				//bufferBuilder.vertex(matrix4f, x1, y1, 0).color(255, 255, 255, 255);
+				//bufferBuilder.vertex(matrix4f, x1, y2, 0).color(255, 255, 255, 255);
+				//bufferBuilder.vertex(matrix4f, x2, y2, 0).color(255, 255, 255, 255);
+				//bufferBuilder.vertex(matrix4f, x2, y1, 0).color(255, 255, 255, 255);
 
-				RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-				BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+				// TODO: DO I NEED TO DO THIS?
+				//RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
+				//BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 			}
 		}
 		var pair = new Pair<>((int)handler.getMapX(), (int)handler.getMapY());

@@ -23,8 +23,7 @@
 			"dev.pswg.Gadgets"
 		],
 		"pswg-client-addon": [
-			"dev.pswg.GadgetsClient",
-			"dev.pswg.EntitiesClient"
+			"dev.pswg.GadgetsClient"
 		],
 		"fabric-datagen": [
 			"dev.pswg.datagen.GadgetsDataGenerator"

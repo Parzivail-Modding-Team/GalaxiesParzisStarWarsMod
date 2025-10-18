@@ -32,16 +32,16 @@ public abstract class GrenadeEntityWithBlock extends GrenadeEntity
 		if (timer >= BLOCK_TIME)
 		{
 			BlockPos pos = getBlockPos();
-			BlockState state = getWorld().getBlockState(pos);
+			BlockState state = getEntityWorld().getBlockState(pos);
 			if (state.isAir())
 			{
 				this.discard();
-				getWorld().setBlockState(pos, getBlock().getDefaultState());
+				getEntityWorld().setBlockState(pos, getBlock().getDefaultState());
 			}
-			else if (getWorld().getBlockState(pos.offset(Direction.UP)).isAir())
+			else if (getEntityWorld().getBlockState(pos.offset(Direction.UP)).isAir())
 			{
 				this.discard();
-				getWorld().setBlockState(pos.offset(Direction.UP), getBlock().getDefaultState().with(GrenadeBlock.CLUSTER_SIZE, 1));
+				getEntityWorld().setBlockState(pos.offset(Direction.UP), getBlock().getDefaultState().with(GrenadeBlock.CLUSTER_SIZE, 1));
 			}
 		}
 		super.tick();

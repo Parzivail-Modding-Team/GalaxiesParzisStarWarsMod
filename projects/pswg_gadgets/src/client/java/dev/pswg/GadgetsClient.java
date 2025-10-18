@@ -17,15 +17,14 @@ import dev.pswg.screens.MixerScreen;
 import dev.pswg.screens.ScrappingTableScreen;
 import dev.pswg.tints.SwgDrinkTintSource;
 import dev.pswg.util.AutoGenerateUtil;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.client.render.item.tint.TintSourceTypes;
 
@@ -76,8 +75,10 @@ public class GadgetsClient implements GalaxiesClientAddon
 		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
 			switch (clientData.renderLayer())
 			{
-				case Transparent:	BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent());
-				case CutoutMipped:  BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutoutMipped());
+				case Transparent:
+					BlockRenderLayerMap.putBlock(block, BlockRenderLayer.TRANSLUCENT);
+				case CutoutMipped:
+					BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT_MIPPED);
 			}
 		});
 

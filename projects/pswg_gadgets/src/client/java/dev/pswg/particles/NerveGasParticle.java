@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(value = EnvType.CLIENT)
@@ -29,13 +30,12 @@ public class NerveGasParticle extends GasParticle
 			this.spriteProvider = spriteProvider;
 		}
 
-		@Nullable
 		@Override
-		public Particle createParticle(GasParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
+		public @Nullable Particle createParticle(GasParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
 		{
 			NerveGasEntity entity = (NerveGasEntity)MinecraftClient.getInstance().world.getEntityById(parameters.getGasEntityId());
 			NerveGasParticle gasParticle = new NerveGasParticle(entity, world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider, parameters.minConcentration);
-			gasParticle.setSprite(spriteProvider);
+			gasParticle.setSprite(spriteProvider.getFirst());
 			return gasParticle;
 		}
 	}

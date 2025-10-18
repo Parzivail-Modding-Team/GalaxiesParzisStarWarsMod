@@ -16,9 +16,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.TintedParticleEffect;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import net.minecraft.util.Colors;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -72,9 +76,9 @@ public class PressureMineEntity extends Entity implements Ownable
 
 	public void explode()
 	{
-		if (getWorld() instanceof ServerWorld serverWorld)
+		if (getEntityWorld() instanceof ServerWorld serverWorld)
 		{
-			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, this.getPos().add(0, 0.05f, 0), 2f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, this.getEntityPos().add(0, 0.05f, 0), 2f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
 			explosion.explode();
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
@@ -86,22 +90,21 @@ public class PressureMineEntity extends Entity implements Ownable
 
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 		{
-			serverWorld.spawnParticles(serverPlayerEntity, GadgetsParticleTypes.SMALL_FLASH_PARTICLE, true, true, x, y, z, 1, 0, 0, 0, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, TintedParticleEffect.create(GadgetsParticleTypes.SMALL_FLASH_PARTICLE, Colors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
 		}
 	}
 
 	private void applyDrag()
 	{
 		Vec3d vec3d = this.getVelocity();
-		Vec3d vec3d2 = this.getPos();
+		Vec3d vec3d2 = this.getEntityPos();
 		float g;
 		if (this.isTouchingWater())
 		{
 			for (int i = 0; i < 4; i++)
 			{
 				float f = 0.25F;
-				this.getWorld()
-				    .addParticle(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
+				this.getEntityWorld().addParticleClient(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
 			}
 
 			g = 0.8F;
@@ -148,13 +151,13 @@ public class PressureMineEntity extends Entity implements Ownable
 	{
 		Vec3d vec3d = this.getVelocity();
 		BlockPos blockPos = this.getBlockPos();
-		BlockState blockState = this.getWorld().getBlockState(blockPos);
+		BlockState blockState = this.getEntityWorld().getBlockState(blockPos);
 		if (!blockState.isAir())
 		{
-			VoxelShape voxelShape = blockState.getCollisionShape(this.getWorld(), blockPos);
+			VoxelShape voxelShape = blockState.getCollisionShape(this.getEntityWorld(), blockPos);
 			if (!voxelShape.isEmpty())
 			{
-				Vec3d vec3d2 = this.getPos();
+				Vec3d vec3d2 = this.getEntityPos();
 
 				for (Box box : voxelShape.getBoundingBoxes())
 				{
@@ -169,7 +172,7 @@ public class PressureMineEntity extends Entity implements Ownable
 
 		if (this.isInGround())
 		{
-			if (!this.getWorld().isClient())
+			if (!this.getEntityWorld().isClient())
 			{
 				if (this.inBlockState != blockState)
 				{
@@ -178,8 +181,7 @@ public class PressureMineEntity extends Entity implements Ownable
 			}
 		}
 
-
-		var world = getWorld();
+		var world = getEntityWorld();
 		if (!isInGround())
 			this.applyGravity();
 		else
@@ -198,14 +200,13 @@ public class PressureMineEntity extends Entity implements Ownable
 		}
 
 		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
-		Vec3d vec;
 		if (hitResult.getType() != HitResult.Type.MISS)
 		{
 			vec3d = hitResult.getPos();
 		}
 		else
 		{
-			vec3d = this.getPos().add(this.getVelocity());
+			vec3d = this.getEntityPos().add(this.getVelocity());
 		}
 		this.setPosition(vec3d);
 		this.tickBlockCollision();
@@ -245,37 +246,38 @@ public class PressureMineEntity extends Entity implements Ownable
 	}
 
 	@Override
-	protected void readCustomDataFromNbt(NbtCompound nbt)
+	protected void readCustomData(ReadView view)
 	{
-		if (nbt.containsUuid("Owner"))
+		if (view.contains("owner"))
 		{
-			this.setOwner(nbt.getUuid("Owner"));
+			this.setOwner(UUID.fromString(view.getString("owner", "")));
 		}
-		this.setInGround(nbt.getBoolean("inGround"));
-		if (nbt.contains("inBlockState", NbtElement.COMPOUND_TYPE))
+		this.setInGround(view.getBoolean("inGround", false));
+		if (view.contains("inBlockState"))
 		{
-			this.inBlockState = NbtHelper.toBlockState(this.getWorld().createCommandRegistryWrapper(RegistryKeys.BLOCK), nbt.getCompound("inBlockState"));
+			this.inBlockState = view.read("inBlockState", BlockState.CODEC).get();
 		}
 	}
 
 	@Override
-	protected void writeCustomDataToNbt(NbtCompound nbt)
+	protected void writeCustomData(WriteView view)
 	{
 		if (this.ownerUuid != null)
 		{
-			nbt.putUuid("Owner", this.ownerUuid);
+			view.putString("owner", this.ownerUuid.toString());
 		}
-		nbt.putBoolean("inGround", this.isInGround());
+		view.putBoolean("inGround", this.isInGround());
 		if (this.inBlockState != null)
 		{
-			nbt.put("inBlockState", NbtHelper.fromBlockState(this.inBlockState));
+			view.put("inBlockState", BlockState.CODEC, inBlockState);
 		}
 	}
+
 
 	@Nullable
 	protected Entity getEntity(UUID uuid)
 	{
-		return this.getWorld() instanceof ServerWorld serverWorld ? serverWorld.getEntity(uuid) : null;
+		return this.getEntityWorld() instanceof ServerWorld serverWorld ? serverWorld.getEntity(uuid) : null;
 	}
 
 	@Override

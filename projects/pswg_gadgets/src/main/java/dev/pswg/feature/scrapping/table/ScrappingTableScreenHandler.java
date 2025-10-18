@@ -37,7 +37,7 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		super(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, syncId);
 		this.inventory = inventory;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.getWorld();
+		this.world = playerInventory.player.getEntityWorld();
 		this.propertyDelegate = propertyDelegate;
 		///  Cutter
 		this.addSlot(new ToolSlot(inventory, 0, 6, 46, GadgetsItems.CUTTER_ITEM));

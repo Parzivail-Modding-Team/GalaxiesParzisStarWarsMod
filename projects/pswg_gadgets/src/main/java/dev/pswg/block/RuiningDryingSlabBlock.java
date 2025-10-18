@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import dev.pswg.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -31,13 +32,13 @@ public class RuiningDryingSlabBlock extends MutatingSlabBlock
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl)
 	{
 		if (world instanceof ServerWorld serverWorld)
 		{
 			if (entity instanceof LivingEntity && (entity instanceof PlayerEntity || serverWorld.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F)
 				world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getStateWithProperties(state), world, pos));
 		}
-		super.onEntityCollision(state, world, pos, entity);
+		super.onEntityCollision(state, world, pos, entity, handler, bl);
 	}
 }

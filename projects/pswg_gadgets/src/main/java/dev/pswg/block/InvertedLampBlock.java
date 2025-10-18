@@ -41,7 +41,7 @@ public class InvertedLampBlock extends Block
 	@Override
 	protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify)
 	{
-		if (!world.isClient)
+		if (!world.isClient())
 			updateState(state.with(POWERED, world.isReceivingRedstonePower(pos)), world, pos);
 		super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
 	}

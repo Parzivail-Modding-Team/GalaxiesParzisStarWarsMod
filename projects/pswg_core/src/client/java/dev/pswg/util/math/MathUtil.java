@@ -103,8 +103,8 @@ public class MathUtil
 	public static float calculateDopplerShift(Entity a, Entity b)
 	{
 		// TODO: move doppler handling to OpenAL through SoundSystem's updateListenerPosition call?
-		var velA = a.getPos().subtract(a.prevX, a.prevY, a.prevZ);
-		var velB = b.getPos().subtract(b.prevX, b.prevY, b.prevZ);
+		var velA = a.getEntityPos().subtract(a.lastX, a.lastY, a.lastZ);
+		var velB = b.getEntityPos().subtract(b.lastX, b.lastY, b.lastZ);
 
 		var posA = a.getEyePos();
 		var posB = b.getEyePos();

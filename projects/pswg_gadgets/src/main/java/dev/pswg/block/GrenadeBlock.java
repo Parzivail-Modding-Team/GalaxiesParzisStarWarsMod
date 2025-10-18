@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
@@ -142,12 +143,12 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	@Override
 	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
 	{
-		if (player.getInventory().getMainHandStack().isOf(getItem()) && !player.isSneaking())
+		if (player.getMainHandStack().isOf(getItem()) && !player.isSneaking())
 		{
 			if (state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE)
 			{
 				if (!player.isCreative())
-					player.getInventory().getMainHandStack().decrement(1);
+					player.getMainHandStack().decrement(1);
 
 				world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
 				return ActionResult.SUCCESS;
@@ -169,7 +170,7 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl)
 	{
 		if (entity instanceof GrenadeEntity grenade && entity.getType() == getEntityType())
 		{
@@ -179,8 +180,7 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 				entity.discard();
 			}
 		}
-
-		super.onEntityCollision(state, world, pos, entity);
+		super.onEntityCollision(state, world, pos, entity, handler, bl);
 	}
 
 	@Override

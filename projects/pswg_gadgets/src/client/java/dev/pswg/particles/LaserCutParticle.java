@@ -11,6 +11,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import org.jetbrains.annotations.Nullable;
 
 public class LaserCutParticle extends DecalParticle
 {
@@ -28,7 +30,7 @@ public class LaserCutParticle extends DecalParticle
 		var a = MathHelper.lerp(heat, 1, MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1));
 		this.setColor(MathHelper.clamp(getRed(a), 0, 1), MathHelper.clamp(getGreen(a), 0, 1), MathHelper.clamp(getBlue(a), 0, 1));
 		this.maxAge = clientWorld.random.nextBetween(350, 400);
-		this.setSpriteForAge(spriteProvider);
+		this.updateSprite(spriteProvider);
 		this.collidesWithWorld = false;
 		this.velocityX = vX;
 		this.velocityY = vY;
@@ -38,9 +40,9 @@ public class LaserCutParticle extends DecalParticle
 	}
 
 	@Override
-	public ParticleTextureSheet getType()
+	public RenderType getRenderType()
 	{
-		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
 	}
 
 	@Override
@@ -107,12 +109,12 @@ public class LaserCutParticle extends DecalParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType defaultParticleType, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ)
+		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
 		{
-			var heatEncodedNormal = new Vec3d(vX, vY, vZ);
+			var heatEncodedNormal = new Vec3d(velocityX, velocityY, velocityZ);
 			var heat = heatEncodedNormal.length();
 			var normal = heatEncodedNormal.normalize();
-			return new LaserCutParticle(clientWorld, x, y, z, normal.x, normal.y, normal.z, (float)heat, this.spriteProvider);
+			return new LaserCutParticle(world, x, y, z, normal.x, normal.y, normal.z, (float)heat, this.spriteProvider);
 		}
 	}
 }

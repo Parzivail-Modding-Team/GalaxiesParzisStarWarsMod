@@ -52,13 +52,13 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 	{
 		if (!IS_EXPLODING)
 		{
-			if (getWorld() instanceof ServerWorld serverWorld)
+			if (getEntityWorld() instanceof ServerWorld serverWorld)
 			{
 				serverWorld.spawnParticles(GadgetsParticleTypes.FRAGMENTATION_GRENADE_WAVE_PARTICLE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
 				var passedData = new PacketByteBuf(Unpooled.buffer());
 				passedData.writeBoolean(true);
 				passedData.writeInt(getId());
-				//for (var player : PlayerLookup.tracking((ServerWorld)getWorld(), this.getBlockPos()))
+				//for (var player : PlayerLookup.tracking((ServerWorld)getEntityWorld(), this.getBlockPos()))
 				//	ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
 
 
@@ -70,16 +70,16 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 
 			switch (randomNum){
 				case 1:
-					getWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION1, SoundCategory.PLAYERS, 4f, 1f);
+					getEntityWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION1, SoundCategory.PLAYERS, 4f, 1f);
 					break;
 				case 2:
-					getWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION2, SoundCategory.PLAYERS, 4f, 1f);
+					getEntityWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION2, SoundCategory.PLAYERS, 4f, 1f);
 					break;
 				case 3:
-					getWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION3, SoundCategory.PLAYERS, 4f, 1f);
+					getEntityWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION3, SoundCategory.PLAYERS, 4f, 1f);
 					break;
 				case 4:
-					getWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION4, SoundCategory.PLAYERS, 4f, 1f);
+					getEntityWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION4, SoundCategory.PLAYERS, 4f, 1f);
 					break;
 			}
 		}
@@ -97,7 +97,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 	public void tick()
 	{
 		super.tick();
-		//if (getWorld().isClient() && this.age == 1 && this.isPrimed())
+		//if (getEntityWorld().isClient() && this.age == 1 && this.isPrimed())
 		//	SoundHelper.playFragmentationEntitySound(this);
 		if (IS_EXPLODING)
 		{
@@ -109,27 +109,27 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 		{
 			for (int i = 0; i < Random.create().nextBetween(70, 100); i++)
 			{
-				double vx = getWorld().random.nextGaussian() * 0.5;
-				double vz = getWorld().random.nextGaussian() * 0.5;
+				double vx = getEntityWorld().random.nextGaussian() * 0.5;
+				double vz = getEntityWorld().random.nextGaussian() * 0.5;
 				double vy;
 
 				if (COLLISION_BELOW)
-					vy = Math.abs(getWorld().random.nextGaussian() * 0.8);
+					vy = Math.abs(getEntityWorld().random.nextGaussian() * 0.8);
 				else
-					vy = getWorld().random.nextGaussian() * 0.4;
-				getWorld().addParticle(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
+					vy = getEntityWorld().random.nextGaussian() * 0.4;
+				getEntityWorld().addParticleClient(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
 			}
-			/*if (!getWorld().isClient)
+			/*if (!getEntityWorld().isClient)
 			{
 				var passedData = new PacketByteBuf(Unpooled.buffer());
 				passedData.writeBoolean(false);
 				PacketByteBufHelper.writeVec3d(passedData, getPos());
 				passedData.writeInt(getId());
 				passedData.writeBoolean(COLLISION_BELOW);
-				for (var player : PlayerLookup.tracking((ServerWorld)getWorld(), this.getBlockPos()))
+				for (var player : PlayerLookup.tracking((ServerWorld)getEntityWorld(), this.getBlockPos()))
 					ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
 			}*/
-			List<LivingEntity> entities = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> true);
+			List<LivingEntity> entities = getEntityWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> true);
 			for (LivingEntity entity : entities)
 			{
 				float x = (float)(entity.getX() - getX()) / (getExplosionPower() / 4f * 3f);

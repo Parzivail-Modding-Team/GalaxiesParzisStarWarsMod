@@ -78,10 +78,10 @@ public final class Registrar
 	 *
 	 * @return A constructed block with the provided settings, given the corresponding registry key
 	 */
-	public static <TBlock extends Block, TSettings extends Block.Settings> TBlock block(Identifier registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
+	public static <TBlock extends Block, TSettings extends AbstractBlock.Settings> TBlock block(Identifier registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
 	{
 		// this cast to TSettings is legal since `registryKey` returns `this`
-		//noinspection unchecked
+		// noinspection unchecked
 		var block = constructor.apply((TSettings)settings.registryKey(RegistryKey.of(RegistryKeys.BLOCK, registryKey)));
 		Registrar.item(registryKey, itemSettings -> new BlockItem(block, itemSettings));
 		return Registry.register(Registries.BLOCK, registryKey, block);

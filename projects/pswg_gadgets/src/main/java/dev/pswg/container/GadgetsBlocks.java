@@ -1,5 +1,6 @@
 package dev.pswg.container;
 
+import com.mojang.serialization.MapCodec;
 import dev.pswg.Gadgets;
 import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.autoreg.ServerBlockRegistryData;
@@ -21,8 +22,13 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ColorCode;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.World;
+
+import java.util.function.ToIntFunction;
 
 public class GadgetsBlocks
 {
@@ -502,27 +508,29 @@ public class GadgetsBlocks
 	}
 	private static LeavesBlock createLeavesBlock(String key)
 	{
-		return Registrar.block(Gadgets.id(key), LeavesBlock::new, AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		return Registrar.block(Gadgets.id(key), settings -> new TintedParticleLeavesBlock(0.01F, settings), AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
 	}
 	private static AccumulatingBlock createAccumulatingBlock(String key, AbstractBlock.Settings settings, Block fullBlock){
 		return Registrar.block(Gadgets.id(key), blockSettings -> new AccumulatingBlock(settings, fullBlock::getPlacementState), settings);
 	}
 	private static InteractableInvertedLampBlock createLightingPanelBlock(String key, int luminosity)
 	{
-		return Registrar.block(Gadgets.id(key), InteractableInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.luminance(value -> {
-			if(value.getNullable(Properties.LIT) != null && value.get(Properties.LIT))
-				return luminosity;
-			return 0;
-		}));
+		return Registrar.block(Gadgets.id(key), InteractableInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.luminance(createLightLevelFromLit(luminosity)));
 	}
+
+	public static ToIntFunction<BlockState> createLightLevelFromLit(int litLevel)
+	{
+		return state -> state.contains(Properties.LIT) && state.get(Properties.LIT) ? litLevel : 0;
+	}
+
+	public static ToIntFunction<BlockState> createLightLevelFromLitAndSlab(int litLevelSingle, int litLevelDouble)
+	{
+		return state -> state.contains(Properties.LIT) && state.get(Properties.LIT) ? (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE ? litLevelDouble : litLevelSingle) : 0;
+	}
+
 	private static InteractableInvertedLampSlab createLightingPanelSlab(String key, int luminositySingle, int luminosityDouble)
 	{
-		return Registrar.block(Gadgets.id(key), InteractableInvertedLampSlab::new, IMPERIAL_PANEL_SETTINGS.luminance(value -> {
-			if(value.getNullable(Properties.LIT) != null && value.get(Properties.LIT))
-				if(value.getNullable(Properties.SLAB_TYPE)!= null)
-					return  value.get(Properties.SLAB_TYPE) == SlabType.DOUBLE ? luminosityDouble : luminositySingle;
-			return 0;
-		}));
+		return Registrar.block(Gadgets.id(key), InteractableInvertedLampSlab::new, IMPERIAL_PANEL_SETTINGS.luminance(createLightLevelFromLitAndSlab(luminositySingle, luminosityDouble)));
 	}
 
 	private static NumberedBlocks createNumberedBlocks(String key, int count, AbstractBlock.Settings settings)

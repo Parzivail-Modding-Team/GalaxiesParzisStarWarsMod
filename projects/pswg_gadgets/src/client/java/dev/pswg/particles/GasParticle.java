@@ -12,10 +12,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @Environment(value = EnvType.CLIENT)
-public abstract class GasParticle extends SpriteBillboardParticle
+public abstract class GasParticle extends BillboardParticle
 {
 	private final int variant;
 	final int NUM_VARIANTS = 5;
@@ -32,7 +33,7 @@ public abstract class GasParticle extends SpriteBillboardParticle
 
 	protected GasParticle(GasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider, float minConcentration)
 	{
-		super(clientWorld, x, y, z);
+		super(clientWorld, x, y, z, spriteProvider.getFirst());
 
 		this.originalScale = Random.create().nextBetween(50, 75) / 20f;
 		scale(originalScale);
@@ -57,6 +58,12 @@ public abstract class GasParticle extends SpriteBillboardParticle
 	}
 
 	@Override
+	protected RenderType getRenderType()
+	{
+		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
+	}
+
+	@Override
 	protected int getBrightness(float tint)
 	{
 		BlockPos blockPos = BlockPos.ofFloored(this.x, this.y, this.z);
@@ -66,7 +73,7 @@ public abstract class GasParticle extends SpriteBillboardParticle
 	}
 
 	@Override
-	public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta)
+	protected void render(BillboardParticleSubmittable submittable, Camera camera, Quaternionf rotation, float tickProgress)
 	{
 		var texture = this.sprite.getAtlasId();
 		var mc = MinecraftClient.getInstance();
@@ -74,14 +81,14 @@ public abstract class GasParticle extends SpriteBillboardParticle
 		var v = mc.getBufferBuilders().getEffectVertexConsumers().getBuffer(PswgGadgetsRenderLayers.pswgParticle(texture, true));
 
 		Vec3d vec3d = camera.getPos();
-		float f = (float)(MathHelper.lerp((double)tickDelta, this.prevPosX, this.x) - vec3d.getX());
-		float g = (float)(MathHelper.lerp((double)tickDelta, this.prevPosY, this.y) - vec3d.getY());
-		float h = (float)(MathHelper.lerp((double)tickDelta, this.prevPosZ, this.z) - vec3d.getZ());
+		float f = (float)(MathHelper.lerp(tickProgress, this.lastX, this.x) - vec3d.getX());
+		float g = (float)(MathHelper.lerp(tickProgress, this.lastY, this.y) - vec3d.getY());
+		float h = (float)(MathHelper.lerp(tickProgress, this.lastZ, this.z) - vec3d.getZ());
 
 		Vector3f[] corners = new Vector3f[] {
 				new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)
 		};
-		float size = this.getSize(tickDelta);
+		float size = this.getSize(tickProgress);
 
 		for (int j = 0; j < 4; ++j)
 		{
@@ -95,7 +102,7 @@ public abstract class GasParticle extends SpriteBillboardParticle
 		float l = this.getMaxU();
 		float m = this.getMinV();
 		float n = this.getMaxV();
-		int o = this.getBrightness(tickDelta);
+		int o = this.getBrightness(tickProgress);
 		v.vertex(corners[0].x(), corners[0].y(), corners[0].z())
 		 .texture(l, n)
 		 .color(this.red, this.green, this.blue, this.alpha)
@@ -112,6 +119,7 @@ public abstract class GasParticle extends SpriteBillboardParticle
 		 .texture(k, n)
 		 .color(this.red, this.green, this.blue, this.alpha)
 		 .light(o);
+		//super.render(submittable, camera, rotation, tickProgress);
 	}
 
 	@Override
@@ -125,9 +133,9 @@ public abstract class GasParticle extends SpriteBillboardParticle
 		float blockConcentration = gasEntity != null ? gasEntity.massMap.getOrDefault(new BlockPos((int)x, (int)y, (int)z), 1f) : 1;
 		;
 		alphaScaling = blockConcentration;
-		prevPosX = x;
-		prevPosY = y;
-		prevPosZ = z;
+		lastX = x;
+		lastY = y;
+		lastZ = z;
 		age++;
 		float ageCoeficient = gasEntity != null ? (float)gasEntity.MAX_AGE / maxAge : 1;
 		float inverseAgeCoeficient = gasEntity != null ? (float)maxAge / gasEntity.MAX_AGE : 1;
@@ -156,11 +164,5 @@ public abstract class GasParticle extends SpriteBillboardParticle
 			velocityZ *= 0.95;
 		}
 		move(velocityX, velocityY, velocityZ);
-	}
-
-	@Override
-	public ParticleTextureSheet getType()
-	{
-		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
 	}
 }

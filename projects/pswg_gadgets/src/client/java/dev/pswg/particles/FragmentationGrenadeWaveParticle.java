@@ -5,8 +5,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.command.LayeredCustomCommandRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -15,14 +17,14 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @Environment(value = EnvType.CLIENT)
-public class FragmentationGrenadeWaveParticle extends SpriteBillboardParticle
+public class FragmentationGrenadeWaveParticle extends BillboardParticle
 {
 	private float scaleX = 1;
 	private float scaleY = 1;
 
 	protected FragmentationGrenadeWaveParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
-		super(clientWorld, x, y, z);
+		super(clientWorld, x, y, z, spriteProvider.getFirst());
 		setBoundingBoxSpacing(0.25f, 0.25f);
 		this.collidesWithWorld = false;
 		velocityX = vX;
@@ -30,7 +32,7 @@ public class FragmentationGrenadeWaveParticle extends SpriteBillboardParticle
 		velocityZ = vZ;
 		this.maxAge = 20;
 		this.scale = Random.create().nextBetween(0, 5) / 5f + 0.95f;
-		this.setSprite(spriteProvider);
+		this.setSprite(spriteProvider.getFirst());
 		this.setColor(Random.create().nextBetween(0, 3) / 3f + 0.97f, Random.create().nextBetween(0, 3) / 3f + 0.98f, 1);
 	}
 
@@ -52,32 +54,32 @@ public class FragmentationGrenadeWaveParticle extends SpriteBillboardParticle
 	}
 
 	@Override
-	public ParticleTextureSheet getType()
+	protected RenderType getRenderType()
 	{
-		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
 	}
 
 	@Override
-	public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta)
+	protected void render(BillboardParticleSubmittable submittable, Camera camera, Quaternionf rotation, float tickProgress)
 	{
-		updateShape(this.age + tickDelta);
+		updateShape(this.age + tickProgress);
 
 		Vec3d vec3d = camera.getPos();
-		float f = (float)(MathHelper.lerp((double)tickDelta, this.prevPosX, this.x) - vec3d.getX());
-		float g = (float)(MathHelper.lerp((double)tickDelta, this.prevPosY, this.y) - vec3d.getY());
-		float h = (float)(MathHelper.lerp((double)tickDelta, this.prevPosZ, this.z) - vec3d.getZ());
+		float f = (float)(MathHelper.lerp(tickProgress, this.lastX, this.x) - vec3d.getX());
+		float g = (float)(MathHelper.lerp(tickProgress, this.lastY, this.y) - vec3d.getY());
+		float h = (float)(MathHelper.lerp(tickProgress, this.lastZ, this.z) - vec3d.getZ());
 
 		Quaternionf quaternionf = new Quaternionf();
-		this.getRotator().setRotation(quaternionf, camera, tickDelta);
-		if (this.angle != 0.0F)
+		this.getRotator().setRotation(quaternionf, camera, tickProgress);
+		if (this.zRotation != 0.0F)
 		{
-			quaternionf.rotateZ(MathHelper.lerp(tickDelta, this.prevAngle, this.angle));
+			quaternionf.rotateZ(MathHelper.lerp(tickProgress, this.lastZRotation, this.zRotation));
 		}
 
 		Vector3f[] corners = new Vector3f[] {
 				new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)
 		};
-		float size = this.getSize(tickDelta);
+		float size = this.getSize(tickProgress);
 
 		for (int j = 0; j < 4; ++j)
 		{
@@ -87,13 +89,17 @@ public class FragmentationGrenadeWaveParticle extends SpriteBillboardParticle
 			vector3f.mul(size);
 			vector3f.add(f, g, h);
 		}
+		var rot = new Quaternionf(camera.getRotation().rotateZ((float)Math.toRadians(180d)));
 
 		float k = this.getMinU();
 		float l = this.getMaxU();
 		float m = this.getMinV();
 		float n = this.getMaxV();
-		int o = this.getBrightness(tickDelta);
-		vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z())
+		int o = this.getBrightness(tickProgress);
+		var color = ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue);
+		submittable.render(RenderType.PARTICLE_ATLAS_TRANSLUCENT, (float)this.x, (float)this.y, (float)this.z, rot.x, rot.y, rot.z, rot.w, size, getMinU(), getMinV(), getMaxU(), getMaxV(), color, o);
+		// TODO: MAKE SURE THIS WORKS
+		/*vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z())
 		              .texture(l, n)
 		              .color(this.red, this.green, this.blue, this.alpha)
 		              .light(o);
@@ -109,6 +115,7 @@ public class FragmentationGrenadeWaveParticle extends SpriteBillboardParticle
 		              .texture(k, n)
 		              .color(this.red, this.green, this.blue, this.alpha)
 		              .light(o);
+		//super.render(submittable, camera, rotation, tickProgress);*/
 	}
 
 	@Environment(value = EnvType.CLIENT)
@@ -121,12 +128,11 @@ public class FragmentationGrenadeWaveParticle extends SpriteBillboardParticle
 			this.spriteProvider = spriteProvider;
 		}
 
-		@Nullable
 		@Override
-		public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
+		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
 		{
 			FragmentationGrenadeWaveParticle fragmentationGrenadeParticle = new FragmentationGrenadeWaveParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
-			fragmentationGrenadeParticle.setSprite(spriteProvider);
+			fragmentationGrenadeParticle.setSprite(spriteProvider.getFirst());
 			return fragmentationGrenadeParticle;
 		}
 	}

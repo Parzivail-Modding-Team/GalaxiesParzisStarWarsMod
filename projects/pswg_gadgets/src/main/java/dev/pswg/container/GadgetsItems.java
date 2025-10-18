@@ -208,41 +208,41 @@ public class GadgetsItems
 	@DataGenItem
 	public static final ArmorItems JUMP_TROOPER = new ArmorItems("jumptrooper", ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 	@DataGenItem
-	public static final ArmorItem IMPERIAL_PILOT_HELMET = registerArmorItem("imperial_pilot_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
+	public static final Item IMPERIAL_PILOT_HELMET = registerArmorItem("imperial_pilot_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem IMPERIAL_PILOT_KIT = registerArmorItem("imperial_pilot_kit", ArmorMaterials.DIAMOND, EquipmentType.BODY);
+	public static final Item IMPERIAL_PILOT_KIT = registerArmorItem("imperial_pilot_kit", ArmorMaterials.DIAMOND, EquipmentType.BODY);
 	@DataGenItem
-	public static final ArmorItem IMPERIAL_PILOT_CADET_HELMET = registerArmorItem("imperial_pilot_cadet_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
+	public static final Item IMPERIAL_PILOT_CADET_HELMET = registerArmorItem("imperial_pilot_cadet_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem IMPERIAL_PILOT_TECHNICAL_HELMET = registerArmorItem("imperial_pilot_technical_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
+	public static final Item IMPERIAL_PILOT_TECHNICAL_HELMET = registerArmorItem("imperial_pilot_technical_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem IMPERIAL_PILOT_COLD_HELMET = registerArmorItem("imperial_pilot_cold_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
+	public static final Item IMPERIAL_PILOT_COLD_HELMET = registerArmorItem("imperial_pilot_cold_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem REBEL_PILOT_HELMET = registerArmorItem("rebel_pilot_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
+	public static final Item REBEL_PILOT_HELMET = registerArmorItem("rebel_pilot_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem REBEL_PILOT_KIT = registerArmorItem("rebel_pilot_kit", ArmorMaterials.DIAMOND, EquipmentType.CHESTPLATE);
+	public static final Item REBEL_PILOT_KIT = registerArmorItem("rebel_pilot_kit", ArmorMaterials.DIAMOND, EquipmentType.CHESTPLATE);
 	@DataGenItem
-	public static final ArmorItem REBEL_FOREST = registerArmorItem("rebel_forest_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
+	public static final Item REBEL_FOREST = registerArmorItem("rebel_forest_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem REBEL_TROPICAL = registerArmorItem("rebel_tropical_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
+	public static final Item REBEL_TROPICAL = registerArmorItem("rebel_tropical_helmet", ArmorMaterials.DIAMOND, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem BLACK_IMPERIAL_OFFICER = registerArmorItem("black_imperial_officer_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item BLACK_IMPERIAL_OFFICER = registerArmorItem("black_imperial_officer_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem GRAY_IMPERIAL_OFFICER = registerArmorItem("gray_imperial_officer_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item GRAY_IMPERIAL_OFFICER = registerArmorItem("gray_imperial_officer_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem LIGHT_GRAY_IMPERIAL_OFFICER = registerArmorItem("light_gray_imperial_officer_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item LIGHT_GRAY_IMPERIAL_OFFICER = registerArmorItem("light_gray_imperial_officer_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem KHAKI_IMPERIAL_OFFICER = registerArmorItem("khaki_imperial_officer_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item KHAKI_IMPERIAL_OFFICER = registerArmorItem("khaki_imperial_officer_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem TAN_GOGGLES_CAP = registerArmorItem("tan_goggles_cap", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item TAN_GOGGLES_CAP = registerArmorItem("tan_goggles_cap", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem GRAY_GOGGLES_CAP = registerArmorItem("gray_goggles_cap", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item GRAY_GOGGLES_CAP = registerArmorItem("gray_goggles_cap", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem BROWN_GOGGLES_CAP = registerArmorItem("brown_goggles_cap", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item BROWN_GOGGLES_CAP = registerArmorItem("brown_goggles_cap", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem BEACH_INSURGENCE_HAT = registerArmorItem("beach_insurgence_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item BEACH_INSURGENCE_HAT = registerArmorItem("beach_insurgence_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 	@DataGenItem
-	public static final ArmorItem DESERT_INSURGENCE_HAT = registerArmorItem("desert_insurgence_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
+	public static final Item DESERT_INSURGENCE_HAT = registerArmorItem("desert_insurgence_hat", ArmorMaterials.LEATHER, EquipmentType.HELMET);
 
 	/// DOOR.
 
@@ -279,9 +279,9 @@ public class GadgetsItems
 	@DataGenItem
 	public static final Item BESKAR_INGOT = registerSimpleItem("beskar_ingot");
 	@DataGenItem(model = ItemModel.handheld)
-	public static final MiningToolItem BESKAR_SHOVEL = Registrar.item(Gadgets.id("beskar_shovel"), settings -> new ShovelItem(GadgetsToolMaterials.BESKAR, 1.5F, -3.0F, settings), new Item.Settings());
+	public static final ShovelItem BESKAR_SHOVEL = Registrar.item(Gadgets.id("beskar_shovel"), settings -> new ShovelItem(GadgetsToolMaterials.BESKAR, 1.5F, -3.0F, settings), new Item.Settings());
 	@DataGenItem(model = ItemModel.handheld)
-	public static final PickaxeItem BESKAR_PICKAXE = Registrar.item(Gadgets.id("beskar_pickaxe"), settings -> new PickaxeItem(GadgetsToolMaterials.BESKAR, 1, -2.8F, settings), new Item.Settings());
+	public static final Item BESKAR_PICKAXE = Registrar.item(Gadgets.id("beskar_pickaxe"), Item::new, new Item.Settings().pickaxe(GadgetsToolMaterials.BESKAR, 1, -2.8F));
 	@DataGenItem(model = ItemModel.handheld)
 	public static final AxeItem BESKAR_AXE = Registrar.item(Gadgets.id("beskar_axe"), settings -> new AxeItem(GadgetsToolMaterials.BESKAR, 5, -3.0F, settings), new Item.Settings());
 	@DataGenItem(model = ItemModel.handheld)
@@ -324,7 +324,7 @@ public class GadgetsItems
 	@DataGenItem(model = ItemModel.handheld)
 	public static final HoeItem DURASTEEL_HOE = Registrar.item(Gadgets.id("durasteel_hoe"), settings -> new HoeItem(GadgetsToolMaterials.DURASTEEL, 0, 0.0F, settings), new Item.Settings());
 	@DataGenItem(model = ItemModel.handheld)
-	public static final PickaxeItem DURASTEEL_PICKAXE = Registrar.item(Gadgets.id("durasteel_pickaxe"), settings -> new PickaxeItem(GadgetsToolMaterials.DURASTEEL, 1, -2.8F, settings), new Item.Settings());
+	public static final Item DURASTEEL_PICKAXE = Registrar.item(Gadgets.id("durasteel_pickaxe"), Item::new, new Item.Settings().pickaxe(GadgetsToolMaterials.DURASTEEL, 1, -2.8F));
 
 	@DataGenItem
 	public static final Item EXONIUM_CRYSTAL = registerSimpleItem("exonium");
@@ -374,7 +374,7 @@ public class GadgetsItems
 	@DataGenItem(model = ItemModel.handheld)
 	public static final ShovelItem TITANIUM_SHOVEL = Registrar.item(Gadgets.id("titanium_shovel"), settings -> new ShovelItem(GadgetsToolMaterials.TITANIUM, 1.5F, -3.0F, settings), new Item.Settings());
 	@DataGenItem(model = ItemModel.handheld)
-	public static final PickaxeItem TITANIUM_PICKAXE = Registrar.item(Gadgets.id("titanium_pickaxe"), settings -> new PickaxeItem(GadgetsToolMaterials.TITANIUM, 1, -2.8F, settings), new Item.Settings());
+	public static final Item TITANIUM_PICKAXE = Registrar.item(Gadgets.id("titanium_pickaxe"), Item::new, new Item.Settings().pickaxe(GadgetsToolMaterials.TITANIUM, 1, -2.8F));
 	@DataGenItem(model = ItemModel.handheld)
 	public static final AxeItem TITANIUM_AXE = Registrar.item(Gadgets.id("titanium_axe"), settings -> new AxeItem(GadgetsToolMaterials.TITANIUM, 5, -3.0F, settings), new Item.Settings());
 	@DataGenItem(model = ItemModel.handheld)
@@ -592,14 +592,14 @@ public class GadgetsItems
 		return registerSimpleItem(key, settings.component(DataComponentTypes.POTION_CONTENTS, PotionContentsComponent.DEFAULT).component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK));
 	}
 
-	public static ArmorItem registerArmorItem(String key, ArmorMaterial material, EquipmentType type)
+	public static Item registerArmorItem(String key, ArmorMaterial material, EquipmentType type)
 	{
 		return registerArmorItem(key, material, type, new Item.Settings().maxCount(1));
 	}
 
-	public static ArmorItem registerArmorItem(String key, ArmorMaterial material, EquipmentType type, Item.Settings itemSettings)
+	public static Item registerArmorItem(String key, ArmorMaterial material, EquipmentType type, Item.Settings itemSettings)
 	{
-		return Registrar.item(Gadgets.id(key), settings -> new ArmorItem(material, type, settings), itemSettings);
+		return Registrar.item(Gadgets.id(key), Item::new, itemSettings.armor(material, type));
 	}
 	public static void register()
 	{

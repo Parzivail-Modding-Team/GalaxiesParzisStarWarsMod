@@ -35,7 +35,7 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 
 	public ContainerStructurePiece(StructureTemplateManager templateManager, NbtCompound nbt)
 	{
-		super(GadgetsStructurePieces.DERELICT_CONTAINER, nbt, templateManager, identifier -> createPlacementData(BlockRotation.valueOf(nbt.getString("Rot")), identifier));
+		super(GadgetsStructurePieces.DERELICT_CONTAINER, nbt, templateManager, identifier -> createPlacementData(BlockRotation.valueOf(nbt.getString("Rot").get()), identifier));
 	}
 
 	private static StructurePlacementData createPlacementData(BlockRotation rotation, Identifier identifier)

@@ -43,7 +43,7 @@ public class MixerScreenHandler extends ScreenHandler
 		super(GadgetsScreenHandlerTypes.MIXER, syncId);
 		this.inventory = inventory;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.getWorld();
+		this.world = playerInventory.player.getEntityWorld();
 		this.propertyDelegate = propertyDelegate;
 		this.blockPos = pos;
 		this.drinkEffects = drinkEffects;

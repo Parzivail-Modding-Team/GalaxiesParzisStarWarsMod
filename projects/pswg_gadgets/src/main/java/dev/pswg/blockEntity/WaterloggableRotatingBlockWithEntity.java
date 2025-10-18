@@ -6,6 +6,7 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -35,18 +36,14 @@ public abstract class WaterloggableRotatingBlockWithEntity extends Waterloggable
 	}
 
 	@Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved)
+	protected void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved)
 	{
-		if (!state.isOf(newState.getBlock()))
-		{
 			var blockEntity = world.getBlockEntity(pos);
 			if (blockEntity instanceof Inventory)
 			{
 				ItemScatterer.spawn(world, pos, (Inventory)blockEntity);
 				world.updateComparators(pos, this);
 			}
-
-			super.onStateReplaced(state, world, pos, newState, moved);
-		}
+		super.onStateReplaced(state, world, pos, moved);
 	}
 }

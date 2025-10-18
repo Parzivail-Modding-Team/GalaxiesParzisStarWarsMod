@@ -4,6 +4,7 @@ import dev.pswg.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ColorCode;
 import net.minecraft.util.math.BlockPos;
@@ -25,10 +26,10 @@ public class DryingBlock extends FallingMutatingBlock
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl)
 	{
 		entity.slowMovement(state, new Vec3d(0.25, 1.5, 0.25));
-		super.onEntityCollision(state, world, pos, entity);
+		super.onEntityCollision(state, world, pos, entity, handler, bl);
 	}
 }
 

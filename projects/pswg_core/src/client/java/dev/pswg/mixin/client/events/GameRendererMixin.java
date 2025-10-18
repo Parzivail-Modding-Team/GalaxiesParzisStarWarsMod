@@ -20,7 +20,7 @@ public abstract class GameRendererMixin
 	@Inject(at = @At("HEAD"), method = "tiltViewWhenHurt", cancellable = true)
 	void tiltViewWhenHurt(MatrixStack matrices, float tickDelta, CallbackInfo ci)
 	{
-		if (getClient().cameraEntity instanceof LivingEntity livingEntity)
+		if (getClient().getCameraEntity() instanceof LivingEntity livingEntity)
 			if (livingEntity.getRecentDamageSource() != null && livingEntity.getRecentDamageSource().isIn(Galaxies.IGNORES_DAMAGE_TILT))
 				ci.cancel();
 	}

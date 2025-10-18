@@ -3,6 +3,7 @@ package dev.pswg.block;
 import dev.pswg.util.WorldUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -23,9 +24,9 @@ public class DryingSlabBlock extends MutatingSlabBlock
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl)
 	{
 		entity.slowMovement(state, new Vec3d(0.25, 1.5, 0.25));
-		super.onEntityCollision(state, world, pos, entity);
+		super.onEntityCollision(state, world, pos, entity, handler, bl);
 	}
 }

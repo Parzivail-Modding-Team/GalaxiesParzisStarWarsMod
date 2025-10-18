@@ -1,4 +1,4 @@
-package dev.pswg.container;
+/*package dev.pswg.container;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.predicate.item.ItemSubPredicate;
@@ -11,4 +11,4 @@ public class GadgetsItemSubPredicateTypes
 	{
 		return Registry.register(Registries.ITEM_SUB_PREDICATE_TYPE, id, new ItemSubPredicate.Type<>(codec));
 	}
-}
+}*/

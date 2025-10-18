@@ -8,6 +8,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
@@ -39,21 +40,21 @@ public class ScrappingTableBlock extends BlockWithEntity
 	{
 		if (type != GadgetsBlockEntities.SCRAPPING_TABLE_BLOCK_ENTITY)
 			return null;
-		return world.isClient ? null : ScrappingTableBlockEntity::tick;
+		return world.isClient() ? null : ScrappingTableBlockEntity::tick;
 	}
 
 	@Override
-	protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved)
+	protected void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved)
 	{
 		if(!moved)
-			ItemScatterer.onStateReplaced(state, newState, world, pos);
-		super.onStateReplaced(state, world, pos, newState, moved);
+			ItemScatterer.onStateReplaced(state, world, pos);
+		super.onStateReplaced(state, world, pos, moved);
 	}
 
 	@Override
 	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
 	{
-		if (!world.isClient)
+		if (!world.isClient())
 			player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
 
 		return ActionResult.SUCCESS;

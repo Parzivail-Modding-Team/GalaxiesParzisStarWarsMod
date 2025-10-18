@@ -26,7 +26,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.item.tint.ConstantTintSource;
-import net.minecraft.client.render.item.tint.PotionTintSource;
+import net.minecraft.client.render.model.json.ModelVariant;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
+import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
@@ -34,6 +36,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
@@ -42,6 +45,9 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.Pool;
+import net.minecraft.util.collection.Weighted;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 
 import java.util.ArrayList;
@@ -77,6 +83,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public ModelGenerator(FabricDataOutput output)
 		{
 			super(output);
+		}
+
+		public static WeightedVariant createWeightedVariant(Identifier id)
+		{
+			return new WeightedVariant(Pool.of(new ModelVariant(id)));
 		}
 
 		@Override
@@ -141,10 +152,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		private static void registerAccumulatingBlock(Block block, BlockStateModelGenerator generator) {
 			var id = TextureMap.getId(block);
 
-			generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(Properties.LAYERS).register(
+			generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.LAYERS).generate(
 						 height -> {
 							Identifier modelId = TexturedModel.makeFactory(block1 -> TextureMap.all(id).put(TextureKey.PARTICLE, id), blockModel("template_accumulating_height" + height * 2, TextureKey.ALL, TextureKey.PARTICLE)).upload(block, "_height"+ height * 2, generator.modelCollector);
-							return BlockStateVariant.create().put(VariantSettings.MODEL, modelId);
+							 return createWeightedVariant(modelId);//BlockStateVariant.create().put(VariantSettings.MODEL, modelId);
 						 }))
 					);
 			generator.registerParentedItemModel(block, ModelIds.getBlockSubModelId(block, "_height2"));
@@ -177,25 +188,25 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				case Default -> generator.registerSingleton(block, modelFactory);
 				case RandomRotationX -> {
 					Identifier id = modelFactory.upload(block, generator.modelCollector);
-					var blockStateVariants = new ArrayList<BlockStateVariant>(4);
-					blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R0));
-					         blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R90));
-							 blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
-					         blockStateVariants.add(BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270));
-
-					var blockStateSupplier = MultipartBlockStateSupplier.create(block).with(blockStateVariants);
+					var blockStateSupplier = MultipartBlockModelDefinitionCreator.create(block).with(new WeightedVariant(Pool.of(
+							new Weighted<>(new ModelVariant(id).withRotationX(AxisRotation.R0), 1),
+							new Weighted<>(new ModelVariant(id).withRotationX(AxisRotation.R90), 1),
+							new Weighted<>(new ModelVariant(id).withRotationX(AxisRotation.R180), 1),
+							new Weighted<>(new ModelVariant(id).withRotationX(AxisRotation.R270), 1)
+					)));
 					generator.blockStateCollector.accept(blockStateSupplier);
 				}
 				case AxisRotated -> {
 					Identifier id = modelFactory.upload(block, generator.modelCollector);
-					var blockStateSupplier = VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(Properties.AXIS)
-						.register(Direction.Axis.Y, BlockStateVariant.create().put(VariantSettings.MODEL, id))
-						.register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, id)
-							.put(VariantSettings.X, VariantSettings.Rotation.R90))
-						.register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.MODEL, id)
-							.put(VariantSettings.X, VariantSettings.Rotation.R90)
-							.put(VariantSettings.Y, VariantSettings.Rotation.R90)
-					));
+					var blockStateSupplier = VariantsBlockModelDefinitionCreator.of(block, createWeightedVariant(id)).apply(BlockStateVariantMap.operations(Properties.AXIS)
+					                                                                                                                            .register(Direction.Axis.Y, ModelVariantOperator.MODEL.withValue(id))
+					                                                                                                                            .register(Direction.Axis.Z, ModelVariantOperator.MODEL.withValue(id)
+					                                                                                                                                                                                  .then(ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90)))
+					                                                                                                                            .register(Direction.Axis.X, ModelVariantOperator.MODEL.withValue(id)
+					                                                                                                                                                                                  .then(ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90))
+					                                                                                                                                                                                  .then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90))
+					                                                                                                                            )
+					);
 					generator.blockStateCollector.accept(blockStateSupplier);
 				}
 			}
@@ -205,7 +216,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			Identifier stairsOuterId = Models.OUTER_STAIRS.upload(stairs, TextureMap.all(stairs), generator.modelCollector);
 			Identifier stairsInnerId = Models.INNER_STAIRS.upload(stairs, TextureMap.all(stairs), generator.modelCollector);
 
-			generator.blockStateCollector.accept(BlockStateModelGenerator.createStairsBlockState(stairs, stairsInnerId, stairsId, stairsOuterId));
+			generator.blockStateCollector.accept(BlockStateModelGenerator.createStairsBlockState(stairs, createWeightedVariant(stairsInnerId), createWeightedVariant(stairsId), createWeightedVariant(stairsOuterId)));
 			generator.registerItemModel(stairs);
 
 		}
@@ -220,17 +231,16 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			Identifier topId =  Models.SLAB_TOP.upload(slab, "_top", textureMap, generator.modelCollector);
 			Identifier doubleId =  Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
 
-			var blockState = VariantsBlockStateSupplier.create(slab).
-			                          coordinate(BlockStateVariantMap.create(Properties.AXIS)
-			                                                         .register(Direction.Axis.Y, BlockStateVariant.create())
-			                                                         .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270).put(VariantSettings.UVLOCK, true))
-			                                                         .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90).put(VariantSettings.UVLOCK, true))).
-			                          coordinate(
-					                          BlockStateVariantMap.create(Properties.SLAB_TYPE)
-					                                              .register(SlabType.BOTTOM, BlockStateVariant.create().put(VariantSettings.MODEL, bottomId))
-					                                              .register(SlabType.TOP, BlockStateVariant.create().put(VariantSettings.MODEL, topId))
-					                                              .register(SlabType.DOUBLE, BlockStateVariant.create().put(VariantSettings.MODEL, doubleId))
-			                          );
+			var blockState = VariantsBlockModelDefinitionCreator.of(slab, createWeightedVariant(bottomId)).
+			                                                    apply(BlockStateVariantMap.operations(Properties.AXIS)
+			                                                                              .register(Direction.Axis.Y, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R0))
+			                                                                              .register(Direction.Axis.Z, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R270).then(ModelVariantOperator.UV_LOCK.withValue(true)))
+			                                                                              .register(Direction.Axis.X, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90).then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)).then(ModelVariantOperator.UV_LOCK.withValue(true)))
+			                                                    ).apply(BlockStateVariantMap.operations(Properties.SLAB_TYPE)
+			                                                                                .register(SlabType.BOTTOM, ModelVariantOperator.MODEL.withValue(bottomId))
+			                                                                                .register(SlabType.DOUBLE, ModelVariantOperator.MODEL.withValue(doubleId))
+			                                                                                .register(SlabType.TOP, ModelVariantOperator.MODEL.withValue(topId))
+					);
 			generator.blockStateCollector.accept(blockState);
 
 		}
@@ -248,20 +258,19 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			Identifier doubleId =  Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
 			Identifier doubleIdOn =  Models.CUBE_COLUMN.upload(slab, "_double_on", textureMapOn, generator.modelCollector);
 
-			var blockState = VariantsBlockStateSupplier.create(slab).
-			                                           coordinate(BlockStateVariantMap.create(Properties.AXIS)
-			                                                                          .register(Direction.Axis.Y, BlockStateVariant.create())
-			                                                                          .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270))
-			                                                                          .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90))).
-			                                           coordinate(
-					                                           BlockStateVariantMap.create(Properties.SLAB_TYPE, Properties.LIT)
-					                                                               .register(SlabType.BOTTOM, false, BlockStateVariant.create().put(VariantSettings.MODEL, bottomId))
-					                                                               .register(SlabType.BOTTOM, true, BlockStateVariant.create().put(VariantSettings.MODEL, bottomIdOn))
-					                                                               .register(SlabType.TOP, false, BlockStateVariant.create().put(VariantSettings.MODEL, topId))
-					                                                               .register(SlabType.TOP, true, BlockStateVariant.create().put(VariantSettings.MODEL, topIdOn))
-					                                                               .register(SlabType.DOUBLE, false, BlockStateVariant.create().put(VariantSettings.MODEL, doubleId))
-					                                                               .register(SlabType.DOUBLE, true, BlockStateVariant.create().put(VariantSettings.MODEL, doubleIdOn))
-			                                           );
+			var blockState = VariantsBlockModelDefinitionCreator.of(slab, createWeightedVariant(bottomId)).
+			                                                    apply(BlockStateVariantMap.operations(Properties.AXIS)
+			                                                                              .register(Direction.Axis.Y, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R0))
+			                                                                              .register(Direction.Axis.Z, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R270).then(ModelVariantOperator.UV_LOCK.withValue(true)))
+			                                                                              .register(Direction.Axis.X, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90).then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)).then(ModelVariantOperator.UV_LOCK.withValue(true)))
+			                                                    ).apply(BlockStateVariantMap.operations(Properties.SLAB_TYPE, Properties.LIT)
+			                                                                                .register(SlabType.BOTTOM, false, ModelVariantOperator.MODEL.withValue(bottomId))
+			                                                                                .register(SlabType.BOTTOM, true, ModelVariantOperator.MODEL.withValue(bottomIdOn))
+			                                                                                .register(SlabType.DOUBLE, false, ModelVariantOperator.MODEL.withValue(doubleId))
+			                                                                                .register(SlabType.DOUBLE, true, ModelVariantOperator.MODEL.withValue(doubleIdOn))
+			                                                                                .register(SlabType.TOP, false, ModelVariantOperator.MODEL.withValue(topId))
+			                                                                                .register(SlabType.TOP, true, ModelVariantOperator.MODEL.withValue(topIdOn))
+					);
 			generator.blockStateCollector.accept(blockState);
 
 		}
@@ -274,7 +283,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			Identifier identifier = lightingPanelFactory().upload(block, generator.modelCollector);
 			Identifier identifier2 = generator.createSubModel(block, "_on", Models.CUBE_COLUMN, ModelGenerator::createLightingPanelTextureMap);
 
-			generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(block).coordinate(BlockStateModelGenerator.createBooleanModelMap(Properties.LIT, identifier2, identifier)));
+			generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(BlockStateModelGenerator.createBooleanModelMap(Properties.LIT, createWeightedVariant(identifier2), createWeightedVariant(identifier))));
 		}
 		public static TexturedModel.Factory lightingPanelFactory(){
 			return TexturedModel.makeFactory(ModelGenerator::createLightingPanelTextureMap, Models.CUBE_COLUMN);
@@ -456,6 +465,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			super(output, completableFuture);
 		}
 
+		public static Identifier itemId(Item item)
+		{
+			return Registries.ITEM.getId(item);
+		}
+
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
@@ -464,26 +478,26 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			addItemsToTag(GadgetsItems.Tags.DRINK_CONTAINER_TAG, DGItemTag.DrinkContainer, this);
 			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
 
-			getOrCreateTagBuilder(GadgetsItems.Tags.DRINK_CONTAINER_TAG)
-					.add(Items.GLASS_BOTTLE);
+			getTagBuilder(GadgetsItems.Tags.DRINK_CONTAINER_TAG)
+					.add(itemId(Items.GLASS_BOTTLE));
 
-			getOrCreateTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
-					.add(GadgetsItems.BESKAR_INGOT);
-			getOrCreateTagBuilder(GadgetsItems.Tags.DURASTEEL_TOOL_MATERIALS_TAG)
-					.add(GadgetsItems.PLASTEEL_INGOT);
-			getOrCreateTagBuilder(GadgetsItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
-					.add(GadgetsItems.TITANIUM_INGOT);
+			getTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
+					.add(itemId(GadgetsItems.BESKAR_INGOT));
+			getTagBuilder(GadgetsItems.Tags.DURASTEEL_TOOL_MATERIALS_TAG)
+					.add(itemId(GadgetsItems.PLASTEEL_INGOT));
+			getTagBuilder(GadgetsItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
+					.add(itemId(GadgetsItems.TITANIUM_INGOT));
 		}
 		private static void addItemsToTag(TagKey<Item> tag, DGItemTag datagenTag, ItemTagGenerator generator){
 
 			AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 				if(Arrays.stream(dataGenBlock.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
-					generator.getOrCreateTagBuilder(tag).add(block.asItem());
+					generator.getTagBuilder(tag).add(itemId(block.asItem()));
 
 			});
 			AutoGenerateUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
 				if(Arrays.stream(dataGenItem.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
-					generator.getOrCreateTagBuilder(tag).add(item);
+					generator.getTagBuilder(tag).add(itemId(item));
 			});
 		}
 	}
@@ -498,76 +512,81 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			super(output, completableFuture);
 		}
 
+		public static Identifier blockId(Block block)
+		{
+			return Registries.BLOCK.getId(block);
+		}
+
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			getOrCreateTagBuilder(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY)
-					.addOptionalTag(BlockTags.LEAVES)
-					.addOptionalTag(BlockTags.CAVE_VINES)
-					.addOptionalTag(BlockTags.CROPS)
-					.addOptionalTag(BlockTags.FLOWERS)
-					.addOptionalTag(BlockTags.SAPLINGS)
-					.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS)
-					.addOptionalTag(BlockTags.ICE)
-					.add(Blocks.FERN)
-					.add(Blocks.LARGE_FERN)
-					.add(Blocks.BROWN_MUSHROOM)
-					.add(Blocks.RED_MUSHROOM)
-					.add(Blocks.DEAD_BUSH)
-					.add(Blocks.SHORT_GRASS)
-					.add(Blocks.TALL_GRASS)
-					.add(Blocks.SNOW);
+			getTagBuilder(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY)
+					.addOptionalTag(BlockTags.LEAVES.id())
+					.addOptionalTag(BlockTags.CAVE_VINES.id())
+					.addOptionalTag(BlockTags.CROPS.id())
+					.addOptionalTag(BlockTags.FLOWERS.id())
+					.addOptionalTag(BlockTags.SAPLINGS.id())
+					.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS.id())
+					.addOptionalTag(BlockTags.ICE.id())
+					.add(blockId(Blocks.FERN))
+					.add(blockId(Blocks.LARGE_FERN))
+					.add(blockId(Blocks.BROWN_MUSHROOM))
+					.add(blockId(Blocks.RED_MUSHROOM))
+					.add(blockId(Blocks.DEAD_BUSH))
+					.add(blockId(Blocks.SHORT_GRASS))
+					.add(blockId(Blocks.TALL_GRASS))
+					.add(blockId(Blocks.SNOW));
 
-			getOrCreateTagBuilder(GadgetsBlocks.Tags.DETONATES_GRENADE)
-					.add(Blocks.REDSTONE_BLOCK)
-					.add(Blocks.REDSTONE_TORCH)
-					.add(Blocks.REDSTONE_WALL_TORCH)
-					.add(Blocks.FIRE)
-					.add(Blocks.SOUL_FIRE);
+			getTagBuilder(GadgetsBlocks.Tags.DETONATES_GRENADE)
+					.add(blockId(Blocks.REDSTONE_BLOCK))
+					.add(blockId(Blocks.REDSTONE_TORCH))
+					.add(blockId(Blocks.REDSTONE_WALL_TORCH))
+					.add(blockId(Blocks.FIRE))
+					.add(blockId(Blocks.SOUL_FIRE));
 
-			getOrCreateTagBuilder(GadgetsBlocks.Tags.BOUNCY)
-					.add(Blocks.HONEY_BLOCK)
-					.add(Blocks.SLIME_BLOCK);
+			getTagBuilder(GadgetsBlocks.Tags.BOUNCY)
+					.add(blockId(Blocks.HONEY_BLOCK))
+					.add(blockId(Blocks.SLIME_BLOCK));
 
-			getOrCreateTagBuilder(GadgetsBlocks.Tags.GAS_PASS_THROUGH)
-					.addOptionalTag(BlockTags.LEAVES)
-					.add(Blocks.COPPER_GRATE);
+			getTagBuilder(GadgetsBlocks.Tags.GAS_PASS_THROUGH)
+					.addOptionalTag(BlockTags.LEAVES.id())
+					.add(blockId(Blocks.COPPER_GRATE));
 
-			getOrCreateTagBuilder(GadgetsBlocks.Tags.INFERNO_CHAR)
-					.add(Blocks.MOSS_BLOCK)
-					.addOptionalTag(BlockTags.LOGS)
-					.addOptionalTag(BlockTags.PLANKS)
-					.addOptionalTag(BlockTags.BAMBOO_BLOCKS)
-					.addOptionalTag(BlockTags.WOOL)
-					.addOptionalTag(BlockTags.WOODEN_FENCES)
-					.addOptionalTag(BlockTags.WOODEN_SLABS)
-					.addOptionalTag(BlockTags.WOODEN_STAIRS)
-					.addOptionalTag(BlockTags.WOODEN_TRAPDOORS)
-					.addOptionalTag(ConventionalBlockTags.BOOKSHELVES)
+			getTagBuilder(GadgetsBlocks.Tags.INFERNO_CHAR)
+					.add(blockId(Blocks.MOSS_BLOCK))
+					.addOptionalTag(BlockTags.LOGS.id())
+					.addOptionalTag(BlockTags.PLANKS.id())
+					.addOptionalTag(BlockTags.BAMBOO_BLOCKS.id())
+					.addOptionalTag(BlockTags.WOOL.id())
+					.addOptionalTag(BlockTags.WOODEN_FENCES.id())
+					.addOptionalTag(BlockTags.WOODEN_SLABS.id())
+					.addOptionalTag(BlockTags.WOODEN_STAIRS.id())
+					.addOptionalTag(BlockTags.WOODEN_TRAPDOORS.id())
+					.addOptionalTag(ConventionalBlockTags.BOOKSHELVES.id())
 			;
 
-			getOrCreateTagBuilder(GadgetsBlocks.Tags.INFERNO_DESTROY)
-					.addOptionalTag(BlockTags.LEAVES)
-					.addOptionalTag(BlockTags.CAVE_VINES)
-					.addOptionalTag(BlockTags.FLOWERS)
-					.addOptionalTag(BlockTags.CROPS)
-					.addOptionalTag(BlockTags.CRIMSON_STEMS)
-					.addOptionalTag(BlockTags.ALL_SIGNS)
-					.addOptionalTag(BlockTags.BANNERS)
-					.addOptionalTag(BlockTags.FLOWER_POTS)
-					.addOptionalTag(BlockTags.WOOL_CARPETS)
-					.addOptionalTag(BlockTags.WOODEN_BUTTONS)
-					.addOptionalTag(BlockTags.WARPED_STEMS)
-					.addOptionalTag(BlockTags.SNOW)
-					.addOptionalTag(BlockTags.ICE)
-					.add(Blocks.BAMBOO)
-					.add(Blocks.VINE)
-					.add(Blocks.FERN)
-					.add(Blocks.LARGE_FERN)
-					.add(Blocks.DEAD_BUSH)
-					.add(Blocks.TALL_GRASS)
-					.add(Blocks.SHORT_GRASS)
-					.add(Blocks.CACTUS)
+			getTagBuilder(GadgetsBlocks.Tags.INFERNO_DESTROY)
+					.addOptionalTag(BlockTags.LEAVES.id())
+					.addOptionalTag(BlockTags.CAVE_VINES.id())
+					.addOptionalTag(BlockTags.FLOWERS.id())
+					.addOptionalTag(BlockTags.CROPS.id())
+					.addOptionalTag(BlockTags.CRIMSON_STEMS.id())
+					.addOptionalTag(BlockTags.ALL_SIGNS.id())
+					.addOptionalTag(BlockTags.BANNERS.id())
+					.addOptionalTag(BlockTags.FLOWER_POTS.id())
+					.addOptionalTag(BlockTags.WOOL_CARPETS.id())
+					.addOptionalTag(BlockTags.WOODEN_BUTTONS.id())
+					.addOptionalTag(BlockTags.WARPED_STEMS.id())
+					.addOptionalTag(BlockTags.SNOW.id())
+					.addOptionalTag(BlockTags.ICE.id())
+					.add(blockId(Blocks.BAMBOO))
+					.add(blockId(Blocks.VINE))
+					.add(blockId(Blocks.FERN))
+					.add(blockId(Blocks.LARGE_FERN))
+					.add(blockId(Blocks.DEAD_BUSH))
+					.add(blockId(Blocks.TALL_GRASS))
+					.add(blockId(Blocks.SHORT_GRASS))
+					.add(blockId(Blocks.CACTUS))
 			;
 
 			addBlocksToTag(GadgetsBlocks.Tags.BOUNCY, DGBlockTag.Bouncy, this);
@@ -576,7 +595,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.InfernoDestroy, this);
 			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DGBlockTag.GasPassThrough, this);
 			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DGBlockTag.FragmentationGrenadeDestroy, this);
-			addBlocksToTag(BlockTags.DEAD_BUSH_MAY_PLACE_ON, DGBlockTag.DeadBushSubstrate, this);
+			//addBlocksToTag(BlockTags.DEAD_BUSH_MAY_PLACE_ON, DGBlockTag.DeadBushSubstrate, this);
 			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.Leaves, this);
 			addBlocksToTag(BlockTags.LOGS, DGBlockTag.Logs, this);
 			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AxeMineable, this);
@@ -592,7 +611,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 				if(Arrays.stream(dataGenBlock.tags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag)){
-					generator.getOrCreateTagBuilder(tag).add(block);
+					generator.getTagBuilder(tag).add(blockId(block));
 				}
 			});
 		}

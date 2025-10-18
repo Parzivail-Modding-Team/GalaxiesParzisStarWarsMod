@@ -25,7 +25,7 @@ public class NerveGasEntity extends GasEntity
 	@Override
 	public void tick()
 	{
-		var entities = getWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(32));
+		var entities = getEntityWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(32));
 		for (LivingEntity entity : entities)
 		{
 			if (massMap.containsKey(entity.getBlockPos()))

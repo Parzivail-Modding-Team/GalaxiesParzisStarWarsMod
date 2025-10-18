@@ -10,9 +10,11 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -30,25 +32,25 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 		super(context);
 		this.model = new TripwireMineModel(context.getPart(MODEL_LAYER));
 	}
+
 	@Override
-	public void render(TripwireMineRenderState state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light)
+	public void render(TripwireMineRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState)
 	{
-		matrixStack.push();
-		VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE));
+		matrices.push();
 
-		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw + 90));
-		matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(state.pitch + 90));
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw + 90));
+		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(state.pitch + 90));
 
+		this.model.setAngles(state);
 		this.model.setAngles(state);
 
 		model.getRootPart().getChild("laser").yScale = state.tripwireDistance * 31f;
-		model.getRootPart().getChild("laser").pivotY = state.tripwireDistance * -31 + 1f;
+		model.getRootPart().getChild("laser").originY = state.tripwireDistance * -31 + 1f;
 		model.getRootPart().getChild("laser").hidden = !state.primed;
 
-		this.model.getRootPart().getChild("body").render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
-		//this.model.getRootPart().getChild("laser").render(matrixStack, vertexConsumer, 205, OverlayTexture.DEFAULT_UV);
-		matrixStack.pop();
-		super.render(state, matrixStack, vertexConsumerProvider, light);
+		queue.submitModel(this.model, state, matrices, RenderLayer.getEntityCutout(TEXTURE), state.light, OverlayTexture.DEFAULT_UV, state.outlineColor, null);
+		matrices.pop();
+		super.render(state, matrices, queue, cameraState);
 	}
 
 	@Override
