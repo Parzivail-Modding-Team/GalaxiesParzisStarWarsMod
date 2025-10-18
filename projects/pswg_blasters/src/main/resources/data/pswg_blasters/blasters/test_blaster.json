@@ -21,6 +21,44 @@
     }
   },
   "attachments": {
-    "hud": "pswg_blasters:default"
+    "hud": "pswg_blasters:default",
+    "options": [
+    	{
+    		"id": "pswg_blasters:scope_d",
+    		"slots": [ "pswg_blasters:scope_slot" ],
+    		"function": "pswg_blasters:default_scope",
+    		"category": "pswg_blasters:scope"
+    	},
+    	{
+    		"id": "pswg_blasters:scope_x",
+    		"slots": [ "pswg_blasters:scope_slot" ],
+    		"function": "pswg_blasters:default_scope",
+    		"category": "pswg_blasters:scope"
+    	},
+		{
+			"id": "pswg_blasters:bipod",
+			"slots": [ "pswg_blasters:barrel_slot" ],
+			"function": "pswg_blasters:reduce_recoil",
+			"category": "pswg_blasters:barrel"
+		},
+		{
+			"id": "pswg_blasters:barrel_d",
+			"slots": [ "pswg_blasters:barrel_slot" ],
+			"function": "pswg_blasters:reduce_spread",
+			"category": "pswg_blasters:barrel"
+		},
+		{
+			"id": "pswg_blasters:cooling",
+			"slots": [ "pswg_blasters:internal_slot" ],
+			"function": "pswg_blasters:improve_cooling",
+			"category": "pswg_blasters:internal_cooling"
+		},
+		{
+			"id": "pswg_blasters:rapidfire",
+			"slots": [ "pswg_blasters:internal_slot" ],
+			"function": "pswg_blasters:increase_rate",
+			"category": "pswg_blasters:internal_ordnance_config"
+		}
+    ]
   }
 }

@@ -46,6 +46,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -53,6 +54,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.RandomUtils;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -147,13 +149,37 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	/**
 	 * Contains the infrequently-modified attachment data for the blaster
 	 *
-	 * @param hud The ID of the HUD renderer this blaster should display
+	 * @param hud     The ID of the HUD renderer this blaster should display
+	 * @param options The list of attachment definitions for this blaster
 	 */
 	@GenerateCodec
-	public record AttachmentsComponent(Identifier hud) implements IAttachmentsComponentCodec
+	public record AttachmentsComponent(
+			Identifier hud,
+			@SelfCodec List<AttachmentDefinition> options
+	) implements IAttachmentsComponentCodec
 	{
 		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent(
-				Blasters.DEFAULT_HUD
+				Blasters.DEFAULT_HUD,
+				List.of()
+		);
+	}
+
+	/**
+	 * Contains the attachment options
+	 */
+	@GenerateCodec
+	public record AttachmentDefinition(
+			Identifier id,
+			@SelfCodec List<Identifier> slots,
+			Identifier function,
+			Identifier category
+	) implements IAttachmentDefinitionCodec
+	{
+		public static final AttachmentDefinition DEFAULT = new AttachmentDefinition(
+				null,
+				List.of(),
+				null,
+				null
 		);
 	}
 
