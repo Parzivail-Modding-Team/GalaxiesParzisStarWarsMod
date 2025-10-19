@@ -12,7 +12,7 @@ import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.interaction.IRecoilEntity;
-import dev.pswg.math.FloatBinaryOperator;
+import dev.pswg.math.Combinator;
 import dev.pswg.math.GMath;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
@@ -53,55 +53,6 @@ import java.util.function.UnaryOperator;
 
 public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler
 {
-	/**
-	 * Represents a strategy for combining multiple attachment values
-	 * into a final value
-	 */
-	public enum StatModifier
-	{
-		/**
-		 * The values will be added together, starting at zero
-		 */
-		ARITHMETIC(0, (a, b) -> a + b),
-
-		/**
-		 * The attachment values will be multiplied together, starting at one
-		 */
-		GEOMETRIC(1, (a, b) -> a * b);
-
-		private final float identity;
-		private final FloatBinaryOperator func;
-
-		StatModifier(float identity, FloatBinaryOperator func)
-		{
-			this.identity = identity;
-			this.func = func;
-		}
-
-		/**
-		 * Gets the modifier value when no attachments have been applied
-		 *
-		 * @return The identity value
-		 */
-		public float getIdentity()
-		{
-			return identity;
-		}
-
-		/**
-		 * Applies the modifier to the value
-		 *
-		 * @param value    The value to modify
-		 * @param modifier The amount by which the value should be modified
-		 *
-		 * @return The modified value
-		 */
-		public float apply(float value, float modifier)
-		{
-			return func.apply(value, modifier);
-		}
-	}
-
 	/**
 	 * The reason, if any, for a blaster to be cooling.
 	 * Different cooling modes allow different interactions
@@ -272,17 +223,17 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 * @param options  The available attachment options
 		 * @param function The attachment function to evaluate
 		 *
-		 * @return The evaluated attachment modifier
+		 * @return The evaluated attachment combinator
 		 */
 		public float getAttachmentsValue(Map<Identifier, AttachmentDefinition> options, AttachmentFunction function)
 		{
-			float identity = function.getModifier().getIdentity();
+			float identity = function.getCombinator().getIdentity();
 
 			for (var equipped : applied().values())
 			{
 				var equippedValue = options.getOrDefault(equipped, null);
 				if (equippedValue != null && equippedValue.function().equals(function.getId()))
-					identity = function.getModifier().apply(identity, equippedValue.value());
+					identity = function.getCombinator().combine(identity, equippedValue.value());
 			}
 
 			return identity;
@@ -450,19 +401,19 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public enum AttachmentFunction
 	{
-		ZOOM_MULTIPLIER(Blasters.id("zoom_multiplier"), StatModifier.GEOMETRIC),
-		RECOIL_MULTIPLIER(Blasters.id("recoil_multiplier"), StatModifier.GEOMETRIC),
-		SPREAD_MULTIPLIER(Blasters.id("spread_multiplier"), StatModifier.GEOMETRIC),
-		COOLING_MULTIPLIER(Blasters.id("cooling_multiplier"), StatModifier.GEOMETRIC),
-		FIRE_RATE_MULTIPLIER(Blasters.id("fire_rate_multiplier"), StatModifier.GEOMETRIC);
+		ZOOM_MULTIPLIER(Blasters.id("zoom_multiplier"), Combinator.GEOMETRIC),
+		RECOIL_MULTIPLIER(Blasters.id("recoil_multiplier"), Combinator.GEOMETRIC),
+		SPREAD_MULTIPLIER(Blasters.id("spread_multiplier"), Combinator.GEOMETRIC),
+		COOLING_MULTIPLIER(Blasters.id("cooling_multiplier"), Combinator.GEOMETRIC),
+		FIRE_RATE_MULTIPLIER(Blasters.id("fire_rate_multiplier"), Combinator.GEOMETRIC);
 
 		private final Identifier id;
-		private final StatModifier modifier;
+		private final Combinator combinator;
 
-		AttachmentFunction(Identifier id, StatModifier modifier)
+		AttachmentFunction(Identifier id, Combinator combinator)
 		{
 			this.id = id;
-			this.modifier = modifier;
+			this.combinator = combinator;
 		}
 
 		/**
@@ -478,11 +429,11 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		/**
 		 * Gets the combining function
 		 *
-		 * @return The modifier
+		 * @return The combinator
 		 */
-		public StatModifier getModifier()
+		public Combinator getCombinator()
 		{
-			return modifier;
+			return combinator;
 		}
 	}
 
@@ -496,7 +447,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	protected static final int TOGGLE_AIMING_USE_TIME_TICKS = 3;
 
 	/**
-	 * The attribute modifier that is applied to the {@link EntityAttributes#MOVEMENT_SPEED}
+	 * The attribute combinator that is applied to the {@link EntityAttributes#MOVEMENT_SPEED}
 	 * attribute in players when they are aiming-down-sights.
 	 */
 	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED = new EntityAttributeModifier(
@@ -506,7 +457,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	);
 
 	/**
-	 * The attribute modifier that is applied to the {@link GalaxiesEntityAttributes#FIELD_OF_VIEW_ZOOM}
+	 * The attribute combinator that is applied to the {@link GalaxiesEntityAttributes#FIELD_OF_VIEW_ZOOM}
 	 * attribute in players when they are aiming-down-sights.
 	 */
 	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_FOV_ENABLED = new EntityAttributeModifier(
