@@ -531,14 +531,24 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				codecInitializer.add(",\n");
 			first = false;
 
+			String fieldInitializer;
+
+			var codecDefault = component.getAnnotation(CodecDefault.class);
+			if (codecDefault != null)
+			{
+				fieldInitializer = "optionalFieldOf($2S, %s)".formatted(codecDefault.value());
+			}
+			else
+				fieldInitializer = "fieldOf($2S)";
+
 			var classTypeName = nestedCodecType.className().toString();
 			if (classTypeName.startsWith("java.util.List"))
 			{
 				var listArg = ClassName.bestGuess(classTypeName.substring("java.util.List<".length(), classTypeName.length() - 1));
-				codecInitializer.add("$5T.listOrSingle($3T.$4L).fieldOf($2S).forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), listArg, nestedCodecType.elementName(), MC_TYPES);
+				codecInitializer.add("$5T.listOrSingle($3T.$4L)." + fieldInitializer + ".forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), listArg, nestedCodecType.elementName(), MC_TYPES);
 			}
 			else
-				codecInitializer.add("$3T.$4L.fieldOf($2S).forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), nestedCodecType.className(), nestedCodecType.elementName());
+				codecInitializer.add("$3T.$4L." + fieldInitializer + ".forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), nestedCodecType.className(), nestedCodecType.elementName());
 		}
 
 		codecInitializer.unindent()

@@ -11,7 +11,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Defines packet codecs and related utilities for common data types
@@ -27,6 +29,11 @@ public final class GalaxiesPacketCodecs
 	 * A packet codec that can serialize and deserialize {@link Identifier} lists
 	 */
 	public static final PacketCodec<ByteBuf, List<Identifier>> IDENTIFIER_LIST  = Identifier.PACKET_CODEC.collect(PacketCodecs.toList());
+
+	/**
+	 * A packet codec that can serialize and deserialize maps between {@link Identifier}s
+	 */
+	public static final PacketCodec<ByteBuf, Map<Identifier, Identifier>> IDENTIFIER_MAP = PacketCodecs.map(HashMap::new, Identifier.PACKET_CODEC, Identifier.PACKET_CODEC);
 
 	/**
 	 * A packet codec that can serialize and deserialize {@link ClientPlayerAction} enum values

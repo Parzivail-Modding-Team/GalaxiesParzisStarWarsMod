@@ -98,11 +98,13 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 					var reader = new InputStreamReader(stream)
 			)
 			{
+				var parseResult = codec.parse(JsonOps.INSTANCE, JsonParser.parseReader(reader));
+				if (parseResult.error().isPresent())
+					throw new IOException("Failed to decode %s definition '%s' from JSON: %s".formatted(id, key, parseResult.error().get().message()));
+
 				definitions.put(
 						key.withPath(FilenameUtils.getBaseName(key.getPath())),
-						codec.parse(JsonOps.INSTANCE, JsonParser.parseReader(reader))
-						     .result()
-						     .orElseThrow(() -> new IOException("Failed to decode blaster definition from JSON"))
+						parseResult.result().orElseThrow(() -> new IOException("Failed to decode %s definition '%s' from JSON".formatted(id, key)))
 				);
 			}
 			catch (Exception e)

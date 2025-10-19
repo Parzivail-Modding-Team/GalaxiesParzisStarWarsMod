@@ -1,6 +1,7 @@
 package dev.pswg.item;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.UnboundedMapCodec;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
@@ -11,7 +12,7 @@ import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.interaction.IRecoilEntity;
-import dev.pswg.interaction.RecoilEntityAttachment;
+import dev.pswg.math.FloatBinaryOperator;
 import dev.pswg.math.GMath;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
@@ -23,7 +24,6 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -31,38 +31,77 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
-import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.RandomUtils;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler
 {
+	/**
+	 * Represents a strategy for combining multiple attachment values
+	 * into a final value
+	 */
+	public enum StatModifier
+	{
+		/**
+		 * The values will be added together, starting at zero
+		 */
+		ARITHMETIC(0, (a, b) -> a + b),
+
+		/**
+		 * The attachment values will be multiplied together, starting at one
+		 */
+		GEOMETRIC(1, (a, b) -> a * b);
+
+		private final float identity;
+		private final FloatBinaryOperator func;
+
+		StatModifier(float identity, FloatBinaryOperator func)
+		{
+			this.identity = identity;
+			this.func = func;
+		}
+
+		/**
+		 * Gets the modifier value when no attachments have been applied
+		 *
+		 * @return The identity value
+		 */
+		public float getIdentity()
+		{
+			return identity;
+		}
+
+		/**
+		 * Applies the modifier to the value
+		 *
+		 * @param value    The value to modify
+		 * @param modifier The amount by which the value should be modified
+		 *
+		 * @return The modified value
+		 */
+		public float apply(float value, float modifier)
+		{
+			return func.apply(value, modifier);
+		}
+	}
+
 	/**
 	 * The reason, if any, for a blaster to be cooling.
 	 * Different cooling modes allow different interactions
@@ -147,21 +186,107 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	/**
+	 * Contains the immutable attachment data for the blaster
+	 *
+	 * @param hud      The ID of the HUD renderer this blaster should display
+	 * @param defaults The default values of each slot in the blaster
+	 * @param options  The list of attachment definitions for this blaster
+	 */
+	@GenerateCodec
+	public record AvailableAttachmentsComponent(
+			Identifier hud,
+			@UseCodec(
+					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
+					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
+			)
+			Map<Identifier, Identifier> defaults,
+			@UseCodec(
+					customCodec = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_CODEC"),
+					customPacket = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_PACKET_CODEC")
+			)
+			Map<Identifier, AttachmentDefinition> options
+	) implements IAvailableAttachmentsComponentCodec
+	{
+		/**
+		 * The codec for the `options` field
+		 */
+		public static final UnboundedMapCodec<Identifier, AttachmentDefinition> OPTIONS_CODEC = Codec.unboundedMap(Identifier.CODEC, AttachmentDefinition.CODEC);
+
+		/**
+		 * The packet codec for the `options` field
+		 */
+		public static final PacketCodec<RegistryByteBuf, Map<Identifier, AttachmentDefinition>> OPTIONS_PACKET_CODEC = PacketCodecs.map(HashMap::new, Identifier.PACKET_CODEC, AttachmentDefinition.PACKET_CODEC);
+
+		public static final AvailableAttachmentsComponent DEFAULT = new AvailableAttachmentsComponent(
+				Blasters.DEFAULT_HUD,
+				Map.of(),
+				Map.of()
+		);
+	}
+
+	/**
 	 * Contains the infrequently-modified attachment data for the blaster
 	 *
 	 * @param hud     The ID of the HUD renderer this blaster should display
-	 * @param options The list of attachment definitions for this blaster
+	 * @param applied The attachments currently applied to the blaster
 	 */
 	@GenerateCodec
 	public record AttachmentsComponent(
 			Identifier hud,
-			@SelfCodec List<AttachmentDefinition> options
+			@UseCodec(
+					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
+					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
+			)
+			Map<Identifier, Identifier> applied
 	) implements IAttachmentsComponentCodec
 	{
 		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent(
 				Blasters.DEFAULT_HUD,
-				List.of()
+				Map.of()
 		);
+
+		/**
+		 * Gets the attachment definition applied in the given slot for the given stack
+		 *
+		 * @param slot The slot where the attachment would be applied
+		 *
+		 * @return An optional attachment definition if one is applied, empty otherwise
+		 */
+		public Optional<AttachmentDefinition> getAttachmentInSlot(Map<Identifier, AttachmentDefinition> options, Identifier slot)
+		{
+			// Find the ID of the attachment in the given slot
+			Identifier appliedEntryId = applied().getOrDefault(slot, null);
+
+			if (appliedEntryId == null)
+				return Optional.empty();
+
+			// Find the attachment definition for the applied attachment
+			var appliedDefinition = options.getOrDefault(appliedEntryId, null);
+			return Optional.ofNullable(appliedDefinition);
+		}
+
+		/**
+		 * Gets a combined value of the attachment by stacking all equipped
+		 * attachments of the given function
+		 *
+		 * @param options  The available attachment options
+		 * @param function The attachment function to evaluate
+		 *
+		 * @return The evaluated attachment modifier
+		 */
+		public float getAttachmentsValue(Map<Identifier, AttachmentDefinition> options, AttachmentFunction function)
+		{
+			float identity = function.getModifier().getIdentity();
+
+			for (var equipped : applied().values())
+			{
+				var equippedValue = options.getOrDefault(equipped, null);
+				if (equippedValue != null && equippedValue.function().equals(function.getId()))
+					identity = function.getModifier().apply(identity, equippedValue.value());
+			}
+
+			return identity;
+		}
 	}
 
 	/**
@@ -169,18 +294,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	@GenerateCodec
 	public record AttachmentDefinition(
-			Identifier id,
 			@SelfCodec List<Identifier> slots,
 			Identifier function,
-			Identifier category
+			Identifier category,
+			@CodecDefault("0f") float value
 	) implements IAttachmentDefinitionCodec
 	{
-		public static final AttachmentDefinition DEFAULT = new AttachmentDefinition(
-				null,
-				List.of(),
-				null,
-				null
-		);
 	}
 
 	/**
@@ -326,6 +445,47 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		}
 	}
 
+	/**
+	 * Represents an attachment function that can stack values between multiple attachments
+	 */
+	public enum AttachmentFunction
+	{
+		ZOOM_MULTIPLIER(Blasters.id("zoom_multiplier"), StatModifier.GEOMETRIC),
+		RECOIL_MULTIPLIER(Blasters.id("recoil_multiplier"), StatModifier.GEOMETRIC),
+		SPREAD_MULTIPLIER(Blasters.id("spread_multiplier"), StatModifier.GEOMETRIC),
+		COOLING_MULTIPLIER(Blasters.id("cooling_multiplier"), StatModifier.GEOMETRIC),
+		FIRE_RATE_MULTIPLIER(Blasters.id("fire_rate_multiplier"), StatModifier.GEOMETRIC);
+
+		private final Identifier id;
+		private final StatModifier modifier;
+
+		AttachmentFunction(Identifier id, StatModifier modifier)
+		{
+			this.id = id;
+			this.modifier = modifier;
+		}
+
+		/**
+		 * Gets the function ID
+		 *
+		 * @return the function ID
+		 */
+		public Identifier getId()
+		{
+			return id;
+		}
+
+		/**
+		 * Gets the combining function
+		 *
+		 * @return The modifier
+		 */
+		public StatModifier getModifier()
+		{
+			return modifier;
+		}
+	}
+
 	public static final Identifier MISSING_ID = Blasters.id("missingno");
 
 	/**
@@ -374,6 +534,15 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	);
 
 	/**
+	 * The component that contains the immutable attachments of the blaster
+	 */
+	private static final ComponentType<AvailableAttachmentsComponent> AVAILABLE_ATTACHMENTS = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("available_attachments"),
+			ComponentType.<AvailableAttachmentsComponent>builder().codec(AvailableAttachmentsComponent.CODEC).packetCodec(AvailableAttachmentsComponent.PACKET_CODEC).build()
+	);
+
+	/**
 	 * The component that contains the mutable attachments of the blaster
 	 */
 	private static final ComponentType<AttachmentsComponent> ATTACHMENTS = Registry.register(
@@ -399,6 +568,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		return new Settings()
 				.component(ID, MISSING_ID)
 				.component(STATS, StatsComponent.DEFAULT)
+				.component(AVAILABLE_ATTACHMENTS, AvailableAttachmentsComponent.DEFAULT)
 				.component(ATTACHMENTS, AttachmentsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
 	}
@@ -420,9 +590,22 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		stack.set(ID, id);
 		stack.set(STATS, definition.stats());
-		stack.set(ATTACHMENTS, definition.attachments());
+		stack.set(AVAILABLE_ATTACHMENTS, definition.attachments());
+		stack.set(ATTACHMENTS, createAvailableAttachments(definition.attachments()));
 
 		return stack;
+	}
+
+	/**
+	 * Creates a new attachments component that equips the default attachments
+	 *
+	 * @param attachments The available attachments
+	 *
+	 * @return A new attachments component that equips the default attachments
+	 */
+	private static AttachmentsComponent createAvailableAttachments(AvailableAttachmentsComponent attachments)
+	{
+		return new AttachmentsComponent(attachments.hud(), attachments.defaults());
 	}
 
 	public BlasterItem(Settings settings)
@@ -452,6 +635,18 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	public static AttachmentsComponent getAttachments(ItemStack stack)
 	{
 		return stack.getOrDefault(ATTACHMENTS, AttachmentsComponent.DEFAULT);
+	}
+
+	/**
+	 * Gets the available attachments of the given blaster
+	 *
+	 * @param stack The stack to query
+	 *
+	 * @return The blaster's available attachments
+	 */
+	public static AvailableAttachmentsComponent getAvailableAttachments(ItemStack stack)
+	{
+		return stack.getOrDefault(AVAILABLE_ATTACHMENTS, AvailableAttachmentsComponent.DEFAULT);
 	}
 
 	/**
@@ -841,6 +1036,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			return ActionResult.PASS;
 
 		var state = getState(itemStack);
+		var availableAttachments = getAvailableAttachments(itemStack);
 		var attachments = getAttachments(itemStack);
 		var stats = getStats(itemStack);
 
@@ -953,6 +1149,9 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			fireBolt(user, serverWorld);
 
 			// TODO: fixed recoil mean/std pattern for first n shots
+
+			var recoilScale = attachments.getAttachmentsValue(availableAttachments.options(), AttachmentFunction.RECOIL_MULTIPLIER);
+
 			var recoil = new Vector3f(
 					-(float)RandomHelper.nextGaussian(world.getRandom(), 3.6, 0.2),
 					-(float)RandomHelper.nextGaussian(world.getRandom(), -0.2, 0.2),
@@ -960,7 +1159,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			);
 
 			if (user instanceof IRecoilEntity recoilEntity)
-				recoilEntity.pswg$addRecoilVelocity(recoil);
+				recoilEntity.pswg$addRecoilVelocity(recoil.mul(recoilScale));
 		}
 
 		if (user instanceof IRecoilEntity recoilEntity)
