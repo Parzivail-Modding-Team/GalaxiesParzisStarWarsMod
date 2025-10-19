@@ -167,12 +167,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 * The packet codec for the `options` field
 		 */
 		public static final PacketCodec<RegistryByteBuf, Map<Identifier, AttachmentDefinition>> OPTIONS_PACKET_CODEC = PacketCodecs.map(HashMap::new, Identifier.PACKET_CODEC, AttachmentDefinition.PACKET_CODEC);
-
-		public static final AvailableAttachmentsComponent DEFAULT = new AvailableAttachmentsComponent(
-				Blasters.DEFAULT_HUD,
-				Map.of(),
-				Map.of()
-		);
 	}
 
 	/**
@@ -485,15 +479,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	);
 
 	/**
-	 * The component that contains the immutable attachments of the blaster
-	 */
-	private static final ComponentType<AvailableAttachmentsComponent> AVAILABLE_ATTACHMENTS = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
-			Blasters.id("available_attachments"),
-			ComponentType.<AvailableAttachmentsComponent>builder().codec(AvailableAttachmentsComponent.CODEC).packetCodec(AvailableAttachmentsComponent.PACKET_CODEC).build()
-	);
-
-	/**
 	 * The component that contains the mutable attachments of the blaster
 	 */
 	private static final ComponentType<AttachmentsComponent> ATTACHMENTS = Registry.register(
@@ -503,23 +488,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	);
 
 	/**
-	 * The component that contains the immutable base statistics of the blaster
-	 */
-	private static final ComponentType<StatsComponent> STATS = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
-			Blasters.id("stats"),
-			ComponentType.<StatsComponent>builder().codec(StatsComponent.CODEC).packetCodec(StatsComponent.PACKET_CODEC).build()
-	);
-
-	/**
 	 * @return A new instance of the item settings for this item
 	 */
 	public static Settings createSettings()
 	{
 		return new Settings()
 				.component(ID, MISSING_ID)
-				.component(STATS, StatsComponent.DEFAULT)
-				.component(AVAILABLE_ATTACHMENTS, AvailableAttachmentsComponent.DEFAULT)
 				.component(ATTACHMENTS, AttachmentsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
 	}
@@ -540,8 +514,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		stack.set(DataComponentTypes.ITEM_NAME, Text.translatable(id.toTranslationKey()));
 
 		stack.set(ID, id);
-		stack.set(STATS, definition.stats());
-		stack.set(AVAILABLE_ATTACHMENTS, definition.attachments());
 		stack.set(ATTACHMENTS, createAvailableAttachments(definition.attachments()));
 
 		return stack;
@@ -571,9 +543,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The blaster's stats
 	 */
-	public static StatsComponent getStats(ItemStack stack)
+	public static Optional<StatsComponent> getStats(ItemStack stack)
 	{
-		return stack.getOrDefault(STATS, StatsComponent.DEFAULT);
+		return Optional.ofNullable(Blasters.DATAPACK_LOADER.getDefinitions().getOrDefault(stack.get(ID), null))
+		               .map(BlasterDatapackDefinition::stats);
 	}
 
 	/**
@@ -595,9 +568,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The blaster's available attachments
 	 */
-	public static AvailableAttachmentsComponent getAvailableAttachments(ItemStack stack)
+	public static Optional<AvailableAttachmentsComponent> getAvailableAttachments(ItemStack stack)
 	{
-		return stack.getOrDefault(AVAILABLE_ATTACHMENTS, AvailableAttachmentsComponent.DEFAULT);
+		return Optional.ofNullable(Blasters.DATAPACK_LOADER.getDefinitions().getOrDefault(stack.get(ID), null))
+		               .map(BlasterDatapackDefinition::attachments);
 	}
 
 	/**
@@ -691,7 +665,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (!state.coolingMode.canBypass())
 			return Optional.empty();
 
-		var stats = getStats(stack);
+		var optionalStats = getStats(stack);
+		if (optionalStats.isEmpty())
+			return Optional.empty();
+
+		var stats = optionalStats.get();
+
 		var potentialVentingHeat = getVentingHeat(world, stack, tickDelta);
 		if (potentialVentingHeat.isEmpty())
 			return Optional.empty();
@@ -748,7 +727,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	public static Optional<Float> getOverchargeTimeRemaining(World world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
-		var stats = getStats(stack);
+
+		var optionalStats = getStats(stack);
+		if (optionalStats.isEmpty())
+			return Optional.empty();
+
+		var stats = optionalStats.get();
 
 		var overchargeStart = state.overchargeStart();
 		var overchargeLength = stats.heat.overchargeBonus();
@@ -779,7 +763,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (state.coolingMode() != CoolingMode.PASSIVE)
 			return Optional.empty();
 
-		var stats = getStats(stack);
+		var optionalStats = getStats(stack);
+		if (optionalStats.isEmpty())
+			return Optional.empty();
+
+		var stats = optionalStats.get();
+
 		var attachments = getAttachments(stack);
 
 		var time = world.getTime() + tickDelta;
@@ -809,7 +798,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (state.coolingMode() == CoolingMode.PASSIVE)
 			return Optional.empty();
 
-		var stats = getStats(stack);
+		var optionalStats = getStats(stack);
+		if (optionalStats.isEmpty())
+			return Optional.empty();
+
+		var stats = optionalStats.get();
+
 		var attachments = getAttachments(stack);
 
 		var time = world.getTime() + tickDelta;
@@ -987,9 +981,24 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			return ActionResult.PASS;
 
 		var state = getState(itemStack);
-		var availableAttachments = getAvailableAttachments(itemStack);
 		var attachments = getAttachments(itemStack);
-		var stats = getStats(itemStack);
+
+		var optionalStats = getStats(itemStack);
+		if (optionalStats.isEmpty())
+		{
+			Blasters.LOGGER.warn("Blaster stats not found for blaster {}", itemStack);
+			return ActionResult.FAIL;
+		}
+
+		var optionalAvailableAttachments = getAvailableAttachments(itemStack);
+		if (optionalAvailableAttachments.isEmpty())
+		{
+			Blasters.LOGGER.warn("Blaster available attachments not found for blaster {}", itemStack);
+			return ActionResult.FAIL;
+		}
+
+		var stats = optionalStats.get();
+		var availableAttachments = optionalAvailableAttachments.get();
 
 		var timestamp = world.getTime();
 
@@ -1094,6 +1103,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		if (getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
+
+		var defs = Blasters.DATAPACK_LOADER.getDefinitions();
 
 		if (world instanceof ServerWorld serverWorld)
 		{

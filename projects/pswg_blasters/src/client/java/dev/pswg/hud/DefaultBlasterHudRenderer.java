@@ -51,7 +51,12 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 
 		assert client.world != null;
 
-		var stats = BlasterItem.getStats(stack);
+		var optionalStats = BlasterItem.getStats(stack);
+		if (optionalStats.isEmpty())
+			return;
+
+		var stats = optionalStats.get();
+
 		var state = BlasterItem.getState(stack);
 
 		var m = context.getMatrices();

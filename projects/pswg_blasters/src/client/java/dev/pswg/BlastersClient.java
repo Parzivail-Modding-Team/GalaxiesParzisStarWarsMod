@@ -23,6 +23,7 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The main entrypoint for PSWG client-side blaster features
@@ -85,7 +86,12 @@ public class BlastersClient implements GalaxiesClientAddon
 			BlasterItem.getFireCooldownProgress(client.world, stack, GalaxiesClient.getTickDelta())
 			           .ifPresent(value -> Drawables.itemDurability(context, value, x, y - 13, 13, 0x0000FF));
 
-			var stats = BlasterItem.getStats(stack);
+			var optionalStats = BlasterItem.getStats(stack);
+			if (optionalStats.isEmpty())
+				return;
+
+			var stats = optionalStats.get();
+
 			var state = BlasterItem.getState(stack);
 			if (state.coolingMode() == BlasterItem.CoolingMode.PASSIVE)
 			{
