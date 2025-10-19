@@ -239,6 +239,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	@GenerateCodec
 	public record AttachmentDefinition(
+			String translationKey,
 			@SelfCodec List<Identifier> slots,
 			Identifier function,
 			Identifier category,
@@ -1103,8 +1104,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		if (getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
-
-		var defs = Blasters.DATAPACK_LOADER.getDefinitions();
 
 		if (world instanceof ServerWorld serverWorld)
 		{

@@ -1,4 +1,10 @@
 {
+  "attachment.pswg_blasters.e11.barrel_d": "Extended barrel",
+  "attachment.pswg_blasters.e11.bipod": "Bipod",
+  "attachment.pswg_blasters.e11.cooling": "Heat Spreader",
+  "attachment.pswg_blasters.e11.rapidfire": "Advanced Regeneration",
+  "attachment.pswg_blasters.e11.scope_d": "1.5x Scope",
+  "attachment.pswg_blasters.e11.scope_x": "2.5x Scope",
   "item.pswg_blasters.blaster": "Blaster",
   "pswg_blasters.missingno": "[unknown model]",
   "pswg_blasters.test_blaster": "Test Blaster",

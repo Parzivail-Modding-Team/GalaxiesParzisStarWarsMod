@@ -13,8 +13,12 @@ import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.Models;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * The blaster data generator
@@ -25,6 +29,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	public void onInitializeDataGenerator(FabricDataGenerator generator)
 	{
 		var pack = generator.createPack();
+
+		DataGenResourceHelper.loadResources(ResourceType.SERVER_DATA, Blasters.DATAPACK_LOADER);
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(TagGenerator::new);
@@ -60,6 +66,24 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class LangGenerator extends FabricLanguageProvider
 	{
+		private record BlasterLang(String name, Map<Identifier, String> attachmentLangs)
+		{
+		}
+
+		private final Map<Identifier, BlasterLang> blasterLang = Map.ofEntries(
+				Map.entry(Blasters.id("test_blaster"), new BlasterLang(
+						"Test Blaster",
+						Map.ofEntries(
+								Map.entry(Blasters.id("e11/scope_d"), "1.5x Scope"),
+								Map.entry(Blasters.id("e11/scope_x"), "2.5x Scope"),
+								Map.entry(Blasters.id("e11/bipod"), "Bipod"),
+								Map.entry(Blasters.id("e11/barrel_d"), "Extended barrel"),
+								Map.entry(Blasters.id("e11/cooling"), "Heat Spreader"),
+								Map.entry(Blasters.id("e11/rapidfire"), "Advanced Regeneration")
+						)
+				))
+		);
+
 		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
 		{
 			super(dataOutput, "en_us", registryLookup);
@@ -76,7 +100,26 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 
 			// Model number of each blaster
 			translationBuilder.add(BlasterItem.MISSING_ID, "[unknown model]");
-			translationBuilder.add(Blasters.id("test_blaster"), "Test Blaster");
+
+			for (var entry : Blasters.DATAPACK_LOADER.getDefinitions().entrySet())
+			{
+				var blasterEntry = blasterLang.getOrDefault(entry.getKey(), null);
+				if (blasterEntry == null)
+					throw new RuntimeException("Missing blaster lang entry for " + entry.getKey());
+
+				// Add the name of the blaster
+				translationBuilder.add(entry.getKey(), blasterEntry.name());
+
+				// Add all the attachments
+				for (var attachmentEntry : entry.getValue().attachments().options().entrySet())
+				{
+					var blasterAttachmentEntry = blasterEntry.attachmentLangs().getOrDefault(attachmentEntry.getKey(), null);
+					if (blasterAttachmentEntry == null)
+						throw new RuntimeException("Missing blaster attachment lang entry for " + attachmentEntry.getKey());
+
+					translationBuilder.add(attachmentEntry.getValue().translationKey(), blasterAttachmentEntry);
+				}
+			}
 
 			// Sound subtitles
 			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.fire"), "Blaster Firing");

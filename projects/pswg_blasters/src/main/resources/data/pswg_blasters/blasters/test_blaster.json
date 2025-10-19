@@ -23,10 +23,11 @@
 	"attachments": {
 		"hud": "pswg_blasters:default",
 		"defaults": {
-			"pswg_blasters:barrel_slot": "pswg_blasters:bipod"
+			"pswg_blasters:barrel_slot": "pswg_blasters:e11/bipod"
 		},
 		"options": {
-			"pswg_blasters:scope_d": {
+			"pswg_blasters:e11/scope_d": {
+				"translationKey": "attachment.pswg_blasters.e11.scope_d",
 				"slots": [
 					"pswg_blasters:scope_slot"
 				],
@@ -34,7 +35,8 @@
 				"category": "pswg_blasters:scope",
 				"value": 1.5
 			},
-			"pswg_blasters:scope_x": {
+			"pswg_blasters:e11/scope_x": {
+				"translationKey": "attachment.pswg_blasters.e11.scope_x",
 				"slots": [
 					"pswg_blasters:scope_slot"
 				],
@@ -42,7 +44,8 @@
 				"category": "pswg_blasters:scope",
 				"value": 2.5
 			},
-			"pswg_blasters:bipod": {
+			"pswg_blasters:e11/bipod": {
+				"translationKey": "attachment.pswg_blasters.e11.bipod",
 				"slots": [
 					"pswg_blasters:barrel_slot"
 				],
@@ -50,7 +53,8 @@
 				"category": "pswg_blasters:barrel",
 				"value": 0.8
 			},
-			"pswg_blasters:barrel_d": {
+			"pswg_blasters:e11/barrel_d": {
+				"translationKey": "attachment.pswg_blasters.e11.barrel_d",
 				"slots": [
 					"pswg_blasters:barrel_slot"
 				],
@@ -58,7 +62,8 @@
 				"category": "pswg_blasters:barrel",
 				"value": 0.8
 			},
-			"pswg_blasters:cooling": {
+			"pswg_blasters:e11/cooling": {
+				"translationKey": "attachment.pswg_blasters.e11.cooling",
 				"slots": [
 					"pswg_blasters:internal_slot"
 				],
@@ -66,7 +71,8 @@
 				"category": "pswg_blasters:internal_cooling",
 				"value": 1.3
 			},
-			"pswg_blasters:rapidfire": {
+			"pswg_blasters:e11/rapidfire": {
+				"translationKey": "attachment.pswg_blasters.e11.rapidfire",
 				"slots": [
 					"pswg_blasters:internal_slot"
 				],

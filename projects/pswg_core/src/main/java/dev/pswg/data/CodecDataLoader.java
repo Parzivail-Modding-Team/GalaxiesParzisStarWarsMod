@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.Predicate;
 
 /**
@@ -86,6 +87,10 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 	{
 		definitions.clear();
 
+		logger.info("Loading data...");
+
+		var namespaces = new HashSet<String>();
+
 		for (var entry : manager.findResources(folderName, filter).entrySet())
 		{
 			var key = entry.getKey();
@@ -106,12 +111,16 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 						key.withPath(FilenameUtils.getBaseName(key.getPath())),
 						parseResult.result().orElseThrow(() -> new IOException("Failed to decode %s definition '%s' from JSON".formatted(id, key)))
 				);
+
+				namespaces.add(key.getNamespace());
 			}
 			catch (Exception e)
 			{
 				logger.error("Failed to load " + key, e);
 			}
 		}
+
+		logger.info("Loaded {} entries from the following namespaces: {}", definitions.size(), String.join(", ", namespaces));
 	}
 }
 
