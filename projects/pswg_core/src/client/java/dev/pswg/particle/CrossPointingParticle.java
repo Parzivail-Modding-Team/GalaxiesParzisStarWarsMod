@@ -57,8 +57,11 @@ public class CrossPointingParticle extends AnimatedParticle
 			vec3f2.mul(j);
 			vec3f2.add(f, g, h);
 		}
-
-		submittable.render(this.getRenderType(), corners[0].x, corners[0].y, corners[0].z, rotation.x, rotation.y, rotation.z, rotation.w, this.getSize(tickProgress), this.getMinU(), this.getMaxU(), this.getMinV(), this.getMaxV(), ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue), this.getBrightness(tickProgress));
+		float x = (corners[0].x + corners[1].x + corners[2].x + corners[3].x) / 4f;
+		float y = (corners[0].y + corners[1].y + corners[2].y + corners[3].y) / 4f;
+		float z = (corners[0].z + corners[1].z + corners[2].z + corners[3].z) / 4f;
+		submittable.render(this.getRenderType(), x, y, z, rotation.x, rotation.y, rotation.z, rotation.w, this.getSize(tickProgress), this.getMinU(), this.getMaxU(), this.getMinV(), this.getMaxV(), ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue), this.getBrightness(tickProgress));
+		//submittable.render(this.getRenderType(), corners[0].x, corners[0].y, corners[0].z, rotation.x, rotation.y, rotation.z, rotation.w, this.getSize(tickProgress), this.getMinU(), this.getMaxU(), this.getMinV(), this.getMaxV(), ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue), this.getBrightness(tickProgress));
 
 		/*vertexConsumer.vertex(corners[0].x, corners[0].y, corners[0].z).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[1].x, corners[1].y, corners[1].z).texture(m, n).color(this.red, this.green, this.blue, this.alpha).light(p);
@@ -84,9 +87,15 @@ public class CrossPointingParticle extends AnimatedParticle
 			vec3f2.mul(j);
 			vec3f2.add(f, g, h);
 		}
-		submittable.render(this.getRenderType(), corners[0].x, corners[0].y, corners[0].z, rotation.x, rotation.y, rotation.z, rotation.w, this.getSize(tickProgress), this.getMinU(), this.getMaxU(), this.getMinV(), this.getMaxV(), ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue), this.getBrightness(tickProgress));
+		//submittable.render(this.getRenderType(), corners[0].x, corners[0].y, corners[0].z, rotation.x, rotation.y, rotation.z, rotation.w, this.getSize(tickProgress), this.getMinU(), this.getMaxU(), this.getMinV(), this.getMaxV(), ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue), this.getBrightness(tickProgress));
+		x = (corners[0].x + corners[1].x + corners[2].x + corners[3].x) / 4f;
+		y = (corners[0].y + corners[1].y + corners[2].y + corners[3].y) / 4f;
+		z = (corners[0].z + corners[1].z + corners[2].z + corners[3].z) / 4f;
+		submittable.render(this.getRenderType(), x, y, z, rotation.x, rotation.y, rotation.z, rotation.w, this.getSize(tickProgress), this.getMinU(), this.getMaxU(), this.getMinV(), this.getMaxV(), ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue), this.getBrightness(tickProgress));
+	}
+	//submittable.render(this.getRenderType(), corners[0].x, corners[0].y, corners[0].z, rotation.x, rotation.y, rotation.z, rotation.w, this.getSize(tickProgress), this.getMinU(), this.getMaxU(), this.getMinV(), this.getMaxV(), ColorHelper.fromFloats(this.alpha, this.red, this.green, this.blue), this.getBrightness(tickProgress));
 
-		/// TODO MAKE THIS WORK
+
 		/*vertexConsumer.vertex(corners[0].x, corners[0].y, corners[0].z).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[1].x, corners[1].y, corners[1].z).texture(m, n).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[2].x, corners[2].y, corners[2].z).texture(l, n).color(this.red, this.green, this.blue, this.alpha).light(p);
@@ -96,5 +105,4 @@ public class CrossPointingParticle extends AnimatedParticle
 		vertexConsumer.vertex(corners[2].x, corners[2].y, corners[2].z).texture(l, n).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[1].x, corners[1].y, corners[1].z).texture(m, n).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[0].x, corners[0].y, corners[0].z).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p);*/
-	}
 }
