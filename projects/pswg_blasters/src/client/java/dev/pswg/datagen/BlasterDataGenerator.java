@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
+import net.minecraft.client.data.ItemModels;
 import net.minecraft.client.data.Models;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.resource.ResourceType;
@@ -56,7 +57,9 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
-			register(itemModelGenerator, Blasters.BLASTER_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+//			register(itemModelGenerator, Blasters.BLASTER_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
+
+			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
 		}
 	}
 
@@ -122,14 +125,14 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			}
 
 			// Sound subtitles
-			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.fire"), "Blaster Firing");
-			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.reload"), "Blaster Reloading");
-			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.dryfire"), "Blaster Dry-firing");
-			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.primary"), "Blaster Cooling");
-			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.secondary"), "Blaster Overcharging");
-			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.failed"), "Blaster Cooling Fail");
-			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.vent"), "Blaster Venting");
-			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.overheat"), "Blaster Overheating");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.fire"), "Blaster fires");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.reload"), "Blaster reloads");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.dryfire"), "Blaster dry-fires");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.primary"), "Blaster cools");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.secondary"), "Blaster overcharges");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.bypass.failed"), "Blaster cooling fails");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.vent"), "Blaster vents");
+			LangGenHelper.soundSubtitle(translationBuilder, Blasters.id("blaster.overheat"), "Blaster overheats");
 
 			// Tooltips
 			translationBuilder.add(BlastersClient.I18N_VENT_BLASTER, "Vent Heat");

@@ -6,11 +6,12 @@
 		"accessors.ClientPlayerInteractionManagerAccessor",
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
-		"attributes.MouseMixin",
 		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
+		"attributes.MouseMixin",
 		"events.DrawContextMixin",
 		"events.InGameHudMixin",
 		"leftuse.MinecraftClientMixin",
+		"models.BakedSimpleModelMixin",
 		"recoil.ClientPlayerEntityMixin"
 	],
 	"injectors": {
