@@ -587,6 +587,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.TALL_GRASS))
 					.add(blockId(Blocks.SHORT_GRASS))
 					.add(blockId(Blocks.CACTUS))
+					.add(blockId(Blocks.LEAF_LITTER))
 			;
 
 			addBlocksToTag(GadgetsBlocks.Tags.BOUNCY, DGBlockTag.Bouncy, this);

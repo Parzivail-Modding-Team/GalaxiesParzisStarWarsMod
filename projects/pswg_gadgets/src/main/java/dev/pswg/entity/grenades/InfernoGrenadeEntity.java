@@ -1,7 +1,6 @@
 package dev.pswg.entity.grenades;
 
 import com.google.common.collect.ConcurrentHashMultiset;
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
@@ -25,7 +24,6 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class InfernoGrenadeEntity extends GrenadeEntity
 {

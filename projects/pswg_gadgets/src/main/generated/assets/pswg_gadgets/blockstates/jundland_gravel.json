@@ -3,8 +3,7 @@
     {
       "apply": [
         {
-          "model": "pswg_gadgets:block/jundland_gravel",
-          "x": 0
+          "model": "pswg_gadgets:block/jundland_gravel"
         },
         {
           "model": "pswg_gadgets:block/jundland_gravel",

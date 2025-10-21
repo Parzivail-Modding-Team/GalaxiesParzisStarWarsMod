@@ -3,8 +3,7 @@
     {
       "apply": [
         {
-          "model": "pswg_gadgets:block/desert_loam",
-          "x": 0
+          "model": "pswg_gadgets:block/desert_loam"
         },
         {
           "model": "pswg_gadgets:block/desert_loam",
