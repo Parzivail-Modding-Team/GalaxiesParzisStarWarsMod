@@ -1,12 +1,11 @@
 package dev.pswg.particles;
 
 import dev.pswg.particle.CrossPointingParticle;
-import dev.pswg.util.math.Ease;
+import dev.pswg.utility.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
@@ -14,15 +13,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-
 public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 {
 	protected FragmentationGrenadeSparkParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z, spriteProvider);
 		this.velocityMultiplier = 1;
-		this.setAlpha(1.0F);
+		this.setAlpha(1F);
 		this.setColor(0, 0, 1);
 		this.maxAge = (int)(this.random.nextFloat() * 20 + 10);
 		this.scale = (float)(this.random.nextFloat() * 0.25 + 0.15);
@@ -31,12 +28,6 @@ public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 		this.velocityX = vX;
 		this.velocityY = vY;
 		this.velocityZ = vZ;
-	}
-
-	@Override
-	public RenderType getRenderType()
-	{
-		return RenderType.BLOCK_ATLAS_TRANSLUCENT;
 	}
 
 	@Override

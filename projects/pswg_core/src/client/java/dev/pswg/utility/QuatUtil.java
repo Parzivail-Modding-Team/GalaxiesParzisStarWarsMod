@@ -1,8 +1,7 @@
-package dev.pswg.util;
+package dev.pswg.utility;
 
-import dev.pswg.util.math.MathUtil;
+import dev.pswg.utility.math.MathUtil;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.EulerAngle;

@@ -1,14 +1,12 @@
 package dev.pswg.particle;
 
-import dev.pswg.util.math.MathUtil;
-import dev.pswg.util.QuatUtil;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.AnimatedParticle;
 import net.minecraft.client.particle.BillboardParticleSubmittable;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
@@ -16,6 +14,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import dev.pswg.utility.math.MathUtil;
+import dev.pswg.utility.QuatUtil;
 
 @Environment(EnvType.CLIENT)
 public class DecalParticle extends AnimatedParticle

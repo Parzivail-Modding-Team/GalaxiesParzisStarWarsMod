@@ -1,17 +1,13 @@
 package dev.pswg.particles;
 
 import dev.pswg.particle.CrossPointingParticle;
-import dev.pswg.util.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,12 +21,6 @@ public class TripwireLaserParticle extends CrossPointingParticle
 		this.scale = 0.0625f;
 		this.setColor(0.05f + (float)clientWorld.random.nextBetween(0, 100) / 1000f, 0.65f + (float)clientWorld.random.nextBetween(0, 100) / 1000f, 0.9f + (float)clientWorld.random.nextBetween(0, 100) / 1000f);
 		this.updateSprite(spriteProvider);
-	}
-
-	@Override
-	public RenderType getRenderType()
-	{
-		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
 	}
 
 	@Override
