@@ -1,20 +1,27 @@
 package dev.pswg.rendering.models;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BuiltBuffer;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.*;
 import net.minecraft.client.util.BufferAllocator;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * TODO: docs
+ */
 public final class GalaxiesModelBakery
 {
-	private record GQuadGeometry(GQuad[] quads) implements Geometry
+	private record GQuadGeometry(Collection<GQuad> quads) implements Geometry
 	{
 		@Override
 		public BakedGeometry bake(ModelTextures textures, Baker baker, ModelBakeSettings settings, SimpleModel model)
@@ -26,23 +33,35 @@ public final class GalaxiesModelBakery
 			{
 				for (var quad : quads())
 				{
+					var sprite = baker.getSpriteGetter().get(textures, quad.textureRef(), model);
+					var minUv = new Vector2f(sprite.getMinU(), sprite.getMinV());
+					var maxUv = new Vector2f(sprite.getMaxU(), sprite.getMaxV());
+
+					var uvExtent = maxUv.sub(minUv, new Vector2f());
+
 					var bufferBuilder = new BufferBuilder(bufferAllocator, VertexFormat.DrawMode.QUADS, format);
 
 					var vertices = List.of(quad.a(), quad.b(), quad.c(), quad.d());
 					for (var vertex : vertices)
+					{
+						var translatedTexCoords = new Vector2f(vertex.texCoords());
+						translatedTexCoords.mul(uvExtent);
+						translatedTexCoords.add(minUv);
+
 						bufferBuilder.vertex(
 								vertex.position().x,
 								vertex.position().y,
 								vertex.position().z,
 								vertex.color(),
-								vertex.texCoords().x,
-								vertex.texCoords().y,
+								translatedTexCoords.x,
+								translatedTexCoords.y,
 								vertex.overlay(),
 								vertex.light(),
 								vertex.normal().x,
 								vertex.normal().y,
 								vertex.normal().z
 						);
+					}
 
 					var faceNormal = new Vec3d(0, 0, 0);
 					for (var vertex : vertices)
@@ -56,12 +75,15 @@ public final class GalaxiesModelBakery
 
 					try (BuiltBuffer builtBuffer = bufferBuilder.end())
 					{
-						var ints = builtBuffer.getBuffer().asIntBuffer().array();
+						var intBuffer = builtBuffer.getBuffer().asIntBuffer();
+						var ints = new int[intBuffer.capacity()];
+						intBuffer.get(ints);
+
 						geometryBuilder.add(new BakedQuad(
 								ints,
 								0,
 								Direction.getFacing(faceNormal),
-								baker.getSpriteGetter().get(textures, quad.textureRef(), model),
+								sprite,
 								true,
 								0
 						));
@@ -75,10 +97,15 @@ public final class GalaxiesModelBakery
 
 	public static Optional<Geometry> getGeometry(BakedSimpleModel model)
 	{
-		// TODO: p3d loading
+		// TODO: model loading... convert from interchange format to codec-ified format in data generator?
 //		if (model.name().equals("pswg_blasters:item/blaster"))
 //		{
-//			var quads = ...
+//			var color = -1;
+//			var overlay = OverlayTexture.DEFAULT_UV;
+//			var light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
+//
+//			var quads = PacketCodecs.collection(ArrayList::new, GQuad.PACKET_CODEC).decode(inputStream);
+//
 //			return Optional.of(new GQuadGeometry(quads));
 //		}
 

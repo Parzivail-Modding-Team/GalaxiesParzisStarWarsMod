@@ -3,13 +3,17 @@ package dev.pswg.networking;
 import dev.pswg.interaction.ClientPlayerAction;
 import dev.pswg.interaction.ServerPlayerAction;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.codec.PacketDecoder;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +49,25 @@ public final class GalaxiesPacketCodecs
 	 * A packet codec that can serialize and deserialize {@link ServerPlayerAction} enum values
 	 */
 	public static final PacketCodec<RegistryByteBuf, ServerPlayerAction> SERVER_PLAYER_ACTION = forEnum(ServerPlayerAction.class);
+
+	/**
+	 * A packet codec that can serialize and deserialize {@link Vector2f}s
+	 */
+	public static final PacketCodec<ByteBuf, Vector2f> VECTOR_2F = new PacketCodec<>()
+	{
+		@Override
+		public Vector2f decode(ByteBuf buf)
+		{
+			return new Vector2f(buf.readFloat(), buf.readFloat());
+		}
+
+		@Override
+		public void encode(ByteBuf buf, Vector2f vector)
+		{
+			buf.writeFloat(vector.x());
+			buf.writeFloat(vector.y());
+		}
+	};
 
 	/**
 	 * Creates a packet decoder for the given enum type
