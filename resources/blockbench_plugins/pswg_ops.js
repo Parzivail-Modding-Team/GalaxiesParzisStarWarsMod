@@ -93,7 +93,7 @@ Plugin.register("pswg_ops", {
 
 						element.getGlobalVertexPositions().forEach((coords) => {
 							vertex.set(...coords).divideScalar(export_scale);
-							output.vertices.push([vertex.x, vertex.y, vertex.z]);
+							output.vertices.push({ x: vertex.x, y: vertex.y, z: vertex.z });
 							nbVertex++;
 						});
 
@@ -103,10 +103,10 @@ Plugin.register("pswg_ops", {
 								let texture = face.getTexture();
 								let uv_size = [Project.getUVWidth(texture), Project.getUVHeight(texture)];
 								let uv_outputs = [];
-								uv_outputs.push([face.uv[0] / uv_size[0], 1 - face.uv[1] / uv_size[1]]);
-								uv_outputs.push([face.uv[2] / uv_size[0], 1 - face.uv[1] / uv_size[1]]);
-								uv_outputs.push([face.uv[2] / uv_size[0], 1 - face.uv[3] / uv_size[1]]);
-								uv_outputs.push([face.uv[0] / uv_size[0], 1 - face.uv[3] / uv_size[1]]);
+								uv_outputs.push({ x: face.uv[0] / uv_size[0], y: 1 - face.uv[1] / uv_size[1] });
+								uv_outputs.push({ x: face.uv[2] / uv_size[0], y: 1 - face.uv[1] / uv_size[1] });
+								uv_outputs.push({ x: face.uv[2] / uv_size[0], y: 1 - face.uv[3] / uv_size[1] });
+								uv_outputs.push({ x: face.uv[0] / uv_size[0], y: 1 - face.uv[3] / uv_size[1] });
 								var rot = face.rotation || 0;
 								while (rot > 0) {
 									uv_outputs.splice(0, 0, uv_outputs.pop());
@@ -120,7 +120,7 @@ Plugin.register("pswg_ops", {
 							if (element.faces[key].texture !== null) {
 								normal.fromArray(cube_face_normals[key]);
 								normal.applyMatrix3(normalMatrixWorld).normalize();
-								output.normals.push([normal.x, normal.y, normal.z]);
+								output.normals.push({ x: normal.x, y: normal.y, z: normal.z });
 								nbNormals += 1;
 							}
 						}
@@ -161,10 +161,26 @@ Plugin.register("pswg_ops", {
 								}
 
 								pushFace([
-									[vertices[3] + indexVertex, i * 4 + 4 + indexVertexUvs, i + 1 + indexNormals],
-									[vertices[2] + indexVertex, i * 4 + 3 + indexVertexUvs, i + 1 + indexNormals],
-									[vertices[1] + indexVertex, i * 4 + 2 + indexVertexUvs, i + 1 + indexNormals],
-									[vertices[0] + indexVertex, i * 4 + 1 + indexVertexUvs, i + 1 + indexNormals],
+									{
+										p: vertices[3] + indexVertex,
+										t: i * 4 + 4 + indexVertexUvs,
+										n: i + 1 + indexNormals,
+									},
+									{
+										p: vertices[2] + indexVertex,
+										t: i * 4 + 3 + indexVertexUvs,
+										n: i + 1 + indexNormals,
+									},
+									{
+										p: vertices[1] + indexVertex,
+										t: i * 4 + 2 + indexVertexUvs,
+										n: i + 1 + indexNormals,
+									},
+									{
+										p: vertices[0] + indexVertex,
+										t: i * 4 + 1 + indexVertexUvs,
+										n: i + 1 + indexNormals,
+									},
 								]);
 
 								i++;
@@ -179,12 +195,12 @@ Plugin.register("pswg_ops", {
 						function addVertex(vkey, x, y, z) {
 							vertex.set(x, y, z);
 							vertex.applyMatrix4(mesh.matrixWorld).divideScalar(export_scale);
-							output.vertices.push([vertex.x, vertex.y, vertex.z]);
+							output.vertices.push({ x: vertex.x, y: vertex.y, z: vertex.z });
 							nbVertex++;
 							if (element.shading == "smooth") {
 								normal.fromArray(smooth_vertex_normals[vkey]);
 								normal.applyMatrix3(normalMatrixWorld).normalize();
-								vertexnormals.push([normal.x, normal.y, normal.z]);
+								vertexnormals.push({ x: normal.x, y: normal.y, z: normal.z });
 								nbNormals += 1;
 							}
 						}
@@ -203,17 +219,17 @@ Plugin.register("pswg_ops", {
 								let uv_size = [Project.getUVWidth(tex), Project.getUVHeight(tex)];
 
 								vertices.forEach((vkey) => {
-									output.texCoords.push([
-										face.uv[vkey][0] / uv_size[0],
-										1 - face.uv[vkey][1] / uv_size[1],
-									]);
+									output.texCoords.push({
+										x: face.uv[vkey][0] / uv_size[0],
+										y: 1 - face.uv[vkey][1] / uv_size[1],
+									});
 									nbVertexUvs += 1;
 								});
 
 								if (element.shading == "flat") {
 									normal.fromArray(face.getNormal(true));
 									normal.applyMatrix3(normalMatrixWorld).normalize();
-									vertexnormals.push([normal.x, normal.y, normal.z]);
+									vertexnormals.push({ x: normal.x, y: normal.y, z: normal.z });
 									nbNormals += 1;
 								}
 
@@ -230,13 +246,14 @@ Plugin.register("pswg_ops", {
 
 								let triplets = [];
 								vertices.forEach((vkey) => {
-									let triplet = [
-										vertex_keys.indexOf(vkey) + 1 + indexVertex,
-										nbVertexUvs - vertices.length + vertices.indexOf(vkey) + 1 + indexVertexUvs,
-										element.shading == "smooth"
-											? indexNormals + 1 + vertex_keys.indexOf(vkey)
-											: i + 1 + indexNormals,
-									];
+									let triplet = {
+										p: vertex_keys.indexOf(vkey) + 1 + indexVertex,
+										t: nbVertexUvs - vertices.length + vertices.indexOf(vkey) + 1 + indexVertexUvs,
+										n:
+											element.shading == "smooth"
+												? indexNormals + 1 + vertex_keys.indexOf(vkey)
+												: i + 1 + indexNormals,
+									};
 									triplets.push(triplet);
 								});
 								pushFace(triplets);
@@ -265,7 +282,7 @@ Plugin.register("pswg_ops", {
 
 								vertex.applyMatrix4(mesh.matrixWorld).divideScalar(export_scale); // transform the vertex to export format
 
-								output.vertices.push([vertex.x, vertex.y, vertex.z]);
+								output.vertices.push({ x: vertex.x, y: vertex.y, z: vertex.z });
 							}
 						} // uvs
 
@@ -274,7 +291,7 @@ Plugin.register("pswg_ops", {
 								uv.x = uvs.getX(i);
 								uv.y = uvs.getY(i); // transform the uv to export format
 
-								output.texCoords.push([uv.x, uv.y]);
+								output.texCoords.push({ x: uv.x, y: uv.y });
 							}
 						} // normals
 
@@ -288,7 +305,7 @@ Plugin.register("pswg_ops", {
 
 								normal.applyMatrix3(normalMatrixWorld).normalize(); // transform the normal to export format
 
-								output.normals.push([normal.x, normal.y, normal.z]);
+								output.normals.push({ x: normal.x, y: normal.y, z: normal.z });
 							}
 						}
 
@@ -311,17 +328,12 @@ Plugin.register("pswg_ops", {
 
 									for (let m = 0; m < 3; m++) {
 										const j = indices.getX(i + m) + 1;
-										face[m] = (
-											indexVertex +
-											j +
-											(normals || uvs
-												? "/" +
-												  (uvs ? indexVertexUvs + j : "") +
-												  (normals ? "/" + (indexNormals + j) : "")
-												: "")
-										)
-											.split("/")
-											.map((i) => parseInt(i));
+
+										face[m] = {
+											p: indexVertex + j,
+										};
+										if (normals) face[m].n = indexNormals + j;
+										if (uvs) face[m].t = indexVertexUvs + j;
 									} // transform the face to export format
 
 									pushFace(face);
@@ -331,17 +343,12 @@ Plugin.register("pswg_ops", {
 							for (let i = 0, l = vertices.count; i < l; i += 3) {
 								for (let m = 0; m < 3; m++) {
 									const j = i + m + 1;
-									face[m] = (
-										indexVertex +
-										j +
-										(normals || uvs
-											? "/" +
-											  (uvs ? indexVertexUvs + j : "") +
-											  (normals ? "/" + (indexNormals + j) : "")
-											: "")
-									)
-										.split("/")
-										.map((i) => parseInt(i));
+
+									face[m] = {
+										p: indexVertex + j,
+									};
+									if (normals) face[m].n = indexNormals + j;
+									if (uvs) face[m].t = indexVertexUvs + j;
 								} // transform the face to export format
 
 								pushFace(face);

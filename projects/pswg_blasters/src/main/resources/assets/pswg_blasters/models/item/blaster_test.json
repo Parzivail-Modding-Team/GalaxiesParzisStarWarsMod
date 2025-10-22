@@ -1,7 +1,7 @@
 {
 	"textures": {
 		"particle": "pswg:block/empty",
-		"model": "pswg_blasters:item/galaar15"
+		"0": "pswg_blasters:item/galaar15"
 	},
 	"display": {
 		"thirdperson_righthand": {

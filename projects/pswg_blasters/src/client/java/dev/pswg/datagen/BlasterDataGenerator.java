@@ -3,12 +3,19 @@ package dev.pswg.datagen;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingOutputStream;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.Blasters;
 import dev.pswg.BlastersClient;
 import dev.pswg.Galaxies;
+import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.data.CodecDataLoader;
 import dev.pswg.data.IdentifierUtil;
 import dev.pswg.item.BlasterItem;
+import dev.pswg.rendering.models.GQuad;
+import dev.pswg.rendering.models.GVertex;
+import dev.pswg.rendering.models.GalaxiesModelBakery;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -19,6 +26,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.ItemModels;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
@@ -29,11 +38,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.dynamic.Codecs;
 import org.apache.commons.io.FilenameUtils;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,15 +54,63 @@ import java.util.concurrent.CompletableFuture;
  */
 public class BlasterDataGenerator implements DataGeneratorEntrypoint
 {
+	private record GqbIntermediary(
+			ModelData data,
+			JsonElement textures,
+			JsonElement display
+	)
+	{
+		public static final Codec<GqbIntermediary> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				ModelData.CODEC.fieldOf("data").forGetter(GqbIntermediary::data),
+				Codecs.JSON_ELEMENT.fieldOf("textures").forGetter(GqbIntermediary::textures),
+				Codecs.JSON_ELEMENT.fieldOf("display").forGetter(GqbIntermediary::display)
+		).apply(instance, GqbIntermediary::new));
+
+		private record ModelData(
+				List<Vector3f> vertices,
+				List<Vector3f> normals,
+				List<Vector2f> texCoords,
+				Map<String, List<ModelFace>> faces
+		)
+		{
+			public static final Codec<ModelData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+					GalaxiesCodecs.NAMED_VECTOR_3F.listOf().fieldOf("vertices").forGetter(ModelData::vertices),
+					GalaxiesCodecs.NAMED_VECTOR_3F.listOf().fieldOf("normals").forGetter(ModelData::normals),
+					GalaxiesCodecs.NAMED_VECTOR_2F.listOf().fieldOf("texCoords").forGetter(ModelData::texCoords),
+					Codec.unboundedMap(Codec.STRING, ModelFace.CODEC.listOf()).fieldOf("faces").forGetter(ModelData::faces)
+			).apply(instance, ModelData::new));
+
+			private record ModelFace(
+					String material,
+					List<ModelFaceTriplet> triplets
+			)
+			{
+				public static final Codec<ModelFace> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+						Codec.STRING.fieldOf("material").forGetter(ModelFace::material),
+						ModelFaceTriplet.CODEC.listOf().fieldOf("triplets").forGetter(ModelFace::triplets)
+				).apply(instance, ModelFace::new));
+
+				private record ModelFaceTriplet(int p, int t, int n)
+				{
+					public static final Codec<ModelFaceTriplet> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+							Codec.INT.fieldOf("p").forGetter(ModelFaceTriplet::p),
+							Codec.INT.fieldOf("t").forGetter(ModelFaceTriplet::t),
+							Codec.INT.fieldOf("n").forGetter(ModelFaceTriplet::n)
+					).apply(instance, ModelFaceTriplet::new));
+				}
+			}
+		}
+	}
+
 	/**
 	 * A resource loader for quad buffer intermediary files
 	 */
-	public static final CodecDataLoader<JsonElement> GQB_INTERMEDIARY_LOADER = new CodecDataLoader<>(
+	private static final CodecDataLoader<GqbIntermediary> GQB_INTERMEDIARY_LOADER = new CodecDataLoader<>(
 			Galaxies.id("gqbi"),
 			"models",
-			false,
-			(i) -> IdentifierUtil.hasExtension(i, "gqbi"),
-			Codecs.JSON_ELEMENT
+			true,
+			(i) -> IdentifierUtil.hasExtension(i, "json") && i.getPath().contains("/datagen/"),
+			GqbIntermediary.CODEC
 	);
 
 	@Override
@@ -95,6 +155,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	/**
 	 * The GQD compiled model generator. All models should be compiled through
 	 * this generator.
+	 *
+	 * TODO: docs
 	 */
 	private static class GqdCompiledModelGenerator implements DataProvider
 	{
@@ -115,19 +177,78 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 				if (!entry.getKey().getNamespace().equals(Blasters.MODID))
 					continue;
 
-				completables.add(compile(entry));
+				completables.add(compile(writer, entry));
 			}
 
 			return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
 		}
 
-		private CompletableFuture<?> compile(Map.Entry<Identifier, JsonElement> entry)
+		private CompletableFuture<?> compile(DataWriter writer, Map.Entry<Identifier, GqbIntermediary> entry)
 		{
-			return CompletableFuture.runAsync(() -> {
-				var nonDatagenId = entry.getKey().withPath("models/" + getNonDatagenPath(entry.getKey().getPath()));
-				var outputPath = resolver.resolve(nonDatagenId, "gqb");
-				// TODO: compile
-			});
+			var nonDatagenId = entry.getKey().withPath("models/" + getNonDatagenPath(entry.getKey().getPath()));
+			var jsonOutputPath = resolver.resolve(nonDatagenId, "json");
+			var quadsOutputPath = resolver.resolve(nonDatagenId, "gqb");
+
+			return CompletableFuture.allOf(
+					writeToPath(writer, quadsOutputPath, GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC, createGeometry(entry.getValue())),
+					DataProvider.writeToPath(writer, createModelDef(entry.getValue()), jsonOutputPath)
+			);
+		}
+
+		private JsonElement createModelDef(GqbIntermediary value)
+		{
+			var obj = new JsonObject();
+
+			var tex = value.textures().getAsJsonObject();
+
+			if (!tex.has("particle"))
+				tex.addProperty("particle", "pswg:block/empty");
+
+			obj.add("textures", tex);
+			obj.add("display", value.display());
+
+			return obj;
+		}
+
+		private GalaxiesModelBakery.GQuadGeometry createGeometry(GqbIntermediary value)
+		{
+			var color = -1;
+			var overlay = OverlayTexture.DEFAULT_UV;
+			var light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
+
+			var quads = new ArrayList<GQuad>();
+
+			for (var obj : value.data().faces().values())
+			{
+				for (var face : obj)
+				{
+					quads.add(new GQuad(
+							getVertex(value, face, 0, color, overlay, light),
+							getVertex(value, face, 1, color, overlay, light),
+							getVertex(value, face, 2, color, overlay, light),
+							getVertex(value, face, 3, color, overlay, light),
+							face.material
+					));
+				}
+			}
+
+			return new GalaxiesModelBakery.GQuadGeometry(quads);
+		}
+
+		private static GVertex getVertex(GqbIntermediary value, GqbIntermediary.ModelData.ModelFace face, int i, int color, int overlay, int light)
+		{
+			// Repeat the last vertex to create a quad from triangles
+			var triplet = face.triplets.get(Math.min(i, face.triplets.size() - 1));
+
+			var pos = value.data().vertices().get(triplet.p - 1);
+			var texCoord = value.data().texCoords().get(triplet.t - 1);
+
+			return new GVertex(
+					new Vector3f(pos.x + 0.5f, pos.y, pos.z + 0.5f),
+					value.data().normals().get(triplet.n - 1),
+					new Vector2f(texCoord.x, 1 - texCoord.y),
+					color, overlay, light
+			);
 		}
 
 		private String getNonDatagenPath(String filename)
@@ -164,10 +285,11 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 					buf.readBytes(hashingOutputStream, buf.readableBytes());
 
 					writer.write(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
+					System.out.println("Saved file to " + path);
 				}
-				catch (IOException var10)
+				catch (IOException ex)
 				{
-					LOGGER.error("Failed to save file to {}", path, var10);
+					LOGGER.error("Failed to save file to {}", path, ex);
 				}
 			}, Util.getMainWorkerExecutor().named("saveStable"));
 		}
