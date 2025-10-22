@@ -1,28 +1,49 @@
 package dev.pswg.rendering.models;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
+import dev.pswg.GalaxiesClient;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.*;
 import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
- * TODO: docs
+ * Utilities for loading GQB models into the model bakery
  */
 public final class GalaxiesModelBakery
 {
-	private record GQuadGeometry(Collection<GQuad> quads) implements Geometry
+	/**
+	 * A geometry that bakes a collection of GQuads
+	 *
+	 * @param quads The quads to bake
+	 */
+	public record GQuadGeometry(Collection<GQuad> quads) implements Geometry
 	{
+		private static final PacketCodec<ByteBuf, Collection<GQuad>> QUAD_COLLECTION_CODEC = PacketCodecs.collection(ArrayList::new, GQuad.PACKET_CODEC);
+
+		public static final PacketCodec<ByteBuf, GQuadGeometry> PACKET_CODEC = new PacketCodec<ByteBuf, GQuadGeometry>()
+		{
+			@Override
+			public GQuadGeometry decode(ByteBuf buf)
+			{
+				return new GQuadGeometry(QUAD_COLLECTION_CODEC.decode(buf));
+			}
+
+			@Override
+			public void encode(ByteBuf buf, GQuadGeometry value)
+			{
+				QUAD_COLLECTION_CODEC.encode(buf, value.quads());
+			}
+		};
+
 		@Override
 		public BakedGeometry bake(ModelTextures textures, Baker baker, ModelBakeSettings settings, SimpleModel model)
 		{
@@ -95,20 +116,19 @@ public final class GalaxiesModelBakery
 		}
 	}
 
+	/**
+	 * Attempts to load GQB geometry for the given model
+	 *
+	 * @param model The model that might have GQB geometry
+	 *
+	 * @return The GQB geometry if it exists, or an empty optional otherwise
+	 */
 	public static Optional<Geometry> getGeometry(BakedSimpleModel model)
 	{
-		// TODO: model loading... convert from interchange format to codec-ified format in data generator?
-//		if (model.name().equals("pswg_blasters:item/blaster"))
-//		{
-//			var color = -1;
-//			var overlay = OverlayTexture.DEFAULT_UV;
-//			var light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
-//
-//			var quads = PacketCodecs.collection(ArrayList::new, GQuad.PACKET_CODEC).decode(inputStream);
-//
-//			return Optional.of(new GQuadGeometry(quads));
-//		}
+		// Test to see if a GQB model exists for the MC model
+		var key = Identifier.of(model.name() + ".gqb");
+		var result = GalaxiesClient.GQB_LOADER.getDefinitions().getOrDefault(key, null);
 
-		return Optional.empty();
+		return Optional.ofNullable(result);
 	}
 }

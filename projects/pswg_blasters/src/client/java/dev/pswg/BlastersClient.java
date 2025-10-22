@@ -1,7 +1,7 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
-import dev.pswg.data.SlimRegistry;
+import dev.pswg.data.*;
 import dev.pswg.events.HudRenderEvents;
 import dev.pswg.events.ItemRenderEvents;
 import dev.pswg.hud.DefaultBlasterHudRenderer;
@@ -11,7 +11,9 @@ import dev.pswg.item.ItemTooltipHelper;
 import dev.pswg.renderer.BlasterBoltEntityRenderer;
 import dev.pswg.rendering.Drawables;
 import dev.pswg.rendering.ItemHudRenderer;
+import dev.pswg.rendering.models.GalaxiesModelBakery;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -20,6 +22,7 @@ import net.minecraft.client.render.entity.EntityRendererFactories;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 
 import java.util.List;
