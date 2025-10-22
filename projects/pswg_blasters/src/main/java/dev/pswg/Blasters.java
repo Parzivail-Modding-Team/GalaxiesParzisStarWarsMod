@@ -61,6 +61,7 @@ public final class Blasters implements GalaxiesAddon
 	public static final CodecDataLoader<BlasterDatapackDefinition> DATAPACK_LOADER = new CodecDataLoader<>(
 			id("data"),
 			"blasters",
+			true,
 			IdentifierUtil::isJsonFile,
 			BlasterDatapackDefinition.CODEC
 	);

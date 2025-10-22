@@ -42,6 +42,11 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 	private final String folderName;
 
 	/**
+	 * Whether the extension should be removed from entry keys
+	 */
+	private final boolean removeExtension;
+
+	/**
 	 * A filter that will be used to select files from within the specified folder
 	 */
 	private final Predicate<Identifier> filter;
@@ -54,15 +59,17 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 	/**
 	 * Creates a new codec-backed data loader
 	 *
-	 * @param id         The identifier for this data loader instance.
-	 * @param folderName The path of the folder from which data will be loaded.
-	 * @param filter     A filter that will be used to select files from within the specified folder.
-	 * @param codec      The codec that will be used to decode the files to the specified type.
+	 * @param id              The identifier for this data loader instance.
+	 * @param folderName      The path of the folder from which data will be loaded.
+	 * @param removeExtension Whether the extension should be removed from entry keys.
+	 * @param filter          A filter that will be used to select files from within the specified folder.
+	 * @param codec           The codec that will be used to decode the files to the specified type.
 	 */
-	public CodecDataLoader(Identifier id, String folderName, Predicate<Identifier> filter, Codec<? extends T> codec)
+	public CodecDataLoader(Identifier id, String folderName, boolean removeExtension, Predicate<Identifier> filter, Codec<? extends T> codec)
 	{
 		this.id = id;
 		this.folderName = folderName;
+		this.removeExtension = removeExtension;
 		this.filter = filter;
 		this.codec = codec;
 		this.logger = Galaxies.createSubLogger("dataloader/" + id);
@@ -107,8 +114,13 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 				if (parseResult.error().isPresent())
 					throw new IOException("Failed to decode %s definition '%s' from JSON: %s".formatted(id, key, parseResult.error().get().message()));
 
+				var path = PathUtil.makeRelative(key.getPath(), folderName);
+
+				if (removeExtension)
+					path = FilenameUtils.removeExtension(path);
+
 				definitions.put(
-						key.withPath(FilenameUtils.getBaseName(key.getPath())),
+						key.withPath(path),
 						parseResult.result().orElseThrow(() -> new IOException("Failed to decode %s definition '%s' from JSON".formatted(id, key)))
 				);
 

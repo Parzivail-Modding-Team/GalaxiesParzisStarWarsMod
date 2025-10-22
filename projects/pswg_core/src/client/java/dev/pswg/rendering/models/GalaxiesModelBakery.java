@@ -126,8 +126,7 @@ public final class GalaxiesModelBakery
 	public static Optional<Geometry> getGeometry(BakedSimpleModel model)
 	{
 		// Test to see if a GQB model exists for the MC model
-		var key = Identifier.of(model.name() + ".gqb");
-		var result = GalaxiesClient.GQB_LOADER.getDefinitions().getOrDefault(key, null);
+		var result = GalaxiesClient.GQB_LOADER.getDefinitions().getOrDefault(Identifier.of(model.name()), null);
 
 		return Optional.ofNullable(result);
 	}

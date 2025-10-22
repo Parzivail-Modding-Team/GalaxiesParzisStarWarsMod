@@ -37,6 +37,7 @@ public class GalaxiesClient implements ClientModInitializer
 	public static final BinaryCodecDataLoader<GalaxiesModelBakery.GQuadGeometry> GQB_LOADER = new BinaryCodecDataLoader<>(
 			Galaxies.id("gqb"),
 			"models",
+			true,
 			(i) -> IdentifierUtil.hasExtension(i, "gqb"),
 			GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC
 	);

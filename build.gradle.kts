@@ -102,6 +102,9 @@ allprojects {
 	}
 
 	tasks.jar {
+		// prevent datagen assets from ending up in the jar
+		exclude("**/assets/**/datagen/**")
+
 		from(project.file("LICENSE")) {
 			rename { "${it}_${archives_base_name}" }
 		}

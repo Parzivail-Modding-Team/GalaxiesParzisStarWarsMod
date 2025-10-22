@@ -8,6 +8,7 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -43,6 +44,11 @@ public class BinaryCodecDataLoader<T> implements ResourceReloader
 	private final String folderName;
 
 	/**
+	 * Whether the extension should be removed from entry keys
+	 */
+	private final boolean removeExtension;
+
+	/**
 	 * A filter that will be used to select files from within the specified folder
 	 */
 	private final Predicate<Identifier> filter;
@@ -55,15 +61,17 @@ public class BinaryCodecDataLoader<T> implements ResourceReloader
 	/**
 	 * Creates a new packet-codec-backed data loader
 	 *
-	 * @param id         The identifier for this data loader instance.
-	 * @param folderName The path of the folder from which data will be loaded.
-	 * @param filter     A filter that will be used to select files from within the specified folder.
-	 * @param codec      The codec that will be used to decode the files to the specified type.
+	 * @param id              The identifier for this data loader instance.
+	 * @param folderName      The path of the folder from which data will be loaded.
+	 * @param removeExtension Whether the extension should be removed from entry keys.
+	 * @param filter          A filter that will be used to select files from within the specified folder.
+	 * @param codec           The codec that will be used to decode the files to the specified type.
 	 */
-	public BinaryCodecDataLoader(Identifier id, String folderName, Predicate<Identifier> filter, PacketCodec<ByteBuf, ? extends T> codec)
+	public BinaryCodecDataLoader(Identifier id, String folderName, boolean removeExtension, Predicate<Identifier> filter, PacketCodec<ByteBuf, ? extends T> codec)
 	{
 		this.id = id;
 		this.folderName = folderName;
+		this.removeExtension = removeExtension;
 		this.filter = filter;
 		this.codec = codec;
 		this.logger = Galaxies.createSubLogger("dataloader/" + id);
@@ -93,17 +101,6 @@ public class BinaryCodecDataLoader<T> implements ResourceReloader
 				}, prepareExecutor)
 				.thenCompose(reloadSynchronizer::whenPrepared)
 				.thenAcceptAsync((reloadState) -> this.apply(), applyExecutor);
-	}
-
-	private String makeRelative(String path, String root)
-	{
-		if (!root.endsWith("/"))
-			root += "/";
-
-		if (!path.startsWith(root))
-			throw new IllegalArgumentException("Path '%s' does not start with root '%s'".formatted(path, root));
-
-		return path.substring(root.length());
 	}
 
 	private void reload(ResourceManager manager)
@@ -138,8 +135,13 @@ public class BinaryCodecDataLoader<T> implements ResourceReloader
 					throw new IOException("Failed to decode %s definition '%s' from JSON: %s".formatted(id, key, e.getMessage()));
 				}
 
+				var path = PathUtil.makeRelative(key.getPath(), folderName);
+
+				if (removeExtension)
+					path = FilenameUtils.removeExtension(path);
+
 				definitions.put(
-						key.withPath(makeRelative(key.getPath(), folderName)),
+						key.withPath(path),
 						parseResult
 				);
 

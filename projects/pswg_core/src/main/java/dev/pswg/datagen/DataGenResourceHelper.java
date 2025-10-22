@@ -3,10 +3,7 @@ package dev.pswg.datagen;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.fabricmc.fabric.impl.resource.v1.SetupMarkerResourceReloader;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.resource.ReloadableResourceManagerImpl;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.resource.SynchronousResourceReloader;
+import net.minecraft.resource.*;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.util.Unit;
 import net.minecraft.util.Util;
@@ -26,7 +23,7 @@ public final class DataGenResourceHelper
 	 * @param reloaders The reloaders to load
 	 * @param type      The type of resources to load
 	 */
-	public static void loadResources(ResourceType type, SynchronousResourceReloader... reloaders)
+	public static void loadResources(ResourceType type, ResourceReloader... reloaders)
 	{
 		try (var resourceManager = new ReloadableResourceManagerImpl(type))
 		{
