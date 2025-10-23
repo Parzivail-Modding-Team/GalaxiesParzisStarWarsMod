@@ -10,6 +10,7 @@
 		"attributes.MouseMixin",
 		"events.DrawContextMixin",
 		"events.InGameHudMixin",
+		"handbobbing.HeldItemRendererMixin",
 		"leftuse.MinecraftClientMixin",
 		"models.BakedSimpleModelMixin",
 		"recoil.ClientPlayerEntityMixin"

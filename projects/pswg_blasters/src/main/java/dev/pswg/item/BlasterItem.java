@@ -24,6 +24,8 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -46,12 +48,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.function.UnaryOperator;
 
-public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler
+public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler, IHandAnimationAware
 {
 	/**
 	 * The reason, if any, for a blaster to be cooling.
@@ -468,6 +471,15 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			Registries.DATA_COMPONENT_TYPE,
 			Blasters.id("id"),
 			ComponentType.<Identifier>builder().codec(Identifier.CODEC).packetCodec(Identifier.PACKET_CODEC).build()
+	);
+
+	/**
+	 * The component that contains the serial number of the blaster
+	 */
+	public static final ComponentType<Long> SERIAL = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("serial"),
+			ComponentType.<Long>builder().codec(Codec.LONG).packetCodec(PacketCodecs.LONG).build()
 	);
 
 	/**
@@ -909,6 +921,26 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	@Override
+	public void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, @Nullable EquipmentSlot slot)
+	{
+		// If the stack does not have a serial number, assign one
+		if (stack.get(SERIAL) == null)
+			stack.set(SERIAL, world.getRandom().nextLong());
+	}
+
+	@Override
+	public Optional<Boolean> shouldSkipHandAnimationOnSwap(ItemStack from, ItemStack to)
+	{
+		var serialA = from.get(SERIAL);
+		var serialB = to.get(SERIAL);
+
+		if (serialA == null || serialB == null)
+			return Optional.empty();
+
+		return Optional.of(serialA == (long)serialB);
+	}
+
+	@Override
 	public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user)
 	{
 		return false;
@@ -1037,7 +1069,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				}
 
 				itemStack.set(STATE, state.withCoolingMode(CoolingMode.FAILED_OVERCHARGE));
-				return ActionResult.SUCCESS;
+				return ActionResult.CONSUME;
 			}
 			else if (bypass.get() == CoolingBypass.PRIMARY)
 			{
@@ -1063,7 +1095,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						state.withLastTotalHeat(0)
 						     .withCooling(CoolingMode.PASSIVE, timestamp)
 				);
-				return ActionResult.SUCCESS;
+				return ActionResult.CONSUME;
 			}
 			else if (bypass.get() == CoolingBypass.SECONDARY)
 			{
@@ -1092,7 +1124,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						     .withOverchargeStart(timestamp)
 						     .withCooling(CoolingMode.PASSIVE, timestamp)
 				);
-				return ActionResult.SUCCESS;
+				return ActionResult.CONSUME;
 			}
 		}
 
@@ -1161,7 +1193,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		itemStack.set(STATE, state);
 
-		return ActionResult.SUCCESS;
+		return ActionResult.CONSUME;
 	}
 
 	@Override

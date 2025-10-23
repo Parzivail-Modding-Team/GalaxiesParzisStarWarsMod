@@ -145,8 +145,6 @@ public final class GalaxiesEntityLeftClickClientManager
 				client.player.swingHand(hand);
 			}
 
-			// TODO: wanted?
-			client.gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
 			return;
 		}
 	}
