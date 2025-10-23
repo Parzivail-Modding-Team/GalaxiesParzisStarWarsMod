@@ -1,7 +1,5 @@
 package dev.pswg.datagen;
 
-import com.google.common.hash.Hashing;
-import com.google.common.hash.HashingOutputStream;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
@@ -16,8 +14,6 @@ import dev.pswg.item.BlasterItem;
 import dev.pswg.rendering.models.GQuad;
 import dev.pswg.rendering.models.GVertex;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -31,19 +27,13 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
-import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.dynamic.Codecs;
-import org.apache.commons.io.FilenameUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +44,13 @@ import java.util.concurrent.CompletableFuture;
  */
 public class BlasterDataGenerator implements DataGeneratorEntrypoint
 {
+	/**
+	 * The intermediary model data exported from, e.g., BlockBench
+	 *
+	 * @param data     The model data
+	 * @param textures The texture definitions
+	 * @param display  The display definitions
+	 */
 	private record GqbIntermediary(
 			ModelData data,
 			JsonElement textures,
@@ -66,6 +63,14 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 				Codecs.JSON_ELEMENT.fieldOf("display").forGetter(GqbIntermediary::display)
 		).apply(instance, GqbIntermediary::new));
 
+		/**
+		 * The actual model data
+		 *
+		 * @param vertices  The vertex positions
+		 * @param normals   The vertex normals
+		 * @param texCoords The vertex texture coordinates
+		 * @param faces     The face definitions
+		 */
 		private record ModelData(
 				List<Vector3f> vertices,
 				List<Vector3f> normals,
@@ -80,6 +85,12 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 					Codec.unboundedMap(Codec.STRING, ModelFace.CODEC.listOf()).fieldOf("faces").forGetter(ModelData::faces)
 			).apply(instance, ModelData::new));
 
+			/**
+			 * A model face definition
+			 *
+			 * @param material The name of the texture on this face
+			 * @param triplets The vertex pointer triplets
+			 */
 			private record ModelFace(
 					String material,
 					List<ModelFaceTriplet> triplets
@@ -90,6 +101,13 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 						ModelFaceTriplet.CODEC.listOf().fieldOf("triplets").forGetter(ModelFace::triplets)
 				).apply(instance, ModelFace::new));
 
+				/**
+				 * A pointer to a position, texture coordinate, and normal
+				 *
+				 * @param p The 1-based position index
+				 * @param t The 1-based texture coordinate index
+				 * @param n The 1-based normal index
+				 */
 				private record ModelFaceTriplet(int p, int t, int n)
 				{
 					public static final Codec<ModelFaceTriplet> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -99,6 +117,84 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 					).apply(instance, ModelFaceTriplet::new));
 				}
 			}
+		}
+
+		/**
+		 * Creates a geometry from this intermediary model
+		 *
+		 * @return The created geometry
+		 */
+		private GalaxiesModelBakery.GQuadGeometry createGeometry()
+		{
+			var color = -1;
+			var overlay = OverlayTexture.DEFAULT_UV;
+			var light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
+
+			var quads = new ArrayList<GQuad>();
+
+			for (var obj : data().faces().values())
+			{
+				for (var face : obj)
+				{
+					quads.add(new GQuad(
+							getVertex(face, 0, color, overlay, light),
+							getVertex(face, 1, color, overlay, light),
+							getVertex(face, 2, color, overlay, light),
+							getVertex(face, 3, color, overlay, light),
+							face.material
+					));
+				}
+			}
+
+			return new GalaxiesModelBakery.GQuadGeometry(quads);
+		}
+
+		/**
+		 * Gets the face vertex at the given index, applying the specified color, overlay, and light
+		 *
+		 * @param face    The face to retrieve an index from
+		 * @param i       The vertex index within the face, which will be clamped to the number of vertices present in the face
+		 * @param color   The color to apply
+		 * @param overlay The overlay to apply
+		 * @param light   The light to apply
+		 *
+		 * @return The face vertex at the given index
+		 */
+		private GVertex getVertex(GqbIntermediary.ModelData.ModelFace face, int i, int color, int overlay, int light)
+		{
+			// Repeat the last vertex to create a quad from triangles
+			var triplet = face.triplets.get(Math.min(i, face.triplets.size() - 1));
+
+			var pos = data().vertices().get(triplet.p - 1);
+			var texCoord = data().texCoords().get(triplet.t - 1);
+
+			return new GVertex(
+					new Vector3f(pos.x + 0.5f, pos.y, pos.z + 0.5f),
+					data().normals().get(triplet.n - 1),
+					new Vector2f(texCoord.x, 1 - texCoord.y),
+					color, overlay, light
+			);
+		}
+
+		/**
+		 * Creates a vanilla JSON model definition from this intermediary model,
+		 * containing only textures and display properties.
+		 *
+		 * @return A JsonElement containing the vanilla model data
+		 */
+		private JsonElement createModelDef()
+		{
+			var obj = new JsonObject();
+
+			var tex = textures().getAsJsonObject();
+
+			if (!tex.has("particle"))
+				tex.addProperty("particle", "pswg:block/empty");
+
+			obj.add("textures", tex);
+			obj.add("display", display());
+
+			return obj;
 		}
 	}
 
@@ -146,8 +242,6 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
-			//			register(itemModelGenerator, Blasters.BLASTER_ITEM, Galaxies.id("item/wizard"), Models.GENERATED);
-
 			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
 		}
 	}
@@ -155,8 +249,6 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	/**
 	 * The GQD compiled model generator. All models should be compiled through
 	 * this generator.
-	 *
-	 * TODO: docs
 	 */
 	private static class GqdCompiledModelGenerator implements DataProvider
 	{
@@ -183,115 +275,30 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
 		}
 
+		/**
+		 * Compile the given GQB intermediary model
+		 *
+		 * @param writer The writer to add the generated data to
+		 * @param entry  The entry to compile
+		 *
+		 * @return A future that completes when the data is written
+		 */
 		private CompletableFuture<?> compile(DataWriter writer, Map.Entry<Identifier, GqbIntermediary> entry)
 		{
-			var nonDatagenId = entry.getKey().withPath("models/" + getNonDatagenPath(entry.getKey().getPath()));
+			var nonDatagenId = entry.getKey().withPath("models/" + GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath()));
 			var jsonOutputPath = resolver.resolve(nonDatagenId, "json");
 			var quadsOutputPath = resolver.resolve(nonDatagenId, "gqb");
 
 			return CompletableFuture.allOf(
-					writeToPath(writer, quadsOutputPath, GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC, createGeometry(entry.getValue())),
-					DataProvider.writeToPath(writer, createModelDef(entry.getValue()), jsonOutputPath)
+					GalaxiesDataProvider.writeToPath(writer, quadsOutputPath, GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC, entry.getValue().createGeometry()),
+					DataProvider.writeToPath(writer, entry.getValue().createModelDef(), jsonOutputPath)
 			);
-		}
-
-		private JsonElement createModelDef(GqbIntermediary value)
-		{
-			var obj = new JsonObject();
-
-			var tex = value.textures().getAsJsonObject();
-
-			if (!tex.has("particle"))
-				tex.addProperty("particle", "pswg:block/empty");
-
-			obj.add("textures", tex);
-			obj.add("display", value.display());
-
-			return obj;
-		}
-
-		private GalaxiesModelBakery.GQuadGeometry createGeometry(GqbIntermediary value)
-		{
-			var color = -1;
-			var overlay = OverlayTexture.DEFAULT_UV;
-			var light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
-
-			var quads = new ArrayList<GQuad>();
-
-			for (var obj : value.data().faces().values())
-			{
-				for (var face : obj)
-				{
-					quads.add(new GQuad(
-							getVertex(value, face, 0, color, overlay, light),
-							getVertex(value, face, 1, color, overlay, light),
-							getVertex(value, face, 2, color, overlay, light),
-							getVertex(value, face, 3, color, overlay, light),
-							face.material
-					));
-				}
-			}
-
-			return new GalaxiesModelBakery.GQuadGeometry(quads);
-		}
-
-		private static GVertex getVertex(GqbIntermediary value, GqbIntermediary.ModelData.ModelFace face, int i, int color, int overlay, int light)
-		{
-			// Repeat the last vertex to create a quad from triangles
-			var triplet = face.triplets.get(Math.min(i, face.triplets.size() - 1));
-
-			var pos = value.data().vertices().get(triplet.p - 1);
-			var texCoord = value.data().texCoords().get(triplet.t - 1);
-
-			return new GVertex(
-					new Vector3f(pos.x + 0.5f, pos.y, pos.z + 0.5f),
-					value.data().normals().get(triplet.n - 1),
-					new Vector2f(texCoord.x, 1 - texCoord.y),
-					color, overlay, light
-			);
-		}
-
-		private String getNonDatagenPath(String filename)
-		{
-			String datagenPath = "/datagen/";
-
-			var path = FilenameUtils.getPath(filename);
-
-			if (path.endsWith(datagenPath))
-				path = path.substring(0, path.length() - datagenPath.length() + 1);
-
-			path += FilenameUtils.getBaseName(filename);
-
-			return path;
 		}
 
 		@Override
 		public String getName()
 		{
 			return "GQD Compiled Models";
-		}
-
-		static <T> CompletableFuture<?> writeToPath(DataWriter writer, Path path, PacketCodec<ByteBuf, T> codec, T value)
-		{
-			return CompletableFuture.runAsync(() -> {
-				try
-				{
-					var byteArrayOutputStream = new ByteArrayOutputStream();
-					var hashingOutputStream = new HashingOutputStream(Hashing.sha1(), byteArrayOutputStream);
-
-					var buf = Unpooled.buffer();
-					codec.encode(buf, value);
-
-					buf.readBytes(hashingOutputStream, buf.readableBytes());
-
-					writer.write(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
-					System.out.println("Saved file to " + path);
-				}
-				catch (IOException ex)
-				{
-					LOGGER.error("Failed to save file to {}", path, ex);
-				}
-			}, Util.getMainWorkerExecutor().named("saveStable"));
 		}
 	}
 
