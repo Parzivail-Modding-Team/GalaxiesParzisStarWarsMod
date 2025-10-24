@@ -13,7 +13,8 @@
 		"handbobbing.HeldItemRendererMixin",
 		"leftuse.MinecraftClientMixin",
 		"models.BakedSimpleModelMixin",
-		"recoil.ClientPlayerEntityMixin"
+		"recoil.ClientPlayerEntityMixin",
+		"recoil.HeldItemRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
