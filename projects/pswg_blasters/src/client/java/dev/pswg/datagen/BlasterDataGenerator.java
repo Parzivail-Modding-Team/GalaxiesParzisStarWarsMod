@@ -11,6 +11,7 @@ import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.data.CodecDataLoader;
 import dev.pswg.data.IdentifierUtil;
 import dev.pswg.item.BlasterItem;
+import dev.pswg.item.HasAttachmentProperty;
 import dev.pswg.rendering.models.GQuad;
 import dev.pswg.rendering.models.GVertex;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
@@ -24,6 +25,7 @@ import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.ItemModels;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.item.model.EmptyItemModel;
 import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
@@ -242,7 +244,19 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
-			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
+//			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
+
+			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.composite(
+					ItemModels.basic(Blasters.id("item/blaster")),
+					ItemModels.condition(
+							new HasAttachmentProperty(
+									Blasters.id("barrel_slot"),
+									Blasters.id("e11/bipod")
+							),
+							ItemModels.basic(Identifier.ofVanilla("item/cookie")),
+							new EmptyItemModel.Unbaked()
+					)
+			));
 		}
 	}
 

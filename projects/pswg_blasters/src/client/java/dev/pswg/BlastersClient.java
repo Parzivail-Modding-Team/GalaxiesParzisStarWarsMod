@@ -7,6 +7,7 @@ import dev.pswg.events.ItemRenderEvents;
 import dev.pswg.hud.DefaultBlasterHudRenderer;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.item.BlasterItem;
+import dev.pswg.item.HasAttachmentProperty;
 import dev.pswg.item.ItemTooltipHelper;
 import dev.pswg.renderer.BlasterBoltEntityRenderer;
 import dev.pswg.rendering.Drawables;
@@ -19,6 +20,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.entity.EntityRendererFactories;
+import net.minecraft.client.render.item.property.bool.BooleanProperties;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -57,6 +59,8 @@ public class BlastersClient implements GalaxiesClientAddon
 
 		// Add the name of the blaster in the tool tip, with a fallback
 		ItemTooltipHelper.registerTooltip(Blasters.BLASTER_ITEM, BlastersClient::getTooltip);
+
+		BooleanProperties.ID_MAPPER.put(Blasters.id("has_attachment"), HasAttachmentProperty.CODEC);
 
 		// TODO: I think we can use this to generate config UIs
 		//

@@ -1,6 +1,24 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "pswg_blasters:item/blaster"
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "pswg_blasters:item/blaster"
+      },
+      {
+        "type": "minecraft:condition",
+        "attachmentId": "pswg_blasters:e11/bipod",
+        "attachmentSlot": "pswg_blasters:barrel_slot",
+        "on_false": {
+          "type": "minecraft:empty"
+        },
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/cookie"
+        },
+        "property": "pswg_blasters:has_attachment"
+      }
+    ]
   }
 }
