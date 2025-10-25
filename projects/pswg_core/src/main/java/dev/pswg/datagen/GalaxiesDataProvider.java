@@ -44,7 +44,6 @@ public final class GalaxiesDataProvider
 				buf.readBytes(hashingOutputStream, buf.readableBytes());
 
 				writer.write(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
-				System.out.println("Saved file to " + path);
 			}
 			catch (IOException ex)
 			{

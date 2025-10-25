@@ -12,6 +12,7 @@ loom {
 }
 
 fabricApi {
+	modId = "pswg_core"
 	configureDataGeneration {
 		client = true
 	}

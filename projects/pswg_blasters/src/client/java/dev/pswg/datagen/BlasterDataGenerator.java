@@ -247,7 +247,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 //			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
 
 			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.composite(
-					ItemModels.basic(Blasters.id("item/blaster")),
+					ItemModels.basic(Blasters.id("item/e11d")),
 					ItemModels.condition(
 							new HasAttachmentProperty(
 									Blasters.id("barrel_slot"),
@@ -278,6 +278,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		{
 			var completables = new ArrayList<CompletableFuture<?>>();
 
+			// TODO: split the mesh based on the attachments, but copy
+			//  the display attributes of the base model for each one
 			for (var entry : GQB_INTERMEDIARY_LOADER.getDefinitions().entrySet())
 			{
 				if (!entry.getKey().getNamespace().equals(Blasters.MODID))

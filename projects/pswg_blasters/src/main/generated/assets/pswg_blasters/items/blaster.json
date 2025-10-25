@@ -4,7 +4,7 @@
     "models": [
       {
         "type": "minecraft:model",
-        "model": "pswg_blasters:item/blaster"
+        "model": "pswg_blasters:item/e11d"
       },
       {
         "type": "minecraft:condition",
