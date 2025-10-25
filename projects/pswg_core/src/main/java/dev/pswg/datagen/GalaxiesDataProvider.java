@@ -13,6 +13,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -58,10 +59,11 @@ public final class GalaxiesDataProvider
 	 * that does not end with {@code /datagen/} and without an extension.
 	 *
 	 * @param filename The filename to process
+	 * @param baseName The base name of the file, or empty to use the filename's base name
 	 *
 	 * @return The new filename after the file has been processed
 	 */
-	public static String getNonDatagenPath(String filename)
+	public static String getNonDatagenPath(String filename, Optional<String> baseName)
 	{
 		String datagenPath = "/datagen/";
 
@@ -70,7 +72,7 @@ public final class GalaxiesDataProvider
 		if (path.endsWith(datagenPath))
 			path = path.substring(0, path.length() - datagenPath.length() + 1);
 
-		path += FilenameUtils.getBaseName(filename);
+		path += baseName.orElse(FilenameUtils.getBaseName(filename));
 
 		return path;
 	}

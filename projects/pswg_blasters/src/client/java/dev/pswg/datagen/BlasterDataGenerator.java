@@ -36,9 +36,7 @@ import net.minecraft.util.dynamic.Codecs;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -50,17 +48,20 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 * The intermediary model data exported from, e.g., BlockBench
 	 *
 	 * @param data     The model data
+	 * @param files    The face groups to be included in each file
 	 * @param textures The texture definitions
 	 * @param display  The display definitions
 	 */
 	private record GqbIntermediary(
 			ModelData data,
+			Optional<Map<String, List<String>>> files,
 			JsonElement textures,
 			JsonElement display
 	)
 	{
 		public static final Codec<GqbIntermediary> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				ModelData.CODEC.fieldOf("data").forGetter(GqbIntermediary::data),
+				Codec.unboundedMap(Codec.STRING, Codec.STRING.listOf()).optionalFieldOf("files").forGetter(GqbIntermediary::files),
 				Codecs.JSON_ELEMENT.fieldOf("textures").forGetter(GqbIntermediary::textures),
 				Codecs.JSON_ELEMENT.fieldOf("display").forGetter(GqbIntermediary::display)
 		).apply(instance, GqbIntermediary::new));
@@ -124,9 +125,11 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		/**
 		 * Creates a geometry from this intermediary model
 		 *
+		 * @param groups The face groups to be included in the geometry, or empty to include all groups
+		 *
 		 * @return The created geometry
 		 */
-		private GalaxiesModelBakery.GQuadGeometry createGeometry()
+		private GalaxiesModelBakery.GQuadGeometry createGeometry(Optional<HashSet<String>> groups)
 		{
 			var color = -1;
 			var overlay = OverlayTexture.DEFAULT_UV;
@@ -134,8 +137,12 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 
 			var quads = new ArrayList<GQuad>();
 
-			for (var obj : data().faces().values())
+			for (var entry : data().faces().entrySet())
 			{
+				if (groups.map(set -> !set.contains(entry.getKey())).orElse(false))
+					continue;
+
+				var obj = entry.getValue();
 				for (var face : obj)
 				{
 					quads.add(new GQuad(
@@ -244,7 +251,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
-//			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
+			//			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
 
 			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.composite(
 					ItemModels.basic(Blasters.id("item/e11d")),
@@ -253,7 +260,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 									Blasters.id("barrel_slot"),
 									Blasters.id("e11/bipod")
 							),
-							ItemModels.basic(Identifier.ofVanilla("item/cookie")),
+							ItemModels.basic(Blasters.id("item/e11d_flashlight")),
 							new EmptyItemModel.Unbaked()
 					)
 			));
@@ -278,8 +285,6 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		{
 			var completables = new ArrayList<CompletableFuture<?>>();
 
-			// TODO: split the mesh based on the attachments, but copy
-			//  the display attributes of the base model for each one
 			for (var entry : GQB_INTERMEDIARY_LOADER.getDefinitions().entrySet())
 			{
 				if (!entry.getKey().getNamespace().equals(Blasters.MODID))
@@ -301,14 +306,42 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		 */
 		private CompletableFuture<?> compile(DataWriter writer, Map.Entry<Identifier, GqbIntermediary> entry)
 		{
-			var nonDatagenId = entry.getKey().withPath("models/" + GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath()));
-			var jsonOutputPath = resolver.resolve(nonDatagenId, "json");
-			var quadsOutputPath = resolver.resolve(nonDatagenId, "gqb");
+			var completables = new ArrayList<CompletableFuture<?>>();
 
-			return CompletableFuture.allOf(
-					GalaxiesDataProvider.writeToPath(writer, quadsOutputPath, GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC, entry.getValue().createGeometry()),
-					DataProvider.writeToPath(writer, entry.getValue().createModelDef(), jsonOutputPath)
-			);
+			if (entry.getValue().files().isPresent())
+			{
+				// Split the geometry and model into multiple files
+				for (var fileEntry : entry.getValue().files().get().entrySet())
+				{
+					var nonDatagenId = entry.getKey().withPath("models/" + GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.of(fileEntry.getKey())));
+					var quadsOutputPath = resolver.resolve(nonDatagenId, "gqb");
+					var jsonOutputPath = resolver.resolve(nonDatagenId, "json");
+
+					completables.add(DataProvider.writeToPath(writer, entry.getValue().createModelDef(), jsonOutputPath));
+					completables.add(GalaxiesDataProvider.writeToPath(
+							writer,
+							quadsOutputPath,
+							GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC,
+							entry.getValue().createGeometry(Optional.of(new HashSet<>(fileEntry.getValue())))
+					));
+				}
+			}
+			else
+			{
+				var nonDatagenId = entry.getKey().withPath("models/" + GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.empty()));
+				var quadsOutputPath = resolver.resolve(nonDatagenId, "gqb");
+				var jsonOutputPath = resolver.resolve(nonDatagenId, "json");
+
+				completables.add(DataProvider.writeToPath(writer, entry.getValue().createModelDef(), jsonOutputPath));
+				completables.add(GalaxiesDataProvider.writeToPath(
+						writer,
+						quadsOutputPath,
+						GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC,
+						entry.getValue().createGeometry(Optional.empty())
+				));
+			}
+
+			return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
 		}
 
 		@Override

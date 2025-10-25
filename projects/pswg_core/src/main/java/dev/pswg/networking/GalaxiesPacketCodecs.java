@@ -3,6 +3,11 @@ package dev.pswg.networking;
 import dev.pswg.interaction.ClientPlayerAction;
 import dev.pswg.interaction.ServerPlayerAction;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -13,11 +18,14 @@ import net.minecraft.util.Identifier;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Defines packet codecs and related utilities for common data types
@@ -104,5 +112,54 @@ public final class GalaxiesPacketCodecs
 	public static <T extends Enum<T>> PacketCodec<RegistryByteBuf, T> forEnum(Class<T> clazz)
 	{
 		return PacketCodec.of(GalaxiesPacketCodecs::writeEnumConstant, GalaxiesPacketCodecs.readEnumConstant(clazz));
+	}
+
+	/**
+	 * Creates a packet codec that compresses and decompresses the given codec using GZip
+	 *
+	 * @param codec The codec to wrap
+	 *
+	 * @return A codec that compresses and decompresses the given codec
+	 */
+	public static <T> PacketCodec<ByteBuf, T> gzip(PacketCodec<ByteBuf, T> codec)
+	{
+		return new PacketCodec<>()
+		{
+			@Override
+			public T decode(ByteBuf buf)
+			{
+				var payloadSize = buf.readInt();
+				try (var stream = new ByteBufInputStream(buf); var gz = new GZIPInputStream(stream))
+				{
+					var unzippedBuf = Unpooled.wrappedBuffer(gz.readNBytes(payloadSize));
+					return codec.decode(unzippedBuf);
+				}
+				catch (Exception e)
+				{
+					throw new DecoderException("Failed to decompress value", e);
+				}
+			}
+
+			@Override
+			public void encode(ByteBuf buf, T value)
+			{
+				var payloadBuf = Unpooled.buffer();
+				codec.encode(payloadBuf, value);
+
+				var payloadSize = payloadBuf.writerIndex();
+				buf.writeInt(payloadSize);
+
+				try (var stream = new ByteBufOutputStream(buf); var gz = new GZIPOutputStream(stream))
+				{
+					var bytes = new byte[payloadSize];
+					payloadBuf.readBytes(bytes);
+					gz.write(bytes);
+				}
+				catch (Exception e)
+				{
+					throw new EncoderException("Failed to compress value", e);
+				}
+			}
+		};
 	}
 }

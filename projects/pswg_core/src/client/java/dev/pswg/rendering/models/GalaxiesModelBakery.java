@@ -2,6 +2,7 @@ package dev.pswg.rendering.models;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.pswg.GalaxiesClient;
+import dev.pswg.networking.GalaxiesPacketCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.*;
@@ -29,7 +30,7 @@ public final class GalaxiesModelBakery
 	{
 		private static final PacketCodec<ByteBuf, Collection<GQuad>> QUAD_COLLECTION_CODEC = PacketCodecs.collection(ArrayList::new, GQuad.PACKET_CODEC);
 
-		public static final PacketCodec<ByteBuf, GQuadGeometry> PACKET_CODEC = new PacketCodec<ByteBuf, GQuadGeometry>()
+		public static final PacketCodec<ByteBuf, GQuadGeometry> PACKET_CODEC = GalaxiesPacketCodecs.gzip(new PacketCodec<>()
 		{
 			@Override
 			public GQuadGeometry decode(ByteBuf buf)
@@ -42,7 +43,7 @@ public final class GalaxiesModelBakery
 			{
 				QUAD_COLLECTION_CODEC.encode(buf, value.quads());
 			}
-		};
+		});
 
 		@Override
 		public BakedGeometry bake(ModelTextures textures, Baker baker, ModelBakeSettings settings, SimpleModel model)
