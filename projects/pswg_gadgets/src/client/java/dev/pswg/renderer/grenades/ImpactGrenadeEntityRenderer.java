@@ -41,6 +41,7 @@ public class ImpactGrenadeEntityRenderer extends EntityRenderer<ImpactGrenadeEnt
 		this.model.setAngles(state);
 
 		queue.submitModel(this.model, state, matrices, RenderLayer.getEntityCutout(TEXTURE), state.light, OverlayTexture.DEFAULT_UV, state.outlineColor, null);
+		matrices.pop();
 		super.render(state, matrices, queue, cameraState);
 	}
 

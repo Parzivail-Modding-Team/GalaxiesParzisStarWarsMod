@@ -76,7 +76,7 @@ public class GasEntity extends Entity
 	{
 		var xList = view.getOptionalIntArray("xList").get();
 		var yList = view.getOptionalIntArray("yList").get();
-		var zList = view.getOptionalIntArray("ZList").get();
+		var zList = view.getOptionalIntArray("zList").get();
 		var conList = view.read("concentrationList", Codec.FLOAT.listOf());
 		int s = xList.length;
 		for (int i = 0; i < s; i++)
