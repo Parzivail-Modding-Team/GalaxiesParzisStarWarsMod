@@ -120,7 +120,7 @@ public class MixerScreenHandler extends ScreenHandler
 
 	public boolean wasReset()
 	{
-		return getMapX() == 256 && getMapY() == 256 && drinkEffects.isEmpty();
+		return getMapX() == 256 && getMapY() == 256 && drinkEffects.isEmpty() && getBellowProgress() == 0;
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class MixerScreenHandler extends ScreenHandler
 		{
 			case 0:
 			{
-				/// BELLOW
+				///  BELLOW
 				propertyDelegate.set(6, Math.min(getBellowProgress(), 4));
 				propertyDelegate.set(4, Math.max(getBellowProgress() - 2, 0));
 				return true;
