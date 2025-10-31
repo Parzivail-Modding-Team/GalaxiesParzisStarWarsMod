@@ -143,7 +143,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 130, backgroundY + 151, 188, 146, 11, 5, 256, 256, color);
 		}
 		/// CONFIRM DRINK BUTTON
-		if (!handler.drinkEffects.isEmpty())
+		if (!handler.drinkEffects.isEmpty() || handler.isOnEffectCell())
 		{
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 138, backgroundY + 53, 177, 83, 8, 8, 256, 256);
 			if (within(mouseX, mouseY, 138, 145, 53, 60))

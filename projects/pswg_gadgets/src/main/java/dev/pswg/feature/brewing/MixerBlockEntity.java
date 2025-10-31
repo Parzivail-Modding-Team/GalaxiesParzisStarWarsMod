@@ -160,7 +160,10 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 
 	public static void craftPotion(MixerBlockEntity mixer)
 	{
-		if (!mixer.drinkEffects.isEmpty())
+		if (BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell && mixer.drinkEffects.size() < 3)
+			mixer.drinkEffects.add(effectCell.statusEffect);
+
+		if ((!mixer.drinkEffects.isEmpty()))
 		{
 			ItemStack stack;
 			ItemStack outputStack = mixer.inventory.get(OUTPUT_SLOT_INDEX);
