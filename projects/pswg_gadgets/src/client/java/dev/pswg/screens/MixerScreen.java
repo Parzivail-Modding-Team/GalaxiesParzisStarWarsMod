@@ -151,7 +151,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		}
 
 		/// ADD EFFECT BUTTON
-		if (handler.isOnEffectCell() && handler.drinkEffects.size() < 3)
+		if (handler.canAddEffect() && handler.drinkEffects.size() < 3)
 		{
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 150, backgroundY + 53, 177, 99, 8, 8, 256, 256);
 			if (within(mouseX, mouseY, 150, 157, 53, 60))

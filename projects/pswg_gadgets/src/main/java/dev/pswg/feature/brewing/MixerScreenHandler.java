@@ -123,6 +123,19 @@ public class MixerScreenHandler extends ScreenHandler
 		return getMapX() == 256 && getMapY() == 256 && drinkEffects.isEmpty() && getBellowProgress() == 0;
 	}
 
+	public boolean canAddEffect()
+	{
+		if (BrewingMap.getCell(getMapX(), getMapY()) instanceof EffectCell effectCell)
+		{
+			StatusEffectInstance currentEffect = effectCell.statusEffect;
+			for (StatusEffectInstance effectInstance : drinkEffects)
+				if (effectInstance.getEffectType() == currentEffect.getEffectType())
+					return false;
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public boolean onButtonClick(PlayerEntity player, int id)
 	{

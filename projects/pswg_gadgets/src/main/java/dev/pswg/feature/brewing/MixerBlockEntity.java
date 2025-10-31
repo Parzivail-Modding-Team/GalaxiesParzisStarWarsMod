@@ -160,7 +160,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 
 	public static void craftPotion(MixerBlockEntity mixer)
 	{
-		if (BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell && mixer.drinkEffects.size() < 3)
+		if (BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell && mixer.drinkEffects.size() < 3 && mixer.drinkEffects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == effectCell.statusEffect.getEffectType()))
 			mixer.drinkEffects.add(effectCell.statusEffect);
 
 		if ((!mixer.drinkEffects.isEmpty()))
@@ -216,6 +216,9 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	{
 		if (mixer.drinkEffects.size() < 3 && BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell)
 		{
+			for (StatusEffectInstance statusEffect : mixer.drinkEffects)
+				if (effectCell.statusEffect.getEffectType() == statusEffect.getEffectType())
+					return;
 			mixer.drinkEffects.add(effectCell.statusEffect);
 		}
 		sendSyncPacket(mixer);
