@@ -165,7 +165,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		if (BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell && mixer.drinkEffects.size() < 3 && mixer.drinkEffects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == effectCell.statusEffect.getEffectType()))
 			mixer.drinkEffects.add(effectCell.statusEffect);
 
-		if ((!mixer.drinkEffects.isEmpty()))
+		if ((!mixer.drinkEffects.isEmpty() || !mixer.drinkColors.isEmpty()))
 		{
 			ItemStack stack;
 			ItemStack outputStack = mixer.inventory.get(OUTPUT_SLOT_INDEX);
