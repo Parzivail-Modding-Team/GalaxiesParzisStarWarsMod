@@ -36,6 +36,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -179,14 +180,22 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				else
 					stack = outputStack;
 			}
-			long iColor = 0;
+			int r = 0;
+			int g = 0;
+			int b = 0;
 			for (int i = 0; i < mixer.drinkColors.size(); i++)
 			{
-				iColor += mixer.drinkColors.get(i);
+				r += ColorHelper.getRed(mixer.drinkColors.get(i));
+				g += ColorHelper.getGreen(mixer.drinkColors.get(i));
+				b += ColorHelper.getBlue(mixer.drinkColors.get(i));
 				if (i == mixer.drinkColors.size() - 1)
-					iColor /= mixer.drinkColors.size();
+				{
+					r /= mixer.drinkColors.size();
+					g /= mixer.drinkColors.size();
+					b /= mixer.drinkColors.size();
+				}
 			}
-			Optional<Integer> color = iColor == 0 ? Optional.empty() : Optional.of((int)iColor);
+			Optional<Integer> color = (r == 0 && b == 0 && g == 0) ? Optional.empty() : Optional.of(ColorHelper.getArgb(r, g, b));
 			stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Optional.empty(), color, mixer.drinkEffects.stream().toList(), Optional.empty()));
 			mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
 
