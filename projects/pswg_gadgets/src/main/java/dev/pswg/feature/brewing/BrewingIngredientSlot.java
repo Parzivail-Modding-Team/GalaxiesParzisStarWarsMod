@@ -1,8 +1,8 @@
 package dev.pswg.feature.brewing;
 
-import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
@@ -16,6 +16,6 @@ public class BrewingIngredientSlot extends Slot
 	@Override
 	public boolean canInsert(ItemStack stack)
 	{
-		return stack.contains(GadgetsItems.Components.BREWING_PATH);
+		return stack.contains(GadgetsItems.Components.BREWING_PATH) || stack.getItem() instanceof DyeItem;
 	}
 }

@@ -88,7 +88,10 @@ public class GadgetsClient implements GalaxiesClientAddon
 
 		ClientPlayNetworking.registerGlobalReceiver(MixerSyncS2CPayload.ID, (mixerSyncS2CPayload, context) -> {
 			if (context.player().currentScreenHandler instanceof MixerScreenHandler mixerScreenHandler)
+			{
 				mixerScreenHandler.drinkEffects = mixerSyncS2CPayload.drinkEffects();
+				mixerScreenHandler.drinkColors = mixerSyncS2CPayload.drinkColors();
+			}
 		});
 
 
