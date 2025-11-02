@@ -12,6 +12,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
+import net.minecraft.component.type.FoodComponents;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -33,7 +35,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
@@ -71,6 +72,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	public Stack<Pair<Float, Float>> path = new Stack<>();
 	public ArrayList<StatusEffectInstance> drinkEffects = new ArrayList<>();
 	public ArrayList<Integer> drinkColors = new ArrayList<>();
+	public ArrayList<ItemStack> drinkFoods = new ArrayList<>();
 
 	protected final PropertyDelegate propertyDelegate;
 
@@ -157,6 +159,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			mixer.path.clear();
 			mixer.drinkEffects.clear();
 			mixer.drinkColors.clear();
+			mixer.drinkFoods.clear();
 			sendSyncPacket(mixer);
 		}
 	}
@@ -188,15 +191,24 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				r += ColorHelper.getRed(mixer.drinkColors.get(i));
 				g += ColorHelper.getGreen(mixer.drinkColors.get(i));
 				b += ColorHelper.getBlue(mixer.drinkColors.get(i));
-				if (i == mixer.drinkColors.size() - 1)
-				{
-					r /= mixer.drinkColors.size();
-					g /= mixer.drinkColors.size();
-					b /= mixer.drinkColors.size();
-				}
 			}
+			r /= Math.max(1, mixer.drinkColors.size());
+			g /= Math.max(1, mixer.drinkColors.size());
+			b /= Math.max(1, mixer.drinkColors.size());
+			float s = 0;
+			int n = 0;
+			for (int i = 0; i < mixer.drinkFoods.size(); i++)
+			{
+				var foodComponent = mixer.drinkFoods.get(i).getOrDefault(DataComponentTypes.FOOD, new FoodComponent(0, 0, false));
+				s += foodComponent.saturation();
+				n += foodComponent.nutrition();
+			}
+			s /= 1.5f;
+			n = (int)((float)n / 1.5f);
+
 			Optional<Integer> color = (r == 0 && b == 0 && g == 0) ? Optional.empty() : Optional.of(ColorHelper.getArgb(r, g, b));
 			stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Optional.empty(), color, mixer.drinkEffects.stream().toList(), Optional.empty()));
+			stack.set(DataComponentTypes.FOOD, new FoodComponent(n, s, false));
 			mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
 
 			resetMixer(mixer);
@@ -223,7 +235,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 
 	public static void sendSyncPacket(MixerBlockEntity mixer)
 	{
-		var payload = new MixerSyncS2CPayload(mixer.drinkEffects, mixer.drinkColors);
+		var payload = new MixerSyncS2CPayload(mixer.drinkEffects, mixer.drinkColors, mixer.drinkFoods);
 		if (!mixer.world.isClient())
 		{
 			for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld)mixer.world, mixer.pos.toCenterPos(), 6))
@@ -282,6 +294,12 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.getItem() instanceof DyeItem dyeItem && mixer.drinkColors.size() < 3)
 			{
 				mixer.drinkColors.add(dyeItem.getColor().getEntityColor());
+				inputStack.decrement(1);
+				sendSyncPacket(mixer);
+			}
+			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.isIn(GadgetsItems.Tags.MIXER_FOOD_TAG) && mixer.drinkFoods.size() < 3)
+			{
+				mixer.drinkFoods.add(inputStack.copyWithCount(1));
 				inputStack.decrement(1);
 				sendSyncPacket(mixer);
 			}
@@ -420,7 +438,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			@Override
 			public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player)
 			{
-				return new MixerScreenHandler(syncId, playerInventory, mixer, propertyDelegate, pos, drinkEffects, drinkColors);
+				return new MixerScreenHandler(syncId, playerInventory, mixer, propertyDelegate, pos, drinkEffects, drinkColors, drinkFoods);
 			}
 
 			@Override
@@ -432,7 +450,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			@Override
 			public Object getScreenOpeningData(ServerPlayerEntity player)
 			{
-				return new MixerSyncS2CPayload(drinkEffects, drinkColors);
+				return new MixerSyncS2CPayload(drinkEffects, drinkColors, drinkFoods);
 			}
 		};
 		if (playerInventory.player instanceof ServerPlayerEntity serverPlayer)

@@ -91,6 +91,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 			{
 				mixerScreenHandler.drinkEffects = mixerSyncS2CPayload.drinkEffects();
 				mixerScreenHandler.drinkColors = mixerSyncS2CPayload.drinkColors();
+				mixerScreenHandler.drinkFoods = mixerSyncS2CPayload.drinkFoods();
 			}
 		});
 

@@ -9,5 +9,6 @@ public enum DGItemTag
 	Sand,
 	Grenade,
 	Mine,
-	DrinkContainer
+	DrinkContainer,
+	MixableFood
 }

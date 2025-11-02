@@ -47,6 +47,7 @@ public class GadgetsItems
 		public static final TagKey<Item> MINES_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("mines"));
 		public static final TagKey<Item> SCRAP_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("scrap"));
 		public static final TagKey<Item> DRINK_CONTAINER_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("drink_container"));
+		public static final TagKey<Item> MIXER_FOOD_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("mixable_food"));
 		public static final TagKey<Item> BESKAR_TOOL_MATERIALS_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("beskar_tool_materials"));
 		public static final TagKey<Item> DURASTEEL_TOOL_MATERIALS_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("durasteel_tool_materials"));
 		public static final TagKey<Item> TITANIUM_TOOL_MATERIALS_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("titanium_tool_materials"));
@@ -429,11 +430,11 @@ public class GadgetsItems
 	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerDefaultPotionItem("plastic_bottle_" + i + "_filled", new Item.Settings().useRemainder(PLASTIC_BOTTLES.get(i - 1))));
 	///  FOOD
 
-	@DataGenItem(itemGroup = DataGenItemGroup.Food)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.MixableFood)
 	public static final Item JOGAN_FRUIT = registerSimpleItem("jogan_fruit", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item CHASUKA_LEAF = registerSimpleItem("chasuka_leaf", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()).component(Components.BREWING_PATH, new ArrayList<>(List.of(Pair.of((float)Math.PI * 7 / 12f, 25f), Pair.of((float)Math.PI * 3 / 4f, 20f), Pair.of((float)Math.PI * 11 / 12f, 15f)))));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.MixableFood)
 	public static final Item MEILOORUN = registerSimpleItem("meiloorun", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
@@ -483,7 +484,7 @@ public class GadgetsItems
 	public static final Item BOTTLED_WATER = registerSimpleItem("bottled_water", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).component(DataComponentTypes.CONSUMABLE, Components.WATER).food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
 
 	// TODO: consider turning this into a Fluid
-	@DataGenItem(itemGroup = DataGenItemGroup.Food)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.MixableFood)
 	public static final Item BLUE_MILK = registerSimpleItem("blue_milk", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item BLUE_MILK_GLASS = registerSimpleItem("blue_milk_glass", new Item.Settings().component(DataComponentTypes.CONSUMABLE, ConsumableComponents.DRINK).food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
@@ -499,9 +500,9 @@ public class GadgetsItems
 
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item AHRISA_BOWL = registerSimpleItem("ahrisa_bowl", new Item.Settings().food(new FoodComponent.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.MixableFood)
 	public static final Item BLACK_MELON = registerSimpleItem("black_melon", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.MixableFood)
 	public static final Item DESERT_PLUMS = registerSimpleItem("desert_plums", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item DRIED_POONTEN_GRASS = registerSimpleItem("dried_poonten_grass_bushel", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
@@ -509,9 +510,9 @@ public class GadgetsItems
 	public static final Item HAROUN_BREAD = registerSimpleItem("haroun_bread", new Item.Settings().food(new FoodComponent.Builder().nutrition(5).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item HKAK_BEAN = registerSimpleItem("hkak_bean", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()).component(Components.BREWING_PATH, new ArrayList<>(List.of(Pair.of((float)Math.PI * 11 / 6f, 36f), Pair.of((float)Math.PI * 19 / 12f, 50f), Pair.of((float)Math.PI * 5 / 4f, 50f)))));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.MixableFood)
 	public static final Item PALLIE_FRUIT = registerSimpleItem("pallie_fruit", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.MixableFood)
 	public static final Item PIKA_FRUIT = registerSimpleItem("pika_fruit", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item TUBER = registerSimpleItem("tuber", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
@@ -541,7 +542,7 @@ public class GadgetsItems
 	public static final Item VAPORATOR_MUSHROOM = registerSimpleItem("vaporator_mushroom", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item WORRT_EGG = registerSimpleItem("worrt_egg", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.Food)
+	@DataGenItem(itemGroup = DataGenItemGroup.Food, itemTags = DGItemTag.MixableFood)
 	public static final Item DEB_DEB = registerSimpleItem("deb_deb", new Item.Settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.Food)
 	public static final Item EOPIE_LOIN = registerSimpleItem("eopie_loin", new Item.Settings().food(new FoodComponent.Builder().nutrition(3).saturationModifier(0.3F).build()));

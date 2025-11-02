@@ -149,6 +149,13 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 			if (i == 2)
 				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 42, backgroundY + 151, 188, 146, 11, 5, 256, 256, handler.getDyeColor(i));
 		}
+		/// FOOD BAR
+		for (int i = 0; i < handler.drinkFoods.size(); i++)
+		{
+			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 53 + i * 11, backgroundY + 150, 177, 145, 11, 5, 256, 256, handler.getFoodColor(i));
+			if (i == 2)
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 86, backgroundY + 151, 188, 146, 11, 5, 256, 256, handler.getFoodColor(i));
+		}
 		/// CONFIRM DRINK BUTTON
 		if (!handler.drinkEffects.isEmpty() || handler.isOnEffectCell() || !handler.drinkColors.isEmpty())
 		{

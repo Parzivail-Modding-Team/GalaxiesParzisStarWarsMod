@@ -6,6 +6,7 @@ import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.feature.brewing.BrewingMap;
+import dev.pswg.feature.brewing.MixerFoodColors;
 import dev.pswg.packet.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -69,6 +70,8 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsStructureTypes.register();
 		GadgetsStructureKeys.register();
 		GadgetsLootTables.register();
+
+		MixerFoodColors.init();
 
 		PayloadTypeRegistry.playS2C().register(MixerSyncS2CPayload.ID, MixerSyncS2CPayload.CODEC);
 

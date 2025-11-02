@@ -476,10 +476,18 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.Grenade, this);
 			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.Mine, this);
 			addItemsToTag(GadgetsItems.Tags.DRINK_CONTAINER_TAG, DGItemTag.DrinkContainer, this);
+			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DGItemTag.MixableFood, this);
 			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
 
 			getTagBuilder(GadgetsItems.Tags.DRINK_CONTAINER_TAG)
 					.add(itemId(Items.GLASS_BOTTLE));
+			getTagBuilder(GadgetsItems.Tags.MIXER_FOOD_TAG)
+					.add(itemId(Items.APPLE))
+					.add(itemId(Items.BEETROOT))
+					.add(itemId(Items.CARROT))
+					.add(itemId(Items.GLOW_BERRIES))
+					.add(itemId(Items.MELON))
+					.add(itemId(Items.SWEET_BERRIES));
 
 			getTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
 					.add(itemId(GadgetsItems.BESKAR_INGOT));
