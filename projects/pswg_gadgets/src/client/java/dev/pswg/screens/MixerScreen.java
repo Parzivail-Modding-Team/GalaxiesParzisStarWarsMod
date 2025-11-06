@@ -210,7 +210,6 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 
 			if (Math.abs(handler.getMapX() - x) < 63 + (64 - Math.min(handler.getMapX(), 64)) && Math.abs(handler.getMapY() - y) < 63 + (64 - Math.min(handler.getMapY(), 64)))
 			{
-				//Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
 
 				if (x1 < x2)
 				{
@@ -226,18 +225,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 					y2 = tmp;
 				}
 
-				Tessellator tessellator = Tessellator.getInstance();
-				BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-
 				Drawables.fill(context, RenderPipelines.GUI, x1, y1, x2, y2, 0, Colors.WHITE);
-				//bufferBuilder.vertex(matrix4f, x1, y1, 0).color(255, 255, 255, 255);
-				//bufferBuilder.vertex(matrix4f, x1, y2, 0).color(255, 255, 255, 255);
-				//bufferBuilder.vertex(matrix4f, x2, y2, 0).color(255, 255, 255, 255);
-				//bufferBuilder.vertex(matrix4f, x2, y1, 0).color(255, 255, 255, 255);
-
-				// TODO: DO I NEED TO DO THIS?
-				//RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-				//BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 			}
 		}
 		var pair = new Pair<>((int)handler.getMapX(), (int)handler.getMapY());

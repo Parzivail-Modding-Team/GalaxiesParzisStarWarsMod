@@ -270,10 +270,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			if (mixer.litTimeRemaining > 0)
 			{
 				if (mixer.bellowBacklog == 0)
-				{
-
 					mixer.bellowProgress = Math.min(mixer.bellowProgress + 5, MAX_BELLOW_PROGRESS);
-				}
 			}
 			else
 				mixer.bellowProgress = Math.max(mixer.bellowProgress - 2, 0);
@@ -323,11 +320,6 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 					craftPotion(mixer);
 					spawnFailParticles(world, pos);
 				}
-			}
-			if (cell instanceof EffectCell effectCell)
-			{
-				//if (mixer.bellowProgress >= MAX_BELLOW_PROGRESS - 8)
-				//	craftPotion(mixer, effectCell.statusEffect);
 			}
 			mixer.dangerProgress = Math.max(0, mixer.dangerProgress - 1);
 			if (!mixer.path.empty() && mixer.bellowBacklog > 0 && mixer.bellowProgress > 5)
