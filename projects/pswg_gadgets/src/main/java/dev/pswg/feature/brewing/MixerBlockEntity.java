@@ -13,7 +13,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
-import net.minecraft.component.type.FoodComponents;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.effect.StatusEffectInstance;

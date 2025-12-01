@@ -27,6 +27,8 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.client.render.item.tint.TintSourceTypes;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.util.Pair;
 
 /**
  * The main entrypoint for PSWG client-side gadget features
@@ -94,6 +96,21 @@ public class GadgetsClient implements GalaxiesClientAddon
 				mixerScreenHandler.drinkFoods = mixerSyncS2CPayload.drinkFoods();
 			}
 		});
+
+		MixerScreen.ICON_MAP.put(StatusEffects.ABSORPTION, new Pair<>(126, 127));
+		MixerScreen.ICON_MAP.put(StatusEffects.DOLPHINS_GRACE, new Pair<>(350, 161));
+		MixerScreen.ICON_MAP.put(StatusEffects.FIRE_RESISTANCE, new Pair<>(336, 33));
+		MixerScreen.ICON_MAP.put(StatusEffects.HASTE, new Pair<>(190, 447));
+		MixerScreen.ICON_MAP.put(StatusEffects.HEALTH_BOOST, new Pair<>(46, 225));
+		MixerScreen.ICON_MAP.put(StatusEffects.INVISIBILITY, new Pair<>(64, 384));
+		MixerScreen.ICON_MAP.put(StatusEffects.INSTANT_HEALTH, new Pair<>(127, 244));
+		MixerScreen.ICON_MAP.put(StatusEffects.JUMP_BOOST, new Pair<>(336, 400));
+		MixerScreen.ICON_MAP.put(StatusEffects.LUCK, new Pair<>(143, 384));
+		MixerScreen.ICON_MAP.put(StatusEffects.NIGHT_VISION, new Pair<>(95, 324));
+		MixerScreen.ICON_MAP.put(StatusEffects.REGENERATION, new Pair<>(31, 65));
+		MixerScreen.ICON_MAP.put(StatusEffects.RESISTANCE, new Pair<>(224, 65));
+		MixerScreen.ICON_MAP.put(StatusEffects.SPEED, new Pair<>(382, 273));
+		MixerScreen.ICON_MAP.put(StatusEffects.STRENGTH, new Pair<>(448, 448));
 
 
 		Gadgets.LOGGER.info("Client module initialized");

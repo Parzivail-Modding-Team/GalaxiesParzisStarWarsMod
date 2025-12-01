@@ -8,6 +8,8 @@ import dev.pswg.rendering.Drawables;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gui.Click;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Colors;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.client.MinecraftClient;
@@ -24,6 +26,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MixerScreen extends HandledScreen<MixerScreenHandler>
@@ -31,6 +34,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 	private static final Identifier TEXTURE = Gadgets.id("textures/gui/container/mixer.png");
 	private static final Identifier MAP_TEXTURE = Gadgets.id("textures/gui/misc/brewing_map.png");
 	private List<Pair<Integer, Integer>> previousMousePosition = new ArrayList<>();
+	public static HashMap<RegistryEntry<StatusEffect>, Pair<Integer, Integer>> ICON_MAP = new HashMap<>();
 
 	public MixerScreen(MixerScreenHandler handler, PlayerInventory inventory, Text title)
 	{
@@ -138,6 +142,8 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		{
 			int color = ColorHelper.fullAlpha(handler.getEffectColor(i));
 			color = ColorHelper.getArgb(ColorHelper.getRed(color), ColorHelper.getGreen(color), ColorHelper.getBlue(color));
+			if (i == 0)
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 96, backgroundY + 151, 176, 146, 11, 5, 256, 256, color);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 97 + i * 11, backgroundY + 150, 177, 145, 11, 5, 256, 256, color);
 			if (i == 2)
 				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 130, backgroundY + 151, 188, 146, 11, 5, 256, 256, color);
@@ -145,6 +151,8 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		/// COLOR BAR
 		for (int i = 0; i < handler.drinkColors.size(); i++)
 		{
+			if (i == 0)
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 8, backgroundY + 151, 176, 146, 11, 5, 256, 256, handler.getDyeColor(i));
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 9 + i * 11, backgroundY + 150, 177, 145, 11, 5, 256, 256, handler.getDyeColor(i));
 			if (i == 2)
 				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 42, backgroundY + 151, 188, 146, 11, 5, 256, 256, handler.getDyeColor(i));
@@ -152,6 +160,8 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 		/// FOOD BAR
 		for (int i = 0; i < handler.drinkFoods.size(); i++)
 		{
+			if (i == 0)
+				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 52, backgroundY + 151, 176, 146, 11, 5, 256, 256, handler.getFoodColor(i));
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 53 + i * 11, backgroundY + 150, 177, 145, 11, 5, 256, 256, handler.getFoodColor(i));
 			if (i == 2)
 				context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX + 86, backgroundY + 151, 188, 146, 11, 5, 256, 256, handler.getFoodColor(i));
@@ -210,8 +220,6 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 
 			if (Math.abs(handler.getMapX() - x) < 63 + (64 - Math.min(handler.getMapX(), 64)) && Math.abs(handler.getMapY() - y) < 63 + (64 - Math.min(handler.getMapY(), 64)))
 			{
-				//Matrix4f matrix4f = context.getMatrices().peek().getPositionMatrix();
-
 				if (x1 < x2)
 				{
 					float tmp = x1;
@@ -225,19 +233,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 					y1 = y2;
 					y2 = tmp;
 				}
-
-				Tessellator tessellator = Tessellator.getInstance();
-				BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-
 				Drawables.fill(context, RenderPipelines.GUI, x1, y1, x2, y2, 0, Colors.WHITE);
-				//bufferBuilder.vertex(matrix4f, x1, y1, 0).color(255, 255, 255, 255);
-				//bufferBuilder.vertex(matrix4f, x1, y2, 0).color(255, 255, 255, 255);
-				//bufferBuilder.vertex(matrix4f, x2, y2, 0).color(255, 255, 255, 255);
-				//bufferBuilder.vertex(matrix4f, x2, y1, 0).color(255, 255, 255, 255);
-
-				// TODO: DO I NEED TO DO THIS?
-				//RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-				//BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 			}
 		}
 		var pair = new Pair<>((int)handler.getMapX(), (int)handler.getMapY());
