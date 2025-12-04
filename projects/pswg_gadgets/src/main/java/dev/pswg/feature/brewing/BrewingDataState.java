@@ -1,9 +1,6 @@
 package dev.pswg.feature.brewing;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.pswg.Gadgets;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.dynamic.Codecs;
@@ -13,7 +10,6 @@ import net.minecraft.world.World;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class BrewingDataState extends PersistentState
 {
@@ -35,19 +31,20 @@ public class BrewingDataState extends PersistentState
 			BrewingDataState::getPlayerData
 	);
 
-	private static final PersistentStateType<BrewingDataState> type = new PersistentStateType<BrewingDataState>(
+	private static final PersistentStateType<BrewingDataState> TYPE = new PersistentStateType<>(
 			"player_brewing_data",
 			BrewingDataState::new,
 			CODEC,
 			null
 	);
 
+	// TODO : Sync with the client when getting, since it often is also when an update happens
 	public static BrewingDataState getBrewingDataState(MinecraftServer server)
 	{
 		ServerWorld world = server.getWorld(World.OVERWORLD);
 		if (world == null)
 			return new BrewingDataState();
-		BrewingDataState brewingData = world.getPersistentStateManager().getOrCreate(type);
+		BrewingDataState brewingData = world.getPersistentStateManager().getOrCreate(TYPE);
 		brewingData.markDirty();
 		return brewingData;
 	}

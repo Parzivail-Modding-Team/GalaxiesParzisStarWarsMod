@@ -12,10 +12,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static dev.pswg.feature.brewing.MixerBlockEntity.OUTPUT_SLOT_INDEX;
 
@@ -166,7 +168,19 @@ public class MixerScreenHandler extends ScreenHandler
 			{
 				///  CONFIRM
 				if (world.getBlockEntity(blockPos) instanceof MixerBlockEntity mixer)
+				{
 					MixerBlockEntity.craftPotion(mixer);
+					if(mixer.getWorld() instanceof ServerWorld serverWorld){
+						var data = BrewingDataState.getBrewingDataState(serverWorld.getServer());
+						PlayerEntity playerEntity = this.playerInventory.player;
+
+						for(StatusEffectInstance effect: mixer.drinkEffects)
+						{
+							data.getPlayerData().getOrDefault(playerEntity.getUuidAsString(), new PlayerBrewingData(new HashMap<>())).foundEffects.replace(effect.getEffectType(), true);
+						}
+					}
+				}
+
 				return true;
 			}
 			case 2:

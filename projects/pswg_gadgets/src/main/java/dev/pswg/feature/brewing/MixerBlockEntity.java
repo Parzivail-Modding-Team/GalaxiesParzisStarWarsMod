@@ -424,10 +424,10 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
 		MixerBlockEntity mixer = this;
-		var factory = new ExtendedScreenHandlerFactory()
+		var factory = new ExtendedScreenHandlerFactory<>()
 		{
 			@Override
-			public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player)
+			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player)
 			{
 				return new MixerScreenHandler(syncId, playerInventory, mixer, propertyDelegate, pos, drinkEffects, drinkColors, drinkFoods);
 			}
@@ -447,7 +447,6 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		if (playerInventory.player instanceof ServerPlayerEntity serverPlayer)
 			serverPlayer.openHandledScreen(factory);
 		return null;
-		//return new MixerScreenHandler(syncId, playerInventory, this, this.propertyDelegate, pos, drinkEffects);
 	}
 
 	@Override
