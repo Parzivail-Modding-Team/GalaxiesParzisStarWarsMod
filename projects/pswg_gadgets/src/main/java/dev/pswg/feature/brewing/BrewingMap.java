@@ -1,6 +1,5 @@
 package dev.pswg.feature.brewing;
 
-import dev.pswg.Gadgets;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -47,33 +46,30 @@ public class BrewingMap
 	private static BrewingCell parseCell(String string)
 	{
 		char c = string.charAt(0);
-		BrewingCell cell = new BrewingCell();
+		BrewingCell cell = new BrewingCell(BrewingCellType.Empty);
 		switch (c)
 		{
 			case 'c':
-				cell = new CornerCell();
+				cell = new BrewingCell(BrewingCellType.Corner);
 				break;
 			case 'b':
-				cell = new BrewingCell();
+				cell = new BrewingCell(BrewingCellType.Empty);
 				break;
 			case 'e':
 			{
 				List<String> args = Arrays.stream(string.split("\\.")).toList();
 				var effect = Registries.STATUS_EFFECT.getEntry(Identifier.of(args.get(1))).get();
-				cell = new EffectCell(new StatusEffectInstance(effect, Integer.parseInt(args.get(3)), args.get(2).charAt(0) - '1', false, false, true));
+				cell = new EffectCell(new StatusEffectInstance(effect, Integer.parseInt(args.get(3)), args.get(2).charAt(0) - '1', false, false, true), BrewingCellType.Potion);
 				break;
 			}
 			case 'd':
 			{
 				List<String> args = Arrays.stream(string.split("\\.")).toList();
 				var effect = Registries.STATUS_EFFECT.getEntry(Identifier.of(args.get(1))).get();
-				cell = new DangerCell(new StatusEffectInstance(effect, Integer.parseInt(args.get(3)), args.get(2).charAt(0) - '1', false, false, true));
+				cell = new EffectCell(new StatusEffectInstance(effect, Integer.parseInt(args.get(3)), args.get(2).charAt(0) - '1', false, false, true), BrewingCellType.Danger);
 				break;
 			}
-			default:
-				new BrewingCell();
 		}
-		;
 		return cell;
 	}
 }

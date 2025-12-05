@@ -4,9 +4,10 @@ import net.minecraft.item.ItemStack;
 
 public class BrewingCell
 {
-	///  Can return an ItemStack if it ends potion
-	public ItemStack cellTickEffect(MixerBlockEntity mixerBlockEntity)
+	public BrewingCellType cellType;
+
+	public BrewingCell(BrewingCellType cellType)
 	{
-		return ItemStack.EMPTY;
+		this.cellType = cellType;
 	}
 }

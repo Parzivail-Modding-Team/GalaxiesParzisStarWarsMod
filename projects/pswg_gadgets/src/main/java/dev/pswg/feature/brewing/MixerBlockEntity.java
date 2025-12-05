@@ -165,8 +165,13 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 
 	public static void craftPotion(MixerBlockEntity mixer)
 	{
-		if (BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell && mixer.drinkEffects.size() < 3 && mixer.drinkEffects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == effectCell.statusEffect.getEffectType()))
-			mixer.drinkEffects.add(effectCell.statusEffect);
+		BrewingCell cell = BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY);
+		if (cell.cellType == BrewingCellType.Potion && mixer.drinkEffects.size() < 3)
+		{
+			EffectCell effectCell = (EffectCell)cell;
+			if (mixer.drinkEffects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == effectCell.statusEffect.getEffectType()))
+				mixer.drinkEffects.add(effectCell.statusEffect);
+		}
 
 		if ((!mixer.drinkEffects.isEmpty() || !mixer.drinkColors.isEmpty()))
 		{
@@ -244,8 +249,10 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 
 	public static void tryAddEffect(MixerBlockEntity mixer)
 	{
-		if (mixer.drinkEffects.size() < 3 && BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY) instanceof EffectCell effectCell)
+		BrewingCell cell = BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY);
+		if (mixer.drinkEffects.size() < 3 && cell.cellType == BrewingCellType.Potion)
 		{
+			EffectCell effectCell = (EffectCell)cell;
 			for (StatusEffectInstance statusEffect : mixer.drinkEffects)
 				if (effectCell.statusEffect.getEffectType() == statusEffect.getEffectType())
 					return;
@@ -300,18 +307,20 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				sendSyncPacket(mixer);
 			}
 			BrewingCell cell = BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY);
-			if (cell instanceof DangerCell dangerCell)
+			if (cell.cellType == BrewingCellType.Danger)
 			{
+				EffectCell effectCell = (EffectCell)cell;
 				mixer.dangerProgress++;
 				if (mixer.dangerProgress >= 12)
 				{
 					spawnFailParticles(world, pos);
-					mixer.drinkEffects.set(0, dangerCell.statusEffect);
+					mixer.drinkEffects.set(0, effectCell.statusEffect);
 					craftPotion(mixer);
 				}
 
 			}
-			if (cell instanceof CornerCell){
+			if (cell.cellType == BrewingCellType.Corner)
+			{
 				mixer.dangerProgress++;
 				if (mixer.dangerProgress >= 8)
 				{
@@ -324,14 +333,14 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			if (!mixer.path.empty() && mixer.bellowBacklog > 0 && mixer.bellowProgress > 5)
 			{
 				float mod = 1f;
-				if (cell instanceof DangerCell)
+				if (cell.cellType == BrewingCellType.Danger)
 				{
 					mixer.dangerProgress++;
 					mod = 1.25f;
 				}
-				if(cell instanceof EffectCell)
+				if (cell.cellType == BrewingCellType.Potion)
 					mod = 0.9f;
-				if(cell instanceof CornerCell)
+				if (cell.cellType == BrewingCellType.Corner)
 				{
 					mixer.dangerProgress++;
 					mod = 0.95f;

@@ -6,8 +6,9 @@ public class EffectCell extends BrewingCell
 {
 	public StatusEffectInstance statusEffect;
 
-	public EffectCell(StatusEffectInstance statusEffectInstance)
+	public EffectCell(StatusEffectInstance statusEffectInstance, BrewingCellType cellType)
 	{
+		super(cellType);
 		this.statusEffect = statusEffectInstance;
 	}
 }
