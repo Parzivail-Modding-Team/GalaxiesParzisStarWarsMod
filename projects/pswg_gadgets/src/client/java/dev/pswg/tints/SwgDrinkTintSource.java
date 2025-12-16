@@ -8,10 +8,13 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.OptionalInt;
 
 public record SwgDrinkTintSource(int defaultColor) implements TintSource
 {
@@ -29,9 +32,30 @@ public record SwgDrinkTintSource(int defaultColor) implements TintSource
 	{
 		PotionContentsComponent potionContentsComponent = stack.get(DataComponentTypes.POTION_CONTENTS);
 		DyedColorComponent dyedColorComponent = stack.get(DataComponentTypes.DYED_COLOR);
-		if (dyedColorComponent != null)
+		if
+		(dyedColorComponent != null)
 			return DyedColorComponent.getColor(stack, this.defaultColor);
-		return potionContentsComponent != null ? ColorHelper.fullAlpha(potionContentsComponent.getColor(this.defaultColor)) : ColorHelper.fullAlpha(this.defaultColor);
+		return potionContentsComponent != null ? ColorHelper.fullAlpha(getColor(this.defaultColor, potionContentsComponent)) : ColorHelper.fullAlpha(this.defaultColor);
+	}
+	public int getColor(int defaultColor, PotionContentsComponent component) {
+		return component.customColor().isPresent() ? (Integer)component.customColor().get() : mixColors(component.getEffects()).orElse(defaultColor);
+	}
+	public static OptionalInt mixColors(Iterable<StatusEffectInstance> effects) {
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		int l = 0;
+
+		for (StatusEffectInstance statusEffectInstance : effects) {
+				int m = statusEffectInstance.getEffectType().value().getColor();
+				int n = statusEffectInstance.getAmplifier() + 1;
+				i += n * ColorHelper.getRed(m);
+				j += n * ColorHelper.getGreen(m);
+				k += n * ColorHelper.getBlue(m);
+				l += n;
+		}
+
+		return l == 0 ? OptionalInt.empty() : OptionalInt.of(ColorHelper.getArgb(i / l, j / l, k / l));
 	}
 
 	@Override
