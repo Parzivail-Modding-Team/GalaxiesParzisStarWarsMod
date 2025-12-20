@@ -155,7 +155,7 @@ public class LaserCutterItem extends Item
 			else
 				world.breakBlock(blockPos, true);
 		}
-		if (stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1 < stack.get(DataComponentTypes.MAX_DAMAGE))
+		if (stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1 < stack.get(DataComponentTypes.MAX_DAMAGE) && !entity.isInCreativeMode())
 			stack.set(DataComponentTypes.DAMAGE, stack.getOrDefault(DataComponentTypes.DAMAGE, 0) + 1);
 	}
 
