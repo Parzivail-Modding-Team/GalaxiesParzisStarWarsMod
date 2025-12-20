@@ -38,7 +38,7 @@ public record SwgDrinkTintSource(int defaultColor) implements TintSource
 		return potionContentsComponent != null ? ColorHelper.fullAlpha(getColor(this.defaultColor, potionContentsComponent)) : ColorHelper.fullAlpha(this.defaultColor);
 	}
 	public int getColor(int defaultColor, PotionContentsComponent component) {
-		return component.customColor().isPresent() ? (Integer)component.customColor().get() : mixColors(component.getEffects()).orElse(defaultColor);
+		return component.customColor().isPresent() ? component.customColor().get() : mixColors(component.getEffects()).orElse(defaultColor);
 	}
 	public static OptionalInt mixColors(Iterable<StatusEffectInstance> effects) {
 		int i = 0;
@@ -47,12 +47,12 @@ public record SwgDrinkTintSource(int defaultColor) implements TintSource
 		int l = 0;
 
 		for (StatusEffectInstance statusEffectInstance : effects) {
-				int m = statusEffectInstance.getEffectType().value().getColor();
-				int n = statusEffectInstance.getAmplifier() + 1;
-				i += n * ColorHelper.getRed(m);
-				j += n * ColorHelper.getGreen(m);
-				k += n * ColorHelper.getBlue(m);
-				l += n;
+			int m = statusEffectInstance.getEffectType().value().getColor();
+			int n = statusEffectInstance.getAmplifier() + 1;
+			i += n * ColorHelper.getRed(m);
+			j += n * ColorHelper.getGreen(m);
+			k += n * ColorHelper.getBlue(m);
+			l += n;
 		}
 
 		return l == 0 ? OptionalInt.empty() : OptionalInt.of(ColorHelper.getArgb(i / l, j / l, k / l));
