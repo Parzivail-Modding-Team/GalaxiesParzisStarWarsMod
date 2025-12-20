@@ -486,7 +486,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(itemId(Items.BEETROOT))
 					.add(itemId(Items.CARROT))
 					.add(itemId(Items.GLOW_BERRIES))
-					.add(itemId(Items.MELON))
+					.add(itemId(Items.MELON_SLICE))
 					.add(itemId(Items.SWEET_BERRIES));
 
 			getTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
