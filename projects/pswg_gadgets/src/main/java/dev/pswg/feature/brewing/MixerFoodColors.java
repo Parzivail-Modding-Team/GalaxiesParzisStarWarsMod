@@ -24,7 +24,7 @@ public class MixerFoodColors
 		colorMap.put(Items.BEETROOT, 0xFF71160d);
 		colorMap.put(Items.CARROT, 0xFFff8e09);
 		colorMap.put(Items.GLOW_BERRIES, 0xFFf7e26b);
-		colorMap.put(Items.MELON, 0xFF848920);
+		colorMap.put(Items.MELON_SLICE, 0xFF848920);
 		colorMap.put(Items.SWEET_BERRIES, 0xFFa50700);
 
 		colorMap.put(GadgetsItems.BLACK_MELON, 0xFF42443b);
