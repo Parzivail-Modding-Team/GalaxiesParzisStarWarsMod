@@ -1,6 +1,5 @@
 package dev.pswg.particles;
 
-import dev.pswg.Gadgets;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.ParticleRenderer;
@@ -8,9 +7,9 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Colors;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 
 import java.util.List;
@@ -53,17 +52,7 @@ public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<F
 			for (FragmentationGrenadeWaveParticleRenderer.State state : this.states)
 			{
 				var matrix = state.matrices;
-				RenderLayer customLayer = RenderLayer.of("custom",
-				                                         4096,
-				                                         true,
-				                                         true,
-				                                         RenderPipelines.TRANSLUCENT_PARTICLE,
-				                                         RenderLayer.MultiPhaseParameters.builder().texture(new RenderPhase.Texture(state.sprite.getAtlasId(), false))
-				                                                                         .lightmap(ENABLE_LIGHTMAP)
-				                                                                         .overlay(ENABLE_OVERLAY_COLOR)
-				                                                                         .layering(VIEW_OFFSET_Z_LAYERING)
-				                                                                         .build(true));
-				orderedRenderCommandQueue.submitCustom(matrix, customLayer, (matricesEntry, vertexConsumer) -> {
+				orderedRenderCommandQueue.submitCustom(matrix, GadgetsRenderLayers.PSWG_CUSTOM, (matricesEntry, vertexConsumer) -> {
 					float xSize = state.xScale * state.scale;
 					float ySize = state.yScale * state.scale;
 					int alpha = (int)(state.alpha * 255);

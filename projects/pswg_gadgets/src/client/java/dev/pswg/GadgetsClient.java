@@ -113,6 +113,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 		MixerScreen.ICON_MAP.put(StatusEffects.SPEED, new Pair<>(382, 273));
 		MixerScreen.ICON_MAP.put(StatusEffects.STRENGTH, new Pair<>(448, 448));
 
+		GadgetsRenderLayers.init();
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}
