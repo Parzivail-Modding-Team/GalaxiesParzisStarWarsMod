@@ -416,11 +416,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsBlocks.Tags.GAS_PASS_THROUGH, "Gas Pass Through");
 			translationBuilder.add(GadgetsItems.Tags.GRENADES_TAG, "Grenades");
 
-			translationBuilder.add("subtitle.pswg_gadgets.grenade_throw", "Grenade Thrown");
-			translationBuilder.add("subtitle.pswg_gadgets.grenade_arm", "Grenade Armed");
-			translationBuilder.add("subtitle.pswg_gadgets.grenade_disarm", "Grenade Disarmed");
-			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode", "C-25 Grenade Explosion");
-			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Thermal Detonator Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.grenade_throw", "Grenade thrown");
+			translationBuilder.add("subtitle.pswg_gadgets.grenade_arm", "Grenade armed");
+			translationBuilder.add("subtitle.pswg_gadgets.grenade_disarm", "Grenade disarmed");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode", "C-25 Grenade explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Thermal Detonator explosion");
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
