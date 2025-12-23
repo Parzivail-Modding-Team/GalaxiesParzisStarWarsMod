@@ -223,7 +223,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	}
 
 	@Override
-	public ActionResult useLeft(World world, LivingEntity user, Hand hand)
+	public ActionResult useLeft(World world, LivingEntity user, Hand hand, boolean repeatEvent)
 	{
 		ItemStack stack = user.getMainHandStack();
 		if (!stack.contains(GadgetsItems.Components.PRIMING_TIME))

@@ -233,7 +233,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 					y1 = y2;
 					y2 = tmp;
 				}
-				Drawables.fill(context, RenderPipelines.GUI, x1, y1, x2, y2, 0, Colors.WHITE);
+				Drawables.fill(context, RenderPipelines.GUI, x1, y1, x2, y2, Colors.WHITE);
 			}
 		}
 		var pair = new Pair<>((int)handler.getMapX(), (int)handler.getMapY());
