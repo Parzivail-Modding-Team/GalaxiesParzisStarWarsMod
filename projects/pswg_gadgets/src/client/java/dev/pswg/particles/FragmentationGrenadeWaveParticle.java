@@ -51,6 +51,32 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle
 		this.setColor(Random.create().nextBetween(0, 3) / 3f + 0.97f, Random.create().nextBetween(0, 3) / 3f + 0.98f, 1);
 	}
 
+	public Vec3d getPos()
+	{
+		return new Vec3d(this.x, this.y, this.z);
+	}
+
+	public float getScaleX()
+	{
+		return scaleX;
+	}
+
+	public float getScaleY()
+	{
+		return scaleY;
+	}
+
+	public float getScale()
+	{
+		return getSize(0);
+	}
+
+	public float getAlpha()
+	{
+		return this.alpha;
+	}
+
+
 	private void updateShape(float age)
 	{
 		if (age <= 10)
@@ -81,8 +107,8 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle
 	@Override
 	protected void render(BillboardParticleSubmittable submittable, Camera camera, Quaternionf rotation, float tickProgress)
 	{
-		/*updateShape(this.age + tickProgress);
-
+		updateShape(this.age + tickProgress);
+		/*
 		Vec3d vec3d = camera.getPos();
 		Vector3f fgh = new Vector3f(lerp(lastX, x, tickProgress), lerp(lastY, y, tickProgress), lerp(lastZ, z, tickProgress));
 
@@ -188,7 +214,7 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle
 			//((BillboardParticleSubmittableInvoker)submittable).pswg_gadgets$invokeRenderVertex(bufferBuilder, rot, (float)this.x, (float)this.y, (float)this.z, -this.scaleX, -this.scaleY, this.scale, getMaxU(), getMaxV(), color, o);
 
 		}
-		// TODO: MAKE SURE THIS WORKS
+		// TODO: MAKE SURE THIS WORKS?
 		//var v = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers().getBuffer(RenderLayer.
 		/*vertexConsumer.vertex(corners[0].x(), corners[0].y(), corners[0].z())
 		              .texture(l, n)

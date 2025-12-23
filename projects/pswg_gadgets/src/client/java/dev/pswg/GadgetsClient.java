@@ -35,6 +35,7 @@ import net.minecraft.util.Pair;
  */
 public class GadgetsClient implements GalaxiesClientAddon
 {
+	public static FragmentationGrenadeWaveParticleRenderer pswgParticleRenderer;
 	@Override
 	public void onGalaxiesClientReady()
 	{
