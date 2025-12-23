@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.*;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -16,7 +17,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @Environment(value = EnvType.CLIENT)
-public abstract class GasParticle extends BillboardParticle
+public abstract class GasParticle extends BillboardParticle implements CustomRendererParticle
 {
 	private final int variant;
 	final int NUM_VARIANTS = 5;
@@ -70,6 +71,32 @@ public abstract class GasParticle extends BillboardParticle
 		int light = this.world.isChunkLoaded(blockPos) ? WorldRenderer.getLightmapCoordinates(this.world, blockPos) : 0;
 		return Math.max(light, 80);
 		//return light;
+	}
+
+	@Override
+	public GadgetsParticleRenderer getParticleRenderer()
+	{
+		return GadgetsParticleRenderer.Gas;
+	}
+
+	public float getBillowing()
+	{
+		return billowing;
+	}
+
+	public float getAlpha()
+	{
+		return this.alpha;
+	}
+
+	public Sprite getSprite()
+	{
+		return this.sprite;
+	}
+
+	public Vec3d getPos()
+	{
+		return new Vec3d(this.x, this.y, this.z);
 	}
 
 	@Override

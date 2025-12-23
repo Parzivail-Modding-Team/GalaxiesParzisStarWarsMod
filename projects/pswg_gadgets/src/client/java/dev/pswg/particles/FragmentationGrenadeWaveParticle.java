@@ -1,22 +1,12 @@
 package dev.pswg.particles;
 
-import com.mojang.blaze3d.systems.GpuDevice;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.command.LayeredCustomCommandRenderer;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -24,12 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.Arrays;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
-
 @Environment(value = EnvType.CLIENT)
-public class FragmentationGrenadeWaveParticle extends BillboardParticle
+public class FragmentationGrenadeWaveParticle extends BillboardParticle implements CustomRendererParticle
 {
 	private float scaleX = 1;
 	private float scaleY = 1;
@@ -65,11 +51,6 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle
 	public float getScaleY()
 	{
 		return scaleY;
-	}
-
-	public float getScale()
-	{
-		return getSize(0);
 	}
 
 	public float getAlpha()
@@ -128,6 +109,12 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle
 		vector3f.rotate(r180z);
 		vector3f.mul(size);
 		//vector3f.add(f, g, h);
+	}
+
+	@Override
+	public GadgetsParticleRenderer getParticleRenderer()
+	{
+		return GadgetsParticleRenderer.FragmentationGrenadeWave;
 	}
 
 	@Environment(value = EnvType.CLIENT)

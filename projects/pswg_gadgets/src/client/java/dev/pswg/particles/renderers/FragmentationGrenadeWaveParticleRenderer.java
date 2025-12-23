@@ -1,20 +1,18 @@
-package dev.pswg.particles;
+package dev.pswg.particles.renderers;
 
-import net.minecraft.client.gl.RenderPipelines;
+import dev.pswg.particles.FragmentationGrenadeWaveParticle;
+import dev.pswg.particles.GadgetsRenderLayers;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.ParticleRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Colors;
 import net.minecraft.util.math.ColorHelper;
 
 import java.util.List;
-
-import static net.minecraft.client.render.RenderPhase.*;
 
 public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<FragmentationGrenadeWaveParticle>
 {
@@ -26,30 +24,30 @@ public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<F
 	@Override
 	public Submittable render(Frustum frustum, Camera camera, float tickProgress)
 	{
-		return new FragmentationGrenadeWaveParticleRenderer.Result(
-				this.particles.stream().map(particle -> FragmentationGrenadeWaveParticleRenderer.State.create(particle, camera, tickProgress)).toList()
+		return new Result(
+				this.particles.stream().map(particle -> State.create(particle, camera, tickProgress)).toList()
 		);
 	}
 
 	record State(MatrixStack matrices, Sprite sprite, float xScale, float yScale, float scale, float alpha)
 	{
-		public static FragmentationGrenadeWaveParticleRenderer.State create(FragmentationGrenadeWaveParticle particle, Camera camera, float tickProgress)
+		public static State create(FragmentationGrenadeWaveParticle particle, Camera camera, float tickProgress)
 		{
 			MatrixStack matrixStack = new MatrixStack();
 			matrixStack.push();
 			matrixStack.translate(particle.getPos().subtract(camera.getPos()));
 			matrixStack.multiply(camera.getRotation());
 
-			return new FragmentationGrenadeWaveParticleRenderer.State(matrixStack, particle.getSprite(), particle.getScaleX(), particle.getScaleY(), particle.getSize(tickProgress), particle.getAlpha());
+			return new State(matrixStack, particle.getSprite(), particle.getScaleX(), particle.getScaleY(), particle.getSize(tickProgress), particle.getAlpha());
 		}
 	}
 
-	record Result(List<FragmentationGrenadeWaveParticleRenderer.State> states) implements Submittable
+	record Result(List<State> states) implements Submittable
 	{
 		@Override
 		public void submit(OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState)
 		{
-			for (FragmentationGrenadeWaveParticleRenderer.State state : this.states)
+			for (State state : this.states)
 			{
 				var matrix = state.matrices;
 				orderedRenderCommandQueue.submitCustom(matrix, GadgetsRenderLayers.PSWG_CUSTOM, (matricesEntry, vertexConsumer) -> {

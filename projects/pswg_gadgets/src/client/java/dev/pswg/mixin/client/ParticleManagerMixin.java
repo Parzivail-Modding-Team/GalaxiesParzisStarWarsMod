@@ -3,9 +3,14 @@ package dev.pswg.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.pswg.Gadgets;
 import dev.pswg.GadgetsClient;
+import dev.pswg.particles.CustomRendererParticle;
 import dev.pswg.particles.FragmentationGrenadeWaveParticle;
 import dev.pswg.particles.FragmentationGrenadeWaveParticleRenderer;
+import dev.pswg.particles.GadgetsParticleRenderer;
+import dev.pswg.particles.renderers.GasParticleRenderer;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.particle.ParticleRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.SubmittableBatch;
@@ -20,34 +25,42 @@ public class ParticleManagerMixin
 	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Ljava/util/Queue;poll()Ljava/lang/Object;"))
 	public Object poll(Object particle)
 	{
-		if (particle instanceof FragmentationGrenadeWaveParticle fragParticle)
+		if (particle instanceof CustomRendererParticle customParticle)
 		{
-			if (GadgetsClient.pswgParticleRenderer == null)
-				GadgetsClient.pswgParticleRenderer = new FragmentationGrenadeWaveParticleRenderer((ParticleManager)(Object)this);
-			GadgetsClient.pswgParticleRenderer.add(fragParticle);
+			GadgetsClient.particleRenderers.computeIfAbsent(customParticle.getParticleRenderer(), this::createParticleRenderer).add((Particle)particle);
 		}
 		return particle;
+	}
+
+	private ParticleRenderer<?> createParticleRenderer(GadgetsParticleRenderer particleRenderer)
+	{
+		return switch (particleRenderer)
+		{
+			case Gas -> new GasParticleRenderer((ParticleManager)(Object)this);
+			case FragmentationGrenadeWave -> new FragmentationGrenadeWaveParticleRenderer((ParticleManager)(Object)this);
+		};
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void tick(CallbackInfo ci)
 	{
-		if (!(GadgetsClient.pswgParticleRenderer == null))
-			GadgetsClient.pswgParticleRenderer.tick();
+		for (ParticleRenderer<?> particleRenderer : GadgetsClient.particleRenderers.values())
+			particleRenderer.tick();
 	}
 
 	@Inject(method = "addToBatch", at = @At("HEAD"))
 	public void addToBatch(SubmittableBatch batch, Frustum frustum, Camera camera, float tickProgress, CallbackInfo ci)
 	{
-		if (GadgetsClient.pswgParticleRenderer != null && !GadgetsClient.pswgParticleRenderer.isEmpty())
-		{
-			batch.add(GadgetsClient.pswgParticleRenderer.render(frustum, camera, tickProgress));
-		}
+		for (ParticleRenderer<?> particleRenderer : GadgetsClient.particleRenderers.values())
+			if (!particleRenderer.isEmpty())
+			{
+				batch.add(particleRenderer.render(frustum, camera, tickProgress));
+			}
 	}
 
 	@Inject(method = "clearParticles", at = @At("HEAD"))
 	public void clearParticles(CallbackInfo ci)
 	{
-		GadgetsClient.pswgParticleRenderer = null;
+		GadgetsClient.particleRenderers.clear();
 	}
 }

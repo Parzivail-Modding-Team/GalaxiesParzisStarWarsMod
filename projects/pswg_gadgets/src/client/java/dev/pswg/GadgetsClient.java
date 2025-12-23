@@ -1,5 +1,6 @@
 package dev.pswg;
 
+import com.google.common.collect.Maps;
 import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.container.GadgetsParticleTypes;
@@ -24,18 +25,21 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.particle.ParticleRenderer;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.client.render.item.tint.TintSourceTypes;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.Pair;
 
+import java.util.Map;
+
 /**
  * The main entrypoint for PSWG client-side gadget features
  */
 public class GadgetsClient implements GalaxiesClientAddon
 {
-	public static FragmentationGrenadeWaveParticleRenderer pswgParticleRenderer;
+	public static Map<GadgetsParticleRenderer, ParticleRenderer<?>> particleRenderers = Maps.newIdentityHashMap();
 	@Override
 	public void onGalaxiesClientReady()
 	{
