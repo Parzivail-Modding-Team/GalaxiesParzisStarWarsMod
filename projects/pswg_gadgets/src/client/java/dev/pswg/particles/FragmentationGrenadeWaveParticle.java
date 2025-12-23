@@ -11,6 +11,7 @@ import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.command.LayeredCustomCommandRenderer;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.client.world.ClientWorld;
@@ -74,6 +75,11 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle
 	public float getAlpha()
 	{
 		return this.alpha;
+	}
+
+	public Sprite getSprite()
+	{
+		return this.sprite;
 	}
 
 

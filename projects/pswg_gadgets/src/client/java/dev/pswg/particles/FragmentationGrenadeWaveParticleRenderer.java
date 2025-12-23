@@ -7,6 +7,7 @@ import net.minecraft.client.particle.ParticleRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.state.CameraRenderState;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
@@ -31,7 +32,7 @@ public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<F
 		);
 	}
 
-	record State(MatrixStack matrices, Identifier texture, float xScale, float yScale, float scale, float alpha)
+	record State(MatrixStack matrices, Sprite sprite, float xScale, float yScale, float scale, float alpha)
 	{
 		public static FragmentationGrenadeWaveParticleRenderer.State create(FragmentationGrenadeWaveParticle particle, Camera camera, float tickProgress)
 		{
@@ -40,7 +41,7 @@ public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<F
 			matrixStack.translate(particle.getPos().subtract(camera.getPos()));
 			matrixStack.multiply(camera.getRotation());
 
-			return new FragmentationGrenadeWaveParticleRenderer.State(matrixStack, Gadgets.id("textures/particle/fragmentation_grenade_wave.png"), particle.getScaleX(), particle.getScaleY(), particle.getScale(), particle.getAlpha());
+			return new FragmentationGrenadeWaveParticleRenderer.State(matrixStack, particle.getSprite(), particle.getScaleX(), particle.getScaleY(), particle.getScale(), particle.getAlpha());
 		}
 	}
 
@@ -57,7 +58,7 @@ public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<F
 				                                         true,
 				                                         true,
 				                                         RenderPipelines.TRANSLUCENT_PARTICLE,
-				                                         RenderLayer.MultiPhaseParameters.builder().texture(new RenderPhase.Texture(state.texture, false))
+				                                         RenderLayer.MultiPhaseParameters.builder().texture(new RenderPhase.Texture(state.sprite.getAtlasId(), false))
 				                                                                         .lightmap(ENABLE_LIGHTMAP)
 				                                                                         .overlay(ENABLE_OVERLAY_COLOR)
 				                                                                         .layering(VIEW_OFFSET_Z_LAYERING)
@@ -66,15 +67,15 @@ public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<F
 					float xSize = state.xScale * state.scale;
 					float ySize = state.yScale * state.scale;
 					int alpha = (int)(state.alpha * 255);
-					vertex(vertexConsumer, matricesEntry, 255, alpha, -0.5F * xSize, -0.5F * ySize, 0, 1);
-					vertex(vertexConsumer, matricesEntry, 255, alpha, 0.5F * xSize, -0.5F * ySize, 1, 1);
-					vertex(vertexConsumer, matricesEntry, 255, alpha, 0.5F * xSize, 0.5F * ySize, 1, 0);
-					vertex(vertexConsumer, matricesEntry, 255, alpha, -0.5F * xSize, 0.5F * ySize, 0, 0);
+					vertex(vertexConsumer, matricesEntry, 255, alpha, -0.5F * xSize, -0.5F * ySize, state.sprite.getMinU(), state.sprite.getMaxV());
+					vertex(vertexConsumer, matricesEntry, 255, alpha, 0.5F * xSize, -0.5F * ySize, state.sprite.getMaxU(), state.sprite.getMaxV());
+					vertex(vertexConsumer, matricesEntry, 255, alpha, 0.5F * xSize, 0.5F * ySize, state.sprite.getMaxU(), state.sprite.getMinV());
+					vertex(vertexConsumer, matricesEntry, 255, alpha, -0.5F * xSize, 0.5F * ySize, state.sprite.getMinU(), state.sprite.getMinV());
 				});
 			}
 		}
 
-		private static void vertex(VertexConsumer buffer, MatrixStack.Entry matrix, int light, int alpha, float x, float y, int u, int v)
+		private static void vertex(VertexConsumer buffer, MatrixStack.Entry matrix, int light, int alpha, float x, float y, float u, float v)
 		{
 			buffer.vertex(matrix, x, y, 0.0F)
 			      .color(ColorHelper.withAlpha(alpha, Colors.WHITE))
