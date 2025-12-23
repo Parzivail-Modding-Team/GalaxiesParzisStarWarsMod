@@ -10,6 +10,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -65,7 +66,7 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 	}
 
 	@Override
-	protected int getBrightness(float tint)
+	public int getBrightness(float tint)
 	{
 		BlockPos blockPos = BlockPos.ofFloored(this.x, this.y, this.z);
 		int light = this.world.isChunkLoaded(blockPos) ? WorldRenderer.getLightmapCoordinates(this.world, blockPos) : 0;
@@ -97,6 +98,11 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 	public Vec3d getPos()
 	{
 		return new Vec3d(this.x, this.y, this.z);
+	}
+
+	public int getColor()
+	{
+		return ColorHelper.getArgb((int)(this.red * 255), (int)(this.green * 255), (int)(this.blue * 255));
 	}
 
 	@Override
@@ -158,8 +164,8 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 			markDead();
 		}
 		float blockConcentration = gasEntity != null ? gasEntity.massMap.getOrDefault(new BlockPos((int)x, (int)y, (int)z), 1f) : 1;
-		;
-		alphaScaling = blockConcentration;
+
+		alphaScaling = blockConcentration / 2;
 		lastX = x;
 		lastY = y;
 		lastZ = z;

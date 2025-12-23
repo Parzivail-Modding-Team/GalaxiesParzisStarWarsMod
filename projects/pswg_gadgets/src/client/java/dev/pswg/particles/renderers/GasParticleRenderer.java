@@ -1,6 +1,5 @@
 package dev.pswg.particles.renderers;
 
-import dev.pswg.particles.FragmentationGrenadeWaveParticle;
 import dev.pswg.particles.GadgetsRenderLayers;
 import dev.pswg.particles.GasParticle;
 import net.minecraft.client.particle.ParticleManager;
@@ -30,7 +29,7 @@ public class GasParticleRenderer extends ParticleRenderer<GasParticle>
 		);
 	}
 
-	record State(MatrixStack matrices, Sprite sprite, float billowing, float alpha, float scale)
+	record State(MatrixStack matrices, Sprite sprite, float billowing, float alpha, float scale, int color, int light)
 	{
 		public static State create(GasParticle particle, Camera camera, float tickProgress)
 		{
@@ -40,7 +39,7 @@ public class GasParticleRenderer extends ParticleRenderer<GasParticle>
 			//matrixStack.multiply(camera.getRotation());
 			matrixStack.multiply(camera.getRotation().rotateZ((float)Math.toRadians(particle.getBillowing())));
 
-			return new State(matrixStack, particle.getSprite(), particle.getBillowing(), particle.getAlpha(), particle.getSize(tickProgress));
+			return new State(matrixStack, particle.getSprite(), particle.getBillowing(), particle.getAlpha(), particle.getSize(tickProgress), particle.getColor(), particle.getBrightness(tickProgress));
 		}
 	}
 
@@ -55,18 +54,18 @@ public class GasParticleRenderer extends ParticleRenderer<GasParticle>
 				orderedRenderCommandQueue.submitCustom(matrix, GadgetsRenderLayers.PSWG_CUSTOM, (matricesEntry, vertexConsumer) -> {
 					float scale = state.scale;
 					int alpha = (int)(state.alpha * 255);
-					vertex(vertexConsumer, matricesEntry, 255, alpha, -0.5F * scale, -0.5F * scale, state.sprite.getMinU(), state.sprite.getMaxV());
-					vertex(vertexConsumer, matricesEntry, 255, alpha, 0.5F * scale, -0.5F * scale, state.sprite.getMaxU(), state.sprite.getMaxV());
-					vertex(vertexConsumer, matricesEntry, 255, alpha, 0.5F * scale, 0.5F * scale, state.sprite.getMaxU(), state.sprite.getMinV());
-					vertex(vertexConsumer, matricesEntry, 255, alpha, -0.5F * scale, 0.5F * scale, state.sprite.getMinU(), state.sprite.getMinV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -0.5F * scale, -0.5F * scale, state.sprite.getMinU(), state.sprite.getMaxV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 0.5F * scale, -0.5F * scale, state.sprite.getMaxU(), state.sprite.getMaxV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 0.5F * scale, 0.5F * scale, state.sprite.getMaxU(), state.sprite.getMinV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -0.5F * scale, 0.5F * scale, state.sprite.getMinU(), state.sprite.getMinV());
 				});
 			}
 		}
 
-		private static void vertex(VertexConsumer buffer, MatrixStack.Entry matrix, int light, int alpha, float x, float y, float u, float v)
+		private static void vertex(VertexConsumer buffer, MatrixStack.Entry matrix, int light, int alpha, int color, float x, float y, float u, float v)
 		{
 			buffer.vertex(matrix, x, y, 0.0F)
-			      .color(ColorHelper.withAlpha(alpha, Colors.WHITE))
+			      .color(ColorHelper.withAlpha(alpha, color))
 			      .texture(u, v)
 			      .overlay(OverlayTexture.DEFAULT_UV)
 			      .light(light)
