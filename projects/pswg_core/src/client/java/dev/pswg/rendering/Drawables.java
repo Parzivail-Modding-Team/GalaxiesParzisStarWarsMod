@@ -6,17 +6,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.render.state.ColoredQuadGuiElementRenderState;
 import net.minecraft.client.gui.render.state.SimpleGuiElementRenderState;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.texture.TextureSetup;
 import net.minecraft.util.Colors;
 import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
-import org.joml.Matrix4f;
 
 /**
  * Provides utilities for drawing graphical primitives inside
@@ -60,10 +56,9 @@ public final class Drawables
 	 * @param y1       The first corner's y-coordinate
 	 * @param x2       The second corner's x-coordinate
 	 * @param y2       The second corner's y-coordinate
-	 * @param z        The z-depth of the region
 	 * @param color    The color to fill the region with
 	 */
-	public static void fill(DrawContext context, RenderPipeline pipeline, float x1, float y1, float x2, float y2, int z, int color)
+	public static void fill(DrawContext context, RenderPipeline pipeline, float x1, float y1, float x2, float y2, int color)
 	{
 		context.state.addSimpleElement(new ColoredFloatQuadGuiElementRenderState(pipeline, TextureSetup.empty(), new Matrix3x2f(context.getMatrices()), x1, y1, x2, y2, color, color, context.scissorStack.peekLast()));
 	}
@@ -84,7 +79,7 @@ public final class Drawables
 		{
 			float top = y + size * (1 - value);
 			float bottom = top + size * value;
-			fill(context, RenderPipelines.GUI, x, top, x + size, bottom, 200, color);
+			fill(context, RenderPipelines.GUI, x, top, x + size, bottom, color);
 		}
 	}
 
@@ -102,7 +97,7 @@ public final class Drawables
 	{
 		float i = x + 2;
 		float j = y + 13;
-		fill(context, RenderPipelines.GUI, i, j, i + width, j + 2, 200, Colors.BLACK);
-		fill(context, RenderPipelines.GUI, i, j, i + width * value, j + 1, 200, ColorHelper.fullAlpha(color));
+		fill(context, RenderPipelines.GUI, i, j, i + width, j + 2, Colors.BLACK);
+		fill(context, RenderPipelines.GUI, i, j, i + width * value, j + 1, ColorHelper.fullAlpha(color));
 	}
 }

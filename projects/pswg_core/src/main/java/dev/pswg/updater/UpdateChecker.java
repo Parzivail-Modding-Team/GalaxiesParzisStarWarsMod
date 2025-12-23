@@ -37,7 +37,7 @@ public final class UpdateChecker
 				return Optional.empty();
 			}
 
-			// we cannot use /releases/latest here since most released will likely
+			// we cannot use /releases/latest here since most releases will likely
 			// be pre-releases, which aren't returned by that API
 			var con = new URI(String.format("https://api.github.com/repos/%s/releases", repository)).toURL().openConnection();
 			con.setConnectTimeout(3000);
@@ -53,7 +53,7 @@ public final class UpdateChecker
 
 			var mostRecentRelease = entries[0];
 
-			if (isRemoteVersionNewer(ownVersion, SemanticVersion.parse(mostRecentRelease.tagName())))
+			if (isRemoteVersionNewer(ownVersion, SemanticVersion.parse(mostRecentRelease.tag_name())))
 			{
 				logger.warn("A new version of {} is available: {} (vs: {})", container.getMetadata().getName(), mostRecentRelease.name(), container.getMetadata().getVersion());
 				return Optional.of(mostRecentRelease);

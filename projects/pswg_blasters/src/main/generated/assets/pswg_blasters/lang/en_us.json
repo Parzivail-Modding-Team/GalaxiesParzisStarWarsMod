@@ -1,4 +1,21 @@
 {
+  "attachment.pswg_blasters.e11.barrel_d": "Extended barrel",
+  "attachment.pswg_blasters.e11.bipod": "Bipod",
+  "attachment.pswg_blasters.e11.cooling": "Heat Spreader",
+  "attachment.pswg_blasters.e11.rapidfire": "Advanced Regeneration",
+  "attachment.pswg_blasters.e11.scope_d": "1.5x Scope",
+  "attachment.pswg_blasters.e11.scope_x": "2.5x Scope",
   "item.pswg_blasters.blaster": "Blaster",
-  "tag.item.pswg_blasters.blasters": "Blasters"
+  "pswg_blasters.missingno": "[unknown model]",
+  "pswg_blasters.test_blaster": "Test Blaster",
+  "subtitle.pswg_blasters.blaster.bypass.failed": "Blaster cooling fails",
+  "subtitle.pswg_blasters.blaster.bypass.primary": "Blaster cools",
+  "subtitle.pswg_blasters.blaster.bypass.secondary": "Blaster overcharges",
+  "subtitle.pswg_blasters.blaster.dryfire": "Blaster dry-fires",
+  "subtitle.pswg_blasters.blaster.fire": "Blaster fires",
+  "subtitle.pswg_blasters.blaster.overheat": "Blaster overheats",
+  "subtitle.pswg_blasters.blaster.reload": "Blaster reloads",
+  "subtitle.pswg_blasters.blaster.vent": "Blaster vents",
+  "tag.item.pswg_blasters.blasters": "Blasters",
+  "text.pswg_blasters.vent_blaster": "Vent Heat"
 }

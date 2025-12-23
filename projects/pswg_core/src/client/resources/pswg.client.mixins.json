@@ -3,15 +3,18 @@
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"events.DrawContextMixin",
 		"accessors.ClientPlayerInteractionManagerAccessor",
 		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
+		"attributes.MouseMixin",
 		"events.DrawContextMixin",
-		"events.GameRendererMixin",
 		"events.InGameHudMixin",
-		"leftuse.MinecraftClientMixin"
+		"handbobbing.HeldItemRendererMixin",
+		"leftuse.MinecraftClientMixin",
+		"models.BakedSimpleModelMixin",
+		"recoil.ClientPlayerEntityMixin",
+		"recoil.HeldItemRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

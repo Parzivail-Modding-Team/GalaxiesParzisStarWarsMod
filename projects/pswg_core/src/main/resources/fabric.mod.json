@@ -25,7 +25,8 @@
 			"dev.pswg.GalaxiesClient"
 		],
 		"fabric-datagen": [
-			"dev.pswg.datagen.GalaxiesDataGenerator"
+			"dev.pswg.datagen.GalaxiesDataGenerator",
+			"dev.pswg.datagen.GalaxiesClientDataGenerator"
 		]
 	},
 	"accessWidener": "pswg.accesswidener",

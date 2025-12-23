@@ -1,6 +1,7 @@
 package dev.pswg.hud;
 
 import dev.pswg.Blasters;
+import dev.pswg.GalaxiesClient;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.rendering.BlittableTexture;
 import dev.pswg.rendering.ItemHudRenderer;
@@ -37,6 +38,8 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 
 	private static final BlittableTexture.Patch PASSIVE_HEAT_BAR = HUD_ELEMENTS.createPatch(0, 4, COOLDOWN_WIDTH, COOLDOWN_HEIGHT);
 
+	private static final BlittableTexture.Patch OVERCHARGE_BAR = HUD_ELEMENTS.createPatch(0, 12, COOLDOWN_WIDTH, COOLDOWN_HEIGHT);
+
 	private static final BlittableTexture.Patch COOLDOWN_BACKGROUND = HUD_ELEMENTS.createPatch(0, 16, COOLDOWN_WIDTH, COOLDOWN_HEIGHT);
 
 	private static final BlittableTexture.Patch CURSOR = HUD_ELEMENTS.createPatch(0, 24, 3, 7);
@@ -46,9 +49,15 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 	{
 		var client = MinecraftClient.getInstance();
 
-		var stats = BlasterItem.getStats(stack);
+		assert client.world != null;
+
+		var optionalStats = BlasterItem.getStats(stack);
+		if (optionalStats.isEmpty())
+			return;
+
+		var stats = optionalStats.get();
+
 		var state = BlasterItem.getState(stack);
-		var coolingStatus = BlasterItem.getCoolingStatus(client.world, stack, tickCounter.getTickProgress(false));
 
 		var m = context.getMatrices();
 		m.pushMatrix();
@@ -60,58 +69,80 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 
 		BACKGROUND.blit(context, cooldownBarX, top + COOLDOWN_OFFSET, -1);
 
-		if (coolingStatus.coolingMode() == BlasterItem.CoolingMode.PASSIVE)
+		var tickDelta = GalaxiesClient.getTickDelta();
+
+		var overcharge = BlasterItem.getOverchargeTimeRemaining(client.world, stack, tickDelta);
+		if (overcharge.isPresent())
 		{
-			PASSIVE_HEAT_BAR.blit(
-					context,
-					cooldownBarX, top + COOLDOWN_OFFSET,
-					(int)(COOLDOWN_WIDTH * coolingStatus.totalHeat() / stats.heat().capacity()), COOLDOWN_HEIGHT,
-					-1
-			);
-		}
-		else
-		{
-			COOLDOWN_BACKGROUND.blit(
+			OVERCHARGE_BAR.blit(
 					context,
 					cooldownBarX, top + COOLDOWN_OFFSET,
 					COOLDOWN_WIDTH, COOLDOWN_HEIGHT,
 					-1
 			);
 
-			if (coolingStatus.coolingMode().canBypass())
+			// cursor
+			m.pushMatrix();
+			m.translate(cooldownBarX + overcharge.get() * (COOLDOWN_WIDTH - 3), 0);
+			CURSOR.blit(context, 0, top + COOLDOWN_OFFSET - 2, -1);
+			m.popMatrix();
+		}
+		else
+		{
+			var coolingStatus = BlasterItem.getCoolingStatus(client.world, stack, tickDelta);
+			if (coolingStatus.coolingMode() == BlasterItem.CoolingMode.PASSIVE)
 			{
-				var profile = stats.cooling();
-				var primaryBypassStartX = (int)((profile.primaryBypassTime() - profile.primaryBypassTolerance()) * COOLDOWN_WIDTH);
-				var primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance() * COOLDOWN_WIDTH);
-				var secondaryBypassStartX = (int)((profile.secondaryBypassTime() - profile.secondaryBypassTolerance()) * COOLDOWN_WIDTH);
-				var secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance() * COOLDOWN_WIDTH);
-
-				// blue primary bypass
-				HUD_ELEMENTS.blit(
+				PASSIVE_HEAT_BAR.blit(
 						context,
-						cooldownBarX + primaryBypassStartX, top + COOLDOWN_OFFSET,
-						primaryBypassStartX, PRIMARY_BYPASS_TEX_V,
-						primaryBypassWidth, COOLDOWN_HEIGHT,
-						-1
-				);
-
-				// yellow secondary bypass
-				HUD_ELEMENTS.blit(
-						context,
-						cooldownBarX + secondaryBypassStartX, top + COOLDOWN_OFFSET,
-						secondaryBypassStartX, SECONDARY_BYPASS_TEX_V,
-						secondaryBypassWidth, COOLDOWN_HEIGHT,
+						cooldownBarX, top + COOLDOWN_OFFSET,
+						(int)(COOLDOWN_WIDTH * coolingStatus.totalHeat() / stats.heat().capacity()), COOLDOWN_HEIGHT,
 						-1
 				);
 			}
+			else
+			{
+				COOLDOWN_BACKGROUND.blit(
+						context,
+						cooldownBarX, top + COOLDOWN_OFFSET,
+						COOLDOWN_WIDTH, COOLDOWN_HEIGHT,
+						-1
+				);
 
-			var heat = coolingStatus.totalHeat() / state.lastVentingHeat();
+				if (coolingStatus.coolingMode().canBypass())
+				{
+					var profile = stats.cooling();
+					var primaryBypassStartX = (int)((profile.primaryBypassTime() - profile.primaryBypassTolerance()) * COOLDOWN_WIDTH);
+					var primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance() * COOLDOWN_WIDTH);
+					var secondaryBypassStartX = (int)((profile.secondaryBypassTime() - profile.secondaryBypassTolerance()) * COOLDOWN_WIDTH);
+					var secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance() * COOLDOWN_WIDTH);
 
-			// cursor
-			m.pushMatrix();
-			m.translate(cooldownBarX + heat * (COOLDOWN_WIDTH - 3), 0);
-			CURSOR.blit(context, 0, top + COOLDOWN_OFFSET - 2, -1);
-			m.popMatrix();
+					// blue primary bypass
+					HUD_ELEMENTS.blit(
+							context,
+							cooldownBarX + primaryBypassStartX, top + COOLDOWN_OFFSET,
+							primaryBypassStartX, PRIMARY_BYPASS_TEX_V,
+							primaryBypassWidth, COOLDOWN_HEIGHT,
+							-1
+					);
+
+					// yellow secondary bypass
+					HUD_ELEMENTS.blit(
+							context,
+							cooldownBarX + secondaryBypassStartX, top + COOLDOWN_OFFSET,
+							secondaryBypassStartX, SECONDARY_BYPASS_TEX_V,
+							secondaryBypassWidth, COOLDOWN_HEIGHT,
+							-1
+					);
+				}
+
+				var heat = coolingStatus.totalHeat() / state.lastVentingHeat();
+
+				// cursor
+				m.pushMatrix();
+				m.translate(cooldownBarX + heat * (COOLDOWN_WIDTH - 3), 0);
+				CURSOR.blit(context, 0, top + COOLDOWN_OFFSET - 2, -1);
+				m.popMatrix();
+			}
 		}
 
 		// endcaps

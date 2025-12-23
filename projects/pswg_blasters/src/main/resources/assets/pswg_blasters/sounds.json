@@ -1,0 +1,65 @@
+{
+	"blaster.fire.e11":	{
+		"subtitle": "subtitle.pswg_blasters.blaster.fire",
+		"sounds":
+		[
+			"pswg_blasters:blaster/fire/e11"
+		]
+	},
+	"blaster.reload":	{
+		"subtitle": "subtitle.pswg_blasters.blaster.reload",
+		"sounds":
+		[
+			"pswg_blasters:blaster/reload"
+		]
+	},
+	"blaster.dryfire":	{
+		"subtitle": "subtitle.pswg_blasters.blaster.dryfire",
+		"sounds":
+		[
+			"pswg_blasters:blaster/dryfire"
+		]
+	},
+	"blaster.bypass.primary": {
+		"subtitle": "subtitle.pswg_blasters.blaster.bypass.primary",
+		"sounds":
+		[
+			"pswg_blasters:blaster/bypass/primary"
+		]
+	},
+	"blaster.bypass.secondary":	{
+		"subtitle": "subtitle.pswg_blasters.blaster.bypass.secondary",
+		"sounds":
+		[
+			"pswg_blasters:blaster/bypass/secondary"
+		]
+	},
+	"blaster.bypass.secondary_end":	{
+		"subtitle": "subtitle.pswg_blasters.blaster.bypass.secondary_end",
+		"sounds":
+		[
+			"pswg_blasters:blaster/bypass/secondary_end"
+		]
+	},
+	"blaster.bypass.failed": {
+		"subtitle": "subtitle.pswg_blasters.blaster.bypass.failed",
+		"sounds":
+		[
+			"pswg_blasters:blaster/bypass/failed"
+		]
+	},
+	"blaster.vent":	{
+		"subtitle": "subtitle.pswg_blasters.blaster.vent",
+		"sounds":
+		[
+			"pswg_blasters:blaster/vent"
+		]
+	},
+	"blaster.overheat":	{
+		"subtitle": "subtitle.pswg_blasters.blaster.overheat",
+		"sounds":
+		[
+			"pswg_blasters:blaster/overheat"
+		]
+	}
+}

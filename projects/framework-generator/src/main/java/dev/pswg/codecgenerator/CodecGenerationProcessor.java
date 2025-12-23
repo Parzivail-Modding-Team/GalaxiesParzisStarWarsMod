@@ -63,10 +63,15 @@ public class CodecGenerationProcessor extends AbstractProcessor
 	 */
 	private static final HashMap<String, Map<GenPacketCodec, CodecType>> packetCodecTypes = new HashMap<>();
 
+	/**
+	 * The core Minecraft codecs class
+	 */
+	private static final TypeName MC_TYPES = ClassName.get("net.minecraft.util.dynamic", "Codecs");
+	private static final TypeName MC_PACKET_TYPES = ClassName.get("net.minecraft.network.codec", "PacketCodecs");
+
 	public CodecGenerationProcessor()
 	{
 		var mojangTypes = ClassName.get("com.mojang.serialization", "Codec");
-		var mcTypes = ClassName.get("net.minecraft.util.dynamic", "Codecs");
 
 		registerCodecsForType(
 				"boolean",
@@ -80,7 +85,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				GenStandardCodec.BYTE,
 				Map.of(
 						GenStandardCodec.BYTE, new CodecType(mojangTypes, "BYTE"),
-						GenStandardCodec.UNSIGNED_BYTE, new CodecType(mcTypes, "UNSIGNED_BYTE")
+						GenStandardCodec.UNSIGNED_BYTE, new CodecType(MC_TYPES, "UNSIGNED_BYTE")
 				)
 		);
 		registerCodecsForType(
@@ -95,11 +100,11 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				GenStandardCodec.INT,
 				Map.of(
 						GenStandardCodec.INT, new CodecType(mojangTypes, "INT"),
-						GenStandardCodec.RGB, new CodecType(mcTypes, "RGB"),
-						GenStandardCodec.ARGB, new CodecType(mcTypes, "ARGB"),
-						GenStandardCodec.NON_NEGATIVE_INT, new CodecType(mcTypes, "NON_NEGATIVE_INT"),
-						GenStandardCodec.POSITIVE_INT, new CodecType(mcTypes, "POSITIVE_INT"),
-						GenStandardCodec.UNICODE_CODEPOINT, new CodecType(mcTypes, "CODEPOINT")
+						GenStandardCodec.RGB, new CodecType(MC_TYPES, "RGB"),
+						GenStandardCodec.ARGB, new CodecType(MC_TYPES, "ARGB"),
+						GenStandardCodec.NON_NEGATIVE_INT, new CodecType(MC_TYPES, "NON_NEGATIVE_INT"),
+						GenStandardCodec.POSITIVE_INT, new CodecType(MC_TYPES, "POSITIVE_INT"),
+						GenStandardCodec.UNICODE_CODEPOINT, new CodecType(MC_TYPES, "CODEPOINT")
 				)
 		);
 		registerCodecsForType(
@@ -114,8 +119,8 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				GenStandardCodec.FLOAT,
 				Map.of(
 						GenStandardCodec.FLOAT, new CodecType(mojangTypes, "FLOAT"),
-						GenStandardCodec.NON_NEGATIVE_FLOAT, new CodecType(mcTypes, "NON_NEGATIVE_FLOAT"),
-						GenStandardCodec.POSITIVE_FLOAT, new CodecType(mcTypes, "POSITIVE_FLOAT")
+						GenStandardCodec.NON_NEGATIVE_FLOAT, new CodecType(MC_TYPES, "NON_NEGATIVE_FLOAT"),
+						GenStandardCodec.POSITIVE_FLOAT, new CodecType(MC_TYPES, "POSITIVE_FLOAT")
 				)
 		);
 		registerCodecsForType(
@@ -130,10 +135,10 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				GenStandardCodec.STRING,
 				Map.of(
 						GenStandardCodec.STRING, new CodecType(mojangTypes, "STRING"),
-						GenStandardCodec.ESCAPED_STRING, new CodecType(mcTypes, "ESCAPED_STRING"),
-						GenStandardCodec.PLAYER_NAME, new CodecType(mcTypes, "PLAYER_NAME"),
-						GenStandardCodec.NON_EMPTY_STRING, new CodecType(mcTypes, "NON_EMPTY_STRING"),
-						GenStandardCodec.IDENTIFIER_PATH, new CodecType(mcTypes, "IDENTIFIER_PATH")
+						GenStandardCodec.ESCAPED_STRING, new CodecType(MC_TYPES, "ESCAPED_STRING"),
+						GenStandardCodec.PLAYER_NAME, new CodecType(MC_TYPES, "PLAYER_NAME"),
+						GenStandardCodec.NON_EMPTY_STRING, new CodecType(MC_TYPES, "NON_EMPTY_STRING"),
+						GenStandardCodec.IDENTIFIER_PATH, new CodecType(MC_TYPES, "IDENTIFIER_PATH")
 				)
 		);
 		registerCodecsForType(
@@ -161,85 +166,78 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				"com.google.gson.JsonElement",
 				GenStandardCodec.JSON_ELEMENT,
 				Map.of(
-						GenStandardCodec.JSON_ELEMENT, new CodecType(mcTypes, "JSON_ELEMENT")
+						GenStandardCodec.JSON_ELEMENT, new CodecType(MC_TYPES, "JSON_ELEMENT")
 				)
 		);
 		registerCodecsForType(
-				"net.minecraft.util.dynamic.Codecs.VECTOR_3F",
+				"org.joml.Vector3f",
 				GenStandardCodec.VECTOR_3F,
 				Map.of(
-						GenStandardCodec.VECTOR_3F, new CodecType(mcTypes, "VECTOR_3F")
+						GenStandardCodec.VECTOR_3F, new CodecType(MC_TYPES, "VECTOR_3F")
 				)
 		);
 		registerCodecsForType(
-				"net.minecraft.util.dynamic.Codecs.VECTOR_4F",
+				"org.joml.Vector4f",
 				GenStandardCodec.VECTOR_4F,
 				Map.of(
-						GenStandardCodec.VECTOR_4F, new CodecType(mcTypes, "VECTOR_4F")
+						GenStandardCodec.VECTOR_4F, new CodecType(MC_TYPES, "VECTOR_4F")
 				)
 		);
 		registerCodecsForType(
 				"org.joml.Quaternionf",
 				GenStandardCodec.QUATERNION_F,
 				Map.of(
-						GenStandardCodec.QUATERNION_F, new CodecType(mcTypes, "QUATERNION_F"),
-						GenStandardCodec.ROTATION, new CodecType(mcTypes, "ROTATION")
+						GenStandardCodec.QUATERNION_F, new CodecType(MC_TYPES, "QUATERNION_F"),
+						GenStandardCodec.ROTATION, new CodecType(MC_TYPES, "ROTATION")
 				)
 		);
 		registerCodecsForType(
 				"org.joml.AxisAngle4f",
 				GenStandardCodec.AXIS_ANGLE_4F,
 				Map.of(
-						GenStandardCodec.AXIS_ANGLE_4F, new CodecType(mcTypes, "AXIS_ANGLE_4F")
+						GenStandardCodec.AXIS_ANGLE_4F, new CodecType(MC_TYPES, "AXIS_ANGLE_4F")
 				)
 		);
 		registerCodecsForType(
 				"org.joml.Matrix4f",
 				GenStandardCodec.MATRIX_4F,
 				Map.of(
-						GenStandardCodec.MATRIX_4F, new CodecType(mcTypes, "MATRIX_4F")
+						GenStandardCodec.MATRIX_4F, new CodecType(MC_TYPES, "MATRIX_4F")
 				)
 		);
 		registerCodecsForType(
 				"java.time.Instant",
 				GenStandardCodec.INSTANT,
 				Map.of(
-						GenStandardCodec.INSTANT, new CodecType(mcTypes, "INSTANT")
+						GenStandardCodec.INSTANT, new CodecType(MC_TYPES, "INSTANT")
 				)
 		);
 		registerCodecsForType(
 				"net.minecraft.util.dynamic.Codecs.TagEntryId",
 				GenStandardCodec.TAG_ENTRY_ID,
 				Map.of(
-						GenStandardCodec.TAG_ENTRY_ID, new CodecType(mcTypes, "TAG_ENTRY_ID")
+						GenStandardCodec.TAG_ENTRY_ID, new CodecType(MC_TYPES, "TAG_ENTRY_ID")
 				)
 		);
 		registerCodecsForType(
 				"java.util.BitSet",
 				GenStandardCodec.BIT_SET,
 				Map.of(
-						GenStandardCodec.BIT_SET, new CodecType(mcTypes, "BIT_SET")
+						GenStandardCodec.BIT_SET, new CodecType(MC_TYPES, "BIT_SET")
 				)
 		);
 		registerCodecsForType(
 				"com.mojang.authlib.properties.Property",
 				GenStandardCodec.GAME_PROFILE_PROPERTY,
 				Map.of(
-						GenStandardCodec.GAME_PROFILE_PROPERTY, new CodecType(mcTypes, "GAME_PROFILE_PROPERTY")
+						GenStandardCodec.GAME_PROFILE_PROPERTY, new CodecType(MC_TYPES, "GAME_PROFILE_PROPERTY")
 				)
 		);
 		registerCodecsForType(
 				"com.mojang.authlib.properties.PropertyMap",
 				GenStandardCodec.GAME_PROFILE_PROPERTY_MAP,
 				Map.of(
-						GenStandardCodec.GAME_PROFILE_PROPERTY_MAP, new CodecType(mcTypes, "GAME_PROFILE_PROPERTY_MAP")
-				)
-		);
-		registerCodecsForType(
-				"com.mojang.authlib.GameProfile",
-				GenStandardCodec.GAME_PROFILE_WITH_PROPERTIES,
-				Map.of(
-						GenStandardCodec.GAME_PROFILE_WITH_PROPERTIES, new CodecType(mcTypes, "GAME_PROFILE_WITH_PROPERTIES")
+						GenStandardCodec.GAME_PROFILE_PROPERTY_MAP, new CodecType(MC_TYPES, "GAME_PROFILE_PROPERTY_MAP")
 				)
 		);
 		registerCodecsForType(
@@ -253,134 +251,133 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				"byte[]",
 				GenStandardCodec.BASE_64,
 				Map.of(
-						GenStandardCodec.BASE_64, new CodecType(mcTypes, "BASE_64")
+						GenStandardCodec.BASE_64, new CodecType(MC_TYPES, "BASE_64")
 				)
 		);
 
-		var packetCodecsType = ClassName.get("net.minecraft.network.codec", "PacketCodecs");
 		registerPacketCodecsForType(
 				"boolean",
 				GenPacketCodec.BOOL,
 				Map.of(
-						GenPacketCodec.BOOL, new CodecType(packetCodecsType, "BOOLEAN")
+						GenPacketCodec.BOOL, new CodecType(MC_PACKET_TYPES, "BOOLEAN")
 				)
 		);
 		registerPacketCodecsForType(
 				"byte",
 				GenPacketCodec.BYTE,
 				Map.of(
-						GenPacketCodec.BYTE, new CodecType(packetCodecsType, "BYTE")
+						GenPacketCodec.BYTE, new CodecType(MC_PACKET_TYPES, "BYTE")
 				)
 		);
 		registerPacketCodecsForType(
 				"short",
 				GenPacketCodec.SHORT,
 				Map.of(
-						GenPacketCodec.SHORT, new CodecType(packetCodecsType, "SHORT")
+						GenPacketCodec.SHORT, new CodecType(MC_PACKET_TYPES, "SHORT")
 				)
 		);
 		registerPacketCodecsForType(
 				"int",
 				GenPacketCodec.VAR_INT,
 				Map.of(
-						GenPacketCodec.VAR_INT, new CodecType(packetCodecsType, "VAR_INT"),
-						GenPacketCodec.UNSIGNED_SHORT, new CodecType(packetCodecsType, "UNSIGNED_SHORT"),
-						GenPacketCodec.INTEGER, new CodecType(packetCodecsType, "INTEGER"),
-						GenPacketCodec.SYNC_ID, new CodecType(packetCodecsType, "SYNC_ID")
+						GenPacketCodec.VAR_INT, new CodecType(MC_PACKET_TYPES, "VAR_INT"),
+						GenPacketCodec.UNSIGNED_SHORT, new CodecType(MC_PACKET_TYPES, "UNSIGNED_SHORT"),
+						GenPacketCodec.INTEGER, new CodecType(MC_PACKET_TYPES, "INTEGER"),
+						GenPacketCodec.SYNC_ID, new CodecType(MC_PACKET_TYPES, "SYNC_ID")
 				)
 		);
 		registerPacketCodecsForType(
 				"java.util.OptionalInt",
 				GenPacketCodec.OPTIONAL_INT,
 				Map.of(
-						GenPacketCodec.OPTIONAL_INT, new CodecType(packetCodecsType, "OPTIONAL_INT")
+						GenPacketCodec.OPTIONAL_INT, new CodecType(MC_PACKET_TYPES, "OPTIONAL_INT")
 				)
 		);
 		registerPacketCodecsForType(
 				"long",
 				GenPacketCodec.VAR_LONG,
 				Map.of(
-						GenPacketCodec.VAR_LONG, new CodecType(packetCodecsType, "VAR_LONG"),
-						GenPacketCodec.LONG, new CodecType(packetCodecsType, "LONG")
+						GenPacketCodec.VAR_LONG, new CodecType(MC_PACKET_TYPES, "VAR_LONG"),
+						GenPacketCodec.LONG, new CodecType(MC_PACKET_TYPES, "LONG")
 				)
 		);
 		registerPacketCodecsForType(
 				"float",
 				GenPacketCodec.FLOAT,
 				Map.of(
-						GenPacketCodec.FLOAT, new CodecType(packetCodecsType, "FLOAT"),
-						GenPacketCodec.DEGREES, new CodecType(packetCodecsType, "DEGREES")
+						GenPacketCodec.FLOAT, new CodecType(MC_PACKET_TYPES, "FLOAT"),
+						GenPacketCodec.DEGREES, new CodecType(MC_PACKET_TYPES, "DEGREES")
 				)
 		);
 		registerPacketCodecsForType(
 				"double",
 				GenPacketCodec.DOUBLE,
 				Map.of(
-						GenPacketCodec.DOUBLE, new CodecType(packetCodecsType, "DOUBLE")
+						GenPacketCodec.DOUBLE, new CodecType(MC_PACKET_TYPES, "DOUBLE")
 				)
 		);
 		registerPacketCodecsForType(
 				"byte[]",
 				GenPacketCodec.BYTE_ARRAY,
 				Map.of(
-						GenPacketCodec.BYTE_ARRAY, new CodecType(packetCodecsType, "BYTE_ARRAY")
+						GenPacketCodec.BYTE_ARRAY, new CodecType(MC_PACKET_TYPES, "BYTE_ARRAY")
 				)
 		);
 		registerPacketCodecsForType(
 				"java.lang.String",
 				GenPacketCodec.STRING,
 				Map.of(
-						GenPacketCodec.STRING, new CodecType(packetCodecsType, "STRING")
+						GenPacketCodec.STRING, new CodecType(MC_PACKET_TYPES, "STRING")
 				));
 		registerPacketCodecsForType(
 				"net.minecraft.nbt.NbtElement",
 				GenPacketCodec.NBT_ELEMENT,
 				Map.of(
-						GenPacketCodec.NBT_ELEMENT, new CodecType(packetCodecsType, "NBT_ELEMENT"),
-						GenPacketCodec.UNLIMITED_NBT_ELEMENT, new CodecType(packetCodecsType, "UNLIMITED_NBT_ELEMENT")
+						GenPacketCodec.NBT_ELEMENT, new CodecType(MC_PACKET_TYPES, "NBT_ELEMENT"),
+						GenPacketCodec.UNLIMITED_NBT_ELEMENT, new CodecType(MC_PACKET_TYPES, "UNLIMITED_NBT_ELEMENT")
 				)
 		);
 		registerPacketCodecsForType(
 				"net.minecraft.nbt.NbtCompound",
 				GenPacketCodec.NBT_COMPOUND,
 				Map.of(
-						GenPacketCodec.NBT_COMPOUND, new CodecType(packetCodecsType, "NBT_COMPOUND"),
-						GenPacketCodec.UNLIMITED_NBT_COMPOUND, new CodecType(packetCodecsType, "UNLIMITED_NBT_COMPOUND")
+						GenPacketCodec.NBT_COMPOUND, new CodecType(MC_PACKET_TYPES, "NBT_COMPOUND"),
+						GenPacketCodec.UNLIMITED_NBT_COMPOUND, new CodecType(MC_PACKET_TYPES, "UNLIMITED_NBT_COMPOUND")
 				)
 		);
 		registerPacketCodecsForType(
 				"java.util.Optional<net.minecraft.nbt.NbtCompound>",
 				GenPacketCodec.OPTIONAL_NBT,
 				Map.of(
-						GenPacketCodec.OPTIONAL_NBT, new CodecType(packetCodecsType, "OPTIONAL_NBT")
+						GenPacketCodec.OPTIONAL_NBT, new CodecType(MC_PACKET_TYPES, "OPTIONAL_NBT")
 				)
 		);
 		registerPacketCodecsForType(
 				"org.joml.Vector3f",
 				GenPacketCodec.VECTOR_3F,
 				Map.of(
-						GenPacketCodec.VECTOR_3F, new CodecType(packetCodecsType, "VECTOR_3F")
+						GenPacketCodec.VECTOR_3F, new CodecType(MC_PACKET_TYPES, "VECTOR_3F")
 				)
 		);
 		registerPacketCodecsForType(
 				"org.joml.Quaternionf",
 				GenPacketCodec.QUATERNION_F,
 				Map.of(
-						GenPacketCodec.QUATERNION_F, new CodecType(packetCodecsType, "QUATERNION_F")
+						GenPacketCodec.QUATERNION_F, new CodecType(MC_PACKET_TYPES, "QUATERNION_F")
 				)
 		);
 		registerPacketCodecsForType(
 				"com.mojang.authlib.properties.PropertyMap",
 				GenPacketCodec.PROPERTY_MAP,
 				Map.of(
-						GenPacketCodec.PROPERTY_MAP, new CodecType(packetCodecsType, "PROPERTY_MAP")
+						GenPacketCodec.PROPERTY_MAP, new CodecType(MC_PACKET_TYPES, "PROPERTY_MAP")
 				)
 		);
 		registerPacketCodecsForType(
 				"com.mojang.authlib.GameProfile",
 				GenPacketCodec.GAME_PROFILE,
 				Map.of(
-						GenPacketCodec.GAME_PROFILE, new CodecType(packetCodecsType, "GAME_PROFILE")
+						GenPacketCodec.GAME_PROFILE, new CodecType(MC_PACKET_TYPES, "GAME_PROFILE")
 				)
 		);
 		registerPacketCodecsForType(
@@ -534,7 +531,24 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				codecInitializer.add(",\n");
 			first = false;
 
-			codecInitializer.add("$3T.$4L.fieldOf($2S).forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), nestedCodecType.className(), nestedCodecType.elementName());
+			String fieldInitializer;
+
+			var codecDefault = component.getAnnotation(CodecDefault.class);
+			if (codecDefault != null)
+			{
+				fieldInitializer = "optionalFieldOf($2S, %s)".formatted(codecDefault.value());
+			}
+			else
+				fieldInitializer = "fieldOf($2S)";
+
+			var classTypeName = nestedCodecType.className().toString();
+			if (classTypeName.startsWith("java.util.List"))
+			{
+				var listArg = ClassName.bestGuess(classTypeName.substring("java.util.List<".length(), classTypeName.length() - 1));
+				codecInitializer.add("$5T.listOrSingle($3T.$4L)." + fieldInitializer + ".forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), listArg, nestedCodecType.elementName(), MC_TYPES);
+			}
+			else
+				codecInitializer.add("$3T.$4L." + fieldInitializer + ".forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), nestedCodecType.className(), nestedCodecType.elementName());
 		}
 
 		codecInitializer.unindent()
@@ -582,9 +596,23 @@ public class CodecGenerationProcessor extends AbstractProcessor
 
 			var paramName = component.getSimpleName().toString();
 			paramNames.add(paramName);
+			
+			// PacketCodecs.collection(ArrayList::new, PACKET_CODEC, 65536)
+			var classTypeName = nestedCodecType.className().toString();
+			if (classTypeName.startsWith("java.util.List"))
+			{
+				var arrayListType = ClassName.get("java.util", "ArrayList");
 
-			encodeBuilder.addStatement("$1T.$2L.encode(registryByteBuf, value.$3L())", nestedCodecType.className(), nestedCodecType.elementName(), component.getSimpleName().toString());
-			decodeBuilder.addStatement("var $1L = $2T.$3L.decode(registryByteBuf)", paramName, nestedCodecType.className(), nestedCodecType.elementName());
+				var listArg = ClassName.bestGuess(classTypeName.substring("java.util.List<".length(), classTypeName.length() - 1));
+
+				encodeBuilder.addStatement("$4T.collection(null, $1T.$2L, 65536).encode(registryByteBuf, value.$3L())", listArg, nestedCodecType.elementName(), component.getSimpleName().toString(), MC_PACKET_TYPES);
+				decodeBuilder.addStatement("var $1L = $4T.collection($5T::new, $2T.$3L, 65536).decode(registryByteBuf)", paramName, listArg, nestedCodecType.elementName(), MC_PACKET_TYPES, arrayListType);
+			}
+			else
+			{
+				encodeBuilder.addStatement("$1T.$2L.encode(registryByteBuf, value.$3L())", nestedCodecType.className(), nestedCodecType.elementName(), component.getSimpleName().toString());
+				decodeBuilder.addStatement("var $1L = $2T.$3L.decode(registryByteBuf)", paramName, nestedCodecType.className(), nestedCodecType.elementName());
+			}
 		}
 
 		decodeBuilder.addStatement(

@@ -52,7 +52,7 @@ public final class GalaxiesEntityLeftClickManager
 					player.setAngles(f, g);
 				}
 
-				var result = interactItemLeft(player.interactionManager, player, serverWorld, itemStack, hand);
+				var result = interactItemLeft(player.interactionManager, player, serverWorld, itemStack, hand, packet.repeat());
 				if (result instanceof ActionResult.Success success && success.swingSource() == ActionResult.SwingSource.SERVER)
 				{
 					player.swingHand(hand, true);
@@ -65,7 +65,7 @@ public final class GalaxiesEntityLeftClickManager
 	 * Emulates the {@link ServerPlayerInteractionManager#interactItem} functionality for
 	 * left-use items
 	 */
-	private static ActionResult interactItemLeft(ServerPlayerInteractionManager interactionManager, ServerPlayerEntity player, ServerWorld world, ItemStack stack, Hand hand)
+	private static ActionResult interactItemLeft(ServerPlayerInteractionManager interactionManager, ServerPlayerEntity player, ServerWorld world, ItemStack stack, Hand hand, boolean repeatEvent)
 	{
 		if (interactionManager.getGameMode() == GameMode.SPECTATOR)
 		{
@@ -79,7 +79,7 @@ public final class GalaxiesEntityLeftClickManager
 			int i = stack.getCount();
 			int j = stack.getDamage();
 
-			ActionResult actionResult = useLeft(world, player, hand, stack);
+			ActionResult actionResult = useLeft(world, player, hand, stack, repeatEvent);
 			ItemStack itemStack;
 			if (actionResult instanceof ActionResult.Success success)
 			{
@@ -123,13 +123,13 @@ public final class GalaxiesEntityLeftClickManager
 	/**
 	 * Emulates the {@link ItemStack#use} functionality for left-use items
 	 */
-	static ActionResult useLeft(World world, PlayerEntity user, Hand hand, ItemStack stack)
+	static ActionResult useLeft(World world, PlayerEntity user, Hand hand, ItemStack stack, boolean repeatEvent)
 	{
 		if (!(stack.getItem() instanceof ILeftClickUsable leftItem))
 			return ActionResult.PASS;
 
 		boolean isInstantUseItem = leftItem.getMaxUseLeftTime(stack, user) <= 0;
-		ActionResult actionResult = leftItem.useLeft(world, user, hand);
+		ActionResult actionResult = leftItem.useLeft(world, user, hand, repeatEvent);
 
 		if (isInstantUseItem && actionResult instanceof ActionResult.Success success)
 			return success.withNewHandStack(success.getNewHandStack() == null ? stack : success.getNewHandStack());

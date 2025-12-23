@@ -10,9 +10,11 @@ import dev.pswg.data.IdentifierUtil;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.registry.Registrar;
+import dev.pswg.sound.BlasterSounds;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
@@ -49,7 +51,7 @@ public final class Blasters implements GalaxiesAddon
 	/**
 	 * A logger available only to PSWG module and addon blasters
 	 */
-	public static final Logger LOGGER = Galaxies.createSubLogger("blasters");
+	public static final Logger LOGGER = Galaxies.createSubLogger(MODID);
 
 	/**
 	 * The configuration file that controls the behavior of PSWG core
@@ -59,6 +61,7 @@ public final class Blasters implements GalaxiesAddon
 	public static final CodecDataLoader<BlasterDatapackDefinition> DATAPACK_LOADER = new CodecDataLoader<>(
 			id("data"),
 			"blasters",
+			true,
 			IdentifierUtil::isJsonFile,
 			BlasterDatapackDefinition.CODEC
 	);
@@ -98,9 +101,10 @@ public final class Blasters implements GalaxiesAddon
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT)
 		               .register(Blasters::addBlastersToTab);
 
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(DATAPACK_LOADER);
+		ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(DATAPACK_LOADER.getId(), DATAPACK_LOADER);
 
-		// TODO: how to differentiate different modules' versions?
+		BlasterSounds.register();
+
 		LOGGER.info("Module initialized");
 	}
 }

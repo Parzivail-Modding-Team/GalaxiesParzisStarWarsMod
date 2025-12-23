@@ -1,25 +1,31 @@
 package dev.pswg.item;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.UnboundedMapCodec;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.codec.GalaxiesCodecs;
-import dev.pswg.codecgenerator.GenerateCodec;
-import dev.pswg.codecgenerator.SelfCodec;
+import dev.pswg.codecgenerator.*;
 import dev.pswg.data.BlasterDatapackDefinition;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
+import dev.pswg.interaction.IRecoilEntity;
+import dev.pswg.math.Combinator;
+import dev.pswg.math.GMath;
+import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
+import dev.pswg.sound.BlasterSounds;
 import dev.pswg.world.TickConstants;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -27,29 +33,28 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
-import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
-public class BlasterItem extends Item implements ILeftClickUsable
+public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler, IHandAnimationAware
 {
 	/**
 	 * The reason, if any, for a blaster to be cooling.
@@ -135,16 +140,115 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	/**
-	 * Contains the infrequently-modified attachment data for the blaster
+	 * Contains the immutable attachment data for the blaster
 	 *
-	 * @param hud The ID of the HUD renderer this blaster should display
+	 * @param hud      The ID of the HUD renderer this blaster should display
+	 * @param defaults The default values of each slot in the blaster
+	 * @param options  The list of attachment definitions for this blaster
 	 */
 	@GenerateCodec
-	public record AttachmentsComponent(Identifier hud) implements IAttachmentsComponentCodec
+	public record AvailableAttachmentsComponent(
+			Identifier hud,
+			@UseCodec(
+					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
+					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
+			)
+			Map<Identifier, Identifier> defaults,
+			@UseCodec(
+					customCodec = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_CODEC"),
+					customPacket = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_PACKET_CODEC")
+			)
+			Map<Identifier, AttachmentDefinition> options
+	) implements IAvailableAttachmentsComponentCodec
+	{
+		/**
+		 * The codec for the `options` field
+		 */
+		public static final UnboundedMapCodec<Identifier, AttachmentDefinition> OPTIONS_CODEC = Codec.unboundedMap(Identifier.CODEC, AttachmentDefinition.CODEC);
+
+		/**
+		 * The packet codec for the `options` field
+		 */
+		public static final PacketCodec<RegistryByteBuf, Map<Identifier, AttachmentDefinition>> OPTIONS_PACKET_CODEC = PacketCodecs.map(HashMap::new, Identifier.PACKET_CODEC, AttachmentDefinition.PACKET_CODEC);
+	}
+
+	/**
+	 * Contains the infrequently-modified attachment data for the blaster
+	 *
+	 * @param hud     The ID of the HUD renderer this blaster should display
+	 * @param applied The attachments currently applied to the blaster
+	 */
+	@GenerateCodec
+	public record AttachmentsComponent(
+			Identifier hud,
+			@UseCodec(
+					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
+					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
+			)
+			Map<Identifier, Identifier> applied
+	) implements IAttachmentsComponentCodec
 	{
 		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent(
-				Blasters.DEFAULT_HUD
+				Blasters.DEFAULT_HUD,
+				Map.of()
 		);
+
+		/**
+		 * Gets the attachment definition applied in the given slot for the given stack
+		 *
+		 * @param slot The slot where the attachment would be applied
+		 *
+		 * @return An optional attachment definition if one is applied, empty otherwise
+		 */
+		public Optional<AttachmentDefinition> getAttachmentInSlot(Map<Identifier, AttachmentDefinition> options, Identifier slot)
+		{
+			// Find the ID of the attachment in the given slot
+			Identifier appliedEntryId = applied().getOrDefault(slot, null);
+
+			if (appliedEntryId == null)
+				return Optional.empty();
+
+			// Find the attachment definition for the applied attachment
+			var appliedDefinition = options.getOrDefault(appliedEntryId, null);
+			return Optional.ofNullable(appliedDefinition);
+		}
+
+		/**
+		 * Gets a combined value of the attachment by stacking all equipped
+		 * attachments of the given function
+		 *
+		 * @param options  The available attachment options
+		 * @param function The attachment function to evaluate
+		 *
+		 * @return The evaluated attachment combinator
+		 */
+		public float getAttachmentsValue(Map<Identifier, AttachmentDefinition> options, AttachmentFunction function)
+		{
+			float identity = function.getCombinator().getIdentity();
+
+			for (var equipped : applied().values())
+			{
+				var equippedValue = options.getOrDefault(equipped, null);
+				if (equippedValue != null && equippedValue.function().equals(function.getId()))
+					identity = function.getCombinator().combine(identity, equippedValue.value());
+			}
+
+			return identity;
+		}
+	}
+
+	/**
+	 * Contains the attachment options
+	 */
+	@GenerateCodec
+	public record AttachmentDefinition(
+			String translationKey,
+			@SelfCodec List<Identifier> slots,
+			Identifier function,
+			Identifier category,
+			@CodecDefault("0f") float value
+	) implements IAttachmentDefinitionCodec
+	{
 	}
 
 	/**
@@ -216,11 +320,19 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			float damage,
 			int range,
 			int automaticRepeatDelay,
+			Identifier fireSound,
 			@SelfCodec Heat heat,
 			@SelfCodec Cooling cooling
 	) implements IStatsComponentCodec
 	{
-		public static final StatsComponent DEFAULT = new StatsComponent(8, 48, 4, Heat.DEFAULT, Cooling.DEFAULT);
+		public static final StatsComponent DEFAULT = new StatsComponent(
+				8,
+				48,
+				4,
+				Identifier.ofVanilla("entity.snowball.throw"),
+				Heat.DEFAULT,
+				Cooling.DEFAULT
+		);
 	}
 
 	/**
@@ -238,7 +350,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * @param lastVentingHeat     The amount of heat at the time of cooling start. Can be different
 	 *                            from {@link StateComponent#lastTotalHeat()} if e.g. a heat penalty was applied
 	 * @param coolingMode         The cooling mode of the blaster, if any
-	 * @param burstBoltsRemaining The amount of bolts remaining in this burst
+	 * @param burstBoltsRemaining The number of bolts remaining in this burst
+	 * @param overchargeStart     The timestamp when the blaster began its overcharge perk
 	 */
 	@MutableRecord
 	@GenerateCodec
@@ -250,7 +363,8 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			float lastTotalHeat,
 			float lastVentingHeat,
 			@SelfCodec CoolingMode coolingMode,
-			int burstBoltsRemaining
+			int burstBoltsRemaining,
+			long overchargeStart
 	) implements IStateComponentBuilder, IStateComponentCodec
 	{
 		public static final StateComponent DEFAULT = new StateComponent(
@@ -261,6 +375,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 				0,
 				0,
 				CoolingMode.PASSIVE,
+				0,
 				0
 		);
 
@@ -279,6 +394,47 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		}
 	}
 
+	/**
+	 * Represents an attachment function that can stack values between multiple attachments
+	 */
+	public enum AttachmentFunction
+	{
+		ZOOM_MULTIPLIER(Blasters.id("zoom_multiplier"), Combinator.GEOMETRIC),
+		RECOIL_MULTIPLIER(Blasters.id("recoil_multiplier"), Combinator.GEOMETRIC),
+		SPREAD_MULTIPLIER(Blasters.id("spread_multiplier"), Combinator.GEOMETRIC),
+		COOLING_MULTIPLIER(Blasters.id("cooling_multiplier"), Combinator.GEOMETRIC),
+		FIRE_RATE_MULTIPLIER(Blasters.id("fire_rate_multiplier"), Combinator.GEOMETRIC);
+
+		private final Identifier id;
+		private final Combinator combinator;
+
+		AttachmentFunction(Identifier id, Combinator combinator)
+		{
+			this.id = id;
+			this.combinator = combinator;
+		}
+
+		/**
+		 * Gets the function ID
+		 *
+		 * @return the function ID
+		 */
+		public Identifier getId()
+		{
+			return id;
+		}
+
+		/**
+		 * Gets the combining function
+		 *
+		 * @return The combinator
+		 */
+		public Combinator getCombinator()
+		{
+			return combinator;
+		}
+	}
+
 	public static final Identifier MISSING_ID = Blasters.id("missingno");
 
 	/**
@@ -289,7 +445,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	protected static final int TOGGLE_AIMING_USE_TIME_TICKS = 3;
 
 	/**
-	 * The attribute modifier that is applied to the {@link EntityAttributes#MOVEMENT_SPEED}
+	 * The attribute combinator that is applied to the {@link EntityAttributes#MOVEMENT_SPEED}
 	 * attribute in players when they are aiming-down-sights.
 	 */
 	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED = new EntityAttributeModifier(
@@ -299,7 +455,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	);
 
 	/**
-	 * The attribute modifier that is applied to the {@link GalaxiesEntityAttributes#FIELD_OF_VIEW_ZOOM}
+	 * The attribute combinator that is applied to the {@link GalaxiesEntityAttributes#FIELD_OF_VIEW_ZOOM}
 	 * attribute in players when they are aiming-down-sights.
 	 */
 	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_FOV_ENABLED = new EntityAttributeModifier(
@@ -315,6 +471,15 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			Registries.DATA_COMPONENT_TYPE,
 			Blasters.id("id"),
 			ComponentType.<Identifier>builder().codec(Identifier.CODEC).packetCodec(Identifier.PACKET_CODEC).build()
+	);
+
+	/**
+	 * The component that contains the serial number of the blaster
+	 */
+	public static final ComponentType<Long> SERIAL = Registry.register(
+			Registries.DATA_COMPONENT_TYPE,
+			Blasters.id("serial"),
+			ComponentType.<Long>builder().codec(Codec.LONG).packetCodec(PacketCodecs.LONG).build()
 	);
 
 	/**
@@ -336,22 +501,12 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	);
 
 	/**
-	 * The component that contains the immutable base statistics of the blaster
-	 */
-	private static final ComponentType<StatsComponent> STATS = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
-			Blasters.id("stats"),
-			ComponentType.<StatsComponent>builder().codec(StatsComponent.CODEC).packetCodec(StatsComponent.PACKET_CODEC).build()
-	);
-
-	/**
 	 * @return A new instance of the item settings for this item
 	 */
 	public static Settings createSettings()
 	{
 		return new Settings()
 				.component(ID, MISSING_ID)
-				.component(STATS, StatsComponent.DEFAULT)
 				.component(ATTACHMENTS, AttachmentsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
 	}
@@ -368,11 +523,25 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	{
 		var stack = new ItemStack(Blasters.BLASTER_ITEM);
 
+		// Set the item name to the model name by default
+		stack.set(DataComponentTypes.ITEM_NAME, Text.translatable(id.toTranslationKey()));
+
 		stack.set(ID, id);
-		stack.set(STATS, definition.stats());
-		stack.set(ATTACHMENTS, definition.attachments());
+		stack.set(ATTACHMENTS, createAvailableAttachments(definition.attachments()));
 
 		return stack;
+	}
+
+	/**
+	 * Creates a new attachments component that equips the default attachments
+	 *
+	 * @param attachments The available attachments
+	 *
+	 * @return A new attachments component that equips the default attachments
+	 */
+	private static AttachmentsComponent createAvailableAttachments(AvailableAttachmentsComponent attachments)
+	{
+		return new AttachmentsComponent(attachments.hud(), attachments.defaults());
 	}
 
 	public BlasterItem(Settings settings)
@@ -387,9 +556,10 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 *
 	 * @return The blaster's stats
 	 */
-	public static StatsComponent getStats(ItemStack stack)
+	public static Optional<StatsComponent> getStats(ItemStack stack)
 	{
-		return stack.getOrDefault(STATS, StatsComponent.DEFAULT);
+		return Optional.ofNullable(Blasters.DATAPACK_LOADER.getDefinitions().getOrDefault(stack.get(ID), null))
+		               .map(BlasterDatapackDefinition::stats);
 	}
 
 	/**
@@ -402,6 +572,19 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	public static AttachmentsComponent getAttachments(ItemStack stack)
 	{
 		return stack.getOrDefault(ATTACHMENTS, AttachmentsComponent.DEFAULT);
+	}
+
+	/**
+	 * Gets the available attachments of the given blaster
+	 *
+	 * @param stack The stack to query
+	 *
+	 * @return The blaster's available attachments
+	 */
+	public static Optional<AvailableAttachmentsComponent> getAvailableAttachments(ItemStack stack)
+	{
+		return Optional.ofNullable(Blasters.DATAPACK_LOADER.getDefinitions().getOrDefault(stack.get(ID), null))
+		               .map(BlasterDatapackDefinition::attachments);
 	}
 
 	/**
@@ -457,7 +640,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	 * If currently waiting to be able to fire again, gets the current
 	 * progress [0,1) of the cooldown process
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -479,13 +662,28 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		return Optional.of(cooldownProgress);
 	}
 
+	/**
+	 * If currently venting heat, gets the current bypass segment that the
+	 * cooldown cursor is intersecting.
+	 *
+	 * @param world     The world to which the stack's timestamps are referenced
+	 * @param stack     The stack to query
+	 * @param tickDelta The partial tick to evaluate at
+	 *
+	 * @return A CoolingBypass if currently intersecting one, empty otherwise
+	 */
 	public static Optional<CoolingBypass> getCoolingBypass(World world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
 		if (!state.coolingMode.canBypass())
 			return Optional.empty();
 
-		var stats = getStats(stack);
+		var optionalStats = getStats(stack);
+		if (optionalStats.isEmpty())
+			return Optional.empty();
+
+		var stats = optionalStats.get();
+
 		var potentialVentingHeat = getVentingHeat(world, stack, tickDelta);
 		if (potentialVentingHeat.isEmpty())
 			return Optional.empty();
@@ -509,9 +707,9 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 	/**
 	 * Determines if the blaster is currently able to be fired based on
-	 * the blaster's own properties (e.g. ignoring player eligibility)
+	 * the blaster's own properties (e.g., ignoring player eligibility)
 	 *
-	 * @param world The world to the stack's timestamps are referenced
+	 * @param world The world to which the stack's timestamps are referenced
 	 * @param user  The entity that is requesting to fire the blaster
 	 * @param stack The stack to query
 	 *
@@ -521,7 +719,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	{
 		var state = getState(stack);
 
-		var isWaitingToFire = state.fireCooldown() > world.getTime();
+		var isWaitingToFire = state.fireCooldown() >= world.getTime();
 		if (isWaitingToFire)
 			return false;
 
@@ -531,9 +729,42 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	/**
+	 * If currently overcharged, gets the current proportion [0,1] of the bonus remaining
+	 *
+	 * @param world     The world to which the stack's timestamps are referenced
+	 * @param stack     The stack to query
+	 * @param tickDelta The partial tick to evaluate at
+	 *
+	 * @return The current remaining overcharge proportion
+	 */
+	public static Optional<Float> getOverchargeTimeRemaining(World world, ItemStack stack, float tickDelta)
+	{
+		var state = getState(stack);
+
+		var optionalStats = getStats(stack);
+		if (optionalStats.isEmpty())
+			return Optional.empty();
+
+		var stats = optionalStats.get();
+
+		var overchargeStart = state.overchargeStart();
+		var overchargeLength = stats.heat.overchargeBonus();
+		var time = world.getTime() + tickDelta;
+
+		if (time > overchargeStart + overchargeLength)
+			return Optional.empty();
+
+		if (time < overchargeStart)
+			return Optional.of(1f);
+
+		var overchargeProgress = (time - overchargeStart) / overchargeLength;
+		return Optional.of(1 - overchargeProgress);
+	}
+
+	/**
 	 * Calculates the current accumulated heat of the blaster based on the dissipation rate and the time passed since the last shot.
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -545,7 +776,12 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		if (state.coolingMode() != CoolingMode.PASSIVE)
 			return Optional.empty();
 
-		var stats = getStats(stack);
+		var optionalStats = getStats(stack);
+		if (optionalStats.isEmpty())
+			return Optional.empty();
+
+		var stats = optionalStats.get();
+
 		var attachments = getAttachments(stack);
 
 		var time = world.getTime() + tickDelta;
@@ -563,7 +799,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	/**
 	 * Calculates the current venting heat of the blaster based on the dissipation rate and the time passed since venting started.
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -575,7 +811,12 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		if (state.coolingMode() == CoolingMode.PASSIVE)
 			return Optional.empty();
 
-		var stats = getStats(stack);
+		var optionalStats = getStats(stack);
+		if (optionalStats.isEmpty())
+			return Optional.empty();
+
+		var stats = optionalStats.get();
+
 		var attachments = getAttachments(stack);
 
 		var time = world.getTime() + tickDelta;
@@ -593,7 +834,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	/**
 	 * Determines the cooling status of a blaster, whether passively or actively cooling
 	 *
-	 * @param world     The world to the stack's timestamps are referenced
+	 * @param world     The world to which the stack's timestamps are referenced
 	 * @param stack     The stack to query
 	 * @param tickDelta The partial tick to evaluate at
 	 *
@@ -679,10 +920,24 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		return stats.heat().overheatDrainSpeed();
 	}
 
-	public static float overchargeTimeRemaining(World world, ItemStack itemStack, float tickDelta)
+	@Override
+	public void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, @Nullable EquipmentSlot slot)
 	{
-		// TODO
-		return 0;
+		// If the stack does not have a serial number, assign one
+		if (stack.get(SERIAL) == null)
+			stack.set(SERIAL, world.getRandom().nextLong());
+	}
+
+	@Override
+	public Optional<Boolean> shouldSkipHandAnimationOnSwap(ItemStack from, ItemStack to)
+	{
+		var serialA = from.get(SERIAL);
+		var serialB = to.get(SERIAL);
+
+		if (serialA == null || serialB == null)
+			return Optional.empty();
+
+		return Optional.of(serialA == (long)serialB);
 	}
 
 	@Override
@@ -748,8 +1003,11 @@ public class BlasterItem extends Item implements ILeftClickUsable
 	}
 
 	@Override
-	public ActionResult useLeft(World world, LivingEntity user, Hand hand)
+	public ActionResult useLeft(World world, LivingEntity user, Hand hand, boolean repeatEvent)
 	{
+		// TODO: manual reload
+		// TODO: dryfire sound when no ammunition
+
 		ItemStack itemStack = user.getStackInHand(hand);
 
 		if (!canFire(world, user, itemStack))
@@ -757,7 +1015,23 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		var state = getState(itemStack);
 		var attachments = getAttachments(itemStack);
-		var stats = getStats(itemStack);
+
+		var optionalStats = getStats(itemStack);
+		if (optionalStats.isEmpty())
+		{
+			Blasters.LOGGER.warn("Blaster stats not found for blaster {}", itemStack);
+			return ActionResult.FAIL;
+		}
+
+		var optionalAvailableAttachments = getAvailableAttachments(itemStack);
+		if (optionalAvailableAttachments.isEmpty())
+		{
+			Blasters.LOGGER.warn("Blaster available attachments not found for blaster {}", itemStack);
+			return ActionResult.FAIL;
+		}
+
+		var stats = optionalStats.get();
+		var availableAttachments = optionalAvailableAttachments.get();
 
 		var timestamp = world.getTime();
 
@@ -768,8 +1042,7 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		if (state.coolingMode().isCooling())
 		{
-			var isRepeatEvent = false; // TODO: value ultimately comes from #usageTickLeft
-			if (world.isClient() || !state.coolingMode().canBypass() || isRepeatEvent)
+			if (!state.coolingMode().canBypass() || repeatEvent)
 			{
 				itemStack.set(STATE, state);
 				return ActionResult.FAIL;
@@ -778,34 +1051,80 @@ public class BlasterItem extends Item implements ILeftClickUsable
 			var bypass = getCoolingBypass(world, itemStack, 0);
 			if (bypass.isEmpty())
 			{
-				state = state.withCoolingMode(CoolingMode.FAILED_OVERCHARGE);
+				world.playSound(
+						user,
+						user.getX(),
+						user.getY(),
+						user.getZ(),
+						BlasterSounds.BYPASS_FAILED,
+						SoundCategory.PLAYERS,
+						1,
+						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
+				);
 
-				// TODO: play sound - failed bypass
+				if (world.isClient())
+				{
+					itemStack.set(STATE, state);
+					return ActionResult.FAIL;
+				}
 
-				itemStack.set(STATE, state);
-				return ActionResult.SUCCESS;
+				itemStack.set(STATE, state.withCoolingMode(CoolingMode.FAILED_OVERCHARGE));
+				return ActionResult.CONSUME;
 			}
 			else if (bypass.get() == CoolingBypass.PRIMARY)
 			{
-				state = state.withLastTotalHeat(0)
-				             .withCooling(CoolingMode.PASSIVE, timestamp);
+				world.playSound(
+						user,
+						user.getX(),
+						user.getY(),
+						user.getZ(),
+						BlasterSounds.BYPASS_PRIMARY,
+						SoundCategory.PLAYERS,
+						1,
+						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
+				);
 
-				// TODO: play sound - primary bypass
+				if (world.isClient())
+				{
+					itemStack.set(STATE, state);
+					return ActionResult.FAIL;
+				}
 
-				itemStack.set(STATE, state);
-				return ActionResult.SUCCESS;
+				itemStack.set(
+						STATE,
+						state.withLastTotalHeat(0)
+						     .withCooling(CoolingMode.PASSIVE, timestamp)
+				);
+				return ActionResult.CONSUME;
 			}
 			else if (bypass.get() == CoolingBypass.SECONDARY)
 			{
-				state = state.withLastTotalHeat(0)
-				             .withCooling(CoolingMode.PASSIVE, timestamp);
+				// TODO: overcharge end sound
 
-				// TODO: overcharge bonus
+				world.playSound(
+						user,
+						user.getX(),
+						user.getY(),
+						user.getZ(),
+						BlasterSounds.BYPASS_SECONDARY,
+						SoundCategory.PLAYERS,
+						1,
+						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
+				);
 
-				// TODO: play sound - secondary bypass
+				if (world.isClient())
+				{
+					itemStack.set(STATE, state);
+					return ActionResult.FAIL;
+				}
 
-				itemStack.set(STATE, state);
-				return ActionResult.SUCCESS;
+				itemStack.set(
+						STATE,
+						state.withLastTotalHeat(0)
+						     .withOverchargeStart(timestamp)
+						     .withCooling(CoolingMode.PASSIVE, timestamp)
+				);
+				return ActionResult.CONSUME;
 			}
 		}
 
@@ -815,26 +1134,53 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		var totalHeat = coolingStatus.totalHeat();
 
-		if (overchargeTimeRemaining(world, itemStack, 0) == 0)
+		if (getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
 
 		if (world instanceof ServerWorld serverWorld)
+		{
 			fireBolt(user, serverWorld);
 
+			// TODO: fixed recoil mean/std pattern for first n shots
+
+			var recoilScale = attachments.getAttachmentsValue(availableAttachments.options(), AttachmentFunction.RECOIL_MULTIPLIER);
+
+			var recoil = new Vector3f(
+					-(float)RandomHelper.nextGaussian(world.getRandom(), 3.6, 0.2),
+					-(float)RandomHelper.nextGaussian(world.getRandom(), -0.2, 0.2),
+					0
+			);
+
+			if (user instanceof IRecoilEntity recoilEntity)
+				recoilEntity.pswg$addRecoilVelocity(recoil.mul(recoilScale));
+		}
+
+		if (user instanceof IRecoilEntity recoilEntity)
+			recoilEntity.pswg$setRecoilTime(timestamp);
+
 		world.playSound(
-				null,
+				user,
 				user.getX(),
 				user.getY(),
 				user.getZ(),
-				SoundEvents.ENTITY_SNOWBALL_THROW,
+				RegistryEntry.of(SoundEvent.of(stats.fireSound())),
 				SoundCategory.NEUTRAL,
-				0.5F,
-				0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F)
+				1,
+				RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 		);
 
 		if (totalHeat > stats.heat().capacity())
 		{
-			// TODO: play sound - overheat
+			world.playSound(
+					user,
+					user.getX(),
+					user.getY(),
+					user.getZ(),
+					BlasterSounds.OVERHEAT,
+					SoundCategory.PLAYERS,
+					1,
+					RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
+			);
 
 			state = state.withLastVentingHeat(totalHeat + stats.heat().overheatPenalty())
 			             .withCooling(CoolingMode.OVERHEAT, timestamp)
@@ -847,7 +1193,37 @@ public class BlasterItem extends Item implements ILeftClickUsable
 
 		itemStack.set(STATE, state);
 
-		return ActionResult.SUCCESS;
+		return ActionResult.CONSUME;
+	}
+
+	@Override
+	public ItemStack invokePrimaryAction(ItemStack stack, World world, LivingEntity user)
+	{
+		var timestamp = world.getTime();
+
+		var coolingStatus = getCoolingStatus(world, stack, 0);
+		if (coolingStatus.coolingMode().isCooling())
+			return stack;
+
+		var state = getState(stack);
+		stack.set(STATE,
+		          state.withLastVentingHeat(coolingStatus.totalHeat())
+		               .withCooling(CoolingMode.REQUESTED_BYPASS, timestamp)
+		               .withBurstBoltsRemaining(0)
+		);
+
+		world.playSound(
+				user,
+				user.getX(),
+				user.getY(),
+				user.getZ(),
+				BlasterSounds.VENT,
+				SoundCategory.PLAYERS,
+				1,
+				RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
+		);
+
+		return stack;
 	}
 
 	private static void fireBolt(LivingEntity user, ServerWorld serverWorld)
@@ -855,16 +1231,12 @@ public class BlasterItem extends Item implements ILeftClickUsable
 		var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
 
 		// TODO: abstract into bolt-creating factory
-		projectile.setPosition(user.getX(), user.getEyeY() - 0.2f, user.getZ());
+		projectile.setPosition(user.getX(), user.getY() + user.getEyeHeight(user.getPose()), user.getZ());
 
 		var pitch = user.getPitch();
 		var yaw = user.getHeadYaw();
-		var roll = 0;
 
-		float f = -MathHelper.sin(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
-		float g = -MathHelper.sin((pitch + roll) * MathHelper.RADIANS_PER_DEGREE);
-		float h = MathHelper.cos(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
-		projectile.setVelocity(new Vec3d(f, g, h).multiply(5));
+		projectile.setVelocity(GMath.getForwardVector(yaw, pitch).multiply(5));
 		projectile.setAngles(yaw, pitch);
 
 		//			Vec3d vec3d = user.getMovement();

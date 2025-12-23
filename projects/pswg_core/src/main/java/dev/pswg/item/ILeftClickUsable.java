@@ -25,13 +25,14 @@ public interface ILeftClickUsable
 	 * <p>This method is called on both the logical client and logical server, so take caution when overriding this method.
 	 * The logical side can be checked using {@link net.minecraft.world.World#isClient() world.isClient()}.
 	 *
-	 * @param world  The world the item was used in
-	 * @param user The user who used the item
-	 * @param hand   The hand used
+	 * @param world       The world the item was used in
+	 * @param user        The user who used the item
+	 * @param hand        The hand used
+	 * @param repeatEvent Whether the input event was a repeat event
 	 *
 	 * @return An action result that specifies whether using the item was successful.
 	 */
-	default ActionResult useLeft(World world, LivingEntity user, Hand hand)
+	default ActionResult useLeft(World world, LivingEntity user, Hand hand, boolean repeatEvent)
 	{
 		return ActionResult.PASS;
 	}
@@ -43,11 +44,11 @@ public interface ILeftClickUsable
 	 * when overriding this method. The logical side can be checked using {@link
 	 * World#isClient}.
 	 *
-	 * @param stack  The item stack to query
-	 * @param user The user that is holding the stack
-	 * @param world  The world that the user is in
+	 * @param stack The item stack to query
+	 * @param user  The user that is holding the stack
+	 * @param world The world that the user is in
 	 *
-	 * @return the new item stack after using the item
+	 * @return The new item stack after using the item
 	 */
 	default ItemStack finishUsingLeft(ItemStack stack, World world, LivingEntity user)
 	{
@@ -64,7 +65,7 @@ public interface ILeftClickUsable
 	 * World#isClient}.
 	 *
 	 * @param stack             The item stack to query
-	 * @param user            The user that is holding the stack
+	 * @param user              The user that is holding the stack
 	 * @param world             The world that the user is in
 	 * @param remainingUseTicks The remaining number of ticks until the {@link #getMaxUseLeftTime maximum use time}
 	 */
@@ -79,7 +80,7 @@ public interface ILeftClickUsable
 	 * return a positive value.
 	 *
 	 * @param stack             The item stack to query
-	 * @param user            The user that is holding the stack
+	 * @param user              The user that is holding the stack
 	 * @param world             The world that the user is in
 	 * @param remainingUseTicks How long it's left until the entity finishes using the item, in ticks
 	 */
@@ -92,8 +93,8 @@ public interface ILeftClickUsable
 	 * Once a user has used an item for said number of ticks, they stop using
 	 * it, and {@link #finishUsingLeft} is called.
 	 *
-	 * @param stack  The item stack to query
-	 * @param user The user that is holding the stack
+	 * @param stack The item stack to query
+	 * @param user  The user that is holding the stack
 	 *
 	 * @return The time, in ticks
 	 */

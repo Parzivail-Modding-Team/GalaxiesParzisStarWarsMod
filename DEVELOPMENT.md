@@ -42,3 +42,10 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-<version>-bin.
 ```
 
 4. Reimport the Gradle project
+
+## Generating sources
+
+Generate sources on a per-project basis:
+```
+$ ./gradlew :projects:pswg_core:genSourcesWithVineflower
+```

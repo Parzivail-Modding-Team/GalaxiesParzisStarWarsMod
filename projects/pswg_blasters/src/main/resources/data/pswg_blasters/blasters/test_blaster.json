@@ -1,25 +1,85 @@
 {
-  "stats": {
-    "damage": 8,
-    "range": 48,
-    "automaticRepeatDelay": 4,
-    "heat": {
-      "capacity": 100,
-      "perRound": 20,
-      "drainSpeed": 5.0,
-      "overheatPenalty": 60,
-      "overheatDrainSpeed": 1,
-      "passiveCooldownDelay": 20,
-      "overchargeBonus": 40
-    },
-    "cooling": {
-      "primaryBypassTime": 0.7,
-      "primaryBypassTolerance": 0.1,
-      "secondaryBypassTime": 0.25,
-      "secondaryBypassTolerance": 0.05
-    }
-  },
-  "attachments": {
-    "hud": "pswg_blasters:default"
-  }
+	"stats": {
+		"damage": 8,
+		"range": 48,
+		"automaticRepeatDelay": 4,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 100,
+			"perRound": 20,
+			"drainSpeed": 5.0,
+			"overheatPenalty": 60,
+			"overheatDrainSpeed": 1,
+			"passiveCooldownDelay": 20,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		}
+	},
+	"attachments": {
+		"hud": "pswg_blasters:default",
+		"defaults": {
+			"pswg_blasters:barrel_slot": "pswg_blasters:e11/bipod"
+		},
+		"options": {
+			"pswg_blasters:e11/scope_d": {
+				"translationKey": "attachment.pswg_blasters.e11.scope_d",
+				"slots": [
+					"pswg_blasters:scope_slot"
+				],
+				"function": "pswg_blasters:zoom_multiplier",
+				"category": "pswg_blasters:scope",
+				"value": 1.5
+			},
+			"pswg_blasters:e11/scope_x": {
+				"translationKey": "attachment.pswg_blasters.e11.scope_x",
+				"slots": [
+					"pswg_blasters:scope_slot"
+				],
+				"function": "pswg_blasters:zoom_multiplier",
+				"category": "pswg_blasters:scope",
+				"value": 2.5
+			},
+			"pswg_blasters:e11/bipod": {
+				"translationKey": "attachment.pswg_blasters.e11.bipod",
+				"slots": [
+					"pswg_blasters:barrel_slot"
+				],
+				"function": "pswg_blasters:recoil_multiplier",
+				"category": "pswg_blasters:barrel",
+				"value": 0.8
+			},
+			"pswg_blasters:e11/barrel_d": {
+				"translationKey": "attachment.pswg_blasters.e11.barrel_d",
+				"slots": [
+					"pswg_blasters:barrel_slot"
+				],
+				"function": "pswg_blasters:spread_multiplier",
+				"category": "pswg_blasters:barrel",
+				"value": 0.8
+			},
+			"pswg_blasters:e11/cooling": {
+				"translationKey": "attachment.pswg_blasters.e11.cooling",
+				"slots": [
+					"pswg_blasters:internal_slot"
+				],
+				"function": "pswg_blasters:cooling_multiplier",
+				"category": "pswg_blasters:internal_cooling",
+				"value": 1.3
+			},
+			"pswg_blasters:e11/rapidfire": {
+				"translationKey": "attachment.pswg_blasters.e11.rapidfire",
+				"slots": [
+					"pswg_blasters:internal_slot"
+				],
+				"function": "pswg_blasters:fire_rate_multiplier",
+				"category": "pswg_blasters:internal_ordnance_config",
+				"value": 1.5
+			}
+		}
+	}
 }

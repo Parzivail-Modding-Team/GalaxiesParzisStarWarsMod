@@ -17,4 +17,11 @@ public final class GalaxiesConfig
 	 * notify them for updates, or search for them over the internet
 	 */
 	public boolean isUpdateCheckingDisabled = false;
+
+	/**
+	 * Whether mouse movements should be scaled with field of
+	 * view, e.g., slowing down the mouse inputs when aiming-down-
+	 * sights with a blaster
+	 */
+	public boolean scaleMouseWithFieldOfView = true;
 }

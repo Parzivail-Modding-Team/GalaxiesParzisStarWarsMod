@@ -1,6 +1,8 @@
 package dev.pswg.mixin.client.attributes;
 
+import dev.pswg.GalaxiesClient;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
+import dev.pswg.interaction.IRecoilEntity;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,6 +23,18 @@ public abstract class AbstractClientPlayerEntityMixin
 	public float getFovMultiplier(float fieldOfView)
 	{
 		var self = (PlayerEntity)(Object)this;
-		return fieldOfView / (float)self.getAttributeValue(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM);
+
+		fieldOfView /= (float)self.getAttributeValue(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM);
+
+		if (self instanceof IRecoilEntity recoilEntity)
+		{
+			var recoilTime = recoilEntity.pswg$getRecoilTime();
+			if (recoilTime > 0)
+			{
+				fieldOfView /= recoilEntity.pswg$getRecoilFovMultiplier(self, GalaxiesClient.getTickDelta());
+			}
+		}
+
+		return fieldOfView;
 	}
 }

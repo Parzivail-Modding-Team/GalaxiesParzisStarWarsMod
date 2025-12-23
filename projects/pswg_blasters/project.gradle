@@ -11,6 +11,7 @@ loom {
 
 fabricApi {
 	configureDataGeneration {
+		modId = "pswg_blasters"
 		client = true
 	}
 }

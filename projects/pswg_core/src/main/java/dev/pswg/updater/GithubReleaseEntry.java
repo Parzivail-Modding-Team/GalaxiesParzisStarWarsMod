@@ -1,5 +1,5 @@
 package dev.pswg.updater;
 
-public record GithubReleaseEntry(String tagName, String name)
+public record GithubReleaseEntry(String tag_name, String name)
 {
 }

@@ -1,4 +1,5 @@
 {
-  "pswg.attribute.modifier.multiplier": "%sx %s",
-  "pswg.attribute.name.field_of_view_zoom": "Zoom"
+  "key.category.pswg.keybinds": "Galaxies: Parzi's Star Wars Mod",
+  "key.pswg.primary_action": "Primary Item Action",
+  "text.pswg.hint.keybind": "§9[§f%s§9]§r %s"
 }

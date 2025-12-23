@@ -14,7 +14,7 @@ import dev.pswg.item.BlasterItem;
 @GenerateCodec
 public record BlasterDatapackDefinition(
 		@SelfCodec BlasterItem.StatsComponent stats,
-		@SelfCodec BlasterItem.AttachmentsComponent attachments
+		@SelfCodec BlasterItem.AvailableAttachmentsComponent attachments
 ) implements IBlasterDatapackDefinitionCodec
 {
 }
