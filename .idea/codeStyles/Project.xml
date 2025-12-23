@@ -7,6 +7,8 @@
     </option>
     <option name="DO_NOT_FORMAT">
       <list>
+        <fileSet type="globPattern" pattern="*/src/main/generated/assets/**/*.json" />
+        <fileSet type="globPattern" pattern="*/src/main/generated/data/**/*.json" />
         <fileSet type="globPattern" pattern="*/src/main/resources/assets/**/*.json" />
       </list>
     </option>

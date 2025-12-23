@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "pswg_gadgets:block/green_pourstone",
+    "side": "pswg_gadgets:block/green_pourstone",
+    "top": "pswg_gadgets:block/green_pourstone"
+  }
+}

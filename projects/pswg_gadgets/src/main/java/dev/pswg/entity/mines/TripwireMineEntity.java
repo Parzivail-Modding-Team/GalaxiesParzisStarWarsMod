@@ -1,0 +1,333 @@
+package dev.pswg.entity.mines;
+
+import dev.pswg.container.GadgetsParticleTypes;
+import dev.pswg.container.GadgetsSounds;
+import dev.pswg.container.entity.GadgetsDamage;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.Ownable;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.TintedParticleEffect;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import net.minecraft.util.Colors;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
+import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
+import net.minecraft.world.explosion.ExplosionImpl;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
+
+public class TripwireMineEntity extends Entity implements Ownable
+{
+	@Nullable
+	private BlockState inBlockState;
+	private static final TrackedData<Boolean> IN_GROUND = DataTracker.registerData(TripwireMineEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+	private int PRIMING_TIME = 60;
+	public boolean primed;
+	public float tripwireDistance;
+
+	@Nullable
+	private UUID ownerUuid;
+	@Nullable
+	private Entity owner;
+
+	public TripwireMineEntity(EntityType<?> type, World world)
+	{
+		super(type, world);
+		primed = false;
+	}
+
+	public void setOwner(@Nullable Entity entity)
+	{
+		if (entity != null)
+		{
+			this.ownerUuid = entity.getUuid();
+			this.owner = entity;
+		}
+	}
+
+	protected void setOwner(UUID uuid)
+	{
+		if (this.ownerUuid != uuid)
+		{
+			this.ownerUuid = uuid;
+			this.owner = this.getEntity(uuid);
+		}
+	}
+
+	public void explode()
+	{
+		if (getEntityWorld() instanceof ServerWorld serverWorld)
+		{
+			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), null, this.getEntityPos().add(0, 0.05f, 0), 2.5f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			explosion.explode();
+			createParticles(getX(), getY(), getZ(), serverWorld);
+		}
+		this.discard();
+	}
+
+	@Override
+	public void onDamaged(DamageSource damageSource)
+	{
+		if (damageSource.isIn(GadgetsDamage.DamageTags.IGNITES_EXPLOSIVES))
+			explode();
+		super.onDamaged(damageSource);
+	}
+
+	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
+	{
+
+		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
+		{
+			serverWorld.spawnParticles(serverPlayerEntity, TintedParticleEffect.create(GadgetsParticleTypes.SMALL_FLASH_PARTICLE, Colors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
+		}
+	}
+
+	private void applyDrag()
+	{
+		Vec3d vec3d = this.getVelocity();
+		Vec3d vec3d2 = this.getEntityPos();
+		float g;
+		if (this.isTouchingWater())
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				float f = 0.25F;
+				this.getEntityWorld()
+				    .addParticleClient(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
+			}
+
+			g = 0.8F;
+		}
+		else
+		{
+			g = 0.99F;
+		}
+
+		this.setVelocity(vec3d.multiply((double)g));
+	}
+
+	@Override
+	protected double getGravity()
+	{
+		return 0.075;
+	}
+
+	@Override
+	public boolean canUsePortals(boolean allowVehicles)
+	{
+		return true;
+	}
+
+	protected void setInGround(boolean inGround)
+	{
+		this.dataTracker.set(IN_GROUND, inGround);
+	}
+
+	protected boolean isInGround()
+	{
+		return this.dataTracker.get(IN_GROUND);
+	}
+
+	private void fall()
+	{
+		this.setInGround(false);
+		Vec3d vec3d = this.getVelocity();
+		this.setVelocity(vec3d.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
+	}
+
+	@Override
+	public void tick()
+	{
+
+		BlockState blockState = getBlockStateAtPos();
+
+		if (this.inBlockState != blockState && !this.getEntityWorld().isClient() && this.isInGround())
+					this.fall();
+
+		if (!isInGround())
+			this.applyGravity();
+		else
+		{
+			this.setVelocity(this.getVelocity().multiply(0, 0, 0));
+			this.velocityModified = true;
+		}
+		this.applyDrag();
+		if (this.age == PRIMING_TIME)
+		{
+			primed = true;
+			playSound(GadgetsSounds.ARM, 1, 1);
+		}
+		float maxDist = 3;
+
+
+
+
+		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
+
+		Vec3d newPos = this.getEntityPos();
+		if (hitResult.getType() != HitResult.Type.MISS)
+		{
+			newPos = hitResult.getPos().add(getVelocity().multiply(0.005));
+			if (hitResult.getType() == HitResult.Type.BLOCK && !isInGround())
+			{
+				var blockHit = (BlockHitResult)hitResult;
+				var normal = new Vec3d(blockHit.getSide().getUnitVector());
+
+				if (!getEntityWorld().getBlockState(blockHit.getBlockPos()).isAir())
+				{
+					inBlockState = getEntityWorld().getBlockState(blockHit.getBlockPos());
+					setRotation(normal);
+					setInGround(true);
+					this.velocityModified = true;
+				}
+			}
+		}
+		else
+		{
+			newPos = this.getEntityPos().add(this.getVelocity());
+		}
+		this.setPosition(newPos);
+		this.tickBlockCollision();
+
+		var rotVec = getRotationVector();
+
+		var blockRaycast = getEntityWorld().raycast(new RaycastContext(
+				this.getEntityPos().add(rotVec.multiply(0.05d)),
+				this.getEntityPos().add(rotVec.multiply(maxDist)),
+				RaycastContext.ShapeType.COLLIDER,
+				RaycastContext.FluidHandling.ANY,
+				this
+		));
+		var entityRaycast = ProjectileUtil.raycast(
+				this,
+				this.getEntityPos(),
+				this.getEntityPos().add(rotVec.multiply(tripwireDistance)),
+				this.getBoundingBox().stretch(rotVec.multiply(tripwireDistance)).expand(1.0, 1.0, 1.0),
+				entity -> true,
+				tripwireDistance);
+
+		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && this.primed)
+			explode();
+
+		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getPos().distanceTo(getEntityPos()));
+
+		if (this.primed)
+		{
+			for (float f = 0.015f; f < tripwireDistance; f += 0.015f)
+			{
+				if (getEntityWorld() instanceof ServerWorld serverWorld)
+				{
+					serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX() + getRotationVector().multiply(f).x, getY() + getRotationVector().multiply(f).y, getZ() + getRotationVector().multiply(f).z, 1, getEntityWorld().random.nextBetween(1, 100) / 30000f, 0, getEntityWorld().random.nextBetween(1, 100) / 30000f, 0);
+					//serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX(), getY() + f, getZ(), 1, getWorld().random.nextBetween(1, 100) / 30000f, 0, getWorld().random.nextBetween(1, 100) / 30000f, 0);
+				}
+			}
+		}
+
+		super.tick();
+	}
+
+	public void setRotation(Vec3d vec)
+	{
+		var pitch = Math.asin(-vec.y) / Math.PI * 180f;
+		var yaw = Math.atan2(vec.x, vec.z) / Math.PI * 180f;
+		setRotation((float)-yaw, (float)pitch);
+	}
+
+	@Override
+	public boolean hasNoGravity()
+	{
+		return false;
+	}
+
+	@Override
+	public int getDefaultPortalCooldown()
+	{
+		return 1;
+	}
+
+	@Override
+	protected void initDataTracker(DataTracker.Builder builder)
+	{
+		builder.add(IN_GROUND, false);
+	}
+
+	@Override
+	public boolean damage(ServerWorld world, DamageSource source, float amount)
+	{
+		return true;
+	}
+
+	// TODO: MAKE "OWNER" PART OF A BASE CLASS COMMON FOR MINES
+	@Override
+	protected void readCustomData(ReadView view)
+	{
+		if (view.contains("owner"))
+		{
+			this.setOwner(UUID.fromString(view.getString("owner", "")));
+		}
+		this.setInGround(view.getBoolean("inGround", false));
+		if (view.contains("inBlockState"))
+		{
+			this.inBlockState = view.read("inBlockState", BlockState.CODEC).get();
+		}
+	}
+
+	@Override
+	protected void writeCustomData(WriteView view)
+	{
+		if (this.ownerUuid != null)
+		{
+			view.putString("owner", this.ownerUuid.toString());
+		}
+		view.putBoolean("inGround", this.isInGround());
+		if (this.inBlockState != null)
+		{
+			view.put("inBlockState", BlockState.CODEC, inBlockState);
+		}
+	}
+
+	@Nullable
+	protected Entity getEntity(UUID uuid)
+	{
+		return this.getEntityWorld() instanceof ServerWorld serverWorld ? serverWorld.getEntity(uuid) : null;
+	}
+
+	@Override
+	public @Nullable Entity getOwner()
+	{
+		if (this.owner != null && !this.owner.isRemoved())
+		{
+			return this.owner;
+		}
+		else if (this.ownerUuid != null)
+		{
+			this.owner = this.getEntity(this.ownerUuid);
+			return this.owner;
+		}
+		else
+		{
+			return null;
+		}
+	}
+}

@@ -1,0 +1,62 @@
+{
+	"shared.arm": {
+		"subtitle": "subtitle.pswg_gadgets.grenade_arm",
+		"sounds": [
+			"pswg_gadgets:arm"
+		]
+	},
+	"shared.disarm": {
+		"subtitle": "subtitle.pswg_gadgets.grenade_disarm",
+		"sounds": [
+			"pswg_gadgets:disarm"
+		]
+	},
+	"shared.throw": {
+		"subtitle": "subtitle.pswg_gadgets.grenade_throw",
+		"sounds": [
+			"pswg_gadgets:throw"
+		]
+	},
+	"thermaldetonator.beep": {
+		"subtitle": "subtitle.pswg_gadgets.thermaldetonator.beep",
+		"sounds": [
+			"pswg_gadgets:tdet_beep_loop"
+		]
+	},
+	"thermaldetonator.explode": {
+		"subtitle": "subtitle.pswg_gadgets.thermaldetonator.explode",
+		"sounds": [
+			"pswg_gadgets:tdet_explosion"
+		]
+	},
+	"fragmentationgrenade.explode1": {
+		"subtitle": "subtitle.pswg_gadgets.fragmentationgrenade.explode",
+		"sounds": [
+			"pswg_gadgets:c25_explosion_1"
+		]
+	},
+	"fragmentationgrenade.explode2": {
+		"subtitle": "subtitle.pswg_gadgets.fragmentationgrenade.explode",
+		"sounds": [
+			"pswg_gadgets:c25_explosion_2"
+		]
+	},
+	"fragmentationgrenade.explode3": {
+		"subtitle": "subtitle.pswg_gadgets.fragmentationgrenade.explode",
+		"sounds": [
+			"pswg_gadgets:c25_explosion_3"
+		]
+	},
+	"fragmentationgrenade.explode4": {
+		"subtitle": "subtitle.pswg_gadgets.fragmentationgrenade.explode",
+		"sounds": [
+			"pswg_gadgets:c25_explosion_4"
+		]
+	},
+	"fragmentationgrenade.beep": {
+		"subtitle": "subtitle.pswg_gadgets.fragmentationgrenade.beep",
+		"sounds": [
+			"pswg_gadgets:c25_beep_loop"
+		]
+	}
+}

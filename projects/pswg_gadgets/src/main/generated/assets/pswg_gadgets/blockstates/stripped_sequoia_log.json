@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "pswg_gadgets:block/stripped_sequoia_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "pswg_gadgets:block/stripped_sequoia_log"
+    },
+    "axis=z": {
+      "model": "pswg_gadgets:block/stripped_sequoia_log",
+      "x": 90
+    }
+  }
+}

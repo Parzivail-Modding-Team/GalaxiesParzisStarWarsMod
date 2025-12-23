@@ -17,6 +17,9 @@ import dev.pswg.updater.UpdateChecker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.damage.DamageType;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +98,10 @@ public final class Galaxies implements ModInitializer
 	{
 		return Optional.ofNullable(REMOTE_VERSION);
 	}
+
+	public static final TagKey<DamageType> IGNORES_INVULNERABLE_FRAMES = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("ignores_invulnerable_frames"));
+	public static final TagKey<DamageType> IGNORES_DAMAGE_TILT = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("ignores_damage_tilt"));
+
 
 	@Override
 	public void onInitialize()
