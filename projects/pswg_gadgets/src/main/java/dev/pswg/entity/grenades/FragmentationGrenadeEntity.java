@@ -105,20 +105,8 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 			this.velocityModified = true;
 		}
 
-		if (EXPLOSION_TICK == 7)
+		if (EXPLOSION_TICK == 6)
 		{
-			for (int i = 0; i < Random.create().nextBetween(70, 100); i++)
-			{
-				double vx = getEntityWorld().random.nextGaussian() * 0.5;
-				double vz = getEntityWorld().random.nextGaussian() * 0.5;
-				double vy;
-
-				if (COLLISION_BELOW)
-					vy = Math.abs(getEntityWorld().random.nextGaussian() * 0.8);
-				else
-					vy = getEntityWorld().random.nextGaussian() * 0.4;
-				getEntityWorld().addParticleClient(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
-			}
 			/*if (!getEntityWorld().isClient)
 			{
 				var passedData = new PacketByteBuf(Unpooled.buffer());
@@ -135,6 +123,21 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 				float x = (float)(entity.getX() - getX()) / (getExplosionPower() / 4f * 3f);
 				float z = (float)(entity.getZ() - getZ()) / (getExplosionPower() / 4f * 3f);
 				entity.addVelocity(-x, 0, -z);
+			}
+		}
+		if (EXPLOSION_TICK == 7)
+		{
+			for (int i = 0; i < Random.create().nextBetween(70, 100); i++)
+			{
+				double vx = getEntityWorld().random.nextGaussian() * 0.5;
+				double vz = getEntityWorld().random.nextGaussian() * 0.5;
+				double vy;
+
+				if (COLLISION_BELOW)
+					vy = Math.abs(getEntityWorld().random.nextGaussian() * 0.8);
+				else
+					vy = getEntityWorld().random.nextGaussian() * 0.4;
+				getEntityWorld().addParticleClient(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
 			}
 		}
 		if (EXPLOSION_TICK >= 15)

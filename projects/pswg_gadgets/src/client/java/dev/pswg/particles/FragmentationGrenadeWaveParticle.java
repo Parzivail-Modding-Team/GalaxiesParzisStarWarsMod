@@ -32,7 +32,7 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle implemen
 		velocityX = vX;
 		velocityY = vY + (double)(random.nextFloat() / 500.0f);
 		velocityZ = vZ;
-		this.maxAge = 20;
+		this.maxAge = 25;
 		this.scale = Random.create().nextBetween(0, 5) / 5f + 0.95f;
 		this.updateSprite(spriteProvider);
 		this.setColor(Random.create().nextBetween(0, 3) / 3f + 0.97f, Random.create().nextBetween(0, 3) / 3f + 0.98f, 1);
@@ -66,7 +66,7 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle implemen
 
 	private void updateShape(float age)
 	{
-		if (age <= 10)
+		if (age <= 15)
 		{
 			this.alpha = 1;
 
@@ -76,8 +76,8 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle implemen
 		else
 		{
 			this.scaleX = this.scaleY = 1;
-			this.scale = (float)Math.pow(age / 10, 6);
-			this.alpha = (float)(Math.max(1 - (Math.pow(age / 20, 3) * 2), 0.001f));
+			this.scale = (float)Math.pow(age / 15, 6);
+			this.alpha = (float)(Math.max(1 - (Math.pow(age / 25, 3) * 2.5f), 0.001f));
 		}
 	}
 
