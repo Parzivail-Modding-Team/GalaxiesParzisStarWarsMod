@@ -2,37 +2,31 @@
   "variants": {
     "axis=x,lit=false,type=bottom": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab",
-      "uvlock": true,
       "x": 90,
       "y": 90
     },
     "axis=x,lit=false,type=double": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_double",
-      "uvlock": true,
       "x": 90,
       "y": 90
     },
     "axis=x,lit=false,type=top": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_top",
-      "uvlock": true,
       "x": 90,
       "y": 90
     },
     "axis=x,lit=true,type=bottom": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_on",
-      "uvlock": true,
       "x": 90,
       "y": 90
     },
     "axis=x,lit=true,type=double": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_double_on",
-      "uvlock": true,
       "x": 90,
       "y": 90
     },
     "axis=x,lit=true,type=top": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_on_top",
-      "uvlock": true,
       "x": 90,
       "y": 90
     },
@@ -56,32 +50,26 @@
     },
     "axis=z,lit=false,type=bottom": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab",
-      "uvlock": true,
       "x": 270
     },
     "axis=z,lit=false,type=double": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_double",
-      "uvlock": true,
       "x": 270
     },
     "axis=z,lit=false,type=top": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_top",
-      "uvlock": true,
       "x": 270
     },
     "axis=z,lit=true,type=bottom": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_on",
-      "uvlock": true,
       "x": 270
     },
     "axis=z,lit=true,type=double": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_double_on",
-      "uvlock": true,
       "x": 270
     },
     "axis=z,lit=true,type=top": {
       "model": "pswg_gadgets:block/gray_imperial_lighting_panel_slab_on_top",
-      "uvlock": true,
       "x": 270
     }
   }
