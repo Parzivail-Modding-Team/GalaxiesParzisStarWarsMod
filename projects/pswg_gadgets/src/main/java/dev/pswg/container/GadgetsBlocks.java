@@ -165,10 +165,10 @@ public class GadgetsBlocks
 	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock STRIPPED_SEQUOIA_LOG = createLogBlock("stripped_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock MOSSY_SEQUOIA_LOG = createLogBlock("mossy_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
