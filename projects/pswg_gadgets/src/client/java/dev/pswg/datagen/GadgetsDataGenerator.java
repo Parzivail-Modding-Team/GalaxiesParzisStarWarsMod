@@ -106,6 +106,18 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				for (Block block : numberedBlocks)
 					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
 			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingStoneProducts.class, (reducedDryingStoneProducts, dataGenBlock) -> {
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					registerReducedDryingStoneProducts(reducedDryingStoneProducts, blockStateModelGenerator);
+				}
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedStoneProducts.class, (reducedStoneProducts, dataGenBlock) -> {
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					registerReducedStoneProducts(reducedStoneProducts, blockStateModelGenerator);
+				}
+			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
 				if (dataGenBlock.model() != DataGenBlockModel.None)
 				{
@@ -128,6 +140,19 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		}
 
+		private static void registerReducedDryingStoneProducts(ReducedDryingStoneProducts dryingStoneProducts, BlockStateModelGenerator generator)
+		{
+			generator.registerCubeAllModelTexturePool(dryingStoneProducts.block)
+			         .stairs(dryingStoneProducts.stairs);
+			registerVerticalSlabAllTextures(dryingStoneProducts.block, dryingStoneProducts.slab, generator);
+		}
+
+		private static void registerReducedStoneProducts(ReducedStoneProducts stoneProducts, BlockStateModelGenerator generator)
+		{
+			generator.registerCubeAllModelTexturePool(stoneProducts.block)
+			         .stairs(stoneProducts.stairs);
+			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
+		}
 		private static void registerStoneProducts(StoneProducts stoneProducts, BlockStateModelGenerator generator)
 		{
 			generator.registerCubeAllModelTexturePool(stoneProducts.block)

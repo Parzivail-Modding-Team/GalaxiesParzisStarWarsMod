@@ -1,9 +1,6 @@
 package dev.pswg.util;
 
-import dev.pswg.block.DyedBlocks;
-import dev.pswg.block.NumberedBlocks;
-import dev.pswg.block.StoneProducts;
-import dev.pswg.block.WoodProducts;
+import dev.pswg.block.*;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.item.ArmorItems;
@@ -44,6 +41,16 @@ public class AutoGenerateUtil
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, DyedBlocks.class, (dyedBlocks, annotation) -> {
 			for(Block block : dyedBlocks.values())
 				consumer.accept(block, annotation);
+		});
+		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, ReducedDryingStoneProducts.class, (reducedDryingStoneProducts, annotation) -> {
+			consumer.accept(reducedDryingStoneProducts.slab, annotation);
+			consumer.accept(reducedDryingStoneProducts.block, annotation);
+			consumer.accept(reducedDryingStoneProducts.stairs, annotation);
+		});
+		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, ReducedStoneProducts.class, (reducedStoneProducts, annotation) -> {
+			consumer.accept(reducedStoneProducts.slab, annotation);
+			consumer.accept(reducedStoneProducts.block, annotation);
+			consumer.accept(reducedStoneProducts.stairs, annotation);
 		});
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, annotation) -> {
 			consumer.accept(stoneProducts.slab, annotation);
