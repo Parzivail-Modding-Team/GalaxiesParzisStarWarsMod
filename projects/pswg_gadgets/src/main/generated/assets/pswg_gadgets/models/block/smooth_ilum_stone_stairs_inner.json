@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/slab",
+  "parent": "minecraft:block/inner_stairs",
   "textures": {
     "bottom": "pswg_gadgets:block/smooth_ilum_stone",
     "side": "pswg_gadgets:block/smooth_ilum_stone",

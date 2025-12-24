@@ -82,25 +82,27 @@ public class GadgetsBlocks
 	@DataGenBlock
 	public static final StoneProducts MASSASSI = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone");
 	@DataGenBlock
-	public static final Block MASSASSI_SMOOTH = createBlock("smooth_massassi_stone", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
-	@DataGenBlock(model = DataGenBlockModel.Slab)
-	public static final VerticalSlabBlock MASSASSI_SMOOTH_SLAB = createSlab("smooth_massassi_stone_slab", AbstractBlock.Settings.copy(MASSASSI_SMOOTH));
+	public static final ReducedStoneProducts MASSASSI_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2F).requiresTool(), "smooth_massassi_stone");
+	//@DataGenBlock(model = DataGenBlockModel.Slab)
+	//public static final VerticalSlabBlock MASSASSI_SMOOTH_SLAB = createSlab("smooth_massassi_stone_slab", AbstractBlock.Settings.copy(MASSASSI_SMOOTH));
 	@DataGenBlock
 	public static final StoneProducts MASSASSI_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone_bricks");
 	@DataGenBlock
 	public static final Block MASSASSI_CHISELED_BRICKS = createBlock("chiseled_massassi_stone_bricks", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
 	@DataGenBlock
-	public static final Block MOSSY_MASSASSI_SMOOTH = createBlock("mossy_smooth_massassi_stone", AbstractBlock.Settings.create().strength(2F).requiresTool());
-	@DataGenBlock(model = DataGenBlockModel.Slab)
-	public static final VerticalSlabBlock MOSSY_MASSASSI_SMOOTH_SLAB = createSlab("mossy_smooth_massassi_stone_slab", AbstractBlock.Settings.copy(MOSSY_MASSASSI_SMOOTH));
+	public static final ReducedStoneProducts MOSSY_MASSASSI_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2F).requiresTool(), "mossy_smooth_massassi_stone");
+	//public static final Block MOSSY_MASSASSI_SMOOTH = createBlock("mossy_smooth_massassi_stone", AbstractBlock.Settings.create().strength(2F).requiresTool());
+	//@DataGenBlock(model = DataGenBlockModel.Slab)
+	//public static final VerticalSlabBlock MOSSY_MASSASSI_SMOOTH_SLAB = createSlab("mossy_smooth_massassi_stone_slab", AbstractBlock.Settings.copy(MOSSY_MASSASSI_SMOOTH));
 	@DataGenBlock
 	public static final StoneProducts MOSSY_MASSASSI_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "mossy_massassi_stone_bricks");
 	@DataGenBlock
 	public static final StoneProducts ILUM = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "ilum_stone");
 	@DataGenBlock
-	public static final Block ILUM_SMOOTH = createBlock("smooth_ilum_stone", AbstractBlock.Settings.create().strength(2.0F).requiresTool());
-	@DataGenBlock
-	public static final VerticalSlabBlock ILUM_SMOOTH_SLAB = createSlab("smooth_ilum_stone_slab", AbstractBlock.Settings.copy(ILUM_SMOOTH));
+	public static final ReducedStoneProducts ILUM_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2.0F).requiresTool(), "smooth_ilum_stone");
+	//public static final Block ILUM_SMOOTH = createBlock("smooth_ilum_stone", AbstractBlock.Settings.create().strength(2.0F).requiresTool());
+	//@DataGenBlock
+	//public static final VerticalSlabBlock ILUM_SMOOTH_SLAB = createSlab("smooth_ilum_stone_slab", AbstractBlock.Settings.copy(ILUM_SMOOTH));
 	@DataGenBlock
 	public static final StoneProducts ILUM_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "ilum_stone_bricks");
 	@DataGenBlock
@@ -136,15 +138,10 @@ public class GadgetsBlocks
 	/// DIRT
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
-	//public static final DryingBlock RUINED_WET_POURSTONE = Registrar.block(Gadgets.id("ruined_wet_pourstone"), settings -> new DryingBlock(CRACKED_POURSTONE.block, 10, settings, new ColorCode(0xFF986A39)), AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final RuiningDryingBlock WET_POURSTONE = createRuiningDryingBlock("wet_pourstone", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), 10, POURSTONE.block, RUINED_WET_POURSTONE.block, new ColorCode(0xFF9E6E3B));
-	//@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	//public static final DryingStairsBlock RUINED_WET_POURSTONE_STAIRS = Registrar.block(Gadgets.id("ruined_wet_pourstone_stairs"), settings -> new DryingStairsBlock(WET_POURSTONE.getDefaultState(), CRACKED_POURSTONE.stairs, 10, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final RuiningDryingStairsBlock WET_POURSTONE_STAIRS = Registrar.block(Gadgets.id("wet_pourstone_stairs"), settings -> new RuiningDryingStairsBlock(WET_POURSTONE.getDefaultState(), POURSTONE.stairs, 10, () -> RUINED_WET_POURSTONE.stairs, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	//@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	//public static final DryingSlabBlock RUINED_WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("ruined_wet_pourstone_slab"), settings -> new DryingSlabBlock(CRACKED_POURSTONE.slab, 10, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final RuiningDryingSlabBlock WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("wet_pourstone_slab"), settings -> new RuiningDryingSlabBlock(POURSTONE.slab, 10, () -> RUINED_WET_POURSTONE.slab, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, tags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
