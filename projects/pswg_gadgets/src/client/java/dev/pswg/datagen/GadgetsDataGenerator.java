@@ -310,8 +310,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			var blockState = VariantsBlockModelDefinitionCreator.of(slab, createWeightedVariant(bottomId)).
 			                                                    apply(BlockStateVariantMap.operations(Properties.AXIS)
 			                                                                              .register(Direction.Axis.Y, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R0))
-			                                                                              .register(Direction.Axis.Z, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R270).then(ModelVariantOperator.UV_LOCK.withValue(true)))
-			                                                                              .register(Direction.Axis.X, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90).then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)).then(ModelVariantOperator.UV_LOCK.withValue(true)))
+			                                                                              .register(Direction.Axis.Z, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R270))
+			                                                                              .register(Direction.Axis.X, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90).then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)))
 			                                                    ).apply(BlockStateVariantMap.operations(Properties.SLAB_TYPE, Properties.LIT)
 			                                                                                .register(SlabType.BOTTOM, false, ModelVariantOperator.MODEL.withValue(bottomId))
 			                                                                                .register(SlabType.BOTTOM, true, ModelVariantOperator.MODEL.withValue(bottomIdOn))
