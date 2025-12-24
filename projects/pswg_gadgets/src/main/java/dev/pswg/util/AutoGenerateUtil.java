@@ -42,6 +42,11 @@ public class AutoGenerateUtil
 			for(Block block : dyedBlocks.values())
 				consumer.accept(block, annotation);
 		});
+		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, ReducedDryingRuiningStoneProducts.class, (reducedDryingRuiningStoneProducts, annotation) -> {
+			consumer.accept(reducedDryingRuiningStoneProducts.slab, annotation);
+			consumer.accept(reducedDryingRuiningStoneProducts.block, annotation);
+			consumer.accept(reducedDryingRuiningStoneProducts.stairs, annotation);
+		});
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GadgetsBlocks.class, ReducedDryingStoneProducts.class, (reducedDryingStoneProducts, annotation) -> {
 			consumer.accept(reducedDryingStoneProducts.slab, annotation);
 			consumer.accept(reducedDryingStoneProducts.block, annotation);

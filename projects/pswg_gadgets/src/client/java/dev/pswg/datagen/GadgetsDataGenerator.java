@@ -106,6 +106,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				for (Block block : numberedBlocks)
 					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
 			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingRuiningStoneProducts.class, (reducedDryingRuiningStoneProducts, dataGenBlock) -> {
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					registerReducedDryingRuinedStoneProducts(reducedDryingRuiningStoneProducts, blockStateModelGenerator);
+				}
+			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingStoneProducts.class, (reducedDryingStoneProducts, dataGenBlock) -> {
 				if (dataGenBlock.model() != DataGenBlockModel.None)
 				{
@@ -140,6 +146,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		}
 
+		private static void registerReducedDryingRuinedStoneProducts(ReducedDryingRuiningStoneProducts dryingRuinedStoneProducts, BlockStateModelGenerator generator)
+		{
+			generator.registerCubeAllModelTexturePool(dryingRuinedStoneProducts.block)
+			         .stairs(dryingRuinedStoneProducts.stairs);
+			registerVerticalSlabAllTextures(dryingRuinedStoneProducts.block, dryingRuinedStoneProducts.slab, generator);
+		}
 		private static void registerReducedDryingStoneProducts(ReducedDryingStoneProducts dryingStoneProducts, BlockStateModelGenerator generator)
 		{
 			generator.registerCubeAllModelTexturePool(dryingStoneProducts.block)

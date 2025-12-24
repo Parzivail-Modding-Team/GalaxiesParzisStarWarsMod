@@ -1,6 +1,5 @@
 package dev.pswg.container;
 
-import com.mojang.serialization.MapCodec;
 import dev.pswg.Gadgets;
 import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.autoreg.ServerBlockRegistryData;
@@ -22,11 +21,8 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ColorCode;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
 
 import java.util.function.ToIntFunction;
 
@@ -129,11 +125,7 @@ public class GadgetsBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final RuiningDryingBlock WET_POURSTONE = createRuiningDryingBlock("wet_pourstone", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), 10, POURSTONE.block, RUINED_WET_POURSTONE.block, new ColorCode(0xFF9E6E3B));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final RuiningDryingStairsBlock WET_POURSTONE_STAIRS = Registrar.block(Gadgets.id("wet_pourstone_stairs"), settings -> new RuiningDryingStairsBlock(WET_POURSTONE.getDefaultState(), POURSTONE.stairs, 10, () -> RUINED_WET_POURSTONE.stairs, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final RuiningDryingSlabBlock WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("wet_pourstone_slab"), settings -> new RuiningDryingSlabBlock(POURSTONE.slab, 10, () -> RUINED_WET_POURSTONE.slab, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
+	public static final ReducedDryingRuiningStoneProducts  WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, tags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
