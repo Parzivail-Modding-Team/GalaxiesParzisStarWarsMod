@@ -157,12 +157,12 @@ public class GadgetsBlocks
 	@DataGenBlock(tags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves )
 	public static final LeavesBlock SEQUOIA_LEAVES = createLeavesBlock("sequoia_leaves");
 
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.None)
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	public static final Block SEQUOIA_WOOD = createBlock("sequoia_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	public static final Block SEQUOIA_WOOD = createWoodBlock("sequoia_wood", MapColor.BROWN);
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
@@ -173,23 +173,23 @@ public class GadgetsBlocks
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
-	//TODO: Add Japor leaves & find a way to override datagen texture for japor & sequoia logs
+	//TODO: Add Japor leaves
 
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.None)
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	public static final Block JAPOR_WOOD = createBlock("japor_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model =DataGenBlockModel.Column, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
 	public static final PillarBlock JAPOR_LOG = createLogBlock("japor_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	public static final WoodProducts JAPOR_PRODUCTS = new WoodProducts("japor", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
 
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.None)
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	public static final Block TATOOINE_WOOD = createBlock("tatooine_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	public static final Block TATOOINE_WOOD = createWoodBlock("tatooine_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
 	public static final PillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.OAK_TAN, MapColor.BROWN);
 
 
@@ -505,6 +505,11 @@ public class GadgetsBlocks
 	private static PillarBlock createLogBlock(String key, MapColor topMapColor, MapColor sideMapColor)
 	{
 		return Registrar.block(Gadgets.id(key), PillarBlock::new, AbstractBlock.Settings.create().mapColor(blockState -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	}
+
+	private static PillarBlock createWoodBlock(String key, MapColor mapColor)
+	{
+		return createLogBlock(key, mapColor, mapColor);
 	}
 	private static LeavesBlock createLeavesBlock(String key)
 	{

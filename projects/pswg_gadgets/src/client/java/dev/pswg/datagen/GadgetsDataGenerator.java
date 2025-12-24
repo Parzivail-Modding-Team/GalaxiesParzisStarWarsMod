@@ -50,7 +50,6 @@ import net.minecraft.util.collection.Weighted;
 import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -178,9 +177,22 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 						case null, default:
 					}
 				}
+				case Log, LogWithWood -> registerLog(block, dataGenBlock, generator);
 				case LightingPanel -> registerLightingPanel(block, generator);
 				case Slab -> registerVerticalSlab(block, generator);
 				case Stairs -> registerStairs(block, generator);
+			}
+		}
+
+		private static void registerLog(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
+		{
+			String logKey = getBlockKey(block).toString();
+			BlockStateModelGenerator.LogTexturePool texturePool = generator.createLogTexturePool(block).log(block);
+			if (dataGenBlock.model() == DataGenBlockModel.LogWithWood)
+			{
+				String woodKey = logKey.substring(0, logKey.indexOf("_log")) + "_wood";
+				Block woodBlock = Registries.BLOCK.get(Identifier.of(woodKey));
+				texturePool.wood(woodBlock);
 			}
 		}
 		private static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Factory modelFactory, BlockStateModelGenerator generator){

@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_column",
   "textures": {
-    "all": "pswg_gadgets:block/japor_wood"
+    "end": "pswg_gadgets:block/japor_log",
+    "side": "pswg_gadgets:block/japor_log"
   }
 }

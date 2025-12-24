@@ -2,14 +2,16 @@ package dev.pswg.datagen;
 
 public enum DataGenBlockModel
 {
-	CubeAll,
+	Accumulating,
+	Cross,
 	Column,
 	Connecting,
-	Cross,
-	Slab,
-	Stairs,
+	CubeAll,
 	Custom,
 	LightingPanel,
-	Accumulating,
+	Log,
+	LogWithWood,
+	Slab,
+	Stairs,
 	None
 }
