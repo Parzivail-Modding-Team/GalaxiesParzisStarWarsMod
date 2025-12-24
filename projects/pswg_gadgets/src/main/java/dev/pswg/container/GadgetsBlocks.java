@@ -1,6 +1,5 @@
 package dev.pswg.container;
 
-import com.mojang.serialization.MapCodec;
 import dev.pswg.Gadgets;
 import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.autoreg.ServerBlockRegistryData;
@@ -22,11 +21,8 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ColorCode;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
 
 import java.util.function.ToIntFunction;
 
@@ -82,25 +78,17 @@ public class GadgetsBlocks
 	@DataGenBlock
 	public static final StoneProducts MASSASSI = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone");
 	@DataGenBlock
-	public static final Block MASSASSI_SMOOTH = createBlock("smooth_massassi_stone", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
-	@DataGenBlock(model = DataGenBlockModel.Slab)
-	public static final VerticalSlabBlock MASSASSI_SMOOTH_SLAB = createSlab("smooth_massassi_stone_slab", AbstractBlock.Settings.copy(MASSASSI_SMOOTH));
+	public static final ReducedStoneProducts MASSASSI_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2F).requiresTool(), "smooth_massassi_stone");
 	@DataGenBlock
 	public static final StoneProducts MASSASSI_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone_bricks");
 	@DataGenBlock
-	public static final Block MASSASSI_CHISELED_BRICKS = createBlock("chiseled_massassi_stone_bricks", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
-	@DataGenBlock
-	public static final Block MOSSY_MASSASSI_SMOOTH = createBlock("mossy_smooth_massassi_stone", AbstractBlock.Settings.create().strength(2F).requiresTool());
-	@DataGenBlock(model = DataGenBlockModel.Slab)
-	public static final VerticalSlabBlock MOSSY_MASSASSI_SMOOTH_SLAB = createSlab("mossy_smooth_massassi_stone_slab", AbstractBlock.Settings.copy(MOSSY_MASSASSI_SMOOTH));
+	public static final ReducedStoneProducts MOSSY_MASSASSI_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2F).requiresTool(), "mossy_smooth_massassi_stone");
 	@DataGenBlock
 	public static final StoneProducts MOSSY_MASSASSI_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "mossy_massassi_stone_bricks");
 	@DataGenBlock
 	public static final StoneProducts ILUM = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "ilum_stone");
 	@DataGenBlock
-	public static final Block ILUM_SMOOTH = createBlock("smooth_ilum_stone", AbstractBlock.Settings.create().strength(2.0F).requiresTool());
-	@DataGenBlock
-	public static final VerticalSlabBlock ILUM_SMOOTH_SLAB = createSlab("smooth_ilum_stone_slab", AbstractBlock.Settings.copy(ILUM_SMOOTH));
+	public static final ReducedStoneProducts ILUM_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2.0F).requiresTool(), "smooth_ilum_stone");
 	@DataGenBlock
 	public static final StoneProducts ILUM_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "ilum_stone_bricks");
 	@DataGenBlock
@@ -135,17 +123,9 @@ public class GadgetsBlocks
 	public static final FallingBlock JUNDLAND_GRAVEL = createFallingBlock("jundland_gravel", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F), new ColorCode(0xFF7A5346));
 	/// DIRT
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final DryingBlock RUINED_WET_POURSTONE = Registrar.block(Gadgets.id("ruined_wet_pourstone"), settings -> new DryingBlock(CRACKED_POURSTONE.block, 10, settings, new ColorCode(0xFF986A39)), AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F));
+	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final RuiningDryingBlock WET_POURSTONE = createRuiningDryingBlock("wet_pourstone", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), 10, POURSTONE.block, RUINED_WET_POURSTONE, new ColorCode(0xFF9E6E3B));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final DryingStairsBlock RUINED_WET_POURSTONE_STAIRS = Registrar.block(Gadgets.id("ruined_wet_pourstone_stairs"), settings -> new DryingStairsBlock(WET_POURSTONE.getDefaultState(), CRACKED_POURSTONE.stairs, 10, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final RuiningDryingStairsBlock WET_POURSTONE_STAIRS = Registrar.block(Gadgets.id("wet_pourstone_stairs"), settings -> new RuiningDryingStairsBlock(WET_POURSTONE.getDefaultState(), POURSTONE.stairs, 10, () -> RUINED_WET_POURSTONE_STAIRS, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final DryingSlabBlock RUINED_WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("ruined_wet_pourstone_slab"), settings -> new DryingSlabBlock(CRACKED_POURSTONE.slab, 10, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final RuiningDryingSlabBlock WET_POURSTONE_SLAB = Registrar.block(Gadgets.id("wet_pourstone_slab"), settings -> new RuiningDryingSlabBlock(POURSTONE.slab, 10, () -> RUINED_WET_POURSTONE_SLAB, settings), AbstractBlock.Settings.copy(WET_POURSTONE));
+	public static final ReducedDryingRuiningStoneProducts  WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, tags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
@@ -157,39 +137,39 @@ public class GadgetsBlocks
 	@DataGenBlock(tags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves )
 	public static final LeavesBlock SEQUOIA_LEAVES = createLeavesBlock("sequoia_leaves");
 
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.None)
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	public static final Block SEQUOIA_WOOD = createBlock("sequoia_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	public static final Block SEQUOIA_WOOD = createWoodBlock("sequoia_wood", MapColor.BROWN);
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock STRIPPED_SEQUOIA_LOG = createLogBlock("stripped_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock MOSSY_SEQUOIA_LOG = createLogBlock("mossy_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
-	//TODO: Add Japor leaves & find a way to override datagen texture for japor & sequoia logs
+	//TODO: Add Japor leaves
 
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.None)
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	public static final Block JAPOR_WOOD = createBlock("japor_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model =DataGenBlockModel.Column, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
 	public static final PillarBlock JAPOR_LOG = createLogBlock("japor_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	public static final WoodProducts JAPOR_PRODUCTS = new WoodProducts("japor", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
 
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.None)
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	public static final Block TATOOINE_WOOD = createBlock("tatooine_wood", AbstractBlock.Settings.create().strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	public static final Block TATOOINE_WOOD = createWoodBlock("tatooine_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Column, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
 	public static final PillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.OAK_TAN, MapColor.BROWN);
 
 
@@ -505,6 +485,11 @@ public class GadgetsBlocks
 	private static PillarBlock createLogBlock(String key, MapColor topMapColor, MapColor sideMapColor)
 	{
 		return Registrar.block(Gadgets.id(key), PillarBlock::new, AbstractBlock.Settings.create().mapColor(blockState -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+	}
+
+	private static PillarBlock createWoodBlock(String key, MapColor mapColor)
+	{
+		return createLogBlock(key, mapColor, mapColor);
 	}
 	private static LeavesBlock createLeavesBlock(String key)
 	{

@@ -50,7 +50,6 @@ import net.minecraft.util.collection.Weighted;
 import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -107,6 +106,24 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				for (Block block : numberedBlocks)
 					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
 			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingRuiningStoneProducts.class, (reducedDryingRuiningStoneProducts, dataGenBlock) -> {
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					registerReducedDryingRuinedStoneProducts(reducedDryingRuiningStoneProducts, blockStateModelGenerator);
+				}
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingStoneProducts.class, (reducedDryingStoneProducts, dataGenBlock) -> {
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					registerReducedDryingStoneProducts(reducedDryingStoneProducts, blockStateModelGenerator);
+				}
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedStoneProducts.class, (reducedStoneProducts, dataGenBlock) -> {
+				if (dataGenBlock.model() != DataGenBlockModel.None)
+				{
+					registerReducedStoneProducts(reducedStoneProducts, blockStateModelGenerator);
+				}
+			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
 				if (dataGenBlock.model() != DataGenBlockModel.None)
 				{
@@ -129,6 +146,25 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		}
 
+		private static void registerReducedDryingRuinedStoneProducts(ReducedDryingRuiningStoneProducts dryingRuinedStoneProducts, BlockStateModelGenerator generator)
+		{
+			generator.registerCubeAllModelTexturePool(dryingRuinedStoneProducts.block)
+			         .stairs(dryingRuinedStoneProducts.stairs);
+			registerVerticalSlabAllTextures(dryingRuinedStoneProducts.block, dryingRuinedStoneProducts.slab, generator);
+		}
+		private static void registerReducedDryingStoneProducts(ReducedDryingStoneProducts dryingStoneProducts, BlockStateModelGenerator generator)
+		{
+			generator.registerCubeAllModelTexturePool(dryingStoneProducts.block)
+			         .stairs(dryingStoneProducts.stairs);
+			registerVerticalSlabAllTextures(dryingStoneProducts.block, dryingStoneProducts.slab, generator);
+		}
+
+		private static void registerReducedStoneProducts(ReducedStoneProducts stoneProducts, BlockStateModelGenerator generator)
+		{
+			generator.registerCubeAllModelTexturePool(stoneProducts.block)
+			         .stairs(stoneProducts.stairs);
+			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
+		}
 		private static void registerStoneProducts(StoneProducts stoneProducts, BlockStateModelGenerator generator)
 		{
 			generator.registerCubeAllModelTexturePool(stoneProducts.block)
@@ -178,9 +214,22 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 						case null, default:
 					}
 				}
+				case Log, LogWithWood -> registerLog(block, dataGenBlock, generator);
 				case LightingPanel -> registerLightingPanel(block, generator);
 				case Slab -> registerVerticalSlab(block, generator);
 				case Stairs -> registerStairs(block, generator);
+			}
+		}
+
+		private static void registerLog(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
+		{
+			String logKey = getBlockKey(block).toString();
+			BlockStateModelGenerator.LogTexturePool texturePool = generator.createLogTexturePool(block).log(block);
+			if (dataGenBlock.model() == DataGenBlockModel.LogWithWood)
+			{
+				String woodKey = logKey.substring(0, logKey.indexOf("_log")) + "_wood";
+				Block woodBlock = Registries.BLOCK.get(Identifier.of(woodKey));
+				texturePool.wood(woodBlock);
 			}
 		}
 		private static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Factory modelFactory, BlockStateModelGenerator generator){

@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_column",
   "textures": {
-    "all": "pswg_gadgets:block/sequoia_wood"
+    "end": "pswg_gadgets:block/sequoia_log",
+    "side": "pswg_gadgets:block/sequoia_log"
   }
 }

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "pswg_gadgets:block/mossy_smooth_massassi_stone",
+    "side": "pswg_gadgets:block/mossy_smooth_massassi_stone",
+    "top": "pswg_gadgets:block/mossy_smooth_massassi_stone"
+  }
+}

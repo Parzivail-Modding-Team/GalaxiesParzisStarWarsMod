@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/slab",
   "textures": {
-    "all": "pswg_gadgets:block/smooth_ilum_stone_slab"
+    "bottom": "pswg_gadgets:block/smooth_ilum_stone",
+    "side": "pswg_gadgets:block/smooth_ilum_stone",
+    "top": "pswg_gadgets:block/smooth_ilum_stone"
   }
 }
