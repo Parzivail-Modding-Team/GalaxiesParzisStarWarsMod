@@ -9,6 +9,7 @@ import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.feature.brewing.MixerScreenHandler;
 import dev.pswg.models.*;
 import dev.pswg.packet.MixerSyncS2CPayload;
+import dev.pswg.packet.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particles.*;
 import dev.pswg.renderer.grenades.*;
 import dev.pswg.renderer.mines.PressureMineEntityRenderer;
@@ -30,6 +31,7 @@ import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.client.render.item.tint.TintSourceTypes;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.Pair;
 
 import java.util.Map;
@@ -100,6 +102,17 @@ public class GadgetsClient implements GalaxiesClientAddon
 				mixerScreenHandler.drinkColors = mixerSyncS2CPayload.drinkColors();
 				mixerScreenHandler.drinkFoods = mixerSyncS2CPayload.drinkFoods();
 			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(PreciseVelocityParticleS2CPayload.ID, (preciseVelocityParticleS2CPayload, context) -> {
+			double x = preciseVelocityParticleS2CPayload.posVector().x;
+			double y = preciseVelocityParticleS2CPayload.posVector().y;
+			double z = preciseVelocityParticleS2CPayload.posVector().z;
+			double vX = preciseVelocityParticleS2CPayload.velocityVector().x;
+			double vY = preciseVelocityParticleS2CPayload.velocityVector().y;
+			double vZ = preciseVelocityParticleS2CPayload.velocityVector().z;
+			ParticleEffect particleEffect = preciseVelocityParticleS2CPayload.particleEffect();
+			context.client().particleManager.addParticle(particleEffect, x, y, z, vX, vY, vZ);
 		});
 
 		MixerScreen.ICON_MAP.put(StatusEffects.ABSORPTION, new Pair<>(126, 127));
