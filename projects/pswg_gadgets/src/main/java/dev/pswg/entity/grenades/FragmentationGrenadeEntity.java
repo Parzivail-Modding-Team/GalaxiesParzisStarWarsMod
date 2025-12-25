@@ -144,7 +144,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 					vy = getEntityWorld().random.nextGaussian() * 0.4;
 				if (getEntityWorld() instanceof ServerWorld serverWorld)
 					createSparkParticle(serverWorld, getX(), getY(), getZ(), vx, vy, vz);
-				//getEntityWorld().addParticleClient(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
 			}
 		}
 		if (EXPLOSION_TICK >= 15)

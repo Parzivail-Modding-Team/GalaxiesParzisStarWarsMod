@@ -6,6 +6,8 @@ import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.item.grenades.GrenadeItem;
+import dev.pswg.packet.PreciseVelocityParticleS2CPayload;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -15,6 +17,7 @@ import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -58,20 +61,8 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		}
 		else if (state.isIn(GadgetsBlocks.Tags.INFERNO_DESTROY))
 		{
-			for (int i = 0; i < 8; i++)
-			{
-				world.addParticleClient(ParticleTypes.SMOKE,
-				                  true,
-				                  true,
-				                  pos.getX() + world.random.nextGaussian() * 0.1f,
-				                  pos.getY() + world.random.nextGaussian() * 0.1f,
-				                  pos.getZ() + world.random.nextGaussian() * 0.1f,
-				                  world.random.nextGaussian() * 0.05f,
-				                  world.random.nextGaussian() * 0.05f,
-				                  world.random.nextGaussian() * 0.05f
-
-				);
-			}
+			if (world instanceof ServerWorld serverWorld)
+				createSmoke(pos, serverWorld);
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
 		else if (state.isIn(BlockTags.DIRT) && pos.isWithinDistance(getEntityPos(), INNER_AREA_DISTANCE))
@@ -80,50 +71,52 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		}
 	}
 
+	private static void createSmoke(BlockPos pos, ServerWorld serverWorld)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			double x = pos.getX() + serverWorld.random.nextGaussian() * 0.1f;
+			double y = pos.getY() + serverWorld.random.nextGaussian() * 0.1f;
+			double z = pos.getZ() + serverWorld.random.nextGaussian() * 0.1f;
+			double vX = serverWorld.random.nextGaussian() * 0.05f;
+			double vY = serverWorld.random.nextGaussian() * 0.05f;
+			double vZ = serverWorld.random.nextGaussian() * 0.05f;
+			var payload = new PreciseVelocityParticleS2CPayload(ParticleTypes.SMOKE, new Vec3d(x, y, z), new Vec3d(vX, vY, vZ));
+			for (ServerPlayerEntity player : serverWorld.getPlayers())
+				ServerPlayNetworking.send(player, payload);
+		}
+	}
+
 	public void spawnScorchParticles(Vector3f unitVec, BlockPos pos)
 	{
-		var world = getEntityWorld();
-		SimpleParticleType scorchParticleType = pos.isWithinDistance(getEntityPos(), INNER_AREA_DISTANCE) ? GadgetsParticleTypes.DENSE_INFERNO_SCORCH_PARTICLE : GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE;
-		world.addParticleClient(scorchParticleType,
-		                  true,
-		                  true,
-		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (1 / 4f),
-		                  pos.getY() + 0.5f + unitVec.y / 2f + (unitVec.x + unitVec.z) * (1 / 4f),
-		                  pos.getZ() + 0.5f + unitVec.z / 2f + (unitVec.x + unitVec.y) * (1 / 4f),
-		                  unitVec.x,
-		                  unitVec.y,
-		                  unitVec.z
-		);
-		world.addParticleClient(scorchParticleType,
-		                  true,
-		                  true,
-		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (1 / 4f),
-		                  pos.getY() + 0.5f + unitVec.y / 2f + (unitVec.x + unitVec.z) * (-1 / 4f),
-		                  pos.getZ() + 0.5f + unitVec.z / 2f + (unitVec.x + unitVec.y) * (-1 / 4f),
-		                  unitVec.x,
-		                  unitVec.y,
-		                  unitVec.z
-		);
-		world.addParticleClient(scorchParticleType,
-		                  true,
-		                  true,
-		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (-1 / 4f),
-		                  pos.getY() + 0.5f + unitVec.y / 2f + (unitVec.x + unitVec.z) * (1 / 4f),
-		                  pos.getZ() + 0.5f + unitVec.z / 2f + (unitVec.x + unitVec.y) * (-1 / 4f),
-		                  unitVec.x,
-		                  unitVec.y,
-		                  unitVec.z
-		);
-		world.addParticleClient(scorchParticleType,
-		                  true,
-		                  true,
-		                  pos.getX() + 0.5f + unitVec.x / 2f + (unitVec.y + unitVec.z) * (-1 / 4f),
-		                  pos.getY() + 0.5f + unitVec.y / 2f + (unitVec.x + unitVec.z) * (-1 / 4f),
-		                  pos.getZ() + 0.5f + unitVec.z / 2f + (unitVec.x + unitVec.y) * (1 / 4f),
-		                  unitVec.x,
-		                  unitVec.y,
-		                  unitVec.z
-		);
+		if (getEntityWorld() instanceof ServerWorld serverWorld)
+		{
+			SimpleParticleType scorchParticleType = pos.isWithinDistance(getEntityPos(), INNER_AREA_DISTANCE) ? GadgetsParticleTypes.DENSE_INFERNO_SCORCH_PARTICLE : GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE;
+			createScorchParticles(serverWorld, scorchParticleType, pos.getX(), pos.getY(), pos.getZ(), unitVec.x, unitVec.y, unitVec.z);
+		}
+	}
+
+	private static void createScorchParticles(ServerWorld serverWorld, SimpleParticleType particleType, double x, double y, double z, float unitX, float unitY, float unitZ)
+	{
+		List<PreciseVelocityParticleS2CPayload> payloads = new ArrayList<>();
+		double x1 = x + 0.5f + unitX / 2f + (unitY + unitZ) * (1 / 4f);
+		double x2 = x + 0.5f + unitX / 2f + (unitY + unitZ) * (-1 / 4f);
+		double y1 = y + 0.5f + unitY / 2f + (unitX + unitZ) * (1 / 4f);
+		double y2 = y + 0.5f + unitY / 2f + (unitX + unitZ) * (-1 / 4f);
+		double z1 = z + 0.5f + unitZ / 2f + (unitX + unitY) * (1 / 4f);
+		double z2 = z + 0.5f + unitZ / 2f + (unitX + unitY) * (-1 / 4f);
+		payloads.add(new PreciseVelocityParticleS2CPayload(particleType, new Vec3d(x1, y1, z1), new Vec3d(unitX, unitY, unitZ)));
+		payloads.add(new PreciseVelocityParticleS2CPayload(particleType, new Vec3d(x1, y2, z2), new Vec3d(unitX, unitY, unitZ)));
+		payloads.add(new PreciseVelocityParticleS2CPayload(particleType, new Vec3d(x2, y1, z2), new Vec3d(unitX, unitY, unitZ)));
+		payloads.add(new PreciseVelocityParticleS2CPayload(particleType, new Vec3d(x2, y2, z1), new Vec3d(unitX, unitY, unitZ)));
+
+		for (var payload : payloads)
+		{
+			for (ServerPlayerEntity player : serverWorld.getPlayers())
+			{
+				ServerPlayNetworking.send(player, payload);
+			}
+		}
 	}
 
 	@Override
