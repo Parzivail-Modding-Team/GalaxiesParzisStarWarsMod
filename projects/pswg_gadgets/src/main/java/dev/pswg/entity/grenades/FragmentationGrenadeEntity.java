@@ -6,11 +6,16 @@ import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import dev.pswg.item.grenades.GrenadeItem;
+import dev.pswg.packet.MixerSyncS2CPayload;
+import dev.pswg.packet.PreciseVelocityParticleS2CPayload;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -137,7 +142,9 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 					vy = Math.abs(getEntityWorld().random.nextGaussian() * 0.8);
 				else
 					vy = getEntityWorld().random.nextGaussian() * 0.4;
-				getEntityWorld().addParticleClient(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
+				if (getEntityWorld() instanceof ServerWorld serverWorld)
+					createSparkParticle(serverWorld, getX(), getY(), getZ(), vx, vy, vz);
+				//getEntityWorld().addParticleClient(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, getX(), getY(), getZ(), vx, vy, vz);
 			}
 		}
 		if (EXPLOSION_TICK >= 15)
@@ -146,6 +153,13 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 		}
 		if (IS_EXPLODING)
 			EXPLOSION_TICK++;
+	}
+
+	private static void createSparkParticle(ServerWorld serverWorld, double x, double y, double z, double vx, double vy, double vz)
+	{
+		var payload = new PreciseVelocityParticleS2CPayload(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, new Vec3d(x, y, z), new Vec3d(vx, vy, vz));
+		for (ServerPlayerEntity player : serverWorld.getPlayers())
+			ServerPlayNetworking.send(player, payload);
 	}
 
 	@Override
