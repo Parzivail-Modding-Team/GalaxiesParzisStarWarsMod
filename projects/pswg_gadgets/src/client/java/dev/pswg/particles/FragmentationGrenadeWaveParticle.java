@@ -75,9 +75,11 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle implemen
 		}
 		else
 		{
-			this.scaleX = this.scaleY = 1;
-			this.scale = (float)Math.pow(age / 15, 6);
 			this.alpha = (float)(Math.max(1 - (Math.pow(age / 25, 3) * 2.5f), 0.001f));
+
+			this.scaleX = 1;
+			this.scaleY = 1;
+			this.scale = (float)Math.pow(age / 15, 6);
 		}
 	}
 
