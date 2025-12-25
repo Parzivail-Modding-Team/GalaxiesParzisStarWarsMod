@@ -8,6 +8,7 @@ import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.feature.brewing.BrewingMap;
 import dev.pswg.feature.brewing.MixerFoodColors;
 import dev.pswg.packet.MixerSyncS2CPayload;
+import dev.pswg.packet.PreciseVelocityParticleS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -74,6 +75,7 @@ public final class Gadgets implements GalaxiesAddon
 		MixerFoodColors.init();
 
 		PayloadTypeRegistry.playS2C().register(MixerSyncS2CPayload.ID, MixerSyncS2CPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(PreciseVelocityParticleS2CPayload.ID, PreciseVelocityParticleS2CPayload.CODEC);
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener()
 		{
