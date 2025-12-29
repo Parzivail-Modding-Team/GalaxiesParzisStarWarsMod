@@ -1,22 +1,9 @@
 package dev.pswg.structure;
 
-import dev.pswg.Gadgets;
-import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.container.GadgetsBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.StructureTemplate;
-import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-
-import java.util.Optional;
 
 public class StructUtil
 {

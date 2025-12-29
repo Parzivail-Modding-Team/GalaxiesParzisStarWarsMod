@@ -1,6 +1,5 @@
-package dev.pswg.util;
+package dev.pswg.autoreg;
 
-import dev.pswg.block.*;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.item.ArmorItems;

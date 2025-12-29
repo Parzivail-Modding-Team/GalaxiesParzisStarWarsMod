@@ -1,7 +1,9 @@
 package dev.pswg.block;
 
 import dev.pswg.util.WorldUtil;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.server.world.ServerWorld;
@@ -10,11 +12,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-public class DryingSlabBlock extends MutatingSlabBlock
+public class DryingStairsBlock extends MutatingStairsBlock
 {
-	public DryingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, Settings settings)
+	public DryingStairsBlock(BlockState baseBlockState, StairsBlock target, int meanTransitionTime, AbstractBlock.Settings settings)
 	{
-		super(target, meanTransitionTime, settings);
+		super(baseBlockState, target, meanTransitionTime, settings);
 	}
 
 	@Override

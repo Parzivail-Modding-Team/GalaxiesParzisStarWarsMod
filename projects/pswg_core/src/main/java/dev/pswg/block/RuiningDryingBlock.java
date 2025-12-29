@@ -1,7 +1,6 @@
 package dev.pswg.block;
 
 import com.google.common.base.Suppliers;
-import dev.pswg.block.FallingMutatingBlock;
 import dev.pswg.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

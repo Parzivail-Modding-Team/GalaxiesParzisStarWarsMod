@@ -5,7 +5,6 @@ import dev.pswg.registry.Registrar;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.StairsBlock;
-import net.minecraft.block.WallBlock;
 
 public class ReducedStoneProducts
 {

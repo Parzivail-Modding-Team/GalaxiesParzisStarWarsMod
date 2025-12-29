@@ -1,5 +1,7 @@
 package dev.pswg.block;
 
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -10,7 +12,7 @@ public class MutatingSlabBlock extends VerticalSlabBlock
 	private final VerticalSlabBlock target;
 	private final int meanTransitionTime;
 
-	public MutatingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, Settings settings)
+	public MutatingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, AbstractBlock.Settings settings)
 	{
 		super(settings.ticksRandomly());
 		this.target = target;
@@ -24,7 +26,7 @@ public class MutatingSlabBlock extends VerticalSlabBlock
 			return;
 
 		if (random.nextInt(meanTransitionTime) == 0)
-			world.setBlockState(pos, target.getStateWithProperties(state), NOTIFY_LISTENERS);
+			world.setBlockState(pos, target.getStateWithProperties(state), Block.NOTIFY_LISTENERS);
 	}
 
 	protected boolean canTransition(BlockState state, ServerWorld world, BlockPos pos, Random random)

@@ -2,6 +2,8 @@ package dev.pswg.block;
 
 import com.google.common.base.Suppliers;
 import dev.pswg.util.WorldUtil;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCollisionHandler;
@@ -19,7 +21,7 @@ public class RuiningDryingSlabBlock extends MutatingSlabBlock
 {
 	private final Supplier<VerticalSlabBlock> ruinedBlock;
 
-	public RuiningDryingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, Supplier<VerticalSlabBlock> ruinedBlock, Settings settings)
+	public RuiningDryingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, Supplier<VerticalSlabBlock> ruinedBlock, AbstractBlock.Settings settings)
 	{
 		super(target, meanTransitionTime, settings);
 		this.ruinedBlock = Suppliers.memoize(ruinedBlock::get);
@@ -37,7 +39,7 @@ public class RuiningDryingSlabBlock extends MutatingSlabBlock
 		if (world instanceof ServerWorld serverWorld)
 		{
 			if (entity instanceof LivingEntity && (entity instanceof PlayerEntity || serverWorld.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F)
-				world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getStateWithProperties(state), world, pos));
+				world.setBlockState(pos, Block.pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getStateWithProperties(state), world, pos));
 		}
 		super.onEntityCollision(state, world, pos, entity, handler, bl);
 	}

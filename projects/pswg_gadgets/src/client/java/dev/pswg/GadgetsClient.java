@@ -18,7 +18,7 @@ import dev.pswg.screens.CrateGenericSmallScreen;
 import dev.pswg.screens.MixerScreen;
 import dev.pswg.screens.ScrappingTableScreen;
 import dev.pswg.tints.SwgDrinkTintSource;
-import dev.pswg.util.AutoGenerateUtil;
+import dev.pswg.autoreg.AutoGenerateUtil;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

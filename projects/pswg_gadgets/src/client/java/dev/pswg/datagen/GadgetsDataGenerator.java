@@ -13,7 +13,7 @@ import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
 import dev.pswg.tints.SwgDrinkTintSource;
-import dev.pswg.util.AutoGenerateUtil;
+import dev.pswg.autoreg.AutoGenerateUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
