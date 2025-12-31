@@ -5,6 +5,9 @@ import dev.pswg.container.*;
 import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.container.entity.GadgetsEntities;
+import dev.pswg.container.structure.GalaxiesStructureKeys;
+import dev.pswg.container.structure.GalaxiesStructurePieces;
+import dev.pswg.container.structure.GalaxiesStructureTypes;
 import dev.pswg.feature.brewing.BrewingMap;
 import dev.pswg.feature.brewing.MixerFoodColors;
 import dev.pswg.packet.MixerSyncS2CPayload;
@@ -67,10 +70,10 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsRecipeTypes.register();
 		GadgetsRecipeSerializers.register();
 		GadgetsItemGroups.register();
-		GadgetsStructurePieces.register();
-		GadgetsStructureTypes.register();
-		GadgetsStructureKeys.register();
-		GadgetsLootTables.register();
+		GalaxiesStructurePieces.register();
+		GalaxiesStructureTypes.register();
+		GalaxiesStructureKeys.register();
+		GalaxiesLootTables.register();
 
 		MixerFoodColors.init();
 

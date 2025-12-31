@@ -1,14 +1,13 @@
-package dev.pswg.container;
+package dev.pswg.container.structure;
 
 import dev.pswg.structure.ContainerStructurePiece;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.structure.IglooGenerator;
 import net.minecraft.structure.StructurePieceType;
 
 import java.util.Locale;
 
-public class GadgetsStructurePieces
+public class GalaxiesStructurePieces
 {
 	public static final StructurePieceType DERELICT_CONTAINER = registerPiece(ContainerStructurePiece::new, "DerelictImpContainer");
 

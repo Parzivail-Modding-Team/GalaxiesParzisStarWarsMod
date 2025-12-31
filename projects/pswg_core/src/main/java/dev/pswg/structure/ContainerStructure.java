@@ -1,8 +1,7 @@
 package dev.pswg.structure;
 
 import com.mojang.serialization.MapCodec;
-import dev.pswg.container.GadgetsStructureTypes;
-import net.minecraft.structure.IglooGenerator;
+import dev.pswg.container.structure.GalaxiesStructureTypes;
 import net.minecraft.structure.StructurePiecesCollector;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
@@ -42,6 +41,6 @@ public class ContainerStructure extends Structure
 	@Override
 	public StructureType<?> getType()
 	{
-		return GadgetsStructureTypes.CONTAINER_STRUCTURE;
+		return GalaxiesStructureTypes.CONTAINER_STRUCTURE;
 	}
 }

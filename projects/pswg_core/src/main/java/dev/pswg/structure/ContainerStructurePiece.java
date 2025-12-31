@@ -1,13 +1,14 @@
 package dev.pswg.structure;
 
 import dev.pswg.Gadgets;
+import dev.pswg.Galaxies;
 import dev.pswg.container.GadgetsBlocks;
-import dev.pswg.container.GadgetsLootTables;
-import dev.pswg.container.GadgetsStructurePieces;
+import dev.pswg.container.GalaxiesLootTables;
+import dev.pswg.container.GalaxiesBlocks;
+import dev.pswg.container.structure.GalaxiesStructurePieces;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.*;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
@@ -26,16 +27,16 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 public class ContainerStructurePiece extends SimpleStructurePiece
 {
-	private final Identifier templateId = Gadgets.id("derelict_imperial_container");
+	private final Identifier templateId = Galaxies.id("derelict_imperial_container");
 
 	public ContainerStructurePiece(StructureTemplateManager manager, Identifier identifier, BlockPos pos, BlockRotation rotation)
 	{
-		super(GadgetsStructurePieces.DERELICT_CONTAINER, 0, manager, identifier, identifier.toString(), createPlacementData(rotation, identifier), pos);
+		super(GalaxiesStructurePieces.DERELICT_CONTAINER, 0, manager, identifier, identifier.toString(), createPlacementData(rotation, identifier), pos);
 	}
 
 	public ContainerStructurePiece(StructureTemplateManager templateManager, NbtCompound nbt)
 	{
-		super(GadgetsStructurePieces.DERELICT_CONTAINER, nbt, templateManager, identifier -> createPlacementData(BlockRotation.valueOf(nbt.getString("Rot").get()), identifier));
+		super(GalaxiesStructurePieces.DERELICT_CONTAINER, nbt, templateManager, identifier -> createPlacementData(BlockRotation.valueOf(nbt.getString("Rot").get()), identifier));
 	}
 
 	private static StructurePlacementData createPlacementData(BlockRotation rotation, Identifier identifier)
@@ -83,14 +84,14 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 				if (be instanceof LootableContainerBlockEntity lootTable)
 				{
 					// TODO: CHANGE LOOT HERE
-					if (crateBlock.equals(GadgetsBlocks.IMPERIAL_CORRUGATED_CRATE))
-						lootTable.setLootTable(GadgetsLootTables.IMPERIAL_CRATE);
-					else if (crateBlock.equals(GadgetsBlocks.MEDICAL_CORRUGATED_CRATE))
-						lootTable.setLootTable(GadgetsLootTables.MEDICAL_CRATE);
-					else if (crateBlock.equals(GadgetsBlocks.MINING_CORRUGATED_CRATE))
-						lootTable.setLootTable(GadgetsLootTables.MINING_CRATE);
+					if (crateBlock.equals(GalaxiesBlocks.IMPERIAL_CORRUGATED_CRATE))
+						lootTable.setLootTable(GalaxiesLootTables.IMPERIAL_CRATE);
+					else if (crateBlock.equals(GalaxiesBlocks.MEDICAL_CORRUGATED_CRATE))
+						lootTable.setLootTable(GalaxiesLootTables.MEDICAL_CRATE);
+					else if (crateBlock.equals(GalaxiesBlocks.MINING_CORRUGATED_CRATE))
+						lootTable.setLootTable(GalaxiesLootTables.MINING_CRATE);
 					else
-						lootTable.setLootTable(GadgetsLootTables.GENERIC_CRATE);
+						lootTable.setLootTable(GalaxiesLootTables.GENERIC_CRATE);
 					lootTable.setLootTableSeed(random.nextLong());
 				}
 			}
