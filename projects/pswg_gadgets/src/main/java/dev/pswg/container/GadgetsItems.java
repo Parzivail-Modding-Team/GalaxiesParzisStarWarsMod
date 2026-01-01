@@ -86,12 +86,6 @@ public class GadgetsItems
 				Identifier.of(Gadgets.MODID, "max_pos"),
 				ComponentType.<Vec3d>builder().codec(Vec3d.CODEC).build()
 		);
-		/// FIRST ARGUMENT IS AN ANGLE, SECOND IS THE LENGTH
-		public static final ComponentType<List<Pair<Float, Float>>> BREWING_PATH = Registry.register(
-				Registries.DATA_COMPONENT_TYPE,
-				Identifier.of(Gadgets.MODID, "brewing_path"),
-				ComponentType.<List<Pair<Float, Float>>>builder().codec(Codec.list(Codec.pair(Codec.FLOAT, Codec.FLOAT))).build()
-		);
 		public static final ConsumableComponent DEATH_STICK_RED = food()
 				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 1), 0.99F))
 				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200, 1), 1F))

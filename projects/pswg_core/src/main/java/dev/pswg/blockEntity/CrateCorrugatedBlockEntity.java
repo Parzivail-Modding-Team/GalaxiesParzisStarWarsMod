@@ -1,9 +1,8 @@
 package dev.pswg.blockEntity;
 
-import dev.pswg.Gadgets;
-import dev.pswg.container.GadgetsBlockEntities;
-import dev.pswg.container.GadgetsScreenHandlerTypes;
-import dev.pswg.screenHandler.CrateGenericSmallScreenHandler;
+import dev.pswg.CrateGenericSmallScreenHandler;
+import dev.pswg.container.GalaxiesBlockEntities;
+import dev.pswg.container.GalaxiesScreenHandlerTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.ContainerUser;
@@ -11,8 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.storage.ReadView;
@@ -26,7 +23,7 @@ public class CrateCorrugatedBlockEntity extends LootableContainerBlockEntity imp
 	private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(15, ItemStack.EMPTY);
 	public CrateCorrugatedBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(GadgetsBlockEntities.CORRUGATED_CRATE_BLOCK_ENTITY, pos, state);
+		super(GalaxiesBlockEntities.CORRUGATED_CRATE_BLOCK_ENTITY, pos, state);
 	}
 
 	@Override
@@ -77,7 +74,7 @@ public class CrateCorrugatedBlockEntity extends LootableContainerBlockEntity imp
 	@Override
 	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player)
 	{
-		return new CrateGenericSmallScreenHandler(GadgetsScreenHandlerTypes.CORRUGATED, syncId, inv, this);
+		return new CrateGenericSmallScreenHandler(GalaxiesScreenHandlerTypes.CORRUGATED, syncId, inv, this);
 	}
 
 	@Override

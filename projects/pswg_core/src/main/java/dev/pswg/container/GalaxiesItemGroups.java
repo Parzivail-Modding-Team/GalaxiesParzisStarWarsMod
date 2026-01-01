@@ -81,7 +81,7 @@ public class GalaxiesItemGroups
 
 	public static void addBlocks(FabricItemGroupEntries itemGroup, DataGenItemGroup group)
 	{
-		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 			if(dataGenBlock.itemGroup() == group)
 				itemGroup.add(block);
 		});

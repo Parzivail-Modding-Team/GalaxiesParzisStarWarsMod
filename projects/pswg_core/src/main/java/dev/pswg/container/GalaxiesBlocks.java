@@ -5,6 +5,7 @@ import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.autoreg.ServerBlockRegistryData;
 import dev.pswg.block.*;
+import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.datagen.*;
 import dev.pswg.registry.Registrar;
@@ -44,7 +45,7 @@ public class GalaxiesBlocks
 	public static final DyedStoneProducts DYED_POURSTONE = new DyedStoneProducts(color -> new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), color.name().toLowerCase() + "_pourstone"));
 	@DataGenBlock
 	// TODO: find a way implement "connecting" blocks
-	public static final SelfConnectingBlock DURASTEEL_CONNECTING_POURSTONE = Registrar.block(Gadgets.id("durasteel_bordered_pourstone"), SelfConnectingBlock::new, AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+	public static final SelfConnectingBlock DURASTEEL_CONNECTING_POURSTONE = Registrar.block(Galaxies.id("durasteel_bordered_pourstone"), SelfConnectingBlock::new, AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 	@DataGenBlock
 	public static final StoneProducts MASSASSI = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone");
 	@DataGenBlock
@@ -535,7 +536,7 @@ public class GalaxiesBlocks
 	public static void register()
 	{
 
-		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(ServerBlockRegistryData.class, GalaxiesBlocks::registerServerDataBlock);
+		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(ServerBlockRegistryData.class, GalaxiesBlocks::registerServerDataBlock);
 
 	}
 	private static void registerServerDataBlock(Block block, ServerBlockRegistryData serverData)

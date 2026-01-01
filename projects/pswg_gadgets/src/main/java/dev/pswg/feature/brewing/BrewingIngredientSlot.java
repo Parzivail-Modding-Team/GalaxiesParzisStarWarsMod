@@ -16,6 +16,6 @@ public class BrewingIngredientSlot extends Slot
 	@Override
 	public boolean canInsert(ItemStack stack)
 	{
-		return stack.contains(GadgetsItems.Components.BREWING_PATH) || stack.isIn(GadgetsItems.Tags.MIXER_FOOD_TAG) || stack.getItem() instanceof DyeItem;
+		return MixerBrewingPaths.pathMap.containsKey(stack.getItem()) || stack.isIn(GadgetsItems.Tags.MIXER_FOOD_TAG) || stack.getItem() instanceof DyeItem;
 	}
 }

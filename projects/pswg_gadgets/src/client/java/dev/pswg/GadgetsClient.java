@@ -78,10 +78,11 @@ public class GadgetsClient implements GalaxiesClientAddon
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.LASER_CUT_PARTICLE, LaserCutParticle.Factory::new);
 
 		HandledScreens.register(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, ScrappingTableScreen::new);
-		HandledScreens.register(GadgetsScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
+		//TODO: MOVE
+		// HandledScreens.register(GadgetsScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
 		HandledScreens.register(GadgetsScreenHandlerTypes.MIXER, MixerScreen::new);
 
-		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
+		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
 			switch (clientData.renderLayer())
 			{
 				case Transparent:

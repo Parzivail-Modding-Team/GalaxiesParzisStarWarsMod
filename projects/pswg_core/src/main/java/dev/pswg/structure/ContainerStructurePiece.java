@@ -1,8 +1,6 @@
 package dev.pswg.structure;
 
-import dev.pswg.Gadgets;
 import dev.pswg.Galaxies;
-import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GalaxiesLootTables;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.structure.GalaxiesStructurePieces;

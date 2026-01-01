@@ -1,6 +1,6 @@
 package dev.pswg.block;
 
-import dev.pswg.Gadgets;
+import dev.pswg.Galaxies;
 import dev.pswg.registry.Registrar;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -17,11 +17,11 @@ public class ReducedDryingStoneProducts
 
 	public ReducedDryingStoneProducts(AbstractBlock.Settings settings, String key, Block targetBlock, int transitionTime, ColorCode color)
 	{
-		this.block = Registrar.block(Gadgets.id(key), blockSettings -> new DryingBlock(targetBlock, transitionTime, blockSettings, color), settings);
+		this.block = Registrar.block(Galaxies.id(key), blockSettings -> new DryingBlock(targetBlock, transitionTime, blockSettings, color), settings);
 		VerticalSlabBlock targetSlab = (VerticalSlabBlock)Registries.BLOCK.get(Identifier.of(getBlockKey(targetBlock) + "_slab"));
-		this.slab = Registrar.block(Gadgets.id(key + "_slab"), blockSettings -> new DryingSlabBlock(targetSlab, transitionTime, blockSettings), settings);
+		this.slab = Registrar.block(Galaxies.id(key + "_slab"), blockSettings -> new DryingSlabBlock(targetSlab, transitionTime, blockSettings), settings);
 		StairsBlock targetStairs = (StairsBlock)Registries.BLOCK.get(Identifier.of(getBlockKey(targetBlock) + "_stairs"));
-		this.stairs = Registrar.block(Gadgets.id(key + "_stairs"), blockSettings -> new DryingStairsBlock(block.getDefaultState(), targetStairs, transitionTime, blockSettings), settings);
+		this.stairs = Registrar.block(Galaxies.id(key + "_stairs"), blockSettings -> new DryingStairsBlock(block.getDefaultState(), targetStairs, transitionTime, blockSettings), settings);
 	}
 
 	private static Identifier getBlockKey(Block block)

@@ -1,4 +1,4 @@
-package dev.pswg.screenHandler;
+package dev.pswg;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
