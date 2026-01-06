@@ -4,8 +4,10 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.configuration.GalaxiesConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
-import dev.pswg.container.GalaxiesBlockEntities;
-import dev.pswg.container.GalaxiesBlocks;
+import dev.pswg.container.*;
+import dev.pswg.container.structure.GalaxiesStructureKeys;
+import dev.pswg.container.structure.GalaxiesStructurePieces;
+import dev.pswg.container.structure.GalaxiesStructureTypes;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
 import dev.pswg.interaction.LeftClickingEntityAttachment;
@@ -129,6 +131,19 @@ public final class Galaxies implements ModInitializer
 
 		GalaxiesBlocks.register();
 		GalaxiesBlockEntities.register();
+
+		GalaxiesItems.register();
+		GalaxiesItemGroups.register();
+		GalaxiesToolMaterials.register();
+
+		GalaxiesLootTables.register();
+		GalaxiesStructureKeys.register();
+		GalaxiesStructurePieces.register();
+		GalaxiesStructureTypes.register();
+
+		GalaxiesScreenHandlerTypes.register();
+
+
 
 		LOGGER.info("Loading PSWG modules and addons via pswg-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesStarting);

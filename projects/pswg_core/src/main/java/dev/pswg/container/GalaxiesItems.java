@@ -539,4 +539,10 @@ public class GalaxiesItems
 	{
 		return Registrar.item(Galaxies.id(key), Item::new, itemSettings.armor(material, type));
 	}
+
+	public static void register()
+	{
+		Tags.register();
+		Components.register();
+	}
 }
