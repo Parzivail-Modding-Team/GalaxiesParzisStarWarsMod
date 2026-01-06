@@ -1,6 +1,5 @@
 package dev.pswg.item;
 
-import dev.pswg.Gadgets;
 import dev.pswg.Galaxies;
 import dev.pswg.registry.Registrar;
 import net.minecraft.item.Item;

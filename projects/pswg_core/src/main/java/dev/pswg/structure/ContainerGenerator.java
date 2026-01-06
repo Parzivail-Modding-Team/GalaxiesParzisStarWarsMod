@@ -1,6 +1,5 @@
 package dev.pswg.structure;
 
-import dev.pswg.Gadgets;
 import dev.pswg.Galaxies;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.structure.StructureTemplateManager;

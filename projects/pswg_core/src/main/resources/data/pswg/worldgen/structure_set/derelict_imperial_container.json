@@ -7,7 +7,7 @@
 	},
 	"structures": [
 		{
-			"structure": "pswg_gadgets:derelict_imperial_container",
+			"structure": "pswg:derelict_imperial_container",
 			"weight": 1
 		}
 	]

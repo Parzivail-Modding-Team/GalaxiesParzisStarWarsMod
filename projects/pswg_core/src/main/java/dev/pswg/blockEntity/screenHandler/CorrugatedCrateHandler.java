@@ -1,4 +1,4 @@
-package dev.pswg;
+package dev.pswg.blockEntity.screenHandler;
 
 import dev.pswg.container.GalaxiesScreenHandlerTypes;
 import net.minecraft.entity.player.PlayerInventory;

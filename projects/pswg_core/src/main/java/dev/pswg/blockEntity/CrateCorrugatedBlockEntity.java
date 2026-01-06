@@ -1,6 +1,6 @@
 package dev.pswg.blockEntity;
 
-import dev.pswg.CrateGenericSmallScreenHandler;
+import dev.pswg.blockEntity.screenHandler.CrateGenericSmallScreenHandler;
 import dev.pswg.container.GalaxiesBlockEntities;
 import dev.pswg.container.GalaxiesScreenHandlerTypes;
 import net.minecraft.block.BlockState;

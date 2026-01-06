@@ -2,6 +2,7 @@ package dev.pswg.screens;
 
 import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
+import dev.pswg.container.GalaxiesItems;
 import dev.pswg.feature.scrapping.table.ScrappingTableScreenHandler;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
@@ -57,9 +58,9 @@ public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHand
 		context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 25 + backgroundX, 89 + backgroundY + (16 - calibratorProgress + 1), 187, 16 - calibratorProgress + 1, 4, calibratorProgress, 256, 256);
 
 		var stack = handler.getInputItem();
-		if (stack.contains(GadgetsItems.Components.METAL_COMPONENT))
+		if (stack.contains(GalaxiesItems.Components.METAL_COMPONENT))
 		{
-			int metalAmount = stack.get(GadgetsItems.Components.METAL_COMPONENT);
+			int metalAmount = stack.get(GalaxiesItems.Components.METAL_COMPONENT);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 56 + backgroundX, 55 + backgroundY, 177, 42, 1 + 13 * metalAmount, 4, 256, 256);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 45 + backgroundX, 53 + backgroundY, 192, 0, 9, 8, 256, 256);
 			if (hoveringOverTool == 0)
@@ -69,9 +70,9 @@ public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHand
 				for (int i = 0; i < Math.min(metalAmount, 1); i++)
 					context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 56 + backgroundX + 13 * (metalAmount - i - 1), 55 + backgroundY, 177, 62, 14, 4, 256, 256);
 		}
-		if (stack.contains(GadgetsItems.Components.TECH_COMPONENT))
+		if (stack.contains(GalaxiesItems.Components.TECH_COMPONENT))
 		{
-			int techAmount = stack.get(GadgetsItems.Components.TECH_COMPONENT);
+			int techAmount = stack.get(GalaxiesItems.Components.TECH_COMPONENT);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 56 + backgroundX, 67 + backgroundY, 177, 47, 1 + 13 * techAmount, 4, 256, 256);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 44 + backgroundX, 65 + backgroundY, 192, 9, 10, 7, 256, 256);
 			if (hoveringOverTool == 1)
@@ -81,18 +82,18 @@ public class ScrappingTableScreen extends HandledScreen<ScrappingTableScreenHand
 				for (int i = 0; i < Math.min(techAmount, 1); i++)
 					context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 56 + backgroundX + 13 * (techAmount - i - 1), 67 + backgroundY, 177, 62, 14, 4, 256, 256);
 		}
-		if (stack.contains(GadgetsItems.Components.PLASTIC_COMPONENT))
+		if (stack.contains(GalaxiesItems.Components.PLASTIC_COMPONENT))
 		{
-			int plasticAmount = stack.get(GadgetsItems.Components.PLASTIC_COMPONENT);
+			int plasticAmount = stack.get(GalaxiesItems.Components.PLASTIC_COMPONENT);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 56 + backgroundX, 79 + backgroundY, 177, 52, 1 + 13 * plasticAmount, 4, 256, 256);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 43 + backgroundX, 77 + backgroundY, 203, 0, 12, 8, 256, 256);
 			if (hoveringOverTool == 0)
 				for (int i = 0; i < Math.min(plasticAmount, 1); i++)
 					context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 56 + backgroundX + 13 * (plasticAmount - i - 1), 79 + backgroundY, 177, 62, 14, 4, 256, 256);
 		}
-		if (stack.contains(GadgetsItems.Components.ENERGY_COMPONENT))
+		if (stack.contains(GalaxiesItems.Components.ENERGY_COMPONENT))
 		{
-			int energyAmount = stack.get(GadgetsItems.Components.ENERGY_COMPONENT);
+			int energyAmount = stack.get(GalaxiesItems.Components.ENERGY_COMPONENT);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 56 + backgroundX, 91 + backgroundY, 177, 57, 1 + 13 * energyAmount, 4, 256, 256);
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 47 + backgroundX, 89 + backgroundY, 205, 9, 6, 8, 256, 256);
 			if (hoveringOverTool == 2)

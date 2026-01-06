@@ -1,6 +1,5 @@
 package dev.pswg.util;
 
-import dev.pswg.container.GadgetsItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 

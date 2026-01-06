@@ -1,7 +1,7 @@
 package dev.pswg.container;
 
-import dev.pswg.CorrugatedCrateHandler;
-import dev.pswg.CrateGenericSmallScreenHandler;
+import dev.pswg.blockEntity.screenHandler.CorrugatedCrateHandler;
+import dev.pswg.blockEntity.screenHandler.CrateGenericSmallScreenHandler;
 import dev.pswg.Galaxies;
 import dev.pswg.registry.Registrar;
 import net.minecraft.screen.ScreenHandlerType;

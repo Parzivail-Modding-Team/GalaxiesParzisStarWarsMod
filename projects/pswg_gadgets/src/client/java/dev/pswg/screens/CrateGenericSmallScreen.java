@@ -1,7 +1,7 @@
 package dev.pswg.screens;
 
 import dev.pswg.Gadgets;
-import dev.pswg.CrateGenericSmallScreenHandler;
+import dev.pswg.blockEntity.screenHandler.CrateGenericSmallScreenHandler;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
