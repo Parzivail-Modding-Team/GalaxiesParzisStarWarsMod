@@ -47,7 +47,6 @@ public class GalaxiesClientDataGenerator implements DataGeneratorEntrypoint
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ModelGenerator::new);
-
 	}
 
 	/**
@@ -194,7 +193,7 @@ public class GalaxiesClientDataGenerator implements DataGeneratorEntrypoint
 			generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.LAYERS).generate(
 					height -> {
 						Identifier modelId = TexturedModel.makeFactory(block1 -> TextureMap.all(id).put(TextureKey.PARTICLE, id), blockModel("template_accumulating_height" + height * 2, TextureKey.ALL, TextureKey.PARTICLE)).upload(block, "_height" + height * 2, generator.modelCollector);
-						return createWeightedVariant(modelId);//BlockStateVariant.create().put(VariantSettings.MODEL, modelId);
+						return createWeightedVariant(modelId);
 					}))
 			);
 			generator.registerParentedItemModel(block, ModelIds.getBlockSubModelId(block, "_height2"));

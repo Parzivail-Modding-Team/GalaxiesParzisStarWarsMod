@@ -229,7 +229,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public String getName()
 		{
-			return "PSWGGadgetsRecipeProvider";
+			return "PSWGGalaxiesRecipeProvider";
 		}
 	}
 }
