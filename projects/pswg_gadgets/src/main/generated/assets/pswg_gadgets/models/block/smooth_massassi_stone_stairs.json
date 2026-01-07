@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "pswg_gadgets:block/smooth_massassi_stone",
-    "side": "pswg_gadgets:block/smooth_massassi_stone",
-    "top": "pswg_gadgets:block/smooth_massassi_stone"
-  }
-}

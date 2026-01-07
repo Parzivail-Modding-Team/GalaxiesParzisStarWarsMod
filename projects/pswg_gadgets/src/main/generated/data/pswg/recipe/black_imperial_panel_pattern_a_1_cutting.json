@@ -1,0 +1,13 @@
+{
+  "type": "pswg_gadgets:laser_cutting",
+  "ingredient": "pswg:black_imperial_panel_pattern_a_1",
+  "primary_result": {
+    "count": 1,
+    "id": "pswg:durasteel_ingot"
+  },
+  "secondary_chance": 0.35,
+  "secondary_result": {
+    "count": 3,
+    "id": "pswg:durasteel_nugget"
+  }
+}

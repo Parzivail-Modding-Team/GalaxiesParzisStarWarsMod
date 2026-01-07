@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "pswg_gadgets:block/white_pourstone",
-    "side": "pswg_gadgets:block/white_pourstone",
-    "top": "pswg_gadgets:block/white_pourstone"
-  }
-}

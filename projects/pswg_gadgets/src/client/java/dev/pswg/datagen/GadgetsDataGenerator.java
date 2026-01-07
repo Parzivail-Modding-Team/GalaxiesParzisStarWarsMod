@@ -12,6 +12,7 @@ import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
 import dev.pswg.tints.SwgDrinkTintSource;
 import dev.pswg.autoreg.AutoGenerateUtil;
+import dev.pswg.util.GadgetsGenUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -90,97 +91,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
 		{
-			registerVerticalLightingSlab(blockStateModelGenerator);
-
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (genBlock, dataGenBlock) -> {
 				registerDataGenBlock(genBlock, dataGenBlock, blockStateModelGenerator);
 			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (genDyedBlocks, dataGenBlock) -> {
-
-				for (Block block : genDyedBlocks.values())
-					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, NumberedBlocks.class, (numberedBlocks, dataGenBlock) -> {
-				for (Block block : numberedBlocks)
-					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingRuiningStoneProducts.class, (reducedDryingRuiningStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerReducedDryingRuinedStoneProducts(reducedDryingRuiningStoneProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingStoneProducts.class, (reducedDryingStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerReducedDryingStoneProducts(reducedDryingStoneProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedStoneProducts.class, (reducedStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerReducedStoneProducts(reducedStoneProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerStoneProducts(stoneProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, WoodProducts.class, (woodProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerWoodProducts(woodProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedStoneProducts.class, (dyedStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					for (StoneProducts stoneProducts : dyedStoneProducts.values())
-						registerStoneProducts(stoneProducts, blockStateModelGenerator);
-				}
-			});
-
-		}
-
-		private static void registerReducedDryingRuinedStoneProducts(ReducedDryingRuiningStoneProducts dryingRuinedStoneProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(dryingRuinedStoneProducts.block)
-			         .stairs(dryingRuinedStoneProducts.stairs);
-			registerVerticalSlabAllTextures(dryingRuinedStoneProducts.block, dryingRuinedStoneProducts.slab, generator);
-		}
-		private static void registerReducedDryingStoneProducts(ReducedDryingStoneProducts dryingStoneProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(dryingStoneProducts.block)
-			         .stairs(dryingStoneProducts.stairs);
-			registerVerticalSlabAllTextures(dryingStoneProducts.block, dryingStoneProducts.slab, generator);
-		}
-
-		private static void registerReducedStoneProducts(ReducedStoneProducts stoneProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(stoneProducts.block)
-			         .stairs(stoneProducts.stairs);
-			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
-		}
-		private static void registerStoneProducts(StoneProducts stoneProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(stoneProducts.block)
-			         .wall(stoneProducts.wall)
-			         .stairs(stoneProducts.stairs);
-			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
-
-		}
-		private static void registerWoodProducts(WoodProducts woodProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(woodProducts.plank)
-			         .fence(woodProducts.fence)
-					 .fenceGate(woodProducts.gate)
-			         .stairs(woodProducts.stairs);
-			generator.registerDoor(woodProducts.door);
-			generator.registerTrapdoor(woodProducts.trapdoor);
-
-			registerVerticalSlabAllTextures(woodProducts.plank, woodProducts.slab, generator);
 
 		}
 		private static void registerAccumulatingBlock(Block block, BlockStateModelGenerator generator) {
@@ -207,8 +120,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				{
 					switch (dataGenBlock.dataGenModelKey())
 					{
-						case "corrugated_crate":
-							registerCorrugatedCrate(generator, block);
 						case null, default:
 					}
 				}
@@ -291,36 +202,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			generator.blockStateCollector.accept(blockState);
 
 		}
-		private static void registerVerticalLightingSlab( BlockStateModelGenerator generator){
-
-			var textureIdTopBottom = TextureMap.getId(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
-			var slab = GalaxiesBlocks.GRAY_IMPERIAL_LIGHTING_SLAB;
-			var textureIdSide = TextureMap.getId(GalaxiesBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
-			var textureMap = new TextureMap().put(TextureKey.SIDE, textureIdSide).put(TextureKey.TOP, textureIdTopBottom).put(TextureKey.END, textureIdTopBottom);
-			var textureMapOn = new TextureMap().put(TextureKey.SIDE, textureIdSide.withSuffixedPath("_on")).put(TextureKey.TOP, textureIdTopBottom).put(TextureKey.END, textureIdTopBottom);
-			Identifier bottomId = Models.SLAB.upload(slab, textureMap, generator.modelCollector);
-			Identifier bottomIdOn = Models.SLAB.upload(slab, "_on", textureMapOn, generator.modelCollector);
-			Identifier topId =  Models.SLAB_TOP.upload(slab, "", textureMap, generator.modelCollector);
-			Identifier topIdOn =  Models.SLAB_TOP.upload(slab, "_on", textureMapOn, generator.modelCollector);
-			Identifier doubleId =  Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
-			Identifier doubleIdOn =  Models.CUBE_COLUMN.upload(slab, "_double_on", textureMapOn, generator.modelCollector);
-
-			var blockState = VariantsBlockModelDefinitionCreator.of(slab, createWeightedVariant(bottomId)).
-			                                                    apply(BlockStateVariantMap.operations(Properties.AXIS)
-			                                                                              .register(Direction.Axis.Y, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R0))
-			                                                                              .register(Direction.Axis.Z, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R270))
-			                                                                              .register(Direction.Axis.X, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90).then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)))
-			                                                    ).apply(BlockStateVariantMap.operations(Properties.SLAB_TYPE, Properties.LIT)
-			                                                                                .register(SlabType.BOTTOM, false, ModelVariantOperator.MODEL.withValue(bottomId))
-			                                                                                .register(SlabType.BOTTOM, true, ModelVariantOperator.MODEL.withValue(bottomIdOn))
-			                                                                                .register(SlabType.DOUBLE, false, ModelVariantOperator.MODEL.withValue(doubleId))
-			                                                                                .register(SlabType.DOUBLE, true, ModelVariantOperator.MODEL.withValue(doubleIdOn))
-			                                                                                .register(SlabType.TOP, false, ModelVariantOperator.MODEL.withValue(topId))
-			                                                                                .register(SlabType.TOP, true, ModelVariantOperator.MODEL.withValue(topIdOn))
-					);
-			generator.blockStateCollector.accept(blockState);
-
-		}
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
 			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);
@@ -342,42 +223,15 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			return new TextureMap().put(TextureKey.SIDE, identifier).put(TextureKey.END, TextureMap.getId(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
 		}
 
-		public static final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)
-		{
-			var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("block/model/corrugated_crate/");
-			TexturedModel.makeFactory(block1 -> TextureMap.all(crateKey).put(TextureKey.PARTICLE, crateKey.withSuffixedPath("_particle")), blockModel("template_corrugated_crate", TextureKey.ALL, TextureKey.PARTICLE)).upload(block, generator.modelCollector);
-			generator.registerSimpleState(block);
-		}
-
 		public static Identifier getBlockKey(Block block)
 		{
 			return block.getRegistryEntry().getKey().get().getValue();
-		}
-
-		public static Identifier getCorrugatedCrateKey(Block block)
-		{
-			String string = block.getRegistryEntry().getKey().get().getValue().toString();
-			return Identifier.of(string.substring(0, string.indexOf("_corrugated_crate")));
 		}
 
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
-				registerItem(itemModelGenerator, armorItems.helmet, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.chestplate, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.leggings, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.boots, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
-				for (Item item : dyedItems.values())
-					registerItem(itemModelGenerator, item, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
-				for (Item item : numberedItems.stream().toList())
-					registerItem(itemModelGenerator, item, dataGenItem);
-			});
 
 		}
 
@@ -453,7 +307,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					addDatagenItem(translationBuilder, item, dataGenItem);
 			});
 
-			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> addDataGenBlock(translationBuilder, block, dataGenBlock));
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> addDataGenBlock(translationBuilder, block, dataGenBlock));
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
@@ -471,11 +325,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
-			translationBuilder.add(GalaxiesItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY, "PSWG - Construction Blocks");
-			translationBuilder.add(GalaxiesItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "PSWG - Worldgen Blocks");
 			translationBuilder.add(GadgetsItemGroups.DEMOLITIONS_ITEMS_GROUP_KEY, "PSWG - Demolitions Gadgets");
-			translationBuilder.add(GalaxiesItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG - Items");
-			translationBuilder.add(GalaxiesItemGroups.FOOD_ITEMS_GROUP_KEY, "PSWG - Food");
 
 		}
 
@@ -522,12 +372,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.Grenade, this);
 			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.Mine, this);
-			addItemsToTag(GadgetsItems.Tags.DRINK_CONTAINER_TAG, DGItemTag.DrinkContainer, this);
 			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DGItemTag.MixableFood, this);
 			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
 
-			getTagBuilder(GadgetsItems.Tags.DRINK_CONTAINER_TAG)
-					.add(itemId(Items.GLASS_BOTTLE));
 			getTagBuilder(GadgetsItems.Tags.MIXER_FOOD_TAG)
 					.add(itemId(Items.APPLE))
 					.add(itemId(Items.BEETROOT))
@@ -535,13 +382,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(itemId(Items.GLOW_BERRIES))
 					.add(itemId(Items.MELON_SLICE))
 					.add(itemId(Items.SWEET_BERRIES));
-
-			getTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
-					.add(itemId(GalaxiesItems.BESKAR_INGOT));
-			getTagBuilder(GadgetsItems.Tags.DURASTEEL_TOOL_MATERIALS_TAG)
-					.add(itemId(GalaxiesItems.PLASTEEL_INGOT));
-			getTagBuilder(GadgetsItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
-					.add(itemId(GalaxiesItems.TITANIUM_INGOT));
 		}
 		private static void addItemsToTag(TagKey<Item> tag, DGItemTag datagenTag, ItemTagGenerator generator){
 
@@ -557,7 +397,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 	}
 	/**
-	 * The gadget connectingBlock tag generator. All connectingBlock tags should be added
+	 * The gadget block tag generator. All block tags should be added
 	 * through this generator.
 	 */
 	private static class BlockTagGenerator extends FabricTagProvider.BlockTagProvider
@@ -651,7 +491,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.InfernoDestroy, this);
 			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DGBlockTag.GasPassThrough, this);
 			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DGBlockTag.FragmentationGrenadeDestroy, this);
-			//addBlocksToTag(BlockTags.DEAD_BUSH_MAY_PLACE_ON, DGBlockTag.DeadBushSubstrate, this);
 			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.Leaves, this);
 			addBlocksToTag(BlockTags.LOGS, DGBlockTag.Logs, this);
 			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AxeMineable, this);

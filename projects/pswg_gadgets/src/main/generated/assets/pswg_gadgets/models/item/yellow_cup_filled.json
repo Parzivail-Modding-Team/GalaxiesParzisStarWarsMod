@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "pswg_gadgets:item/yellow_cup",
-    "layer1": "pswg_gadgets:item/cup_overlay"
-  }
-}

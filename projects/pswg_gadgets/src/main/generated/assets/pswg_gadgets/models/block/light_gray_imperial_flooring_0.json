@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "pswg_gadgets:block/light_gray_imperial_flooring_0"
-  }
-}

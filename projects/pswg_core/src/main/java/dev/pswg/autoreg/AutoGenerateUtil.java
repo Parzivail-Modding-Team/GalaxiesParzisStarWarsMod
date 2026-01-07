@@ -1,5 +1,6 @@
 package dev.pswg.autoreg;
 
+import dev.pswg.Galaxies;
 import dev.pswg.block.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItems;

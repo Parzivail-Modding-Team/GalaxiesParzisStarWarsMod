@@ -1,0 +1,14 @@
+{
+  "type": "pswg_gadgets:scrapping",
+  "ingredient": "pswg:durasteel_cup",
+  "primary_result": {
+    "count": 6,
+    "id": "pswg:durasteel_nugget"
+  },
+  "secondary_chance": 0.35,
+  "secondary_result": {
+    "count": 3,
+    "id": "pswg:durasteel_nugget"
+  },
+  "tool": "pswg_gadgets:cutter"
+}

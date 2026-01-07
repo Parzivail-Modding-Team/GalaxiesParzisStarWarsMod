@@ -49,9 +49,6 @@ public class GadgetsItems
 		public static final TagKey<Item> SCRAP_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("scrap"));
 		public static final TagKey<Item> DRINK_CONTAINER_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("drink_container"));
 		public static final TagKey<Item> MIXER_FOOD_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("mixable_food"));
-		public static final TagKey<Item> BESKAR_TOOL_MATERIALS_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("beskar_tool_materials"));
-		public static final TagKey<Item> DURASTEEL_TOOL_MATERIALS_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("durasteel_tool_materials"));
-		public static final TagKey<Item> TITANIUM_TOOL_MATERIALS_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("titanium_tool_materials"));
 
 		public static void register()
 		{
@@ -86,34 +83,6 @@ public class GadgetsItems
 				Identifier.of(Gadgets.MODID, "max_pos"),
 				ComponentType.<Vec3d>builder().codec(Vec3d.CODEC).build()
 		);
-		public static final ConsumableComponent DEATH_STICK_RED = food()
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 1), 0.99F))
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200, 1), 1F))
-				.build();
-		public static final ConsumableComponent DEATH_STICK_YELLOW = food()
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.99F))
-				.build();
-		public static final ConsumableComponent MYSTERIOUS_SMOOTHIE = food()
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F))
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 200, 1), 1F))
-				.build();
-		public static final ConsumableComponent KREETLE_JUICE = food()
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 200, 1), 1F))
-				.build();
-		public static final ConsumableComponent ABSYNTHESIZED_MALT = food()
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F))
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.LUCK, 200, 1), 1F))
-				.build();
-		public static final ConsumableComponent CORONET_COCKTAIL = food()
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 1), 0.5F))
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200, 1), 1F))
-				.build();
-		public static final ConsumableComponent SODA = food()
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.SPEED, 200, 1), 1F))
-				.build();
-		public static final ConsumableComponent WATER = food()
-				.consumeEffect(new ApplyEffectsConsumeEffect(new StatusEffectInstance(StatusEffects.SATURATION, 200, 1), 1F))
-				.build();
 
 
 		public static void register()

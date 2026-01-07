@@ -1,0 +1,14 @@
+{
+  "type": "pswg_gadgets:scrapping",
+  "ingredient": "pswg:desh_cup",
+  "primary_result": {
+    "count": 6,
+    "id": "pswg:desh_nugget"
+  },
+  "secondary_chance": 0.35,
+  "secondary_result": {
+    "count": 3,
+    "id": "pswg:desh_nugget"
+  },
+  "tool": "pswg_gadgets:cutter"
+}

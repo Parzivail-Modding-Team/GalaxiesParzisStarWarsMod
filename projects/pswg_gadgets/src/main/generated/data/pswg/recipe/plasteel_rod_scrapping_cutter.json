@@ -1,0 +1,14 @@
+{
+  "type": "pswg_gadgets:scrapping",
+  "ingredient": "pswg:plasteel_rod",
+  "primary_result": {
+    "count": 6,
+    "id": "pswg:plasteel_nugget"
+  },
+  "secondary_chance": 0.35,
+  "secondary_result": {
+    "count": 3,
+    "id": "pswg:plasteel_nugget"
+  },
+  "tool": "pswg_gadgets:cutter"
+}

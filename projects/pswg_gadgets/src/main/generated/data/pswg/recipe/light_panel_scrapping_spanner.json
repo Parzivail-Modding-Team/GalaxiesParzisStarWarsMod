@@ -1,0 +1,14 @@
+{
+  "type": "pswg_gadgets:scrapping",
+  "ingredient": "pswg:light_panel",
+  "primary_result": {
+    "count": 1,
+    "id": "pswg:desh_wire"
+  },
+  "secondary_chance": 0.35,
+  "secondary_result": {
+    "count": 3,
+    "id": "pswg:plasteel_nugget"
+  },
+  "tool": "pswg_gadgets:spanner"
+}

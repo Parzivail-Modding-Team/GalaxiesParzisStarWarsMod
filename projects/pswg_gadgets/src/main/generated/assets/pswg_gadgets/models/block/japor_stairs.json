@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "pswg_gadgets:block/japor_planks",
-    "side": "pswg_gadgets:block/japor_planks",
-    "top": "pswg_gadgets:block/japor_planks"
-  }
-}
