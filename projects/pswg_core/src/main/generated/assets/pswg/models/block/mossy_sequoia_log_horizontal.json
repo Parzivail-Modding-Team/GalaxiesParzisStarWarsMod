@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "pswg:block/mossy_sequoia_log_top",
+    "side": "pswg:block/mossy_sequoia_log"
+  }
+}

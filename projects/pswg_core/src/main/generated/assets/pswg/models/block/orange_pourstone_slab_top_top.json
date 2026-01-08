@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "pswg:block/orange_pourstone",
+    "side": "pswg:block/orange_pourstone",
+    "top": "pswg:block/orange_pourstone"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "pswg:block/template_corrugated_crate",
+  "textures": {
+    "all": "pswg:block/model/corrugated_crate/white",
+    "particle": "pswg:block/model/corrugated_crate/white_particle"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "pswg:block/mossy_massassi_stone_bricks",
+    "side": "pswg:block/mossy_massassi_stone_bricks"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "pswg:block/mossy_smooth_massassi_stone",
+    "side": "pswg:block/mossy_smooth_massassi_stone",
+    "top": "pswg:block/mossy_smooth_massassi_stone"
+  }
+}

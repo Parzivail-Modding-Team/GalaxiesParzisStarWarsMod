@@ -1,0 +1,16 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg:item/desh_cup_filled",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -1
+      },
+      {
+        "type": "pswg:drink",
+        "default": -13083194
+      }
+    ]
+  }
+}

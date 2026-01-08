@@ -1,0 +1,23 @@
+{
+  "multipart": [
+    {
+      "apply": [
+        {
+          "model": "pswg:block/desert_loam"
+        },
+        {
+          "model": "pswg:block/desert_loam",
+          "x": 90
+        },
+        {
+          "model": "pswg:block/desert_loam",
+          "x": 180
+        },
+        {
+          "model": "pswg:block/desert_loam",
+          "x": 270
+        }
+      ]
+    }
+  ]
+}

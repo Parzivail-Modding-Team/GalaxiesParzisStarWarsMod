@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "pswg:block/desert_sandstone",
+    "side": "pswg:block/desert_sandstone"
+  }
+}

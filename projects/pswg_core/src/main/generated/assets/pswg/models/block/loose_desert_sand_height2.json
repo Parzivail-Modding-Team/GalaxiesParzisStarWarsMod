@@ -1,0 +1,7 @@
+{
+  "parent": "pswg:block/template_accumulating_height2",
+  "textures": {
+    "all": "pswg:block/loose_desert_sand",
+    "particle": "pswg:block/loose_desert_sand"
+  }
+}

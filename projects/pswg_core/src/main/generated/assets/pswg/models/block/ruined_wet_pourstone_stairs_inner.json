@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "pswg:block/ruined_wet_pourstone",
+    "side": "pswg:block/ruined_wet_pourstone",
+    "top": "pswg:block/ruined_wet_pourstone"
+  }
+}
