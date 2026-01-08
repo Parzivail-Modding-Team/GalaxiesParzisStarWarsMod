@@ -6,6 +6,7 @@ import dev.pswg.data.IdentifierUtil;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
+import dev.pswg.item.SwgDrinkTintSource;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
 import net.fabricmc.api.ClientModInitializer;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.item.tint.TintSourceTypes;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -98,6 +100,8 @@ public class GalaxiesClient implements ClientModInitializer
 		// Register the quad buffer loader
 		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(GQB_LOADER.getId(), GQB_LOADER);
 		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).addReloaderOrdering(GQB_LOADER.getId(), ResourceReloaderKeys.Client.MODELS);
+
+		TintSourceTypes.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);
 
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);

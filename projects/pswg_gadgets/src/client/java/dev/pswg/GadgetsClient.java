@@ -14,10 +14,8 @@ import dev.pswg.particles.*;
 import dev.pswg.renderer.grenades.*;
 import dev.pswg.renderer.mines.PressureMineEntityRenderer;
 import dev.pswg.renderer.mines.TripwireMineEntityRenderer;
-import dev.pswg.screens.CrateGenericSmallScreen;
 import dev.pswg.screens.MixerScreen;
 import dev.pswg.screens.ScrappingTableScreen;
-import dev.pswg.tints.SwgDrinkTintSource;
 import dev.pswg.autoreg.AutoGenerateUtil;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -93,8 +91,6 @@ public class GadgetsClient implements GalaxiesClientAddon
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(LaserCutterHandler::tick);
-
-		TintSourceTypes.ID_MAPPER.put(Gadgets.id("drink"), SwgDrinkTintSource.CODEC);
 
 		ClientPlayNetworking.registerGlobalReceiver(MixerSyncS2CPayload.ID, (mixerSyncS2CPayload, context) -> {
 			if (context.player().currentScreenHandler instanceof MixerScreenHandler mixerScreenHandler)
