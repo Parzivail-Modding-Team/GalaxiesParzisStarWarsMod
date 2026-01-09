@@ -53,8 +53,6 @@ public final class Gadgets implements GalaxiesAddon
 	 */
 	public static final Logger LOGGER = Galaxies.createSubLogger("gadgets");
 
-	public static final TagKey<Item> BANTHA_TEMPT = TagKey.of(RegistryKeys.ITEM, id("bantha_tempt"));
-
 	@Override
 	public void onGalaxiesReady()
 	{
