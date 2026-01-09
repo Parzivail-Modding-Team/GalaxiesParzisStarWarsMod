@@ -12,37 +12,37 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:stormtrooper_helmet",
+			"name": "pswg:stormtrooper_helmet",
           "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:stormtrooper_leggings",
+			"name": "pswg:stormtrooper_leggings",
           "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:stormtrooper_chestplate",
+			"name": "pswg:stormtrooper_chestplate",
           "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:stormtrooper_boots",
+			"name": "pswg:stormtrooper_boots",
           "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:imperial_pilot_helmet",
+			"name": "pswg:imperial_pilot_helmet",
           "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:imperial_pilot_kit",
+			"name": "pswg:imperial_pilot_kit",
           "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:black_imperial_officer_hat",
+			"name": "pswg:black_imperial_officer_hat",
           "weight": 1
         }
       ]

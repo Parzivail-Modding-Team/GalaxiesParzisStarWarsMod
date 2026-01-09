@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:chromium_ingot",
+			"name": "pswg:chromium_ingot",
           "weight": 1,
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:ionite_ingot",
+			"name": "pswg:ionite_ingot",
           "weight": 1,
           "functions": [
             {
@@ -39,7 +39,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:desh_ingot",
+			"name": "pswg:desh_ingot",
           "weight": 2,
           "functions": [
             {
@@ -55,7 +55,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:durasteel_ingot",
+			"name": "pswg:durasteel_ingot",
           "weight": 2,
           "functions": [
             {
@@ -71,7 +71,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:transparisteel_ingot",
+			"name": "pswg:transparisteel_ingot",
           "weight": 2,
           "functions": [
             {
@@ -87,7 +87,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:durasteel_cup",
+			"name": "pswg:durasteel_cup",
           "weight": 1,
           "functions": [
             {
@@ -103,7 +103,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:desh_cup",
+			"name": "pswg:desh_cup",
           "weight": 1,
           "functions": [
             {
@@ -119,7 +119,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:jogan_fruit",
+			"name": "pswg:jogan_fruit",
           "weight": 1,
           "functions": [
             {
@@ -135,7 +135,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:chasuka_leaf",
+			"name": "pswg:chasuka_leaf",
           "weight": 1,
           "functions": [
             {
@@ -151,7 +151,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:meiloorun",
+			"name": "pswg:meiloorun",
           "weight": 1,
           "functions": [
             {
@@ -167,7 +167,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:mynock_wing",
+			"name": "pswg:mynock_wing",
           "weight": 1,
           "functions": [
             {
@@ -183,7 +183,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:cooked_mynock_wing",
+			"name": "pswg:cooked_mynock_wing",
           "weight": 1,
           "functions": [
             {
@@ -199,7 +199,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:hkak_bean",
+			"name": "pswg:hkak_bean",
           "weight": 1,
           "functions": [
             {
@@ -215,7 +215,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:pallie_fruit",
+			"name": "pswg:pallie_fruit",
           "weight": 1,
           "functions": [
             {
@@ -231,7 +231,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:pika_fruit",
+			"name": "pswg:pika_fruit",
           "weight": 1,
           "functions": [
             {
@@ -247,7 +247,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:tuber",
+			"name": "pswg:tuber",
           "weight": 1,
           "functions": [
             {
@@ -263,7 +263,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:vaporator_mushroom",
+			"name": "pswg:vaporator_mushroom",
           "weight": 1,
           "functions": [
             {
@@ -279,7 +279,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:deb_deb",
+			"name": "pswg:deb_deb",
           "weight": 1,
           "functions": [
             {
@@ -356,7 +356,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:turbine",
+			"name": "pswg:turbine",
           "weight": 2,
           "functions": [
             {
@@ -371,7 +371,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:ball_bearing",
+			"name": "pswg:ball_bearing",
           "weight": 1,
           "functions": [
             {
@@ -386,7 +386,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:desh_wire",
+			"name": "pswg:desh_wire",
           "weight": 2,
           "functions": [
             {
@@ -401,7 +401,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:desh_coil",
+			"name": "pswg:desh_coil",
           "weight": 1,
           "functions": [
             {
@@ -416,7 +416,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:plasteel_rod",
+			"name": "pswg:plasteel_rod",
           "weight": 2,
           "functions": [
             {
@@ -431,7 +431,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:durasteel_rod",
+			"name": "pswg:durasteel_rod",
           "weight": 2,
           "functions": [
             {
@@ -446,7 +446,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:bantha_chop",
+			"name": "pswg:bantha_chop",
           "weight": 1,
           "functions": [
             {
@@ -461,7 +461,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:cooked_bantha_chop",
+			"name": "pswg:cooked_bantha_chop",
           "weight": 1,
           "functions": [
             {
@@ -476,7 +476,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:nerf_chop",
+			"name": "pswg:nerf_chop",
           "weight": 1,
           "functions": [
             {
@@ -491,7 +491,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:cooked_nerf_chop",
+			"name": "pswg:cooked_nerf_chop",
           "weight": 1,
           "functions": [
             {
@@ -506,7 +506,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:gizka_chop",
+			"name": "pswg:gizka_chop",
           "weight": 1,
           "functions": [
             {
@@ -521,7 +521,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:cooked_gizka_chop",
+			"name": "pswg:cooked_gizka_chop",
           "weight": 1,
           "functions": [
             {
@@ -536,7 +536,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:flangth_takeout",
+			"name": "pswg:flangth_takeout",
           "weight": 1,
           "functions": [
             {
@@ -551,7 +551,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:bantha_cookie",
+			"name": "pswg:bantha_cookie",
           "weight": 2,
           "functions": [
             {
@@ -566,7 +566,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:qrikki_bread",
+			"name": "pswg:qrikki_bread",
           "weight": 1,
           "functions": [
             {
@@ -581,7 +581,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:qrikki_waffle",
+			"name": "pswg:qrikki_waffle",
           "weight": 1,
           "functions": [
             {
@@ -596,7 +596,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:black_melon",
+			"name": "pswg:black_melon",
           "weight": 1,
           "functions": [
             {
@@ -611,7 +611,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:black_melon",
+			"name": "pswg:black_melon",
           "weight": 1,
           "functions": [
             {

@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:death_stick_red",
+			"name": "pswg:death_stick_red",
           "weight": 1,
           "functions": [
             {
@@ -22,7 +22,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:death_stick_yellow",
+			"name": "pswg:death_stick_yellow",
           "weight": 1,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:diet_soda",
+			"name": "pswg:diet_soda",
           "weight": 2,
           "functions": [
             {
@@ -52,7 +52,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:flangth_takeout",
+			"name": "pswg:flangth_takeout",
           "weight": 1,
           "functions": [
             {

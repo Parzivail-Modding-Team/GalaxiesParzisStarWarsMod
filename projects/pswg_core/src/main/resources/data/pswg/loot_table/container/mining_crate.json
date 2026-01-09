@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:diatium_nugget",
+			"name": "pswg:diatium_nugget",
           "weight": 1,
           "functions": [
             {
@@ -22,7 +22,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:chromium_nugget",
+			"name": "pswg:chromium_nugget",
           "weight": 1,
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:ionite_nugget",
+			"name": "pswg:ionite_nugget",
           "weight": 1,
           "functions": [
             {
@@ -52,7 +52,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:titanium_nugget",
+			"name": "pswg:titanium_nugget",
           "weight": 1,
           "functions": [
             {
@@ -67,7 +67,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:lommite_crystal",
+			"name": "pswg:lommite_crystal",
           "weight": 1,
           "functions": [
             {
@@ -82,7 +82,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:helicite_crystal",
+			"name": "pswg:helicite_crystal",
           "weight": 1,
           "functions": [
             {
@@ -97,7 +97,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:zersium_crystal",
+			"name": "pswg:zersium_crystal",
           "weight": 1,
           "functions": [
             {
@@ -112,7 +112,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:thorilide_crystal",
+			"name": "pswg:thorilide_crystal",
           "weight": 1,
           "functions": [
             {
@@ -133,7 +133,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:raw_desh",
+			"name": "pswg:raw_desh",
           "weight": 4,
           "functions": [
             {
@@ -148,7 +148,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:raw_kelerium",
+			"name": "pswg:raw_kelerium",
           "weight": 4,
           "functions": [
             {
@@ -163,7 +163,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:raw_diatium",
+			"name": "pswg:raw_diatium",
           "weight": 4,
           "functions": [
             {
@@ -178,7 +178,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:raw_titanium",
+			"name": "pswg:raw_titanium",
           "weight": 4,
           "functions": [
             {
@@ -193,7 +193,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:raw_ionite",
+			"name": "pswg:raw_ionite",
           "weight": 4,
           "functions": [
             {
@@ -208,7 +208,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:raw_chromium",
+			"name": "pswg:raw_chromium",
           "weight": 4,
           "functions": [
             {
@@ -223,7 +223,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:durasteel_pickaxe",
+			"name": "pswg:durasteel_pickaxe",
           "weight": 1,
           "functions": [
             {
@@ -238,7 +238,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:titanium_pickaxe",
+			"name": "pswg:titanium_pickaxe",
           "weight": 1,
           "functions": [
             {
@@ -253,7 +253,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "pswg_gadgets:durasteel_shovel",
+			"name": "pswg:durasteel_shovel",
           "weight": 1,
           "functions": [
             {
