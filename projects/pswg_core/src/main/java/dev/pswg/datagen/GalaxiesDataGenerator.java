@@ -41,6 +41,8 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 	{
 		var pack = generator.createPack();
 
+		Galaxies.LOGGER.info("Running Galaxies Data Generator");
+
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);

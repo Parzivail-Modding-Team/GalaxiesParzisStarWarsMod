@@ -65,6 +65,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	{
 		var pack = generator.createPack();
 
+		Galaxies.LOGGER.info("Running Gadgets Data Generator");
+
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
