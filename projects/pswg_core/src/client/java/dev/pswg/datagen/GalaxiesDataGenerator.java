@@ -61,6 +61,9 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ModelGenerator::new);
+		pack.addProvider(RecipesGenerator::new);
+		pack.addProvider(BlockTagGenerator::new);
+		pack.addProvider(ItemTagGenerator::new);
 	}
 
 	/**
@@ -468,18 +471,18 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, "Zoom");
 
 			// Items
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, Galaxies.class, Item.class, (item, dataGenItem) -> addDatagenItem(translationBuilder, item, dataGenItem));
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, Galaxies.class, ArmorItems.class, (armorItems, dataGenItem) -> {
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, Item.class, (item, dataGenItem) -> addDatagenItem(translationBuilder, item, dataGenItem));
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
 				addDatagenItem(translationBuilder, armorItems.helmet, dataGenItem);
 				addDatagenItem(translationBuilder, armorItems.chestplate, dataGenItem);
 				addDatagenItem(translationBuilder, armorItems.leggings, dataGenItem);
 				addDatagenItem(translationBuilder, armorItems.boots, dataGenItem);
 			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, Galaxies.class, DyedItems.class, (dyedItems, dataGenItem) -> {
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
 				for (Item item : dyedItems.values())
 					addDatagenItem(translationBuilder, item, dataGenItem);
 			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, Galaxies.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
 				for (Item item : numberedItems.stream().toList())
 					addDatagenItem(translationBuilder, item, dataGenItem);
 			});
