@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "pswg_gadgets:block/orange_pourstone",
-    "side": "pswg_gadgets:block/orange_pourstone",
-    "top": "pswg_gadgets:block/orange_pourstone"
-  }
-}

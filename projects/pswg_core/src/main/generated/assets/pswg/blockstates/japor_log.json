@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "pswg:block/japor_log_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "pswg:block/japor_log"
+    },
+    "axis=z": {
+      "model": "pswg:block/japor_log_horizontal",
+      "x": 90
+    }
+  }
+}

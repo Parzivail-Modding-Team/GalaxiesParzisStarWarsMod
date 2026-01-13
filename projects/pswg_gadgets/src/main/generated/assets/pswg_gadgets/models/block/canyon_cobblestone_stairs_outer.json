@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/outer_stairs",
-  "textures": {
-    "bottom": "pswg_gadgets:block/canyon_cobblestone",
-    "side": "pswg_gadgets:block/canyon_cobblestone",
-    "top": "pswg_gadgets:block/canyon_cobblestone"
-  }
-}

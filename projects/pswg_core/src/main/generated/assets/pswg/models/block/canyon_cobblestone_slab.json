@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "pswg:block/canyon_cobblestone",
+    "side": "pswg:block/canyon_cobblestone",
+    "top": "pswg:block/canyon_cobblestone"
+  }
+}

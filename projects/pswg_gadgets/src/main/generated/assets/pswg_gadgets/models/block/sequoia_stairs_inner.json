@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "bottom": "pswg_gadgets:block/sequoia_planks",
-    "side": "pswg_gadgets:block/sequoia_planks",
-    "top": "pswg_gadgets:block/sequoia_planks"
-  }
-}

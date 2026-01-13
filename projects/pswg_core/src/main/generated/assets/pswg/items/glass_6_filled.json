@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "pswg:item/glass_6_filled",
+    "tints": [
+      {
+        "type": "pswg:drink",
+        "default": -13083194
+      }
+    ]
+  }
+}

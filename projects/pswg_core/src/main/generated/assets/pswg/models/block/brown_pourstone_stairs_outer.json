@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "pswg:block/brown_pourstone",
+    "side": "pswg:block/brown_pourstone",
+    "top": "pswg:block/brown_pourstone"
+  }
+}

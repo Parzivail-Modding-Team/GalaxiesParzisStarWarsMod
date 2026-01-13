@@ -1,0 +1,51 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 3,
+      "bonus_rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "pswg_gadgets:fragmentation_grenade",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+			"name": "pswg:stormtrooper_helmet",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+			"name": "pswg:stormtrooper_leggings",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+			"name": "pswg:stormtrooper_chestplate",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+			"name": "pswg:stormtrooper_boots",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+			"name": "pswg:imperial_pilot_helmet",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+			"name": "pswg:imperial_pilot_kit",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+			"name": "pswg:black_imperial_officer_hat",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

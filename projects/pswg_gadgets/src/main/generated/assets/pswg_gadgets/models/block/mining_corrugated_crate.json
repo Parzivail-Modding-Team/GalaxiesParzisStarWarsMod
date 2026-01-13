@@ -1,7 +1,0 @@
-{
-  "parent": "pswg_gadgets:block/template_corrugated_crate",
-  "textures": {
-    "all": "pswg_gadgets:block/model/corrugated_crate/mining",
-    "particle": "pswg_gadgets:block/model/corrugated_crate/mining_particle"
-  }
-}

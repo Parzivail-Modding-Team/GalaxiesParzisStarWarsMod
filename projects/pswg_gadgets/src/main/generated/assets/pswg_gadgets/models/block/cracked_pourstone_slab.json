@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "pswg_gadgets:block/cracked_pourstone",
-    "side": "pswg_gadgets:block/cracked_pourstone",
-    "top": "pswg_gadgets:block/cracked_pourstone"
-  }
-}

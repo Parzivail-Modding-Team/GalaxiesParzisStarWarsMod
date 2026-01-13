@@ -289,9 +289,9 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				fuelStack.decrement(1);
 			}
 
-			if (inputStack.contains(GadgetsItems.Components.BREWING_PATH) && mixer.path.empty() && mixer.litTimeRemaining > 0 && drinkContainerPresent)
+			if (MixerBrewingPaths.pathMap.containsKey(inputStack.getItem()) && mixer.path.empty() && mixer.litTimeRemaining > 0 && drinkContainerPresent)
 			{
-				mixer.path.addAll(inputStack.get(GadgetsItems.Components.BREWING_PATH));
+				mixer.path.addAll(MixerBrewingPaths.pathMap.get(inputStack.getItem()));
 				inputStack.decrement(1);
 			}
 			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.getItem() instanceof DyeItem dyeItem && mixer.drinkColors.size() < 3)

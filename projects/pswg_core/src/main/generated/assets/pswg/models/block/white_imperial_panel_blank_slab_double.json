@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "pswg:block/white_imperial_panel_blank",
+    "side": "pswg:block/white_imperial_panel_blank"
+  }
+}

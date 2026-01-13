@@ -81,6 +81,7 @@ public class GalaxiesEntitySpawnS2CPacket extends EntitySpawnS2CPacket implement
 	/**
 	 * @return The full-precision velocity represented by this packet
 	 */
+	@Override
 	public Vec3d getVelocity()
 	{
 		return velocity;

@@ -7,7 +7,7 @@ import dev.pswg.datagen.DataGenItemGroup;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
-import dev.pswg.util.AutoGenerateUtil;
+import dev.pswg.autoreg.AutoGenerateUtil;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -22,17 +22,6 @@ import net.minecraft.text.Text;
 
 public class GadgetsItemGroups
 {
-	public static final RegistryKey<ItemGroup> CONSTRUCTION_BLOCK_GROUP_KEY = registerGroup("construction_blocks");
-	public static final ItemGroup CONSTRUCTION_BLOCK_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_9)).displayName(Text.translatable("pswg_gadgets.construction_block_group")).build();
-
-	public static final RegistryKey<ItemGroup> WORLDGEN_BLOCK_GROUP_KEY = registerGroup("worldgen_blocks");
-	public static final ItemGroup WORLDGEN_BLOCK_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(GadgetsBlocks.CANYON.block)).displayName(Text.translatable("pswg_gadgets.worldgen_block_group")).build();
-
-	public static final RegistryKey<ItemGroup> GENERIC_ITEMS_GROUP_KEY = registerGroup("items");
-	public static final ItemGroup GENERIC_ITEMS_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(GadgetsItems.DURASTEEL_ROD)).displayName(Text.translatable("pswg_gadgets.item_group")).build();
-
-	public static final RegistryKey<ItemGroup> FOOD_ITEMS_GROUP_KEY = registerGroup("food_items");
-	public static final ItemGroup FOOD_ITEMS_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(GadgetsItems.BANTHA_COOKIE)).displayName(Text.translatable("pswg_gadgets.food_item_group")).build();
 
 	public static final RegistryKey<ItemGroup> DEMOLITIONS_ITEMS_GROUP_KEY = registerGroup("demolitions_items");
 	public static final ItemGroup DEMOLITIONS_ITEMS_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(GadgetsItems.THERMAL_DETONATOR_ITEM)).displayName(Text.translatable("pswg_gadgets.demolitions_items_group")).build();
@@ -44,17 +33,9 @@ public class GadgetsItemGroups
 
 	public static void register()
 	{
-		Registry.register(Registries.ITEM_GROUP, CONSTRUCTION_BLOCK_GROUP_KEY, CONSTRUCTION_BLOCK_GROUP);
-		Registry.register(Registries.ITEM_GROUP, WORLDGEN_BLOCK_GROUP_KEY, WORLDGEN_BLOCK_GROUP);
-		Registry.register(Registries.ITEM_GROUP, GENERIC_ITEMS_GROUP_KEY, GENERIC_ITEMS_GROUP);
 		Registry.register(Registries.ITEM_GROUP, DEMOLITIONS_ITEMS_GROUP_KEY, DEMOLITIONS_ITEMS_GROUP);
-		Registry.register(Registries.ITEM_GROUP, FOOD_ITEMS_GROUP_KEY, FOOD_ITEMS_GROUP);
 
-		ItemGroupEvents.modifyEntriesEvent(CONSTRUCTION_BLOCK_GROUP_KEY).register(itemGroup -> addBlocks(itemGroup, DataGenItemGroup.ConstructionBlock));
-		ItemGroupEvents.modifyEntriesEvent(WORLDGEN_BLOCK_GROUP_KEY).register(itemGroup -> addBlocks(itemGroup, DataGenItemGroup.WorldGenBlock));
 		ItemGroupEvents.modifyEntriesEvent(DEMOLITIONS_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.DemolitionsGadgets));
-		ItemGroupEvents.modifyEntriesEvent(GENERIC_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.Items));
-		ItemGroupEvents.modifyEntriesEvent(FOOD_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.Food));
 	}
 
 	public static void addItems(FabricItemGroupEntries itemGroup, DataGenItemGroup group)
@@ -87,7 +68,7 @@ public class GadgetsItemGroups
 
 	public static void addBlocks(FabricItemGroupEntries itemGroup, DataGenItemGroup group)
 	{
-		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 			if(dataGenBlock.itemGroup() == group)
 				itemGroup.add(block);
 		});

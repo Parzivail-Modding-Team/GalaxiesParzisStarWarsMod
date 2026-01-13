@@ -2,9 +2,7 @@ package dev.pswg.datagen;
 
 import dev.pswg.Gadgets;
 import dev.pswg.block.*;
-import dev.pswg.container.GadgetsBlocks;
-import dev.pswg.container.GadgetsItemGroups;
-import dev.pswg.container.GadgetsItems;
+import dev.pswg.container.*;
 import dev.pswg.Galaxies;
 import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
@@ -12,8 +10,9 @@ import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
-import dev.pswg.tints.SwgDrinkTintSource;
-import dev.pswg.util.AutoGenerateUtil;
+import dev.pswg.autoreg.AutoGenerateUtil;
+import dev.pswg.item.SwgDrinkTintSource;
+import dev.pswg.util.GadgetsGenUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -66,6 +65,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	{
 		var pack = generator.createPack();
 
+		Galaxies.LOGGER.info("Running Gadgets Data Generator");
+
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
@@ -92,97 +93,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
 		{
-			registerVerticalLightingSlab(blockStateModelGenerator);
-
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, Block.class, (genBlock, dataGenBlock) -> {
 				registerDataGenBlock(genBlock, dataGenBlock, blockStateModelGenerator);
 			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedBlocks.class, (genDyedBlocks, dataGenBlock) -> {
-
-				for (Block block : genDyedBlocks.values())
-					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, NumberedBlocks.class, (numberedBlocks, dataGenBlock) -> {
-				for (Block block : numberedBlocks)
-					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingRuiningStoneProducts.class, (reducedDryingRuiningStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerReducedDryingRuinedStoneProducts(reducedDryingRuiningStoneProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedDryingStoneProducts.class, (reducedDryingStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerReducedDryingStoneProducts(reducedDryingStoneProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, ReducedStoneProducts.class, (reducedStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerReducedStoneProducts(reducedStoneProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerStoneProducts(stoneProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, WoodProducts.class, (woodProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					registerWoodProducts(woodProducts, blockStateModelGenerator);
-				}
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GadgetsBlocks.class, DyedStoneProducts.class, (dyedStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
-				{
-					for (StoneProducts stoneProducts : dyedStoneProducts.values())
-						registerStoneProducts(stoneProducts, blockStateModelGenerator);
-				}
-			});
-
-		}
-
-		private static void registerReducedDryingRuinedStoneProducts(ReducedDryingRuiningStoneProducts dryingRuinedStoneProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(dryingRuinedStoneProducts.block)
-			         .stairs(dryingRuinedStoneProducts.stairs);
-			registerVerticalSlabAllTextures(dryingRuinedStoneProducts.block, dryingRuinedStoneProducts.slab, generator);
-		}
-		private static void registerReducedDryingStoneProducts(ReducedDryingStoneProducts dryingStoneProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(dryingStoneProducts.block)
-			         .stairs(dryingStoneProducts.stairs);
-			registerVerticalSlabAllTextures(dryingStoneProducts.block, dryingStoneProducts.slab, generator);
-		}
-
-		private static void registerReducedStoneProducts(ReducedStoneProducts stoneProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(stoneProducts.block)
-			         .stairs(stoneProducts.stairs);
-			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
-		}
-		private static void registerStoneProducts(StoneProducts stoneProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(stoneProducts.block)
-			         .wall(stoneProducts.wall)
-			         .stairs(stoneProducts.stairs);
-			registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
-
-		}
-		private static void registerWoodProducts(WoodProducts woodProducts, BlockStateModelGenerator generator)
-		{
-			generator.registerCubeAllModelTexturePool(woodProducts.plank)
-			         .fence(woodProducts.fence)
-					 .fenceGate(woodProducts.gate)
-			         .stairs(woodProducts.stairs);
-			generator.registerDoor(woodProducts.door);
-			generator.registerTrapdoor(woodProducts.trapdoor);
-
-			registerVerticalSlabAllTextures(woodProducts.plank, woodProducts.slab, generator);
 
 		}
 		private static void registerAccumulatingBlock(Block block, BlockStateModelGenerator generator) {
@@ -209,8 +122,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				{
 					switch (dataGenBlock.dataGenModelKey())
 					{
-						case "corrugated_crate":
-							registerCorrugatedCrate(generator, block);
 						case null, default:
 					}
 				}
@@ -293,36 +204,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			generator.blockStateCollector.accept(blockState);
 
 		}
-		private static void registerVerticalLightingSlab( BlockStateModelGenerator generator){
-
-			var textureIdTopBottom = TextureMap.getId(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
-			var slab = GadgetsBlocks.GRAY_IMPERIAL_LIGHTING_SLAB;
-			var textureIdSide = TextureMap.getId(GadgetsBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
-			var textureMap = new TextureMap().put(TextureKey.SIDE, textureIdSide).put(TextureKey.TOP, textureIdTopBottom).put(TextureKey.END, textureIdTopBottom);
-			var textureMapOn = new TextureMap().put(TextureKey.SIDE, textureIdSide.withSuffixedPath("_on")).put(TextureKey.TOP, textureIdTopBottom).put(TextureKey.END, textureIdTopBottom);
-			Identifier bottomId = Models.SLAB.upload(slab, textureMap, generator.modelCollector);
-			Identifier bottomIdOn = Models.SLAB.upload(slab, "_on", textureMapOn, generator.modelCollector);
-			Identifier topId =  Models.SLAB_TOP.upload(slab, "", textureMap, generator.modelCollector);
-			Identifier topIdOn =  Models.SLAB_TOP.upload(slab, "_on", textureMapOn, generator.modelCollector);
-			Identifier doubleId =  Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
-			Identifier doubleIdOn =  Models.CUBE_COLUMN.upload(slab, "_double_on", textureMapOn, generator.modelCollector);
-
-			var blockState = VariantsBlockModelDefinitionCreator.of(slab, createWeightedVariant(bottomId)).
-			                                                    apply(BlockStateVariantMap.operations(Properties.AXIS)
-			                                                                              .register(Direction.Axis.Y, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R0))
-			                                                                              .register(Direction.Axis.Z, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R270))
-			                                                                              .register(Direction.Axis.X, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90).then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)))
-			                                                    ).apply(BlockStateVariantMap.operations(Properties.SLAB_TYPE, Properties.LIT)
-			                                                                                .register(SlabType.BOTTOM, false, ModelVariantOperator.MODEL.withValue(bottomId))
-			                                                                                .register(SlabType.BOTTOM, true, ModelVariantOperator.MODEL.withValue(bottomIdOn))
-			                                                                                .register(SlabType.DOUBLE, false, ModelVariantOperator.MODEL.withValue(doubleId))
-			                                                                                .register(SlabType.DOUBLE, true, ModelVariantOperator.MODEL.withValue(doubleIdOn))
-			                                                                                .register(SlabType.TOP, false, ModelVariantOperator.MODEL.withValue(topId))
-			                                                                                .register(SlabType.TOP, true, ModelVariantOperator.MODEL.withValue(topIdOn))
-					);
-			generator.blockStateCollector.accept(blockState);
-
-		}
 		private static Model blockModel(String parent, TextureKey... requiredTextureKeys)
 		{
 			return new Model(Optional.of(Gadgets.id("block/" + parent)), Optional.empty(), requiredTextureKeys);
@@ -341,14 +222,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			return createLightingPanelTextureMap(TextureMap.getId(block));
 		}
 		public static TextureMap createLightingPanelTextureMap(Identifier identifier){
-			return  new TextureMap().put(TextureKey.SIDE, identifier).put(TextureKey.END, TextureMap.getId(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
-		}
-
-		public static final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)
-		{
-			var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("block/model/corrugated_crate/");
-			TexturedModel.makeFactory(block1 -> TextureMap.all(crateKey).put(TextureKey.PARTICLE, crateKey.withSuffixedPath("_particle")), blockModel("template_corrugated_crate", TextureKey.ALL, TextureKey.PARTICLE)).upload(block, generator.modelCollector);
-			generator.registerSimpleState(block);
+			return new TextureMap().put(TextureKey.SIDE, identifier).put(TextureKey.END, TextureMap.getId(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
 		}
 
 		public static Identifier getBlockKey(Block block)
@@ -356,30 +230,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			return block.getRegistryEntry().getKey().get().getValue();
 		}
 
-		public static Identifier getCorrugatedCrateKey(Block block)
-		{
-			String string = block.getRegistryEntry().getKey().get().getValue().toString();
-			return Identifier.of(string.substring(0, string.indexOf("_corrugated_crate")));
-		}
-
 		@Override
 		public void generateItemModels(ItemModelGenerator itemModelGenerator)
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
-				registerItem(itemModelGenerator, armorItems.helmet, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.chestplate, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.leggings, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.boots, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
-				for (Item item : dyedItems.values())
-					registerItem(itemModelGenerator, item, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
-				for (Item item : numberedItems.stream().toList())
-					registerItem(itemModelGenerator, item, dataGenItem);
-			});
 
 		}
 
@@ -455,7 +309,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					addDatagenItem(translationBuilder, item, dataGenItem);
 			});
 
-			AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> addDataGenBlock(translationBuilder, block, dataGenBlock));
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> addDataGenBlock(translationBuilder, block, dataGenBlock));
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
@@ -473,11 +327,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
-			translationBuilder.add(GadgetsItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY, "PSWG - Construction Blocks");
-			translationBuilder.add(GadgetsItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "PSWG - Worldgen Blocks");
 			translationBuilder.add(GadgetsItemGroups.DEMOLITIONS_ITEMS_GROUP_KEY, "PSWG - Demolitions Gadgets");
-			translationBuilder.add(GadgetsItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG - Items");
-			translationBuilder.add(GadgetsItemGroups.FOOD_ITEMS_GROUP_KEY, "PSWG - Food");
 
 		}
 
@@ -524,12 +374,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.Grenade, this);
 			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.Mine, this);
-			addItemsToTag(GadgetsItems.Tags.DRINK_CONTAINER_TAG, DGItemTag.DrinkContainer, this);
 			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DGItemTag.MixableFood, this);
 			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
 
-			getTagBuilder(GadgetsItems.Tags.DRINK_CONTAINER_TAG)
-					.add(itemId(Items.GLASS_BOTTLE));
 			getTagBuilder(GadgetsItems.Tags.MIXER_FOOD_TAG)
 					.add(itemId(Items.APPLE))
 					.add(itemId(Items.BEETROOT))
@@ -537,17 +384,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(itemId(Items.GLOW_BERRIES))
 					.add(itemId(Items.MELON_SLICE))
 					.add(itemId(Items.SWEET_BERRIES));
-
-			getTagBuilder(GadgetsItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
-					.add(itemId(GadgetsItems.BESKAR_INGOT));
-			getTagBuilder(GadgetsItems.Tags.DURASTEEL_TOOL_MATERIALS_TAG)
-					.add(itemId(GadgetsItems.PLASTEEL_INGOT));
-			getTagBuilder(GadgetsItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
-					.add(itemId(GadgetsItems.TITANIUM_INGOT));
 		}
 		private static void addItemsToTag(TagKey<Item> tag, DGItemTag datagenTag, ItemTagGenerator generator){
 
-			AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 				if(Arrays.stream(dataGenBlock.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getTagBuilder(tag).add(itemId(block.asItem()));
 
@@ -559,7 +399,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 	}
 	/**
-	 * The gadget connectingBlock tag generator. All connectingBlock tags should be added
+	 * The gadget block tag generator. All block tags should be added
 	 * through this generator.
 	 */
 	private static class BlockTagGenerator extends FabricTagProvider.BlockTagProvider
@@ -653,7 +493,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.InfernoDestroy, this);
 			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DGBlockTag.GasPassThrough, this);
 			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DGBlockTag.FragmentationGrenadeDestroy, this);
-			//addBlocksToTag(BlockTags.DEAD_BUSH_MAY_PLACE_ON, DGBlockTag.DeadBushSubstrate, this);
 			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.Leaves, this);
 			addBlocksToTag(BlockTags.LOGS, DGBlockTag.Logs, this);
 			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AxeMineable, this);
@@ -667,7 +506,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator){
 
-			AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 				if(Arrays.stream(dataGenBlock.tags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag)){
 					generator.getTagBuilder(tag).add(blockId(block));
 				}
@@ -691,106 +530,106 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				@Override
 				public void generate()
 				{
-					createPanelStoneProductsCuttingRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_BLANK);
-					createPanelStoneProductsCuttingRecipes(GadgetsBlocks.GRAY_IMPERIAL_PANEL_BLANK);
-					createPanelStoneProductsCuttingRecipes(GadgetsBlocks.WHITE_IMPERIAL_PANEL_BLANK);
-					createPanelStoneProductsCuttingRecipes(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_BLANK);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_TILE);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL_1);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL_2);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL_1);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL_2);
-					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_PANEL_TALL_1);
-					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_PANEL_TALL_2);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_1);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_2);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_3);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_4);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_HALF_5);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_PANEL_1);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_PANEL_2);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_PANEL_3);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_1);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_LIGHT_2);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_1);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_2);
-					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL);
-					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL_1);
-					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL_2);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_BORDERED);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_SPLIT);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_PANEL_THIN_BORDERED);
-					createPanelCuttingRecipe(GadgetsBlocks.EXTERNAL_IMPERIAL_PLATING);
-					createPanelCuttingRecipe(GadgetsBlocks.LARGE_IMPERIAL_PLATING);
-					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_LARGE_IMPERIAL_PLATING);
-					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_LARGE_IMPERIAL_PLATING);
-					createPanelCuttingRecipe(GadgetsBlocks.LARGE_LIGHT_GRAY_IMPERIAL_PLATING);
-					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_A);
-					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_B);
-					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_C);
-					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_D);
-					createNumberedPanelsRecipes(GadgetsBlocks.BLACK_IMPERIAL_PANEL_PATTERN_E);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_3);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_4);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_5);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
-					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_3);
-					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_3);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_4);
-					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_4);
-					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_4);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_5);
-					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_5);
-					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_5);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_6);
-					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_6);
-					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_6);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_7);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_8);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_9);
-					createPanelCuttingRecipe(GadgetsBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_9);
-					createPanelCuttingRecipe(GadgetsBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_9);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_10);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_11);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_12);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_PANEL_PATTERN_13);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_FLOORING_0);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_FLOORING_3);
-					createPanelCuttingRecipe(GadgetsBlocks.GRAY_IMPERIAL_FLOORING_4);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_0);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_3);
-					createPanelCuttingRecipe(GadgetsBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_4);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_FLOORING_3);
-					createPanelCuttingRecipe(GadgetsBlocks.BLACK_IMPERIAL_FLOORING_4);
-					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_FLOORING_3);
-					createPanelCuttingRecipe(GadgetsBlocks.WHITE_IMPERIAL_FLOORING_4);
-					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_FLOORING_PATTERN_1);
-					createPanelCuttingRecipe(GadgetsBlocks.IMPERIAL_FLOORING_PATTERN_2);
-					createPanelCuttingRecipe(GadgetsBlocks.LAB_WALL);
+					createPanelStoneProductsCuttingRecipes(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(GalaxiesBlocks.WHITE_IMPERIAL_PANEL_BLANK);
+					createPanelStoneProductsCuttingRecipes(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_PANEL_BLANK);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_TILE);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_SECTIONAL_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_SECTIONAL_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.IMPERIAL_PANEL_TALL_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.IMPERIAL_PANEL_TALL_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_HALF_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_HALF_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_HALF_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_HALF_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_HALF_5);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_PANEL_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_PANEL_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_PANEL_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_LIGHT_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL);
+					createPanelCuttingRecipe(GalaxiesBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.WHITE_IMPERIAL_PANEL_SECTIONAL_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_BORDERED);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_SPLIT);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_THIN_BORDERED);
+					createPanelCuttingRecipe(GalaxiesBlocks.EXTERNAL_IMPERIAL_PLATING);
+					createPanelCuttingRecipe(GalaxiesBlocks.LARGE_IMPERIAL_PLATING);
+					createPanelCuttingRecipe(GalaxiesBlocks.RUSTED_LARGE_IMPERIAL_PLATING);
+					createPanelCuttingRecipe(GalaxiesBlocks.MOSSY_LARGE_IMPERIAL_PLATING);
+					createPanelCuttingRecipe(GalaxiesBlocks.LARGE_LIGHT_GRAY_IMPERIAL_PLATING);
+					createNumberedPanelsRecipes(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_PATTERN_A);
+					createNumberedPanelsRecipes(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_PATTERN_B);
+					createNumberedPanelsRecipes(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_PATTERN_C);
+					createNumberedPanelsRecipes(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_PATTERN_D);
+					createNumberedPanelsRecipes(GalaxiesBlocks.BLACK_IMPERIAL_PANEL_PATTERN_E);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_5);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_5);
+					createPanelCuttingRecipe(GalaxiesBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_5);
+					createPanelCuttingRecipe(GalaxiesBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_5);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_6);
+					createPanelCuttingRecipe(GalaxiesBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_6);
+					createPanelCuttingRecipe(GalaxiesBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_6);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_7);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_8);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_9);
+					createPanelCuttingRecipe(GalaxiesBlocks.RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_9);
+					createPanelCuttingRecipe(GalaxiesBlocks.MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_9);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_10);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_11);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_12);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_13);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_FLOORING_0);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_FLOORING_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.GRAY_IMPERIAL_FLOORING_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_0);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.LIGHT_GRAY_IMPERIAL_FLOORING_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_FLOORING_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.BLACK_IMPERIAL_FLOORING_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.WHITE_IMPERIAL_FLOORING_3);
+					createPanelCuttingRecipe(GalaxiesBlocks.WHITE_IMPERIAL_FLOORING_4);
+					createPanelCuttingRecipe(GalaxiesBlocks.IMPERIAL_FLOORING_PATTERN_1);
+					createPanelCuttingRecipe(GalaxiesBlocks.IMPERIAL_FLOORING_PATTERN_2);
+					createPanelCuttingRecipe(GalaxiesBlocks.LAB_WALL);
 
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DURASTEEL_ROD, new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 6), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.PLASTEEL_ROD, new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 6), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.BALL_BEARING, new ItemStack(GadgetsItems.DURASTEEL_INGOT), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DESH_CUP, new ItemStack(GadgetsItems.DESH_NUGGET, 6), new ItemStack(GadgetsItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DURASTEEL_CUP, new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 6), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DESH_WIRE, new ItemStack(GadgetsItems.DESH_NUGGET, 6), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DESH_COIL, new ItemStack(GadgetsItems.DESH_INGOT, 2), new ItemStack(GadgetsItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GadgetsItems.DESH_WIRE, new ItemStack(GadgetsItems.DESH_INGOT), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 6), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GadgetsItems.DESH_INGOT), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GadgetsItems.DESH_WIRE), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GadgetsItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GadgetsItems.IONITE_INGOT), new ItemStack(GadgetsItems.IONITE_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.DISPLAY_PANEL, new ItemStack(GadgetsItems.PLASTEEL_INGOT), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.DISPLAY_PANEL, new ItemStack(GadgetsItems.CHROMIUM_INGOT), new ItemStack(GadgetsItems.CHROMIUM_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GadgetsItems.DISPLAY_PANEL, new ItemStack(GadgetsItems.DESH_WIRE), new ItemStack(GadgetsItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.ELECTRIC_MOTOR, new ItemStack(GadgetsItems.TURBINE), new ItemStack(GadgetsItems.DURASTEEL_ROD, 2), 0.25f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GadgetsItems.ELECTRIC_MOTOR, new ItemStack(GadgetsItems.DESH_COIL), new ItemStack(GadgetsItems.DESH_WIRE, 3), 0.25f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GadgetsItems.LIGHT_PANEL, new ItemStack(GadgetsItems.PLASTEEL_INGOT), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.LIGHT_PANEL, new ItemStack(GadgetsItems.DESH_WIRE), new ItemStack(GadgetsItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GadgetsItems.TURBINE, new ItemStack(GadgetsItems.DURASTEEL_INGOT, 2), new ItemStack(GadgetsItems.DURASTEEL_INGOT), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_ROD, new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.PLASTEEL_ROD, new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BALL_BEARING, new ItemStack(GalaxiesItems.DURASTEEL_INGOT), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_CUP, new ItemStack(GalaxiesItems.DESH_NUGGET, 6), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_CUP, new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_WIRE, new ItemStack(GalaxiesItems.DESH_NUGGET, 6), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_COIL, new ItemStack(GalaxiesItems.DESH_INGOT, 2), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DESH_WIRE, new ItemStack(GalaxiesItems.DESH_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 6), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.DESH_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.IONITE_INGOT), new ItemStack(GalaxiesItems.IONITE_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.PLASTEEL_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.CHROMIUM_INGOT), new ItemStack(GalaxiesItems.CHROMIUM_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.ELECTRIC_MOTOR, new ItemStack(GalaxiesItems.TURBINE), new ItemStack(GalaxiesItems.DURASTEEL_ROD, 2), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.ELECTRIC_MOTOR, new ItemStack(GalaxiesItems.DESH_COIL), new ItemStack(GalaxiesItems.DESH_WIRE, 3), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.LIGHT_PANEL, new ItemStack(GalaxiesItems.PLASTEEL_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.LIGHT_PANEL, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.TURBINE, new ItemStack(GalaxiesItems.DURASTEEL_INGOT, 2), new ItemStack(GalaxiesItems.DURASTEEL_INGOT), 0.25f);
 
 				}
 
@@ -810,7 +649,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 				public void createPanelCuttingRecipe(ItemConvertible panel)
 				{
-					createLaserCuttingRecipe(panel, new ItemStack(GadgetsItems.DURASTEEL_INGOT), new ItemStack(GadgetsItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createLaserCuttingRecipe(panel, new ItemStack(GalaxiesItems.DURASTEEL_INGOT), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
 				}
 
 				public void createLaserCuttingRecipe(ItemConvertible input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)

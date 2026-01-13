@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pswg:item/plastic_bottle_2_overlay",
+    "layer1": "pswg:item/plastic_bottle_2"
+  }
+}

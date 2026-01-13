@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "pswg_gadgets:block/japor_planks",
-    "side": "pswg_gadgets:block/japor_planks"
-  }
-}

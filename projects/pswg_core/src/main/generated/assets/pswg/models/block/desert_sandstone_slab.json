@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "pswg:block/desert_sandstone",
+    "side": "pswg:block/desert_sandstone",
+    "top": "pswg:block/desert_sandstone"
+  }
+}

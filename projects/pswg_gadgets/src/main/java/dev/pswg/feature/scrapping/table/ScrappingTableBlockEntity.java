@@ -3,6 +3,7 @@ package dev.pswg.feature.scrapping.table;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsRecipeTypes;
+import dev.pswg.container.GalaxiesItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
@@ -160,16 +161,16 @@ public class ScrappingTableBlockEntity extends LockableContainerBlockEntity impl
 							switch (toolIndex)
 							{
 								case 0:
-									decreaseComponent(inputStack, GadgetsItems.Components.METAL_COMPONENT, 2);
-									decreaseComponent(inputStack, GadgetsItems.Components.PLASTIC_COMPONENT, 1);
+									decreaseComponent(inputStack, GalaxiesItems.Components.METAL_COMPONENT, 2);
+									decreaseComponent(inputStack, GalaxiesItems.Components.PLASTIC_COMPONENT, 1);
 									break;
 								case 1:
-									decreaseComponent(inputStack, GadgetsItems.Components.TECH_COMPONENT, 2);
-									decreaseComponent(inputStack, GadgetsItems.Components.METAL_COMPONENT, 1);
+									decreaseComponent(inputStack, GalaxiesItems.Components.TECH_COMPONENT, 2);
+									decreaseComponent(inputStack, GalaxiesItems.Components.METAL_COMPONENT, 1);
 									break;
 								case 2:
-									decreaseComponent(inputStack, GadgetsItems.Components.ENERGY_COMPONENT, 2);
-									decreaseComponent(inputStack, GadgetsItems.Components.TECH_COMPONENT, 1);
+									decreaseComponent(inputStack, GalaxiesItems.Components.ENERGY_COMPONENT, 2);
+									decreaseComponent(inputStack, GalaxiesItems.Components.TECH_COMPONENT, 1);
 							}
 							damageTool(scrappingBlockEntity.getStack(toolIndex));
 							scrappingBlockEntity.propertyDelegate.set(toolIndex, 0);

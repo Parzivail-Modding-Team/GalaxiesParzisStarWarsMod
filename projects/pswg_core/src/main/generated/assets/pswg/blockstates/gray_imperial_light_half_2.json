@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "pswg:block/gray_imperial_light_half_2"
+    },
+    "lit=true": {
+      "model": "pswg:block/gray_imperial_light_half_2_on"
+    }
+  }
+}

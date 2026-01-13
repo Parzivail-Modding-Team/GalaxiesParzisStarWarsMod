@@ -1,7 +1,0 @@
-{
-	"type": "pswg_gadgets:derelict_imperial_container",
-	"spawn_overrides": {},
-	"biomes": "#pswg_gadgets:has_structure/derelict_imperial_container",
-	"step": "surface_structures",
-	"terrain_adaptation": "beard_box"
-}

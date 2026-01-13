@@ -14,11 +14,9 @@ import dev.pswg.particles.*;
 import dev.pswg.renderer.grenades.*;
 import dev.pswg.renderer.mines.PressureMineEntityRenderer;
 import dev.pswg.renderer.mines.TripwireMineEntityRenderer;
-import dev.pswg.screens.CrateGenericSmallScreen;
 import dev.pswg.screens.MixerScreen;
 import dev.pswg.screens.ScrappingTableScreen;
-import dev.pswg.tints.SwgDrinkTintSource;
-import dev.pswg.util.AutoGenerateUtil;
+import dev.pswg.autoreg.AutoGenerateUtil;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -78,10 +76,11 @@ public class GadgetsClient implements GalaxiesClientAddon
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.LASER_CUT_PARTICLE, LaserCutParticle.Factory::new);
 
 		HandledScreens.register(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, ScrappingTableScreen::new);
-		HandledScreens.register(GadgetsScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
+		//TODO: MOVE
+		// HandledScreens.register(GadgetsScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
 		HandledScreens.register(GadgetsScreenHandlerTypes.MIXER, MixerScreen::new);
 
-		AutoGenerateUtil.consumeAnnotatedGadgetsBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
+		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
 			switch (clientData.renderLayer())
 			{
 				case Transparent:
@@ -92,8 +91,6 @@ public class GadgetsClient implements GalaxiesClientAddon
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(LaserCutterHandler::tick);
-
-		TintSourceTypes.ID_MAPPER.put(Gadgets.id("drink"), SwgDrinkTintSource.CODEC);
 
 		ClientPlayNetworking.registerGlobalReceiver(MixerSyncS2CPayload.ID, (mixerSyncS2CPayload, context) -> {
 			if (context.player().currentScreenHandler instanceof MixerScreenHandler mixerScreenHandler)

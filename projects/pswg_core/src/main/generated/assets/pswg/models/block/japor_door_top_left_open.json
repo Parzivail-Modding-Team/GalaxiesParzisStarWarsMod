@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left_open",
+  "textures": {
+    "bottom": "pswg:block/japor_door_bottom",
+    "top": "pswg:block/japor_door_top"
+  }
+}
