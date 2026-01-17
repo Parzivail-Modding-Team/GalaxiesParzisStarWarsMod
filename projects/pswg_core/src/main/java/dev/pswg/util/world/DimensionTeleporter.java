@@ -1,4 +1,4 @@
-package dev.pswg.util;
+package dev.pswg.util.world;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

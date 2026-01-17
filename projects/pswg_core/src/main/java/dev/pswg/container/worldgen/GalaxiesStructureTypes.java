@@ -1,4 +1,4 @@
-package dev.pswg.container.structure;
+package dev.pswg.container.worldgen;
 
 import dev.pswg.Galaxies;
 import dev.pswg.structure.ContainerStructure;

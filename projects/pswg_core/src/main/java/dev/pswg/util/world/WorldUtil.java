@@ -1,4 +1,4 @@
-package dev.pswg.util;
+package dev.pswg.util.world;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

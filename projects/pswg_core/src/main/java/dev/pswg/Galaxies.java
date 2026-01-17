@@ -5,9 +5,10 @@ import dev.pswg.configuration.GalaxiesConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.container.*;
-import dev.pswg.container.structure.GalaxiesStructureKeys;
-import dev.pswg.container.structure.GalaxiesStructurePieces;
-import dev.pswg.container.structure.GalaxiesStructureTypes;
+import dev.pswg.container.worldgen.GalaxiesDimensions;
+import dev.pswg.container.worldgen.GalaxiesStructureKeys;
+import dev.pswg.container.worldgen.GalaxiesStructurePieces;
+import dev.pswg.container.worldgen.GalaxiesStructureTypes;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
 import dev.pswg.interaction.LeftClickingEntityAttachment;
@@ -18,7 +19,7 @@ import dev.pswg.networking.GalaxiesPlayerActionS2CPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
-import dev.pswg.util.DimensionTeleporter;
+import dev.pswg.util.world.DimensionTeleporter;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -147,6 +148,8 @@ public final class Galaxies implements ModInitializer
 		GalaxiesStructureTypes.register();
 
 		GalaxiesScreenHandlerTypes.register();
+
+		GalaxiesDimensions.register();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(CommandManager.literal("cdim")
