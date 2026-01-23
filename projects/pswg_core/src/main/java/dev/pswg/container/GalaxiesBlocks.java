@@ -13,6 +13,7 @@ import dev.pswg.util.BlockUtil;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ColorCode;
@@ -100,7 +101,7 @@ public class GalaxiesBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, tags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
-	// TODO: Implement tree & plants
+	// TODO: Implement plants
 	/// Tree
 
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
@@ -124,8 +125,10 @@ public class GalaxiesBlocks
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
-	//TODO: Add Japor leaves
-
+	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
+	@DataGenBlock(model = DataGenBlockModel.JaporLeaves, tags = { DGBlockTag.Leaves, DGBlockTag.ShearsMineable }, itemTags = { DGItemTag.Leaves })
+	public static final BushLeavesBlock JAPOR_LEAVES = createBushLeavesBlock("japor_leaves");
 	@DataGenBlock(model = DataGenBlockModel.None)
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.BROWN);
@@ -465,6 +468,11 @@ public class GalaxiesBlocks
 	private static LeavesBlock createLeavesBlock(String key)
 	{
 		return Registrar.block(Galaxies.id(key), settings -> new TintedParticleLeavesBlock(0.01F, settings), AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+	}
+
+	private static BushLeavesBlock createBushLeavesBlock(String key)
+	{
+		return Registrar.block(Galaxies.id(key), settings -> new BushLeavesBlock(8, 3, settings), AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).noCollision().pistonBehavior(PistonBehavior.DESTROY));
 	}
 	private static AccumulatingBlock createAccumulatingBlock(String key, AbstractBlock.Settings settings, Block fullBlock){
 		return Registrar.block(Galaxies.id(key), blockSettings -> new AccumulatingBlock(settings, fullBlock::getPlacementState), settings);

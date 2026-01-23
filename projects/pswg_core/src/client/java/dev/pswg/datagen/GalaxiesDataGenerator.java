@@ -209,11 +209,28 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 						case null, default:
 					}
 				}
+				case JaporLeaves -> registerJaporLeaves(block, generator);
 				case Log, LogWithWood -> registerLog(block, dataGenBlock, generator);
 				case LightingPanel -> registerLightingPanel(block, generator);
 				case Slab -> registerVerticalSlab(block, generator);
 				case Stairs -> registerStairs(block, generator);
 			}
+		}
+
+		private static void registerJaporLeaves(Block block, BlockStateModelGenerator generator)
+		{
+			Model model = new Model(Optional.of(Galaxies.id("block/template_japor_leaves")), Optional.empty(), TextureKey.TEXTURE);
+			TexturedModel texturedModel = TexturedModel.makeFactory(TextureMap::texture, model).get(block);
+			WeightedVariant weightedVariant = createWeightedVariant(texturedModel.upload(block, generator.modelCollector));
+			generator.blockStateCollector.accept(
+					VariantsBlockModelDefinitionCreator.of(block, weightedVariant).apply(BlockStateVariantMap.operations(Properties.FACING)
+					                                                                                         .register(Direction.DOWN, BlockStateModelGenerator.ROTATE_X_180)
+					                                                                                         .register(Direction.UP, BlockStateModelGenerator.NO_OP)
+					                                                                                         .register(Direction.EAST, BlockStateModelGenerator.ROTATE_Y_90.then(BlockStateModelGenerator.ROTATE_X_90))
+					                                                                                         .register(Direction.SOUTH, BlockStateModelGenerator.ROTATE_Y_180.then(BlockStateModelGenerator.ROTATE_X_90))
+					                                                                                         .register(Direction.WEST, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.ROTATE_X_90))
+					                                                                                         .register(Direction.NORTH, BlockStateModelGenerator.ROTATE_X_90)));
+			generator.registerItemModel(block);
 		}
 
 		private static void registerLog(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)

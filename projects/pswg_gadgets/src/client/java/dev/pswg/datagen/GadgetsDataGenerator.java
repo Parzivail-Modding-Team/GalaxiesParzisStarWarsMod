@@ -98,17 +98,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			});
 
 		}
-		private static void registerAccumulatingBlock(Block block, BlockStateModelGenerator generator) {
-			var id = TextureMap.getId(block);
-
-			generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.LAYERS).generate(
-						 height -> {
-							Identifier modelId = TexturedModel.makeFactory(block1 -> TextureMap.all(id).put(TextureKey.PARTICLE, id), blockModel("template_accumulating_height" + height * 2, TextureKey.ALL, TextureKey.PARTICLE)).upload(block, "_height"+ height * 2, generator.modelCollector);
-							 return createWeightedVariant(modelId);//BlockStateVariant.create().put(VariantSettings.MODEL, modelId);
-						 }))
-					);
-			generator.registerParentedItemModel(block, ModelIds.getBlockSubModelId(block, "_height2"));
-		}
 
 		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
 		{
@@ -125,11 +114,39 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 						case null, default:
 					}
 				}
+				case JaporLeaves -> registerJaporLeaves(block, generator);
 				case Log, LogWithWood -> registerLog(block, dataGenBlock, generator);
 				case LightingPanel -> registerLightingPanel(block, generator);
 				case Slab -> registerVerticalSlab(block, generator);
 				case Stairs -> registerStairs(block, generator);
 			}
+		}
+
+		private static void registerAccumulatingBlock(Block block, BlockStateModelGenerator generator)
+		{
+			var id = TextureMap.getId(block);
+
+			generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.LAYERS).generate(
+					height -> {
+						Identifier modelId = TexturedModel.makeFactory(block1 -> TextureMap.all(id).put(TextureKey.PARTICLE, id), blockModel("template_accumulating_height" + height * 2, TextureKey.ALL, TextureKey.PARTICLE)).upload(block, "_height" + height * 2, generator.modelCollector);
+						return createWeightedVariant(modelId);
+					}))
+			);
+			generator.registerParentedItemModel(block, ModelIds.getBlockSubModelId(block, "_height2"));
+		}
+
+		private static void registerJaporLeaves(Block block, BlockStateModelGenerator generator)
+		{
+			Model model = new Model(Optional.of(Galaxies.id("block/japor_leaves")), Optional.empty(), TextureKey.TEXTURE);
+			TexturedModel texturedModel = TexturedModel.makeFactory(TextureMap::texture, model).get(block);
+			WeightedVariant weightedVariant = createWeightedVariant(texturedModel.upload(block, generator.modelCollector));
+			generator.blockStateCollector.accept(
+					VariantsBlockModelDefinitionCreator.of(block, weightedVariant).apply(BlockStateVariantMap.operations(Properties.HORIZONTAL_FACING)
+					                                                                                         .register(Direction.EAST, BlockStateModelGenerator.ROTATE_Y_90)
+					                                                                                         .register(Direction.SOUTH, BlockStateModelGenerator.ROTATE_Y_180)
+					                                                                                         .register(Direction.WEST, BlockStateModelGenerator.ROTATE_Y_270)
+					                                                                                         .register(Direction.NORTH, BlockStateModelGenerator.NO_OP)));
+			generator.registerItemModel(block);
 		}
 
 		private static void registerLog(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
