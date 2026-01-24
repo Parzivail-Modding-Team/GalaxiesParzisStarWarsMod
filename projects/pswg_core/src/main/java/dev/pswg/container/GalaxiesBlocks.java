@@ -115,7 +115,6 @@ public class GalaxiesBlocks
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
 	/// Plants
-	//TODO: sprite item model for all plants
 	//TODO: "crop" block-state for chasuka, hkak bush
 	//TODO: vaporator mushroom colony & molo shrub
 
