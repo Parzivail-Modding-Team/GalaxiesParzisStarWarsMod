@@ -333,8 +333,8 @@ public class GalaxiesItems
 	public static final Item SALT_PILE = registerSimpleItem("salt_pile");
 
 	/// SEEDS
-	@DataGenItem
-	public static final Item CHASUKA_SEEDS = registerBlockItem("chasuka_seeds", GalaxiesBlocks.CHASUKA, new Item.Settings());
+	@DataGenItem(model = ItemModel.none)
+	public static final Item CHASUKA_SEEDS = registerBlockItem("chasuka_seeds", GalaxiesBlocks.CHASUKA, new Item.Settings().useItemPrefixedTranslationKey());
 
 	/// FOOD PREP
 

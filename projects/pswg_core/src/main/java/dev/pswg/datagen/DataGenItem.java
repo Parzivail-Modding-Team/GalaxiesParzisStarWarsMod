@@ -9,8 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataGenItem
 {
-	boolean genModel() default true;
-
 	boolean wiz() default false;
 	DGItemTag[] itemTags() default {};
 

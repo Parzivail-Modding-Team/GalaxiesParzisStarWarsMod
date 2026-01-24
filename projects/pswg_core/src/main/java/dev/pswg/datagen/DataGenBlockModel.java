@@ -4,7 +4,7 @@ public enum DataGenBlockModel
 {
 	Accumulating,
 	Cross,
-	CrossWithoutItem,
+	Crop2,
 	Column,
 	Connecting,
 	CubeAll,

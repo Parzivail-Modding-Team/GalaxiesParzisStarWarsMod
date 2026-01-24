@@ -140,7 +140,7 @@ public class GalaxiesBlocks
 	public static final AridPlant TUBER_STALK = createAridPlantBlock("tuber_stalk");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.CrossWithoutItem, itemGroup = DataGenItemGroup.None, addItemTranslation = false)
+	@DataGenBlock(model = DataGenBlockModel.Crop2, itemGroup = DataGenItemGroup.None, addItemTranslation = false)
 	public static final ChasukaCrop CHASUKA = Registrar.blockWithoutItem(Galaxies.id("chasuka"), ChasukaCrop::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)

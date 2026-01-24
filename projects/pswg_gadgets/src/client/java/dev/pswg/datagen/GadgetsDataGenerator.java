@@ -264,7 +264,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		public void registerItem(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
 		{
-			if (dataGenItem.genModel())
+			if (dataGenItem.model() != ItemModel.none)
 			{
 				if (dataGenItem.wiz())
 					register(generator, item, Galaxies.id("item/wizard"), Models.GENERATED);

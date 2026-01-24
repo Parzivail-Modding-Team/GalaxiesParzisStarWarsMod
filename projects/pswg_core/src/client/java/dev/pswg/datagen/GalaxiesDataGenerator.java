@@ -201,7 +201,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case Accumulating -> registerAccumulatingBlock(block, generator);
 				case Column -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
 				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
-				case CrossWithoutItem -> registerCrossWithoutItem(block, generator);
+				case Crop2 -> generator.registerCrop(block, Properties.AGE_2, 0, 1, 2);
 				case Custom ->
 				{
 					switch (dataGenBlock.dataGenModelKey())
@@ -427,7 +427,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 		public void registerItem(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
 		{
-			if (dataGenItem.genModel())
+			if (dataGenItem.model() != ItemModel.none)
 			{
 				if (dataGenItem.wiz())
 					GalaxiesModelProvider.register(generator, item, Galaxies.id("item/wizard"), Models.GENERATED);
