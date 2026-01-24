@@ -11,11 +11,11 @@ public class TestLayer implements InitLayer
 	public int sample(LayerSampleContext<?> context, int x, int z)
 	{
 		//TODO: update with the other biomes
-		/*if (context.nextInt(2) == 0) {
+		if (context.nextInt(2) == 0)
+		{
 			return BiomeList.getId(TerrainBiomes.TATOOINE_CANYON);
 		}
 
-		return context.nextInt(2) == 0 ? BiomeList.getId(TerrainBiomes.TATOOINE_DUNE_SEA) : BiomeList.getId(TerrainBiomes.TATOOINE_SALT_FLATS);*/
-		return BiomeList.getId(TerrainBiomes.TATOOINE_CANYON);
+		return context.nextInt(2) == 0 ? BiomeList.getId(TerrainBiomes.TATOOINE_DUNE_SEA) : BiomeList.getId(TerrainBiomes.TATOOINE_SALT_FLATS);
 	}
 }
