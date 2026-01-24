@@ -1,4 +1,4 @@
-package dev.pswg.block;
+package dev.pswg.block.plant;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -1,6 +1,18 @@
 {
   "values": [
     "pswg:caked_salt",
-    "pswg:desert_loam"
+    "pswg:desert_loam",
+    {
+      "id": "#minecraft:sand",
+      "required": false
+    },
+    {
+      "id": "#minecraft:terracotta",
+      "required": false
+    },
+    "minecraft:grass_block",
+    "minecraft:dirt",
+    "minecraft:podzol",
+    "minecraft:coarse_dirt"
   ]
 }

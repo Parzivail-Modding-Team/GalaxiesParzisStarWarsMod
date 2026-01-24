@@ -4,7 +4,6 @@ import dev.pswg.Galaxies;
 import dev.pswg.GalaxiesClient;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.autoreg.AutoGenerateUtil;
-import dev.pswg.block.*;
 import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItemGroups;
@@ -202,6 +201,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case Accumulating -> registerAccumulatingBlock(block, generator);
 				case Column -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
 				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
+				case CrossWithoutItem -> registerCrossWithoutItem(block, generator);
 				case Custom ->
 				{
 					switch (dataGenBlock.dataGenModelKey())
@@ -217,6 +217,11 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case Slab -> registerVerticalSlab(block, generator);
 				case Stairs -> registerStairs(block, generator);
 			}
+		}
+
+		private static void registerCrossWithoutItem(Block block, BlockStateModelGenerator generator)
+		{
+			generator.registerTintableCrossBlockState(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
 		}
 
 		private static void registerJaporLeaves(Block block, BlockStateModelGenerator generator)
@@ -529,12 +534,14 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			if (!Objects.equals(dataGenBlock.langOverride(), ""))
 			{
 				translationBuilder.add(block, dataGenBlock.langOverride());
-				translationBuilder.add(block.asItem(), dataGenBlock.langOverride());
+				if (dataGenBlock.addItemTranslation())
+					translationBuilder.add(block.asItem(), dataGenBlock.langOverride());
 			}
 			else
 			{
 				translationBuilder.add(block, generateDefaultLang(block.getRegistryEntry().registryKey().getValue()));
-				translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().getRegistryEntry().registryKey().getValue()));
+				if (dataGenBlock.addItemTranslation())
+					translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().getRegistryEntry().registryKey().getValue()));
 			}
 		}
 	}
@@ -617,7 +624,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.PODZOL))
 					.add(blockId(Blocks.COARSE_DIRT));
 			addBlocksToTag(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE, DGBlockTag.AridPlantPlaceable, this);
-			getTagBuilder(GalaxiesBlocks.Tags.HKAK_BUSH_PLACEABLE)
+			getTagBuilder(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.id())
 					.addOptionalTag(BlockTags.TERRACOTTA.id())
 					.add(blockId(Blocks.GRASS_BLOCK))

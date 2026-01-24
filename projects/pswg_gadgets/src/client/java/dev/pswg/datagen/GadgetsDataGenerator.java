@@ -1,7 +1,7 @@
 package dev.pswg.datagen;
 
 import dev.pswg.Gadgets;
-import dev.pswg.block.*;
+import dev.pswg.block.collection.NumberedBlocks;
 import dev.pswg.block.collection.StoneProducts;
 import dev.pswg.container.*;
 import dev.pswg.Galaxies;

@@ -1,4 +1,4 @@
-package dev.pswg.block;
+package dev.pswg.block.collection;
 
 import net.minecraft.util.DyeColor;
 
