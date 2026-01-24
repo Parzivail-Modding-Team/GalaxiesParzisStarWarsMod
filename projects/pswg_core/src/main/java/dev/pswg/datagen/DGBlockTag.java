@@ -2,6 +2,7 @@ package dev.pswg.datagen;
 
 public enum DGBlockTag
 {
+	AridPlantPlaceable,
 	FragmentationGrenadeDestroy,
 	DetonatesGrenade,
 	Bouncy,

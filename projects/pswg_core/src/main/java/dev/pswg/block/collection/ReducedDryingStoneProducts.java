@@ -1,6 +1,10 @@
-package dev.pswg.block;
+package dev.pswg.block.collection;
 
 import dev.pswg.Galaxies;
+import dev.pswg.block.DryingBlock;
+import dev.pswg.block.DryingSlabBlock;
+import dev.pswg.block.DryingStairsBlock;
+import dev.pswg.block.VerticalSlabBlock;
 import dev.pswg.registry.Registrar;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;

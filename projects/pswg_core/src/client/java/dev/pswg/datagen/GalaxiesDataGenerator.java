@@ -5,6 +5,7 @@ import dev.pswg.GalaxiesClient;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.block.*;
+import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItemGroups;
 import dev.pswg.container.GalaxiesItems;
@@ -611,6 +612,14 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(GalaxiesBlocks.Tags.HKAK_BUSH_PLACEABLE, DGBlockTag.HkakBushPlaceable, this);
 			getTagBuilder(GalaxiesBlocks.Tags.HKAK_BUSH_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.id())
+					.add(blockId(Blocks.GRASS_BLOCK))
+					.add(blockId(Blocks.DIRT))
+					.add(blockId(Blocks.PODZOL))
+					.add(blockId(Blocks.COARSE_DIRT));
+			addBlocksToTag(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE, DGBlockTag.AridPlantPlaceable, this);
+			getTagBuilder(GalaxiesBlocks.Tags.HKAK_BUSH_PLACEABLE)
+					.addOptionalTag(BlockTags.SAND.id())
+					.addOptionalTag(BlockTags.TERRACOTTA.id())
 					.add(blockId(Blocks.GRASS_BLOCK))
 					.add(blockId(Blocks.DIRT))
 					.add(blockId(Blocks.PODZOL))

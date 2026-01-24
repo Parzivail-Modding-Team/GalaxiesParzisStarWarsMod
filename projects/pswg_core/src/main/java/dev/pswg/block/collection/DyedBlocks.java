@@ -1,5 +1,6 @@
-package dev.pswg.block;
+package dev.pswg.block.collection;
 
+import dev.pswg.block.Dyed;
 import net.minecraft.block.Block;
 import net.minecraft.util.DyeColor;
 

@@ -5,11 +5,13 @@ import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.autoreg.ServerBlockRegistryData;
 import dev.pswg.block.*;
+import dev.pswg.block.collection.*;
 import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.datagen.*;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.BlockUtil;
+import dev.pswg.util.VoxelShapeUtil;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
@@ -30,6 +32,7 @@ public class GalaxiesBlocks
 	public static final class Tags
 	{
 		public static final TagKey<Block> HKAK_BUSH_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("hkak_bush_placeable"));
+		public static final TagKey<Block> ARID_PLANT_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("arid_plant_placeable"));
 	}
 	/// STONE
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
@@ -94,7 +97,7 @@ public class GalaxiesBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
 	/// SALT
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.HkakBushPlaceable, DGBlockTag.AridPlantPlaceable })
 	public static final Block CAKED_SALT = createBlock("caked_salt", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	/// GRAVEL
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
@@ -103,11 +106,55 @@ public class GalaxiesBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
-	public static final ReducedDryingRuiningStoneProducts  WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
+	public static final ReducedDryingRuiningStoneProducts WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate, DGBlockTag.HkakBushPlaceable, DGBlockTag.AridPlantPlaceable })
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
-	// TODO: Implement plants
+	/// Plants
+
+
+	/*@RegistryName("funnel_flower")
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
+	public static final Block FunnelFlower = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+	@RegistryName("blossoming_funnel_flower")
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
+	public static final Block BlossomingFunnelFlower = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+	@RegistryName("poonten_grass")
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
+	public static final Block PoontenGrass = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+	@RegistryName("dried_poonten_grass")
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
+	public static final Block DriedPoontenGrass = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+	@RegistryName("tuber_stalk")
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	@TarkinBlock(model = TrModel.Cross, itemModel = TrModel.Sprite, tags = {})
+	public static final Block Tuber = new AridPlant(FabricBlockSettings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+	@RegistryName("chasuka")
+	@TabIgnore
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	public static final ChasukaCrop Chasuka = new ChasukaCrop(FabricBlockSettings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+	@RegistryName("hkak_bush")
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	public static final HkakBushBlock HkakBush = new HkakBushBlock(FabricBlockSettings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+	@RegistryName("molo_shrub")
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(FabricBlockSettings.create().noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
+	@RegistryName("vaporator_mushroom_colony")
+	@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+	public static final Block VaporatorMushroom = new VaporatorMushroomBlock(FabricBlockSettings.create().noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));*/
+
 	/// Tree
 
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)

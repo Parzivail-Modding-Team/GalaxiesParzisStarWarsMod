@@ -2,6 +2,7 @@ package dev.pswg.datagen;
 
 import dev.pswg.Gadgets;
 import dev.pswg.block.*;
+import dev.pswg.block.collection.StoneProducts;
 import dev.pswg.container.*;
 import dev.pswg.Galaxies;
 import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
