@@ -13,6 +13,7 @@ import dev.pswg.util.BlockUtil;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.BlockSoundGroup;
@@ -476,6 +477,11 @@ public class GalaxiesBlocks
 	}
 	private static AccumulatingBlock createAccumulatingBlock(String key, AbstractBlock.Settings settings, Block fullBlock){
 		return Registrar.block(Galaxies.id(key), blockSettings -> new AccumulatingBlock(settings, fullBlock::getPlacementState), settings);
+	}
+
+	private static BushLeavesBlock createBushLeavesBlock(String key)
+	{
+		return Registrar.block(Galaxies.id(key), settings -> new BushLeavesBlock(8, 3, settings), AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).noCollision().pistonBehavior(PistonBehavior.DESTROY));
 	}
 	private static InteractableInvertedLampBlock createLightingPanelBlock(String key, int luminosity)
 	{
