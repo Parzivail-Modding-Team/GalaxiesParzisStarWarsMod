@@ -1,5 +1,6 @@
 package dev.pswg.util.worldgen.biome;
 
+import dev.pswg.util.worldgen.decoration.ConfiguredDecoration;
 import dev.pswg.util.worldgen.surface.CanyonSurfaceBuilder;
 import dev.pswg.util.worldgen.surface.SaltFlatsSurfaceBuilder;
 import dev.pswg.util.worldgen.surface.TwoStateSurfaceBuilder;
@@ -10,7 +11,8 @@ import java.util.List;
 
 public class TerrainBiomes
 {
-	/*public static final TerrainBiome TATOOINE_CRAGGY_DUNES = new TerrainBiome(
+	/*
+	public static final TerrainBiome TATOOINE_CRAGGY_DUNES = new TerrainBiome(
 			BiomeKeys.PLAINS,
 			new TwoStateSurfaceBuilder(SwgBlocks.Sand.Desert.getDefaultState(), 3, SwgBlocks.Sandstone.SmoothDesert.getDefaultState(), 16),
 			new CraggyDunesTerrainBuilder(),
@@ -22,6 +24,7 @@ public class TerrainBiomes
 			)
 	);
 
+
 	public static final TerrainBiome TATOOINE_SOFT_DUNES = new TerrainBiome(
 			BiomeKeys.TAIGA,
 			new TwoStateSurfaceBuilder(SwgBlocks.Sand.Desert.getDefaultState(), 3, SwgBlocks.Sandstone.SmoothDesert.getDefaultState(), 16),
@@ -32,8 +35,8 @@ public class TerrainBiomes
 							new PatchDecoration(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 5, 8, true, List.of(SwgBlocks.Sand.Desert))
 					)
 			)
-	);
-
+	);*/
+	/*
 	public static final TerrainBiome TATOOINE_SALT_FLATS = new TerrainBiome(
 			BiomeKeys.FOREST,
 			new SaltFlatsSurfaceBuilder(),

@@ -8,6 +8,7 @@ public enum DataGenBlockModel
 	Connecting,
 	CubeAll,
 	Custom,
+	JaporLeaves,
 	LightingPanel,
 	Log,
 	LogWithWood,

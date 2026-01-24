@@ -1,0 +1,6 @@
+{
+  "parent": "pswg:block/template_japor_leaves",
+  "textures": {
+    "texture": "pswg:block/japor_leaves"
+  }
+}

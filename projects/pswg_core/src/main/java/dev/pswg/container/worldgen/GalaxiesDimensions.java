@@ -35,28 +35,6 @@ public class GalaxiesDimensions
 		Registry.register(Registries.BIOME_SOURCE, Galaxies.id("galaxies"), GalaxiesBiomeSource.CODEC);
 		Registry.register(Registries.CHUNK_GENERATOR, Galaxies.id("galaxies"), GalaxiesChunkGenerator.CODEC);
 
-		//		Registry.register(
-		//				Registries.,
-		//				TATOOINE,
-		//				new DimensionType(
-		//						/*fixedTime = */ OptionalLong.empty(),
-		//						/*hasSkyLight = */ true,
-		//						/*hasCeiling = */ false,
-		//						/*ultraWarm = */ false,
-		//						/*natural = */ false,
-		//						/*coordinateScale = */ 1.0,
-		//						/*bedWorks = */ true,
-		//						/*respawnAnchorWorks = */ false,
-		//						/*minY = */ -64,
-		//						/*height = */ 384,
-		//						/*logicalHeight = */ 384,
-		//						/*infiniburn = */ BlockTags.INFINIBURN_OVERWORLD,
-		//						/*effectsLocation = */ TATOOINE.getValue(),
-		//						/*ambientLight = */ 0.0F,
-		//						/*monsterSettings = */ new DimensionType.MonsterSettings(false, true, UniformIntProvider.create(0, 7), 0)
-		//				)
-		//		);
-
 		TerrainBiomes.init();
 	}
 }

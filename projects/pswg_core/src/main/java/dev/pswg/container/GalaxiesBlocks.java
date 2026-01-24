@@ -93,7 +93,7 @@ public class GalaxiesBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
 	/// SALT
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = {DGBlockTag.HkakBushPlaceable})
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
 	public static final Block CAKED_SALT = createBlock("caked_salt", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	/// GRAVEL
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
@@ -103,10 +103,10 @@ public class GalaxiesBlocks
 	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ReducedDryingRuiningStoneProducts  WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate, DGBlockTag.HkakBushPlaceable})
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
-	// TODO: Implement tree & plants
+	// TODO: Implement plants
 	/// Tree
 
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
@@ -130,8 +130,10 @@ public class GalaxiesBlocks
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
-	//TODO: Add Japor leaves
-
+	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
+	@DataGenBlock(model = DataGenBlockModel.JaporLeaves, blockTags = { DGBlockTag.Leaves, DGBlockTag.ShearsMineable }, itemTags = { DGItemTag.Leaves })
+	public static final BushLeavesBlock JAPOR_LEAVES = createBushLeavesBlock("japor_leaves");
 	@DataGenBlock(model = DataGenBlockModel.None)
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.BROWN);
