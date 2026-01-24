@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.item.tint.ConstantTintSource;
@@ -590,13 +591,20 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(BlockTags.SHOVEL_MINEABLE, DGBlockTag.ShovelMineable, this);
 			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LogsThatBurn, this);
 			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.Stairs, this);
+			addBlocksToTag(GalaxiesBlocks.Tags.HKAK_BUSH_PLACEABLE, DGBlockTag.HkakBushPlaceable, this);
+			getTagBuilder(GalaxiesBlocks.Tags.HKAK_BUSH_PLACEABLE)
+					.addOptionalTag(BlockTags.SAND.id())
+					.add(blockId(Blocks.GRASS_BLOCK))
+					.add(blockId(Blocks.DIRT))
+					.add(blockId(Blocks.PODZOL))
+					.add(blockId(Blocks.COARSE_DIRT));
 		}
 
 		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator)
 		{
 
 			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
-				if (Arrays.stream(dataGenBlock.tags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag))
+				if (Arrays.stream(dataGenBlock.blockTags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag))
 				{
 					generator.getTagBuilder(tag).add(blockId(block));
 				}

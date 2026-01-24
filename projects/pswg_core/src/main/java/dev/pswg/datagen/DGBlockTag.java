@@ -14,6 +14,7 @@ public enum DGBlockTag
 	AxeMineable,
 	SlidingDoor,
 	Leaves,
+	HkakBushPlaceable,
 	DeadBushSubstrate,
 	BlasterDestroy,
 	BlasterExplode,

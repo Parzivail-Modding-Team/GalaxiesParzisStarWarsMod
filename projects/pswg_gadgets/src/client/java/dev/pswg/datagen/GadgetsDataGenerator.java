@@ -507,7 +507,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator){
 
 			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
-				if(Arrays.stream(dataGenBlock.tags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag)){
+				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag)){
 					generator.getTagBuilder(tag).add(blockId(block));
 				}
 			});

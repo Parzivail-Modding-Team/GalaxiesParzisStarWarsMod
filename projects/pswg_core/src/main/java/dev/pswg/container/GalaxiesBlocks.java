@@ -13,6 +13,8 @@ import dev.pswg.util.BlockUtil;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ColorCode;
@@ -24,6 +26,10 @@ import java.util.function.ToIntFunction;
 
 public class GalaxiesBlocks
 {
+	public static final class Tags
+	{
+		public static final TagKey<Block> HKAK_BUSH_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("hkak_bush_placeable"));
+	}
 	/// STONE
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final StoneProducts CANYON = new StoneProducts(AbstractBlock.Settings.create().strength(0.5F), "canyon_stone");
@@ -87,7 +93,7 @@ public class GalaxiesBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
 	/// SALT
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = {DGBlockTag.HkakBushPlaceable})
 	public static final Block CAKED_SALT = createBlock("caked_salt", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	/// GRAVEL
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
@@ -97,7 +103,7 @@ public class GalaxiesBlocks
 	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ReducedDryingRuiningStoneProducts  WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, tags = {DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate})
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate, DGBlockTag.HkakBushPlaceable})
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
 	// TODO: Implement tree & plants
@@ -105,7 +111,7 @@ public class GalaxiesBlocks
 
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(tags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves )
+	@DataGenBlock(blockTags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves )
 	public static final LeavesBlock SEQUOIA_LEAVES = createLeavesBlock("sequoia_leaves");
 
 	@DataGenBlock(model = DataGenBlockModel.None)
@@ -113,13 +119,13 @@ public class GalaxiesBlocks
 	public static final Block SEQUOIA_WOOD = createWoodBlock("sequoia_wood", MapColor.BROWN);
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock STRIPPED_SEQUOIA_LOG = createLogBlock("stripped_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, tags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock MOSSY_SEQUOIA_LOG = createLogBlock("mossy_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
@@ -130,7 +136,7 @@ public class GalaxiesBlocks
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, blockTags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
 	public static final PillarBlock JAPOR_LOG = createLogBlock("japor_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
@@ -140,7 +146,7 @@ public class GalaxiesBlocks
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	public static final Block TATOOINE_WOOD = createWoodBlock("tatooine_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, tags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, blockTags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
 	public static final PillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.OAK_TAN, MapColor.BROWN);
 
 
@@ -164,7 +170,7 @@ public class GalaxiesBlocks
 	public static final Block DESH_BLOCK = createBlock("desh_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block DIATIUM_ORE = createBlock("diatium_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
-	@DataGenBlock(tags = DGBlockTag.BlasterReflect)
+	@DataGenBlock(blockTags = DGBlockTag.BlasterReflect)
 	public static final Block DIATIUM_BLOCK = createBlock("diatium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block IONITE_ORE = createBlock("ionite_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
