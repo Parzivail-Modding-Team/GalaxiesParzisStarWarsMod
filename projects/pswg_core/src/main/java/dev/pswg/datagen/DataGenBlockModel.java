@@ -3,8 +3,9 @@ package dev.pswg.datagen;
 public enum DataGenBlockModel
 {
 	Accumulating,
+	CrossAge3,
 	Cross,
-	Crop2,
+	CropAge2,
 	Column,
 	Connecting,
 	CubeAll,

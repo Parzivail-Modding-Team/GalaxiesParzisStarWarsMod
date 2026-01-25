@@ -201,7 +201,8 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case Accumulating -> registerAccumulatingBlock(block, generator);
 				case Column -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
 				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
-				case Crop2 -> generator.registerCrop(block, Properties.AGE_2, 0, 1, 2);
+				case CrossAge3 -> registerCrossAge3(block, generator);
+				case CropAge2 -> generator.registerCrop(block, Properties.AGE_2, 0, 1, 2);
 				case Custom ->
 				{
 					switch (dataGenBlock.dataGenModelKey())
@@ -219,9 +220,12 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			}
 		}
 
-		private static void registerCrossWithoutItem(Block block, BlockStateModelGenerator generator)
+		private static void registerCrossAge3(Block block, BlockStateModelGenerator generator)
 		{
-			generator.registerTintableCrossBlockState(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
+			generator.registerItemModel(block.asItem());
+			generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block)
+			                                                                        .with(BlockStateVariantMap.models(Properties.AGE_3)
+			                                                                                                  .generate(stage -> createWeightedVariant(generator.createSubModel(block, "_stage" + stage, Models.CROSS, TextureMap::cross)))));
 		}
 
 		private static void registerJaporLeaves(Block block, BlockStateModelGenerator generator)

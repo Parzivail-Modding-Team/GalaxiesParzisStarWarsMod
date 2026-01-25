@@ -140,11 +140,11 @@ public class GalaxiesBlocks
 	public static final AridPlant TUBER_STALK = createAridPlantBlock("tuber_stalk");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Crop2, itemGroup = DataGenItemGroup.None, addItemTranslation = false)
+	@DataGenBlock(model = DataGenBlockModel.CropAge2, itemGroup = DataGenItemGroup.None, addItemTranslation = false)
 	public static final ChasukaCrop CHASUKA = Registrar.blockWithoutItem(Galaxies.id("chasuka"), ChasukaCrop::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.None)
+	@DataGenBlock(model = DataGenBlockModel.CrossAge3, itemGroup = DataGenItemGroup.None)
 	public static final HkakBushBlock HKAK_BUSH = Registrar.block(Galaxies.id("hkak_bush"), HkakBushBlock::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 
 	/// Tree
