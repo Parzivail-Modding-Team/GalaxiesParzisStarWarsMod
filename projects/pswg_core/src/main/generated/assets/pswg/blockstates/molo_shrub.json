@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0,bloom=false": {
+      "model": "pswg:block/molo_shrub_stage0"
+    },
+    "age=0,bloom=true": {
+      "model": "pswg:block/molo_shrub_stage0_blooming"
+    },
+    "age=1,bloom=false": {
+      "model": "pswg:block/molo_shrub_stage1"
+    },
+    "age=1,bloom=true": {
+      "model": "pswg:block/molo_shrub_stage1_blooming"
+    },
+    "age=2,bloom=false": {
+      "model": "pswg:block/molo_shrub_stage2"
+    },
+    "age=2,bloom=true": {
+      "model": "pswg:block/molo_shrub_stage2_blooming"
+    },
+    "age=3,bloom=false": {
+      "model": "pswg:block/molo_shrub_stage3"
+    },
+    "age=3,bloom=true": {
+      "model": "pswg:block/molo_shrub_stage3_blooming"
+    }
+  }
+}

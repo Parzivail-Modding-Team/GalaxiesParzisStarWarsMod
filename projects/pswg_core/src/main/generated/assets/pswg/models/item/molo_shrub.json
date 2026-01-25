@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "pswg:block/hkak_bush_stage3"
+    "layer0": "pswg:block/molo_shrub_stage3_blooming"
   }
 }

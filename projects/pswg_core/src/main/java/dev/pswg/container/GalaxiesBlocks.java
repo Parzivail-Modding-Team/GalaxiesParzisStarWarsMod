@@ -6,10 +6,7 @@ import dev.pswg.autoreg.ClientBlockRegistryData;
 import dev.pswg.autoreg.ServerBlockRegistryData;
 import dev.pswg.block.*;
 import dev.pswg.block.collection.*;
-import dev.pswg.block.plant.AridPlant;
-import dev.pswg.block.plant.BushLeavesBlock;
-import dev.pswg.block.plant.ChasukaCrop;
-import dev.pswg.block.plant.HkakBushBlock;
+import dev.pswg.block.plant.*;
 import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.blockEntity.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import dev.pswg.datagen.*;
@@ -35,7 +32,7 @@ public class GalaxiesBlocks
 {
 	public static final class Tags
 	{
-		public static final TagKey<Block> HKAK_BUSH_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("hkak_bush_placeable"));
+		public static final TagKey<Block> BUSH_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("bush_placeable"));
 		public static final TagKey<Block> ARID_PLANT_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("arid_plant_placeable"));
 	}
 	/// STONE
@@ -101,7 +98,7 @@ public class GalaxiesBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
 	/// SALT
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.HkakBushPlaceable, DGBlockTag.AridPlantPlaceable })
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.BushPlaceable, DGBlockTag.AridPlantPlaceable })
 	public static final Block CAKED_SALT = createBlock("caked_salt", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	/// GRAVEL
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
@@ -111,32 +108,31 @@ public class GalaxiesBlocks
 	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final ReducedDryingRuiningStoneProducts WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate, DGBlockTag.HkakBushPlaceable, DGBlockTag.AridPlantPlaceable })
+	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate, DGBlockTag.BushPlaceable, DGBlockTag.AridPlantPlaceable })
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
 	/// Plants
-	//TODO: "crop" block-state for chasuka, hkak bush
 	//TODO: vaporator mushroom colony & molo shrub
 
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross)
+	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final AridPlant FUNNEL_FLOWER = createAridPlantBlock("funnel_flower");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross)
+	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final AridPlant BLOSSOMING_FUNNEL_FLOWER = createAridPlantBlock("blossoming_funnel_flower");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross)
+	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final AridPlant POONTEN_GRASS = createAridPlantBlock("poonten_grass");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross)
+	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final AridPlant DRIED_POONTEN_GRASS = createAridPlantBlock("dried_poonten_grass");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross)
+	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final AridPlant TUBER_STALK = createAridPlantBlock("tuber_stalk");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
@@ -144,51 +140,58 @@ public class GalaxiesBlocks
 	public static final ChasukaCrop CHASUKA = Registrar.blockWithoutItem(Galaxies.id("chasuka"), ChasukaCrop::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.CrossAge3, itemGroup = DataGenItemGroup.None)
+	@DataGenBlock(model = DataGenBlockModel.CrossAge3, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final HkakBushBlock HKAK_BUSH = Registrar.block(Galaxies.id("hkak_bush"), HkakBushBlock::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
+	@DataGenBlock(model = DataGenBlockModel.CrossAge3Blooming, itemGroup = DataGenItemGroup.WorldGenBlock)
+	public static final MoloShrubBlock MOLO_SHRUB = Registrar.block(Galaxies.id("molo_shrub"), MoloShrubBlock::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
+	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
+	public static final VaporatorMushroomBlock VAPORATOR_MUSHROOM_COLONY = Registrar.block(Galaxies.id("vaporator_mushroom_colony"), VaporatorMushroomBlock::new, AbstractBlock.Settings.create().noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 
 	/// Tree
 
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(blockTags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves )
+	@DataGenBlock(blockTags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final LeavesBlock SEQUOIA_LEAVES = createLeavesBlock("sequoia_leaves");
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(model = DataGenBlockModel.None)
+	@DataGenBlock(model = DataGenBlockModel.None, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block SEQUOIA_WOOD = createWoodBlock("sequoia_wood", MapColor.BROWN);
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock STRIPPED_SEQUOIA_LOG = createLogBlock("stripped_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
 	public static final PillarBlock MOSSY_SEQUOIA_LOG = createLogBlock("mossy_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.JaporLeaves, blockTags = { DGBlockTag.Leaves, DGBlockTag.ShearsMineable }, itemTags = { DGItemTag.Leaves })
+	@DataGenBlock(model = DataGenBlockModel.JaporLeaves, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = { DGBlockTag.Leaves, DGBlockTag.ShearsMineable }, itemTags = { DGItemTag.Leaves })
 	public static final BushLeavesBlock JAPOR_LEAVES = createBushLeavesBlock("japor_leaves");
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(model = DataGenBlockModel.None)
+	@DataGenBlock(model = DataGenBlockModel.None, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, blockTags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
 	public static final PillarBlock JAPOR_LOG = createLogBlock("japor_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	@DataGenBlock
 	public static final WoodProducts JAPOR_PRODUCTS = new WoodProducts("japor", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(model = DataGenBlockModel.None)
+	@DataGenBlock(model = DataGenBlockModel.None, itemGroup = DataGenItemGroup.WorldGenBlock)
 	public static final Block TATOOINE_WOOD = createWoodBlock("tatooine_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, blockTags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
 	public static final PillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.OAK_TAN, MapColor.BROWN);
 
 

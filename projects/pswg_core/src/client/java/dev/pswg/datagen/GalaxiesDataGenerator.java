@@ -202,6 +202,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case Column -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
 				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
 				case CrossAge3 -> registerCrossAge3(block, generator);
+				case CrossAge3Blooming -> registerCrossAge3Blooming(block, generator);
 				case CropAge2 -> generator.registerCrop(block, Properties.AGE_2, 0, 1, 2);
 				case Custom ->
 				{
@@ -222,10 +223,22 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 		private static void registerCrossAge3(Block block, BlockStateModelGenerator generator)
 		{
-			generator.registerItemModel(block.asItem());
+			generator.registerItemModel(block, "_stage3");
 			generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block)
 			                                                                        .with(BlockStateVariantMap.models(Properties.AGE_3)
 			                                                                                                  .generate(stage -> createWeightedVariant(generator.createSubModel(block, "_stage" + stage, Models.CROSS, TextureMap::cross)))));
+		}
+
+		private static void registerCrossAge3Blooming(Block block, BlockStateModelGenerator generator)
+		{
+			generator.registerItemModel(block, "_stage3_blooming");
+			generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block)
+			                                                                        .with(BlockStateVariantMap.models(Properties.AGE_3, Properties.BLOOM)
+			                                                                                                  .generate((stage, blooming) -> {
+				                                                                                                  String suffix = blooming ? ("_stage" + stage + "_blooming") : ("_stage" + stage);
+				                                                                                                  return createWeightedVariant(generator.createSubModel(block, suffix, Models.CROSS, TextureMap::cross));
+			                                                                                                  }))
+			);
 		}
 
 		private static void registerJaporLeaves(Block block, BlockStateModelGenerator generator)
@@ -620,8 +633,8 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(BlockTags.SHOVEL_MINEABLE, DGBlockTag.ShovelMineable, this);
 			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LogsThatBurn, this);
 			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.Stairs, this);
-			addBlocksToTag(GalaxiesBlocks.Tags.HKAK_BUSH_PLACEABLE, DGBlockTag.HkakBushPlaceable, this);
-			getTagBuilder(GalaxiesBlocks.Tags.HKAK_BUSH_PLACEABLE)
+			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DGBlockTag.BushPlaceable, this);
+			getTagBuilder(GalaxiesBlocks.Tags.BUSH_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.id())
 					.add(blockId(Blocks.GRASS_BLOCK))
 					.add(blockId(Blocks.DIRT))

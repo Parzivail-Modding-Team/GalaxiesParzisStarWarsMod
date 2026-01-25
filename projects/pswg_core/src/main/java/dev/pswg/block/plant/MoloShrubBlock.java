@@ -3,18 +3,14 @@ package dev.pswg.block.plant;
 import com.mojang.serialization.MapCodec;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItems;
+import dev.pswg.util.world.WorldUtil;
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -22,37 +18,37 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
-public class HkakBushBlock extends PlantBlock implements Fertilizable
+public class MoloShrubBlock extends PlantBlock implements Fertilizable
 {
 	static
 	{
 		AGE = Properties.AGE_3;
+		BLOOMING = Properties.BLOOM;
 		SMALL_SHAPE = Block.createCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
 		LARGE_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 	}
 
 	public static final IntProperty AGE;
+	public static final BooleanProperty BLOOMING;
 	private static final VoxelShape SMALL_SHAPE;
 	private static final VoxelShape LARGE_SHAPE;
 
-	public static final MapCodec<HkakBushBlock> CODEC = createCodec(HkakBushBlock::new);
-
-	public HkakBushBlock(AbstractBlock.Settings settings)
+	public MoloShrubBlock(Settings settings)
 	{
-		super(settings);
-		this.setDefaultState(this.stateManager.getDefaultState().with(AGE, 0));
+		super(settings.ticksRandomly());
+		this.setDefaultState(this.stateManager.getDefaultState().with(AGE, 0).with(BLOOMING, false));
 	}
 
 	@Override
 	protected MapCodec<? extends PlantBlock> getCodec()
 	{
-		return CODEC;
+		return createCodec(MoloShrubBlock::new);
 	}
 
 	@Override
 	protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData)
 	{
-		return new ItemStack(GalaxiesItems.HKAK_BEAN);
+		return new ItemStack(GalaxiesItems.MOLO_FLOWER);
 	}
 
 	@Override
@@ -65,60 +61,29 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		if (state.get(AGE) == 0)
-		{
 			return SMALL_SHAPE;
-		}
 		else
-		{
 			return state.get(AGE) < 3 ? LARGE_SHAPE : super.getOutlineShape(state, world, pos, context);
-		}
-	}
-
-	@Override
-	public boolean hasRandomTicks(BlockState state)
-	{
-		return state.get(AGE) < 3;
 	}
 
 	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		int i = state.get(AGE);
-		if (i < 3 && random.nextInt(5) == 0 && world.getBaseLightLevel(pos.up(), 0) >= 9)
-		{
-			world.setBlockState(pos, state.with(AGE, i + 1), Block.NOTIFY_LISTENERS);
-		}
-	}
+		var finalState = state;
 
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
-	{
-		int i = state.get(AGE);
-		var isMature = i == 3;
-		if (!isMature && player.getMainHandStack().isOf(Items.BONE_MEAL))
-		{
-			return ActionResult.PASS;
-		}
-		else if (i > 1)
-		{
-			var j = 1 + world.random.nextInt(2);
-			dropStack(world, pos, new ItemStack(GalaxiesItems.HKAK_BEAN,j + (isMature ? 1 : 0)));
+		if (random.nextInt(5) == 0 && i < 3)
+			finalState = finalState.with(AGE, i + 1);
 
-			// TODO: new sound event
-			world.playSound(null, pos, SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
-			world.setBlockState(pos, state.with(AGE, 1), Block.NOTIFY_LISTENERS);
-			return ActionResult.SUCCESS;
-		}
-		else
-		{
-			return super.onUse(state, world, pos, player, hit);
-		}
+		finalState = finalState.with(BLOOMING, WorldUtil.isNightTime(world));
+
+		world.setBlockState(pos, finalState, Block.NOTIFY_LISTENERS);
 	}
 
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
-		builder.add(AGE);
+		builder.add(AGE, BLOOMING);
 	}
 
 	@Override
