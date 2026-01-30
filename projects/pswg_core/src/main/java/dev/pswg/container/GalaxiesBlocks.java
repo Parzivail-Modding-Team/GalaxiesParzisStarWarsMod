@@ -32,6 +32,8 @@ public class GalaxiesBlocks
 {
 	public static final class Tags
 	{
+		public static final TagKey<Block> BOUNCY = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("bouncy"));
+		public static final TagKey<Block> SOFT = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("soft"));
 		public static final TagKey<Block> BUSH_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("bush_placeable"));
 		public static final TagKey<Block> ARID_PLANT_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("arid_plant_placeable"));
 	}

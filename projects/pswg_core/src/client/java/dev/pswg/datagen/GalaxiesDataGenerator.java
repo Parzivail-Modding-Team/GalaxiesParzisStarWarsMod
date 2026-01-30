@@ -246,6 +246,12 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GalaxiesItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "PSWG - Worldgen Blocks");
 			translationBuilder.add(GalaxiesItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG - Items");
 			translationBuilder.add(GalaxiesItemGroups.FOOD_ITEMS_GROUP_KEY, "PSWG - Food");
+
+			//Tags
+			translationBuilder.add(GalaxiesBlocks.Tags.BOUNCY, "Bouncy");
+			translationBuilder.add(GalaxiesBlocks.Tags.SOFT, "Soft");
+			translationBuilder.add(GalaxiesBlocks.Tags.BUSH_PLACEABLE, "Bush Placeable");
+			translationBuilder.add(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE, "Arid Plant Placeable");
 		}
 
 		public void addDatagenItem(TranslationBuilder translationBuilder, Item item, DataGenItem dataGenItem)
@@ -358,6 +364,21 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.DIRT))
 					.add(blockId(Blocks.PODZOL))
 					.add(blockId(Blocks.COARSE_DIRT));
+			addBlocksToTag(GalaxiesBlocks.Tags.BOUNCY, DGBlockTag.BOUNCY, this);
+			getTagBuilder(GalaxiesBlocks.Tags.BOUNCY)
+					.add(blockId(Blocks.HONEY_BLOCK))
+					.add(blockId(Blocks.SLIME_BLOCK));
+			addBlocksToTag(GalaxiesBlocks.Tags.SOFT, DGBlockTag.SOFT, this);
+			getTagBuilder(GalaxiesBlocks.Tags.SOFT)
+					.addOptionalTag(BlockTags.SNOW.id())
+					.addOptionalTag(BlockTags.BEDS.id())
+					.addOptionalTag(BlockTags.LEAVES.id())
+					.addOptionalTag(BlockTags.WOOL.id())
+					.addOptionalTag(BlockTags.WOOL_CARPETS.id())
+					.add(blockId(Blocks.MOSS_BLOCK))
+					.add(blockId(Blocks.MOSS_CARPET))
+					.add(blockId(Blocks.PALE_MOSS_BLOCK))
+					.add(blockId(Blocks.PALE_MOSS_CARPET));
 		}
 
 		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator)

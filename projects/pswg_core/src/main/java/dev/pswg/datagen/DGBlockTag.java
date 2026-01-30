@@ -23,5 +23,6 @@ public enum DGBlockTag
 	LOGS,
 	LOGS_THAT_BURN,
 	SAND,
+	SOFT,
 	STAIRS
 }

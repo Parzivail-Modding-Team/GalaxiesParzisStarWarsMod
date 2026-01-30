@@ -170,7 +170,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.DETONATES_GRENADE, "Detonates Grenade");
-			translationBuilder.add(GadgetsBlocks.Tags.BOUNCY, "Bouncy");
 			translationBuilder.add(GadgetsBlocks.Tags.INFERNO_CHAR, "Inferno Grenade Char");
 			translationBuilder.add(GadgetsBlocks.Tags.INFERNO_DESTROY, "Inferno Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.GAS_PASS_THROUGH, "Gas Pass Through");
@@ -298,10 +297,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.FIRE))
 					.add(blockId(Blocks.SOUL_FIRE));
 
-			getTagBuilder(GadgetsBlocks.Tags.BOUNCY)
-					.add(blockId(Blocks.HONEY_BLOCK))
-					.add(blockId(Blocks.SLIME_BLOCK));
-
 			getTagBuilder(GadgetsBlocks.Tags.GAS_PASS_THROUGH)
 					.addOptionalTag(BlockTags.LEAVES.id())
 					.add(blockId(Blocks.COPPER_GRATE));
@@ -344,7 +339,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.LEAF_LITTER))
 			;
 
-			addBlocksToTag(GadgetsBlocks.Tags.BOUNCY, DGBlockTag.BOUNCY, this);
 			addBlocksToTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DGBlockTag.DETONATES_GRENADE, this);
 			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_CHAR, DGBlockTag.INFERNO_CHAR, this);
 			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.INFERNO_DESTROY, this);

@@ -1,6 +1,7 @@
 package dev.pswg.entity.grenades;
 
 import dev.pswg.container.GadgetsBlocks;
+import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.entity.mines.TripwireMineEntity;
 import dev.pswg.item.grenades.GrenadeItem;
@@ -187,17 +188,17 @@ public abstract class GrenadeEntity extends ThrownEntity
 	{
 		if (hit.getType() == HitResult.Type.BLOCK)
 		{
-			var velocity = this.getVelocity();
+			Vec3d velocity = this.getVelocity();
 			BlockHitResult blockHit = (BlockHitResult)hit;
 
-			var hitState = this.getEntityWorld().getBlockState(blockHit.getBlockPos());
-			var hardness = hitState.getHardness(getEntityWorld(), blockHit.getBlockPos());
-			var restitution = MathHelper.clamp(0.4 - 0.25 / hardness, 0.1, 1);
-			var blockMultiplier = 1.;
+			BlockState hitState = this.getEntityWorld().getBlockState(blockHit.getBlockPos());
+			double hardness = hitState.getHardness(getEntityWorld(), blockHit.getBlockPos());
+			double restitution = MathHelper.clamp(0.4 - 0.25 / hardness, 0.1, 1);
+			double blockMultiplier = 1;
 
-			if (getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(GadgetsBlocks.Tags.BOUNCY))
+			if (getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(GalaxiesBlocks.Tags.BOUNCY))
 				blockMultiplier = 2.5;
-			if (getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.WOOL) || getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(BlockTags.LEAVES))
+			if (getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(GalaxiesBlocks.Tags.SOFT))
 				blockMultiplier = 0.75;
 
 			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
@@ -208,10 +209,10 @@ public abstract class GrenadeEntity extends ThrownEntity
 				return;
 			}
 
-			var dir = velocity.normalize();
+			Vec3d dir = velocity.normalize();
 
-			var normal = new Vec3d(blockHit.getSide().getUnitVector());
-			var newDir = normal.multiply(2 * normal.dotProduct(dir)).subtract(dir).multiply(-1);
+			Vec3d normal = new Vec3d(blockHit.getSide().getUnitVector());
+			Vec3d newDir = normal.multiply(2 * normal.dotProduct(dir)).subtract(dir).multiply(-1);
 			this.setVelocity(newDir.multiply(velocity.length() * restitution * blockMultiplier));
 			if (Math.abs(getVelocity().length()) > 0.2f)
 				clientYaw = (float)(MathHelper.atan2(getVelocity().y, getVelocity().horizontalLength()) * (double)(180F / (float)Math.PI));

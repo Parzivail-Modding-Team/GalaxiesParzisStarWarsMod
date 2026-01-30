@@ -16,7 +16,6 @@ public class GadgetsBlocks
 	{
 		public static final TagKey<Block> FRAGMENTATION_GRENADE_DESTROY = TagKey.of(RegistryKeys.BLOCK, Gadgets.id("fragmentation_destroy"));
 		public static final TagKey<Block> DETONATES_GRENADE = TagKey.of(RegistryKeys.BLOCK, Gadgets.id("detonates_grenade"));
-		public static final TagKey<Block> BOUNCY = TagKey.of(RegistryKeys.BLOCK, Gadgets.id("bouncy"));
 		public static final TagKey<Block> GAS_PASS_THROUGH = TagKey.of(RegistryKeys.BLOCK, Gadgets.id("gas_pass_through"));
 		public static final TagKey<Block> INFERNO_CHAR = TagKey.of(RegistryKeys.BLOCK, Gadgets.id("inferno_char"));
 		public static final TagKey<Block> INFERNO_DESTROY = TagKey.of(RegistryKeys.BLOCK, Gadgets.id("inferno_destroy"));
