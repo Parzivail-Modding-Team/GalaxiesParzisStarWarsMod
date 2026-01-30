@@ -1,6 +1,5 @@
 package dev.pswg.datagen;
 
-import dev.pswg.Galaxies;
 import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.item.SwgDrinkTintSource;
@@ -180,7 +179,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	{
 		String logKey = getBlockKey(block).toString();
 		BlockStateModelGenerator.LogTexturePool texturePool = generator.createLogTexturePool(block).log(block);
-		if (dataGenBlock.model() == DataGenBlockModel.LogWithWood)
+		if (dataGenBlock.model() == DataGenBlockModel.LOG_WITH_WOOD)
 		{
 			String woodKey = logKey.substring(0, logKey.indexOf("_log")) + "_wood";
 			Block woodBlock = Registries.BLOCK.get(Identifier.of(woodKey));
@@ -192,8 +191,8 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	{
 		switch (dataGenBlock.rotation())
 		{
-			case Default -> generator.registerSingleton(block, modelFactory);
-			case RandomRotationX ->
+			case DEFAULT -> generator.registerSingleton(block, modelFactory);
+			case RANDOM_ROTATION_X ->
 			{
 				Identifier id = modelFactory.upload(block, generator.modelCollector);
 				var blockStateSupplier = MultipartBlockModelDefinitionCreator.create(block).with(new WeightedVariant(Pool.of(
@@ -204,7 +203,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 				)));
 				generator.blockStateCollector.accept(blockStateSupplier);
 			}
-			case AxisRotated ->
+			case AXIS_ROTATED ->
 			{
 				Identifier id = modelFactory.upload(block, generator.modelCollector);
 				var blockStateSupplier = VariantsBlockModelDefinitionCreator.of(block, createWeightedVariant(id)).apply(BlockStateVariantMap.operations(Properties.AXIS)

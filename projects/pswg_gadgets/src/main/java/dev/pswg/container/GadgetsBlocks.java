@@ -22,19 +22,19 @@ public class GadgetsBlocks
 		public static final TagKey<Block> INFERNO_DESTROY = TagKey.of(RegistryKeys.BLOCK, Gadgets.id("inferno_destroy"));
 	}
 
-	@DataGenBlock(model = DataGenBlockModel.None)
+	@DataGenBlock(model = DataGenBlockModel.NONE)
 	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.block(Gadgets.id("thermal_detonator_block"), ThermalDetonatorBlock::new, Block.Settings.create());
-	@DataGenBlock(model = DataGenBlockModel.None)
+	@DataGenBlock(model = DataGenBlockModel.NONE)
 	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.block(Gadgets.id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, Block.Settings.create());
 
 	@DataGenBlock
 	public static final FertileDirt FERTILE_DIRT_BLOCK = Registrar.block(Gadgets.id("fertile_dirt"), FertileDirt::new, Block.Settings.create().ticksRandomly());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block CHARRED_BLOCK = Registrar.block(Gadgets.id("charred_block"), Block::new, AbstractBlock.Settings.create().dropsNothing().breakInstantly());
 
-	@DataGenBlock(model = DataGenBlockModel.None)
+	@DataGenBlock(model = DataGenBlockModel.NONE)
 	public static final Block SCRAPPING_TABLE_BLOCK = Registrar.block(Gadgets.id("scrapping_table"), ScrappingTableBlock::new, AbstractBlock.Settings.create());
-	@DataGenBlock(model = DataGenBlockModel.None)
+	@DataGenBlock(model = DataGenBlockModel.NONE)
 	public static final Block MIXER_BLOCK = Registrar.block(Gadgets.id("mixer"), MixerBlock::new, AbstractBlock.Settings.create());
 
 	public static void register()

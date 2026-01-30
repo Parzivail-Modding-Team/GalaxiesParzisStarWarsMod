@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ClientBlockRegistryData
 {
-	BlockRenderLayer renderLayer() default BlockRenderLayer.Default;
+	BlockRenderLayer renderLayer() default BlockRenderLayer.DEFAULT;
 }

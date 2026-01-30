@@ -10,9 +10,10 @@ import java.lang.annotation.Target;
 public @interface DataGenBlock
 {
 	boolean addItemTranslation() default true;
-	DataGenBlockModel model() default DataGenBlockModel.CubeAll;
 
-	DataGenItemGroup itemGroup() default DataGenItemGroup.ConstructionBlock;
+	DataGenBlockModel model() default DataGenBlockModel.CUBE_ALL;
+
+	DataGenItemGroup itemGroup() default DataGenItemGroup.CONSTRUCTION_BLOCK;
 
 	String langOverride() default "";
 
@@ -20,5 +21,6 @@ public @interface DataGenBlock
 
 	DGBlockTag[] blockTags() default {};
 	DGItemTag[] itemTags() default {};
-	DGBlockRotation rotation() default DGBlockRotation.Default;
+
+	DGBlockRotation rotation() default DGBlockRotation.DEFAULT;
 }

@@ -12,7 +12,6 @@ import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
 import dev.pswg.autoreg.AutoGenerateUtil;
-import dev.pswg.item.SwgDrinkTintSource;
 import dev.pswg.util.GadgetsGenUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -23,12 +22,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.data.*;
-import net.minecraft.client.render.item.tint.ConstantTintSource;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.client.render.model.json.ModelVariantOperator;
-import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
@@ -43,16 +37,10 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Weighted;
-import net.minecraft.util.math.AxisRotation;
-import net.minecraft.util.math.Direction;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -99,22 +87,22 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			switch (dataGenBlock.model())
 			{
-				case CubeAll -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.CUBE_ALL, generator);
+				case CUBE_ALL -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.CUBE_ALL, generator);
 				case Accumulating -> registerAccumulatingBlock(block, generator);
-				case Column -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
-				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
-				case Custom ->
+				case COLUMN -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
+				case CROSS -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
+				case CUSTOM ->
 				{
 					switch (dataGenBlock.dataGenModelKey())
 					{
 						case null, default:
 					}
 				}
-				case JaporLeaves -> registerJaporLeaves(block, generator);
-				case Log, LogWithWood -> registerLog(block, dataGenBlock, generator);
-				case LightingPanel -> registerLightingPanel(block, generator);
-				case Slab -> registerVerticalSlab(block, generator);
-				case Stairs -> registerStairs(block, generator);
+				case JAPOR_LEAVES -> registerJaporLeaves(block, generator);
+				case LOG, LOG_WITH_WOOD -> registerLog(block, dataGenBlock, generator);
+				case LIGHTING_PANEL -> registerLightingPanel(block, generator);
+				case SLAB -> registerVerticalSlab(block, generator);
+				case STAIRS -> registerStairs(block, generator);
 			}
 		}
 
@@ -133,16 +121,16 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		public void registerItem(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
 		{
-			if (dataGenItem.model() != ItemModel.none)
+			if (dataGenItem.model() != ItemModel.NONE)
 			{
 				if (dataGenItem.wiz())
 					register(generator, item, Galaxies.id("item/wizard"), Models.GENERATED);
 				else
 					switch (dataGenItem.model())
 					{
-						case generated -> register(generator, item, createItemKey(item, dataGenItem), Models.GENERATED);
-						case handheld -> register(generator, item, createItemKey(item, dataGenItem), Models.HANDHELD);
-						case drink -> registerDrink(generator, item, dataGenItem);
+						case GENERATED -> register(generator, item, createItemKey(item, dataGenItem), Models.GENERATED);
+						case HANDHELD -> register(generator, item, createItemKey(item, dataGenItem), Models.HANDHELD);
+						case DRINK -> registerDrink(generator, item, dataGenItem);
 					}
 			}
 		}
@@ -241,10 +229,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.Grenade, this);
-			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.Mine, this);
-			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DGItemTag.MixableFood, this);
-			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
+			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.GRENADE, this);
+			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.MINE, this);
+			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DGItemTag.MIXABLE_FOOD, this);
+			addItemsToTag(ItemTags.LEAVES, DGItemTag.LEAVES, this);
 
 			getTagBuilder(GadgetsItems.Tags.MIXER_FOOD_TAG)
 					.add(itemId(Items.APPLE))
@@ -356,20 +344,20 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.LEAF_LITTER))
 			;
 
-			addBlocksToTag(GadgetsBlocks.Tags.BOUNCY, DGBlockTag.Bouncy, this);
-			addBlocksToTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DGBlockTag.DetonatesGrenade, this);
-			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_CHAR, DGBlockTag.InfernoChar, this);
-			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.InfernoDestroy, this);
-			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DGBlockTag.GasPassThrough, this);
-			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DGBlockTag.FragmentationGrenadeDestroy, this);
-			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.Leaves, this);
-			addBlocksToTag(BlockTags.LOGS, DGBlockTag.Logs, this);
-			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AxeMineable, this);
-			addBlocksToTag(BlockTags.PICKAXE_MINEABLE, DGBlockTag.PickaxeMineable, this);
-			addBlocksToTag(BlockTags.SAND, DGBlockTag.Sand, this);
-			addBlocksToTag(BlockTags.SHOVEL_MINEABLE, DGBlockTag.ShovelMineable, this);
-			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LogsThatBurn, this);
-			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.Stairs, this);
+			addBlocksToTag(GadgetsBlocks.Tags.BOUNCY, DGBlockTag.BOUNCY, this);
+			addBlocksToTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DGBlockTag.DETONATES_GRENADE, this);
+			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_CHAR, DGBlockTag.INFERNO_CHAR, this);
+			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.INFERNO_DESTROY, this);
+			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DGBlockTag.GAS_PASS_THROUGH, this);
+			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DGBlockTag.FRAGMENTATION_GRENADE_DESTROY, this);
+			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.LEAVES, this);
+			addBlocksToTag(BlockTags.LOGS, DGBlockTag.LOGS, this);
+			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.PICKAXE_MINEABLE, DGBlockTag.PICKAXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.SAND, DGBlockTag.SAND, this);
+			addBlocksToTag(BlockTags.SHOVEL_MINEABLE, DGBlockTag.SHOVEL_MINEABLE, this);
+			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LOGS_THAT_BURN, this);
+			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.STAIRS, this);
 
 
 		}

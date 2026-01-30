@@ -27,7 +27,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.particle.ParticleRenderer;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
-import net.minecraft.client.render.item.tint.TintSourceTypes;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.Pair;
@@ -83,9 +82,9 @@ public class GadgetsClient implements GalaxiesClientAddon
 		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
 			switch (clientData.renderLayer())
 			{
-				case Transparent:
+				case TRANSPARENT:
 					BlockRenderLayerMap.putBlock(block, BlockRenderLayer.TRANSLUCENT);
-				case CutoutMipped:
+				case CUTOUT_MIPPED:
 					BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT_MIPPED);
 			}
 		});

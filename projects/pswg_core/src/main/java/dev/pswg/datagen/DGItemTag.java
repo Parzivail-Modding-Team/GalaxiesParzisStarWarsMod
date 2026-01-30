@@ -2,13 +2,13 @@ package dev.pswg.datagen;
 
 public enum DGItemTag
 {
-	TrinketsChestBack,
-	Leaves,
-	Logs,
-	LogsThatBurn,
-	Sand,
-	Grenade,
-	Mine,
-	DrinkContainer,
-	MixableFood
+	TRINKETS_CHEST_BACK,
+	LEAVES,
+	LOGS,
+	LOGS_THAT_BURN,
+	SAND,
+	GRENADE,
+	MINE,
+	DRINK_CONTAINER,
+	MIXABLE_FOOD
 }

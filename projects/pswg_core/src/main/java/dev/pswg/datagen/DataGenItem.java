@@ -12,9 +12,9 @@ public @interface DataGenItem
 	boolean wiz() default false;
 	DGItemTag[] itemTags() default {};
 
-	ItemModel model() default ItemModel.generated;
+	ItemModel model() default ItemModel.GENERATED;
 
-	DataGenItemGroup itemGroup() default DataGenItemGroup.Items;
+	DataGenItemGroup itemGroup() default DataGenItemGroup.ITEMS;
 
 	String langOverride() default "";
 

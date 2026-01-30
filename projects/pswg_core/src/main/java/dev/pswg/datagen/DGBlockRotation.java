@@ -2,8 +2,8 @@ package dev.pswg.datagen;
 
 public enum DGBlockRotation
 {
-	Default,
-	AxisRotated,
-	RandomRotationX
+	DEFAULT,
+	AXIS_ROTATED,
+	RANDOM_ROTATION_X
 
 }

@@ -12,7 +12,6 @@ import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
-import dev.pswg.item.SwgDrinkTintSource;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -21,12 +20,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.data.*;
-import net.minecraft.client.render.item.tint.ConstantTintSource;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.client.render.model.json.ModelVariantOperator;
-import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
@@ -37,14 +31,9 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Weighted;
-import net.minecraft.util.math.AxisRotation;
-import net.minecraft.util.math.Direction;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -96,37 +85,37 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 					registerDataGenBlock(block, dataGenBlock, blockStateModelGenerator);
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, ReducedDryingRuiningStoneProducts.class, (reducedDryingRuiningStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
+				if (dataGenBlock.model() != DataGenBlockModel.NONE)
 				{
 					registerReducedDryingRuinedStoneProducts(reducedDryingRuiningStoneProducts, blockStateModelGenerator);
 				}
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, ReducedDryingStoneProducts.class, (reducedDryingStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
+				if (dataGenBlock.model() != DataGenBlockModel.NONE)
 				{
 					registerReducedDryingStoneProducts(reducedDryingStoneProducts, blockStateModelGenerator);
 				}
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, ReducedStoneProducts.class, (reducedStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
+				if (dataGenBlock.model() != DataGenBlockModel.NONE)
 				{
 					registerReducedStoneProducts(reducedStoneProducts, blockStateModelGenerator);
 				}
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, StoneProducts.class, (stoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
+				if (dataGenBlock.model() != DataGenBlockModel.NONE)
 				{
 					registerStoneProducts(stoneProducts, blockStateModelGenerator);
 				}
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, WoodProducts.class, (woodProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
+				if (dataGenBlock.model() != DataGenBlockModel.NONE)
 				{
 					registerWoodProducts(woodProducts, blockStateModelGenerator);
 				}
 			});
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, DyedStoneProducts.class, (dyedStoneProducts, dataGenBlock) -> {
-				if (dataGenBlock.model() != DataGenBlockModel.None)
+				if (dataGenBlock.model() != DataGenBlockModel.NONE)
 				{
 					for (StoneProducts stoneProducts : dyedStoneProducts.values())
 						registerStoneProducts(stoneProducts, blockStateModelGenerator);
@@ -137,14 +126,14 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		{
 			switch (dataGenBlock.model())
 			{
-				case CubeAll -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.CUBE_ALL, generator);
+				case CUBE_ALL -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.CUBE_ALL, generator);
 				case Accumulating -> registerAccumulatingBlock(block, generator);
-				case Column -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
-				case Cross -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
-				case CrossAge3 -> registerCrossAge3(block, generator);
-				case CrossAge3Blooming -> registerCrossAge3Blooming(block, generator);
-				case CropAge2 -> generator.registerCrop(block, Properties.AGE_2, 0, 1, 2);
-				case Custom ->
+				case COLUMN -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
+				case CROSS -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
+				case CROSS_AGE_3 -> registerCrossAge3(block, generator);
+				case CROSS_AGE_3_BLOOMING -> registerCrossAge3Blooming(block, generator);
+				case CROP_AGE_2 -> generator.registerCrop(block, Properties.AGE_2, 0, 1, 2);
+				case CUSTOM ->
 				{
 					switch (dataGenBlock.dataGenModelKey())
 					{
@@ -153,11 +142,11 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 						case null, default:
 					}
 				}
-				case JaporLeaves -> registerJaporLeaves(block, generator);
-				case Log, LogWithWood -> registerLog(block, dataGenBlock, generator);
-				case LightingPanel -> registerLightingPanel(block, generator);
-				case Slab -> registerVerticalSlab(block, generator);
-				case Stairs -> registerStairs(block, generator);
+				case JAPOR_LEAVES -> registerJaporLeaves(block, generator);
+				case LOG, LOG_WITH_WOOD -> registerLog(block, dataGenBlock, generator);
+				case LIGHTING_PANEL -> registerLightingPanel(block, generator);
+				case SLAB -> registerVerticalSlab(block, generator);
+				case STAIRS -> registerStairs(block, generator);
 			}
 		}
 
@@ -183,16 +172,16 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 		public void registerItem(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
 		{
-			if (dataGenItem.model() != ItemModel.none)
+			if (dataGenItem.model() != ItemModel.NONE)
 			{
 				if (dataGenItem.wiz())
 					GalaxiesModelProvider.register(generator, item, Galaxies.id("item/wizard"), Models.GENERATED);
 				else
 					switch (dataGenItem.model())
 					{
-						case generated -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), Models.GENERATED);
-						case handheld -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), Models.HANDHELD);
-						case drink -> registerDrink(generator, item, dataGenItem);
+						case GENERATED -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), Models.GENERATED);
+						case HANDHELD -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), Models.HANDHELD);
+						case DRINK -> registerDrink(generator, item, dataGenItem);
 					}
 			}
 		}
@@ -303,7 +292,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			addItemsToTag(ItemTags.LEAVES, DGItemTag.Leaves, this);
+			addItemsToTag(ItemTags.LEAVES, DGItemTag.LEAVES, this);
 
 			getTagBuilder(GalaxiesItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
 					.add(itemId(GalaxiesItems.BESKAR_INGOT));
@@ -346,22 +335,22 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 		{
-			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.Leaves, this);
-			addBlocksToTag(BlockTags.LOGS, DGBlockTag.Logs, this);
-			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AxeMineable, this);
-			addBlocksToTag(BlockTags.PICKAXE_MINEABLE, DGBlockTag.PickaxeMineable, this);
-			addBlocksToTag(BlockTags.SAND, DGBlockTag.Sand, this);
-			addBlocksToTag(BlockTags.SHOVEL_MINEABLE, DGBlockTag.ShovelMineable, this);
-			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LogsThatBurn, this);
-			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.Stairs, this);
-			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DGBlockTag.BushPlaceable, this);
+			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.LEAVES, this);
+			addBlocksToTag(BlockTags.LOGS, DGBlockTag.LOGS, this);
+			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.PICKAXE_MINEABLE, DGBlockTag.PICKAXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.SAND, DGBlockTag.SAND, this);
+			addBlocksToTag(BlockTags.SHOVEL_MINEABLE, DGBlockTag.SHOVEL_MINEABLE, this);
+			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LOGS_THAT_BURN, this);
+			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.STAIRS, this);
+			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DGBlockTag.BUSH_PLACEABLE, this);
 			getTagBuilder(GalaxiesBlocks.Tags.BUSH_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.id())
 					.add(blockId(Blocks.GRASS_BLOCK))
 					.add(blockId(Blocks.DIRT))
 					.add(blockId(Blocks.PODZOL))
 					.add(blockId(Blocks.COARSE_DIRT));
-			addBlocksToTag(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE, DGBlockTag.AridPlantPlaceable, this);
+			addBlocksToTag(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE, DGBlockTag.ARID_PLANT_PLACEABLE, this);
 			getTagBuilder(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.id())
 					.addOptionalTag(BlockTags.TERRACOTTA.id())
