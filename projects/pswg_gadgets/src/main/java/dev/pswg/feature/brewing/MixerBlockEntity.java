@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
-import dev.pswg.packet.MixerSyncS2CPayload;
+import dev.pswg.networking.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;

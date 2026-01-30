@@ -1,7 +1,7 @@
 package dev.pswg.particles.renderers;
 
 import dev.pswg.particles.FragmentationGrenadeWaveParticle;
-import dev.pswg.particles.GadgetsRenderLayers;
+import dev.pswg.GalaxiesRenderLayers;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.ParticleRenderer;
 import net.minecraft.client.render.*;
@@ -50,7 +50,7 @@ public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<F
 			for (State state : this.states)
 			{
 				var matrix = state.matrices;
-				orderedRenderCommandQueue.submitCustom(matrix, GadgetsRenderLayers.PSWG_CUSTOM, (matricesEntry, vertexConsumer) -> {
+				orderedRenderCommandQueue.submitCustom(matrix, GalaxiesRenderLayers.GALAXIES_TRANSLUCENT, (matricesEntry, vertexConsumer) -> {
 					float xSize = state.xScale * state.scale;
 					float ySize = state.yScale * state.scale;
 					int alpha = (int)(state.alpha * 255);

@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsRecipeSerializers;
 import dev.pswg.container.GadgetsRecipeTypes;
-import dev.pswg.packet.GadgetsPacketUtil;
+import dev.pswg.util.GalaxiesPacketUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -148,7 +148,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 					                    )
 					                    .apply(instance, recipeFactory::create)
 			);
-			this.packetCodec = GadgetsPacketUtil.quintuple(
+			this.packetCodec = GalaxiesPacketUtil.quintuple(
 					Ingredient.PACKET_CODEC,
 					ScrappingTableRecipe::getTool,
 					Ingredient.PACKET_CODEC,

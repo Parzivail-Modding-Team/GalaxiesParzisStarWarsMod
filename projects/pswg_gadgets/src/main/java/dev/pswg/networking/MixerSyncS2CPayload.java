@@ -1,4 +1,4 @@
-package dev.pswg.packet;
+package dev.pswg.networking;
 
 import dev.pswg.Gadgets;
 import net.minecraft.entity.effect.StatusEffectInstance;

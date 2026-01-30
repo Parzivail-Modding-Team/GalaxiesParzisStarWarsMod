@@ -8,8 +8,8 @@ import dev.pswg.container.GadgetsScreenHandlerTypes;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.feature.brewing.MixerScreenHandler;
 import dev.pswg.models.*;
-import dev.pswg.packet.MixerSyncS2CPayload;
-import dev.pswg.packet.PreciseVelocityParticleS2CPayload;
+import dev.pswg.networking.MixerSyncS2CPayload;
+import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particles.*;
 import dev.pswg.renderer.grenades.*;
 import dev.pswg.renderer.mines.PressureMineEntityRenderer;
@@ -66,12 +66,11 @@ public class GadgetsClient implements GalaxiesClientAddon
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.FRAGMENTATION_GRENADE_WAVE_PARTICLE, FragmentationGrenadeWaveParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SMOKE_PARTICLE, SmokeParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.NERVE_GAS_PARTICLE, NerveGasParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);
+
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, TripwireLaserParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE, InfernoScorchParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.DENSE_INFERNO_SCORCH_PARTICLE, InfernoScorchParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SHORT_FLAME_PARTICLE, ShortFlameParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.SMALL_SHORT_FLAME_PARTICLE, ShortFlameParticle.SmallFactory::new);
+
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.LASER_CUT_PARTICLE, LaserCutParticle.Factory::new);
 
 		HandledScreens.register(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, ScrappingTableScreen::new);
@@ -98,17 +97,6 @@ public class GadgetsClient implements GalaxiesClientAddon
 			}
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(PreciseVelocityParticleS2CPayload.ID, (preciseVelocityParticleS2CPayload, context) -> {
-			double x = preciseVelocityParticleS2CPayload.posVector().x;
-			double y = preciseVelocityParticleS2CPayload.posVector().y;
-			double z = preciseVelocityParticleS2CPayload.posVector().z;
-			double vX = preciseVelocityParticleS2CPayload.velocityVector().x;
-			double vY = preciseVelocityParticleS2CPayload.velocityVector().y;
-			double vZ = preciseVelocityParticleS2CPayload.velocityVector().z;
-			ParticleEffect particleEffect = preciseVelocityParticleS2CPayload.particleEffect();
-			context.client().particleManager.addParticle(particleEffect, x, y, z, vX, vY, vZ);
-		});
-
 		MixerScreen.ICON_MAP.put(StatusEffects.ABSORPTION, new Pair<>(126, 127));
 		MixerScreen.ICON_MAP.put(StatusEffects.DOLPHINS_GRACE, new Pair<>(350, 161));
 		MixerScreen.ICON_MAP.put(StatusEffects.FIRE_RESISTANCE, new Pair<>(336, 33));
@@ -124,7 +112,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 		MixerScreen.ICON_MAP.put(StatusEffects.SPEED, new Pair<>(382, 273));
 		MixerScreen.ICON_MAP.put(StatusEffects.STRENGTH, new Pair<>(448, 448));
 
-		GadgetsRenderLayers.init();
+		GalaxiesRenderLayers.init();
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

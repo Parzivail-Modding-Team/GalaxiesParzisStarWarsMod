@@ -1,6 +1,6 @@
-package dev.pswg.packet;
+package dev.pswg.networking;
 
-import dev.pswg.Gadgets;
+import dev.pswg.Galaxies;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -11,7 +11,7 @@ import net.minecraft.util.math.Vec3d;
 
 public record PreciseVelocityParticleS2CPayload(ParticleEffect particleEffect, Vec3d posVector, Vec3d velocityVector) implements CustomPayload
 {
-	public static final Identifier PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID = Gadgets.id("precise_velocity_particle");
+	public static final Identifier PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID = Galaxies.id("precise_velocity_particle");
 	public static final CustomPayload.Id<PreciseVelocityParticleS2CPayload> ID = new CustomPayload.Id<>(PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID);
 	public static final PacketCodec<RegistryByteBuf, PreciseVelocityParticleS2CPayload> CODEC = PacketCodec.of(PreciseVelocityParticleS2CPayload::toPacket, PreciseVelocityParticleS2CPayload::fromPacket);
 

@@ -1,5 +1,6 @@
 package dev.pswg.particles;
 
+import dev.pswg.GalaxiesRenderLayers;
 import dev.pswg.entity.gas.GasEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -109,7 +110,7 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 	{
 		MinecraftClient mc = MinecraftClient.getInstance();
 
-		VertexConsumer v = mc.getBufferBuilders().getEffectVertexConsumers().getBuffer(GadgetsRenderLayers.PSWG_CUSTOM);
+		VertexConsumer v = mc.getBufferBuilders().getEffectVertexConsumers().getBuffer(GalaxiesRenderLayers.GALAXIES_TRANSLUCENT);
 
 		Vec3d vec3d = camera.getPos();
 		float f = (float)(MathHelper.lerp(tickProgress, this.lastX, this.x) - vec3d.getX());

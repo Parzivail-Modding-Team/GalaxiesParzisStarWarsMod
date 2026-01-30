@@ -1,6 +1,7 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
+import dev.pswg.container.GalaxiesParticleTypes;
 import dev.pswg.data.BinaryCodecDataLoader;
 import dev.pswg.data.IdentifierUtil;
 import dev.pswg.input.GalaxiesKeybinds;
@@ -8,15 +9,20 @@ import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
 import dev.pswg.item.SwgDrinkTintSource;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
+import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
+import dev.pswg.particle.ShortFlameParticle;
+import dev.pswg.particle.SmallFlashParticle;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.item.tint.TintSourceTypes;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -97,11 +103,27 @@ public class GalaxiesClient implements ClientModInitializer
 			        .ifPresent(handler -> handler.onEntitySpawn(galaxiesEntitySpawnS2CPacket));
 		});
 
+		ClientPlayNetworking.registerGlobalReceiver(PreciseVelocityParticleS2CPayload.ID, (preciseVelocityParticleS2CPayload, context) -> {
+			double x = preciseVelocityParticleS2CPayload.posVector().x;
+			double y = preciseVelocityParticleS2CPayload.posVector().y;
+			double z = preciseVelocityParticleS2CPayload.posVector().z;
+			double vX = preciseVelocityParticleS2CPayload.velocityVector().x;
+			double vY = preciseVelocityParticleS2CPayload.velocityVector().y;
+			double vZ = preciseVelocityParticleS2CPayload.velocityVector().z;
+			ParticleEffect particleEffect = preciseVelocityParticleS2CPayload.particleEffect();
+			context.client().particleManager.addParticle(particleEffect, x, y, z, vX, vY, vZ);
+		});
+
 		// Register the quad buffer loader
 		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(GQB_LOADER.getId(), GQB_LOADER);
 		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).addReloaderOrdering(GQB_LOADER.getId(), ResourceReloaderKeys.Client.MODELS);
 
 		TintSourceTypes.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);
+
+		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);
+
+		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SHORT_FLAME_PARTICLE, ShortFlameParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_SHORT_FLAME_PARTICLE, ShortFlameParticle.SmallFactory::new);
 
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);

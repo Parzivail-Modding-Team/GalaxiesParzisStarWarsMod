@@ -1,20 +1,17 @@
 package dev.pswg.particles;
 
-import net.minecraft.client.gl.RenderPipelines;
+import dev.pswg.GalaxiesRenderLayers;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.ParticleRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Colors;
 import net.minecraft.util.math.ColorHelper;
 
 import java.util.List;
-
-import static net.minecraft.client.render.RenderPhase.*;
 
 public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<FragmentationGrenadeWaveParticle>
 {
@@ -52,7 +49,7 @@ public class FragmentationGrenadeWaveParticleRenderer extends ParticleRenderer<F
 			for (FragmentationGrenadeWaveParticleRenderer.State state : this.states)
 			{
 				var matrix = state.matrices;
-				orderedRenderCommandQueue.submitCustom(matrix, GadgetsRenderLayers.PSWG_CUSTOM, (matricesEntry, vertexConsumer) -> {
+				orderedRenderCommandQueue.submitCustom(matrix, GalaxiesRenderLayers.GALAXIES_TRANSLUCENT, (matricesEntry, vertexConsumer) -> {
 					float xSize = state.xScale * state.scale;
 					float ySize = state.yScale * state.scale;
 					int alpha = (int)(state.alpha * 255);

@@ -1,12 +1,8 @@
-package dev.pswg.particles;
+package dev.pswg.particle;
 
-import dev.pswg.entity.gas.SmokeGasEntity;
-import dev.pswg.particle.GasParticleEffect;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
