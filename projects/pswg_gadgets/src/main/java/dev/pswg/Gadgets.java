@@ -65,10 +65,6 @@ public final class Gadgets implements GalaxiesAddon
 		GadgetsRecipeTypes.register();
 		GadgetsRecipeSerializers.register();
 		GadgetsItemGroups.register();
-		GalaxiesStructurePieces.register();
-		GalaxiesStructureTypes.register();
-		GalaxiesStructureKeys.register();
-		GalaxiesLootTables.register();
 
 		MixerFoodColors.init();
 		MixerBrewingPaths.init();
