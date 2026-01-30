@@ -1,6 +1,5 @@
 package dev.pswg.particles;
 
-import dev.pswg.PswgGadgetsRenderLayers;
 import dev.pswg.entity.gas.GasEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -108,10 +107,9 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 	@Override
 	protected void render(BillboardParticleSubmittable submittable, Camera camera, Quaternionf rotation, float tickProgress)
 	{
-		var texture = this.sprite.getAtlasId();
-		var mc = MinecraftClient.getInstance();
+		MinecraftClient mc = MinecraftClient.getInstance();
 
-		var v = mc.getBufferBuilders().getEffectVertexConsumers().getBuffer(PswgGadgetsRenderLayers.pswgParticle(texture, true));
+		VertexConsumer v = mc.getBufferBuilders().getEffectVertexConsumers().getBuffer(GadgetsRenderLayers.PSWG_CUSTOM);
 
 		Vec3d vec3d = camera.getPos();
 		float f = (float)(MathHelper.lerp(tickProgress, this.lastX, this.x) - vec3d.getX());
@@ -152,7 +150,6 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 		 .texture(k, n)
 		 .color(this.red, this.green, this.blue, this.alpha)
 		 .light(o);
-		//super.render(submittable, camera, rotation, tickProgress);
 	}
 
 	@Override
@@ -170,7 +167,6 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 		lastY = y;
 		lastZ = z;
 		age++;
-		float ageCoeficient = gasEntity != null ? (float)gasEntity.MAX_AGE / maxAge : 1;
 		float inverseAgeCoeficient = gasEntity != null ? (float)maxAge / gasEntity.MAX_AGE : 1;
 		if (alpha < 0.1f || minConcentration > blockConcentration)
 		{
@@ -180,16 +176,11 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 		if (age <= 250 * inverseAgeCoeficient)
 		{
 			alpha = age / (250 * inverseAgeCoeficient) * 0.25f * alphaScaling + 0.1f;
-			//scale = growthSpeed * ageCoeficient * age + originalScale;
 		}
 
 		if (age >= 400 * inverseAgeCoeficient)
 		{
 			alpha = (0.1f + 0.25f * alphaScaling) - (0.25f * alphaScaling * ((age - (400 * inverseAgeCoeficient)) / (600 * inverseAgeCoeficient)));
-		}
-		if (age >= 600 * inverseAgeCoeficient)
-		{
-			//scale = maxScale - (shrinkSpeed * ageCoeficient * (age - 600 * inverseAgeCoeficient));
 		}
 		if (age <= 500 * inverseAgeCoeficient)
 		{
