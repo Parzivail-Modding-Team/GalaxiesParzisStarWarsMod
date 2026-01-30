@@ -58,13 +58,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 			if (getEntityWorld() instanceof ServerWorld serverWorld)
 			{
 				serverWorld.spawnParticles(GadgetsParticleTypes.FRAGMENTATION_GRENADE_WAVE_PARTICLE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
-				var passedData = new PacketByteBuf(Unpooled.buffer());
-				passedData.writeBoolean(true);
-				passedData.writeInt(getId());
-				//for (var player : PlayerLookup.tracking((ServerWorld)getEntityWorld(), this.getBlockPos()))
-				//	ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
-
-
 			}
 			IS_EXPLODING = true;
 
@@ -110,16 +103,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 
 		if (EXPLOSION_TICK == 6)
 		{
-			/*if (!getEntityWorld().isClient)
-			{
-				var passedData = new PacketByteBuf(Unpooled.buffer());
-				passedData.writeBoolean(false);
-				PacketByteBufHelper.writeVec3d(passedData, getPos());
-				passedData.writeInt(getId());
-				passedData.writeBoolean(COLLISION_BELOW);
-				for (var player : PlayerLookup.tracking((ServerWorld)getEntityWorld(), this.getBlockPos()))
-					ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
-			}*/
 			List<LivingEntity> entities = getEntityWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> true);
 			for (LivingEntity entity : entities)
 			{
