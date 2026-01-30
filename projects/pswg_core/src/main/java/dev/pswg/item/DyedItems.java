@@ -1,6 +1,6 @@
 package dev.pswg.item;
 
-import dev.pswg.block.Dyed;
+import dev.pswg.block.collection.Dyed;
 import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
 

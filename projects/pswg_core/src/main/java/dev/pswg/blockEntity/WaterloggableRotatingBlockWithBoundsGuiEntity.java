@@ -1,6 +1,6 @@
 package dev.pswg.blockEntity;
 
-import dev.pswg.block.VoxelShapeUtil;
+import dev.pswg.util.VoxelShapeUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;

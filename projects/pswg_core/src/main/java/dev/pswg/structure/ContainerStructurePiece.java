@@ -3,7 +3,7 @@ package dev.pswg.structure;
 import dev.pswg.Galaxies;
 import dev.pswg.container.GalaxiesLootTables;
 import dev.pswg.container.GalaxiesBlocks;
-import dev.pswg.container.structure.GalaxiesStructurePieces;
+import dev.pswg.container.worldgen.GalaxiesStructurePieces;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.LootableContainerBlockEntity;

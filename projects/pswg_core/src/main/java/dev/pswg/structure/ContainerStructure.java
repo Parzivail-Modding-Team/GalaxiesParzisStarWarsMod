@@ -1,7 +1,7 @@
 package dev.pswg.structure;
 
 import com.mojang.serialization.MapCodec;
-import dev.pswg.container.structure.GalaxiesStructureTypes;
+import dev.pswg.container.worldgen.GalaxiesStructureTypes;
 import net.minecraft.structure.StructurePiecesCollector;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;

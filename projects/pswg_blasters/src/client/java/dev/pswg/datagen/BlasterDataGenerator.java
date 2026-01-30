@@ -240,7 +240,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	{
 		public ModelGenerator(FabricDataOutput output)
 		{
-			super(output);
+			super(output, Blasters.MODID);
 		}
 
 		@Override

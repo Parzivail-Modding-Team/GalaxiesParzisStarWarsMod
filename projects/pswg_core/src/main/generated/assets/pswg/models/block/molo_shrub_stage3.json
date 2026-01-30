@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "pswg:block/molo_shrub_stage3"
+  }
+}

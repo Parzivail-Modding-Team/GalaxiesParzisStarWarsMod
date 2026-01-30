@@ -1,7 +1,7 @@
 package dev.pswg.util;
 
 import dev.pswg.autoreg.AutoGenerateUtil;
-import dev.pswg.block.*;
+import dev.pswg.block.collection.*;
 import dev.pswg.container.GadgetsBlocks;
 import net.minecraft.block.Block;
 

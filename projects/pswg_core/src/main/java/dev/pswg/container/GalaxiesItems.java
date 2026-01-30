@@ -12,6 +12,7 @@ import dev.pswg.item.DoorInsertItem;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
 import dev.pswg.registry.Registrar;
+import net.minecraft.block.Block;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ConsumableComponent;
@@ -20,10 +21,7 @@ import net.minecraft.component.type.FoodComponent;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.HoeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ShovelItem;
+import net.minecraft.item.*;
 import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.ArmorMaterials;
@@ -334,10 +332,9 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item SALT_PILE = registerSimpleItem("salt_pile");
 
-	// TODO: ADD CHASUKA SEEDS
-	// @RegistryName("chasuka_seeds")
-	//		@TarkinItem
-	//		public static final Item ChasukaSeeds = new AliasedBlockItem(SwgBlocks.Plant.Chasuka, new Item.Settings());
+	/// SEEDS
+	@DataGenItem(model = ItemModel.none)
+	public static final Item CHASUKA_SEEDS = registerBlockItem("chasuka_seeds", GalaxiesBlocks.CHASUKA, new Item.Settings().useItemPrefixedTranslationKey());
 
 	/// FOOD PREP
 
@@ -523,6 +520,11 @@ public class GalaxiesItems
 	public static Item registerSimpleItem(String key, Item.Settings settings)
 	{
 		return Registrar.item(Galaxies.id(key), Item::new, settings);
+	}
+
+	public static BlockItem registerBlockItem(String key, Block block, Item.Settings settings)
+	{
+		return Registrar.item(Galaxies.id(key), itemSettings -> new BlockItem(block, itemSettings), settings);
 	}
 
 	public static Item registerDefaultPotionItem(String key, Item.Settings settings)

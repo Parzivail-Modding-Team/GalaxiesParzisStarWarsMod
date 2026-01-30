@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataGenBlock
 {
+	boolean addItemTranslation() default true;
 	DataGenBlockModel model() default DataGenBlockModel.CubeAll;
 
 	DataGenItemGroup itemGroup() default DataGenItemGroup.ConstructionBlock;
@@ -17,7 +18,7 @@ public @interface DataGenBlock
 
 	String dataGenModelKey() default "";
 
-	DGBlockTag[] tags() default {};
+	DGBlockTag[] blockTags() default {};
 	DGItemTag[] itemTags() default {};
 	DGBlockRotation rotation() default DGBlockRotation.Default;
 }

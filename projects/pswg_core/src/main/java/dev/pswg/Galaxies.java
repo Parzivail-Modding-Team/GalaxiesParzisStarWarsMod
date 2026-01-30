@@ -5,9 +5,10 @@ import dev.pswg.configuration.GalaxiesConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.container.*;
-import dev.pswg.container.structure.GalaxiesStructureKeys;
-import dev.pswg.container.structure.GalaxiesStructurePieces;
-import dev.pswg.container.structure.GalaxiesStructureTypes;
+import dev.pswg.container.worldgen.GalaxiesDimensions;
+import dev.pswg.container.worldgen.GalaxiesStructureKeys;
+import dev.pswg.container.worldgen.GalaxiesStructurePieces;
+import dev.pswg.container.worldgen.GalaxiesStructureTypes;
 import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
 import dev.pswg.interaction.LeftClickingEntityAttachment;
@@ -18,16 +19,21 @@ import dev.pswg.networking.GalaxiesPlayerActionS2CPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
+import dev.pswg.util.world.DimensionTeleporter;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -143,7 +149,18 @@ public final class Galaxies implements ModInitializer
 
 		GalaxiesScreenHandlerTypes.register();
 
+		GalaxiesDimensions.register();
 
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			dispatcher.register(CommandManager.literal("cdim")
+			                                  .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
+			                                  .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+			                                                      .executes(context -> {
+				                                                      var world = DimensionArgumentType.getDimensionArgument(context, "dimension");
+				                                                      DimensionTeleporter.teleport(Objects.requireNonNull(context.getSource().getEntity()), world);
+				                                                      return 1;
+			                                                      })));
+		});
 
 		LOGGER.info("Loading PSWG modules and addons via pswg-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-addon", GalaxiesAddon.class, GalaxiesAddon::onGalaxiesStarting);

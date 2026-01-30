@@ -1,7 +1,7 @@
 package dev.pswg.block;
 
 import com.google.common.base.Suppliers;
-import dev.pswg.util.WorldUtil;
+import dev.pswg.util.world.WorldUtil;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;

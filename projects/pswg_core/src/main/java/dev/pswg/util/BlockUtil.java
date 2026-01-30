@@ -1,6 +1,6 @@
 package dev.pswg.util;
 
-import dev.pswg.block.DyedBlocks;
+import dev.pswg.block.collection.DyedBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;

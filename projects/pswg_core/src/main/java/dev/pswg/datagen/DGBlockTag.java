@@ -2,6 +2,7 @@ package dev.pswg.datagen;
 
 public enum DGBlockTag
 {
+	AridPlantPlaceable,
 	FragmentationGrenadeDestroy,
 	DetonatesGrenade,
 	Bouncy,
@@ -14,6 +15,7 @@ public enum DGBlockTag
 	AxeMineable,
 	SlidingDoor,
 	Leaves,
+	BushPlaceable,
 	DeadBushSubstrate,
 	BlasterDestroy,
 	BlasterExplode,

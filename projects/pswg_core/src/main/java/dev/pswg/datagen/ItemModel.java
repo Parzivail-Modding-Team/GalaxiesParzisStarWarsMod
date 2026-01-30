@@ -4,5 +4,6 @@ public enum ItemModel
 {
 	generated,
 	drink,
-	handheld
+	handheld,
+	none
 }
