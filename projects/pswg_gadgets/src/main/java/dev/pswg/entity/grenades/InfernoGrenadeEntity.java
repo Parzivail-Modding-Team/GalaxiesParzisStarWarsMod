@@ -257,6 +257,6 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 	@Override
 	public GrenadeItem getItem()
 	{
-		return GadgetsItems.THERMAL_DETONATOR_ITEM;
+		return GadgetsItems.INFERNO_GRENADE_ITEM;
 	}
 }
