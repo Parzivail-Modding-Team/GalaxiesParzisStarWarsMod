@@ -33,7 +33,6 @@ public class GasEntity extends Entity
 	private final float DIFFISSION_COEFFICIENT;
 	private final ParticleType<GasParticleEffect> PARTICLE_TYPE;
 
-	//public ConcurrentMap<BlockPos, Float> blockConcentration;
 	public ConcurrentMap<BlockPos, Float> massMap;
 	public int volume;
 
@@ -74,40 +73,23 @@ public class GasEntity extends Entity
 	@Override
 	protected void readCustomData(ReadView view)
 	{
-		var xList = view.getOptionalIntArray("xList").get();
-		var yList = view.getOptionalIntArray("yList").get();
-		var zList = view.getOptionalIntArray("zList").get();
-		var conList = view.read("concentrationList", Codec.FLOAT.listOf());
-		int s = xList.length;
-		for (int i = 0; i < s; i++)
-			massMap.put(new BlockPos(xList[i], yList[i], zList[i]), conList.get().get(i));
+		var blockPosList = view.read("blockPosList", BlockPos.CODEC.listOf()).get();
+		var conList = view.read("concentrationList", Codec.FLOAT.listOf()).get();
+		for (int i = 0; i < blockPosList.size(); i++)
+			massMap.put(blockPosList.get(i), conList.get(i));
 	}
 
 	@Override
 	protected void writeCustomData(WriteView view)
 	{
-		int[] xList = new int[1024];
-		int[] yList = new int[1024];
-		int[] zList = new int[1024];
-
-		int i = 0;
-		for (BlockPos blockPos : massMap.keySet())
-		{
-			xList[i] = blockPos.getX();
-			yList[i] = blockPos.getY();
-			zList[i] = blockPos.getZ();
-			i++;
-		}
 		byte[] concentrationList = new byte[1024];
-		i = 0;
+		int i = 0;
 		for (Float f : massMap.values())
 		{
 			concentrationList[i] = f.byteValue();
 			i++;
 		}
-		view.putIntArray("xList", xList);
-		view.putIntArray("yList", yList);
-		view.putIntArray("zList", zList);
+		view.put("blockPosList", BlockPos.CODEC.listOf(), massMap.keySet().stream().toList());
 		view.putByteArray("concentrationList", concentrationList);
 	}
 
