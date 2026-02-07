@@ -10,7 +10,9 @@ public class GalaxiesLootTables
 	public static final RegistryKey<LootTable> IMPERIAL_CRATE = registerLootTable("container/imperial_crate");
 	public static final RegistryKey<LootTable> MEDICAL_CRATE = registerLootTable("container/medical_crate");
 	public static final RegistryKey<LootTable> MINING_CRATE = registerLootTable("container/mining_crate");
-	public static final RegistryKey<LootTable> GENERIC_CRATE = registerLootTable("container/generic_crate");
+	public static final RegistryKey<LootTable> GENERIC_FOOD_CRATE = registerLootTable("container/generic_food_crate");
+	public static final RegistryKey<LootTable> GENERIC_WEAPONS_CRATE = registerLootTable("container/generic_weapons_crate");
+	public static final RegistryKey<LootTable> GENERIC_TECH_CRATE = registerLootTable("container/generic_tech_crate");
 
 	private static RegistryKey<LootTable> registerLootTable(String key)
 	{

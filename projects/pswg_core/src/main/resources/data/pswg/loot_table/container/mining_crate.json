@@ -2,7 +2,11 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "rolls": 6,
+		"rolls": {
+			"type": "minecraft:uniform",
+			"max": 4,
+			"min": 3
+		},
       "bonus_rolls": 1,
       "entries": [
         {
@@ -15,7 +19,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2,
-                "max": 6
+				  "max": 8
               }
             }
           ]
@@ -30,7 +34,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2,
-                "max": 6
+				  "max": 8
               }
             }
           ]
@@ -45,7 +49,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2,
-                "max": 6
+				  "max": 8
               }
             }
           ]
@@ -60,7 +64,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 2,
-                "max": 6
+				  "max": 8
               }
             }
           ]
@@ -75,7 +79,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 3
+				  "max": 5
               }
             }
           ]
@@ -90,7 +94,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 3
+				  "max": 5
               }
             }
           ]
@@ -105,7 +109,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 3
+				  "max": 5
               }
             }
           ]
@@ -120,7 +124,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 3
+				  "max": 5
               }
             }
           ]
@@ -128,20 +132,20 @@
       ]
     },
     {
-      "rolls": 4,
+		"rolls": 2,
       "bonus_rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
 			"name": "pswg:raw_desh",
-          "weight": 4,
+			"weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 2
+				  "max": 4
               }
             }
           ]
@@ -149,14 +153,14 @@
         {
           "type": "minecraft:item",
 			"name": "pswg:raw_kelerium",
-          "weight": 4,
+			"weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 2
+				  "max": 4
               }
             }
           ]
@@ -164,14 +168,14 @@
         {
           "type": "minecraft:item",
 			"name": "pswg:raw_diatium",
-          "weight": 4,
+			"weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 2
+				  "max": 4
               }
             }
           ]
@@ -179,14 +183,14 @@
         {
           "type": "minecraft:item",
 			"name": "pswg:raw_titanium",
-          "weight": 4,
+			"weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 2
+				  "max": 4
               }
             }
           ]
@@ -194,14 +198,14 @@
         {
           "type": "minecraft:item",
 			"name": "pswg:raw_ionite",
-          "weight": 4,
+			"weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 2
+				  "max": 4
               }
             }
           ]
@@ -209,14 +213,14 @@
         {
           "type": "minecraft:item",
 			"name": "pswg:raw_chromium",
-          "weight": 4,
+			"weight": 5,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
-                "max": 2
+				  "max": 4
               }
             }
           ]
