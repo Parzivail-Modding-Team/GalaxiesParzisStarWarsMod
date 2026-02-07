@@ -2,6 +2,7 @@ package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.container.GalaxiesParticleTypes;
+import dev.pswg.container.GalaxiesScreenHandlerTypes;
 import dev.pswg.data.BinaryCodecDataLoader;
 import dev.pswg.data.IdentifierUtil;
 import dev.pswg.input.GalaxiesKeybinds;
@@ -13,6 +14,7 @@ import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particle.ShortFlameParticle;
 import dev.pswg.particle.SmallFlashParticle;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
+import dev.pswg.screens.CrateGenericSmallScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -20,6 +22,8 @@ import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.Generic3x3ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.item.tint.TintSourceTypes;
 import net.minecraft.particle.ParticleEffect;
@@ -118,12 +122,18 @@ public class GalaxiesClient implements ClientModInitializer
 		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(GQB_LOADER.getId(), GQB_LOADER);
 		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).addReloaderOrdering(GQB_LOADER.getId(), ResourceReloaderKeys.Client.MODELS);
 
+		//Register tints
 		TintSourceTypes.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);
 
+		// Register particles
 		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);
 
 		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SHORT_FLAME_PARTICLE, ShortFlameParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_SHORT_FLAME_PARTICLE, ShortFlameParticle.SmallFactory::new);
+
+		HandledScreens.register(GalaxiesScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
+
+		GalaxiesRenderLayers.init();
 
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);
