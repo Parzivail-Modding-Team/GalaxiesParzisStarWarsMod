@@ -35,7 +35,6 @@ public class GasParticleRenderer extends ParticleRenderer<GasParticle>
 			MatrixStack matrixStack = new MatrixStack();
 			matrixStack.push();
 			matrixStack.translate(particle.getPos().subtract(camera.getPos()));
-			//matrixStack.multiply(camera.getRotation());
 			matrixStack.multiply(camera.getRotation().rotateZ((float)Math.toRadians(particle.getBillowing())));
 
 			return new State(matrixStack, particle.getSprite(), particle.getBillowing(), particle.getAlpha(), particle.getSize(tickProgress), particle.getColor(), particle.getBrightness(tickProgress));

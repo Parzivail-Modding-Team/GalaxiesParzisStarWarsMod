@@ -12,28 +12,27 @@ import net.minecraft.particle.ParticleType;
 public class GasParticleEffect implements ParticleEffect
 {
 	/// Pair where the first is the gasId and second is minConcentration
-	private static final Codec<Pair<Integer, Float>> GAS_ENTITY_ID_CODEC = Codec.pair(Codec.INT, Codec.FLOAT);
+	private static final Codec<Pair<String, String>> GAS_ENTITY_ID_CODEC = Codec.pair(Codec.STRING, Codec.STRING);
 	private final ParticleType<GasParticleEffect> type;
-	public final int gas;
-	public final float minConcentration;
+	public final String gasId;
+	public final String particleId;
 
-	public GasParticleEffect(ParticleType<GasParticleEffect> type, int gasId, float minConcentration)
+	public GasParticleEffect(ParticleType<GasParticleEffect> type, String gasId, String particleId)
 	{
 		this.type = type;
-		this.gas = gasId;
-		this.minConcentration = minConcentration;
+		this.gasId = gasId;
+		this.particleId = particleId;
 	}
 
 	public static MapCodec<GasParticleEffect> createCodec(ParticleType<GasParticleEffect> type)
 	{
-		//Codec.
-		return GAS_ENTITY_ID_CODEC.<GasParticleEffect>xmap(pair -> new GasParticleEffect(type, pair.getFirst(), pair.getSecond()), effect -> Pair.of(effect.gas, effect.minConcentration))
+		return GAS_ENTITY_ID_CODEC.<GasParticleEffect>xmap(pair -> new GasParticleEffect(type, pair.getFirst(), pair.getSecond()), effect -> Pair.of(effect.gasId, effect.particleId))
 		                          .fieldOf("gas_entity_id");
 	}
 
 	public static PacketCodec<? super RegistryByteBuf, GasParticleEffect> createPacketCodec(ParticleType<GasParticleEffect> type)
 	{
-		return PacketCodecs.codec(GAS_ENTITY_ID_CODEC).xmap(pair -> new GasParticleEffect(type, pair.getFirst(), pair.getSecond()), effect -> Pair.of(effect.gas, effect.minConcentration));
+		return PacketCodecs.codec(GAS_ENTITY_ID_CODEC).xmap(pair -> new GasParticleEffect(type, pair.getFirst(), pair.getSecond()), effect -> Pair.of(effect.gasId, effect.particleId));
 	}
 
 	@Override
@@ -42,8 +41,8 @@ public class GasParticleEffect implements ParticleEffect
 		return type;
 	}
 
-	public int getGasEntityId()
+	public String getGasEntityId()
 	{
-		return gas;
+		return gasId;
 	}
 }

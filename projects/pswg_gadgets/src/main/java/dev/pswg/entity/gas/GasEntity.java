@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.storage.ReadView;
@@ -34,7 +33,9 @@ public class GasEntity extends Entity
 	private final ParticleType<GasParticleEffect> PARTICLE_TYPE;
 
 	public ConcurrentMap<BlockPos, Float> massMap;
+	public Map<BlockPos, List<String>> particleIdList;
 	public int volume;
+	public int particlesCreated;
 
 	public GasEntity(EntityType<?> type, World world, int defaultVolume, int maxAge, float density, float diffusionCoefficient, ParticleType<GasParticleEffect> particle)
 	{
@@ -46,6 +47,8 @@ public class GasEntity extends Entity
 		PARTICLE_TYPE = particle;
 		volume = DEFAULT_VOLUME;
 		massMap = new ConcurrentHashMap<>(1024);
+		particleIdList = new ConcurrentHashMap<>();
+		particlesCreated = 0;
 	}
 
 	@Override
@@ -159,6 +162,7 @@ public class GasEntity extends Entity
 	{
 		var world = getEntityWorld();
 		float totalNeighborPermeability = 0f;
+		///  Logic code
 		for (Map.Entry<BlockPos, Float> entry : massMap.entrySet())
 		{
 			BlockPos pos = entry.getKey();
@@ -171,7 +175,6 @@ public class GasEntity extends Entity
 
 				totalNeighborPermeability += ((!offsetState.isSideSolidFullSquare(world, pos, dir.getOpposite()) && !(state.isSideSolidFullSquare(world, offsetPos, dir)))) ? 1 : 0;
 			}
-			;
 
 			for (Direction dir : Direction.values())
 			{
@@ -184,34 +187,72 @@ public class GasEntity extends Entity
 				{
 					float offsetMass = massMap.getOrDefault(offsetPos, 0f);
 					var massDifferential = totalNeighborPermeability != 0 ? DIFFISSION_COEFFICIENT * (mass - offsetMass) / totalNeighborPermeability : 0;
-					if (massDifferential > 0)
+					if (massDifferential > 0.00625f)
 					{
 						addFlow(offsetPos, massDifferential);
 						mass -= massDifferential;
 					}
-					if (massMap.containsKey(offsetPos))
-					{
-						if ((massMap.get(offsetPos) - massDifferential) / 0.5f != massMap.get(offsetPos) / 0.5f && massDifferential > 0)
-						{
-							if (world.isClient())
-								world.addParticleClient(new GasParticleEffect(PARTICLE_TYPE, this.getId(), massMap.getOrDefault(offsetPos, 0.5f) - (massMap.getOrDefault(offsetPos, 0.5f) % 0.5f)),
-								                  true,
-								                  true,
-								                  offsetPos.getX() + 0.5 + (world.random.nextBetween(-450, 450) / 1000f),
-								                  offsetPos.getY() + 0.5 + (world.random.nextBetween(-450, 450) / 1000f),
-								                  offsetPos.getZ() + 0.5 + (world.random.nextBetween(-450, 450) / 1000f),
-								                  0,
-								                  0,
-								                  0);
-						}
-					}
 				}
 			}
-			;
 			if (!massMap.containsKey(pos))
 				addFlow(pos, mass);
 			else
 				massMap.replace(pos, mass);
+		}
+		/// "Visual" code
+		if (this.age % 2 == 0)
+		{
+			for (BlockPos pos : particleIdList.keySet())
+			{
+				if (!massMap.containsKey(pos))
+					particleIdList.remove(pos);
+			}
+			for (Map.Entry<BlockPos, Float> entry : massMap.entrySet())
+			{
+				BlockPos pos = entry.getKey();
+				float concentration = entry.getValue();
+				float interval = 0.025f;
+				float cConc = concentration - interval;
+				int particleCount = 0;
+				while (cConc > 0)
+				{
+					cConc -= interval;
+					interval += (float)(1f / Math.pow(2, 6));
+					particleCount++;
+				}
+
+				int particleDelta = particleIdList.containsKey(pos) ? particleCount - particleIdList.get(pos).size() : particleCount;
+				if (particleDelta > 0)
+				{
+					for (int i = 0; i < particleDelta; i++)
+					{
+						String particleId = this.getUuidAsString() + particlesCreated;
+						if (world.isClient())
+						{
+							world.addParticleClient(new GasParticleEffect(PARTICLE_TYPE, this.getUuidAsString(), particleId),
+							                        true,
+							                        true,
+							                        pos.getX() + 0.5 + (world.random.nextBetween(-475, 475) / 1000f),
+							                        pos.getY() + 0.5 + (world.random.nextBetween(-475, 475) / 1000f),
+							                        pos.getZ() + 0.5 + (world.random.nextBetween(-475, 475) / 1000f),
+							                        0,
+							                        0,
+							                        0);
+							if (!particleIdList.containsKey(pos))
+								particleIdList.put(pos, new ArrayList<>());
+							particleIdList.get(pos).add(particleId);
+						}
+						particlesCreated++;
+					}
+				}
+				if (particleDelta < 0)
+				{
+					for (int i = 0; i < -particleDelta; i++)
+					{
+						particleIdList.get(pos).removeLast();
+					}
+				}
+			}
 		}
 	}
 

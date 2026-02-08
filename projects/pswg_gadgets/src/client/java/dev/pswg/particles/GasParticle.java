@@ -1,5 +1,6 @@
 package dev.pswg.particles;
 
+import dev.pswg.Gadgets;
 import dev.pswg.GalaxiesRenderLayers;
 import dev.pswg.entity.gas.GasEntity;
 import net.fabricmc.api.EnvType;
@@ -22,40 +23,34 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 {
 	private final int variant;
 	final int NUM_VARIANTS = 5;
-	final float shrinkSpeed;
-	final float growthSpeed;
 	final float originalScale;
-	final float maxScale;
-	float alphaScaling;
 	final int dirX;
 	final int dirZ;
 	final float billowing;
-	final float minConcentration;
+	final String particleId;
 	final GasEntity gasEntity;
 
-	protected GasParticle(GasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider, float minConcentration)
+	protected GasParticle(GasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider, String particleId)
 	{
 		super(clientWorld, x, y, z, spriteProvider.getFirst());
 
-		this.originalScale = Random.create().nextBetween(50, 75) / 20f;
+		this.originalScale = Random.create().nextBetween(150, 225) / 15f;
 		scale(originalScale);
 		setBoundingBoxSpacing(0f, 0f);
 		this.setAlpha(0.1f);
 		this.gasEntity = gasEntity;
-		this.minConcentration = minConcentration;
-		shrinkSpeed = (float)random.nextBetween(10, 100) / 25000f;
-		growthSpeed = (float)random.nextBetween(20, 40) * 0.000005f;
+		this.particleId = particleId;
 		billowing = (float)random.nextBetween(1, 10) / 2500f;
 		variant = random.nextInt(NUM_VARIANTS);
 		dirX = random.nextBoolean() ? 1 : -1;
 		dirZ = random.nextBoolean() ? 1 : -1;
 		velocityX = 0;
 		velocityZ = 0;
-		age = 0;
-		maxAge = gasEntity != null ? gasEntity.MAX_AGE - gasEntity.age : 1000;
-		maxScale = growthSpeed * 250 + originalScale;
-		var pos = new BlockPos((int)x, (int)y, (int)z);
-		alphaScaling = (gasEntity != null ? gasEntity.massMap.getOrDefault(pos, 1f) : 1) * 0.5f;
+		if (gasEntity != null)
+		{
+			age = gasEntity.age;
+			maxAge = gasEntity.MAX_AGE;
+		}
 
 	}
 
@@ -157,37 +152,37 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 	public void tick()
 	{
 		var pos = new BlockPos((int)x, (int)y, (int)z);
-		if (gasEntity != null && !gasEntity.massMap.containsKey(pos))
+		if (gasEntity == null || !gasEntity.particleIdList.containsKey(pos) || !gasEntity.particleIdList.get(pos).contains(this.particleId))
 		{
 			markDead();
 		}
-		float blockConcentration = gasEntity != null ? gasEntity.massMap.getOrDefault(new BlockPos((int)x, (int)y, (int)z), 1f) : 1;
+		else
+		{
+			lastX = x;
+			lastY = y;
+			lastZ = z;
+			age++;
+			/*if (alpha < 0.1f)
+			{
+				markDead();
+				return;
+			}*/
+			float m = maxAge / 100f;
+			// max = 1000; m = 10; 10 * m = 100; age * age = 100 00
+			if (age <= 10 * m)
+			{
+				alpha = (age * age) / (100 * m * m) * 0.3f;
+			}
+			if (age >= 90 * m)
+			{
 
-		alphaScaling = blockConcentration / 2;
-		lastX = x;
-		lastY = y;
-		lastZ = z;
-		age++;
-		float inverseAgeCoeficient = gasEntity != null ? (float)maxAge / gasEntity.MAX_AGE : 1;
-		if (alpha < 0.1f || minConcentration > blockConcentration)
-		{
-			markDead();
-			return;
+			}
+			if (age >= 90 * m)
+			{
+				velocityX *= 0.95;
+				velocityZ *= 0.95;
+			}
+			move(velocityX, velocityY, velocityZ);
 		}
-		if (age <= 250 * inverseAgeCoeficient)
-		{
-			alpha = age / (250 * inverseAgeCoeficient) * 0.25f * alphaScaling + 0.1f;
-		}
-
-		if (age >= 400 * inverseAgeCoeficient)
-		{
-			alpha = (0.1f + 0.25f * alphaScaling) - (0.25f * alphaScaling * ((age - (400 * inverseAgeCoeficient)) / (600 * inverseAgeCoeficient)));
-		}
-		if (age <= 500 * inverseAgeCoeficient)
-		{
-			velocityX *= 0.95;
-			velocityZ *= 0.95;
-		}
-		move(velocityX, velocityY, velocityZ);
 	}
 }
