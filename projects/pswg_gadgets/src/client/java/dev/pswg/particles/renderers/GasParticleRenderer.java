@@ -52,10 +52,10 @@ public class GasParticleRenderer extends ParticleRenderer<GasParticle>
 				orderedRenderCommandQueue.submitCustom(matrix, GalaxiesRenderLayers.GALAXIES_TRANSLUCENT, (matricesEntry, vertexConsumer) -> {
 					float scale = state.scale;
 					int alpha = (int)(state.alpha * 255);
-					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -0.5F * scale, -0.5F * scale, state.sprite.getMinU(), state.sprite.getMaxV());
-					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 0.5F * scale, -0.5F * scale, state.sprite.getMaxU(), state.sprite.getMaxV());
-					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 0.5F * scale, 0.5F * scale, state.sprite.getMaxU(), state.sprite.getMinV());
-					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -0.5F * scale, 0.5F * scale, state.sprite.getMinU(), state.sprite.getMinV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -1F * scale, -1F * scale, state.sprite.getMinU(), state.sprite.getMaxV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 1F * scale, -1F * scale, state.sprite.getMaxU(), state.sprite.getMaxV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 1F * scale, 1F * scale, state.sprite.getMaxU(), state.sprite.getMinV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -1F * scale, 1F * scale, state.sprite.getMinU(), state.sprite.getMinV());
 				});
 			}
 		}
