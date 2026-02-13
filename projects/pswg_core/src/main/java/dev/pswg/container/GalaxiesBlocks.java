@@ -95,7 +95,7 @@ public class GalaxiesBlocks
 	public static final ColoredFallingBlock PIT_SAND = createFallingBlock("pit_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFEAC795));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final ColoredFallingBlock FINE_SAND = createFallingBlock("fine_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFE9C490));
-	@DataGenBlock(model =  DataGenBlockModel.Accumulating)
+	@DataGenBlock(model = DataGenBlockModel.ACCUMULATING)
 	public static final AccumulatingBlock LOOSE_DESERT_SAND = createAccumulatingBlock("loose_desert_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), DESERT_SAND);
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));

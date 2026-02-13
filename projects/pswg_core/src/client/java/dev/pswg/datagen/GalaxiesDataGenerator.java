@@ -127,7 +127,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			switch (dataGenBlock.model())
 			{
 				case CUBE_ALL -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.CUBE_ALL, generator);
-				case Accumulating -> registerAccumulatingBlock(block, generator);
+				case ACCUMULATING -> registerAccumulatingBlock(block, generator);
 				case COLUMN -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
 				case CROSS -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
 				case CROSS_AGE_3 -> registerCrossAge3(block, generator);

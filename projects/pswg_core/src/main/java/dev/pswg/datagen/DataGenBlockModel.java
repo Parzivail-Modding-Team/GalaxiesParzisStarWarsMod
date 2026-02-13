@@ -2,7 +2,7 @@ package dev.pswg.datagen;
 
 public enum DataGenBlockModel
 {
-	Accumulating,
+	ACCUMULATING,
 	CROSS,
 	CROSS_AGE_3,
 	CROSS_AGE_3_BLOOMING,

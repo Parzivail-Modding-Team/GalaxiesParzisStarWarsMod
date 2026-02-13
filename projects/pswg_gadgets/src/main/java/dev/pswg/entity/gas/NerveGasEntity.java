@@ -60,7 +60,6 @@ public class NerveGasEntity extends GasEntity
 						if (livingEntity.getStatusEffect(GadgetsEffects.INTOXICATED).getAmplifier() != amplifier)
 						{
 							livingEntity.setStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, 100, amplifier, false, false, true), this);
-							Gadgets.LOGGER.info("test");
 						}
 					}
 					else
