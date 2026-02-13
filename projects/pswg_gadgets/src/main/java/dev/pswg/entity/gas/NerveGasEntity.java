@@ -1,8 +1,8 @@
 package dev.pswg.entity.gas;
 
+import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.entity.GadgetsEffects;
-import dev.pswg.world.TickConstants;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -28,7 +28,7 @@ public class NerveGasEntity extends GasEntity
 		var entities = getEntityWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(32));
 		for (LivingEntity entity : entities)
 		{
-			if (massMap.containsKey(entity.getBlockPos()))
+			if (massMap.containsKey(entity.getBlockPos()) && massMap.get(entity.getBlockPos()) > 0.25f)
 			{
 				if (toxicityIndex.containsKey(entity))
 					toxicityIndex.replace(entity, toxicityIndex.get(entity) + (massMap.get(entity.getBlockPos())) / 10 + 1);
@@ -58,10 +58,12 @@ public class NerveGasEntity extends GasEntity
 					if (livingEntity.hasStatusEffect(GadgetsEffects.INTOXICATED))
 					{
 						if (livingEntity.getStatusEffect(GadgetsEffects.INTOXICATED).getAmplifier() != amplifier)
-							livingEntity.setStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
+						{
+							livingEntity.setStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, 100, amplifier, false, false, true), this);
+						}
 					}
 					else
-						livingEntity.addStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, TickConstants.ONE_DAY * 100, amplifier, false, false, true), this);
+						livingEntity.addStatusEffect(new StatusEffectInstance(GadgetsEffects.INTOXICATED, 100, amplifier, false, false, true), this);
 				}
 			if (livingEntity.isDead())
 				remove.add(livingEntity);

@@ -1,6 +1,7 @@
 package dev.pswg.particles.renderers;
 
-import dev.pswg.particles.GadgetsRenderLayers;
+import dev.pswg.Gadgets;
+import dev.pswg.GalaxiesRenderLayers;
 import dev.pswg.particles.GasParticle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.ParticleRenderer;
@@ -9,7 +10,6 @@ import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Colors;
 import net.minecraft.util.math.ColorHelper;
 
 import java.util.List;
@@ -36,7 +36,6 @@ public class GasParticleRenderer extends ParticleRenderer<GasParticle>
 			MatrixStack matrixStack = new MatrixStack();
 			matrixStack.push();
 			matrixStack.translate(particle.getPos().subtract(camera.getPos()));
-			//matrixStack.multiply(camera.getRotation());
 			matrixStack.multiply(camera.getRotation().rotateZ((float)Math.toRadians(particle.getBillowing())));
 
 			return new State(matrixStack, particle.getSprite(), particle.getBillowing(), particle.getAlpha(), particle.getSize(tickProgress), particle.getColor(), particle.getBrightness(tickProgress));
@@ -51,13 +50,13 @@ public class GasParticleRenderer extends ParticleRenderer<GasParticle>
 			for (State state : this.states)
 			{
 				var matrix = state.matrices;
-				orderedRenderCommandQueue.submitCustom(matrix, GadgetsRenderLayers.PSWG_CUSTOM, (matricesEntry, vertexConsumer) -> {
+				orderedRenderCommandQueue.submitCustom(matrix, GalaxiesRenderLayers.GALAXIES_TRANSLUCENT, (matricesEntry, vertexConsumer) -> {
 					float scale = state.scale;
 					int alpha = (int)(state.alpha * 255);
-					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -0.5F * scale, -0.5F * scale, state.sprite.getMinU(), state.sprite.getMaxV());
-					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 0.5F * scale, -0.5F * scale, state.sprite.getMaxU(), state.sprite.getMaxV());
-					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 0.5F * scale, 0.5F * scale, state.sprite.getMaxU(), state.sprite.getMinV());
-					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -0.5F * scale, 0.5F * scale, state.sprite.getMinU(), state.sprite.getMinV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -1F * scale, -1F * scale, state.sprite.getMinU(), state.sprite.getMaxV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 1F * scale, -1F * scale, state.sprite.getMaxU(), state.sprite.getMaxV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, 1F * scale, 1F * scale, state.sprite.getMaxU(), state.sprite.getMinV());
+					vertex(vertexConsumer, matricesEntry, state.light, alpha, state.color, -1F * scale, 1F * scale, state.sprite.getMinU(), state.sprite.getMinV());
 				});
 			}
 		}

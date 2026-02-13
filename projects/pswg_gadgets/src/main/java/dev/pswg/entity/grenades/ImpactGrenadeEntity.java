@@ -2,6 +2,7 @@ package dev.pswg.entity.grenades;
 
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
+import dev.pswg.container.GalaxiesParticleTypes;
 import dev.pswg.item.grenades.GrenadeItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -46,7 +47,7 @@ public class ImpactGrenadeEntity extends GrenadeEntity
 
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 		{
-			TintedParticleEffect flashParticle = TintedParticleEffect.create((power > 2 ? ParticleTypes.FLASH : GadgetsParticleTypes.SMALL_FLASH_PARTICLE), Colors.WHITE);
+			TintedParticleEffect flashParticle = TintedParticleEffect.create((power > 2 ? ParticleTypes.FLASH : GalaxiesParticleTypes.SMALL_FLASH_PARTICLE), Colors.WHITE);
 
 			serverWorld.spawnParticles(serverPlayerEntity, flashParticle, true, true, x, y, z, 1, 0, 0, 0, 0);
 			serverWorld.spawnParticles(serverPlayerEntity, GadgetsParticleTypes.EXPLOSION_SMOKE_PARTICLE, true, true, x, y, z, m2 * 6, m, m, m, 0);

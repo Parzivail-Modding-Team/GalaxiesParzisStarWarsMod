@@ -35,7 +35,7 @@ public class GadgetsItemGroups
 	{
 		Registry.register(Registries.ITEM_GROUP, DEMOLITIONS_ITEMS_GROUP_KEY, DEMOLITIONS_ITEMS_GROUP);
 
-		ItemGroupEvents.modifyEntriesEvent(DEMOLITIONS_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.DemolitionsGadgets));
+		ItemGroupEvents.modifyEntriesEvent(DEMOLITIONS_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.DEMOLITIONS_GADGETS));
 	}
 
 	public static void addItems(FabricItemGroupEntries itemGroup, DataGenItemGroup group)

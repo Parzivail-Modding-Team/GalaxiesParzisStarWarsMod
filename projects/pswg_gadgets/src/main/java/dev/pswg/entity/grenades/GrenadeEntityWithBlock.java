@@ -29,6 +29,10 @@ public abstract class GrenadeEntityWithBlock extends GrenadeEntity
 	{
 		if (getVelocity().length() <= 0.01f && !this.isPrimed())
 			timer++;
+		else
+		{
+			timer = 0;
+		}
 		if (timer >= BLOCK_TIME)
 		{
 			BlockPos pos = getBlockPos();

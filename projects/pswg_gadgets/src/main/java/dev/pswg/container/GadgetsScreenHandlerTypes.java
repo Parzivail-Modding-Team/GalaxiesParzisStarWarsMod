@@ -3,7 +3,7 @@ package dev.pswg.container;
 import dev.pswg.Gadgets;
 import dev.pswg.feature.brewing.MixerScreenHandler;
 import dev.pswg.feature.scrapping.table.ScrappingTableScreenHandler;
-import dev.pswg.packet.MixerSyncS2CPayload;
+import dev.pswg.networking.MixerSyncS2CPayload;
 import dev.pswg.registry.Registrar;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.registry.Registries;

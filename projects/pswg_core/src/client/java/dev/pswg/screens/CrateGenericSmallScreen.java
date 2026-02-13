@@ -1,6 +1,6 @@
 package dev.pswg.screens;
 
-import dev.pswg.Gadgets;
+import dev.pswg.Galaxies;
 import dev.pswg.blockEntity.screenHandler.CrateGenericSmallScreenHandler;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 
 public class CrateGenericSmallScreen extends HandledScreen<CrateGenericSmallScreenHandler>
 {
-	private static final Identifier TEXTURE = Gadgets.id("textures/gui/container/crate_5x3.png");
+	private static final Identifier TEXTURE = Galaxies.id("textures/gui/container/crate_5x3.png");
 
 	public CrateGenericSmallScreen(CrateGenericSmallScreenHandler handler, PlayerInventory inventory, Text title)
 	{

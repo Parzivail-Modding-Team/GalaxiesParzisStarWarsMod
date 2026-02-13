@@ -1,13 +1,12 @@
-package dev.pswg.packet;
+package dev.pswg.util;
 
-import com.mojang.datafixers.util.Function3;
 import com.mojang.datafixers.util.Function4;
 import com.mojang.datafixers.util.Function5;
 import net.minecraft.network.codec.PacketCodec;
 
 import java.util.function.Function;
 
-public class GadgetsPacketUtil
+public class GalaxiesPacketUtil
 {
 	public static <B, C, T1, T2, T3, T4, T5> PacketCodec<B, C> quintuple(
 			PacketCodec<? super B, T1> codec1,

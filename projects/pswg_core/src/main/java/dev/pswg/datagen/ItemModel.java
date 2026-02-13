@@ -2,8 +2,8 @@ package dev.pswg.datagen;
 
 public enum ItemModel
 {
-	generated,
-	drink,
-	handheld,
-	none
+	GENERATED,
+	DRINK,
+	HANDHELD,
+	NONE
 }

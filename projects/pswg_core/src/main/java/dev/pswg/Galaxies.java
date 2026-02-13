@@ -13,10 +13,7 @@ import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
 import dev.pswg.interaction.LeftClickingEntityAttachment;
 import dev.pswg.interaction.RecoilEntityAttachment;
-import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
-import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
-import dev.pswg.networking.GalaxiesPlayerActionS2CPacket;
-import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
+import dev.pswg.networking.*;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
 import dev.pswg.util.world.DimensionTeleporter;
@@ -127,6 +124,8 @@ public final class Galaxies implements ModInitializer
 		PayloadTypeRegistry.playS2C().register(GalaxiesPlayerActionS2CPacket.ID, GalaxiesPlayerActionS2CPacket.CODEC);
 
 		PayloadTypeRegistry.playS2C().register(GalaxiesEntitySpawnS2CPacket.ID, GalaxiesEntitySpawnS2CPacket.CODEC);
+
+		PayloadTypeRegistry.playS2C().register(PreciseVelocityParticleS2CPayload.ID, PreciseVelocityParticleS2CPayload.CODEC);
 
 		GalaxiesEntityLeftClickManager.initialize();
 		GalaxiesPlayerActionManager.initialize();

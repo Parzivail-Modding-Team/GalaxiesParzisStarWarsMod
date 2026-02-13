@@ -6,10 +6,8 @@ import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import dev.pswg.item.grenades.GrenadeItem;
-import dev.pswg.packet.MixerSyncS2CPayload;
-import dev.pswg.packet.PreciseVelocityParticleS2CPayload;
+import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -60,13 +58,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 			if (getEntityWorld() instanceof ServerWorld serverWorld)
 			{
 				serverWorld.spawnParticles(GadgetsParticleTypes.FRAGMENTATION_GRENADE_WAVE_PARTICLE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
-				var passedData = new PacketByteBuf(Unpooled.buffer());
-				passedData.writeBoolean(true);
-				passedData.writeInt(getId());
-				//for (var player : PlayerLookup.tracking((ServerWorld)getEntityWorld(), this.getBlockPos()))
-				//	ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
-
-
 			}
 			IS_EXPLODING = true;
 
@@ -112,16 +103,6 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 
 		if (EXPLOSION_TICK == 6)
 		{
-			/*if (!getEntityWorld().isClient)
-			{
-				var passedData = new PacketByteBuf(Unpooled.buffer());
-				passedData.writeBoolean(false);
-				PacketByteBufHelper.writeVec3d(passedData, getPos());
-				passedData.writeInt(getId());
-				passedData.writeBoolean(COLLISION_BELOW);
-				for (var player : PlayerLookup.tracking((ServerWorld)getEntityWorld(), this.getBlockPos()))
-					ServerPlayNetworking.send(player, SwgPackets.S2C.FragmentationGrenadeExplode, passedData);
-			}*/
 			List<LivingEntity> entities = getEntityWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> true);
 			for (LivingEntity entity : entities)
 			{

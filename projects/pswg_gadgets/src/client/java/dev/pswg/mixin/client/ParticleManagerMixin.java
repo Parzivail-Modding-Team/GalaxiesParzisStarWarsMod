@@ -1,12 +1,10 @@
 package dev.pswg.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import dev.pswg.Gadgets;
 import dev.pswg.GadgetsClient;
 import dev.pswg.particles.CustomRendererParticle;
-import dev.pswg.particles.FragmentationGrenadeWaveParticle;
-import dev.pswg.particles.FragmentationGrenadeWaveParticleRenderer;
 import dev.pswg.particles.GadgetsParticleRenderer;
+import dev.pswg.particles.renderers.FragmentationGrenadeWaveParticleRenderer;
 import dev.pswg.particles.renderers.GasParticleRenderer;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;

@@ -14,14 +14,11 @@ public class GadgetsParticleTypes
 	public static final SimpleParticleType EXPLOSION_SMOKE_PARTICLE = registerSimple("explosion_smoke");
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_SPARK_PARTICLE = registerSimple("fragmentation_grenade_spark");
 	public static final SimpleParticleType FRAGMENTATION_GRENADE_WAVE_PARTICLE = registerSimple("fragmentation_grenade_wave");
-	public static final ParticleType<TintedParticleEffect> SMALL_FLASH_PARTICLE = registerTinted("small_flash");
 
 	public static final SimpleParticleType TRIPWIRE_LASER_PARTICLE = registerSimple("tripwire_laser");
 
 	public static final SimpleParticleType INFERNO_SCORCH_PARTICLE = registerSimple("inferno_scorch");
 	public static final SimpleParticleType DENSE_INFERNO_SCORCH_PARTICLE = registerSimple("dense_inferno_scorch");
-	public static final SimpleParticleType SHORT_FLAME_PARTICLE = registerSimple("short_flame");
-	public static final SimpleParticleType SMALL_SHORT_FLAME_PARTICLE = registerSimple("small_short_flame");
 
 	public static final SimpleParticleType LASER_CUT_PARTICLE = registerSimple("laser_cut");
 

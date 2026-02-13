@@ -2,10 +2,10 @@ package dev.pswg.datagen;
 
 public enum DataGenItemGroup
 {
-	ConstructionBlock,
-	WorldGenBlock,
-	DemolitionsGadgets,
-	Items,
-	Food,
-	None
+	CONSTRUCTION_BLOCK,
+	WORLD_GEN_BLOCK,
+	DEMOLITIONS_GADGETS,
+	ITEMS,
+	FOOD,
+	NONE
 }

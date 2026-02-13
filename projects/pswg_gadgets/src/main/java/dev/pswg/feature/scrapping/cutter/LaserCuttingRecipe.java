@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsRecipeSerializers;
 import dev.pswg.container.GadgetsRecipeTypes;
-import dev.pswg.packet.GadgetsPacketUtil;
+import dev.pswg.util.GalaxiesPacketUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -127,7 +127,7 @@ public class LaserCuttingRecipe implements Recipe<SingleStackRecipeInput>
 					                    )
 					                    .apply(instance, recipeFactory::create)
 			);
-			this.packetCodec = GadgetsPacketUtil.quadruple(
+			this.packetCodec = GalaxiesPacketUtil.quadruple(
 					Ingredient.PACKET_CODEC,
 					LaserCuttingRecipe::getIngredient,
 					ItemStack.PACKET_CODEC,

@@ -45,10 +45,10 @@ public class GalaxiesItemGroups
 		Registry.register(Registries.ITEM_GROUP, GENERIC_ITEMS_GROUP_KEY, GENERIC_ITEMS_GROUP);
 		Registry.register(Registries.ITEM_GROUP, FOOD_ITEMS_GROUP_KEY, FOOD_ITEMS_GROUP);
 
-		ItemGroupEvents.modifyEntriesEvent(CONSTRUCTION_BLOCK_GROUP_KEY).register(itemGroup -> addBlocks(itemGroup, DataGenItemGroup.ConstructionBlock));
-		ItemGroupEvents.modifyEntriesEvent(WORLDGEN_BLOCK_GROUP_KEY).register(itemGroup -> addBlocks(itemGroup, DataGenItemGroup.WorldGenBlock));
-		ItemGroupEvents.modifyEntriesEvent(GENERIC_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.Items));
-		ItemGroupEvents.modifyEntriesEvent(FOOD_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.Food));
+		ItemGroupEvents.modifyEntriesEvent(CONSTRUCTION_BLOCK_GROUP_KEY).register(itemGroup -> addBlocks(itemGroup, DataGenItemGroup.CONSTRUCTION_BLOCK));
+		ItemGroupEvents.modifyEntriesEvent(WORLDGEN_BLOCK_GROUP_KEY).register(itemGroup -> addBlocks(itemGroup, DataGenItemGroup.WORLD_GEN_BLOCK));
+		ItemGroupEvents.modifyEntriesEvent(GENERIC_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.ITEMS));
+		ItemGroupEvents.modifyEntriesEvent(FOOD_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.FOOD));
 	}
 
 	public static void addItems(FabricItemGroupEntries itemGroup, DataGenItemGroup group)

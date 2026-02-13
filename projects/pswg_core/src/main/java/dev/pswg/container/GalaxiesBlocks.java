@@ -32,27 +32,29 @@ public class GalaxiesBlocks
 {
 	public static final class Tags
 	{
+		public static final TagKey<Block> BOUNCY = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("bouncy"));
+		public static final TagKey<Block> SOFT = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("soft"));
 		public static final TagKey<Block> BUSH_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("bush_placeable"));
 		public static final TagKey<Block> ARID_PLANT_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("arid_plant_placeable"));
 	}
 	/// STONE
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final StoneProducts CANYON = new StoneProducts(AbstractBlock.Settings.create().strength(0.5F), "canyon_stone");
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block CANYON_BRICKS = createBlock("canyon_stone_bricks", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block POLISHED_CANYON = createBlock("polished_canyon_stone", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block CHISELED_CANYON = createBlock("chiseled_canyon_stone", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final StoneProducts CANYON_COBBLE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "canyon_cobblestone");
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final StoneProducts POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "pourstone");
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final StoneProducts SMOOTH_POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "smooth_pourstone");
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final StoneProducts CRACKED_POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.0F).requiresTool(), "cracked_pourstone");
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final DyedStoneProducts DYED_POURSTONE = new DyedStoneProducts(color -> new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), color.name().toLowerCase() + "_pourstone"));
 	@DataGenBlock
 	// TODO: find a way implement "connecting" blocks
@@ -76,168 +78,168 @@ public class GalaxiesBlocks
 	@DataGenBlock
 	public static final Block ILUM_CHISELED_BRICKS = createBlock("chiseled_ilum_stone_bricks", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
 	/// SANDSTONE
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final StoneProducts DESERT_SANDSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "desert_sandstone");
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block DUNESTONE = createBlock("dunestone", AbstractBlock.Settings.create().strength(1.25F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block SMOOTH_DESERT_SANDSTONE = createBlock("smooth_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block POLISHED_DESERT_SANDSTONE = createBlock("polished_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block CHISELED_DESERT = createBlock("chiseled_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
 	/// SAND
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final ColoredFallingBlock DESERT_SAND = createFallingBlock("desert_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFEDBB8A));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final ColoredFallingBlock PIT_SAND = createFallingBlock("pit_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFEAC795));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final ColoredFallingBlock FINE_SAND = createFallingBlock("fine_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFE9C490));
-	@DataGenBlock(model =  DataGenBlockModel.Accumulating)
+	@DataGenBlock(model = DataGenBlockModel.ACCUMULATING)
 	public static final AccumulatingBlock LOOSE_DESERT_SAND = createAccumulatingBlock("loose_desert_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), DESERT_SAND);
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
 	/// SALT
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.BushPlaceable, DGBlockTag.AridPlantPlaceable })
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, rotation = DGBlockRotation.RANDOM_ROTATION_X, blockTags = { DGBlockTag.BUSH_PLACEABLE, DGBlockTag.ARID_PLANT_PLACEABLE })
 	public static final Block CAKED_SALT = createBlock("caked_salt", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
 	/// GRAVEL
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, rotation = DGBlockRotation.RANDOM_ROTATION_X)
 	public static final FallingBlock JUNDLAND_GRAVEL = createFallingBlock("jundland_gravel", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F), new ColorCode(0xFF7A5346));
 	/// DIRT
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final ReducedDryingRuiningStoneProducts WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock, rotation = DGBlockRotation.RandomRotationX, blockTags = { DGBlockTag.PickaxeMineable, DGBlockTag.DeadBushSubstrate, DGBlockTag.BushPlaceable, DGBlockTag.AridPlantPlaceable })
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, rotation = DGBlockRotation.RANDOM_ROTATION_X, blockTags = { DGBlockTag.PICKAXE_MINEABLE, DGBlockTag.DEAD_BUSH_SUBSTRATE, DGBlockTag.BUSH_PLACEABLE, DGBlockTag.ARID_PLANT_PLACEABLE })
 	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 
 	/// Plants
 	//TODO: vaporator mushroom colony & molo shrub
 
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROSS, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final AridPlant FUNNEL_FLOWER = createAridPlantBlock("funnel_flower");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROSS, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final AridPlant BLOSSOMING_FUNNEL_FLOWER = createAridPlantBlock("blossoming_funnel_flower");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROSS, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final AridPlant POONTEN_GRASS = createAridPlantBlock("poonten_grass");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROSS, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final AridPlant DRIED_POONTEN_GRASS = createAridPlantBlock("dried_poonten_grass");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROSS, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final AridPlant TUBER_STALK = createAridPlantBlock("tuber_stalk");
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.CropAge2, itemGroup = DataGenItemGroup.None, addItemTranslation = false)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROP_AGE_2, itemGroup = DataGenItemGroup.NONE, addItemTranslation = false)
 	public static final ChasukaCrop CHASUKA = Registrar.blockWithoutItem(Galaxies.id("chasuka"), ChasukaCrop::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.CrossAge3, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROSS_AGE_3, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final HkakBushBlock HKAK_BUSH = Registrar.block(Galaxies.id("hkak_bush"), HkakBushBlock::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.CrossAge3Blooming, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROSS_AGE_3_BLOOMING, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final MoloShrubBlock MOLO_SHRUB = Registrar.block(Galaxies.id("molo_shrub"), MoloShrubBlock::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.Cross, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.CROSS, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final VaporatorMushroomBlock VAPORATOR_MUSHROOM_COLONY = Registrar.block(Galaxies.id("vaporator_mushroom_colony"), VaporatorMushroomBlock::new, AbstractBlock.Settings.create().noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 
 	/// Tree
 
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(blockTags = DGBlockTag.Leaves, itemTags = DGItemTag.Leaves, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(blockTags = DGBlockTag.LEAVES, itemTags = DGItemTag.LEAVES, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final LeavesBlock SEQUOIA_LEAVES = createLeavesBlock("sequoia_leaves");
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(model = DataGenBlockModel.None, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(model = DataGenBlockModel.NONE, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block SEQUOIA_WOOD = createWoodBlock("sequoia_wood", MapColor.BROWN);
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG_WITH_WOOD, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = { DGBlockTag.LOGS }, itemTags = { DGItemTag.LOGS })
 	public static final PillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = { DGBlockTag.LOGS }, itemTags = { DGItemTag.LOGS })
 	public static final PillarBlock STRIPPED_SEQUOIA_LOG = createLogBlock("stripped_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.Log, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = { DGBlockTag.Logs }, itemTags = { DGItemTag.Logs })
+	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = { DGBlockTag.LOGS }, itemTags = { DGItemTag.LOGS })
 	public static final PillarBlock MOSSY_SEQUOIA_LOG = createLogBlock("mossy_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CutoutMipped)
-	@DataGenBlock(model = DataGenBlockModel.JaporLeaves, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = { DGBlockTag.Leaves, DGBlockTag.ShearsMineable }, itemTags = { DGItemTag.Leaves })
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
+	@DataGenBlock(model = DataGenBlockModel.JAPOR_LEAVES, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = { DGBlockTag.LEAVES, DGBlockTag.SHEARS_MINEABLE }, itemTags = { DGItemTag.LEAVES })
 	public static final BushLeavesBlock JAPOR_LEAVES = createBushLeavesBlock("japor_leaves");
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(model = DataGenBlockModel.None, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(model = DataGenBlockModel.NONE, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG_WITH_WOOD, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = DGBlockTag.LOGS, itemTags = DGItemTag.LOGS)
 	public static final PillarBlock JAPOR_LOG = createLogBlock("japor_log", MapColor.OAK_TAN, MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	@DataGenBlock
 	public static final WoodProducts JAPOR_PRODUCTS = new WoodProducts("japor", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(model = DataGenBlockModel.None, itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(model = DataGenBlockModel.NONE, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block TATOOINE_WOOD = createWoodBlock("tatooine_wood", MapColor.BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
-	@DataGenBlock(rotation = DGBlockRotation.AxisRotated, model = DataGenBlockModel.LogWithWood, itemGroup = DataGenItemGroup.WorldGenBlock, blockTags = DGBlockTag.Logs, itemTags = DGItemTag.Logs)
+	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG_WITH_WOOD, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = DGBlockTag.LOGS, itemTags = DGItemTag.LOGS)
 	public static final PillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.OAK_TAN, MapColor.BROWN);
 
 
 	/// Ores
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block BESKAR_ORE = createBlock("beskar_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
 	@DataGenBlock
 	public static final Block BESKAR_BLOCK = createBlock("beskar_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block CHROMIUM_ORE = createBlock("chromium_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block CHROMIUM_BLOCK = createBlock("chromium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block CORTOSIS_ORE = createBlock("cortosis_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
 	@DataGenBlock
 	public static final Block CORTOSIS_BLOCK = createBlock("cortosis_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block DESH_ORE = createBlock("desh_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block DESH_BLOCK = createBlock("desh_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block DIATIUM_ORE = createBlock("diatium_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
-	@DataGenBlock(blockTags = DGBlockTag.BlasterReflect)
+	@DataGenBlock(blockTags = DGBlockTag.BLASTER_REFLECT)
 	public static final Block DIATIUM_BLOCK = createBlock("diatium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block IONITE_ORE = createBlock("ionite_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
 	@DataGenBlock
 	public static final Block IONITE_BLOCK = createBlock("ionite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).luminance(value -> 3).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block LOMMITE_ORE = createBlock("lommite_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block LOMMITE_BLOCK = createBlock("lommite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block TITANIUM_ORE = createBlock("titanium_ore", AbstractBlock.Settings.create().strength(4.0F).requiresTool());
 	@DataGenBlock
 	public static final Block TITANIUM_BLOCK = createBlock("titanium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block ZERSIUM_ORE = createBlock("zersium_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block ZERSIUM_BLOCK = createBlock("zersium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block THORILIDE_ORE = createBlock("thorilide_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block THORILIDE_BLOCK = createBlock("thorilide_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WorldGenBlock)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block HELICITE_ORE = createBlock("helicite_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
 	@DataGenBlock
 	public static final Block HELICITE_BLOCK = createBlock("helicite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
@@ -252,56 +254,56 @@ public class GalaxiesBlocks
 
 	/// GLASS
 
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	@DataGenBlock
 	public static final SelfConnectingGlassBlock IMPERIAL_GLASS = createSelfConnectingGlass("imperial_glass");
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock WHITE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("white_stained_imperial_glass", DyeColor.WHITE);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock ORANGE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("orange_stained_imperial_glass", DyeColor.ORANGE);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock MAGENTA_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("magenta_stained_imperial_glass", DyeColor.MAGENTA);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock LIGHT_BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_blue_stained_imperial_glass", DyeColor.LIGHT_BLUE);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock YELLOW_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("yellow_stained_imperial_glass", DyeColor.YELLOW);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock LIME_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("lime_stained_imperial_glass", DyeColor.LIME);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock PINK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("pink_stained_imperial_glass", DyeColor.PINK);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("gray_stained_imperial_glass", DyeColor.GRAY);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock LIGHT_GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_gray_stained_imperial_glass", DyeColor.LIGHT_GRAY);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock CYAN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("cyan_stained_imperial_glass", DyeColor.CYAN);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock PURPLE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("purple_stained_imperial_glass", DyeColor.PURPLE);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("blue_stained_imperial_glass", DyeColor.BLUE);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock BROWN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("brown_stained_imperial_glass", DyeColor.BROWN);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock GREEN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("green_stained_imperial_glass", DyeColor.GREEN);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock RED_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("red_stained_imperial_glass", DyeColor.RED);
 	@DataGenBlock
-	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.Transparent)
+	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock BLACK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("black_stained_imperial_glass", DyeColor.BLACK);
 
 	/// PANEL
@@ -337,17 +339,17 @@ public class GalaxiesBlocks
 	@DataGenBlock
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_2 = createSelfConnectingBlock("gray_imperial_tall_panel_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 	// TODO: Implement connecting lighting panels
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_1 = createLightingPanelBlock("gray_imperial_light_half_1", 13);
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_2 = createLightingPanelBlock("gray_imperial_light_half_2", 13);
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_3 = createLightingPanelBlock("gray_imperial_light_half_3", 13);
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_4 = createLightingPanelBlock("gray_imperial_light_half_4", 13);
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_5 = createLightingPanelBlock("gray_imperial_light_half_5", 13);
-	@DataGenBlock(model = DataGenBlockModel.None)
+	@DataGenBlock(model = DataGenBlockModel.NONE)
 	public static final InteractableInvertedLampSlab GRAY_IMPERIAL_LIGHTING_SLAB = createLightingPanelSlab("gray_imperial_lighting_panel_slab", 15, 12);
 
 	/*@RegistryName("gray_imperial_tall_light_1")
@@ -356,15 +358,15 @@ public class GalaxiesBlocks
 	@RegistryName("gray_imperial_tall_light_2")
 	@TarkinBlock(state = TrState.None, model = TrModel.None)
 	public static final InteractableConnectingInvertedLampBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY, 14);*/
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_1 = createLightingPanelBlock("gray_imperial_light_panel_1", 11);
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_2 = createLightingPanelBlock("gray_imperial_light_panel_2", 9);
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_3 = createLightingPanelBlock("gray_imperial_light_panel_3", 14);
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_1 = createLightingPanelBlock("gray_imperial_light_1", 15);
-	@DataGenBlock(model = DataGenBlockModel.LightingPanel)
+	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_2 = createLightingPanelBlock("gray_imperial_light_2", 15);
 
 	@DataGenBlock
@@ -482,22 +484,20 @@ public class GalaxiesBlocks
 	@DataGenBlock
 	public static final Block IMPERIAL_FLOORING_PATTERN_2 = createPanel("imperial_flooring_pattern_2", MapColor.GRAY);
 
-
-
-	@DataGenBlock(itemGroup = DataGenItemGroup.None)
+	@DataGenBlock(itemGroup = DataGenItemGroup.NONE)
 	public static final Block LAB_WALL = createBlock("lab_wall", AbstractBlock.Settings.create());
 
 	/// CRATES
 	public static final VoxelShape CRATE_SHAPE = VoxelShapeUtil.getCenteredCube(14, 16);
 	public static final AbstractBlock.Settings CORRUGATED_CRATE_SETTINGS = AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F);
 
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.Custom)
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
 	public static final Block IMPERIAL_CORRUGATED_CRATE = createCorrugatedCrate("imperial_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.Custom)
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
 	public static final Block MEDICAL_CORRUGATED_CRATE = createCorrugatedCrate("medical_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.Custom)
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
 	public static final Block MINING_CORRUGATED_CRATE = createCorrugatedCrate("mining_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.Custom)
+	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
 	public static final DyedBlocks CORRUGATED_CRATE = new DyedBlocks(color -> createCorrugatedCrate(color.name().toLowerCase() + "_corrugated_crate"));
 
 	private static Block createBlock(String key, AbstractBlock.Settings settings)

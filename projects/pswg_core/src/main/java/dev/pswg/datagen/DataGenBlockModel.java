@@ -2,20 +2,20 @@ package dev.pswg.datagen;
 
 public enum DataGenBlockModel
 {
-	Accumulating,
-	Cross,
-	CrossAge3,
-	CrossAge3Blooming,
-	CropAge2,
-	Column,
-	Connecting,
-	CubeAll,
-	Custom,
-	JaporLeaves,
-	LightingPanel,
-	Log,
-	LogWithWood,
-	Slab,
-	Stairs,
-	None
+	ACCUMULATING,
+	CROSS,
+	CROSS_AGE_3,
+	CROSS_AGE_3_BLOOMING,
+	CROP_AGE_2,
+	COLUMN,
+	CONNECTING,
+	CUBE_ALL,
+	CUSTOM,
+	JAPOR_LEAVES,
+	LIGHTING_PANEL,
+	LOG,
+	LOG_WITH_WOOD,
+	SLAB,
+	STAIRS,
+	NONE
 }

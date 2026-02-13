@@ -121,35 +121,6 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 		}
 		super.inventoryTick(stack, world, entity, slot);
 	}
-	/*
-	@Override
-	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
-	{
-
-		ThrowableExplosiveTag tag = new ThrowableExplosiveTag(stack.getOrCreateNbt());
-		if (user instanceof PlayerEntity playerEntity)
-		{
-			boolean inCreative = playerEntity.getAbilities().creativeMode;
-			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
-			if (!itemStack.isEmpty())
-			{
-				GrenadeItem GrenadeItem = (GrenadeItem)(itemStack.getItem() instanceof GrenadeItem ? itemStack.getItem() : item);
-				throwEntity(world, tag, itemStack, playerEntity);
-
-				playerEntity.getItemCooldownManager().remove(itemStack.getItem());
-				tag.primed = false;
-
-				//sounds.playThrowSound(playerEntity);
-				if (!inCreative)
-				{
-					stack.decrement(1);
-				}
-				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
-			}
-		}
-		tag.ticksToExplosion = baseTicksToExplosion;
-		tag.serializeAsSubtag(stack);
-	}*/
 
 	@Override
 	public int getMaxUseLeftTime(ItemStack stack, LivingEntity user)

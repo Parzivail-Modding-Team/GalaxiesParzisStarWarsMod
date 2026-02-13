@@ -74,23 +74,36 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 	{
 		if ("crate".equals(metadata))
 		{
-			if (random.nextFloat() > 0.25f)
+			if (random.nextFloat() > 0.33f)
 			{
 				Block crateBlock = StructUtil.getRandomCrate(random);
 				world.setBlockState(pos, crateBlock.getDefaultState(), Block.NOTIFY_ALL);
 				BlockEntity be = world.getBlockEntity(pos);
-				if (be instanceof LootableContainerBlockEntity lootTable)
+				if (be instanceof LootableContainerBlockEntity container)
 				{
 					// TODO: CHANGE LOOT HERE
 					if (crateBlock.equals(GalaxiesBlocks.IMPERIAL_CORRUGATED_CRATE))
-						lootTable.setLootTable(GalaxiesLootTables.IMPERIAL_CRATE);
+						container.setLootTable(GalaxiesLootTables.IMPERIAL_CRATE);
 					else if (crateBlock.equals(GalaxiesBlocks.MEDICAL_CORRUGATED_CRATE))
-						lootTable.setLootTable(GalaxiesLootTables.MEDICAL_CRATE);
+						container.setLootTable(GalaxiesLootTables.MEDICAL_CRATE);
 					else if (crateBlock.equals(GalaxiesBlocks.MINING_CORRUGATED_CRATE))
-						lootTable.setLootTable(GalaxiesLootTables.MINING_CRATE);
+						container.setLootTable(GalaxiesLootTables.MINING_CRATE);
 					else
-						lootTable.setLootTable(GalaxiesLootTables.GENERIC_CRATE);
-					lootTable.setLootTableSeed(random.nextLong());
+					{
+						int lootTable = random.nextBetween(1, 7);
+						switch (lootTable)
+						{
+							case 1, 2, 3:
+								container.setLootTable(GalaxiesLootTables.GENERIC_FOOD_CRATE);
+								break;
+							case 4, 5, 6:
+								container.setLootTable(GalaxiesLootTables.GENERIC_TECH_CRATE);
+								break;
+							default:
+								container.setLootTable(GalaxiesLootTables.GENERIC_WEAPONS_CRATE);
+						}
+					}
+					container.setLootTableSeed(random.nextLong());
 				}
 			}
 		}

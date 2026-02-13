@@ -220,20 +220,7 @@ public class MixerScreen extends HandledScreen<MixerScreenHandler>
 
 			if (Math.abs(handler.getMapX() - x) < 63 + (64 - Math.min(handler.getMapX(), 64)) && Math.abs(handler.getMapY() - y) < 63 + (64 - Math.min(handler.getMapY(), 64)))
 			{
-				if (x1 < x2)
-				{
-					float tmp = x1;
-					x1 = x2;
-					x2 = tmp;
-				}
-
-				if (y1 < y2)
-				{
-					float tmp = y1;
-					y1 = y2;
-					y2 = tmp;
-				}
-				Drawables.fill(context, RenderPipelines.GUI, x1, y1, x2, y2, Colors.WHITE);
+				Drawables.fill(context, RenderPipelines.GUI, Math.max(x1, x2), Math.max(y1, y2), Math.min(x1, x2), Math.min(y1, y2), Colors.WHITE);
 			}
 		}
 		var pair = new Pair<>((int)handler.getMapX(), (int)handler.getMapY());

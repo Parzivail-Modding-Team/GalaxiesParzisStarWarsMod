@@ -4,9 +4,10 @@ import com.google.common.collect.ConcurrentHashMultiset;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
+import dev.pswg.container.GalaxiesParticleTypes;
 import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.item.grenades.GrenadeItem;
-import dev.pswg.packet.PreciseVelocityParticleS2CPayload;
+import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -221,7 +222,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 						double offsetY = this.random.nextGaussian() * (normal.x + normal.z) / 2f;
 						double offsetZ = this.random.nextGaussian() * (normal.y + normal.x) / 2f;
 						world.addParticleClient(
-								GadgetsParticleTypes.SHORT_FLAME_PARTICLE,
+								GalaxiesParticleTypes.SHORT_FLAME_PARTICLE,
 								pos.getX() + 0.5 + normal.x + offsetX,
 								pos.getY() + 0.5 + normal.y + offsetY,
 								pos.getZ() + 0.5 + normal.z + offsetZ,
@@ -236,7 +237,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 						double offsetY = this.random.nextGaussian() * (normal.x + normal.z);
 						double offsetZ = this.random.nextGaussian() * (normal.y + normal.x);
 						world.addParticleClient(
-								GadgetsParticleTypes.SMALL_SHORT_FLAME_PARTICLE,
+								GalaxiesParticleTypes.SMALL_SHORT_FLAME_PARTICLE,
 								pos.getX() + 0.5 + normal.x + offsetX,
 								pos.getY() + 0.5 + normal.y + offsetY,
 								pos.getZ() + 0.5 + normal.z + offsetZ,
@@ -256,6 +257,6 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 	@Override
 	public GrenadeItem getItem()
 	{
-		return GadgetsItems.THERMAL_DETONATOR_ITEM;
+		return GadgetsItems.INFERNO_GRENADE_ITEM;
 	}
 }

@@ -834,5 +834,9 @@
   "pswg.food_item_group": "PSWG - Food",
   "pswg.item_group": "PSWG - Items",
   "pswg.worldgen_block_group": "PSWG - Worldgen Blocks",
+  "tag.block.pswg.arid_plant_placeable": "Arid Plant Placeable",
+  "tag.block.pswg.bouncy": "Bouncy",
+  "tag.block.pswg.bush_placeable": "Bush Placeable",
+  "tag.block.pswg.soft": "Soft",
   "text.pswg.hint.keybind": "§9[§f%s§9]§r %s"
 }

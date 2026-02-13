@@ -2,6 +2,7 @@ package dev.pswg.entity.mines;
 
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
+import dev.pswg.container.GalaxiesParticleTypes;
 import dev.pswg.container.entity.GadgetsDamage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -99,7 +100,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
 		{
-			serverWorld.spawnParticles(serverPlayerEntity, TintedParticleEffect.create(GadgetsParticleTypes.SMALL_FLASH_PARTICLE, Colors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
+			serverWorld.spawnParticles(serverPlayerEntity, TintedParticleEffect.create(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, Colors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
 		}
 	}
 
