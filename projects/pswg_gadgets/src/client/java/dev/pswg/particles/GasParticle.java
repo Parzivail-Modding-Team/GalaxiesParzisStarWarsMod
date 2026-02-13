@@ -43,7 +43,7 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 		if (gasEntity != null)
 		{
 			age = gasEntity.age;
-			maxAge = gasEntity.MAX_AGE;
+			maxAge = gasEntity.MAX_AGE * 2;
 		}
 
 	}
@@ -97,7 +97,7 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 	public void tick()
 	{
 		var pos = BlockPos.ofFloored(x, y, z);
-		if (gasEntity == null || !gasEntity.particleIdList.containsKey(pos) || !gasEntity.particleIdList.get(pos).contains(this.particleId))
+		if (gasEntity == null || !gasEntity.particleIdList.containsKey(pos) || !gasEntity.particleIdList.get(pos).contains(this.particleId) || age >= maxAge)
 		{
 			markDead();
 		}
@@ -110,11 +110,11 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 			float m = maxAge / 100f;
 			if (age <= 10 * m)
 			{
-				alpha = (age * age) / (100 * m * m) * 0.3f;
+				alpha = (float)(age * age) / (maxAge * maxAge) * 0.3f * 100;
 			}
 			if (age >= 90 * m)
 			{
-				alpha = (1 - (float)(age) / (maxAge)) * 0.3f;
+				alpha = (1 - (float)(age) / (maxAge)) * 0.3f * 10;
 				velocityX *= 0.95;
 				velocityZ *= 0.95;
 			}

@@ -259,6 +259,11 @@ public class GasEntity extends Entity
 	@Override
 	public void tick()
 	{
+		if (this.age > this.MAX_AGE)
+		{
+			this.discard();
+			return;
+		}
 		if (this.firstUpdate)
 			setOriginalPos();
 
