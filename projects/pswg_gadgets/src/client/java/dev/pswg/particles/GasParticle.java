@@ -96,7 +96,7 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 	@Override
 	public void tick()
 	{
-		var pos = new BlockPos((int)x, (int)y, (int)z);
+		var pos = BlockPos.ofFloored(x, y, z);
 		if (gasEntity == null || !gasEntity.particleIdList.containsKey(pos) || !gasEntity.particleIdList.get(pos).contains(this.particleId))
 		{
 			markDead();

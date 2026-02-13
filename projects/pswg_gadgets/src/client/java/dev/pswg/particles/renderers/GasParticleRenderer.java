@@ -1,5 +1,6 @@
 package dev.pswg.particles.renderers;
 
+import dev.pswg.Gadgets;
 import dev.pswg.GalaxiesRenderLayers;
 import dev.pswg.particles.GasParticle;
 import net.minecraft.client.particle.ParticleManager;
