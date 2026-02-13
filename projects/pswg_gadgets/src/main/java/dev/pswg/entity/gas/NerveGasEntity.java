@@ -28,7 +28,7 @@ public class NerveGasEntity extends GasEntity
 		var entities = getEntityWorld().getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox().expand(32));
 		for (LivingEntity entity : entities)
 		{
-			if (massMap.containsKey(entity.getBlockPos()))
+			if (massMap.containsKey(entity.getBlockPos()) && massMap.get(entity.getBlockPos()) > 0.25f)
 			{
 				if (toxicityIndex.containsKey(entity))
 					toxicityIndex.replace(entity, toxicityIndex.get(entity) + (massMap.get(entity.getBlockPos())) / 10 + 1);
