@@ -114,10 +114,7 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 			}
 			if (age >= 90 * m)
 			{
-
-			}
-			if (age >= 90 * m)
-			{
+				alpha = (1 - (float)(age) / (maxAge)) * 0.3f;
 				velocityX *= 0.95;
 				velocityZ *= 0.95;
 			}
