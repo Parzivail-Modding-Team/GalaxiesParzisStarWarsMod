@@ -1,9 +1,6 @@
 package dev.pswg.codec;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

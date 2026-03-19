@@ -1,16 +1,13 @@
 package dev.pswg.interaction;
 
 import dev.pswg.Galaxies;
-import dev.pswg.codecgenerator.CodecSource;
 import dev.pswg.codecgenerator.GenPacketCodec;
 import dev.pswg.codecgenerator.GenStandardCodec;
 import dev.pswg.codecgenerator.GenerateCodec;
 import dev.pswg.codecgenerator.UseCodec;
-import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.generated.codecs.IRecoilEntityAttachmentCodec;
 import dev.pswg.generated.recordbuilders.IRecoilEntityAttachmentBuilder;
 import dev.pswg.mutablerecord.MutableRecord;
-import dev.pswg.networking.GalaxiesPacketCodecs;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
@@ -25,13 +22,7 @@ import org.joml.Vector3f;
  */
 @MutableRecord
 @GenerateCodec
-public record RecoilEntityAttachment(
-		@UseCodec(
-				customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "NAMED_VECTOR_3F"),
-				packet = GenPacketCodec.VECTOR_3F
-		)
-		Vector3f recoilVelocity
-) implements IRecoilEntityAttachmentBuilder, IRecoilEntityAttachmentCodec
+public record RecoilEntityAttachment(Vector3f recoilVelocity) implements IRecoilEntityAttachmentBuilder, IRecoilEntityAttachmentCodec
 {
 	@SuppressWarnings("UnstableApiUsage")
 	public static final AttachmentType<RecoilEntityAttachment> ATTACHMENT = AttachmentRegistry.create(
