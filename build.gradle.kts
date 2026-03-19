@@ -17,13 +17,9 @@ subprojects {
 val archives_base_name: String by project.ext
 val maven_group: String by project.ext
 val minecraft_version: String by project.ext
-val yarn_mappings: String by project.ext
 val parchment_mappings: String by project.ext
 val loader_version: String by project.ext
 val fabric_version: String by project.ext
-val migrationMode = providers.gradleProperty("pswgMigrationMode")
-	.map(String::toBoolean)
-	.getOrElse(false)
 
 /**
  * the version name from the latest Git tag
@@ -94,15 +90,10 @@ allprojects {
 
 		// To change the versions, see the gradle.properties file
 		minecraft("com.mojang:minecraft:${minecraft_version}")
-		if (migrationMode) {
-			mappings("net.fabricmc:yarn:${yarn_mappings}:v2")
-		}
-		else {
-			mappings(loom.layered {
-				officialMojangMappings()
-				parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_mappings}@zip")
-			})
-		}
+		mappings(loom.layered {
+			officialMojangMappings()
+			parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_mappings}@zip")
+		})
 		modImplementation("net.fabricmc:fabric-loader:${loader_version}")
 
 		// Fabric API

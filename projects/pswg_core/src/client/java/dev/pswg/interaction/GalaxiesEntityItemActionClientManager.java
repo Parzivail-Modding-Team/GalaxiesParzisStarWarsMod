@@ -1,7 +1,6 @@
 package dev.pswg.interaction;
 
 import dev.pswg.item.IPrimaryActionHandler;
-import dev.pswg.mixin.client.accessors.ClientPlayerInteractionManagerAccessor;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
@@ -19,10 +18,11 @@ public final class GalaxiesEntityItemActionClientManager
 	{
 		var client = Minecraft.getInstance();
 		var interactionManager = client.gameMode;
-
-		((ClientPlayerInteractionManagerAccessor)interactionManager).invokeEnsureHasSentCarriedItem();
-
 		var player = client.player;
+		if (interactionManager == null || player == null)
+			return;
+
+		CarriedItemSyncHelper.ensureHasSentCarriedItem(player);
 		var hand = player.getUsedItemHand();
 		var activeStack = player.getItemInHand(hand);
 		if (!(activeStack.getItem() instanceof IPrimaryActionHandler item))

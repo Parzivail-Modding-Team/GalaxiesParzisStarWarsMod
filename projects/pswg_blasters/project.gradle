@@ -1,28 +1,10 @@
-def migrationMode = project.findProperty("pswgMigrationMode")?.toString()?.toBoolean() ?: false
-
 loom {
-	if (!migrationMode)
-	{
-		splitEnvironmentSourceSets()
-	}
+	splitEnvironmentSourceSets()
 
 	mods {
 		"pswg_blasters" {
 			sourceSet sourceSets.main
-			if (!migrationMode)
-			{
-				sourceSet sourceSets.client
-			}
-		}
-	}
-}
-
-if (migrationMode)
-{
-	sourceSets {
-		main {
-			java.srcDir("src/client/java")
-			resources.srcDir("src/client/resources")
+			sourceSet sourceSets.client
 		}
 	}
 }

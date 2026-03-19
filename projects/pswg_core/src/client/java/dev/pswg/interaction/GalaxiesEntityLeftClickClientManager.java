@@ -1,7 +1,6 @@
 package dev.pswg.interaction;
 
 import dev.pswg.item.ILeftClickUsable;
-import dev.pswg.mixin.client.accessors.ClientPlayerInteractionManagerAccessor;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -13,7 +12,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-import java.lang.constant.Constable;
+
 import java.util.Objects;
 
 /**
@@ -67,7 +66,7 @@ public final class GalaxiesEntityLeftClickClientManager
 		if (leftClickingEntity.pswg$isLeftUsingItem())
 		{
 			if (!client.options.keyAttack.isDown())
-				stopUsingItemLeft(client.gameMode, client.player);
+				stopUsingItemLeft(client.player);
 		}
 		else
 		{
@@ -99,12 +98,11 @@ public final class GalaxiesEntityLeftClickClientManager
 	 * Emulates the {@link MultiPlayerGameMode#releaseUsingItem} functionality for
 	 * left-use items
 	 *
-	 * @param interactionManager The interaction manager to wrap
 	 * @param player             The player that is interacting
 	 */
-	private static void stopUsingItemLeft(MultiPlayerGameMode interactionManager, LocalPlayer player)
+	private static void stopUsingItemLeft(LocalPlayer player)
 	{
-		((ClientPlayerInteractionManagerAccessor)interactionManager).invokeEnsureHasSentCarriedItem();
+		CarriedItemSyncHelper.ensureHasSentCarriedItem(player);
 
 		ClientPlayNetworking.send(new GalaxiesPlayerActionC2SPacket(ClientPlayerAction.RELEASE_USE_LEFT_ITEM));
 
@@ -160,7 +158,7 @@ public final class GalaxiesEntityLeftClickClientManager
 		}
 		else
 		{
-			((ClientPlayerInteractionManagerAccessor)interactionManager).invokeEnsureHasSentCarriedItem();
+			CarriedItemSyncHelper.ensureHasSentCarriedItem(player);
 
 			var packet = new PlayerInteractItemLeftC2SPacket(hand, player.getYRot(), player.getXRot(), repeatEvent);
 

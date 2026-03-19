@@ -5,15 +5,37 @@ import dev.pswg.attributes.GalaxiesEntityAttributes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Scales mouse turn deltas to match the player's custom field of view zoom attribute
+ */
 @Mixin(MouseHandler.class)
 public abstract class MouseMixin
 {
-	@ModifyArgs(method = "Lnet/minecraft/client/Mouse;updateMouse(D)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"))
-	public void updateMouse$changeLookDirection(Args args)
+	/**
+	 * The accumulated horizontal mouse delta for the current frame
+	 */
+	@Shadow
+	private double accumulatedDX;
+
+	/**
+	 * The accumulated vertical mouse delta for the current frame
+	 */
+	@Shadow
+	private double accumulatedDY;
+
+	/**
+	 * Applies field-of-view-based scaling before vanilla converts the stored mouse deltas into turn amounts
+	 *
+	 * @param mouseDeltaTime The frame delta used by vanilla mouse smoothing
+	 * @param ci            The callback info
+	 */
+	@Inject(method = "turnPlayer", at = @At("HEAD"))
+	private void turnPlayer(double mouseDeltaTime, CallbackInfo ci)
 	{
 		var config = Galaxies.CONFIG.get();
 		if (!config.scaleMouseWithFieldOfView)
@@ -25,11 +47,10 @@ public abstract class MouseMixin
 			return;
 
 		var fovMultiplier = (float)player.getAttributeValue(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM);
+		if (fovMultiplier == 0)
+			return;
 
-		// cursorDeltaX
-		args.set(0, (double)args.get(0) / fovMultiplier);
-
-		// cursorDeltaY
-		args.set(1, (double)args.get(1) / fovMultiplier);
+		accumulatedDX /= fovMultiplier;
+		accumulatedDY /= fovMultiplier;
 	}
 }

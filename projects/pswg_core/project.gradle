@@ -1,32 +1,14 @@
-def migrationMode = project.findProperty("pswgMigrationMode")?.toString()?.toBoolean() ?: false
-
 loom {
-	if (!migrationMode)
-	{
-		splitEnvironmentSourceSets()
-	}
+	splitEnvironmentSourceSets()
 
 	mods {
 		"pswg_core" {
 			sourceSet sourceSets.main
-			if (!migrationMode)
-			{
-				sourceSet sourceSets.client
-			}
+			sourceSet sourceSets.client
 		}
 	}
 
 	accessWidenerPath = file("src/main/resources/pswg.accesswidener")
-}
-
-if (migrationMode)
-{
-	sourceSets {
-		main {
-			java.srcDir("src/client/java")
-			resources.srcDir("src/client/resources")
-		}
-	}
 }
 
 fabricApi {
