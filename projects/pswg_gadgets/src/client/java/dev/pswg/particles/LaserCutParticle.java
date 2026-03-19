@@ -31,7 +31,7 @@ public class LaserCutParticle extends DecalParticle
 		this.setAlpha(1F);
 		var a = Mth.lerp(Mth.clamp((this.age / (float)this.lifetime) * 2f, 0, 1), heat, 1.0f);
 		this.setColor(Mth.clamp(getRed(a), 0, 1), Mth.clamp(getGreen(a), 0, 1), Mth.clamp(getBlue(a), 0, 1));
-		this.lifetime = clientWorld.random.nextIntBetweenInclusive(350, 400);
+		this.lifetime = this.random.nextIntBetweenInclusive(350, 400);
 		this.hasPhysics = false;
 		this.xd = vX;
 		this.yd = vY;
@@ -48,11 +48,11 @@ public class LaserCutParticle extends DecalParticle
 	}
 
 	@Override
-	public int getLightColor(float tint)
+	public int getLightCoords(float tint)
 	{
 		float f = ((float)this.age + tint) / (float)this.lifetime;
 		f = Mth.clamp(f, 0.0F, 1.0F);
-		int i = super.getLightColor(tint);
+		int i = super.getLightCoords(tint);
 		int j = i & 255;
 		int k = i >> 16 & 255;
 		j += (int)(f * 15.0F * 16.0F);

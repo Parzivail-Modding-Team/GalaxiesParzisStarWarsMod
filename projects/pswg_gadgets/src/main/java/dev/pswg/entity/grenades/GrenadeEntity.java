@@ -150,14 +150,14 @@ public abstract class GrenadeEntity extends ThrowableProjectile
 	}
 
 	@Override
-	public InteractionResult interact(Player player, InteractionHand hand)
+	public InteractionResult interact(Player player, InteractionHand hand, Vec3 hitPos)
 	{
 		if (!isPrimed() && tickCount > getMinPickUpTime() && player.getMainHandItem().isEmpty())
 		{
 			player.addItem(new ItemStack(getItem()));
 			this.remove(RemovalReason.DISCARDED);
 		}
-		return super.interact(player, hand);
+		return super.interact(player, hand, hitPos);
 	}
 	@Override
 	protected void onInsideBlock(BlockState state)

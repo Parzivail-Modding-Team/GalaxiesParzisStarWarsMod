@@ -18,7 +18,7 @@ import dev.pswg.rendering.models.GalaxiesModelBakery;
 import dev.pswg.screens.CrateGenericSmallScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.fabricmc.loader.api.FabricLoader;
@@ -28,8 +28,10 @@ import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
+
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,6 +46,7 @@ public class GalaxiesClient implements ClientModInitializer
 	 */
 	public static final BinaryCodecDataLoader<GalaxiesModelBakery.GQuadGeometry> GQB_LOADER = new BinaryCodecDataLoader<>(
 			Galaxies.id("gqb"),
+			List.of(ResourceReloaderKeys.Client.MODELS),
 			"models",
 			true,
 			(i) -> IdentifierUtil.hasExtension(i, "gqb"),
@@ -86,7 +89,7 @@ public class GalaxiesClient implements ClientModInitializer
 	 *
 	 * @return The translation key for the given identifier
 	 */
-	public static String getI18nKey(ResourceLocation identifier)
+	public static String getI18nKey(Identifier identifier)
 	{
 		return String.format("text.%s.%s", identifier.getNamespace(), identifier.getPath());
 	}
@@ -132,17 +135,16 @@ public class GalaxiesClient implements ClientModInitializer
 		});
 
 		// Register the quad buffer loader
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(GQB_LOADER.getId(), GQB_LOADER);
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).addReloaderOrdering(GQB_LOADER.getId(), ResourceReloaderKeys.Client.MODELS);
+		registerClientReloader(GQB_LOADER);
 
 		//Register tints
 		ItemTintSources.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);
 
 		// Register particles
-		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);
+		ParticleProviderRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);
 
-		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SHORT_FLAME_PARTICLE, ShortFlameParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_SHORT_FLAME_PARTICLE, ShortFlameParticle.SmallFactory::new);
+		ParticleProviderRegistry.getInstance().register(GalaxiesParticleTypes.SHORT_FLAME_PARTICLE, ShortFlameParticle.Factory::new);
+		ParticleProviderRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_SHORT_FLAME_PARTICLE, ShortFlameParticle.SmallFactory::new);
 
 		MenuScreens.register(GalaxiesScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
 
@@ -153,5 +155,22 @@ public class GalaxiesClient implements ClientModInitializer
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesFinalizing);
 
 		Galaxies.LOGGER.info("Galaxies client initialized");
+	}
+
+	/**
+	 * Registers a client resource reloader against Fabric's v1 resource loader
+	 * API.
+	 *
+	 * @param reloader The reloader to register.
+	 */
+	private static void registerClientReloader(BinaryCodecDataLoader<?> reloader)
+	{
+		var resourceLoader = ResourceLoader.get(PackType.CLIENT_RESOURCES);
+		resourceLoader.registerReloadListener(reloader.getId(), reloader);
+
+		for (var dependency : reloader.getDependencies())
+		{
+			resourceLoader.addListenerOrdering(reloader.getId(), dependency);
+		}
 	}
 }

@@ -6,20 +6,19 @@ import dev.pswg.Gadgets;
 import dev.pswg.entity.mines.TripwireMineEntity;
 import dev.pswg.models.TripwireMineRenderState;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import dev.pswg.models.TripwireMineModel;
 
 public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntity, TripwireMineRenderState>
 {
 
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Gadgets.id("tripwire_mine"), "temp");
-	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("pswg_gadgets", "textures/items/tripwire_mine.png");
+	public static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("pswg_gadgets", "textures/items/tripwire_mine.png");
 	private final TripwireMineModel model;
 
 	public TripwireMineEntityRenderer(EntityRendererProvider.Context context)
@@ -43,7 +42,7 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 		model.root().getChild("laser").y = state.tripwireDistance * -31 + 1f;
 		model.root().getChild("laser").skipDraw = !state.primed;
 
-		queue.submitModel(this.model, state, matrices, RenderType.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
 		matrices.popPose();
 		super.submit(state, matrices, queue, cameraState);
 	}

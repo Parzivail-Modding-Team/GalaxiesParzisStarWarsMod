@@ -1,4 +1,12 @@
 pluginManagement {
+	val loom_version: String by settings
+
+	includeBuild("../vendor/pswg-submodule-dependencies")
+
+	plugins {
+		id("net.fabricmc.fabric-loom") version loom_version
+	}
+
 	repositories {
 		mavenCentral()
 		maven(url = "https://maven.fabricmc.net/") {

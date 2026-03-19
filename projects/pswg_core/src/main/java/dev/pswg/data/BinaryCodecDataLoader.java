@@ -4,7 +4,7 @@ import dev.pswg.Galaxies;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Unit;
@@ -12,8 +12,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -31,12 +33,17 @@ public class BinaryCodecDataLoader<T> implements PreparableReloadListener
 	/**
 	 * The set of data definitions currently associated with the loaded world
 	 */
-	private final HashMap<ResourceLocation, T> definitions = new HashMap<>();
+	private final HashMap<Identifier, T> definitions = new HashMap<>();
 
 	/**
 	 * The id of the logger
 	 */
-	private final ResourceLocation id;
+	private final Identifier id;
+
+	/**
+	 * The reload listeners that must run before this loader.
+	 */
+	private final Collection<Identifier> dependencies;
 
 	/**
 	 * The path of the folder from which data will be loaded
@@ -51,7 +58,7 @@ public class BinaryCodecDataLoader<T> implements PreparableReloadListener
 	/**
 	 * A filter that will be used to select files from within the specified folder
 	 */
-	private final Predicate<ResourceLocation> filter;
+	private final Predicate<Identifier> filter;
 
 	/**
 	 * The codec that will be used to decode the given type from the
@@ -62,14 +69,23 @@ public class BinaryCodecDataLoader<T> implements PreparableReloadListener
 	 * Creates a new packet-codec-backed data loader
 	 *
 	 * @param id              The identifier for this data loader instance.
+	 * @param dependencies    The reload listeners that must run before this loader.
 	 * @param folderName      The path of the folder from which data will be loaded.
 	 * @param removeExtension Whether the extension should be removed from entry keys.
 	 * @param filter          A filter that will be used to select files from within the specified folder.
 	 * @param codec           The codec that will be used to decode the files to the specified type.
 	 */
-	public BinaryCodecDataLoader(ResourceLocation id, String folderName, boolean removeExtension, Predicate<ResourceLocation> filter, StreamCodec<ByteBuf, ? extends T> codec)
+	public BinaryCodecDataLoader(
+			Identifier id,
+			Collection<Identifier> dependencies,
+			String folderName,
+			boolean removeExtension,
+			Predicate<Identifier> filter,
+			StreamCodec<ByteBuf, ? extends T> codec
+	)
 	{
 		this.id = id;
+		this.dependencies = List.copyOf(dependencies);
 		this.folderName = folderName;
 		this.removeExtension = removeExtension;
 		this.filter = filter;
@@ -78,17 +94,47 @@ public class BinaryCodecDataLoader<T> implements PreparableReloadListener
 	}
 
 	/**
+	 * Creates a new packet-codec-backed data loader with no ordering requirements.
+	 *
+	 * @param id              The identifier for this data loader instance.
+	 * @param folderName      The path of the folder from which data will be loaded.
+	 * @param removeExtension Whether the extension should be removed from entry keys.
+	 * @param filter          A filter that will be used to select files from within the specified folder.
+	 * @param codec           The codec that will be used to decode the files to the specified type.
+	 */
+	public BinaryCodecDataLoader(
+			Identifier id,
+			String folderName,
+			boolean removeExtension,
+			Predicate<Identifier> filter,
+			StreamCodec<ByteBuf, ? extends T> codec
+	)
+	{
+		this(id, List.of(), folderName, removeExtension, filter, codec);
+	}
+
+	/**
 	 * Gets the current set of data definitions associated with the loaded
 	 * world, keyed by the identifier deriving from their filename
 	 */
-	public HashMap<ResourceLocation, T> getDefinitions()
+	public HashMap<Identifier, T> getDefinitions()
 	{
 		return definitions;
 	}
 
-	public ResourceLocation getId()
+	public Identifier getId()
 	{
 		return id;
+	}
+
+	/**
+	 * Gets the reload listeners that must run before this loader.
+	 *
+	 * @return The reload listener ids that should precede this loader.
+	 */
+	public Collection<Identifier> getDependencies()
+	{
+		return dependencies;
 	}
 
 	@Override

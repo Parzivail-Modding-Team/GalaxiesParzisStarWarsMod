@@ -17,7 +17,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -54,28 +54,28 @@ public class GalaxiesItems
 	{
 		public static final DataComponentType<Boolean> SCRAP = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Galaxies.MODID, "scrap"),
+				Identifier.fromNamespaceAndPath(Galaxies.MODID, "scrap"),
 				DataComponentType.<Boolean>builder().persistent(Codec.BOOL).build()
 		);
 
 		public static final DataComponentType<Integer> METAL_COMPONENT = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Galaxies.MODID, "metal_component"),
+				Identifier.fromNamespaceAndPath(Galaxies.MODID, "metal_component"),
 				DataComponentType.<Integer>builder().persistent(Codec.INT).build()
 		);
 		public static final DataComponentType<Integer> TECH_COMPONENT = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Galaxies.MODID, "tech_component"),
+				Identifier.fromNamespaceAndPath(Galaxies.MODID, "tech_component"),
 				DataComponentType.<Integer>builder().persistent(Codec.INT).build()
 		);
 		public static final DataComponentType<Integer> PLASTIC_COMPONENT = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Galaxies.MODID, "plastic_component"),
+				Identifier.fromNamespaceAndPath(Galaxies.MODID, "plastic_component"),
 				DataComponentType.<Integer>builder().persistent(Codec.INT).build()
 		);
 		public static final DataComponentType<Integer> ENERGY_COMPONENT = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Galaxies.MODID, "energy_component"),
+				Identifier.fromNamespaceAndPath(Galaxies.MODID, "energy_component"),
 				DataComponentType.<Integer>builder().persistent(Codec.INT).build()
 		);
 

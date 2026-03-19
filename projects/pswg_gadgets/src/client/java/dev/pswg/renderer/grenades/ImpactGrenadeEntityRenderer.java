@@ -6,21 +6,19 @@ import dev.pswg.Gadgets;
 import dev.pswg.entity.grenades.ImpactGrenadeEntity;
 import dev.pswg.models.GrenadeRenderState;
 import dev.pswg.models.ImpactGrenadeModel;
-import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ImpactGrenadeEntityRenderer extends EntityRenderer<ImpactGrenadeEntity, GrenadeRenderState>
 {
 
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Gadgets.id("impact_grenade"), "temp");
-	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("pswg_gadgets", "textures/items/impact_grenade.png");
+	public static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("pswg_gadgets", "textures/items/impact_grenade.png");
 	private final ImpactGrenadeModel model;
 
 	public ImpactGrenadeEntityRenderer(EntityRendererProvider.Context context)
@@ -36,7 +34,7 @@ public class ImpactGrenadeEntityRenderer extends EntityRenderer<ImpactGrenadeEnt
 		matrices.mulPose(Axis.YP.rotationDegrees(-state.yaw));
 		this.model.setupAnim(state);
 
-		queue.submitModel(this.model, state, matrices, RenderType.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
 		matrices.popPose();
 		super.submit(state, matrices, queue, cameraState);
 	}

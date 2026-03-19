@@ -23,7 +23,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.codec.StreamDecoder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 
 /**
@@ -37,14 +37,14 @@ public final class GalaxiesPacketCodecs
 	public static final StreamCodec<RegistryFriendlyByteBuf, InteractionHand> HAND = forEnum(InteractionHand.class);
 
 	/**
-	 * A packet codec that can serialize and deserialize {@link ResourceLocation} lists
+	 * A packet codec that can serialize and deserialize {@link Identifier} lists
 	 */
-	public static final StreamCodec<ByteBuf, List<ResourceLocation>> IDENTIFIER_LIST  = ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list());
+	public static final StreamCodec<ByteBuf, List<Identifier>> IDENTIFIER_LIST  = Identifier.STREAM_CODEC.apply(ByteBufCodecs.list());
 
 	/**
-	 * A packet codec that can serialize and deserialize maps between {@link ResourceLocation}s
+	 * A packet codec that can serialize and deserialize maps between {@link Identifier}s
 	 */
-	public static final StreamCodec<ByteBuf, Map<ResourceLocation, ResourceLocation>> IDENTIFIER_MAP = ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, ResourceLocation.STREAM_CODEC);
+	public static final StreamCodec<ByteBuf, Map<Identifier, Identifier>> IDENTIFIER_MAP = ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, Identifier.STREAM_CODEC);
 
 	/**
 	 * A packet codec that can serialize and deserialize {@link ClientPlayerAction} enum values

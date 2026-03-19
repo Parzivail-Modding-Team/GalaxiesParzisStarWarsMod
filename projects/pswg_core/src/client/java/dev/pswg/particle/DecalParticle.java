@@ -7,7 +7,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -46,7 +46,7 @@ public class DecalParticle extends SimpleAnimatedParticle
 	@Override
 	protected void extractRotatedQuad(QuadParticleRenderState submittable, Camera camera, Quaternionf rotation, float tickProgress)
 	{
-		var vec3d = camera.getPosition();
+		var vec3d = camera.position();
 		var f = (float)(Mth.lerp(tickProgress, this.xo, this.x) - vec3d.x());
 		var g = (float)(Mth.lerp(tickProgress, this.yo, this.y) - vec3d.y());
 		var h = (float)(Mth.lerp(tickProgress, this.zo, this.z) - vec3d.z());
@@ -72,7 +72,7 @@ public class DecalParticle extends SimpleAnimatedParticle
 		var m = this.getU1();
 		var n = this.getV0();
 		var o = this.getV1();
-		var p = this.getLightColor(tickProgress);
+		var p = this.getLightCoords(tickProgress);
 
 		for (var k = 0; k < 4; ++k)
 		{
@@ -86,7 +86,7 @@ public class DecalParticle extends SimpleAnimatedParticle
 		float y = (corners[0].y + corners[1].y + corners[2].y + corners[3].y) / 4f;
 		float z = (corners[0].z + corners[1].z + corners[2].z + corners[3].z) / 4f;
 
-		submittable.add(this.getLayer(), x, y, z, rot.x, rot.y, rot.z, rot.w, this.getQuadSize(tickProgress), this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol), this.getLightColor(tickProgress));
+		submittable.add(this.getLayer(), x, y, z, rot.x, rot.y, rot.z, rot.w, this.getQuadSize(tickProgress), this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol), p);
 		/*vertexConsumer.vertex(corners[3].x, corners[3].y, corners[3].z).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[2].x, corners[2].y, corners[2].z).texture(m, n).color(this.red, this.green, this.blue, this.alpha).light(p);
 		vertexConsumer.vertex(corners[1].x, corners[1].y, corners[1].z).texture(l, n).color(this.red, this.green, this.blue, this.alpha).light(p);

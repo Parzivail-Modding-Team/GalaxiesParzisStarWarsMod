@@ -28,7 +28,6 @@
 			"dev.pswg.datagen.GalaxiesDataGenerator"
 		]
 	},
-	"accessWidener": "pswg.accesswidener",
 	"mixins": [
 		"pswg.mixins.json",
 		"errorman.mixins.json",
@@ -38,10 +37,10 @@
 		}
 	],
 	"depends": {
-		"fabricloader": ">=0.16.7",
-		"minecraft": "~1.21.2-beta.5",
-		"java": ">=21",
-		"fabric-api": ">=0.111.0"
+		"fabricloader": ">=0.18.4",
+		"minecraft": ">=26.1-rc.1 <26.2-",
+		"java": ">=25",
+		"fabric-api": ">=0.143.14+26.1"
 	},
 	"breaks": {
 		"optifabric": "*"
@@ -54,7 +53,7 @@
 	},
 	"custom": {
 		"loom:injected_interfaces": {
-			"net/minecraft/class_1309": [
+			"net/minecraft/world/entity/LivingEntity": [
 				"dev/pswg/interaction/ILeftClickingEntity"
 			]
 		},

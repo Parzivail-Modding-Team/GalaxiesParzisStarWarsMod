@@ -3,7 +3,7 @@ package dev.pswg.sound;
 import dev.pswg.Blasters;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 /**
@@ -30,7 +30,7 @@ public final class BlasterSounds
 	 */
 	private static SoundEvent registerSound(String id)
 	{
-		ResourceLocation identifier = ResourceLocation.fromNamespaceAndPath(Blasters.MODID, id);
+		Identifier identifier = Identifier.fromNamespaceAndPath(Blasters.MODID, id);
 		return Registry.register(BuiltInRegistries.SOUND_EVENT, identifier, SoundEvent.createVariableRangeEvent(identifier));
 	}
 

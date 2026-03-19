@@ -14,12 +14,11 @@ import dev.pswg.renderer.BlasterBoltEntityRenderer;
 import dev.pswg.rendering.Drawables;
 import dev.pswg.rendering.ItemHudRenderer;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.network.chat.Component;
@@ -48,7 +47,6 @@ public class BlastersClient implements GalaxiesClientAddon
 	public void onGalaxiesClientReady()
 	{
 		EntityRenderers.register(Blasters.BLASTER_BOLT_ENTITY, BlasterBoltEntityRenderer::new);
-		EntityModelLayerRegistry.registerModelLayer(BlasterBoltEntityRenderer.MODEL_LAYER, BlasterBoltEntityRenderer.Model::getTexturedModelData);
 
 		BLASTER_HUD_REGISTRY.register(Blasters.DEFAULT_HUD, new DefaultBlasterHudRenderer());
 
@@ -81,7 +79,7 @@ public class BlastersClient implements GalaxiesClientAddon
 		list.add(GalaxiesClient.getKeybindHint(GalaxiesKeybinds.getPrimaryAction(), Component.translatable(I18N_VENT_BLASTER)));
 	}
 
-	private static void renderItemBars(GuiGraphics context, Font textRenderer, ItemStack stack, int x, int y)
+	private static void renderItemBars(GuiGraphicsExtractor context, Font textRenderer, ItemStack stack, int x, int y)
 	{
 		if (stack.is(Blasters.BLASTER_ITEM))
 		{
@@ -125,7 +123,7 @@ public class BlastersClient implements GalaxiesClientAddon
 		BLASTER_HUD_REGISTRY.freeze();
 	}
 
-	private static void renderCrosshair(GuiGraphics context, DeltaTracker tickCounter)
+	private static void renderCrosshair(GuiGraphicsExtractor context, DeltaTracker tickCounter)
 	{
 		var client = Minecraft.getInstance();
 		if (client.player == null)

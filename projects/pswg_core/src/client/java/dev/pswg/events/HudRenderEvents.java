@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 /**
  * Contains events for being notified when certain HUD elements are drawn
@@ -16,7 +16,7 @@ public final class HudRenderEvents
 	@Environment(EnvType.CLIENT)
 	public interface ElementRenderedCallback
 	{
-		void render(GuiGraphics context, DeltaTracker tickCounter);
+		void render(GuiGraphicsExtractor context, DeltaTracker tickCounter);
 	}
 
 	/**

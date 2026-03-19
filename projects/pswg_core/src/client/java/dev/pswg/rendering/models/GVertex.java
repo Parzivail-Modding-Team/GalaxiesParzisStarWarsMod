@@ -20,7 +20,7 @@ public record GVertex(Vector3f position, Vector3f normal, Vector2f texCoords, in
 			var color = ByteBufCodecs.INT.decode(buf);
 			var overlay = ByteBufCodecs.INT.decode(buf);
 			var light = ByteBufCodecs.INT.decode(buf);
-			return new GVertex(position, normal, texCoords, color, overlay, light);
+			return new GVertex(new Vector3f(position), new Vector3f(normal), new Vector2f(texCoords), color, overlay, light);
 		}
 
 		@Override

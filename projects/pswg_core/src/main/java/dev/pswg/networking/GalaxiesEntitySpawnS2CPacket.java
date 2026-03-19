@@ -85,7 +85,7 @@ public class GalaxiesEntitySpawnS2CPacket /* TODO: extends ClientboundAddEntityP
 		this.z = buf.readDouble();
 		this.data = buf.readVarInt();
 		this.yHeadRot = buf.readFloat();
-		this.velocity = buf.readVec3();
+		this.velocity = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
 		this.yaw = buf.readFloat();
 		this.pitch = buf.readFloat();
 		this.customData = buf.readNbt();
@@ -103,7 +103,9 @@ public class GalaxiesEntitySpawnS2CPacket /* TODO: extends ClientboundAddEntityP
 		buf.writeDouble(this.z);
 		buf.writeVarInt(this.data);
 		buf.writeFloat(this.yHeadRot);
-		buf.writeVec3(this.velocity);
+		buf.writeDouble(this.velocity.x);
+		buf.writeDouble(this.velocity.y);
+		buf.writeDouble(this.velocity.z);
 		buf.writeFloat(this.yaw);
 		buf.writeFloat(this.pitch);
 		buf.writeNbt(this.customData);

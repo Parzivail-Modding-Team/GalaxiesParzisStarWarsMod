@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsRecipeSerializers;
 import dev.pswg.container.GadgetsRecipeTypes;
 import dev.pswg.util.GalaxiesPacketUtil;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,6 +14,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
@@ -43,7 +43,7 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 	}
 
 	@Override
-	public ItemStack assemble(SingleRecipeInput input, HolderLookup.Provider registries)
+	public ItemStack assemble(SingleRecipeInput input)
 	{
 		return primaryResult.copy();
 	}
@@ -112,7 +112,7 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 	@Override
 	public RecipeBookCategory recipeBookCategory()
 	{
-		return null;
+		return RecipeBookCategories.CRAFTING_MISC;
 	}
 
 	@FunctionalInterface
@@ -121,45 +121,28 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 		T create(Ingredient ingredient, ItemStack result, ItemStack secondaryResult, float secondaryChance);
 	}
 
-	public static class Serializer<T extends LaserCuttingRecipe> implements RecipeSerializer<T>
+	public static <T extends LaserCuttingRecipe> RecipeSerializer<T> createSerializer(LaserCuttingRecipe.RecipeFactory<T> recipeFactory)
 	{
-		private final MapCodec<T> codec;
-		private final StreamCodec<RegistryFriendlyByteBuf, T> packetCodec;
-
-		public Serializer(LaserCuttingRecipe.RecipeFactory<T> recipeFactory)
-		{
-			this.codec = RecordCodecBuilder.mapCodec(
-					instance -> instance.group(
-							                    Ingredient.CODEC.fieldOf("ingredient").forGetter(LaserCuttingRecipe::getIngredient),
-							                    ItemStack.STRICT_CODEC.fieldOf("primary_result").forGetter(LaserCuttingRecipe::getPrimaryResult),
-							                    ItemStack.STRICT_CODEC.fieldOf("secondary_result").forGetter(LaserCuttingRecipe::getSecondaryResult),
-							                    ExtraCodecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(LaserCuttingRecipe::getSecondaryChance)
-					                    )
-					                    .apply(instance, recipeFactory::create)
-			);
-			this.packetCodec = GalaxiesPacketUtil.quadruple(
-					Ingredient.CONTENTS_STREAM_CODEC,
-					LaserCuttingRecipe::getIngredient,
-					ItemStack.STREAM_CODEC,
-					LaserCuttingRecipe::getPrimaryResult,
-					ItemStack.STREAM_CODEC,
-					LaserCuttingRecipe::getSecondaryResult,
-					ByteBufCodecs.FLOAT,
-					LaserCuttingRecipe::getSecondaryChance,
-					recipeFactory::create
-			);
-		}
-
-		@Override
-		public MapCodec<T> codec()
-		{
-			return this.codec;
-		}
-
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec()
-		{
-			return this.packetCodec;
-		}
+		MapCodec<T> codec = RecordCodecBuilder.mapCodec(
+				instance -> instance.group(
+						                    Ingredient.CODEC.fieldOf("ingredient").forGetter(LaserCuttingRecipe::getIngredient),
+						                    ItemStack.CODEC.fieldOf("primary_result").forGetter(LaserCuttingRecipe::getPrimaryResult),
+						                    ItemStack.CODEC.fieldOf("secondary_result").forGetter(LaserCuttingRecipe::getSecondaryResult),
+						                    ExtraCodecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(LaserCuttingRecipe::getSecondaryChance)
+				                    )
+				                    .apply(instance, recipeFactory::create)
+		);
+		StreamCodec<RegistryFriendlyByteBuf, T> packetCodec = GalaxiesPacketUtil.quadruple(
+				Ingredient.CONTENTS_STREAM_CODEC,
+				LaserCuttingRecipe::getIngredient,
+				ItemStack.STREAM_CODEC,
+				LaserCuttingRecipe::getPrimaryResult,
+				ItemStack.STREAM_CODEC,
+				LaserCuttingRecipe::getSecondaryResult,
+				ByteBufCodecs.FLOAT,
+				LaserCuttingRecipe::getSecondaryChance,
+				recipeFactory::create
+		);
+		return new RecipeSerializer<>(codec, packetCodec);
 	}
 }

@@ -7,7 +7,7 @@ import dev.pswg.rendering.BlittableTexture;
 import dev.pswg.rendering.ItemHudRenderer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.item.ItemStack;
 
@@ -44,7 +44,7 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 	private static final BlittableTexture.Patch CURSOR = HUD_ELEMENTS.createPatch(0, 24, 3, 7);
 
 	@Override
-	public void render(ItemStack stack, GuiGraphics context, DeltaTracker tickCounter)
+	public void render(ItemStack stack, GuiGraphicsExtractor context, DeltaTracker tickCounter)
 	{
 		var client = Minecraft.getInstance();
 

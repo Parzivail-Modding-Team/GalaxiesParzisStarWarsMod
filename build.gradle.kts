@@ -1,8 +1,6 @@
-import java.io.ByteArrayOutputStream
-
 plugins {
-	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.1"
-	id("fabric-loom") version "1.13.6"
+	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.2"
+	id("net.fabricmc.fabric-loom")
 	`maven-publish`
 }
 
@@ -10,14 +8,13 @@ subprojects {
 	if (!file("project.gradle").exists()) return@subprojects
 
 	apply(plugin = "com.parzivail.internal.pswg-submodule-dependencies")
-	apply(plugin = "fabric-loom")
+	apply(plugin = "net.fabricmc.fabric-loom")
 	apply(plugin = "maven-publish")
 }
 
 val archives_base_name: String by project.ext
 val maven_group: String by project.ext
 val minecraft_version: String by project.ext
-val parchment_mappings: String by project.ext
 val loader_version: String by project.ext
 val fabric_version: String by project.ext
 
@@ -25,12 +22,9 @@ val fabric_version: String by project.ext
  * the version name from the latest Git tag
  */
 val versionName: String = run {
-	val stdout = ByteArrayOutputStream()
-	exec {
-		commandLine = listOf("git", "describe", "--tags", "--dirty")
-		standardOutput = stdout
-	}
-	val describe = stdout.toString().trim()
+	val describe = providers.exec {
+		commandLine("git", "describe", "--tags", "--dirty")
+	}.standardOutput.asText.get().trim()
 
 	val regex =
 		Regex("""^(0|[1-9][0-9]+)(?:\.(0|[1-9][0-9]+)(?:\.(0|[1-9][0-9]+))?)?\+[0-9.]+((?:-[0-9]+-g[0-9a-f]+)?(?:-dirty)?)?${'$'}""")
@@ -47,7 +41,7 @@ allprojects {
 	// this fixes some edge cases with special characters not displaying correctly
 	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 	tasks.withType<JavaCompile> {
-		options.release = 21
+		options.release = 25
 		options.encoding = "UTF-8"
 		options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000", "-Xdiags:verbose"))
 	}
@@ -61,18 +55,18 @@ allprojects {
 			name = "Modrinth"
 		}
 
-		maven(url = "https://maven.parchmentmc.org") {
-			name = "ParchmentMC"
-		}
-
 		maven(url = "https://www.jetbrains.com/intellij-repository/releases/") {
 			name = "JetBrains"
 		}
 	}
 
 	java {
-		sourceCompatibility = JavaVersion.VERSION_21
-		targetCompatibility = JavaVersion.VERSION_21
+		sourceCompatibility = JavaVersion.VERSION_25
+		targetCompatibility = JavaVersion.VERSION_25
+
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(25)
+		}
 
 		// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 		// if it is present.
@@ -90,14 +84,10 @@ allprojects {
 
 		// To change the versions, see the gradle.properties file
 		minecraft("com.mojang:minecraft:${minecraft_version}")
-		mappings(loom.layered {
-			officialMojangMappings()
-			parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_mappings}@zip")
-		})
-		modImplementation("net.fabricmc:fabric-loader:${loader_version}")
+		implementation("net.fabricmc:fabric-loader:${loader_version}")
 
 		// Fabric API
-		modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
+		implementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
 	}
 
 	tasks.processResources {

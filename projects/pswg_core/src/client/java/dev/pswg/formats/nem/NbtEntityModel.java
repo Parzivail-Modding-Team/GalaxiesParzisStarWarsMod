@@ -10,7 +10,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,7 +33,7 @@ public final class NbtEntityModel
 	 *
 	 * @return A loaded {@link LayerDefinition} if all dependencies were resolved, or a list of missing dependencies otherwise
 	 */
-	public static DataResolution<LayerDefinition> load(CompoundTag nbt, Function<ResourceLocation, CompoundTag> dependencyResolver)
+	public static DataResolution<LayerDefinition> load(CompoundTag nbt, Function<Identifier, CompoundTag> dependencyResolver)
 	{
 		var resolution = resolveDependencies(nbt, dependencyResolver);
 
@@ -52,7 +52,7 @@ public final class NbtEntityModel
 	 *
 	 * @return A processed {@link CompoundTag} if all dependencies were resolved, or a list of missing dependencies otherwise
 	 */
-	private static DataResolution<CompoundTag> resolveDependencies(CompoundTag nbt, Function<ResourceLocation, CompoundTag> dependencyResolver)
+	private static DataResolution<CompoundTag> resolveDependencies(CompoundTag nbt, Function<Identifier, CompoundTag> dependencyResolver)
 	{
 		var partsOpt = nbt.getCompound("parts");
 
@@ -64,7 +64,7 @@ public final class NbtEntityModel
 		var base = nbt.getString("base");
 		if (base.isPresent())
 		{
-			var baseId = ResourceLocation.parse(base.get());
+			var baseId = Identifier.parse(base.get());
 
 			// resolve the serialized data of the dependency
 			var overrideNbt = dependencyResolver.apply(baseId);

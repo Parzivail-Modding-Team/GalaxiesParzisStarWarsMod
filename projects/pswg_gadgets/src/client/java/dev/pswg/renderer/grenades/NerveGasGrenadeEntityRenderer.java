@@ -6,20 +6,18 @@ import dev.pswg.Gadgets;
 import dev.pswg.entity.grenades.NerveGasGrenadeEntity;
 import dev.pswg.models.GrenadeRenderState;
 import dev.pswg.models.NerveGasGrenadeModel;
-import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class NerveGasGrenadeEntityRenderer extends EntityRenderer<NerveGasGrenadeEntity, GrenadeRenderState>
 {
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Gadgets.id("nerve_gas_grenade"), "temp");
-	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("pswg_gadgets", "textures/items/nerve_gas_grenade.png");
+	public static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("pswg_gadgets", "textures/items/nerve_gas_grenade.png");
 	private final NerveGasGrenadeModel model;
 
 	public NerveGasGrenadeEntityRenderer(EntityRendererProvider.Context context)
@@ -34,7 +32,7 @@ public class NerveGasGrenadeEntityRenderer extends EntityRenderer<NerveGasGrenad
 		matrices.pushPose();
 		matrices.mulPose(Axis.YP.rotationDegrees(-state.yaw));
 		this.model.setupAnim(state);
-		queue.submitModel(this.model, state, matrices, RenderType.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
 		matrices.popPose();
 
 		super.submit(state, matrices, queue, cameraState);

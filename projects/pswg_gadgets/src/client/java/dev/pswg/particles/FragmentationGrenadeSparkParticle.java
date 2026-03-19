@@ -34,11 +34,11 @@ public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 	}
 
 	@Override
-	public int getLightColor(float tint)
+	public int getLightCoords(float tint)
 	{
 		float f = ((float)this.age + tint) / (float)this.lifetime;
 		f = Mth.clamp(f, 0.0F, 1.0F);
-		int i = super.getLightColor(tint);
+		int i = super.getLightCoords(tint);
 		int j = i & 255;
 		int k = i >> 16 & 255;
 		j += (int)(f * 15.0F * 16.0F);

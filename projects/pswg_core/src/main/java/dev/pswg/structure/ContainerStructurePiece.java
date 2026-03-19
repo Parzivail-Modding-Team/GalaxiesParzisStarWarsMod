@@ -6,7 +6,7 @@ import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.worldgen.GalaxiesStructurePieces;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -29,9 +29,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 public class ContainerStructurePiece extends TemplateStructurePiece
 {
-	private final ResourceLocation templateId = Galaxies.id("derelict_imperial_container");
+	private final Identifier templateId = Galaxies.id("derelict_imperial_container");
 
-	public ContainerStructurePiece(StructureTemplateManager manager, ResourceLocation identifier, BlockPos pos, Rotation rotation)
+	public ContainerStructurePiece(StructureTemplateManager manager, Identifier identifier, BlockPos pos, Rotation rotation)
 	{
 		super(GalaxiesStructurePieces.DERELICT_CONTAINER, 0, manager, identifier, identifier.toString(), createPlacementData(rotation, identifier), pos);
 	}
@@ -41,7 +41,7 @@ public class ContainerStructurePiece extends TemplateStructurePiece
 		super(GalaxiesStructurePieces.DERELICT_CONTAINER, nbt, templateManager, identifier -> createPlacementData(Rotation.valueOf(nbt.getString("Rot").get()), identifier));
 	}
 
-	private static StructurePlaceSettings createPlacementData(Rotation rotation, ResourceLocation identifier)
+	private static StructurePlaceSettings createPlacementData(Rotation rotation, Identifier identifier)
 	{
 		return new StructurePlaceSettings()
 				.setRotation(rotation)
@@ -49,11 +49,6 @@ public class ContainerStructurePiece extends TemplateStructurePiece
 				.setRotationPivot(new BlockPos(0, 0, 0))
 				.addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK)
 				.setLiquidSettings(LiquidSettings.APPLY_WATERLOGGING);
-	}
-
-	private void loadTemplate(StructureTemplateManager templateManager, CompoundTag nbtCompound)
-	{
-		this.template = templateManager.getOrCreate(templateId);
 	}
 
 	@Override
@@ -67,7 +62,7 @@ public class ContainerStructurePiece extends TemplateStructurePiece
 	public void postProcess(WorldGenLevel world, StructureManager structureAccessor, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox chunkBox, ChunkPos chunkPos, BlockPos pivot)
 	{
 		BlockPos blockPos = world.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, templatePosition);
-		ResourceLocation identifier = ResourceLocation.parse(this.templateName);
+		Identifier identifier = Identifier.parse(this.templateName);
 		this.templatePosition.atY(blockPos.getY() + random.nextIntBetweenInclusive(-3, 0));
 		StructurePlaceSettings structurePlacementData = createPlacementData(this.placeSettings.getRotation(), identifier);
 		super.postProcess(world, structureAccessor, chunkGenerator, random, chunkBox, chunkPos, pivot);

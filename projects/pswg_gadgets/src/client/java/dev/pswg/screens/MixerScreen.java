@@ -7,45 +7,42 @@ import dev.pswg.Gadgets;
 import dev.pswg.feature.brewing.MixerScreenHandler;
 import dev.pswg.rendering.Drawables;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Inventory;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 {
-	private static final ResourceLocation TEXTURE = Gadgets.id("textures/gui/container/mixer.png");
-	private static final ResourceLocation MAP_TEXTURE = Gadgets.id("textures/gui/misc/brewing_map.png");
+	private static final Identifier TEXTURE = Gadgets.id("textures/gui/container/mixer.png");
+	private static final Identifier MAP_TEXTURE = Gadgets.id("textures/gui/misc/brewing_map.png");
 	private List<Tuple<Integer, Integer>> previousMousePosition = new ArrayList<>();
 	public static HashMap<Holder<MobEffect>, Tuple<Integer, Integer>> ICON_MAP = new HashMap<>();
 
 	public MixerScreen(MixerScreenHandler handler, Inventory inventory, Component title)
 	{
-		super(handler, inventory, title);
-		this.imageHeight = 255;
-		this.imageWidth = 175;
+		super(handler, inventory, title, 175, 255);
 		this.inventoryLabelX = 8;
 		this.inventoryLabelY = 160;
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY)
+	public void extractBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta)
 	{
+		super.extractBackground(context, mouseX, mouseY, delta);
 		var backgroundX = (this.width - this.imageWidth) / 2;
 		var backgroundY = (this.height - this.imageHeight) / 2;
 		context.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX, backgroundY, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
@@ -120,9 +117,9 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 
 
 	@Override
-	public void render(GuiGraphics context, int mouseX, int mouseY, float delta)
+	public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta)
 	{
-		super.render(context, mouseX, mouseY, delta);
+		super.extractRenderState(context, mouseX, mouseY, delta);
 
 		var backgroundX = (this.width - this.imageWidth) / 2;
 		var backgroundY = (this.height - this.imageHeight) / 2;

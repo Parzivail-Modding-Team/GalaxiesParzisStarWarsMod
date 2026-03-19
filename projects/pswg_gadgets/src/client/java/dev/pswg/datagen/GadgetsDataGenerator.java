@@ -15,10 +15,10 @@ import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.util.GadgetsGenUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.data.*;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -31,7 +31,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -73,7 +73,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class ModelGenerator extends GalaxiesModelProvider
 	{
-		public ModelGenerator(FabricDataOutput output)
+		public ModelGenerator(FabricPackOutput output)
 		{
 			super(output, Gadgets.MODID);
 		}
@@ -116,10 +116,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
 		}
 
-		public static ResourceLocation createItemKey(Item item, DataGenItem dataGenItem)
+		public static Identifier createItemKey(Item item, DataGenItem dataGenItem)
 		{
 			if (dataGenItem.textureOverride().equals(""))
-				return item.builtInRegistryHolder().unwrapKey().get().location().withPrefix("item/");
+				return item.builtInRegistryHolder().key().identifier().withPrefix("item/");
 			return Gadgets.id(dataGenItem.textureOverride()).withPrefix("item/");
 		}
 
@@ -146,7 +146,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class LangGenerator extends FabricLanguageProvider
 	{
-		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
+		protected LangGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
 		{
 			super(dataOutput, "en_us", registryLookup);
 		}
@@ -194,7 +194,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void addDatagenItem(TranslationBuilder translationBuilder, Item item, DataGenItem dataGenItem)
 		{
 			if (dataGenItem.langOverride().isEmpty())
-				translationBuilder.add(item, generateDefaultLang(item.builtInRegistryHolder().key().location()));
+				translationBuilder.add(item, generateDefaultLang(item.builtInRegistryHolder().key().identifier()));
 			else
 				translationBuilder.add(item, dataGenItem.langOverride());
 		}
@@ -207,8 +207,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				translationBuilder.add(block.asItem(), dataGenBlock.langOverride());
 			}else
 			{
-				translationBuilder.add(block, generateDefaultLang(block.builtInRegistryHolder().key().location()));
-				translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().location()));
+				translationBuilder.add(block, generateDefaultLang(block.builtInRegistryHolder().key().identifier()));
+				translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().identifier()));
 			}
 		}
 	}
@@ -217,9 +217,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	 * The gadget item tag generator. All item tags should be added
 	 * through this generator.
 	 */
-	private static class ItemTagGenerator extends FabricTagProvider.ItemTagProvider
+	private static class ItemTagGenerator extends FabricTagsProvider.ItemTagsProvider
 	{
-		public ItemTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
+		public ItemTagGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
@@ -262,9 +262,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	 * The gadget block tag generator. All block tags should be added
 	 * through this generator.
 	 */
-	private static class BlockTagGenerator extends FabricTagProvider.BlockTagProvider
+	private static class BlockTagGenerator extends FabricTagsProvider.BlockTagsProvider
 	{
-		public BlockTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
+		public BlockTagGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
@@ -371,7 +371,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 	private static class RecipesGenerator extends FabricRecipeProvider
 	{
-		public RecipesGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture)
+		public RecipesGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture)
 		{
 			super(output, registriesFuture);
 		}
@@ -510,7 +510,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				public void createLaserCuttingRecipe(ItemLike input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
 				{
 					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
-					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(input.asItem().toString() + "_cutting")));
+					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_cutting")));
 				}
 
 				public void createScrappingRecipe(ScrappingToolType tool, ItemLike input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
@@ -536,7 +536,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 							suffix = "_calibrator";
 						}
 					}
-					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(input.asItem().toString() + "_scrapping" + suffix)));
+					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_scrapping" + suffix)));
 				}
 			};
 		}
@@ -548,7 +548,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 	}
 
-	private static String generateDefaultLang(ResourceLocation reg)
+	private static String generateDefaultLang(Identifier reg)
 	{
 		var path = reg.getPath();
 		return Arrays.stream(path.split("_"))

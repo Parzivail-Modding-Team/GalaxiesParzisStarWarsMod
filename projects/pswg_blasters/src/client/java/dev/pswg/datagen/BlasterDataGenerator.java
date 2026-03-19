@@ -17,22 +17,22 @@ import dev.pswg.rendering.models.GVertex;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.item.EmptyModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.LightCoordsUtil;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -133,7 +133,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		{
 			var color = -1;
 			var overlay = OverlayTexture.NO_OVERLAY;
-			var light = LightTexture.FULL_BRIGHT;
+			var light = LightCoordsUtil.FULL_BRIGHT;
 
 			var quads = new ArrayList<GQuad>();
 
@@ -238,7 +238,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class ModelGenerator extends GalaxiesModelProvider
 	{
-		public ModelGenerator(FabricDataOutput output)
+		public ModelGenerator(FabricPackOutput output)
 		{
 			super(output, Blasters.MODID);
 		}
@@ -275,7 +275,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	{
 		private final PackOutput.PathProvider resolver;
 
-		public GqdCompiledModelGenerator(FabricDataOutput output)
+		public GqdCompiledModelGenerator(FabricPackOutput output)
 		{
 			this.resolver = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "");
 		}
@@ -304,7 +304,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		 *
 		 * @return A future that completes when the data is written
 		 */
-		private CompletableFuture<?> compile(CachedOutput writer, Map.Entry<ResourceLocation, GqbIntermediary> entry)
+		private CompletableFuture<?> compile(CachedOutput writer, Map.Entry<Identifier, GqbIntermediary> entry)
 		{
 			var completables = new ArrayList<CompletableFuture<?>>();
 
@@ -357,11 +357,11 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class LangGenerator extends FabricLanguageProvider
 	{
-		private record BlasterLang(String name, Map<ResourceLocation, String> attachmentLangs)
+		private record BlasterLang(String name, Map<Identifier, String> attachmentLangs)
 		{
 		}
 
-		private final Map<ResourceLocation, BlasterLang> blasterLang = Map.ofEntries(
+		private final Map<Identifier, BlasterLang> blasterLang = Map.ofEntries(
 				Map.entry(Blasters.id("test_blaster"), new BlasterLang(
 						"Test Blaster",
 						Map.ofEntries(
@@ -375,7 +375,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 				))
 		);
 
-		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
+		protected LangGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
 		{
 			super(dataOutput, "en_us", registryLookup);
 		}
@@ -431,9 +431,9 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 * The blaster item tag generator. All item tags should be added
 	 * through this generator.
 	 */
-	private static class TagGenerator extends FabricTagProvider.ItemTagProvider
+	private static class TagGenerator extends FabricTagsProvider.ItemTagsProvider
 	{
-		public TagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
+		public TagGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}

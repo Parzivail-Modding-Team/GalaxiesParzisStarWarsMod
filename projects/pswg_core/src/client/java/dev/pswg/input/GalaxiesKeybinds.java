@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import dev.pswg.Galaxies;
 import dev.pswg.interaction.GalaxiesEntityItemActionClientManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
@@ -22,7 +22,7 @@ public final class GalaxiesKeybinds
 	 */
 	public static void initialize()
 	{
-		primaryAction = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		primaryAction = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.pswg.primary_action",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_V,

@@ -145,7 +145,7 @@ public class LaserCutterItem extends Item
 				if (entity != null)
 				{
 					world.addFreshEntity(new ItemEntity(world, centerBlockPos.x(), centerBlockPos.y(), centerBlockPos.z(), recipeEntry.value().getPrimaryResult().copy()));
-					if (Math.abs(world.random.nextFloat()) <= recipeEntry.value().getSecondaryChance())
+					if (Math.abs(world.getRandom().nextFloat()) <= recipeEntry.value().getSecondaryChance())
 						world.addFreshEntity(new ItemEntity(world, centerBlockPos.x(), centerBlockPos.y(), centerBlockPos.z(), recipeEntry.value().craftSecondary()));
 					world.destroyBlock(blockPos, false);
 				}

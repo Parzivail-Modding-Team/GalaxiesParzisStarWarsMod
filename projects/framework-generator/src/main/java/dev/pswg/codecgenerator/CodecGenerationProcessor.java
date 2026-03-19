@@ -20,7 +20,7 @@ import java.util.function.Function;
  */
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("dev.pswg.codecgenerator.GenerateCodec")
-@SupportedSourceVersion(SourceVersion.RELEASE_21)
+@SupportedSourceVersion(SourceVersion.RELEASE_25)
 public class CodecGenerationProcessor extends AbstractProcessor
 {
 	/**
@@ -241,17 +241,10 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				)
 		);
 		registerCodecsForType(
-				"net.minecraft.util.Identifier",
+				"net.minecraft.resources.Identifier",
 				GenStandardCodec.IDENTIFIER,
 				Map.of(
-						GenStandardCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.util", "Identifier"), "CODEC")
-				)
-		);
-		registerCodecsForType(
-				"net.minecraft.resources.ResourceLocation",
-				GenStandardCodec.IDENTIFIER,
-				Map.of(
-						GenStandardCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.resources", "ResourceLocation"), "CODEC")
+						GenStandardCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.resources", "Identifier"), "CODEC")
 				)
 		);
 		registerCodecsForType(
@@ -388,17 +381,10 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				)
 		);
 		registerPacketCodecsForType(
-				"net.minecraft.util.Identifier",
+				"net.minecraft.resources.Identifier",
 				GenPacketCodec.IDENTIFIER,
 				Map.of(
-						GenPacketCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.resources", "ResourceLocation"), "STREAM_CODEC")
-				)
-		);
-		registerPacketCodecsForType(
-				"net.minecraft.resources.ResourceLocation",
-				GenPacketCodec.IDENTIFIER,
-				Map.of(
-						GenPacketCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.resources", "ResourceLocation"), "STREAM_CODEC")
+						GenPacketCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.resources", "Identifier"), "STREAM_CODEC")
 				)
 		);
 	}

@@ -3,9 +3,8 @@ package dev.pswg.renderer.mines;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.pswg.Gadgets;
-import dev.pswg.entity.grenades.ThermalDetonatorEntity;
 import dev.pswg.entity.mines.PressureMineEntity;
-import net.minecraft.client.model.*;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -13,14 +12,14 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class PressureMineEntityRenderer extends EntityRenderer<PressureMineEntity, PressureMineEntityRenderer.State>
 {
@@ -28,7 +27,7 @@ public class PressureMineEntityRenderer extends EntityRenderer<PressureMineEntit
 	{
 		public Model(ModelPart modelPart)
 		{
-			super(modelPart, RenderType::entityCutout);
+			super(modelPart, RenderTypes::entityCutout);
 		}
 
 		public static LayerDefinition getTexturedModelData()
@@ -41,7 +40,7 @@ public class PressureMineEntityRenderer extends EntityRenderer<PressureMineEntit
 	}
 
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Gadgets.id("pressure_mine"), "temp");
-	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("pswg_gadgets", "textures/items/thermal_detonator.png");
+	public static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("pswg_gadgets", "textures/items/thermal_detonator.png");
 	private final Model model;
 
 	public PressureMineEntityRenderer(EntityRendererProvider.Context context)
@@ -56,7 +55,7 @@ public class PressureMineEntityRenderer extends EntityRenderer<PressureMineEntit
 		matrices.pushPose();
 		matrices.mulPose(Axis.YP.rotationDegrees(-state.yaw));
 		this.model.setupAnim(state);
-		queue.submitModel(this.model, state, matrices, RenderType.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
 		matrices.popPose();
 		super.submit(state, matrices, queue, cameraState);
 	}

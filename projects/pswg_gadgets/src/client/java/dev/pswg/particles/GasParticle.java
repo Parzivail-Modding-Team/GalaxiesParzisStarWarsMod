@@ -55,10 +55,10 @@ public abstract class GasParticle extends SingleQuadParticle implements CustomRe
 	}
 
 	@Override
-	public int getLightColor(float tint)
+	public int getLightCoords(float tint)
 	{
 		BlockPos blockPos = BlockPos.containing(this.x, this.y, this.z);
-		int light = this.level.hasChunkAt(blockPos) ? LevelRenderer.getLightColor(this.level, blockPos) : 0;
+		int light = this.level.hasChunkAt(blockPos) ? LevelRenderer.getLightCoords(this.level, blockPos) : 0;
 		return Math.max(light, 80);
 	}
 

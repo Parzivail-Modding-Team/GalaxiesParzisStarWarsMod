@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.Predicate;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
@@ -29,12 +29,12 @@ public class CodecDataLoader<T> implements ResourceManagerReloadListener
 	/**
 	 * The set of data definitions currently associated with the loaded world
 	 */
-	private final HashMap<ResourceLocation, T> definitions = new HashMap<>();
+	private final HashMap<Identifier, T> definitions = new HashMap<>();
 
 	/**
 	 * The id of the logger
 	 */
-	private final ResourceLocation id;
+	private final Identifier id;
 
 	/**
 	 * The path of the folder from which data will be loaded
@@ -49,7 +49,7 @@ public class CodecDataLoader<T> implements ResourceManagerReloadListener
 	/**
 	 * A filter that will be used to select files from within the specified folder
 	 */
-	private final Predicate<ResourceLocation> filter;
+	private final Predicate<Identifier> filter;
 
 	/**
 	 * The codec that will be used to decode the given type from the
@@ -65,7 +65,7 @@ public class CodecDataLoader<T> implements ResourceManagerReloadListener
 	 * @param filter          A filter that will be used to select files from within the specified folder.
 	 * @param codec           The codec that will be used to decode the files to the specified type.
 	 */
-	public CodecDataLoader(ResourceLocation id, String folderName, boolean removeExtension, Predicate<ResourceLocation> filter, Codec<? extends T> codec)
+	public CodecDataLoader(Identifier id, String folderName, boolean removeExtension, Predicate<Identifier> filter, Codec<? extends T> codec)
 	{
 		this.id = id;
 		this.folderName = folderName;
@@ -79,12 +79,12 @@ public class CodecDataLoader<T> implements ResourceManagerReloadListener
 	 * Gets the current set of data definitions associated with the loaded
 	 * world, keyed by the identifier deriving from their filename
 	 */
-	public HashMap<ResourceLocation, T> getDefinitions()
+	public HashMap<Identifier, T> getDefinitions()
 	{
 		return definitions;
 	}
 
-	public ResourceLocation getId()
+	public Identifier getId()
 	{
 		return id;
 	}

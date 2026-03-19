@@ -86,7 +86,7 @@ public final class CachingLayerSampler implements LayerSampler
 
 		private long key(int x, int z)
 		{
-			return ChunkPos.asLong(x, z);
+			return ChunkPos.pack(x, z);
 		}
 	}
 }

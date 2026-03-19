@@ -10,8 +10,8 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleGroup;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.client.renderer.state.ParticleGroupRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.level.ParticleGroupRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ARGB;
@@ -38,10 +38,18 @@ public class GasParticleRenderer extends ParticleGroup<GasParticle>
 		{
 			PoseStack matrixStack = new PoseStack();
 			matrixStack.pushPose();
-			matrixStack.translate(particle.getPos().subtract(camera.getPosition()));
+			matrixStack.translate(particle.getPos().subtract(camera.position()));
 			matrixStack.mulPose(camera.rotation().rotateZ((float)Math.toRadians(particle.getBillowing())));
 
-			return new State(matrixStack, particle.getSprite(), particle.getBillowing(), particle.getAlpha(), particle.getQuadSize(tickProgress), particle.getColor(), particle.getLightColor(tickProgress));
+			return new State(
+					matrixStack,
+					particle.getSprite(),
+					particle.getBillowing(),
+					particle.getAlpha(),
+					particle.getQuadSize(tickProgress),
+					particle.getColor(),
+					particle.getLightCoords(tickProgress)
+			);
 		}
 	}
 

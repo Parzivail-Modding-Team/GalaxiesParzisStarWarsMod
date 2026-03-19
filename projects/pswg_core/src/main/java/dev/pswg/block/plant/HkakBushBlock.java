@@ -106,11 +106,11 @@ public class HkakBushBlock extends VegetationBlock implements BonemealableBlock
 		}
 		else if (i > 1)
 		{
-			var j = 1 + world.random.nextInt(2);
+			var j = 1 + world.getRandom().nextInt(2);
 			popResource(world, pos, new ItemStack(GalaxiesItems.HKAK_BEAN,j + (isMature ? 1 : 0)));
 
 			// TODO: new sound event
-			world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
+			world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.getRandom().nextFloat() * 0.4F);
 			world.setBlock(pos, state.setValue(AGE, 1), Block.UPDATE_CLIENTS);
 			return InteractionResult.SUCCESS;
 		}

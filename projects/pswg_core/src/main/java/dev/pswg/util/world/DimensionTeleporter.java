@@ -32,7 +32,7 @@ public class DimensionTeleporter
 	{
 		if (entity instanceof ServerPlayer)
 		{
-			var chunkPos = new ChunkPos(new BlockPos(Mth.floor(x), Mth.floor(y), Mth.floor(z)));
+			var chunkPos = ChunkPos.containing(new BlockPos(Mth.floor(x), Mth.floor(y), Mth.floor(z)));
 			world.getChunkSource().addTicketWithRadius(TicketType.PLAYER_LOADING, chunkPos, 1); //, entity.getId()
 			entity.stopRiding();
 			if (((ServerPlayer)entity).isSleeping())

@@ -5,7 +5,7 @@ import java.util.function.Function;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 
 /**
@@ -18,7 +18,7 @@ public final class GalaxiesEntityAttributes
 	/**
 	 * The ID of the {@link GalaxiesEntityAttributes#FIELD_OF_VIEW_ZOOM} attribute modifier
 	 */
-	public static final ResourceLocation FIELD_OF_VIEW_ZOOM_ID = Galaxies.id("field_of_view_zoom");
+	public static final Identifier FIELD_OF_VIEW_ZOOM_ID = Galaxies.id("field_of_view_zoom");
 
 	/**
 	 * An entity attribute that can modify the entity's field of view. Units
@@ -38,7 +38,7 @@ public final class GalaxiesEntityAttributes
 	 *
 	 * @return The registered entity attribute entry
 	 */
-	public static Holder<Attribute> register(ResourceLocation id, Function<String, Attribute> attributeConstructor)
+	public static Holder<Attribute> register(Identifier id, Function<String, Attribute> attributeConstructor)
 	{
 		return Registry.registerForHolder(BuiltInRegistries.ATTRIBUTE, id, attributeConstructor.apply("%s.attribute.name.%s".formatted(id.getNamespace(), id.getPath())));
 	}

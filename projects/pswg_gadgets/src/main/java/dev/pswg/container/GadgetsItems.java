@@ -15,7 +15,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -40,28 +40,28 @@ public class GadgetsItems
 	{
 		public static final DataComponentType<Long> PRIMING_TIME = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "priming_time"),
+				Identifier.fromNamespaceAndPath(Gadgets.MODID, "priming_time"),
 				DataComponentType.<Long>builder().persistent(Codec.LONG).build()
 		);
 
 		public static final DataComponentType<Float> CUTTING_PROGRESS = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "cutting_progress"),
+				Identifier.fromNamespaceAndPath(Gadgets.MODID, "cutting_progress"),
 				DataComponentType.<Float>builder().persistent(Codec.FLOAT).build()
 		);
 		public static final DataComponentType<BlockPos> CURRENT_BLOCK = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "current_block"),
+				Identifier.fromNamespaceAndPath(Gadgets.MODID, "current_block"),
 				DataComponentType.<BlockPos>builder().persistent(BlockPos.CODEC).build()
 		);
 		public static final DataComponentType<Vec3> MIN_POS = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "min_pos"),
+				Identifier.fromNamespaceAndPath(Gadgets.MODID, "min_pos"),
 				DataComponentType.<Vec3>builder().persistent(Vec3.CODEC).build()
 		);
 		public static final DataComponentType<Vec3> MAX_POS = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
-				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "max_pos"),
+				Identifier.fromNamespaceAndPath(Gadgets.MODID, "max_pos"),
 				DataComponentType.<Vec3>builder().persistent(Vec3.CODEC).build()
 		);
 

@@ -1,7 +1,7 @@
 package dev.pswg.rendering;
 
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -10,5 +10,5 @@ import net.minecraft.world.item.ItemStack;
 @FunctionalInterface
 public interface ItemHudRenderer
 {
-	void render(ItemStack stack, GuiGraphics context, DeltaTracker tickCounter);
+	void render(ItemStack stack, GuiGraphicsExtractor context, DeltaTracker tickCounter);
 }

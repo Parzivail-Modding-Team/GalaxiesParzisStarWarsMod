@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsRecipeSerializers;
 import dev.pswg.container.GadgetsRecipeTypes;
 import dev.pswg.util.GalaxiesPacketUtil;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,9 +14,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	@Override
 	public RecipeBookCategory recipeBookCategory()
 	{
-		return null;
+		return RecipeBookCategories.CRAFTING_MISC;
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	}
 
 	@Override
-	public ItemStack assemble(ScrappingTableRecipeInput input, HolderLookup.Provider registries)
+	public ItemStack assemble(ScrappingTableRecipeInput input)
 	{
 		return primaryResult.copy();
 	}
@@ -140,49 +141,31 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 		T create(Ingredient tool, Ingredient ingredient, ItemStack result, ItemStack secondaryResult, float secondaryChance);
 	}
 
-	public static class Serializer<T extends ScrappingTableRecipe> implements RecipeSerializer<T>
+	public static <T extends ScrappingTableRecipe> RecipeSerializer<T> createSerializer(ScrappingTableRecipe.RecipeFactory<T> recipeFactory)
 	{
-		private final MapCodec<T> codec;
-		private final StreamCodec<RegistryFriendlyByteBuf, T> packetCodec;
-
-		public Serializer(ScrappingTableRecipe.RecipeFactory<T> recipeFactory)
-		{
-			this.codec = RecordCodecBuilder.mapCodec(
-					instance -> instance.group(
-							                    Ingredient.CODEC.fieldOf("tool").forGetter(ScrappingTableRecipe::getTool),
-							                    Ingredient.CODEC.fieldOf("ingredient").forGetter(ScrappingTableRecipe::getIngredient),
-							                    ItemStack.STRICT_CODEC.fieldOf("primary_result").forGetter(ScrappingTableRecipe::getPrimaryResult),
-							                    ItemStack.STRICT_CODEC.fieldOf("secondary_result").forGetter(ScrappingTableRecipe::getSecondaryResult),
-							                    ExtraCodecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(ScrappingTableRecipe::getSecondaryChance)
-					                    )
-					                    .apply(instance, recipeFactory::create)
-			);
-			this.packetCodec = GalaxiesPacketUtil.quintuple(
-					Ingredient.CONTENTS_STREAM_CODEC,
-					ScrappingTableRecipe::getTool,
-					Ingredient.CONTENTS_STREAM_CODEC,
-					ScrappingTableRecipe::getIngredient,
-					ItemStack.STREAM_CODEC,
-					ScrappingTableRecipe::getPrimaryResult,
-					ItemStack.STREAM_CODEC,
-					ScrappingTableRecipe::getSecondaryResult,
-					ByteBufCodecs.FLOAT,
-					ScrappingTableRecipe::getSecondaryChance,
-					recipeFactory::create
-			);
-		}
-
-		@Override
-		public MapCodec<T> codec()
-		{
-			return this.codec;
-		}
-
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec()
-		{
-			return this.packetCodec;
-		}
+		MapCodec<T> codec = RecordCodecBuilder.mapCodec(
+				instance -> instance.group(
+						                    Ingredient.CODEC.fieldOf("tool").forGetter(ScrappingTableRecipe::getTool),
+						                    Ingredient.CODEC.fieldOf("ingredient").forGetter(ScrappingTableRecipe::getIngredient),
+						                    ItemStack.CODEC.fieldOf("primary_result").forGetter(ScrappingTableRecipe::getPrimaryResult),
+						                    ItemStack.CODEC.fieldOf("secondary_result").forGetter(ScrappingTableRecipe::getSecondaryResult),
+						                    ExtraCodecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(ScrappingTableRecipe::getSecondaryChance)
+				                    )
+				                    .apply(instance, recipeFactory::create)
+		);
+		StreamCodec<RegistryFriendlyByteBuf, T> packetCodec = GalaxiesPacketUtil.quintuple(
+				Ingredient.CONTENTS_STREAM_CODEC,
+				ScrappingTableRecipe::getTool,
+				Ingredient.CONTENTS_STREAM_CODEC,
+				ScrappingTableRecipe::getIngredient,
+				ItemStack.STREAM_CODEC,
+				ScrappingTableRecipe::getPrimaryResult,
+				ItemStack.STREAM_CODEC,
+				ScrappingTableRecipe::getSecondaryResult,
+				ByteBufCodecs.FLOAT,
+				ScrappingTableRecipe::getSecondaryChance,
+				recipeFactory::create
+		);
+		return new RecipeSerializer<>(codec, packetCodec);
 	}
-
 }

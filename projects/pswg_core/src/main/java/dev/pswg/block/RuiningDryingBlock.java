@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,7 +37,7 @@ public class RuiningDryingBlock extends FallingMutatingBlock
 	{
 		if (world instanceof ServerLevel serverWorld)
 		{
-			if (!world.isClientSide() && entity instanceof LivingEntity && (entity instanceof Player || serverWorld.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) &&
+			if (!world.isClientSide() && entity instanceof LivingEntity && (entity instanceof Player || serverWorld.getGameRules().get(GameRules.MOB_GRIEFING)) &&
 			    entity.getBbWidth() * entity.getBbWidth() * entity.getBbHeight() > 0.512F)
 				world.setBlockAndUpdate(pos, pushEntitiesUp(state, ruinedBlock.get().withPropertiesOf(state), world, pos));
 		}

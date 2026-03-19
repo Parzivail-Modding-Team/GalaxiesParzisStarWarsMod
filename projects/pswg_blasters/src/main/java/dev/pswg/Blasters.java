@@ -11,12 +11,11 @@ import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.registry.Registrar;
 import dev.pswg.sound.BlasterSounds;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -36,16 +35,16 @@ public final class Blasters implements GalaxiesAddon
 	public static final String MODID = "pswg_blasters";
 
 	/**
-	 * Creates a scoped {@link ResourceLocation} whose domain is this
+	 * Creates a scoped {@link Identifier} whose domain is this
 	 * mod's MODID
 	 *
-	 * @param path The path for the {@link ResourceLocation}
+	 * @param path The path for the {@link Identifier}
 	 *
-	 * @return A scoped {@link ResourceLocation}
+	 * @return A scoped {@link Identifier}
 	 */
-	public static ResourceLocation id(String path)
+	public static Identifier id(String path)
 	{
-		return ResourceLocation.fromNamespaceAndPath(MODID, path);
+		return Identifier.fromNamespaceAndPath(MODID, path);
 	}
 
 	/**
@@ -71,9 +70,9 @@ public final class Blasters implements GalaxiesAddon
 	 */
 	public static final TagKey<Item> BLASTERS_TAG = TagKey.create(Registries.ITEM, id("blasters"));
 
-	public static final ResourceLocation DEFAULT_HUD = id("default");
+	public static final Identifier DEFAULT_HUD = id("default");
 
-	public static final ResourceLocation BLASTER_ITEM_ID = id("blaster");
+	public static final Identifier BLASTER_ITEM_ID = id("blaster");
 	public static final BlasterItem BLASTER_ITEM = Registrar.item(BLASTER_ITEM_ID, BlasterItem::new, BlasterItem.createSettings());
 
 	public static final EntityType<BlasterBoltEntity> BLASTER_BOLT_ENTITY = Registrar.entityType(
@@ -86,7 +85,7 @@ public final class Blasters implements GalaxiesAddon
 			                  .updateInterval(20)
 	);
 
-	private static void addBlastersToTab(FabricItemGroupEntries itemGroup)
+	private static void addBlastersToTab(FabricCreativeModeTabOutput itemGroup)
 	{
 		for (var definition : DATAPACK_LOADER.getDefinitions().entrySet())
 		{
@@ -98,10 +97,10 @@ public final class Blasters implements GalaxiesAddon
 	@Override
 	public void onGalaxiesReady()
 	{
-		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT)
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.COMBAT)
 		               .register(Blasters::addBlastersToTab);
 
-		ResourceLoader.get(PackType.SERVER_DATA).registerReloader(DATAPACK_LOADER.getId(), DATAPACK_LOADER);
+		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(DATAPACK_LOADER.getId(), DATAPACK_LOADER);
 
 		BlasterSounds.register();
 

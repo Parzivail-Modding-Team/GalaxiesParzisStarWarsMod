@@ -2,6 +2,7 @@ package dev.pswg.util.world;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -31,9 +32,9 @@ public class WorldUtil
 			return 0;
 
 		var skyLight = world.getBrightness(LightLayer.SKY, pos) - world.getSkyDarken();
-		var skyAngle = world.getSunAngle(1.0F);
+		var skyAngle = world.environmentAttributes().getDimensionValue(EnvironmentAttributes.SUN_ANGLE);
 
-		var upperBoundAngle = skyAngle < Math.PI ? 0 : (2 * Math.PI);
+		float upperBoundAngle = skyAngle < Math.PI ? 0.0F : (float)(2 * Math.PI);
 		skyAngle += (upperBoundAngle - skyAngle) * 0.2F;
 		skyLight = Math.round(skyLight * Mth.cos(skyAngle));
 

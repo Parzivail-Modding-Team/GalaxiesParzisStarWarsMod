@@ -14,10 +14,10 @@ import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.client.data.*;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -27,7 +27,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagEntry;
@@ -66,7 +66,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class ModelGenerator extends GalaxiesModelProvider
 	{
-		public ModelGenerator(FabricDataOutput output)
+		public ModelGenerator(FabricPackOutput output)
 		{
 			super(output, Galaxies.MODID);
 		}
@@ -191,7 +191,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		}
 	}
 
-	private static String generateDefaultLang(ResourceLocation reg)
+	private static String generateDefaultLang(Identifier reg)
 	{
 		var path = reg.getPath();
 		return Arrays.stream(path.split("_"))
@@ -205,7 +205,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class LangGenerator extends FabricLanguageProvider
 	{
-		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
+		protected LangGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
 		{
 			super(dataOutput, "en_us", registryLookup);
 		}
@@ -261,7 +261,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		public void addDatagenItem(TranslationBuilder translationBuilder, Item item, DataGenItem dataGenItem)
 		{
 			if (dataGenItem.langOverride().isEmpty())
-				translationBuilder.add(item, generateDefaultLang(item.builtInRegistryHolder().key().location()));
+				translationBuilder.add(item, generateDefaultLang(item.builtInRegistryHolder().key().identifier()));
 			else
 				translationBuilder.add(item, dataGenItem.langOverride());
 		}
@@ -276,9 +276,9 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			}
 			else
 			{
-				translationBuilder.add(block, generateDefaultLang(block.builtInRegistryHolder().key().location()));
+				translationBuilder.add(block, generateDefaultLang(block.builtInRegistryHolder().key().identifier()));
 				if (dataGenBlock.addItemTranslation())
-					translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().location()));
+					translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().identifier()));
 			}
 		}
 	}
@@ -287,9 +287,9 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 	 * The galaxies item tag generator. All item tags should be added
 	 * through this generator.
 	 */
-	private static class ItemTagGenerator extends FabricTagProvider.ItemTagProvider
+	private static class ItemTagGenerator extends FabricTagsProvider.ItemTagsProvider
 	{
-		public ItemTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
+		public ItemTagGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
@@ -330,9 +330,9 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 	 * The galaxies block tag generator. All block tags should be added
 	 * through this generator.
 	 */
-	private static class BlockTagGenerator extends FabricTagProvider.BlockTagProvider
+	private static class BlockTagGenerator extends FabricTagsProvider.BlockTagsProvider
 	{
-		public BlockTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
+		public BlockTagGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
@@ -399,7 +399,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 	private static class RecipesGenerator extends FabricRecipeProvider
 	{
-		public RecipesGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture)
+		public RecipesGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture)
 		{
 			super(output, registriesFuture);
 		}
