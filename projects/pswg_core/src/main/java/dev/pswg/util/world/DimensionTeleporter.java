@@ -1,93 +1,92 @@
 package dev.pswg.util.world;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.network.packet.s2c.play.PositionFlag;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ChunkTicketType;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.Heightmap;
-
 import java.util.EnumSet;
 import java.util.Set;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Relative;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class DimensionTeleporter
 {
-	public static void teleport(Entity entity, ServerWorld world)
+	public static void teleport(Entity entity, ServerLevel world)
 	{
-		var y = world.getChunk(ChunkSectionPos.getSectionCoord(0), ChunkSectionPos.getSectionCoord(0)).sampleHeightmap(Heightmap.Type.MOTION_BLOCKING, 0, 0) + 1;
+		var y = world.getChunk(SectionPos.blockToSectionCoord(0), SectionPos.blockToSectionCoord(0)).getHeight(Heightmap.Types.MOTION_BLOCKING, 0, 0) + 1;
 
-		Set<PositionFlag> set = EnumSet.noneOf(PositionFlag.class);
-		set.add(PositionFlag.X_ROT);
-		set.add(PositionFlag.Y_ROT);
+		Set<Relative> set = EnumSet.noneOf(Relative.class);
+		set.add(Relative.X_ROT);
+		set.add(Relative.Y_ROT);
 		teleport(entity, world, 0, y, 0, 0, 0, set);
 	}
 
-	public static void teleport(Entity entity, ServerWorld world, double x, double y, double z, float pitch, float yaw, Set<PositionFlag> movementFlags)
+	public static void teleport(Entity entity, ServerLevel world, double x, double y, double z, float pitch, float yaw, Set<Relative> movementFlags)
 	{
-		if (entity instanceof ServerPlayerEntity)
+		if (entity instanceof ServerPlayer)
 		{
-			var chunkPos = new ChunkPos(new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z)));
-			world.getChunkManager().addTicket(ChunkTicketType.PLAYER_LOADING, chunkPos, 1); //, entity.getId()
+			var chunkPos = new ChunkPos(new BlockPos(Mth.floor(x), Mth.floor(y), Mth.floor(z)));
+			world.getChunkSource().addTicketWithRadius(TicketType.PLAYER_LOADING, chunkPos, 1); //, entity.getId()
 			entity.stopRiding();
-			if (((ServerPlayerEntity)entity).isSleeping())
+			if (((ServerPlayer)entity).isSleeping())
 			{
-				((ServerPlayerEntity)entity).wakeUp(true, true);
+				((ServerPlayer)entity).stopSleepInBed(true, true);
 			}
 
-			if (world == ((ServerPlayerEntity)entity).getEntityWorld())
+			if (world == ((ServerPlayer)entity).level())
 			{
-				((ServerPlayerEntity)entity).networkHandler.requestTeleport(x, y, z, yaw, pitch);
+				((ServerPlayer)entity).connection.teleport(x, y, z, yaw, pitch);
 			}
 			else
 			{
-				entity.teleport(world, x, y, z, movementFlags, yaw, pitch, true);
+				entity.teleportTo(world, x, y, z, movementFlags, yaw, pitch, true);
 			}
 
-			entity.setHeadYaw(yaw);
+			entity.setYHeadRot(yaw);
 		}
 		else
 		{
-			var f = MathHelper.wrapDegrees(yaw);
-			var g = MathHelper.wrapDegrees(pitch);
-			g = MathHelper.clamp(g, -90.0F, 90.0F);
-			if (world == entity.getEntityWorld())
+			var f = Mth.wrapDegrees(yaw);
+			var g = Mth.wrapDegrees(pitch);
+			g = Mth.clamp(g, -90.0F, 90.0F);
+			if (world == entity.level())
 			{
-				entity.refreshPositionAndAngles(x, y, z, f, g);
-				entity.setHeadYaw(f);
+				entity.snapTo(x, y, z, f, g);
+				entity.setYHeadRot(f);
 			}
 			else
 			{
-				entity.detach();
+				entity.unRide();
 				var other = entity;
-				entity = entity.getType().create(world, SpawnReason.DIMENSION_TRAVEL);
+				entity = entity.getType().create(world, EntitySpawnReason.DIMENSION_TRAVEL);
 
 				if (entity == null)
 					return;
 
-				entity.copyFrom(other);
-				entity.refreshPositionAndAngles(x, y, z, f, g);
-				entity.setHeadYaw(f);
-				world.onDimensionChanged(entity);
+				entity.restoreFrom(other);
+				entity.snapTo(x, y, z, f, g);
+				entity.setYHeadRot(f);
+				world.addDuringTeleport(entity);
 				other.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
 			}
 		}
 
 		if (!(entity instanceof LivingEntity) || !((LivingEntity)entity).isDescending())
 		{
-			entity.setVelocity(entity.getVelocity().multiply(1.0D, 0.0D, 1.0D));
+			entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D));
 			entity.setOnGround(true);
 		}
 
-		if (entity instanceof PathAwareEntity)
+		if (entity instanceof PathfinderMob)
 		{
-			((PathAwareEntity)entity).getNavigation().stop();
+			((PathfinderMob)entity).getNavigation().stop();
 		}
 	}
 }

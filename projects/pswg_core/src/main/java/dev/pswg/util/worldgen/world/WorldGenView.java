@@ -1,15 +1,15 @@
 package dev.pswg.util.worldgen.world;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public interface WorldGenView
 {
 	BlockState getBlockState(BlockPos pos);
 
-	int getTopY(Heightmap.Type type, int x, int z);
+	int getTopY(Heightmap.Types type, int x, int z);
 
 	void setBlockState(BlockPos pos, BlockState state);
 

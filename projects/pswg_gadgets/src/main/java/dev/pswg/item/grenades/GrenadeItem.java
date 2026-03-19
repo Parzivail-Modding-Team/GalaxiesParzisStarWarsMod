@@ -5,21 +5,27 @@ import dev.pswg.entity.grenades.GrenadeEntity;
 import dev.pswg.item.ExplosionSoundGroup;
 import dev.pswg.item.ILeftClickUsable;
 import dev.pswg.world.TickConstants;
-import net.minecraft.entity.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.*;
-import net.minecraft.item.consume.UseAction;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Position;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.ProjectileItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class GrenadeItem extends Item implements ILeftClickUsable, ProjectileItem
@@ -28,7 +34,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	public final Item item;
 	public final ExplosionSoundGroup sounds;
 
-	public GrenadeItem(Item.Settings settings, Item item, int baseTicksToExplosion, ExplosionSoundGroup sounds)
+	public GrenadeItem(Item.Properties settings, Item item, int baseTicksToExplosion, ExplosionSoundGroup sounds)
 	{
 		super(settings);
 		this.item = item;
@@ -41,13 +47,13 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	/**
 	 * Method called when a grenade is thrown by a player, not to be confused with spawnEntity
 	 */
-	public void throwEntity(World world, ItemStack stack, PlayerEntity player)
+	public void throwEntity(Level world, ItemStack stack, Player player)
 	{
-		GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
-		if (stack.contains(GadgetsItems.Components.PRIMING_TIME))
+		GrenadeEntity grenade = getEntityType().create(world, EntitySpawnReason.EVENT);
+		if (stack.has(GadgetsItems.Components.PRIMING_TIME))
 		{
 			// By checking if the stack contains PRIMING_TIME, it's impossible to get an NPE
-			grenade.setLife((int)(stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getTime()));
+			grenade.setLife((int)(stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getGameTime()));
 			grenade.setPrimed(true);
 		}
 		else
@@ -56,66 +62,66 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 			grenade.setPrimed(false);
 		}
 		grenade.setVisible(true);
-		grenade.onSpawnPacket(new EntitySpawnS2CPacket(grenade.getId(), grenade.getUuid(), player.getX(), player.getY() + 1.5, player.getZ(), -player.getPitch(), -player.getYaw(), grenade.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
+		grenade.recreateFromPacket(new ClientboundAddEntityPacket(grenade.getId(), grenade.getUUID(), player.getX(), player.getY() + 1.5, player.getZ(), -player.getXRot(), -player.getYRot(), grenade.getType(), 0, Vec3.ZERO, player.getYHeadRot()));
 		grenade.setOwner(player);
-		grenade.setVelocity(player, player.getPitch(), player.getYaw(), (float)player.getRotationVector().z * 10, 1.0F, 0F);
+		grenade.shootFromRotation(player, player.getXRot(), player.getYRot(), (float)player.getLookAngle().z * 10, 1.0F, 0F);
 
-		world.spawnEntity(grenade);
+		world.addFreshEntity(grenade);
 
-		if (world.isClient())
+		if (world.isClientSide())
 			sounds.playThrowSound(player);
 	}
 
 	/**
 	 * Method called when a grenade explodes in inventory or through a grenade block, not to be confused with throwEntity
 	 */
-	public void spawnEntity(World world, int power, ItemStack stack, Entity player)
+	public void spawnEntity(Level world, int power, ItemStack stack, Entity player)
 	{
-		GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
-		grenade.setLife(stack.contains(GadgetsItems.Components.PRIMING_TIME) ? (int)(stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getTime()) : 1);
-		grenade.setPrimed(stack.contains(GadgetsItems.Components.PRIMING_TIME));
+		GrenadeEntity grenade = getEntityType().create(world, EntitySpawnReason.EVENT);
+		grenade.setLife(stack.has(GadgetsItems.Components.PRIMING_TIME) ? (int)(stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getGameTime()) : 1);
+		grenade.setPrimed(stack.has(GadgetsItems.Components.PRIMING_TIME));
 		grenade.setExplosionPower(power);
-		grenade.onSpawnPacket(new EntitySpawnS2CPacket(grenade.getId(), grenade.getUuid(), player.getX(), player.getY() + 1, player.getZ(), -player.getPitch(), -player.getYaw(), grenade.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
-		world.spawnEntity(grenade);
+		grenade.recreateFromPacket(new ClientboundAddEntityPacket(grenade.getId(), grenade.getUUID(), player.getX(), player.getY() + 1, player.getZ(), -player.getXRot(), -player.getYRot(), grenade.getType(), 0, Vec3.ZERO, player.getYHeadRot()));
+		world.addFreshEntity(grenade);
 	}
 
-	public void createExplosion(World world, int power, Entity player)
+	public void createExplosion(Level world, int power, Entity player)
 	{
 		if(player instanceof LivingEntity livingEntity)
-			spawnEntity(world, power, livingEntity.getMainHandStack(), player);
+			spawnEntity(world, power, livingEntity.getMainHandItem(), player);
 	}
 
-	public void createExplosion(World world, Entity player)
+	public void createExplosion(Level world, Entity player)
 	{
 		createExplosion(world, 4, player);
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, @Nullable EquipmentSlot slot)
+	public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot)
 	{
-		if (entity instanceof PlayerEntity player && stack.contains(GadgetsItems.Components.PRIMING_TIME))
+		if (entity instanceof Player player && stack.has(GadgetsItems.Components.PRIMING_TIME))
 		{
-			player.sendMessage(Text.of("" + (stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getTime())), true);
+			player.displayClientMessage(Component.nullToEmpty("" + (stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getGameTime())), true);
 		}
 		if (entity.isOnFire())
 		{
-			PlayerEntity player = (PlayerEntity)entity;
+			Player player = (Player)entity;
 			var teItem = (GrenadeItem)stack.getItem();
-			int power = player.getInventory().count(this);
+			int power = player.getInventory().countItem(this);
 			for (int i = power; i >= 0; i--)
 			{
-				player.getInventory().removeOne(stack);
+				player.getInventory().removeItem(stack);
 			}
 			teItem.createExplosion(world, power * 2, player);
 		}
 
-		if (stack.contains(GadgetsItems.Components.PRIMING_TIME) && world.getTime() >= stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion)
+		if (stack.has(GadgetsItems.Components.PRIMING_TIME) && world.getGameTime() >= stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion)
 		{
-			PlayerEntity player = (PlayerEntity)entity;
+			Player player = (Player)entity;
 			createExplosion(world, player);
 			if (!player.isCreative())
 			{
-				stack.decrement(1);
+				stack.shrink(1);
 			}
 			stack.remove(GadgetsItems.Components.PRIMING_TIME);
 		}
@@ -129,25 +135,25 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	}
 
 	@Override
-	public int getMaxUseTime(ItemStack stack, LivingEntity user)
+	public int getUseDuration(ItemStack stack, LivingEntity user)
 	{
 		return TickConstants.ONE_HOUR;
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack)
+	public ItemUseAnimation getUseAnimation(ItemStack stack)
 	{
-		return UseAction.NONE;
+		return ItemUseAnimation.NONE;
 	}
 
 	@Override
-	public ActionResult use(World world, PlayerEntity user, Hand hand)
+	public InteractionResult use(Level world, Player user, InteractionHand hand)
 	{
-		ItemStack stack = user.getStackInHand(hand);
-		if (user instanceof PlayerEntity playerEntity)
+		ItemStack stack = user.getItemInHand(hand);
+		if (user instanceof Player playerEntity)
 		{
-			boolean inCreative = playerEntity.getAbilities().creativeMode;
-			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
+			boolean inCreative = playerEntity.getAbilities().instabuild;
+			ItemStack itemStack = playerEntity.getItemInHand(InteractionHand.MAIN_HAND);
 			if (!itemStack.isEmpty())
 			{
 				GrenadeItem throwableExplosiveItem = (GrenadeItem)(itemStack.getItem() instanceof GrenadeItem ? itemStack.getItem() : item);
@@ -159,21 +165,21 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 				//sounds.playThrowSound(playerEntity);
 				if (!inCreative)
 				{
-					stack.decrement(1);
+					stack.shrink(1);
 				}
-				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+				playerEntity.awardStat(Stats.ITEM_USED.get(this));
 			}
 		}
-		return ActionResult.CONSUME;
+		return InteractionResult.CONSUME;
 	}
 
 	@Override
-	public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
+	public boolean releaseUsing(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks)
 	{
-		if (user instanceof PlayerEntity playerEntity)
+		if (user instanceof Player playerEntity)
 		{
-			boolean inCreative = playerEntity.getAbilities().creativeMode;
-			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
+			boolean inCreative = playerEntity.getAbilities().instabuild;
+			ItemStack itemStack = playerEntity.getItemInHand(InteractionHand.MAIN_HAND);
 			if (!itemStack.isEmpty())
 			{
 				GrenadeItem throwableExplosiveItem = (GrenadeItem)(itemStack.getItem() instanceof GrenadeItem ? itemStack.getItem() : item);
@@ -185,23 +191,23 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 				//sounds.playThrowSound(playerEntity);
 				if (!inCreative)
 				{
-					stack.decrement(1);
+					stack.shrink(1);
 				}
-				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+				playerEntity.awardStat(Stats.ITEM_USED.get(this));
 			}
 		}
-		return super.onStoppedUsing(stack, world, user, remainingUseTicks);
+		return super.releaseUsing(stack, world, user, remainingUseTicks);
 	}
 
 	@Override
-	public ActionResult useLeft(World world, LivingEntity user, Hand hand, boolean repeatEvent)
+	public InteractionResult useLeft(Level world, LivingEntity user, InteractionHand hand, boolean repeatEvent)
 	{
-		ItemStack stack = user.getMainHandStack();
-		if (!stack.contains(GadgetsItems.Components.PRIMING_TIME))
+		ItemStack stack = user.getMainHandItem();
+		if (!stack.has(GadgetsItems.Components.PRIMING_TIME))
 		{
 
-			stack.set(GadgetsItems.Components.PRIMING_TIME, world.getTime());
-			if (world.isClient())
+			stack.set(GadgetsItems.Components.PRIMING_TIME, world.getGameTime());
+			if (world.isClientSide())
 			{
 				sounds.playArmSound(user);
 				//sounds.playBeepingSound(user);
@@ -209,12 +215,12 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 		}
 		else
 		{
-			if (world.isClient())
+			if (world.isClientSide())
 				sounds.playDisarmSound(user);
 			stack.remove(GadgetsItems.Components.PRIMING_TIME);
 			//sounds.playDisarmSound(user);
 		}
-		return ActionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	/**
@@ -222,27 +228,27 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	 * createEntity should be overwritten, or a NPE will be caused
 	 */
 	@Override
-	public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction)
+	public Projectile asProjectile(Level world, Position pos, ItemStack stack, Direction direction)
 	{
-		GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
-		initializeProjectile(grenade, pos.getX(), pos.getY(), pos.getZ(), 1f, 0);
+		GrenadeEntity grenade = getEntityType().create(world, EntitySpawnReason.EVENT);
+		shoot(grenade, pos.x(), pos.y(), pos.z(), 1f, 0);
 		return grenade;
 	}
 
 	@Override
-	public ProjectileItem.Settings getProjectileSettings()
+	public ProjectileItem.DispenseConfig createDispenseConfig()
 	{
-		return ProjectileItem.super.getProjectileSettings();
+		return ProjectileItem.super.createDispenseConfig();
 	}
 
 	@Override
-	public void initializeProjectile(ProjectileEntity entity, double x, double y, double z, float power, float uncertainty)
+	public void shoot(Projectile entity, double x, double y, double z, float power, float uncertainty)
 	{
 		GrenadeEntity grenade = (GrenadeEntity)entity;
 		grenade.setLife(baseTicksToExplosion);
 		grenade.setPrimed(true);
-		grenade.setPos(x, y, z);
-		ProjectileItem.super.initializeProjectile(entity, x, y, z, power, uncertainty);
+		grenade.setPosRaw(x, y, z);
+		ProjectileItem.super.shoot(entity, x, y, z, power, uncertainty);
 	}
 
 	/*

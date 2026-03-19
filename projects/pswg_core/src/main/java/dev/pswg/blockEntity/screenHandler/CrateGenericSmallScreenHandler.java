@@ -1,23 +1,23 @@
 package dev.pswg.blockEntity.screenHandler;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 
 public class CrateGenericSmallScreenHandler extends InventoryScreenHandler
 {
-	public CrateGenericSmallScreenHandler(ScreenHandlerType<?> screenType, int syncId, PlayerInventory playerInventory)
+	public CrateGenericSmallScreenHandler(MenuType<?> screenType, int syncId, Inventory playerInventory)
 	{
-		this(screenType, syncId, playerInventory, new SimpleInventory(15));
+		this(screenType, syncId, playerInventory, new SimpleContainer(15));
 	}
 
-	public CrateGenericSmallScreenHandler(ScreenHandlerType<?> screenType, int syncId, PlayerInventory playerInventory, Inventory inventory)
+	public CrateGenericSmallScreenHandler(MenuType<?> screenType, int syncId, Inventory playerInventory, Container inventory)
 	{
 		super(screenType, syncId, inventory);
-		checkSize(inventory, 15);
-		inventory.onOpen(playerInventory.player);
+		checkContainerSize(inventory, 15);
+		inventory.startOpen(playerInventory.player);
 
 		for (var row = 0; row < 3; ++row)
 			for (var column = 0; column < 5; ++column)

@@ -4,10 +4,10 @@ import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingOutputStream;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.Util;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.DataWriter;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.util.Util;
+import net.minecraft.network.codec.StreamCodec;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +31,7 @@ public final class GalaxiesDataProvider
 	 *
 	 * @return A completable future that completes when the file has been written
 	 */
-	public static <T> CompletableFuture<?> writeToPath(DataWriter writer, Path path, PacketCodec<ByteBuf, T> codec, T value)
+	public static <T> CompletableFuture<?> writeToPath(CachedOutput writer, Path path, StreamCodec<ByteBuf, T> codec, T value)
 	{
 		return CompletableFuture.runAsync(() -> {
 			try
@@ -44,13 +44,13 @@ public final class GalaxiesDataProvider
 
 				buf.readBytes(hashingOutputStream, buf.readableBytes());
 
-				writer.write(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
+				writer.writeIfNeeded(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
 			}
 			catch (IOException ex)
 			{
 				DataProvider.LOGGER.error("Failed to save file to {}", path, ex);
 			}
-		}, Util.getMainWorkerExecutor().named("saveStable"));
+		}, Util.backgroundExecutor().forName("saveStable"));
 	}
 
 	/**

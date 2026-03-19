@@ -1,18 +1,18 @@
 package dev.pswg.util.worldgen.mc;
 
 import dev.pswg.util.worldgen.world.WorldGenView;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class MinecraftWorldView implements WorldGenView
 {
 
-	private final StructureWorldAccess world;
+	private final WorldGenLevel world;
 
-	public MinecraftWorldView(StructureWorldAccess world)
+	public MinecraftWorldView(WorldGenLevel world)
 	{
 
 		this.world = world;
@@ -25,20 +25,20 @@ public class MinecraftWorldView implements WorldGenView
 	}
 
 	@Override
-	public int getTopY(Heightmap.Type type, int x, int z)
+	public int getTopY(Heightmap.Types type, int x, int z)
 	{
-		return world.getTopY(type, x, z);
+		return world.getHeight(type, x, z);
 	}
 
 	@Override
 	public void setBlockState(BlockPos pos, BlockState state)
 	{
-		world.setBlockState(pos, state, 3);
+		world.setBlock(pos, state, 3);
 	}
 
 	@Override
 	public void addEntity(Entity entity)
 	{
-		world.spawnEntity(entity);
+		world.addFreshEntity(entity);
 	}
 }

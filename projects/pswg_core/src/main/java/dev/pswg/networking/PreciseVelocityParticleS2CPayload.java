@@ -1,38 +1,38 @@
 package dev.pswg.networking;
 
 import dev.pswg.Galaxies;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 
-public record PreciseVelocityParticleS2CPayload(ParticleEffect particleEffect, Vec3d posVector, Vec3d velocityVector) implements CustomPayload
+public record PreciseVelocityParticleS2CPayload(ParticleOptions particleEffect, Vec3 posVector, Vec3 velocityVector) implements CustomPacketPayload
 {
-	public static final Identifier PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID = Galaxies.id("precise_velocity_particle");
-	public static final CustomPayload.Id<PreciseVelocityParticleS2CPayload> ID = new CustomPayload.Id<>(PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID);
-	public static final PacketCodec<RegistryByteBuf, PreciseVelocityParticleS2CPayload> CODEC = PacketCodec.of(PreciseVelocityParticleS2CPayload::toPacket, PreciseVelocityParticleS2CPayload::fromPacket);
+	public static final ResourceLocation PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID = Galaxies.id("precise_velocity_particle");
+	public static final CustomPacketPayload.Type<PreciseVelocityParticleS2CPayload> ID = new CustomPacketPayload.Type<>(PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID);
+	public static final StreamCodec<RegistryFriendlyByteBuf, PreciseVelocityParticleS2CPayload> CODEC = StreamCodec.ofMember(PreciseVelocityParticleS2CPayload::toPacket, PreciseVelocityParticleS2CPayload::fromPacket);
 
-	private void toPacket(RegistryByteBuf buf)
+	private void toPacket(RegistryFriendlyByteBuf buf)
 	{
-		ParticleTypes.PACKET_CODEC.encode(buf, particleEffect);
-		Vec3d.PACKET_CODEC.encode(buf, posVector);
-		Vec3d.PACKET_CODEC.encode(buf, velocityVector);
+		ParticleTypes.STREAM_CODEC.encode(buf, particleEffect);
+		Vec3.STREAM_CODEC.encode(buf, posVector);
+		Vec3.STREAM_CODEC.encode(buf, velocityVector);
 	}
 
-	private static PreciseVelocityParticleS2CPayload fromPacket(RegistryByteBuf buf)
+	private static PreciseVelocityParticleS2CPayload fromPacket(RegistryFriendlyByteBuf buf)
 	{
-		ParticleEffect particleEffect = ParticleTypes.PACKET_CODEC.decode(buf);
-		Vec3d pos = Vec3d.PACKET_CODEC.decode(buf);
-		Vec3d velocity = Vec3d.PACKET_CODEC.decode(buf);
+		ParticleOptions particleEffect = ParticleTypes.STREAM_CODEC.decode(buf);
+		Vec3 pos = Vec3.STREAM_CODEC.decode(buf);
+		Vec3 velocity = Vec3.STREAM_CODEC.decode(buf);
 
 		return new PreciseVelocityParticleS2CPayload(particleEffect, pos, velocity);
 	}
 
 	@Override
-	public Id<? extends CustomPayload> getId()
+	public CustomPacketPayload.Type<? extends CustomPacketPayload> type()
 	{
 		return ID;
 	}

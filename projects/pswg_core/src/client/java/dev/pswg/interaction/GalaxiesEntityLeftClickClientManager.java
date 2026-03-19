@@ -6,14 +6,13 @@ import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.GameMode;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import java.lang.constant.Constable;
 import java.util.Objects;
 
@@ -43,7 +42,7 @@ public final class GalaxiesEntityLeftClickClientManager
 	/**
 	 * Handles per-tick left-use item actions
 	 */
-	private static void tick(MinecraftClient client)
+	private static void tick(Minecraft client)
 	{
 		if (itemUseCooldownLeft > 0)
 		{
@@ -52,14 +51,14 @@ public final class GalaxiesEntityLeftClickClientManager
 	}
 
 	/**
-	 * Emulates the {@link MinecraftClient#handleInputEvents()} use-item keybind
+	 * Emulates the {@link Minecraft#handleKeybinds()} use-item keybind
 	 * handler, except using the attack key for left-click interactions
 	 */
-	public static void handleInputEvents(MinecraftClient client)
+	public static void handleInputEvents(Minecraft client)
 	{
 		assert client.player != null;
 
-		var handItem = client.player.getStackInHand(client.player.getActiveHand());
+		var handItem = client.player.getItemInHand(client.player.getUsedItemHand());
 		var isHoldingLeftClickableItem = handItem.getItem() instanceof ILeftClickUsable;
 
 		if (!isHoldingLeftClickableItem || !(client.player instanceof ILeftClickingEntity leftClickingEntity))
@@ -67,14 +66,14 @@ public final class GalaxiesEntityLeftClickClientManager
 
 		if (leftClickingEntity.pswg$isLeftUsingItem())
 		{
-			if (!client.options.attackKey.isPressed())
-				stopUsingItemLeft(client.interactionManager, client.player);
+			if (!client.options.keyAttack.isDown())
+				stopUsingItemLeft(client.gameMode, client.player);
 		}
 		else
 		{
 			var startedUsing = false;
 
-			while (client.options.attackKey.wasPressed())
+			while (client.options.keyAttack.consumeClick())
 			{
 				doItemUseLeft(client);
 				startedUsing = true;
@@ -84,28 +83,28 @@ public final class GalaxiesEntityLeftClickClientManager
 				repeatEvent = true;
 		}
 
-		if (!client.options.attackKey.isPressed())
+		if (!client.options.keyAttack.isDown())
 		{
 			itemUseCooldownLeft = 0;
 			repeatEvent = false;
 		}
 
-		if (client.options.attackKey.isPressed() && itemUseCooldownLeft == 0 && !leftClickingEntity.pswg$isLeftUsingItem())
+		if (client.options.keyAttack.isDown() && itemUseCooldownLeft == 0 && !leftClickingEntity.pswg$isLeftUsingItem())
 		{
 			doItemUseLeft(client);
 		}
 	}
 
 	/**
-	 * Emulates the {@link ClientPlayerInteractionManager#stopUsingItem} functionality for
+	 * Emulates the {@link MultiPlayerGameMode#releaseUsingItem} functionality for
 	 * left-use items
 	 *
 	 * @param interactionManager The interaction manager to wrap
 	 * @param player             The player that is interacting
 	 */
-	private static void stopUsingItemLeft(ClientPlayerInteractionManager interactionManager, ClientPlayerEntity player)
+	private static void stopUsingItemLeft(MultiPlayerGameMode interactionManager, LocalPlayer player)
 	{
-		((ClientPlayerInteractionManagerAccessor)interactionManager).invokeSyncSelectedSlot();
+		((ClientPlayerInteractionManagerAccessor)interactionManager).invokeEnsureHasSentCarriedItem();
 
 		ClientPlayNetworking.send(new GalaxiesPlayerActionC2SPacket(ClientPlayerAction.RELEASE_USE_LEFT_ITEM));
 
@@ -116,33 +115,33 @@ public final class GalaxiesEntityLeftClickClientManager
 	}
 
 	/**
-	 * Emulates the {@link MinecraftClient#doItemUse} functionality for
+	 * Emulates the {@link Minecraft#startUseItem} functionality for
 	 * left-use items, excluding checks for riding another entity
 	 */
-	private static void doItemUseLeft(MinecraftClient client)
+	private static void doItemUseLeft(Minecraft client)
 	{
-		assert client.interactionManager != null;
+		assert client.gameMode != null;
 		assert client.player != null;
-		assert client.world != null;
+		assert client.level != null;
 
-		if (client.interactionManager.isBreakingBlock())
+		if (client.gameMode.isDestroying())
 			return;
 
 		itemUseCooldownLeft = 4;
 
-		for (var hand : Hand.values())
+		for (var hand : InteractionHand.values())
 		{
-			var stack = client.player.getStackInHand(hand);
+			var stack = client.player.getItemInHand(hand);
 
-			if (!stack.isItemEnabled(client.world.getEnabledFeatures()))
+			if (!stack.isItemEnabled(client.level.enabledFeatures()))
 				return;
 
-			if (stack.isEmpty() || !(interactItemLeft(client, client.interactionManager, client.player, hand) instanceof ActionResult.Success success))
+			if (stack.isEmpty() || !(interactItemLeft(client, client.gameMode, client.player, hand) instanceof InteractionResult.Success success))
 				continue;
 
-			if (success.swingSource() == ActionResult.SwingSource.CLIENT)
+			if (success.swingSource() == InteractionResult.SwingSource.CLIENT)
 			{
-				client.player.swingHand(hand);
+				client.player.swing(hand);
 			}
 
 			return;
@@ -150,37 +149,37 @@ public final class GalaxiesEntityLeftClickClientManager
 	}
 
 	/**
-	 * Emulates the {@link ClientPlayerInteractionManager#interactItem} functionality for
+	 * Emulates the {@link MultiPlayerGameMode#useItem} functionality for
 	 * left-use items
 	 */
-	private static ActionResult interactItemLeft(MinecraftClient client, ClientPlayerInteractionManager interactionManager, ClientPlayerEntity player, Hand hand)
+	private static InteractionResult interactItemLeft(Minecraft client, MultiPlayerGameMode interactionManager, LocalPlayer player, InteractionHand hand)
 	{
-		if (interactionManager.getCurrentGameMode() == GameMode.SPECTATOR)
+		if (interactionManager.getPlayerMode() == GameType.SPECTATOR)
 		{
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 		}
 		else
 		{
-			((ClientPlayerInteractionManagerAccessor)interactionManager).invokeSyncSelectedSlot();
+			((ClientPlayerInteractionManagerAccessor)interactionManager).invokeEnsureHasSentCarriedItem();
 
-			var packet = new PlayerInteractItemLeftC2SPacket(hand, player.getYaw(), player.getPitch(), repeatEvent);
+			var packet = new PlayerInteractItemLeftC2SPacket(hand, player.getYRot(), player.getXRot(), repeatEvent);
 
-			var itemStack = player.getStackInHand(hand);
+			var itemStack = player.getItemInHand(hand);
 
-			var actionResult = GalaxiesEntityLeftClickManager.useLeft(client.world, player, hand, itemStack, repeatEvent);
+			var actionResult = GalaxiesEntityLeftClickManager.useLeft(client.level, player, hand, itemStack, repeatEvent);
 			ItemStack resultStack;
-			if (actionResult instanceof ActionResult.Success success)
+			if (actionResult instanceof InteractionResult.Success success)
 			{
-				resultStack = Objects.requireNonNullElseGet(success.getNewHandStack(), () -> player.getStackInHand(hand));
+				resultStack = Objects.requireNonNullElseGet(success.heldItemTransformedTo(), () -> player.getItemInHand(hand));
 			}
 			else
 			{
-				resultStack = player.getStackInHand(hand);
+				resultStack = player.getItemInHand(hand);
 			}
 
 			if (resultStack != itemStack)
 			{
-				player.setStackInHand(hand, resultStack);
+				player.setItemInHand(hand, resultStack);
 			}
 
 			ClientPlayNetworking.send(packet);

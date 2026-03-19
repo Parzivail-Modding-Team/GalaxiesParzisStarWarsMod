@@ -6,12 +6,12 @@ import dev.pswg.block.RuiningDryingSlabBlock;
 import dev.pswg.block.RuiningDryingStairsBlock;
 import dev.pswg.block.VerticalSlabBlock;
 import dev.pswg.registry.Registrar;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.ColorCode;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ColorRGBA;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class ReducedDryingRuiningStoneProducts
 {
@@ -19,19 +19,19 @@ public class ReducedDryingRuiningStoneProducts
 	public final RuiningDryingStairsBlock stairs;
 	public final RuiningDryingSlabBlock slab;
 
-	public ReducedDryingRuiningStoneProducts(AbstractBlock.Settings settings, String key, Block targetBlock, Block ruinedBlock, int transitionTime, ColorCode color)
+	public ReducedDryingRuiningStoneProducts(BlockBehaviour.Properties settings, String key, Block targetBlock, Block ruinedBlock, int transitionTime, ColorRGBA color)
 	{
 		this.block = Registrar.block(Galaxies.id(key), blockSettings -> new RuiningDryingBlock(targetBlock, transitionTime, () -> ruinedBlock, blockSettings, color), settings);
-		VerticalSlabBlock targetSlab = (VerticalSlabBlock)Registries.BLOCK.get(Identifier.of(getBlockKey(targetBlock) + "_slab"));
-		VerticalSlabBlock ruinedSlab = (VerticalSlabBlock)Registries.BLOCK.get(Identifier.of(getBlockKey(ruinedBlock) + "_slab"));
+		VerticalSlabBlock targetSlab = (VerticalSlabBlock)BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(getBlockKey(targetBlock) + "_slab"));
+		VerticalSlabBlock ruinedSlab = (VerticalSlabBlock)BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(getBlockKey(ruinedBlock) + "_slab"));
 		this.slab = Registrar.block(Galaxies.id(key + "_slab"), blockSettings -> new RuiningDryingSlabBlock(targetSlab, transitionTime, () -> ruinedSlab, blockSettings), settings);
-		StairsBlock targetStairs = (StairsBlock)Registries.BLOCK.get(Identifier.of(getBlockKey(targetBlock) + "_stairs"));
-		StairsBlock ruinedStairs = (StairsBlock)Registries.BLOCK.get(Identifier.of(getBlockKey(ruinedBlock) + "_stairs"));
-		this.stairs = Registrar.block(Galaxies.id(key + "_stairs"), blockSettings -> new RuiningDryingStairsBlock(block.getDefaultState(), targetStairs, transitionTime, () -> ruinedStairs, blockSettings), settings);
+		StairBlock targetStairs = (StairBlock)BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(getBlockKey(targetBlock) + "_stairs"));
+		StairBlock ruinedStairs = (StairBlock)BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(getBlockKey(ruinedBlock) + "_stairs"));
+		this.stairs = Registrar.block(Galaxies.id(key + "_stairs"), blockSettings -> new RuiningDryingStairsBlock(block.defaultBlockState(), targetStairs, transitionTime, () -> ruinedStairs, blockSettings), settings);
 	}
 
-	private static Identifier getBlockKey(Block block)
+	private static ResourceLocation getBlockKey(Block block)
 	{
-		return block.getRegistryEntry().getKey().get().getValue();
+		return block.builtInRegistryHolder().unwrapKey().get().location();
 	}
 }

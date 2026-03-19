@@ -2,10 +2,9 @@ package dev.pswg.data;
 
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Keyable;
-import net.minecraft.util.Identifier;
-
 import java.util.*;
 import java.util.stream.Stream;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * A registry to manage items keyed by unique identifiers with no
@@ -18,7 +17,7 @@ public class SlimRegistry<TItem> implements Keyable
 	/**
 	 * The backing identifier-to-item map
 	 */
-	private final Map<Identifier, TItem> registry = new HashMap<>();
+	private final Map<ResourceLocation, TItem> registry = new HashMap<>();
 
 	/**
 	 * Indicates whether the registry is frozen. When the registry is frozen,
@@ -36,7 +35,7 @@ public class SlimRegistry<TItem> implements Keyable
 	 *                               or if the registry is frozen.
 	 * @throws NullPointerException  if the key or value is null.
 	 */
-	public void register(Identifier key, TItem value)
+	public void register(ResourceLocation key, TItem value)
 	{
 		throwIfFrozen();
 		Objects.requireNonNull(key, "Key cannot be null");
@@ -58,7 +57,7 @@ public class SlimRegistry<TItem> implements Keyable
 	 * @throws NullPointerException  if the key is null.
 	 * @throws IllegalStateException if the registry is frozen and modifications are not allowed.
 	 */
-	public boolean unregister(Identifier key)
+	public boolean unregister(ResourceLocation key)
 	{
 		throwIfFrozen();
 		Objects.requireNonNull(key, "Key cannot be null");
@@ -75,7 +74,7 @@ public class SlimRegistry<TItem> implements Keyable
 	 * @throws NullPointerException  if the key is null.
 	 * @throws IllegalStateException if no item is found for the given key.
 	 */
-	public TItem getValueOrThrow(Identifier key)
+	public TItem getValueOrThrow(ResourceLocation key)
 	{
 		Objects.requireNonNull(key, "Key cannot be null");
 
@@ -96,7 +95,7 @@ public class SlimRegistry<TItem> implements Keyable
 	 *
 	 * @throws NullPointerException if the key is null.
 	 */
-	public Optional<TItem> tryGetValue(Identifier key)
+	public Optional<TItem> tryGetValue(ResourceLocation key)
 	{
 		Objects.requireNonNull(key, "Key cannot be null");
 		return Optional.ofNullable(registry.get(key));
@@ -109,7 +108,7 @@ public class SlimRegistry<TItem> implements Keyable
 	 *
 	 * @return true if the registry contains an entry with the specified key, false otherwise.
 	 */
-	public boolean containsKey(Identifier key)
+	public boolean containsKey(ResourceLocation key)
 	{
 		Objects.requireNonNull(key, "Key cannot be null");
 		return registry.containsKey(key);
@@ -149,7 +148,7 @@ public class SlimRegistry<TItem> implements Keyable
 	 *
 	 * @return The set of Identifiers in this registry
 	 */
-	public Set<Identifier> getIds()
+	public Set<ResourceLocation> getIds()
 	{
 		return registry.keySet();
 	}

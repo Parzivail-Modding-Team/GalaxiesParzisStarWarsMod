@@ -1,9 +1,8 @@
 package dev.pswg.util.worldgen.terrain;
 
 import dev.pswg.util.worldgen.noise.OctaveNoise;
-import net.minecraft.util.math.MathHelper;
-
 import java.util.Random;
+import net.minecraft.util.Mth;
 
 public class CanyonTerrainBuilder extends TerrainBuilder
 {
@@ -30,7 +29,7 @@ public class CanyonTerrainBuilder extends TerrainBuilder
 			wx *= 6; // TODO: noise!
 		}
 
-		wx = MathHelper.clamp(wx, 0, 1);
+		wx = Mth.clamp(wx, 0, 1);
 
 		// TODO: add a bit of variance
 		return (-y + 9) + (wx * 4.5) + (noiseMini.sample(x, y, z) * 0.35);

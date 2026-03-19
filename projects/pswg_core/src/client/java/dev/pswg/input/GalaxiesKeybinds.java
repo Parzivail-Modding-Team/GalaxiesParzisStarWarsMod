@@ -1,11 +1,11 @@
 package dev.pswg.input;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.pswg.Galaxies;
 import dev.pswg.interaction.GalaxiesEntityItemActionClientManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -13,24 +13,24 @@ import org.lwjgl.glfw.GLFW;
  */
 public final class GalaxiesKeybinds
 {
-	public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(Galaxies.id("keybinds"));
+	public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Galaxies.id("keybinds"));
 
-	private static KeyBinding primaryAction;
+	private static KeyMapping primaryAction;
 
 	/**
 	 * Initializes the keybinds
 	 */
 	public static void initialize()
 	{
-		primaryAction = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		primaryAction = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 				"key.pswg.primary_action",
-				InputUtil.Type.KEYSYM,
+				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_V,
 				CATEGORY
 		));
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			while (primaryAction.wasPressed())
+			while (primaryAction.consumeClick())
 				GalaxiesEntityItemActionClientManager.handlePrimaryItemAction();
 		});
 	}
@@ -40,7 +40,7 @@ public final class GalaxiesKeybinds
 	 *
 	 * @return The primary action keybind
 	 */
-	public static KeyBinding getPrimaryAction()
+	public static KeyMapping getPrimaryAction()
 	{
 		return primaryAction;
 	}

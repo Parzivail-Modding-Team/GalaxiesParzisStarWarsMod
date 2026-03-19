@@ -1,11 +1,11 @@
 package dev.pswg.util;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemUtil
 {
-	public static boolean isInventoryEmpty(DefaultedList<ItemStack> inventory)
+	public static boolean isInventoryEmpty(NonNullList<ItemStack> inventory)
 	{
 		for (var itemStack : inventory)
 			if (!ItemStack.EMPTY.equals(itemStack))

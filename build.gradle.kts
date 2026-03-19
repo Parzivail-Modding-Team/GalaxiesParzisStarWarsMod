@@ -2,7 +2,7 @@ import java.io.ByteArrayOutputStream
 
 plugins {
 	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.1"
-	id("fabric-loom") version "1.11-SNAPSHOT"
+	id("fabric-loom") version "1.13.6"
 	`maven-publish`
 }
 
@@ -18,8 +18,12 @@ val archives_base_name: String by project.ext
 val maven_group: String by project.ext
 val minecraft_version: String by project.ext
 val yarn_mappings: String by project.ext
+val parchment_mappings: String by project.ext
 val loader_version: String by project.ext
 val fabric_version: String by project.ext
+val migrationMode = providers.gradleProperty("pswgMigrationMode")
+	.map(String::toBoolean)
+	.getOrElse(false)
 
 /**
  * the version name from the latest Git tag
@@ -61,6 +65,10 @@ allprojects {
 			name = "Modrinth"
 		}
 
+		maven(url = "https://maven.parchmentmc.org") {
+			name = "ParchmentMC"
+		}
+
 		maven(url = "https://www.jetbrains.com/intellij-repository/releases/") {
 			name = "JetBrains"
 		}
@@ -86,7 +94,15 @@ allprojects {
 
 		// To change the versions, see the gradle.properties file
 		minecraft("com.mojang:minecraft:${minecraft_version}")
-		mappings("net.fabricmc:yarn:${yarn_mappings}:v2")
+		if (migrationMode) {
+			mappings("net.fabricmc:yarn:${yarn_mappings}:v2")
+		}
+		else {
+			mappings(loom.layered {
+				officialMojangMappings()
+				parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_mappings}@zip")
+			})
+		}
 		modImplementation("net.fabricmc:fabric-loader:${loader_version}")
 
 		// Fabric API

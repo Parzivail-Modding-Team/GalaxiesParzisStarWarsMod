@@ -3,51 +3,50 @@ package dev.pswg.feature.brewing;
 import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import static dev.pswg.feature.brewing.MixerBlockEntity.OUTPUT_SLOT_INDEX;
 
-public class MixerScreenHandler extends ScreenHandler
+public class MixerScreenHandler extends AbstractContainerMenu
 {
-	private final Inventory inventory;
-	private final PlayerInventory playerInventory;
-	private final PropertyDelegate propertyDelegate;
+	private final Container inventory;
+	private final Inventory playerInventory;
+	private final ContainerData propertyDelegate;
 	private final BlockPos blockPos;
-	protected final World world;
-	public ArrayList<StatusEffectInstance> drinkEffects;
+	protected final Level world;
+	public ArrayList<MobEffectInstance> drinkEffects;
 	public ArrayList<Integer> drinkColors;
 	public ArrayList<ItemStack> drinkFoods;
 
-	public MixerScreenHandler(int syncId, PlayerInventory playerInventory)
+	public MixerScreenHandler(int syncId, Inventory playerInventory)
 	{
-		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(11), BlockPos.ORIGIN, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+		this(syncId, playerInventory, new SimpleContainer(3), new SimpleContainerData(11), BlockPos.ZERO, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	}
 
-	public MixerScreenHandler(int syncId, PlayerInventory playerInventory, ArrayList<StatusEffectInstance> drinkEffects, ArrayList<Integer> drinkColors, ArrayList<ItemStack> drinkFoods)
+	public MixerScreenHandler(int syncId, Inventory playerInventory, ArrayList<MobEffectInstance> drinkEffects, ArrayList<Integer> drinkColors, ArrayList<ItemStack> drinkFoods)
 	{
-		this(syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(11), BlockPos.ORIGIN, drinkEffects, drinkColors, drinkFoods);
+		this(syncId, playerInventory, new SimpleContainer(3), new SimpleContainerData(11), BlockPos.ZERO, drinkEffects, drinkColors, drinkFoods);
 	}
 
-	public MixerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate, BlockPos pos, ArrayList<StatusEffectInstance> drinkEffects, ArrayList<Integer> drinkColors, ArrayList<ItemStack> drinkFoods)
+	public MixerScreenHandler(int syncId, Inventory playerInventory, Container inventory, ContainerData propertyDelegate, BlockPos pos, ArrayList<MobEffectInstance> drinkEffects, ArrayList<Integer> drinkColors, ArrayList<ItemStack> drinkFoods)
 	{
 		super(GadgetsScreenHandlerTypes.MIXER, syncId);
 		this.inventory = inventory;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.getEntityWorld();
+		this.world = playerInventory.player.level();
 		this.propertyDelegate = propertyDelegate;
 		this.blockPos = pos;
 		this.drinkEffects = drinkEffects;
@@ -63,9 +62,9 @@ public class MixerScreenHandler extends ScreenHandler
 		/// OUTPUT / DRINK CONTAINER INPUT
 		this.addSlot(new DrinkContainerSlot(inventory, 2, 146, 29));
 
-		this.addPlayerSlots(playerInventory, 8, 174);
+		this.addStandardInventorySlots(playerInventory, 8, 174);
 
-		this.addProperties(propertyDelegate);
+		this.addDataSlots(propertyDelegate);
 	}
 
 	public float getMapX()
@@ -112,7 +111,7 @@ public class MixerScreenHandler extends ScreenHandler
 
 	public int getEffectColor(int i)
 	{
-		return drinkEffects.get(i).getEffectType().value().getColor();
+		return drinkEffects.get(i).getEffect().value().getColor();
 	}
 
 	public int getDyeColor(int i)
@@ -126,7 +125,7 @@ public class MixerScreenHandler extends ScreenHandler
 	}
 
 	public boolean isDrinkContainerPresent() {
-		return !inventory.getStack(OUTPUT_SLOT_INDEX).isEmpty() && inventory.getStack(OUTPUT_SLOT_INDEX).isIn(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
+		return !inventory.getItem(OUTPUT_SLOT_INDEX).isEmpty() && inventory.getItem(OUTPUT_SLOT_INDEX).is(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
 	}
 
 	public boolean isOnEffectCell()
@@ -143,9 +142,9 @@ public class MixerScreenHandler extends ScreenHandler
 	{
 		if (BrewingMap.getCell(getMapX(), getMapY()) instanceof EffectCell effectCell)
 		{
-			StatusEffectInstance currentEffect = effectCell.statusEffect;
-			for (StatusEffectInstance effectInstance : drinkEffects)
-				if (effectInstance.getEffectType() == currentEffect.getEffectType())
+			MobEffectInstance currentEffect = effectCell.statusEffect;
+			for (MobEffectInstance effectInstance : drinkEffects)
+				if (effectInstance.getEffect() == currentEffect.getEffect())
 					return false;
 			return true;
 		}
@@ -153,7 +152,7 @@ public class MixerScreenHandler extends ScreenHandler
 	}
 
 	@Override
-	public boolean onButtonClick(PlayerEntity player, int id)
+	public boolean clickMenuButton(Player player, int id)
 	{
 		switch (id)
 		{
@@ -170,13 +169,13 @@ public class MixerScreenHandler extends ScreenHandler
 				if (world.getBlockEntity(blockPos) instanceof MixerBlockEntity mixer)
 				{
 					MixerBlockEntity.craftPotion(mixer);
-					if(mixer.getWorld() instanceof ServerWorld serverWorld){
+					if(mixer.getLevel() instanceof ServerLevel serverWorld){
 						var data = BrewingDataState.getBrewingDataState(serverWorld.getServer());
-						PlayerEntity playerEntity = this.playerInventory.player;
+						Player playerEntity = this.playerInventory.player;
 
-						for(StatusEffectInstance effect: mixer.drinkEffects)
+						for(MobEffectInstance effect: mixer.drinkEffects)
 						{
-							data.getPlayerData().getOrDefault(playerEntity.getUuidAsString(), new PlayerBrewingData(new HashMap<>())).foundEffects.replace(effect.getEffectType(), true);
+							data.getPlayerData().getOrDefault(playerEntity.getStringUUID(), new PlayerBrewingData(new HashMap<>())).foundEffects.replace(effect.getEffect(), true);
 						}
 					}
 				}
@@ -199,45 +198,45 @@ public class MixerScreenHandler extends ScreenHandler
 
 			}
 		}
-		return super.onButtonClick(player, id);
+		return super.clickMenuButton(player, id);
 	}
 
 	@Override
-	public ItemStack quickMove(PlayerEntity player, int index)
+	public ItemStack quickMoveStack(Player player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;
 		var slot = this.slots.get(index);
-		if (slot != null && slot.hasStack())
+		if (slot != null && slot.hasItem())
 		{
-			var slotStack = slot.getStack();
+			var slotStack = slot.getItem();
 			itemStack = slotStack.copy();
-			if (index < this.inventory.size())
+			if (index < this.inventory.getContainerSize())
 			{
-				if (!this.insertItem(slotStack, this.inventory.size(), this.slots.size(), true))
+				if (!this.moveItemStackTo(slotStack, this.inventory.getContainerSize(), this.slots.size(), true))
 				{
 					return ItemStack.EMPTY;
 				}
 			}
-			else if (!this.insertItem(slotStack, 0, this.inventory.size(), false))
+			else if (!this.moveItemStackTo(slotStack, 0, this.inventory.getContainerSize(), false))
 			{
 				return ItemStack.EMPTY;
 			}
 
 			if (slotStack.isEmpty())
 			{
-				slot.setStack(ItemStack.EMPTY);
+				slot.setByPlayer(ItemStack.EMPTY);
 			}
 			else
 			{
-				slot.markDirty();
+				slot.setChanged();
 			}
 		}
 		return itemStack;
 	}
 
 	@Override
-	public boolean canUse(PlayerEntity player)
+	public boolean stillValid(Player player)
 	{
-		return this.inventory.canPlayerUse(player);
+		return this.inventory.stillValid(player);
 	}
 }

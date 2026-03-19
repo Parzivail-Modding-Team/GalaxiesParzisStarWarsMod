@@ -1,11 +1,11 @@
 package dev.pswg.blockEntity.screenHandler;
 
 import dev.pswg.container.GalaxiesScreenHandlerTypes;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.world.entity.player.Inventory;
 
 public class CorrugatedCrateHandler extends CrateGenericSmallScreenHandler
 {
-	public CorrugatedCrateHandler(int syncId, PlayerInventory playerInventory)
+	public CorrugatedCrateHandler(int syncId, Inventory playerInventory)
 	{
 		super(GalaxiesScreenHandlerTypes.CORRUGATED, syncId, playerInventory);
 	}

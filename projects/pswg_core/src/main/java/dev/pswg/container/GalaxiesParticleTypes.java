@@ -2,15 +2,15 @@ package dev.pswg.container;
 
 import dev.pswg.Galaxies;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.particle.TintedParticleEffect;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class GalaxiesParticleTypes
 {
-	public static final ParticleType<TintedParticleEffect> SMALL_FLASH_PARTICLE = registerTinted("small_flash");
+	public static final ParticleType<ColorParticleOption> SMALL_FLASH_PARTICLE = registerTinted("small_flash");
 
 	public static final SimpleParticleType SHORT_FLAME_PARTICLE = registerSimple("short_flame");
 	public static final SimpleParticleType SMALL_SHORT_FLAME_PARTICLE = registerSimple("small_short_flame");
@@ -20,13 +20,13 @@ public class GalaxiesParticleTypes
 
 	}
 
-	private static ParticleType<TintedParticleEffect> registerTinted(String id)
+	private static ParticleType<ColorParticleOption> registerTinted(String id)
 	{
-		return Registry.register(Registries.PARTICLE_TYPE, Galaxies.id(id), FabricParticleTypes.complex(true, TintedParticleEffect::createCodec, TintedParticleEffect::createPacketCodec));
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, Galaxies.id(id), FabricParticleTypes.complex(true, ColorParticleOption::codec, ColorParticleOption::streamCodec));
 	}
 
 	private static SimpleParticleType registerSimple(String id)
 	{
-		return Registry.register(Registries.PARTICLE_TYPE, Galaxies.id(id), FabricParticleTypes.simple());
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, Galaxies.id(id), FabricParticleTypes.simple());
 	}
 }

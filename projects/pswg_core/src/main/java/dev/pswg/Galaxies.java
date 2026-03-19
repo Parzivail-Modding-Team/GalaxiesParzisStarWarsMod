@@ -21,12 +21,12 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.command.argument.DimensionArgumentType;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,16 +44,16 @@ public final class Galaxies implements ModInitializer
 	public static final String MODID = "pswg";
 
 	/**
-	 * Creates a scoped {@link Identifier} whose domain is this
+	 * Creates a scoped {@link ResourceLocation} whose domain is this
 	 * mod's MODID
 	 *
-	 * @param path The path for the {@link Identifier}
+	 * @param path The path for the {@link ResourceLocation}
 	 *
-	 * @return A scoped {@link Identifier}
+	 * @return A scoped {@link ResourceLocation}
 	 */
-	public static Identifier id(String path)
+	public static ResourceLocation id(String path)
 	{
-		return Identifier.of(MODID, path);
+		return ResourceLocation.fromNamespaceAndPath(MODID, path);
 	}
 
 	/**
@@ -106,8 +106,8 @@ public final class Galaxies implements ModInitializer
 		return Optional.ofNullable(REMOTE_VERSION);
 	}
 
-	public static final TagKey<DamageType> IGNORES_INVULNERABLE_FRAMES = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("ignores_invulnerable_frames"));
-	public static final TagKey<DamageType> IGNORES_DAMAGE_TILT = TagKey.of(RegistryKeys.DAMAGE_TYPE, id("ignores_damage_tilt"));
+	public static final TagKey<DamageType> IGNORES_INVULNERABLE_FRAMES = TagKey.create(Registries.DAMAGE_TYPE, id("ignores_invulnerable_frames"));
+	public static final TagKey<DamageType> IGNORES_DAMAGE_TILT = TagKey.create(Registries.DAMAGE_TYPE, id("ignores_damage_tilt"));
 
 
 	@Override
@@ -151,11 +151,11 @@ public final class Galaxies implements ModInitializer
 		GalaxiesDimensions.register();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			dispatcher.register(CommandManager.literal("cdim")
-			                                  .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
-			                                  .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+			dispatcher.register(Commands.literal("cdim")
+			                                  .requires(source -> source.hasPermission(2) && source.getEntity() != null) // same permission level as tp
+			                                  .then(Commands.argument("dimension", DimensionArgument.dimension())
 			                                                      .executes(context -> {
-				                                                      var world = DimensionArgumentType.getDimensionArgument(context, "dimension");
+				                                                      var world = DimensionArgument.getDimension(context, "dimension");
 				                                                      DimensionTeleporter.teleport(Objects.requireNonNull(context.getSource().getEntity()), world);
 				                                                      return 1;
 			                                                      })));

@@ -2,24 +2,24 @@ package dev.pswg.item;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.render.item.tint.TintSource;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.component.type.PotionContentsComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.OptionalInt;
+import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.DyedItemColor;
 
-public record SwgDrinkTintSource(int defaultColor) implements TintSource
+public record SwgDrinkTintSource(int defaultColor) implements ItemTintSource
 {
 	public static final MapCodec<SwgDrinkTintSource> CODEC = RecordCodecBuilder.mapCodec(
-			instance -> instance.group(Codecs.RGB.fieldOf("default").forGetter(SwgDrinkTintSource::defaultColor)).apply(instance, SwgDrinkTintSource::new)
+			instance -> instance.group(ExtraCodecs.RGB_COLOR_CODEC.fieldOf("default").forGetter(SwgDrinkTintSource::defaultColor)).apply(instance, SwgDrinkTintSource::new)
 	);
 
 	public SwgDrinkTintSource()
@@ -28,43 +28,43 @@ public record SwgDrinkTintSource(int defaultColor) implements TintSource
 	}
 
 	@Override
-	public int getTint(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity user)
+	public int calculate(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity user)
 	{
-		PotionContentsComponent potionContentsComponent = stack.get(DataComponentTypes.POTION_CONTENTS);
-		DyedColorComponent dyedColorComponent = stack.get(DataComponentTypes.DYED_COLOR);
+		PotionContents potionContentsComponent = stack.get(DataComponents.POTION_CONTENTS);
+		DyedItemColor dyedColorComponent = stack.get(DataComponents.DYED_COLOR);
 		if
 		(dyedColorComponent != null)
-			return DyedColorComponent.getColor(stack, this.defaultColor);
-		return potionContentsComponent != null ? ColorHelper.fullAlpha(getColor(this.defaultColor, potionContentsComponent)) : ColorHelper.fullAlpha(this.defaultColor);
+			return DyedItemColor.getOrDefault(stack, this.defaultColor);
+		return potionContentsComponent != null ? ARGB.opaque(getColor(this.defaultColor, potionContentsComponent)) : ARGB.opaque(this.defaultColor);
 	}
 
-	public int getColor(int defaultColor, PotionContentsComponent component)
+	public int getColor(int defaultColor, PotionContents component)
 	{
-		return component.customColor().isPresent() ? component.customColor().get() : mixColors(component.getEffects()).orElse(defaultColor);
+		return component.customColor().isPresent() ? component.customColor().get() : mixColors(component.getAllEffects()).orElse(defaultColor);
 	}
 
-	public static OptionalInt mixColors(Iterable<StatusEffectInstance> effects)
+	public static OptionalInt mixColors(Iterable<MobEffectInstance> effects)
 	{
 		int i = 0;
 		int j = 0;
 		int k = 0;
 		int l = 0;
 
-		for (StatusEffectInstance statusEffectInstance : effects)
+		for (MobEffectInstance statusEffectInstance : effects)
 		{
-			int m = statusEffectInstance.getEffectType().value().getColor();
+			int m = statusEffectInstance.getEffect().value().getColor();
 			int n = statusEffectInstance.getAmplifier() + 1;
-			i += n * ColorHelper.getRed(m);
-			j += n * ColorHelper.getGreen(m);
-			k += n * ColorHelper.getBlue(m);
+			i += n * ARGB.red(m);
+			j += n * ARGB.green(m);
+			k += n * ARGB.blue(m);
 			l += n;
 		}
 
-		return l == 0 ? OptionalInt.empty() : OptionalInt.of(ColorHelper.getArgb(i / l, j / l, k / l));
+		return l == 0 ? OptionalInt.empty() : OptionalInt.of(ARGB.color(i / l, j / l, k / l));
 	}
 
 	@Override
-	public MapCodec<? extends TintSource> getCodec()
+	public MapCodec<? extends ItemTintSource> type()
 	{
 		return CODEC;
 	}

@@ -1,24 +1,24 @@
 package dev.pswg;
 
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.texture.SpriteAtlasTexture;
+import static net.minecraft.client.renderer.RenderStateShard.*;
 
-import static net.minecraft.client.render.RenderPhase.*;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 
 public class GalaxiesRenderLayers
 {
-	public static final RenderLayer GALAXIES_TRANSLUCENT = RenderLayer.of("pswg_translucent",
+	public static final RenderType GALAXIES_TRANSLUCENT = RenderType.create("pswg_translucent",
 	                                                                      16384,
 	                                                                      true,
 	                                                                      true,
 	                                                                      RenderPipelines.TRANSLUCENT_PARTICLE,
-	                                                                      RenderLayer.MultiPhaseParameters.builder().texture(new RenderPhase.Texture(SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE, false))
-	                                                                                             .lightmap(ENABLE_LIGHTMAP)
-	                                                                                             .overlay(ENABLE_OVERLAY_COLOR)
-	                                                                                                      .layering(VIEW_OFFSET_Z_LAYERING_FORWARD)
-	                                                                                             .build(true));
+	                                                                      RenderType.CompositeState.builder().setTextureState(new RenderStateShard.TextureStateShard(TextureAtlas.LOCATION_PARTICLES, false))
+	                                                                                             .setLightmapState(LIGHTMAP)
+	                                                                                             .setOverlayState(OVERLAY)
+	                                                                                                      .setLayeringState(VIEW_OFFSET_Z_LAYERING_FORWARD)
+	                                                                                             .createCompositeState(true));
 
 	public static void init()
 	{

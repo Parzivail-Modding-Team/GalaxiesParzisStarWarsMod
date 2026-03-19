@@ -5,13 +5,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 
 /**
  * Defines codecs and related utilities for common data types
@@ -19,14 +19,14 @@ import java.util.Map;
 public final class GalaxiesCodecs
 {
 	/**
-	 * A codec for serializing and deserializing a list of {@link Identifier}s.
+	 * A codec for serializing and deserializing a list of {@link ResourceLocation}s.
 	 */
-	public static final Codec<List<Identifier>> IDENTIFIER_LIST = Codecs.listOrSingle(Identifier.CODEC);
+	public static final Codec<List<ResourceLocation>> IDENTIFIER_LIST = ExtraCodecs.compactListCodec(ResourceLocation.CODEC);
 
 	/**
-	 * A codec for serializing and deserializing a map between {@link Identifier}s.
+	 * A codec for serializing and deserializing a map between {@link ResourceLocation}s.
 	 */
-	public static final Codec<Map<Identifier, Identifier>> IDENTIFIER_MAP = Codec.unboundedMap(Identifier.CODEC, Identifier.CODEC);
+	public static final Codec<Map<ResourceLocation, ResourceLocation>> IDENTIFIER_MAP = Codec.unboundedMap(ResourceLocation.CODEC, ResourceLocation.CODEC);
 
 	/**
 	 * A codec for serializing and deserializing a {@link Vector3f} with named components.

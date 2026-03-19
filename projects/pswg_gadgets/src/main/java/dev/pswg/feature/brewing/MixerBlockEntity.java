@@ -8,37 +8,37 @@ import dev.pswg.networking.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.LockableContainerBlockEntity;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.FoodComponent;
-import net.minecraft.component.type.PotionContentsComponent;
-import net.minecraft.entity.ContainerUser;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ContainerUser;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
-public class MixerBlockEntity extends LockableContainerBlockEntity implements SidedInventory, NamedScreenHandlerFactory
+public class MixerBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider
 {
 	protected static final int FUEL_SLOT_INDEX = 0;
 	protected static final int INPUT_SLOT_INDEX = 1;
@@ -56,7 +56,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	protected static final int MAX_MAP_X = 512;
 	protected static final int MAX_MAP_Y = 512;
 
-	protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
+	protected NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
 	float currentMapX;
 	float currentMapY;
 	int litTimeRemaining;
@@ -69,11 +69,11 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	int drinkNutrition;
 	int drinkColor;
 	public Stack<Pair<Float, Float>> path = new Stack<>();
-	public ArrayList<StatusEffectInstance> drinkEffects = new ArrayList<>();
+	public ArrayList<MobEffectInstance> drinkEffects = new ArrayList<>();
 	public ArrayList<Integer> drinkColors = new ArrayList<>();
 	public ArrayList<ItemStack> drinkFoods = new ArrayList<>();
 
-	protected final PropertyDelegate propertyDelegate;
+	protected final ContainerData propertyDelegate;
 
 	public MixerBlockEntity(BlockPos pos, BlockState state)
 	{
@@ -85,7 +85,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		bellowProgress = 0;
 		dangerProgress = 0;
 		bellowBacklog = 0;
-		propertyDelegate = new PropertyDelegate()
+		propertyDelegate = new ContainerData()
 		{
 			@Override
 			public int get(int index)
@@ -119,7 +119,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			}
 
 			@Override
-			public int size()
+			public int getCount()
 			{
 				return 7;
 			}
@@ -169,7 +169,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		if (cell.cellType == BrewingCellType.Potion && mixer.drinkEffects.size() < 3)
 		{
 			EffectCell effectCell = (EffectCell)cell;
-			if (mixer.drinkEffects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == effectCell.statusEffect.getEffectType()))
+			if (mixer.drinkEffects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffect() == effectCell.statusEffect.getEffect()))
 				mixer.drinkEffects.add(effectCell.statusEffect);
 		}
 
@@ -177,11 +177,11 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		{
 			ItemStack stack;
 			ItemStack outputStack = mixer.inventory.get(OUTPUT_SLOT_INDEX);
-			if (outputStack.isOf(Items.GLASS_BOTTLE))
+			if (outputStack.is(Items.GLASS_BOTTLE))
 				stack = new ItemStack(Items.POTION);
 			else
 			{
-				Item item = Registries.ITEM.get(Registries.ITEM.getId(outputStack.getItem()).withSuffixedPath("_filled"));
+				Item item = BuiltInRegistries.ITEM.getValue(BuiltInRegistries.ITEM.getKey(outputStack.getItem()).withSuffix("_filled"));
 				if (item != null)
 					stack = new ItemStack(item);
 				else
@@ -192,9 +192,9 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			int b = 0;
 			for (int i = 0; i < mixer.drinkColors.size(); i++)
 			{
-				r += ColorHelper.getRed(mixer.drinkColors.get(i));
-				g += ColorHelper.getGreen(mixer.drinkColors.get(i));
-				b += ColorHelper.getBlue(mixer.drinkColors.get(i));
+				r += ARGB.red(mixer.drinkColors.get(i));
+				g += ARGB.green(mixer.drinkColors.get(i));
+				b += ARGB.blue(mixer.drinkColors.get(i));
 			}
 			r /= Math.max(1, mixer.drinkColors.size());
 			g /= Math.max(1, mixer.drinkColors.size());
@@ -203,32 +203,32 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			int n = 0;
 			for (int i = 0; i < mixer.drinkFoods.size(); i++)
 			{
-				var foodComponent = mixer.drinkFoods.get(i).getOrDefault(DataComponentTypes.FOOD, new FoodComponent(0, 0, false));
+				var foodComponent = mixer.drinkFoods.get(i).getOrDefault(DataComponents.FOOD, new FoodProperties(0, 0, false));
 				s += foodComponent.saturation();
 				n += foodComponent.nutrition();
 			}
 			s /= 1.5f;
 			n = (int)((float)n / 1.5f);
 
-			Optional<Integer> color = (r == 0 && b == 0 && g == 0) ? Optional.empty() : Optional.of(ColorHelper.getArgb(r, g, b));
-			stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(Optional.empty(), color, mixer.drinkEffects.stream().toList(), Optional.empty()));
-			stack.set(DataComponentTypes.FOOD, new FoodComponent(n, s, false));
+			Optional<Integer> color = (r == 0 && b == 0 && g == 0) ? Optional.empty() : Optional.of(ARGB.color(r, g, b));
+			stack.set(DataComponents.POTION_CONTENTS, new PotionContents(Optional.empty(), color, mixer.drinkEffects.stream().toList(), Optional.empty()));
+			stack.set(DataComponents.FOOD, new FoodProperties(n, s, false));
 			mixer.inventory.set(OUTPUT_SLOT_INDEX, stack);
 
 			resetMixer(mixer);
 		}
 	}
 
-	public static void spawnFailParticles(World world, BlockPos pos)
+	public static void spawnFailParticles(Level world, BlockPos pos)
 	{
-		if (world instanceof ServerWorld serverWorld)
-			serverWorld.spawnParticles(
+		if (world instanceof ServerLevel serverWorld)
+			serverWorld.sendParticles(
 					ParticleTypes.SMOKE,
 					false,
 					false,
-					pos.toCenterPos().getX(),
-					pos.toCenterPos().getY(),
-					pos.toCenterPos().getZ(),
+					pos.getCenter().x(),
+					pos.getCenter().y(),
+					pos.getCenter().z(),
 					20,
 					0,
 					0,
@@ -240,9 +240,9 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 	public static void sendSyncPacket(MixerBlockEntity mixer)
 	{
 		var payload = new MixerSyncS2CPayload(mixer.drinkEffects, mixer.drinkColors, mixer.drinkFoods);
-		if (!mixer.world.isClient())
+		if (!mixer.level.isClientSide())
 		{
-			for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld)mixer.world, mixer.pos.toCenterPos(), 6))
+			for (ServerPlayer player : PlayerLookup.around((ServerLevel)mixer.level, mixer.worldPosition.getCenter(), 6))
 				ServerPlayNetworking.send(player, payload);
 		}
 	}
@@ -253,23 +253,23 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		if (mixer.drinkEffects.size() < 3 && cell.cellType == BrewingCellType.Potion)
 		{
 			EffectCell effectCell = (EffectCell)cell;
-			for (StatusEffectInstance statusEffect : mixer.drinkEffects)
-				if (effectCell.statusEffect.getEffectType() == statusEffect.getEffectType())
+			for (MobEffectInstance statusEffect : mixer.drinkEffects)
+				if (effectCell.statusEffect.getEffect() == statusEffect.getEffect())
 					return;
 			mixer.drinkEffects.add(effectCell.statusEffect);
 		}
 		sendSyncPacket(mixer);
 	}
 
-	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity)
+	public static <T extends BlockEntity> void tick(Level world, BlockPos pos, BlockState state, T blockEntity)
 	{
 		if (blockEntity instanceof MixerBlockEntity mixer)
 		{
-			boolean drinkContainerPresent = !mixer.getStack(OUTPUT_SLOT_INDEX).isEmpty() && mixer.getStack(OUTPUT_SLOT_INDEX).isIn(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
+			boolean drinkContainerPresent = !mixer.getItem(OUTPUT_SLOT_INDEX).isEmpty() && mixer.getItem(OUTPUT_SLOT_INDEX).is(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
 			if (!drinkContainerPresent)
 				resetMixer(mixer);
 
-			ItemStack inputStack = mixer.getStack(INPUT_SLOT_INDEX);
+			ItemStack inputStack = mixer.getItem(INPUT_SLOT_INDEX);
 			mixer.bellowBacklog = Math.max(mixer.bellowBacklog - 1, 0);
 			mixer.litTimeRemaining = Math.max(mixer.litTimeRemaining - 1, 0);
 
@@ -281,29 +281,29 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			else
 				mixer.bellowProgress = Math.max(mixer.bellowProgress - 2, 0);
 
-			ItemStack fuelStack = mixer.getStack(FUEL_SLOT_INDEX);
-			if (mixer.litTimeRemaining == 0 && drinkContainerPresent && !fuelStack.isEmpty() && world.getFuelRegistry().isFuel(fuelStack) && (!mixer.path.empty() || !mixer.getStack(INPUT_SLOT_INDEX).isEmpty()))
+			ItemStack fuelStack = mixer.getItem(FUEL_SLOT_INDEX);
+			if (mixer.litTimeRemaining == 0 && drinkContainerPresent && !fuelStack.isEmpty() && world.fuelValues().isFuel(fuelStack) && (!mixer.path.empty() || !mixer.getItem(INPUT_SLOT_INDEX).isEmpty()))
 			{
-				mixer.litTotalTime = world.getFuelRegistry().getFuelTicks(fuelStack);
-				mixer.litTimeRemaining = world.getFuelRegistry().getFuelTicks(fuelStack);
-				fuelStack.decrement(1);
+				mixer.litTotalTime = world.fuelValues().burnDuration(fuelStack);
+				mixer.litTimeRemaining = world.fuelValues().burnDuration(fuelStack);
+				fuelStack.shrink(1);
 			}
 
 			if (MixerBrewingPaths.pathMap.containsKey(inputStack.getItem()) && mixer.path.empty() && mixer.litTimeRemaining > 0 && drinkContainerPresent)
 			{
 				mixer.path.addAll(MixerBrewingPaths.pathMap.get(inputStack.getItem()));
-				inputStack.decrement(1);
+				inputStack.shrink(1);
 			}
 			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.getItem() instanceof DyeItem dyeItem && mixer.drinkColors.size() < 3)
 			{
-				mixer.drinkColors.add(dyeItem.getColor().getEntityColor());
-				inputStack.decrement(1);
+				mixer.drinkColors.add(dyeItem.getDyeColor().getTextureDiffuseColor());
+				inputStack.shrink(1);
 				sendSyncPacket(mixer);
 			}
-			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.isIn(GadgetsItems.Tags.MIXER_FOOD_TAG) && mixer.drinkFoods.size() < 3)
+			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.is(GadgetsItems.Tags.MIXER_FOOD_TAG) && mixer.drinkFoods.size() < 3)
 			{
 				mixer.drinkFoods.add(inputStack.copyWithCount(1));
-				inputStack.decrement(1);
+				inputStack.shrink(1);
 				sendSyncPacket(mixer);
 			}
 			BrewingCell cell = BrewingMap.getCell(mixer.currentMapX, mixer.currentMapY);
@@ -357,30 +357,30 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 				if (lastElem.getSecond() > 0)
 					mixer.path.push(lastElem);
 			}
-			mixer.markDirty();
+			mixer.setChanged();
 		}
 	}
 
 	@Override
-	protected void readData(ReadView view)
+	protected void loadAdditional(ValueInput view)
 	{
-		currentMapX = view.getFloat("current_map_x", 256);
-		currentMapY = view.getFloat("current_map_y", 256);
-		litTimeRemaining = view.getInt("lit_time_remaining", 0);
-		litTotalTime = view.getInt("lit_time_total", 1);
-		bellowProgress = view.getInt("bellow_progress", 0);
-		dangerProgress = view.getInt("danger_progress", 0);
-		Inventories.readData(view, inventory);
+		currentMapX = view.getFloatOr("current_map_x", 256);
+		currentMapY = view.getFloatOr("current_map_y", 256);
+		litTimeRemaining = view.getIntOr("lit_time_remaining", 0);
+		litTotalTime = view.getIntOr("lit_time_total", 1);
+		bellowProgress = view.getIntOr("bellow_progress", 0);
+		dangerProgress = view.getIntOr("danger_progress", 0);
+		ContainerHelper.loadAllItems(view, inventory);
 		List<Float> angleList = view.read("path_angles", Codec.FLOAT.listOf()).get();
 		List<Float> lengthList = view.read("path_lengths", Codec.FLOAT.listOf()).get();
 		for (int i = 0; i < angleList.size(); i++)
 			path.push(Pair.of(angleList.get(i), lengthList.get(i)));
-		drinkEffects = new ArrayList<>(view.read("drink_effects", StatusEffectInstance.CODEC.listOf()).get());
-		super.readData(view);
+		drinkEffects = new ArrayList<>(view.read("drink_effects", MobEffectInstance.CODEC.listOf()).get());
+		super.loadAdditional(view);
 	}
 
 	@Override
-	protected void writeData(WriteView view)
+	protected void saveAdditional(ValueOutput view)
 	{
 
 		view.putFloat("current_map_x", currentMapX);
@@ -389,7 +389,7 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 		view.putInt("lit_time_total", litTotalTime);
 		view.putInt("bellow_progress", bellowProgress);
 		view.putInt("danger_progress", dangerProgress);
-		Inventories.writeData(view, inventory);
+		ContainerHelper.saveAllItems(view, inventory);
 		ArrayList<Float> angleList = new ArrayList<>();
 		ArrayList<Float> lengthList = new ArrayList<>();
 		for (Pair<Float, Float> pair : path.stream().toList())
@@ -397,87 +397,87 @@ public class MixerBlockEntity extends LockableContainerBlockEntity implements Si
 			angleList.add(pair.getFirst());
 			lengthList.add(pair.getSecond());
 		}
-		view.put("path_angles", Codec.FLOAT.listOf(), angleList);
-		view.put("path_lengths", Codec.FLOAT.listOf(), lengthList);
-		view.put("drink_effects", StatusEffectInstance.CODEC.listOf(), drinkEffects);
+		view.store("path_angles", Codec.FLOAT.listOf(), angleList);
+		view.store("path_lengths", Codec.FLOAT.listOf(), lengthList);
+		view.store("drink_effects", MobEffectInstance.CODEC.listOf(), drinkEffects);
 
-		super.writeData(view);
+		super.saveAdditional(view);
 	}
 
 	@Override
-	public void onOpen(ContainerUser user)
+	public void startOpen(ContainerUser user)
 	{
-		super.onOpen(user);
+		super.startOpen(user);
 		sendSyncPacket(this);
 	}
 
 	@Override
-	protected Text getContainerName()
+	protected Component getDefaultName()
 	{
-		return Text.literal("Mixer");
+		return Component.literal("Mixer");
 	}
 
 	@Override
-	protected DefaultedList<ItemStack> getHeldStacks()
+	protected NonNullList<ItemStack> getItems()
 	{
 		return inventory;
 	}
 
 	@Override
-	protected void setHeldStacks(DefaultedList<ItemStack> inventory)
+	protected void setItems(NonNullList<ItemStack> inventory)
 	{
 		this.inventory = inventory;
 	}
 
 	@Override
-	protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory)
+	protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory)
 	{
 		MixerBlockEntity mixer = this;
 		var factory = new ExtendedScreenHandlerFactory<>()
 		{
 			@Override
-			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player)
+			public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player)
 			{
-				return new MixerScreenHandler(syncId, playerInventory, mixer, propertyDelegate, pos, drinkEffects, drinkColors, drinkFoods);
+				return new MixerScreenHandler(syncId, playerInventory, mixer, propertyDelegate, worldPosition, drinkEffects, drinkColors, drinkFoods);
 			}
 
 			@Override
-			public Text getDisplayName()
+			public Component getDisplayName()
 			{
-				return Text.of("Mixer");
+				return Component.nullToEmpty("Mixer");
 			}
 
 			@Override
-			public Object getScreenOpeningData(ServerPlayerEntity player)
+			public Object getScreenOpeningData(ServerPlayer player)
 			{
 				return new MixerSyncS2CPayload(drinkEffects, drinkColors, drinkFoods);
 			}
 		};
-		if (playerInventory.player instanceof ServerPlayerEntity serverPlayer)
-			serverPlayer.openHandledScreen(factory);
+		if (playerInventory.player instanceof ServerPlayer serverPlayer)
+			serverPlayer.openMenu(factory);
 		return null;
 	}
 
 	@Override
-	public int[] getAvailableSlots(Direction side)
+	public int[] getSlotsForFace(Direction side)
 	{
 		return new int[0];
 	}
 
 	@Override
-	public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir)
+	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction dir)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean canExtract(int slot, ItemStack stack, Direction dir)
+	public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction dir)
 	{
 		return false;
 	}
 
 	@Override
-	public int size()
+	public int getContainerSize()
 	{
 		return 3;
 	}

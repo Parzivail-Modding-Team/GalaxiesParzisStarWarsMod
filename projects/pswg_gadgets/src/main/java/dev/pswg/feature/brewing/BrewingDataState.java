@@ -2,16 +2,15 @@ package dev.pswg.feature.brewing;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateType;
-import net.minecraft.world.World;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BrewingDataState extends PersistentState
+public class BrewingDataState extends SavedData
 {
 	public BrewingDataState(Map<String, PlayerBrewingData> map)
 	{
@@ -26,12 +25,12 @@ public class BrewingDataState extends PersistentState
 
 	public Map<String, PlayerBrewingData> players;
 
-	public static final Codec<BrewingDataState> CODEC = Codec.unboundedMap(Codecs.NON_EMPTY_STRING, PlayerBrewingData.createCodec()).xmap(
+	public static final Codec<BrewingDataState> CODEC = Codec.unboundedMap(ExtraCodecs.NON_EMPTY_STRING, PlayerBrewingData.createCodec()).xmap(
 			BrewingDataState::new,
 			BrewingDataState::getPlayerData
 	);
 
-	private static final PersistentStateType<BrewingDataState> TYPE = new PersistentStateType<>(
+	private static final SavedDataType<BrewingDataState> TYPE = new SavedDataType<>(
 			"player_brewing_data",
 			BrewingDataState::new,
 			CODEC,
@@ -41,11 +40,11 @@ public class BrewingDataState extends PersistentState
 	// TODO : Sync with the client when getting, since it often is also when an update happens
 	public static BrewingDataState getBrewingDataState(MinecraftServer server)
 	{
-		ServerWorld world = server.getWorld(World.OVERWORLD);
+		ServerLevel world = server.getLevel(Level.OVERWORLD);
 		if (world == null)
 			return new BrewingDataState();
-		BrewingDataState brewingData = world.getPersistentStateManager().getOrCreate(TYPE);
-		brewingData.markDirty();
+		BrewingDataState brewingData = world.getDataStorage().computeIfAbsent(TYPE);
+		brewingData.setDirty();
 		return brewingData;
 	}
 

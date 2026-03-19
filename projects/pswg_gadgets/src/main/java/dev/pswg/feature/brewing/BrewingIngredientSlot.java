@@ -1,21 +1,21 @@
 package dev.pswg.feature.brewing;
 
 import dev.pswg.container.GadgetsItems;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
 
 public class BrewingIngredientSlot extends Slot
 {
-	public BrewingIngredientSlot(Inventory inventory, int index, int x, int y)
+	public BrewingIngredientSlot(Container inventory, int index, int x, int y)
 	{
 		super(inventory, index, x, y);
 	}
 
 	@Override
-	public boolean canInsert(ItemStack stack)
+	public boolean mayPlace(ItemStack stack)
 	{
-		return MixerBrewingPaths.pathMap.containsKey(stack.getItem()) || stack.isIn(GadgetsItems.Tags.MIXER_FOOD_TAG) || stack.getItem() instanceof DyeItem;
+		return MixerBrewingPaths.pathMap.containsKey(stack.getItem()) || stack.is(GadgetsItems.Tags.MIXER_FOOD_TAG) || stack.getItem() instanceof DyeItem;
 	}
 }

@@ -4,9 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Contains events for being notified when item-related components are drawn
@@ -17,7 +17,7 @@ public final class ItemRenderEvents
 	@Environment(EnvType.CLIENT)
 	public interface StackRenderedCallback
 	{
-		void render(DrawContext context, TextRenderer textRenderer, ItemStack stack, int x, int y);
+		void render(GuiGraphics context, Font textRenderer, ItemStack stack, int x, int y);
 	}
 
 	/**

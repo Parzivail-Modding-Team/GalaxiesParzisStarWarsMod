@@ -1,11 +1,10 @@
 package dev.pswg.util.worldgen.biome.gen.system;
 
 import it.unimi.dsi.fastutil.HashCommon;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-
 import java.util.Arrays;
 import java.util.concurrent.locks.StampedLock;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ChunkPos;
 
 public final class CachingLayerSampler implements LayerSampler
 {
@@ -41,7 +40,7 @@ public final class CachingLayerSampler implements LayerSampler
 		{
 			this.operator = operator;
 
-			size = MathHelper.smallestEncompassingPowerOfTwo(size);
+			size = Mth.smallestEncompassingPowerOfTwo(size);
 			this.mask = size - 1;
 
 			this.keys = new long[size];
@@ -87,7 +86,7 @@ public final class CachingLayerSampler implements LayerSampler
 
 		private long key(int x, int z)
 		{
-			return ChunkPos.toLong(x, z);
+			return ChunkPos.asLong(x, z);
 		}
 	}
 }

@@ -1,29 +1,28 @@
 package dev.pswg.blockEntity;
 
 import dev.pswg.util.VoxelShapeUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-
 import java.util.function.BiFunction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class WaterloggableRotatingBlockWithBoundsGuiEntity extends WaterloggableRotatingBlockWithGuiEntity
 {
 	private final VoxelShape shape;
 
-	public WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShape shape, Settings settings, BiFunction<BlockPos, BlockState, BlockEntity> blockEntitySupplier)
+	public WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShape shape, Properties settings, BiFunction<BlockPos, BlockState, BlockEntity> blockEntitySupplier)
 	{
-		super(settings.dynamicBounds(), blockEntitySupplier);
+		super(settings.dynamicShape(), blockEntitySupplier);
 		this.shape = shape;
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
 	{
 		// East isn't zero, but everything defaults to facing east
-		return VoxelShapeUtil.rotate(shape, (state.get(FACING).getHorizontalQuarterTurns() + 1) % 4);
+		return VoxelShapeUtil.rotate(shape, (state.getValue(FACING).get2DDataValue() + 1) % 4);
 	}
 }

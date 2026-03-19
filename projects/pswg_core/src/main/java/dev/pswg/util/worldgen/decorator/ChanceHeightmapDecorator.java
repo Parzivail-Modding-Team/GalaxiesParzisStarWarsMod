@@ -1,27 +1,26 @@
 package dev.pswg.util.worldgen.decorator;
 
 import dev.pswg.util.worldgen.world.WorldGenView;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class ChanceHeightmapDecorator extends Decorator
 {
 	private final double chance;
-	private final Heightmap.Type heightmap;
+	private final Heightmap.Types heightmap;
 
 	// chance is 1 in chance
 	public ChanceHeightmapDecorator(int chance)
 	{
-		this(1.0 / chance, Heightmap.Type.WORLD_SURFACE_WG);
+		this(1.0 / chance, Heightmap.Types.WORLD_SURFACE_WG);
 	}
 
 	// Raw chance
-	public ChanceHeightmapDecorator(double chance, Heightmap.Type heightmap)
+	public ChanceHeightmapDecorator(double chance, Heightmap.Types heightmap)
 	{
 		this.chance = chance;
 		this.heightmap = heightmap;

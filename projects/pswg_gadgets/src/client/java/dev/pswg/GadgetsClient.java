@@ -24,14 +24,12 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.particle.ParticleRenderer;
-import net.minecraft.client.render.BlockRenderLayer;
-import net.minecraft.client.render.entity.EmptyEntityRenderer;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.util.Pair;
-
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.particle.ParticleGroup;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.effect.MobEffects;
 import java.util.Map;
 
 /**
@@ -39,7 +37,7 @@ import java.util.Map;
  */
 public class GadgetsClient implements GalaxiesClientAddon
 {
-	public static Map<GadgetsParticleRenderer, ParticleRenderer<?>> particleRenderers = Maps.newIdentityHashMap();
+	public static Map<GadgetsParticleRenderer, ParticleGroup<?>> particleRenderers = Maps.newIdentityHashMap();
 	@Override
 	public void onGalaxiesClientReady()
 	{
@@ -59,8 +57,8 @@ public class GadgetsClient implements GalaxiesClientAddon
 		EntityModelLayerRegistry.registerModelLayer(PressureMineEntityRenderer.MODEL_LAYER, PressureMineEntityRenderer.Model::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.TRIPWIRE_MINE_ENTITY, TripwireMineEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(TripwireMineEntityRenderer.MODEL_LAYER, TripwireMineModel::getTexturedModelData);
-		EntityRendererRegistry.register(GadgetsEntities.NERVE_GAS, EmptyEntityRenderer::new);
-		EntityRendererRegistry.register(GadgetsEntities.SMOKE_GAS, EmptyEntityRenderer::new);
+		EntityRendererRegistry.register(GadgetsEntities.NERVE_GAS, NoopRenderer::new);
+		EntityRendererRegistry.register(GadgetsEntities.SMOKE_GAS, NoopRenderer::new);
 
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.EXPLOSION_SMOKE_PARTICLE, ExplosionSmokeParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, FragmentationGrenadeSparkParticle.Factory::new);
@@ -74,23 +72,23 @@ public class GadgetsClient implements GalaxiesClientAddon
 
 		ParticleFactoryRegistry.getInstance().register(GadgetsParticleTypes.LASER_CUT_PARTICLE, LaserCutParticle.Factory::new);
 
-		HandledScreens.register(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, ScrappingTableScreen::new);
-		HandledScreens.register(GadgetsScreenHandlerTypes.MIXER, MixerScreen::new);
+		MenuScreens.register(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, ScrappingTableScreen::new);
+		MenuScreens.register(GadgetsScreenHandlerTypes.MIXER, MixerScreen::new);
 
 		GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(ClientBlockRegistryData.class, (block, clientData) -> {
 			switch (clientData.renderLayer())
 			{
 				case TRANSPARENT:
-					BlockRenderLayerMap.putBlock(block, BlockRenderLayer.TRANSLUCENT);
+					BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.TRANSLUCENT);
 				case CUTOUT_MIPPED:
-					BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT_MIPPED);
+					BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT_MIPPED);
 			}
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(LaserCutterHandler::tick);
 
 		ClientPlayNetworking.registerGlobalReceiver(MixerSyncS2CPayload.ID, (mixerSyncS2CPayload, context) -> {
-			if (context.player().currentScreenHandler instanceof MixerScreenHandler mixerScreenHandler)
+			if (context.player().containerMenu instanceof MixerScreenHandler mixerScreenHandler)
 			{
 				mixerScreenHandler.drinkEffects = mixerSyncS2CPayload.drinkEffects();
 				mixerScreenHandler.drinkColors = mixerSyncS2CPayload.drinkColors();
@@ -98,20 +96,20 @@ public class GadgetsClient implements GalaxiesClientAddon
 			}
 		});
 
-		MixerScreen.ICON_MAP.put(StatusEffects.ABSORPTION, new Pair<>(126, 127));
-		MixerScreen.ICON_MAP.put(StatusEffects.DOLPHINS_GRACE, new Pair<>(350, 161));
-		MixerScreen.ICON_MAP.put(StatusEffects.FIRE_RESISTANCE, new Pair<>(336, 33));
-		MixerScreen.ICON_MAP.put(StatusEffects.HASTE, new Pair<>(190, 447));
-		MixerScreen.ICON_MAP.put(StatusEffects.HEALTH_BOOST, new Pair<>(46, 225));
-		MixerScreen.ICON_MAP.put(StatusEffects.INVISIBILITY, new Pair<>(64, 384));
-		MixerScreen.ICON_MAP.put(StatusEffects.INSTANT_HEALTH, new Pair<>(127, 244));
-		MixerScreen.ICON_MAP.put(StatusEffects.JUMP_BOOST, new Pair<>(336, 400));
-		MixerScreen.ICON_MAP.put(StatusEffects.LUCK, new Pair<>(143, 384));
-		MixerScreen.ICON_MAP.put(StatusEffects.NIGHT_VISION, new Pair<>(95, 324));
-		MixerScreen.ICON_MAP.put(StatusEffects.REGENERATION, new Pair<>(31, 65));
-		MixerScreen.ICON_MAP.put(StatusEffects.RESISTANCE, new Pair<>(224, 65));
-		MixerScreen.ICON_MAP.put(StatusEffects.SPEED, new Pair<>(382, 273));
-		MixerScreen.ICON_MAP.put(StatusEffects.STRENGTH, new Pair<>(448, 448));
+		MixerScreen.ICON_MAP.put(MobEffects.ABSORPTION, new Tuple<>(126, 127));
+		MixerScreen.ICON_MAP.put(MobEffects.DOLPHINS_GRACE, new Tuple<>(350, 161));
+		MixerScreen.ICON_MAP.put(MobEffects.FIRE_RESISTANCE, new Tuple<>(336, 33));
+		MixerScreen.ICON_MAP.put(MobEffects.HASTE, new Tuple<>(190, 447));
+		MixerScreen.ICON_MAP.put(MobEffects.HEALTH_BOOST, new Tuple<>(46, 225));
+		MixerScreen.ICON_MAP.put(MobEffects.INVISIBILITY, new Tuple<>(64, 384));
+		MixerScreen.ICON_MAP.put(MobEffects.INSTANT_HEALTH, new Tuple<>(127, 244));
+		MixerScreen.ICON_MAP.put(MobEffects.JUMP_BOOST, new Tuple<>(336, 400));
+		MixerScreen.ICON_MAP.put(MobEffects.LUCK, new Tuple<>(143, 384));
+		MixerScreen.ICON_MAP.put(MobEffects.NIGHT_VISION, new Tuple<>(95, 324));
+		MixerScreen.ICON_MAP.put(MobEffects.REGENERATION, new Tuple<>(31, 65));
+		MixerScreen.ICON_MAP.put(MobEffects.RESISTANCE, new Tuple<>(224, 65));
+		MixerScreen.ICON_MAP.put(MobEffects.SPEED, new Tuple<>(382, 273));
+		MixerScreen.ICON_MAP.put(MobEffects.STRENGTH, new Tuple<>(448, 448));
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

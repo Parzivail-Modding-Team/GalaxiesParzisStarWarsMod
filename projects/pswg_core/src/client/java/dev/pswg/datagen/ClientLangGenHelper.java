@@ -1,10 +1,9 @@
 package dev.pswg.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 
 /**
  * A set of utilities for working with language generation
@@ -18,9 +17,9 @@ public final class ClientLangGenHelper
 	 * @param category           The keybind category
 	 * @param value              The translated string
 	 */
-	public static void keybindCategory(FabricLanguageProvider.TranslationBuilder translationBuilder, KeyBinding.Category category, String value)
+	public static void keybindCategory(FabricLanguageProvider.TranslationBuilder translationBuilder, KeyMapping.Category category, String value)
 	{
-		translatableText(translationBuilder, category.getLabel(), value);
+		translatableText(translationBuilder, category.label(), value);
 	}
 
 	/**
@@ -30,9 +29,9 @@ public final class ClientLangGenHelper
 	 * @param keyBinding         The keybind
 	 * @param value              The translated string
 	 */
-	public static void keybind(FabricLanguageProvider.TranslationBuilder translationBuilder, KeyBinding keyBinding, String value)
+	public static void keybind(FabricLanguageProvider.TranslationBuilder translationBuilder, KeyMapping keyBinding, String value)
 	{
-		translationBuilder.add(keyBinding.getId(), value);
+		translationBuilder.add(keyBinding.getName(), value);
 	}
 
 	/**
@@ -42,9 +41,9 @@ public final class ClientLangGenHelper
 	 * @param text               The keybind
 	 * @param value              The translated string
 	 */
-	public static void translatableText(FabricLanguageProvider.TranslationBuilder translationBuilder, Text text, String value)
+	public static void translatableText(FabricLanguageProvider.TranslationBuilder translationBuilder, Component text, String value)
 	{
-		if (!(text.getContent() instanceof TranslatableTextContent ttc))
+		if (!(text.getContents() instanceof TranslatableContents ttc))
 			throw new RuntimeException("Text is not translatable");
 
 		translationBuilder.add(ttc.getKey(), value);

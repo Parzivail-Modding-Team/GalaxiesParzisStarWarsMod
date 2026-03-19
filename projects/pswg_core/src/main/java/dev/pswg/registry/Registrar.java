@@ -1,26 +1,25 @@
 package dev.pswg.registry;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.util.function.Function;
 
 /**
@@ -40,12 +39,12 @@ public final class Registrar
 	 *
 	 * @return A constructed item with the provided settings, given the corresponding registry key
 	 */
-	public static <TItem extends Item, TSettings extends Item.Settings> TItem item(Identifier registryKey, Function<TSettings, TItem> constructor, TSettings settings)
+	public static <TItem extends Item, TSettings extends Item.Properties> TItem item(ResourceLocation registryKey, Function<TSettings, TItem> constructor, TSettings settings)
 	{
 		// this cast to TSettings is legal since `registryKey` returns `this`
 		//noinspection unchecked
-		var item = constructor.apply((TSettings)settings.registryKey(RegistryKey.of(RegistryKeys.ITEM, registryKey)));
-		return Registry.register(Registries.ITEM, registryKey, item);
+		var item = constructor.apply((TSettings)settings.setId(ResourceKey.create(Registries.ITEM, registryKey)));
+		return Registry.register(BuiltInRegistries.ITEM, registryKey, item);
 	}
 
 	/**
@@ -59,12 +58,12 @@ public final class Registrar
 	 *
 	 * @return A constructed block with the provided settings, given the corresponding registry key
 	 */
-	public static <TBlock extends Block, TSettings extends Block.Settings> TBlock blockWithoutItem(Identifier registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
+	public static <TBlock extends Block, TSettings extends BlockBehaviour.Properties> TBlock blockWithoutItem(ResourceLocation registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
 	{
 		// this cast to TSettings is legal since `registryKey` returns `this`
 		//noinspection unchecked
-		var block = constructor.apply((TSettings)settings.registryKey(RegistryKey.of(RegistryKeys.BLOCK, registryKey)));
-		return Registry.register(Registries.BLOCK, registryKey, block);
+		var block = constructor.apply((TSettings)settings.setId(ResourceKey.create(Registries.BLOCK, registryKey)));
+		return Registry.register(BuiltInRegistries.BLOCK, registryKey, block);
 	}
 
 	/**
@@ -78,13 +77,13 @@ public final class Registrar
 	 *
 	 * @return A constructed block with the provided settings, given the corresponding registry key
 	 */
-	public static <TBlock extends Block, TSettings extends AbstractBlock.Settings> TBlock block(Identifier registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
+	public static <TBlock extends Block, TSettings extends BlockBehaviour.Properties> TBlock block(ResourceLocation registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
 	{
 		// this cast to TSettings is legal since `registryKey` returns `this`
 		// noinspection unchecked
-		var block = constructor.apply((TSettings)settings.registryKey(RegistryKey.of(RegistryKeys.BLOCK, registryKey)));
+		var block = constructor.apply((TSettings)settings.setId(ResourceKey.create(Registries.BLOCK, registryKey)));
 		Registrar.item(registryKey, itemSettings -> new BlockItem(block, itemSettings));
-		return Registry.register(Registries.BLOCK, registryKey, block);
+		return Registry.register(BuiltInRegistries.BLOCK, registryKey, block);
 	}
 
 	/**
@@ -96,9 +95,9 @@ public final class Registrar
 	 *
 	 * @return A constructed item with the provided settings, given the corresponding registry key
 	 */
-	public static <TItem extends Item> TItem item(Identifier registryKey, Function<Item.Settings, TItem> constructor)
+	public static <TItem extends Item> TItem item(ResourceLocation registryKey, Function<Item.Properties, TItem> constructor)
 	{
-		return item(registryKey, constructor, new Item.Settings());
+		return item(registryKey, constructor, new Item.Properties());
 	}
 
 	/**
@@ -110,12 +109,12 @@ public final class Registrar
 	 *
 	 * @return A built entity type, given the corresponding registry key
 	 */
-	public static <T extends Entity> EntityType<T> entityType(Identifier registryKey, EntityType.Builder<T> builder)
+	public static <T extends Entity> EntityType<T> entityType(ResourceLocation registryKey, EntityType.Builder<T> builder)
 	{
 		return Registry.register(
-				Registries.ENTITY_TYPE,
+				BuiltInRegistries.ENTITY_TYPE,
 				registryKey,
-				builder.build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, registryKey))
+				builder.build(ResourceKey.create(Registries.ENTITY_TYPE, registryKey))
 		);
 	}
 
@@ -129,9 +128,9 @@ public final class Registrar
 	 * @return A built block entity type, given the corresponding registry key
 	 */
 
-	public static <T extends BlockEntity> BlockEntityType<T> blockEntity(Identifier registryKey, FabricBlockEntityTypeBuilder.Factory<? extends T> factory, Block... blocks)
+	public static <T extends BlockEntity> BlockEntityType<T> blockEntity(ResourceLocation registryKey, FabricBlockEntityTypeBuilder.Factory<? extends T> factory, Block... blocks)
 	{
-		return Registry.register(Registries.BLOCK_ENTITY_TYPE, registryKey, FabricBlockEntityTypeBuilder.<T>create(factory, blocks).build());
+		return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, registryKey, FabricBlockEntityTypeBuilder.<T>create(factory, blocks).build());
 	}
 
 	/**
@@ -142,9 +141,9 @@ public final class Registrar
 	 *
 	 * @return A built recipe type, given the corresponding registry key
 	 */
-	public static <T extends Recipe<?>> RecipeType<T> recipeType(Identifier registryKey)
+	public static <T extends Recipe<?>> RecipeType<T> recipeType(ResourceLocation registryKey)
 	{
-		return Registry.register(Registries.RECIPE_TYPE, registryKey, new RecipeType<T>()
+		return Registry.register(BuiltInRegistries.RECIPE_TYPE, registryKey, new RecipeType<T>()
 		{
 			@Override
 			public String toString()
@@ -154,13 +153,13 @@ public final class Registrar
 		});
 	}
 
-	public static <T extends ScreenHandler> ScreenHandlerType<T> screenHandlerType(Identifier registryKey, ScreenHandlerType.Factory<T> factory)
+	public static <T extends AbstractContainerMenu> MenuType<T> screenHandlerType(ResourceLocation registryKey, MenuType.MenuSupplier<T> factory)
 	{
-		return Registry.register(Registries.SCREEN_HANDLER, registryKey, new ScreenHandlerType<>(factory, FeatureFlags.DEFAULT_ENABLED_FEATURES));
+		return Registry.register(BuiltInRegistries.MENU, registryKey, new MenuType<>(factory, FeatureFlags.DEFAULT_FLAGS));
 	}
 
-	public static <S extends RecipeSerializer<T>, T extends Recipe<?>> S recipeSerializer(Identifier id, S serializer)
+	public static <S extends RecipeSerializer<T>, T extends Recipe<?>> S recipeSerializer(ResourceLocation id, S serializer)
 	{
-		return Registry.register(Registries.RECIPE_SERIALIZER, id, serializer);
+		return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, serializer);
 	}
 }

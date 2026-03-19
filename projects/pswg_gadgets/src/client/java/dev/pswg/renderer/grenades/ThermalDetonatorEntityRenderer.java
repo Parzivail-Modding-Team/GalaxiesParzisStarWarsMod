@@ -1,45 +1,41 @@
 package dev.pswg.renderer.grenades;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.pswg.Gadgets;
 import dev.pswg.entity.grenades.ThermalDetonatorEntity;
 import dev.pswg.models.GrenadeRenderState;
 import dev.pswg.models.ThermalDetonatorGrenadeModel;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.entity.state.EntityRenderState;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 
 public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetonatorEntity, GrenadeRenderState>
 {
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("thermal_detonator"), "temp");
-	public static final Identifier TEXTURE = Identifier.of("pswg_gadgets", "textures/items/thermal_detonator.png");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Gadgets.id("thermal_detonator"), "temp");
+	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("pswg_gadgets", "textures/items/thermal_detonator.png");
 	private final ThermalDetonatorGrenadeModel model;
-	public ThermalDetonatorEntityRenderer(EntityRendererFactory.Context context)
+	public ThermalDetonatorEntityRenderer(EntityRendererProvider.Context context)
 	{
 		super(context);
-		this.model = new ThermalDetonatorGrenadeModel(context.getPart(MODEL_LAYER));
+		this.model = new ThermalDetonatorGrenadeModel(context.bakeLayer(MODEL_LAYER));
 	}
 
 	@Override
-	public void render(GrenadeRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState)
+	public void submit(GrenadeRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState)
 	{
-		matrices.push();
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw));
-		this.model.setAngles(state);
-		queue.submitModel(this.model, state, matrices, RenderLayer.getEntityCutout(TEXTURE), state.light, OverlayTexture.DEFAULT_UV, state.outlineColor, null);
-		matrices.pop();
-		super.render(state, matrices, queue, cameraState);
+		matrices.pushPose();
+		matrices.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+		this.model.setupAnim(state);
+		queue.submitModel(this.model, state, matrices, RenderType.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		matrices.popPose();
+		super.submit(state, matrices, queue, cameraState);
 	}
 
 	@Override
@@ -49,10 +45,10 @@ public class ThermalDetonatorEntityRenderer extends EntityRenderer<ThermalDetona
 	}
 
 	@Override
-	public void updateRenderState(ThermalDetonatorEntity entity, GrenadeRenderState state, float tickDelta)
+	public void extractRenderState(ThermalDetonatorEntity entity, GrenadeRenderState state, float tickDelta)
 	{
-		super.updateRenderState(entity, state, tickDelta);
-		state.pitch = entity.getLerpedPitch(tickDelta);
+		super.extractRenderState(entity, state, tickDelta);
+		state.pitch = entity.getXRot(tickDelta);
 		state.yaw = entity.getClientYaw();
 	}
 }

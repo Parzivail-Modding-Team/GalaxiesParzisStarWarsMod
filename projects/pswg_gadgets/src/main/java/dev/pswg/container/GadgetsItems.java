@@ -10,26 +10,26 @@ import dev.pswg.feature.scrapping.cutter.LaserCutterItem;
 import dev.pswg.item.*;
 import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.component.ComponentType;
-import net.minecraft.item.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.phys.Vec3;
 
 public class GadgetsItems
 {
 	public static class Tags
 	{
-		public static final TagKey<Item> GRENADES_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("grenades"));
-		public static final TagKey<Item> MINES_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("mines"));
-		public static final TagKey<Item> SCRAP_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("scrap"));
-		public static final TagKey<Item> DRINK_CONTAINER_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("drink_container"));
-		public static final TagKey<Item> MIXER_FOOD_TAG = TagKey.of(RegistryKeys.ITEM, Gadgets.id("mixable_food"));
+		public static final TagKey<Item> GRENADES_TAG = TagKey.create(Registries.ITEM, Gadgets.id("grenades"));
+		public static final TagKey<Item> MINES_TAG = TagKey.create(Registries.ITEM, Gadgets.id("mines"));
+		public static final TagKey<Item> SCRAP_TAG = TagKey.create(Registries.ITEM, Gadgets.id("scrap"));
+		public static final TagKey<Item> DRINK_CONTAINER_TAG = TagKey.create(Registries.ITEM, Gadgets.id("drink_container"));
+		public static final TagKey<Item> MIXER_FOOD_TAG = TagKey.create(Registries.ITEM, Gadgets.id("mixable_food"));
 
 		public static void register()
 		{
@@ -38,31 +38,31 @@ public class GadgetsItems
 
 	public static class Components
 	{
-		public static final ComponentType<Long> PRIMING_TIME = Registry.register(
-				Registries.DATA_COMPONENT_TYPE,
-				Identifier.of(Gadgets.MODID, "priming_time"),
-				ComponentType.<Long>builder().codec(Codec.LONG).build()
+		public static final DataComponentType<Long> PRIMING_TIME = Registry.register(
+				BuiltInRegistries.DATA_COMPONENT_TYPE,
+				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "priming_time"),
+				DataComponentType.<Long>builder().persistent(Codec.LONG).build()
 		);
 
-		public static final ComponentType<Float> CUTTING_PROGRESS = Registry.register(
-				Registries.DATA_COMPONENT_TYPE,
-				Identifier.of(Gadgets.MODID, "cutting_progress"),
-				ComponentType.<Float>builder().codec(Codec.FLOAT).build()
+		public static final DataComponentType<Float> CUTTING_PROGRESS = Registry.register(
+				BuiltInRegistries.DATA_COMPONENT_TYPE,
+				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "cutting_progress"),
+				DataComponentType.<Float>builder().persistent(Codec.FLOAT).build()
 		);
-		public static final ComponentType<BlockPos> CURRENT_BLOCK = Registry.register(
-				Registries.DATA_COMPONENT_TYPE,
-				Identifier.of(Gadgets.MODID, "current_block"),
-				ComponentType.<BlockPos>builder().codec(BlockPos.CODEC).build()
+		public static final DataComponentType<BlockPos> CURRENT_BLOCK = Registry.register(
+				BuiltInRegistries.DATA_COMPONENT_TYPE,
+				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "current_block"),
+				DataComponentType.<BlockPos>builder().persistent(BlockPos.CODEC).build()
 		);
-		public static final ComponentType<Vec3d> MIN_POS = Registry.register(
-				Registries.DATA_COMPONENT_TYPE,
-				Identifier.of(Gadgets.MODID, "min_pos"),
-				ComponentType.<Vec3d>builder().codec(Vec3d.CODEC).build()
+		public static final DataComponentType<Vec3> MIN_POS = Registry.register(
+				BuiltInRegistries.DATA_COMPONENT_TYPE,
+				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "min_pos"),
+				DataComponentType.<Vec3>builder().persistent(Vec3.CODEC).build()
 		);
-		public static final ComponentType<Vec3d> MAX_POS = Registry.register(
-				Registries.DATA_COMPONENT_TYPE,
-				Identifier.of(Gadgets.MODID, "max_pos"),
-				ComponentType.<Vec3d>builder().codec(Vec3d.CODEC).build()
+		public static final DataComponentType<Vec3> MAX_POS = Registry.register(
+				BuiltInRegistries.DATA_COMPONENT_TYPE,
+				ResourceLocation.fromNamespaceAndPath(Gadgets.MODID, "max_pos"),
+				DataComponentType.<Vec3>builder().persistent(Vec3.CODEC).build()
 		);
 
 
@@ -73,38 +73,38 @@ public class GadgetsItems
 
 	/// GRENADE
 	@DataGenItem(langOverride = "CLS-A Thermal Detonator", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE, itemTags = DGItemTag.GRENADE)
-	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(Gadgets.id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Settings());
+	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(Gadgets.id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Properties());
 	@DataGenItem(langOverride = "C-25 Fragmentation Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE, itemTags = DGItemTag.GRENADE)
-	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(Gadgets.id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Settings());
+	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(Gadgets.id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Properties());
 	@DataGenItem(wiz = true, langOverride = "FEX-M3 Nerve Gas Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.GRENADE)
-	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Settings());
+	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Properties());
 	@DataGenItem(wiz = true, langOverride = "NACHT-5 Smoke Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.GRENADE)
-	public static final SmokeSignalGrenadeItem SMOKE_SIGNAL_GRENADE_ITEM = Registrar.item(Gadgets.id("smoke_grenade"), SmokeSignalGrenadeItem::new, new Item.Settings());
+	public static final SmokeSignalGrenadeItem SMOKE_SIGNAL_GRENADE_ITEM = Registrar.item(Gadgets.id("smoke_grenade"), SmokeSignalGrenadeItem::new, new Item.Properties());
 	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.GRENADE)
-	public static final ImpactGrenadeItem IMPACT_GRENADE_ITEM = Registrar.item(Gadgets.id("impact_grenade"), ImpactGrenadeItem::new, new Item.Settings());
+	public static final ImpactGrenadeItem IMPACT_GRENADE_ITEM = Registrar.item(Gadgets.id("impact_grenade"), ImpactGrenadeItem::new, new Item.Properties());
 	@DataGenItem(wiz = true, langOverride = "D-24 Inferno Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.GRENADE)
-	public static final InfernoGrenadeItem INFERNO_GRENADE_ITEM = Registrar.item(Gadgets.id("inferno_grenade"), InfernoGrenadeItem::new, new Item.Settings());
+	public static final InfernoGrenadeItem INFERNO_GRENADE_ITEM = Registrar.item(Gadgets.id("inferno_grenade"), InfernoGrenadeItem::new, new Item.Properties());
 
 	/// MINES
 	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.MINE)
-	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Settings());
+	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Properties());
 	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.MINE)
-	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Settings());
+	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Properties());
 
 	///  SCRAPPING TOOLS
 	@DataGenItem(wiz = true, langOverride = "F-187 Fusioncutter")
-	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), LaserCutterItem::new, new Item.Settings().maxDamage(100));
+	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), LaserCutterItem::new, new Item.Properties().durability(100));
 	@DataGenItem(wiz = true, langOverride = "FastTurn-3 Hydrospanner")
-	public static final Item SPANNER_ITEM = registerSimpleItem("spanner", new Item.Settings().maxDamage(100));
+	public static final Item SPANNER_ITEM = registerSimpleItem("spanner", new Item.Properties().durability(100));
 	@DataGenItem(wiz = true, langOverride = "ReliaCharge Power Calibrator")
-	public static final Item CALIBRATOR_ITEM = registerSimpleItem("calibrator", new Item.Settings().maxDamage(100));
+	public static final Item CALIBRATOR_ITEM = registerSimpleItem("calibrator", new Item.Properties().durability(100));
 
 	public static Item registerSimpleItem(String key)
 	{
-		return registerSimpleItem(key, new Item.Settings());
+		return registerSimpleItem(key, new Item.Properties());
 	}
 
-	public static Item registerSimpleItem(String key, Item.Settings settings)
+	public static Item registerSimpleItem(String key, Item.Properties settings)
 	{
 		return Registrar.item(Gadgets.id(key), Item::new, settings);
 	}

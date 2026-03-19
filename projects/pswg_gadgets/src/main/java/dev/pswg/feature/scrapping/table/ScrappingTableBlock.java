@@ -2,61 +2,61 @@ package dev.pswg.feature.scrapping.table;
 
 import com.mojang.serialization.MapCodec;
 import dev.pswg.container.GadgetsBlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class ScrappingTableBlock extends BlockWithEntity
+public class ScrappingTableBlock extends BaseEntityBlock
 {
-	public ScrappingTableBlock(Settings settings)
+	public ScrappingTableBlock(Properties settings)
 	{
 		super(settings);
 	}
 
 	@Override
-	protected MapCodec<? extends BlockWithEntity> getCodec()
+	protected MapCodec<? extends BaseEntityBlock> codec()
 	{
-		return createCodec(ScrappingTableBlock::new);
+		return simpleCodec(ScrappingTableBlock::new);
 	}
 
 	@Override
-	public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state)
+	public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{
 		return new ScrappingTableBlockEntity(pos, state);
 	}
 
 	@Override
-	public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type)
+	public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type)
 	{
 		if (type != GadgetsBlockEntities.SCRAPPING_TABLE_BLOCK_ENTITY)
 			return null;
-		return world.isClient() ? null : ScrappingTableBlockEntity::tick;
+		return world.isClientSide() ? null : ScrappingTableBlockEntity::tick;
 	}
 
 	@Override
-	protected void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved)
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved)
 	{
 		if(!moved)
-			ItemScatterer.onStateReplaced(state, world, pos);
-		super.onStateReplaced(state, world, pos, moved);
+			Containers.updateNeighboursAfterDestroy(state, world, pos);
+		super.affectNeighborsAfterRemoval(state, world, pos, moved);
 	}
 
 	@Override
-	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
+	protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit)
 	{
-		if (!world.isClient())
-			player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
+		if (!world.isClientSide())
+			player.openMenu(state.getMenuProvider(world, pos));
 
-		return ActionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

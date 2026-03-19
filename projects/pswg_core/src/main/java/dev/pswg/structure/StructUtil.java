@@ -1,15 +1,15 @@
 package dev.pswg.structure;
 
 import dev.pswg.container.GalaxiesBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
 
 public class StructUtil
 {
-	public static Block getRandomCrate(Random random)
+	public static Block getRandomCrate(RandomSource random)
 	{
-		int i = random.nextBetween(1, 20);
+		int i = random.nextIntBetweenInclusive(1, 20);
 		return switch (i)
 		{
 			case 1 -> GalaxiesBlocks.IMPERIAL_CORRUGATED_CRATE;

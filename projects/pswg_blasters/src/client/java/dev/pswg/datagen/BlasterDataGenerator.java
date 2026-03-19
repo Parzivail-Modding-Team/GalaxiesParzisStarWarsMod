@@ -20,19 +20,19 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.ItemModelGenerator;
-import net.minecraft.client.data.ItemModels;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.item.model.EmptyItemModel;
-import net.minecraft.data.DataOutput;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.item.EmptyModel;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.DataWriter;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.util.ExtraCodecs;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -62,8 +62,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		public static final Codec<GqbIntermediary> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				ModelData.CODEC.fieldOf("data").forGetter(GqbIntermediary::data),
 				Codec.unboundedMap(Codec.STRING, Codec.STRING.listOf()).optionalFieldOf("files").forGetter(GqbIntermediary::files),
-				Codecs.JSON_ELEMENT.fieldOf("textures").forGetter(GqbIntermediary::textures),
-				Codecs.JSON_ELEMENT.fieldOf("display").forGetter(GqbIntermediary::display)
+				ExtraCodecs.JSON.fieldOf("textures").forGetter(GqbIntermediary::textures),
+				ExtraCodecs.JSON.fieldOf("display").forGetter(GqbIntermediary::display)
 		).apply(instance, GqbIntermediary::new));
 
 		/**
@@ -132,8 +132,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		private GalaxiesModelBakery.GQuadGeometry createGeometry(Optional<HashSet<String>> groups)
 		{
 			var color = -1;
-			var overlay = OverlayTexture.DEFAULT_UV;
-			var light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
+			var overlay = OverlayTexture.NO_OVERLAY;
+			var light = LightTexture.FULL_BRIGHT;
 
 			var quads = new ArrayList<GQuad>();
 
@@ -223,8 +223,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	{
 		var pack = generator.createPack();
 
-		DataGenResourceHelper.loadResources(ResourceType.CLIENT_RESOURCES, GQB_INTERMEDIARY_LOADER);
-		DataGenResourceHelper.loadResources(ResourceType.SERVER_DATA, Blasters.DATAPACK_LOADER);
+		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, GQB_INTERMEDIARY_LOADER);
+		DataGenResourceHelper.loadResources(PackType.SERVER_DATA, Blasters.DATAPACK_LOADER);
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(TagGenerator::new);
@@ -244,24 +244,24 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		}
 
 		@Override
-		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
+		public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator)
 		{
 		}
 
 		@Override
-		public void generateItemModels(ItemModelGenerator itemModelGenerator)
+		public void generateItemModels(ItemModelGenerators itemModelGenerator)
 		{
 			//			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
 
-			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.composite(
-					ItemModels.basic(Blasters.id("item/e11d")),
-					ItemModels.condition(
+			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModelUtils.composite(
+					ItemModelUtils.plainModel(Blasters.id("item/e11d")),
+					ItemModelUtils.conditional(
 							new HasAttachmentProperty(
 									Blasters.id("barrel_slot"),
 									Blasters.id("e11/bipod")
 							),
-							ItemModels.basic(Blasters.id("item/e11d_flashlight")),
-							new EmptyItemModel.Unbaked()
+							ItemModelUtils.plainModel(Blasters.id("item/e11d_flashlight")),
+							new EmptyModel.Unbaked()
 					)
 			));
 		}
@@ -273,15 +273,15 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class GqdCompiledModelGenerator implements DataProvider
 	{
-		private final DataOutput.PathResolver resolver;
+		private final PackOutput.PathProvider resolver;
 
 		public GqdCompiledModelGenerator(FabricDataOutput output)
 		{
-			this.resolver = output.getResolver(DataOutput.OutputType.RESOURCE_PACK, "");
+			this.resolver = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "");
 		}
 
 		@Override
-		public CompletableFuture<?> run(DataWriter writer)
+		public CompletableFuture<?> run(CachedOutput writer)
 		{
 			var completables = new ArrayList<CompletableFuture<?>>();
 
@@ -304,7 +304,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		 *
 		 * @return A future that completes when the data is written
 		 */
-		private CompletableFuture<?> compile(DataWriter writer, Map.Entry<Identifier, GqbIntermediary> entry)
+		private CompletableFuture<?> compile(CachedOutput writer, Map.Entry<ResourceLocation, GqbIntermediary> entry)
 		{
 			var completables = new ArrayList<CompletableFuture<?>>();
 
@@ -314,10 +314,10 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 				for (var fileEntry : entry.getValue().files().get().entrySet())
 				{
 					var nonDatagenId = entry.getKey().withPath("models/" + GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.of(fileEntry.getKey())));
-					var quadsOutputPath = resolver.resolve(nonDatagenId, "gqb");
-					var jsonOutputPath = resolver.resolve(nonDatagenId, "json");
+					var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
+					var jsonOutputPath = resolver.file(nonDatagenId, "json");
 
-					completables.add(DataProvider.writeToPath(writer, entry.getValue().createModelDef(), jsonOutputPath));
+					completables.add(DataProvider.saveStable(writer, entry.getValue().createModelDef(), jsonOutputPath));
 					completables.add(GalaxiesDataProvider.writeToPath(
 							writer,
 							quadsOutputPath,
@@ -329,10 +329,10 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			else
 			{
 				var nonDatagenId = entry.getKey().withPath("models/" + GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.empty()));
-				var quadsOutputPath = resolver.resolve(nonDatagenId, "gqb");
-				var jsonOutputPath = resolver.resolve(nonDatagenId, "json");
+				var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
+				var jsonOutputPath = resolver.file(nonDatagenId, "json");
 
-				completables.add(DataProvider.writeToPath(writer, entry.getValue().createModelDef(), jsonOutputPath));
+				completables.add(DataProvider.saveStable(writer, entry.getValue().createModelDef(), jsonOutputPath));
 				completables.add(GalaxiesDataProvider.writeToPath(
 						writer,
 						quadsOutputPath,
@@ -357,11 +357,11 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class LangGenerator extends FabricLanguageProvider
 	{
-		private record BlasterLang(String name, Map<Identifier, String> attachmentLangs)
+		private record BlasterLang(String name, Map<ResourceLocation, String> attachmentLangs)
 		{
 		}
 
-		private final Map<Identifier, BlasterLang> blasterLang = Map.ofEntries(
+		private final Map<ResourceLocation, BlasterLang> blasterLang = Map.ofEntries(
 				Map.entry(Blasters.id("test_blaster"), new BlasterLang(
 						"Test Blaster",
 						Map.ofEntries(
@@ -375,13 +375,13 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 				))
 		);
 
-		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
+		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
 		{
 			super(dataOutput, "en_us", registryLookup);
 		}
 
 		@Override
-		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
+		public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder)
 		{
 			// Tag that contains the blasters
 			translationBuilder.add(Blasters.BLASTERS_TAG, "Blasters");
@@ -433,16 +433,16 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class TagGenerator extends FabricTagProvider.ItemTagProvider
 	{
-		public TagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture)
+		public TagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
+		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
-			getTagBuilder(Blasters.BLASTERS_TAG)
-					.add(Blasters.BLASTER_ITEM_ID);
+			getOrCreateRawBuilder(Blasters.BLASTERS_TAG)
+					.addElement(Blasters.BLASTER_ITEM_ID);
 		}
 	}
 }

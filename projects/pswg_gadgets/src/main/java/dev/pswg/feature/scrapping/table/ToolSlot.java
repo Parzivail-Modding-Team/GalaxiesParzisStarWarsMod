@@ -1,23 +1,23 @@
 package dev.pswg.feature.scrapping.table;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class ToolSlot extends Slot
 {
 	Item tool;
 
-	public ToolSlot(Inventory inventory, int index, int x, int y, Item tool)
+	public ToolSlot(Container inventory, int index, int x, int y, Item tool)
 	{
 		super(inventory, index, x, y);
 		this.tool = tool;
 	}
 
 	@Override
-	public boolean canInsert(ItemStack stack)
+	public boolean mayPlace(ItemStack stack)
 	{
-		return stack.isOf(tool);
+		return stack.is(tool);
 	}
 }

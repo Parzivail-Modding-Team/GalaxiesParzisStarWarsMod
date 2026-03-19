@@ -3,17 +3,17 @@ package dev.pswg.particles;
 import dev.pswg.entity.gas.GasEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.render.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 
 @Environment(value = EnvType.CLIENT)
-public abstract class GasParticle extends BillboardParticle implements CustomRendererParticle
+public abstract class GasParticle extends SingleQuadParticle implements CustomRendererParticle
 {
 	private final int variant;
 	final int NUM_VARIANTS = 5;
@@ -24,41 +24,41 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 	final String particleId;
 	final GasEntity gasEntity;
 
-	protected GasParticle(GasEntity gasEntity, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider, String particleId)
+	protected GasParticle(GasEntity gasEntity, ClientLevel clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteSet spriteProvider, String particleId)
 	{
-		super(clientWorld, x, y, z, spriteProvider.getFirst());
+		super(clientWorld, x, y, z, spriteProvider.first());
 
-		this.originalScale = Random.create().nextBetween(75, 125) / 15f;
+		this.originalScale = RandomSource.create().nextIntBetweenInclusive(75, 125) / 15f;
 		scale(originalScale);
-		setBoundingBoxSpacing(0f, 0f);
+		setSize(0f, 0f);
 		this.setAlpha(0.1f);
 		this.gasEntity = gasEntity;
 		this.particleId = particleId;
-		billowing = (float)random.nextBetween(1, 10) / 2500f;
+		billowing = (float)random.nextIntBetweenInclusive(1, 10) / 2500f;
 		variant = random.nextInt(NUM_VARIANTS);
 		dirX = random.nextBoolean() ? 1 : -1;
 		dirZ = random.nextBoolean() ? 1 : -1;
-		velocityX = 0;
-		velocityZ = 0;
+		xd = 0;
+		zd = 0;
 		if (gasEntity != null)
 		{
-			age = gasEntity.age;
-			maxAge = gasEntity.MAX_AGE * 2;
+			age = gasEntity.tickCount;
+			lifetime = gasEntity.MAX_AGE * 2;
 		}
 
 	}
 
 	@Override
-	protected RenderType getRenderType()
+	protected Layer getLayer()
 	{
-		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
+		return Layer.TRANSLUCENT;
 	}
 
 	@Override
-	public int getBrightness(float tint)
+	public int getLightColor(float tint)
 	{
-		BlockPos blockPos = BlockPos.ofFloored(this.x, this.y, this.z);
-		int light = this.world.isChunkLoaded(blockPos) ? WorldRenderer.getLightmapCoordinates(this.world, blockPos) : 0;
+		BlockPos blockPos = BlockPos.containing(this.x, this.y, this.z);
+		int light = this.level.hasChunkAt(blockPos) ? LevelRenderer.getLightColor(this.level, blockPos) : 0;
 		return Math.max(light, 80);
 	}
 
@@ -78,47 +78,47 @@ public abstract class GasParticle extends BillboardParticle implements CustomRen
 		return this.alpha;
 	}
 
-	public Sprite getSprite()
+	public TextureAtlasSprite getSprite()
 	{
 		return this.sprite;
 	}
 
-	public Vec3d getPos()
+	public Vec3 getPos()
 	{
-		return new Vec3d(this.x, this.y, this.z);
+		return new Vec3(this.x, this.y, this.z);
 	}
 
 	public int getColor()
 	{
-		return ColorHelper.getArgb((int)(this.red * 255), (int)(this.green * 255), (int)(this.blue * 255));
+		return ARGB.color((int)(this.rCol * 255), (int)(this.gCol * 255), (int)(this.bCol * 255));
 	}
 
 	@Override
 	public void tick()
 	{
-		var pos = BlockPos.ofFloored(x, y, z);
-		if (gasEntity == null || !gasEntity.particleIdList.containsKey(pos) || !gasEntity.particleIdList.get(pos).contains(this.particleId) || age >= maxAge)
+		var pos = BlockPos.containing(x, y, z);
+		if (gasEntity == null || !gasEntity.particleIdList.containsKey(pos) || !gasEntity.particleIdList.get(pos).contains(this.particleId) || age >= lifetime)
 		{
-			markDead();
+			remove();
 		}
 		else
 		{
-			lastX = x;
-			lastY = y;
-			lastZ = z;
+			xo = x;
+			yo = y;
+			zo = z;
 			age++;
-			float m = maxAge / 100f;
+			float m = lifetime / 100f;
 			if (age <= 10 * m)
 			{
-				alpha = (float)(age * age) / (maxAge * maxAge) * 0.3f * 100;
+				alpha = (float)(age * age) / (lifetime * lifetime) * 0.3f * 100;
 			}
 			if (age >= 90 * m)
 			{
-				alpha = (1 - (float)(age) / (maxAge)) * 0.3f * 10;
-				velocityX *= 0.95;
-				velocityZ *= 0.95;
+				alpha = (1 - (float)(age) / (lifetime)) * 0.3f * 10;
+				xd *= 0.95;
+				zd *= 0.95;
 			}
-			move(velocityX, velocityY, velocityZ);
+			move(xd, yd, zd);
 		}
 	}
 }

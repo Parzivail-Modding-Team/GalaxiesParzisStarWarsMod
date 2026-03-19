@@ -1,10 +1,10 @@
 package dev.pswg.mixin.client.events;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.pswg.Galaxies;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GameRendererMixin
 {
 	@Shadow
-	public abstract MinecraftClient getClient();
+	public abstract Minecraft getMinecraft();
 
-	@Inject(at = @At("HEAD"), method = "tiltViewWhenHurt", cancellable = true)
-	void tiltViewWhenHurt(MatrixStack matrices, float tickDelta, CallbackInfo ci)
+	@Inject(at = @At("HEAD"), method = "bobHurt", cancellable = true)
+	void tiltViewWhenHurt(PoseStack matrices, float tickDelta, CallbackInfo ci)
 	{
-		if (getClient().getCameraEntity() instanceof LivingEntity livingEntity)
-			if (livingEntity.getRecentDamageSource() != null && livingEntity.getRecentDamageSource().isIn(Galaxies.IGNORES_DAMAGE_TILT))
+		if (getMinecraft().getCameraEntity() instanceof LivingEntity livingEntity)
+			if (livingEntity.getLastDamageSource() != null && livingEntity.getLastDamageSource().is(Galaxies.IGNORES_DAMAGE_TILT))
 				ci.cancel();
 	}
 }

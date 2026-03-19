@@ -3,20 +3,21 @@ package dev.pswg.particles;
 import dev.pswg.Gadgets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.render.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @Environment(value = EnvType.CLIENT)
-public class FragmentationGrenadeWaveParticle extends BillboardParticle implements CustomRendererParticle
+public class FragmentationGrenadeWaveParticle extends SingleQuadParticle implements CustomRendererParticle
 {
 	private float scaleX = 1;
 	private float scaleY = 1;
@@ -25,23 +26,23 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle implemen
 			new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)
 	};
 
-	protected FragmentationGrenadeWaveParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
+	protected FragmentationGrenadeWaveParticle(ClientLevel clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteSet spriteProvider)
 	{
-		super(clientWorld, x, y, z, spriteProvider.getFirst());
-		setBoundingBoxSpacing(0.25f, 0.25f);
-		this.collidesWithWorld = false;
-		velocityX = vX;
-		velocityY = vY + (double)(random.nextFloat() / 500.0f);
-		velocityZ = vZ;
-		this.maxAge = 25;
-		this.scale = Random.create().nextBetween(0, 5) / 5f + 0.95f;
-		this.updateSprite(spriteProvider);
-		this.setColor(Random.create().nextBetween(0, 3) / 3f + 0.97f, Random.create().nextBetween(0, 3) / 3f + 0.98f, 1);
+		super(clientWorld, x, y, z, spriteProvider.first());
+		setSize(0.25f, 0.25f);
+		this.hasPhysics = false;
+		xd = vX;
+		yd = vY + (double)(random.nextFloat() / 500.0f);
+		zd = vZ;
+		this.lifetime = 25;
+		this.quadSize = RandomSource.create().nextIntBetweenInclusive(0, 5) / 5f + 0.95f;
+		this.setSpriteFromAge(spriteProvider);
+		this.setColor(RandomSource.create().nextIntBetweenInclusive(0, 3) / 3f + 0.97f, RandomSource.create().nextIntBetweenInclusive(0, 3) / 3f + 0.98f, 1);
 	}
 
-	public Vec3d getPos()
+	public Vec3 getPos()
 	{
-		return new Vec3d(this.x, this.y, this.z);
+		return new Vec3(this.x, this.y, this.z);
 	}
 
 	public float getScaleX()
@@ -59,7 +60,7 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle implemen
 		return this.alpha;
 	}
 
-	public Sprite getSprite()
+	public TextureAtlasSprite getSprite()
 	{
 		return this.sprite;
 	}
@@ -81,22 +82,22 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle implemen
 
 			this.scaleX = 1;
 			this.scaleY = 1;
-			this.scale = (float)Math.pow((age) / 15, 6);
+			this.quadSize = (float)Math.pow((age) / 15, 6);
 		}
 	}
 
 	@Override
-	protected RenderType getRenderType()
+	protected Layer getLayer()
 	{
-		return RenderType.PARTICLE_ATLAS_TRANSLUCENT;
+		return Layer.TRANSLUCENT;
 	}
 
 	float lerp(double last, double now, float progress)
 	{
-		return (float)(MathHelper.lerp(progress, last, now));
+		return (float)(Mth.lerp(progress, last, now));
 	}
 	@Override
-	protected void render(BillboardParticleSubmittable submittable, Camera camera, Quaternionf rotation, float tickProgress)
+	protected void extractRotatedQuad(QuadParticleRenderState submittable, Camera camera, Quaternionf rotation, float tickProgress)
 	{
 		updateShape(this.age + tickProgress);
 	}
@@ -122,17 +123,17 @@ public class FragmentationGrenadeWaveParticle extends BillboardParticle implemen
 	}
 
 	@Environment(value = EnvType.CLIENT)
-	public static class Factory implements ParticleFactory<SimpleParticleType>
+	public static class Factory implements ParticleProvider<SimpleParticleType>
 	{
-		private final SpriteProvider spriteProvider;
+		private final SpriteSet spriteProvider;
 
-		public Factory(SpriteProvider spriteProvider)
+		public Factory(SpriteSet spriteProvider)
 		{
 			this.spriteProvider = spriteProvider;
 		}
 
 		@Override
-		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random)
+		public @Nullable Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, RandomSource random)
 		{
 			return new FragmentationGrenadeWaveParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
 		}

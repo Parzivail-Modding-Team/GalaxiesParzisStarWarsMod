@@ -4,23 +4,27 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.util.worldgen.TerrainGenerator;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.structure.StructureTemplateManager;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.*;
-import net.minecraft.world.biome.source.BiomeAccess;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.Blender;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.VerticalBlockSample;
-import net.minecraft.world.gen.chunk.placement.StructurePlacementCalculator;
-import net.minecraft.world.gen.noise.NoiseConfig;
-
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -40,7 +44,7 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 			throw new IllegalStateException("Biome source must be galaxies biome source");
 		}
 
-		this.backing = new TerrainGenerator(100, bs.getBackingGen(), this, Blocks.STONE.getDefaultState());
+		this.backing = new TerrainGenerator(100, bs.getBackingGen(), this, Blocks.STONE.defaultBlockState());
 	}
 
 	@Override
@@ -50,37 +54,37 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	protected MapCodec<? extends ChunkGenerator> getCodec()
+	protected MapCodec<? extends ChunkGenerator> codec()
 	{
 		return CODEC;
 	}
 
 	@Override
-	public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess biomeAccess, StructureAccessor structureAccessor, Chunk chunk)
+	public void applyCarvers(WorldGenRegion chunkRegion, long seed, RandomState noiseConfig, BiomeManager biomeAccess, StructureManager structureAccessor, ChunkAccess chunk)
 	{
 
 	}
 
 	@Override
-	public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk)
+	public void buildSurface(WorldGenRegion region, StructureManager structures, RandomState noiseConfig, ChunkAccess chunk)
 	{
 		this.backing.buildSurface(new MinecraftChunkView(chunk));
 	}
 
 	@Override
-	public void populateEntities(ChunkRegion region)
+	public void spawnOriginalMobs(WorldGenRegion region)
 	{
 
 	}
 
 	@Override
-	public int getWorldHeight()
+	public int getGenDepth()
 	{
 		return -64;
 	}
 
 	@Override
-	public CompletableFuture<Chunk> populateNoise(Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk)
+	public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk)
 	{
 		this.backing.buildNoise(new MinecraftChunkView(chunk));
 
@@ -88,13 +92,13 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public void setStructureStarts(DynamicRegistryManager registryManager, StructurePlacementCalculator placementCalculator, StructureAccessor structureAccessor, Chunk chunk, StructureTemplateManager structureTemplateManager, RegistryKey<World> dimension)
+	public void createStructures(RegistryAccess registryManager, ChunkGeneratorStructureState placementCalculator, StructureManager structureAccessor, ChunkAccess chunk, StructureTemplateManager structureTemplateManager, ResourceKey<Level> dimension)
 	{
-		super.setStructureStarts(registryManager, placementCalculator, structureAccessor, chunk, structureTemplateManager, dimension);
+		super.createStructures(registryManager, placementCalculator, structureAccessor, chunk, structureTemplateManager, dimension);
 	}
 
 	@Override
-	public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor)
+	public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunk, StructureManager structureAccessor)
 	{
 		this.backing.generateDecorations(new MinecraftWorldView(world), new MinecraftChunkView(chunk));
 	}
@@ -106,25 +110,25 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public int getMinimumY()
+	public int getMinY()
 	{
 		return -64;
 	}
 
 	@Override
-	public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig)
+	public int getBaseHeight(int x, int z, Heightmap.Types heightmap, LevelHeightAccessor world, RandomState noiseConfig)
 	{
 		return 0;
 	}
 
 	@Override
-	public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig)
+	public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world, RandomState noiseConfig)
 	{
-		return new VerticalBlockSample(0, new BlockState[0]);
+		return new NoiseColumn(0, new BlockState[0]);
 	}
 
 	@Override
-	public void appendDebugHudText(List<String> text, NoiseConfig noiseConfig, BlockPos pos)
+	public void addDebugScreenInfo(List<String> text, RandomState noiseConfig, BlockPos pos)
 	{
 
 	}

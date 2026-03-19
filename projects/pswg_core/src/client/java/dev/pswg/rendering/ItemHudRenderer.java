@@ -1,8 +1,8 @@
 package dev.pswg.rendering;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Defines an interface for items that have elements that can be rendered into a HUD
@@ -10,5 +10,5 @@ import net.minecraft.item.ItemStack;
 @FunctionalInterface
 public interface ItemHudRenderer
 {
-	void render(ItemStack stack, DrawContext context, RenderTickCounter tickCounter);
+	void render(ItemStack stack, GuiGraphics context, DeltaTracker tickCounter);
 }

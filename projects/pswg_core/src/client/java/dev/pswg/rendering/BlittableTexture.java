@@ -1,13 +1,13 @@
 package dev.pswg.rendering;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Represents a texture that can be drawn onto the screen.
  */
-public record BlittableTexture(Identifier identifier, RenderPipeline renderPipeline, int width, int height)
+public record BlittableTexture(ResourceLocation identifier, RenderPipeline renderPipeline, int width, int height)
 {
 	/**
 	 * A region of the {@link BlittableTexture} that has a pre-defined
@@ -36,7 +36,7 @@ public record BlittableTexture(Identifier identifier, RenderPipeline renderPipel
 		 * @param screenY the y-coordinate on the screen where the texture will be drawn
 		 * @param color   the tint to be applied to the texture while drawing
 		 */
-		public void blit(DrawContext context, int screenX, int screenY, int color)
+		public void blit(GuiGraphics context, int screenX, int screenY, int color)
 		{
 			BlittableTexture.this.blit(context, screenX, screenY, u, v, width, height, color);
 		}
@@ -51,7 +51,7 @@ public record BlittableTexture(Identifier identifier, RenderPipeline renderPipel
 		 * @param patchHeight the height of the texture portion to be drawn
 		 * @param color       the tint to be applied to the texture while drawing
 		 */
-		public void blit(DrawContext context, int screenX, int screenY, int patchWidth, int patchHeight, int color)
+		public void blit(GuiGraphics context, int screenX, int screenY, int patchWidth, int patchHeight, int color)
 		{
 			BlittableTexture.this.blit(context, screenX, screenY, u, v, patchWidth, patchHeight, color);
 		}
@@ -84,9 +84,9 @@ public record BlittableTexture(Identifier identifier, RenderPipeline renderPipel
 	 * @param patchHeight the height of the texture portion to be drawn
 	 * @param color       the tint to be applied to the texture while drawing
 	 */
-	public void blit(DrawContext context, int screenX, int screenY, int texU, int texV, int patchWidth, int patchHeight, int color)
+	public void blit(GuiGraphics context, int screenX, int screenY, int texU, int texV, int patchWidth, int patchHeight, int color)
 	{
-		context.drawTexture(
+		context.blit(
 				renderPipeline,
 				identifier,
 				screenX, screenY,

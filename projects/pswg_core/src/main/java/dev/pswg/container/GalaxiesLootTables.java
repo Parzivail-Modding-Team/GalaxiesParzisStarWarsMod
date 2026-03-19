@@ -1,22 +1,22 @@
 package dev.pswg.container;
 
 import dev.pswg.Galaxies;
-import net.minecraft.loot.LootTable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 public class GalaxiesLootTables
 {
-	public static final RegistryKey<LootTable> IMPERIAL_CRATE = registerLootTable("container/imperial_crate");
-	public static final RegistryKey<LootTable> MEDICAL_CRATE = registerLootTable("container/medical_crate");
-	public static final RegistryKey<LootTable> MINING_CRATE = registerLootTable("container/mining_crate");
-	public static final RegistryKey<LootTable> GENERIC_FOOD_CRATE = registerLootTable("container/generic_food_crate");
-	public static final RegistryKey<LootTable> GENERIC_WEAPONS_CRATE = registerLootTable("container/generic_weapons_crate");
-	public static final RegistryKey<LootTable> GENERIC_TECH_CRATE = registerLootTable("container/generic_tech_crate");
+	public static final ResourceKey<LootTable> IMPERIAL_CRATE = registerLootTable("container/imperial_crate");
+	public static final ResourceKey<LootTable> MEDICAL_CRATE = registerLootTable("container/medical_crate");
+	public static final ResourceKey<LootTable> MINING_CRATE = registerLootTable("container/mining_crate");
+	public static final ResourceKey<LootTable> GENERIC_FOOD_CRATE = registerLootTable("container/generic_food_crate");
+	public static final ResourceKey<LootTable> GENERIC_WEAPONS_CRATE = registerLootTable("container/generic_weapons_crate");
+	public static final ResourceKey<LootTable> GENERIC_TECH_CRATE = registerLootTable("container/generic_tech_crate");
 
-	private static RegistryKey<LootTable> registerLootTable(String key)
+	private static ResourceKey<LootTable> registerLootTable(String key)
 	{
-		return RegistryKey.of(RegistryKeys.LOOT_TABLE, Galaxies.id(key));
+		return ResourceKey.create(Registries.LOOT_TABLE, Galaxies.id(key));
 	}
 
 	public static void register()

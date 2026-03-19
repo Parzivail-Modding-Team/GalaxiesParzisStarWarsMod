@@ -1,10 +1,10 @@
 package dev.pswg.attributes;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 /**
  * A collection of utilities related to entity attributes
@@ -20,11 +20,11 @@ public final class AttributeUtil
 	 *
 	 * @return The component without the given modifier
 	 */
-	public static AttributeModifiersComponent without(AttributeModifiersComponent base, RegistryEntry<EntityAttribute> attribute, EntityAttributeModifier modifier)
+	public static ItemAttributeModifiers without(ItemAttributeModifiers base, Holder<Attribute> attribute, AttributeModifier modifier)
 	{
-		ImmutableList.Builder<AttributeModifiersComponent.Entry> builder = ImmutableList.builderWithExpectedSize(base.modifiers().size() + 1);
+		ImmutableList.Builder<ItemAttributeModifiers.Entry> builder = ImmutableList.builderWithExpectedSize(base.modifiers().size() + 1);
 
-		for (AttributeModifiersComponent.Entry entry : base.modifiers())
+		for (ItemAttributeModifiers.Entry entry : base.modifiers())
 		{
 			if (!entry.matches(attribute, modifier.id()))
 			{
@@ -32,6 +32,6 @@ public final class AttributeUtil
 			}
 		}
 
-		return new AttributeModifiersComponent(builder.build());
+		return new ItemAttributeModifiers(builder.build());
 	}
 }

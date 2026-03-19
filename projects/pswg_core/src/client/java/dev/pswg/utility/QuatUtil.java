@@ -1,12 +1,12 @@
 package dev.pswg.utility;
 
 import dev.pswg.utility.math.MathUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtFloat;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.util.math.EulerAngle;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.Rotations;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -22,64 +22,64 @@ public class QuatUtil
 
 	public static final Quaternionf IDENTITY = new Quaternionf();
 
-	private static final Vec3d UP = new Vec3d(0, 1, 0);
-	private static final Vec3d FORWARD = new Vec3d(0, 0, 1);
+	private static final Vec3 UP = new Vec3(0, 1, 0);
+	private static final Vec3 FORWARD = new Vec3(0, 0, 1);
 
-	public static EulerAngle toEulerAngles(Quaternionf q)
+	public static Rotations toEulerAngles(Quaternionf q)
 	{
 		var forward = rotate(MathUtil.V3D_NEG_Z, q);
 
 		return MathUtil.lookToAngles(forward);
 	}
 
-	public static Quaternionf lookAt(Vec3d sourcePoint, Vec3d destPoint)
+	public static Quaternionf lookAt(Vec3 sourcePoint, Vec3 destPoint)
 	{
 		var forwardVector = destPoint.subtract(sourcePoint).normalize();
 
-		var dot = FORWARD.dotProduct(forwardVector);
+		var dot = FORWARD.dot(forwardVector);
 
 		if (Math.abs(dot - (-1.0f)) < 0.000001f)
-			return new Quaternionf().rotationAxis(MathHelper.PI, new Vector3f((float)UP.x, (float)UP.y, (float)UP.z));
+			return new Quaternionf().rotationAxis(Mth.PI, new Vector3f((float)UP.x, (float)UP.y, (float)UP.z));
 		if (Math.abs(dot - (1.0f)) < 0.000001f)
 			return new Quaternionf(QuatUtil.IDENTITY);
 
 		var rotAngle = Math.acos(dot);
-		var rotAxis = FORWARD.crossProduct(forwardVector);
+		var rotAxis = FORWARD.cross(forwardVector);
 		rotAxis = rotAxis.normalize();
 
 		return new Quaternionf().rotationAxis((float)rotAngle, rotAxis.toVector3f());
 	}
 
-	public static Vec3d rotate(Vec3d self, Quaternionf q)
+	public static Vec3 rotate(Vec3 self, Quaternionf q)
 	{
-		var u = new Vec3d(q.x, q.y, q.z);
+		var u = new Vec3(q.x, q.y, q.z);
 		var s = q.w;
-		return u.multiply(2.0f * u.dotProduct(self))
-		        .add(self.multiply(s * s - u.dotProduct(u)))
-		        .add(u.crossProduct(self).multiply(2.0f * s));
+		return u.scale(2.0f * u.dot(self))
+		        .add(self.scale(s * s - u.dot(u)))
+		        .add(u.cross(self).scale(2.0f * s));
 	}
 
-	public static void putQuaternion(NbtCompound tag, String key, Quaternionf q)
+	public static void putQuaternion(CompoundTag tag, String key, Quaternionf q)
 	{
-		var list = new NbtList();
-		list.add(NbtFloat.of(q.w));
-		list.add(NbtFloat.of(q.x));
-		list.add(NbtFloat.of(q.y));
-		list.add(NbtFloat.of(q.z));
+		var list = new ListTag();
+		list.add(FloatTag.valueOf(q.w));
+		list.add(FloatTag.valueOf(q.x));
+		list.add(FloatTag.valueOf(q.y));
+		list.add(FloatTag.valueOf(q.z));
 		tag.put(key, list);
 	}
 
-	public static Quaternionf getQuaternion(NbtCompound tag, String key)
+	public static Quaternionf getQuaternion(CompoundTag tag, String key)
 	{
 		var list = tag.getList(key).get();
 		return new Quaternionf(list.getFloat(1).get(), list.getFloat(2).get(), list.getFloat(3).get(), list.getFloat(0).get());
 	}
 
-	public static void rotateTowards(Quaternionf self, Vec3d orientation, float speed)
+	public static void rotateTowards(Quaternionf self, Vec3 orientation, float speed)
 	{
 		self.normalize();
 		var vec2 = rotate(orientation, self);
-		var cross = orientation.crossProduct(vec2).multiply(-1.0);
+		var cross = orientation.cross(vec2).scale(-1.0);
 		var axis = cross.normalize();
 		var f1 = (float)cross.length();
 		var other = new Quaternionf().rotationAxis(speed * f1, axis.toVector3f());
@@ -87,10 +87,10 @@ public class QuatUtil
 		self.set(other);
 	}
 
-	public static Quaternionf getRotationTowards(Vec3d from, Vec3d to)
+	public static Quaternionf getRotationTowards(Vec3 from, Vec3 to)
 	{
-		var cross = from.crossProduct(to);
-		var w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
+		var cross = from.cross(to);
+		var w = (float)(Math.sqrt(from.lengthSqr() * to.lengthSqr()) + from.dot(to));
 		var q = new Quaternionf(w, (float)cross.x, (float)cross.y, (float)cross.z);
 		q.normalize();
 		return q;
@@ -99,7 +99,7 @@ public class QuatUtil
 	/**
 	 * Finds a global vector in local terms
 	 */
-	public static Vec3d project(Vec3d v, Quaternionf q)
+	public static Vec3 project(Vec3 v, Quaternionf q)
 	{
 		var c = new Quaternionf(q);
 		c.conjugate();

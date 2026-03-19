@@ -1,9 +1,8 @@
 package dev.pswg.block.collection;
 
 import dev.pswg.util.Numbered;
-import net.minecraft.block.Block;
-
 import java.util.function.Function;
+import net.minecraft.world.level.block.Block;
 
 public class NumberedBlocks extends Numbered<Block>
 {

@@ -1,10 +1,10 @@
 package dev.pswg.util;
 
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class VoxelShapeUtil
 {
@@ -12,7 +12,7 @@ public class VoxelShapeUtil
 	{
 		width /= 32;
 		height /= 16;
-		return VoxelShapes.cuboid(0.5 - width, 0, 0.5 - width, 0.5 + width, height, 0.5 + width);
+		return Shapes.box(0.5 - width, 0, 0.5 - width, 0.5 + width, height, 0.5 + width);
 	}
 
 	public static VoxelShape getCenteredCube(float width, float height, float dX, float dZ)
@@ -21,7 +21,7 @@ public class VoxelShapeUtil
 		height /= 16;
 		dX /= 16;
 		dZ /= 16;
-		return VoxelShapes.cuboid(0.5 - width + dX, 0, 0.5 - width + dZ, 0.5 + width + dX, height, 0.5 + width + dZ);
+		return Shapes.box(0.5 - width + dX, 0, 0.5 - width + dZ, 0.5 + width + dX, height, 0.5 + width + dZ);
 	}
 
 	public static VoxelShape getCentered(float length, float width, float height)
@@ -29,7 +29,7 @@ public class VoxelShapeUtil
 		length /= 32;
 		width /= 32;
 		height /= 16;
-		return VoxelShapes.cuboid(0.5 - length, 0, 0.5 - width, 0.5 + length, height, 0.5 + width);
+		return Shapes.box(0.5 - length, 0, 0.5 - width, 0.5 + length, height, 0.5 + width);
 	}
 
 	public static VoxelShape rotateToFace(VoxelShape shape, Direction direction)
@@ -39,7 +39,7 @@ public class VoxelShapeUtil
 		if (direction == Direction.DOWN)
 			return VoxelShapeUtil.rotate(shape, Direction.Axis.Z, 1, 0.5f, 0.5f, 0.5f);
 		// East isn't zero, but everything defaults to facing east
-		return VoxelShapeUtil.rotate(shape, (direction.getHorizontalQuarterTurns() + 1) % 4);
+		return VoxelShapeUtil.rotate(shape, (direction.get2DDataValue() + 1) % 4);
 	}
 
 	public static VoxelShape rotate(VoxelShape shape, int times)
@@ -49,26 +49,26 @@ public class VoxelShapeUtil
 
 	public static VoxelShape rotate(VoxelShape shape, Direction.Axis axis, int times, float cX, float cY, float cZ)
 	{
-		var rotatedShape = VoxelShapes.empty();
-		for (var box : shape.getBoundingBoxes())
+		var rotatedShape = Shapes.empty();
+		for (var box : shape.toAabbs())
 		{
 			var rotatedBox = rotateAABB(box, axis, times, cX, cY, cZ);
-			rotatedShape = VoxelShapes.union(rotatedShape, rotatedBox);
+			rotatedShape = Shapes.or(rotatedShape, rotatedBox);
 		}
 		return rotatedShape;
 	}
 
-	private static VoxelShape rotateAABB(Box box, Direction.Axis axis, int times, float cX, float cY, float cZ)
+	private static VoxelShape rotateAABB(AABB box, Direction.Axis axis, int times, float cX, float cY, float cZ)
 	{
 		double tmp;
 
-		var minX = box.getMin(Direction.Axis.X);
-		var minY = box.getMin(Direction.Axis.Y);
-		var minZ = box.getMin(Direction.Axis.Z);
+		var minX = box.min(Direction.Axis.X);
+		var minY = box.min(Direction.Axis.Y);
+		var minZ = box.min(Direction.Axis.Z);
 
-		var maxX = box.getMax(Direction.Axis.X);
-		var maxY = box.getMax(Direction.Axis.Y);
-		var maxZ = box.getMax(Direction.Axis.Z);
+		var maxX = box.max(Direction.Axis.X);
+		var maxY = box.max(Direction.Axis.Y);
+		var maxZ = box.max(Direction.Axis.Z);
 
 		switch (axis)
 		{
@@ -128,13 +128,13 @@ public class VoxelShapeUtil
 			maxZ = temp;
 		}
 
-		return VoxelShapes.cuboid(minX, minY, minZ, maxX, maxY, maxZ);
+		return Shapes.box(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
-	public static Vec3d getCenter(VoxelShape shape)
+	public static Vec3 getCenter(VoxelShape shape)
 	{
-		return new Vec3d((shape.getMin(Direction.Axis.X) + shape.getMax(Direction.Axis.X)) / 2,
-		                 (shape.getMin(Direction.Axis.Y) + shape.getMax(Direction.Axis.Y)) / 2,
-		                 (shape.getMin(Direction.Axis.Z) + shape.getMax(Direction.Axis.Z)) / 2);
+		return new Vec3((shape.min(Direction.Axis.X) + shape.max(Direction.Axis.X)) / 2,
+		                 (shape.min(Direction.Axis.Y) + shape.max(Direction.Axis.Y)) / 2,
+		                 (shape.min(Direction.Axis.Z) + shape.max(Direction.Axis.Z)) / 2);
 	}
 }

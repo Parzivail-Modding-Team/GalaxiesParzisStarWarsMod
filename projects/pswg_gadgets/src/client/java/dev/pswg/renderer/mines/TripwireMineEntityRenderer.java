@@ -1,56 +1,51 @@
 package dev.pswg.renderer.mines;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.pswg.Gadgets;
 import dev.pswg.entity.mines.TripwireMineEntity;
 import dev.pswg.models.TripwireMineRenderState;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import dev.pswg.models.TripwireMineModel;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelTransform;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 
 public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntity, TripwireMineRenderState>
 {
 
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("tripwire_mine"), "temp");
-	public static final Identifier TEXTURE = Identifier.of("pswg_gadgets", "textures/items/tripwire_mine.png");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Gadgets.id("tripwire_mine"), "temp");
+	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("pswg_gadgets", "textures/items/tripwire_mine.png");
 	private final TripwireMineModel model;
 
-	public TripwireMineEntityRenderer(EntityRendererFactory.Context context)
+	public TripwireMineEntityRenderer(EntityRendererProvider.Context context)
 	{
 		super(context);
-		this.model = new TripwireMineModel(context.getPart(MODEL_LAYER));
+		this.model = new TripwireMineModel(context.bakeLayer(MODEL_LAYER));
 	}
 
 	@Override
-	public void render(TripwireMineRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState)
+	public void submit(TripwireMineRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState)
 	{
-		matrices.push();
+		matrices.pushPose();
 
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw + 90));
-		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(state.pitch + 90));
+		matrices.mulPose(Axis.YP.rotationDegrees(-state.yaw + 90));
+		matrices.mulPose(Axis.ZP.rotationDegrees(state.pitch + 90));
 
-		this.model.setAngles(state);
-		this.model.setAngles(state);
+		this.model.setupAnim(state);
+		this.model.setupAnim(state);
 
-		model.getRootPart().getChild("laser").yScale = state.tripwireDistance * 31f;
-		model.getRootPart().getChild("laser").originY = state.tripwireDistance * -31 + 1f;
-		model.getRootPart().getChild("laser").hidden = !state.primed;
+		model.root().getChild("laser").yScale = state.tripwireDistance * 31f;
+		model.root().getChild("laser").y = state.tripwireDistance * -31 + 1f;
+		model.root().getChild("laser").skipDraw = !state.primed;
 
-		queue.submitModel(this.model, state, matrices, RenderLayer.getEntityCutout(TEXTURE), state.light, OverlayTexture.DEFAULT_UV, state.outlineColor, null);
-		matrices.pop();
-		super.render(state, matrices, queue, cameraState);
+		queue.submitModel(this.model, state, matrices, RenderType.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		matrices.popPose();
+		super.submit(state, matrices, queue, cameraState);
 	}
 
 	@Override
@@ -60,13 +55,13 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 	}
 
 	@Override
-	public void updateRenderState(TripwireMineEntity entity, TripwireMineRenderState state, float tickDelta)
+	public void extractRenderState(TripwireMineEntity entity, TripwireMineRenderState state, float tickDelta)
 	{
-		super.updateRenderState(entity, state, tickDelta);
-		state.pitch = entity.getLerpedPitch(tickDelta);
-		state.yaw = entity.getYaw();
+		super.extractRenderState(entity, state, tickDelta);
+		state.pitch = entity.getXRot(tickDelta);
+		state.yaw = entity.getYRot();
 		state.primed = entity.primed;
 		state.tripwireDistance = entity.tripwireDistance;
-		state.rotationVec = entity.getRotationVector();
+		state.rotationVec = entity.getLookAngle();
 	}
 }

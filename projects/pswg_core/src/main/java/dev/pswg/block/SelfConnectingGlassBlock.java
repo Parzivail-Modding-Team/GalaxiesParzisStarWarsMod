@@ -1,33 +1,33 @@
 package dev.pswg.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SelfConnectingGlassBlock extends SelfConnectingBlock
 {
-	public SelfConnectingGlassBlock(Settings settings)
+	public SelfConnectingGlassBlock(Properties settings)
 	{
 		super(settings);
 	}
 
 	@Override
-	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
 	{
-		return VoxelShapes.empty();
+		return Shapes.empty();
 	}
 
 	@Override
-	public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos)
+	public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos)
 	{
 		return 1.0F;
 	}
 
 	@Override
-	protected boolean isTransparent(BlockState state)
+	protected boolean propagatesSkylightDown(BlockState state)
 	{
 		return true;
 	}

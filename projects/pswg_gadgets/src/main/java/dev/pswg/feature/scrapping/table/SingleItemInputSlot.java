@@ -1,17 +1,17 @@
 package dev.pswg.feature.scrapping.table;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
 
 public class SingleItemInputSlot extends Slot
 {
-	public SingleItemInputSlot(Inventory inventory, int index, int x, int y)
+	public SingleItemInputSlot(Container inventory, int index, int x, int y)
 	{
 		super(inventory, index, x, y);
 	}
 
 	@Override
-	public int getMaxItemCount()
+	public int getMaxStackSize()
 	{
 		return 1;
 	}

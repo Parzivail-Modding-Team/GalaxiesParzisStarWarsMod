@@ -4,7 +4,7 @@ import dev.pswg.Galaxies;
 import dev.pswg.blockEntity.CrateCorrugatedBlockEntity;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.BlockUtil;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class GalaxiesBlockEntities
 {

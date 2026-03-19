@@ -1,10 +1,10 @@
 package dev.pswg.sound;
 
 import dev.pswg.Blasters;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 /**
  * The sound events for PSWG blaster features
@@ -30,8 +30,8 @@ public final class BlasterSounds
 	 */
 	private static SoundEvent registerSound(String id)
 	{
-		Identifier identifier = Identifier.of(Blasters.MODID, id);
-		return Registry.register(Registries.SOUND_EVENT, identifier, SoundEvent.of(identifier));
+		ResourceLocation identifier = ResourceLocation.fromNamespaceAndPath(Blasters.MODID, id);
+		return Registry.register(BuiltInRegistries.SOUND_EVENT, identifier, SoundEvent.createVariableRangeEvent(identifier));
 	}
 
 	public static void register()

@@ -4,44 +4,39 @@ import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import dev.pswg.container.GalaxiesParticleTypes;
 import dev.pswg.container.entity.GadgetsDamage;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.Ownable;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.particle.TintedParticleEffect;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.Colors;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
-import net.minecraft.world.explosion.ExplosionImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerExplosion;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
-public class TripwireMineEntity extends Entity implements Ownable
+public class TripwireMineEntity extends Entity implements TraceableEntity
 {
 	@Nullable
 	private BlockState inBlockState;
-	private static final TrackedData<Boolean> IN_GROUND = DataTracker.registerData(TripwireMineEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IN_GROUND = SynchedEntityData.defineId(TripwireMineEntity.class, EntityDataSerializers.BOOLEAN);
 
 	private int PRIMING_TIME = 60;
 	public boolean primed;
@@ -52,7 +47,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 	@Nullable
 	private Entity owner;
 
-	public TripwireMineEntity(EntityType<?> type, World world)
+	public TripwireMineEntity(EntityType<?> type, Level world)
 	{
 		super(type, world);
 		primed = false;
@@ -62,7 +57,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 	{
 		if (entity != null)
 		{
-			this.ownerUuid = entity.getUuid();
+			this.ownerUuid = entity.getUUID();
 			this.owner = entity;
 		}
 	}
@@ -78,9 +73,9 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 	public void explode()
 	{
-		if (getEntityWorld() instanceof ServerWorld serverWorld)
+		if (level() instanceof ServerLevel serverWorld)
 		{
-			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), null, this.getEntityPos().add(0, 0.05f, 0), 2.5f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			var explosion = new ServerExplosion(serverWorld, this, damageSources().source(DamageTypes.EXPLOSION), null, this.position().add(0, 0.05f, 0), 2.5f, false, Explosion.BlockInteraction.DESTROY_WITH_DECAY);
 			explosion.explode();
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
@@ -88,34 +83,34 @@ public class TripwireMineEntity extends Entity implements Ownable
 	}
 
 	@Override
-	public void onDamaged(DamageSource damageSource)
+	public void handleDamageEvent(DamageSource damageSource)
 	{
-		if (damageSource.isIn(GadgetsDamage.DamageTags.IGNITES_EXPLOSIVES))
+		if (damageSource.is(GadgetsDamage.DamageTags.IGNITES_EXPLOSIVES))
 			explode();
-		super.onDamaged(damageSource);
+		super.handleDamageEvent(damageSource);
 	}
 
-	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
+	protected void createParticles(double x, double y, double z, ServerLevel serverWorld)
 	{
 
-		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
+		for (ServerPlayer serverPlayerEntity : serverWorld.players())
 		{
-			serverWorld.spawnParticles(serverPlayerEntity, TintedParticleEffect.create(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, Colors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
+			serverWorld.sendParticles(serverPlayerEntity, ColorParticleOption.create(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, CommonColors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
 		}
 	}
 
 	private void applyDrag()
 	{
-		Vec3d vec3d = this.getVelocity();
-		Vec3d vec3d2 = this.getEntityPos();
+		Vec3 vec3d = this.getDeltaMovement();
+		Vec3 vec3d2 = this.position();
 		float g;
-		if (this.isTouchingWater())
+		if (this.isInWater())
 		{
 			for (int i = 0; i < 4; i++)
 			{
 				float f = 0.25F;
-				this.getEntityWorld()
-				    .addParticleClient(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
+				this.level()
+				    .addParticle(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
 			}
 
 			g = 0.8F;
@@ -125,56 +120,56 @@ public class TripwireMineEntity extends Entity implements Ownable
 			g = 0.99F;
 		}
 
-		this.setVelocity(vec3d.multiply((double)g));
+		this.setDeltaMovement(vec3d.scale((double)g));
 	}
 
 	@Override
-	protected double getGravity()
+	protected double getDefaultGravity()
 	{
 		return 0.075;
 	}
 
 	@Override
-	public boolean canUsePortals(boolean allowVehicles)
+	public boolean canUsePortal(boolean allowVehicles)
 	{
 		return true;
 	}
 
 	protected void setInGround(boolean inGround)
 	{
-		this.dataTracker.set(IN_GROUND, inGround);
+		this.entityData.set(IN_GROUND, inGround);
 	}
 
 	protected boolean isInGround()
 	{
-		return this.dataTracker.get(IN_GROUND);
+		return this.entityData.get(IN_GROUND);
 	}
 
 	private void fall()
 	{
 		this.setInGround(false);
-		Vec3d vec3d = this.getVelocity();
-		this.setVelocity(vec3d.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
+		Vec3 vec3d = this.getDeltaMovement();
+		this.setDeltaMovement(vec3d.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
 	}
 
 	@Override
 	public void tick()
 	{
 
-		BlockState blockState = getBlockStateAtPos();
+		BlockState blockState = getInBlockState();
 
-		if (this.inBlockState != blockState && !this.getEntityWorld().isClient() && this.isInGround())
+		if (this.inBlockState != blockState && !this.level().isClientSide() && this.isInGround())
 					this.fall();
 
 		if (!isInGround())
 			this.applyGravity();
 		else
 		{
-			this.setVelocity(this.getVelocity().multiply(0, 0, 0));
-			this.velocityModified = true;
+			this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
+			this.hurtMarked = true;
 		}
 		this.applyDrag();
-		if (this.age == PRIMING_TIME)
+		if (this.tickCount == PRIMING_TIME)
 		{
 			primed = true;
 			playSound(GadgetsSounds.ARM, 1, 1);
@@ -184,62 +179,62 @@ public class TripwireMineEntity extends Entity implements Ownable
 
 
 
-		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
+		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, entity -> true);
 
-		Vec3d newPos = this.getEntityPos();
+		Vec3 newPos = this.position();
 		if (hitResult.getType() != HitResult.Type.MISS)
 		{
-			newPos = hitResult.getPos().add(getVelocity().multiply(0.005));
+			newPos = hitResult.getLocation().add(getDeltaMovement().scale(0.005));
 			if (hitResult.getType() == HitResult.Type.BLOCK && !isInGround())
 			{
 				var blockHit = (BlockHitResult)hitResult;
-				var normal = new Vec3d(blockHit.getSide().getUnitVector());
+				var normal = new Vec3(blockHit.getDirection().step());
 
-				if (!getEntityWorld().getBlockState(blockHit.getBlockPos()).isAir())
+				if (!level().getBlockState(blockHit.getBlockPos()).isAir())
 				{
-					inBlockState = getEntityWorld().getBlockState(blockHit.getBlockPos());
+					inBlockState = level().getBlockState(blockHit.getBlockPos());
 					setRotation(normal);
 					setInGround(true);
-					this.velocityModified = true;
+					this.hurtMarked = true;
 				}
 			}
 		}
 		else
 		{
-			newPos = this.getEntityPos().add(this.getVelocity());
+			newPos = this.position().add(this.getDeltaMovement());
 		}
-		this.setPosition(newPos);
-		this.tickBlockCollision();
+		this.setPos(newPos);
+		this.applyEffectsFromBlocks();
 
-		var rotVec = getRotationVector();
+		var rotVec = getLookAngle();
 
-		var blockRaycast = getEntityWorld().raycast(new RaycastContext(
-				this.getEntityPos().add(rotVec.multiply(0.05d)),
-				this.getEntityPos().add(rotVec.multiply(maxDist)),
-				RaycastContext.ShapeType.COLLIDER,
-				RaycastContext.FluidHandling.ANY,
+		var blockRaycast = level().clip(new ClipContext(
+				this.position().add(rotVec.scale(0.05d)),
+				this.position().add(rotVec.scale(maxDist)),
+				ClipContext.Block.COLLIDER,
+				ClipContext.Fluid.ANY,
 				this
 		));
-		var entityRaycast = ProjectileUtil.raycast(
+		var entityRaycast = ProjectileUtil.getEntityHitResult(
 				this,
-				this.getEntityPos(),
-				this.getEntityPos().add(rotVec.multiply(tripwireDistance)),
-				this.getBoundingBox().stretch(rotVec.multiply(tripwireDistance)).expand(1.0, 1.0, 1.0),
+				this.position(),
+				this.position().add(rotVec.scale(tripwireDistance)),
+				this.getBoundingBox().expandTowards(rotVec.scale(tripwireDistance)).inflate(1.0, 1.0, 1.0),
 				entity -> true,
 				tripwireDistance);
 
 		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && this.primed)
 			explode();
 
-		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getPos().distanceTo(getEntityPos()));
+		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getLocation().distanceTo(position()));
 
 		if (this.primed)
 		{
 			for (float f = 0.015f; f < tripwireDistance; f += 0.015f)
 			{
-				if (getEntityWorld() instanceof ServerWorld serverWorld)
+				if (level() instanceof ServerLevel serverWorld)
 				{
-					serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX() + getRotationVector().multiply(f).x, getY() + getRotationVector().multiply(f).y, getZ() + getRotationVector().multiply(f).z, 1, getEntityWorld().random.nextBetween(1, 100) / 30000f, 0, getEntityWorld().random.nextBetween(1, 100) / 30000f, 0);
+					serverWorld.sendParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX() + getLookAngle().scale(f).x, getY() + getLookAngle().scale(f).y, getZ() + getLookAngle().scale(f).z, 1, level().random.nextIntBetweenInclusive(1, 100) / 30000f, 0, level().random.nextIntBetweenInclusive(1, 100) / 30000f, 0);
 					//serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX(), getY() + f, getZ(), 1, getWorld().random.nextBetween(1, 100) / 30000f, 0, getWorld().random.nextBetween(1, 100) / 30000f, 0);
 				}
 			}
@@ -248,46 +243,46 @@ public class TripwireMineEntity extends Entity implements Ownable
 		super.tick();
 	}
 
-	public void setRotation(Vec3d vec)
+	public void setRotation(Vec3 vec)
 	{
 		var pitch = Math.asin(-vec.y) / Math.PI * 180f;
 		var yaw = Math.atan2(vec.x, vec.z) / Math.PI * 180f;
-		setRotation((float)-yaw, (float)pitch);
+		setRot((float)-yaw, (float)pitch);
 	}
 
 	@Override
-	public boolean hasNoGravity()
+	public boolean isNoGravity()
 	{
 		return false;
 	}
 
 	@Override
-	public int getDefaultPortalCooldown()
+	public int getDimensionChangingDelay()
 	{
 		return 1;
 	}
 
 	@Override
-	protected void initDataTracker(DataTracker.Builder builder)
+	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
-		builder.add(IN_GROUND, false);
+		builder.define(IN_GROUND, false);
 	}
 
 	@Override
-	public boolean damage(ServerWorld world, DamageSource source, float amount)
+	public boolean hurtServer(ServerLevel world, DamageSource source, float amount)
 	{
 		return true;
 	}
 
 	// TODO: MAKE "OWNER" PART OF A BASE CLASS COMMON FOR MINES
 	@Override
-	protected void readCustomData(ReadView view)
+	protected void readAdditionalSaveData(ValueInput view)
 	{
 		if (view.contains("owner"))
 		{
-			this.setOwner(UUID.fromString(view.getString("owner", "")));
+			this.setOwner(UUID.fromString(view.getStringOr("owner", "")));
 		}
-		this.setInGround(view.getBoolean("inGround", false));
+		this.setInGround(view.getBooleanOr("inGround", false));
 		if (view.contains("inBlockState"))
 		{
 			this.inBlockState = view.read("inBlockState", BlockState.CODEC).get();
@@ -295,7 +290,7 @@ public class TripwireMineEntity extends Entity implements Ownable
 	}
 
 	@Override
-	protected void writeCustomData(WriteView view)
+	protected void addAdditionalSaveData(ValueOutput view)
 	{
 		if (this.ownerUuid != null)
 		{
@@ -304,14 +299,14 @@ public class TripwireMineEntity extends Entity implements Ownable
 		view.putBoolean("inGround", this.isInGround());
 		if (this.inBlockState != null)
 		{
-			view.put("inBlockState", BlockState.CODEC, inBlockState);
+			view.store("inBlockState", BlockState.CODEC, inBlockState);
 		}
 	}
 
 	@Nullable
 	protected Entity getEntity(UUID uuid)
 	{
-		return this.getEntityWorld() instanceof ServerWorld serverWorld ? serverWorld.getEntity(uuid) : null;
+		return this.level() instanceof ServerLevel serverWorld ? serverWorld.getEntity(uuid) : null;
 	}
 
 	@Override

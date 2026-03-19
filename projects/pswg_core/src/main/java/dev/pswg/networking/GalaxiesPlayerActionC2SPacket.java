@@ -2,27 +2,27 @@ package dev.pswg.networking;
 
 import dev.pswg.Galaxies;
 import dev.pswg.interaction.ClientPlayerAction;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /**
  * Encapsulates a fire-and-forget C2S player action notification
  *
  * @param action The action to invoke
  */
-public record GalaxiesPlayerActionC2SPacket(ClientPlayerAction action) implements CustomPayload
+public record GalaxiesPlayerActionC2SPacket(ClientPlayerAction action) implements CustomPacketPayload
 {
-	public static final Id<GalaxiesPlayerActionC2SPacket> ID = new Id<>(Galaxies.id("client_player_action"));
+	public static final CustomPacketPayload.Type<GalaxiesPlayerActionC2SPacket> ID = new CustomPacketPayload.Type<>(Galaxies.id("client_player_action"));
 
-	public static final PacketCodec<RegistryByteBuf, GalaxiesPlayerActionC2SPacket> CODEC = PacketCodec.tuple(
+	public static final StreamCodec<RegistryFriendlyByteBuf, GalaxiesPlayerActionC2SPacket> CODEC = StreamCodec.composite(
 			GalaxiesPacketCodecs.CLIENT_PLAYER_ACTION,
 			GalaxiesPlayerActionC2SPacket::action,
 			GalaxiesPlayerActionC2SPacket::new
 	);
 
 	@Override
-	public Id<? extends CustomPayload> getId()
+	public CustomPacketPayload.Type<? extends CustomPacketPayload> type()
 	{
 		return ID;
 	}

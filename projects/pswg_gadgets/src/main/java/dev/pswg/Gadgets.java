@@ -15,9 +15,9 @@ import dev.pswg.networking.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
 
 import java.io.InputStream;
@@ -33,16 +33,16 @@ public final class Gadgets implements GalaxiesAddon
 	public static final String MODID = "pswg_gadgets";
 
 	/**
-	 * Creates a scoped {@link Identifier} whose domain is this
+	 * Creates a scoped {@link ResourceLocation} whose domain is this
 	 * mod's MODID
 	 *
-	 * @param path The path for the {@link Identifier}
+	 * @param path The path for the {@link ResourceLocation}
 	 *
-	 * @return A scoped {@link Identifier}
+	 * @return A scoped {@link ResourceLocation}
 	 */
-	public static Identifier id(String path)
+	public static ResourceLocation id(String path)
 	{
-		return Identifier.of(MODID, path);
+		return ResourceLocation.fromNamespaceAndPath(MODID, path);
 	}
 
 	/**
@@ -71,20 +71,20 @@ public final class Gadgets implements GalaxiesAddon
 
 		PayloadTypeRegistry.playS2C().register(MixerSyncS2CPayload.ID, MixerSyncS2CPayload.CODEC);
 
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener()
+		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener()
 		{
 			@Override
-			public Identifier getFabricId()
+			public ResourceLocation getFabricId()
 			{
 				return Gadgets.id("brewing_maps");
 			}
 
 			@Override
-			public void reload(ResourceManager manager)
+			public void onResourceManagerReload(ResourceManager manager)
 			{
-				for (Identifier id : manager.findResources("brewing_map", path -> true).keySet())
+				for (ResourceLocation id : manager.listResources("brewing_map", path -> true).keySet())
 				{
-					try (InputStream stream = manager.getResource(id).get().getInputStream())
+					try (InputStream stream = manager.getResource(id).get().open())
 					{
 						BrewingMap.init(stream);
 					}

@@ -8,13 +8,6 @@ import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.codec.PacketDecoder;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -26,6 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.StreamDecoder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 
 /**
  * Defines packet codecs and related utilities for common data types
@@ -33,35 +32,35 @@ import java.util.zip.GZIPOutputStream;
 public final class GalaxiesPacketCodecs
 {
 	/**
-	 * A packet codec that can serialize and deserialize {@link Hand} enum values
+	 * A packet codec that can serialize and deserialize {@link InteractionHand} enum values
 	 */
-	public static final PacketCodec<RegistryByteBuf, Hand> HAND = forEnum(Hand.class);
+	public static final StreamCodec<RegistryFriendlyByteBuf, InteractionHand> HAND = forEnum(InteractionHand.class);
 
 	/**
-	 * A packet codec that can serialize and deserialize {@link Identifier} lists
+	 * A packet codec that can serialize and deserialize {@link ResourceLocation} lists
 	 */
-	public static final PacketCodec<ByteBuf, List<Identifier>> IDENTIFIER_LIST  = Identifier.PACKET_CODEC.collect(PacketCodecs.toList());
+	public static final StreamCodec<ByteBuf, List<ResourceLocation>> IDENTIFIER_LIST  = ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list());
 
 	/**
-	 * A packet codec that can serialize and deserialize maps between {@link Identifier}s
+	 * A packet codec that can serialize and deserialize maps between {@link ResourceLocation}s
 	 */
-	public static final PacketCodec<ByteBuf, Map<Identifier, Identifier>> IDENTIFIER_MAP = PacketCodecs.map(HashMap::new, Identifier.PACKET_CODEC, Identifier.PACKET_CODEC);
+	public static final StreamCodec<ByteBuf, Map<ResourceLocation, ResourceLocation>> IDENTIFIER_MAP = ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, ResourceLocation.STREAM_CODEC);
 
 	/**
 	 * A packet codec that can serialize and deserialize {@link ClientPlayerAction} enum values
 	 */
-	public static final PacketCodec<RegistryByteBuf, ClientPlayerAction> CLIENT_PLAYER_ACTION = forEnum(ClientPlayerAction.class);
+	public static final StreamCodec<RegistryFriendlyByteBuf, ClientPlayerAction> CLIENT_PLAYER_ACTION = forEnum(ClientPlayerAction.class);
 
 
 	/**
 	 * A packet codec that can serialize and deserialize {@link ServerPlayerAction} enum values
 	 */
-	public static final PacketCodec<RegistryByteBuf, ServerPlayerAction> SERVER_PLAYER_ACTION = forEnum(ServerPlayerAction.class);
+	public static final StreamCodec<RegistryFriendlyByteBuf, ServerPlayerAction> SERVER_PLAYER_ACTION = forEnum(ServerPlayerAction.class);
 
 	/**
 	 * A packet codec that can serialize and deserialize {@link Vector2f}s
 	 */
-	public static final PacketCodec<ByteBuf, Vector2f> VECTOR_2F = new PacketCodec<>()
+	public static final StreamCodec<ByteBuf, Vector2f> VECTOR_2F = new StreamCodec<>()
 	{
 		@Override
 		public Vector2f decode(ByteBuf buf)
@@ -85,7 +84,7 @@ public final class GalaxiesPacketCodecs
 	 *
 	 * @return A PacketDecoder that reads the enum constant from a RegistryByteBuf
 	 */
-	public static <T extends Enum<T>> PacketDecoder<RegistryByteBuf, T> readEnumConstant(Class<T> enumClass)
+	public static <T extends Enum<T>> StreamDecoder<RegistryFriendlyByteBuf, T> readEnumConstant(Class<T> enumClass)
 	{
 		return (buf) -> (T)enumClass.getEnumConstants()[buf.readVarInt()];
 	}
@@ -96,7 +95,7 @@ public final class GalaxiesPacketCodecs
 	 * @param instance The enum constant to write
 	 * @param writer   The buffer to write to
 	 */
-	public static void writeEnumConstant(Enum<?> instance, RegistryByteBuf writer)
+	public static void writeEnumConstant(Enum<?> instance, RegistryFriendlyByteBuf writer)
 	{
 		writer.writeVarInt(instance.ordinal());
 	}
@@ -107,11 +106,11 @@ public final class GalaxiesPacketCodecs
 	 * @param <T>   The type of the enum
 	 * @param clazz The class of the enum
 	 *
-	 * @return A {@link PacketCodec} that can serialize and deserialize the enum type
+	 * @return A {@link StreamCodec} that can serialize and deserialize the enum type
 	 */
-	public static <T extends Enum<T>> PacketCodec<RegistryByteBuf, T> forEnum(Class<T> clazz)
+	public static <T extends Enum<T>> StreamCodec<RegistryFriendlyByteBuf, T> forEnum(Class<T> clazz)
 	{
-		return PacketCodec.of(GalaxiesPacketCodecs::writeEnumConstant, GalaxiesPacketCodecs.readEnumConstant(clazz));
+		return StreamCodec.ofMember(GalaxiesPacketCodecs::writeEnumConstant, GalaxiesPacketCodecs.readEnumConstant(clazz));
 	}
 
 	/**
@@ -121,9 +120,9 @@ public final class GalaxiesPacketCodecs
 	 *
 	 * @return A codec that compresses and decompresses the given codec
 	 */
-	public static <T> PacketCodec<ByteBuf, T> gzip(PacketCodec<ByteBuf, T> codec)
+	public static <T> StreamCodec<ByteBuf, T> gzip(StreamCodec<ByteBuf, T> codec)
 	{
-		return new PacketCodec<>()
+		return new StreamCodec<>()
 		{
 			@Override
 			public T decode(ByteBuf buf)

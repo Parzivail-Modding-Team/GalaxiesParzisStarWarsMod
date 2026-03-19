@@ -2,10 +2,9 @@ package dev.pswg.util.worldgen.decoration;
 
 import dev.pswg.util.worldgen.decorator.Decorator;
 import dev.pswg.util.worldgen.world.WorldGenView;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 
 public record ConfiguredDecoration(Decorator decorator, Decoration decoration)
 {

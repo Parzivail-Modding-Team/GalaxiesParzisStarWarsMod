@@ -3,45 +3,41 @@ package dev.pswg.entity.mines;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsSounds;
 import dev.pswg.container.GalaxiesParticleTypes;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.Ownable;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.particle.TintedParticleEffect;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.Colors;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
-import net.minecraft.world.explosion.ExplosionImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerExplosion;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class PressureMineEntity extends Entity implements Ownable
+public class PressureMineEntity extends Entity implements TraceableEntity
 {
 	@Nullable
 	private BlockState inBlockState;
-	private static final TrackedData<Boolean> IN_GROUND = DataTracker.registerData(PressureMineEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IN_GROUND = SynchedEntityData.defineId(PressureMineEntity.class, EntityDataSerializers.BOOLEAN);
 
 	private int PRIMING_TIME = 50;
 	private boolean primed;
@@ -51,7 +47,7 @@ public class PressureMineEntity extends Entity implements Ownable
 	@Nullable
 	private Entity owner;
 
-	public PressureMineEntity(EntityType<?> type, World world)
+	public PressureMineEntity(EntityType<?> type, Level world)
 	{
 		super(type, world);
 		primed = false;
@@ -61,7 +57,7 @@ public class PressureMineEntity extends Entity implements Ownable
 	{
 		if (entity != null)
 		{
-			this.ownerUuid = entity.getUuid();
+			this.ownerUuid = entity.getUUID();
 			this.owner = entity;
 		}
 	}
@@ -77,35 +73,35 @@ public class PressureMineEntity extends Entity implements Ownable
 
 	public void explode()
 	{
-		if (getEntityWorld() instanceof ServerWorld serverWorld)
+		if (level() instanceof ServerLevel serverWorld)
 		{
-			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, this.getEntityPos().add(0, 0.05f, 0), 2f, false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			var explosion = new ServerExplosion(serverWorld, this, damageSources().source(DamageTypes.EXPLOSION), (ExplosionDamageCalculator)null, this.position().add(0, 0.05f, 0), 2f, false, Explosion.BlockInteraction.DESTROY_WITH_DECAY);
 			explosion.explode();
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
 		this.discard();
 	}
 
-	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
+	protected void createParticles(double x, double y, double z, ServerLevel serverWorld)
 	{
 
-		for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers())
+		for (ServerPlayer serverPlayerEntity : serverWorld.players())
 		{
-			serverWorld.spawnParticles(serverPlayerEntity, TintedParticleEffect.create(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, Colors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
+			serverWorld.sendParticles(serverPlayerEntity, ColorParticleOption.create(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, CommonColors.WHITE), true, true, x, y, z, 1, 0, 0, 0, 0);
 		}
 	}
 
 	private void applyDrag()
 	{
-		Vec3d vec3d = this.getVelocity();
-		Vec3d vec3d2 = this.getEntityPos();
+		Vec3 vec3d = this.getDeltaMovement();
+		Vec3 vec3d2 = this.position();
 		float g;
-		if (this.isTouchingWater())
+		if (this.isInWater())
 		{
 			for (int i = 0; i < 4; i++)
 			{
 				float f = 0.25F;
-				this.getEntityWorld().addParticleClient(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
+				this.level().addParticle(ParticleTypes.BUBBLE, vec3d2.x - vec3d.x * 0.25, vec3d2.y - vec3d.y * 0.25, vec3d2.z - vec3d.z * 0.25, vec3d.x, vec3d.y, vec3d.z);
 			}
 
 			g = 0.8F;
@@ -115,54 +111,54 @@ public class PressureMineEntity extends Entity implements Ownable
 			g = 0.99F;
 		}
 
-		this.setVelocity(vec3d.multiply((double)g));
+		this.setDeltaMovement(vec3d.scale((double)g));
 	}
 
 	@Override
-	protected double getGravity()
+	protected double getDefaultGravity()
 	{
 		return 0.075;
 	}
 
 	@Override
-	public boolean canUsePortals(boolean allowVehicles)
+	public boolean canUsePortal(boolean allowVehicles)
 	{
 		return true;
 	}
 
 	protected void setInGround(boolean inGround)
 	{
-		this.dataTracker.set(IN_GROUND, inGround);
+		this.entityData.set(IN_GROUND, inGround);
 	}
 
 	protected boolean isInGround()
 	{
-		return this.dataTracker.get(IN_GROUND);
+		return this.entityData.get(IN_GROUND);
 	}
 
 	private void fall()
 	{
 		this.setInGround(false);
-		Vec3d vec3d = this.getVelocity();
-		this.setVelocity(vec3d.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
+		Vec3 vec3d = this.getDeltaMovement();
+		this.setDeltaMovement(vec3d.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
 	}
 
 	@Override
 	public void tick()
 	{
-		Vec3d vec3d = this.getVelocity();
-		BlockPos blockPos = this.getBlockPos();
-		BlockState blockState = this.getEntityWorld().getBlockState(blockPos);
+		Vec3 vec3d = this.getDeltaMovement();
+		BlockPos blockPos = this.blockPosition();
+		BlockState blockState = this.level().getBlockState(blockPos);
 		if (!blockState.isAir())
 		{
-			VoxelShape voxelShape = blockState.getCollisionShape(this.getEntityWorld(), blockPos);
+			VoxelShape voxelShape = blockState.getCollisionShape(this.level(), blockPos);
 			if (!voxelShape.isEmpty())
 			{
-				Vec3d vec3d2 = this.getEntityPos();
+				Vec3 vec3d2 = this.position();
 
-				for (Box box : voxelShape.getBoundingBoxes())
+				for (AABB box : voxelShape.toAabbs())
 				{
-					if (box.offset(blockPos).contains(vec3d2))
+					if (box.move(blockPos).contains(vec3d2))
 					{
 						this.setInGround(true);
 						break;
@@ -173,7 +169,7 @@ public class PressureMineEntity extends Entity implements Ownable
 
 		if (this.isInGround())
 		{
-			if (!this.getEntityWorld().isClient())
+			if (!this.level().isClientSide())
 			{
 				if (this.inBlockState != blockState)
 				{
@@ -182,78 +178,78 @@ public class PressureMineEntity extends Entity implements Ownable
 			}
 		}
 
-		var world = getEntityWorld();
+		var world = level();
 		if (!isInGround())
 			this.applyGravity();
 		else
-			this.setVelocity(this.getVelocity().multiply(1, -0.5, 1));
+			this.setDeltaMovement(this.getDeltaMovement().multiply(1, -0.5, 1));
 		this.applyDrag();
-		if (this.age == PRIMING_TIME)
+		if (this.tickCount == PRIMING_TIME)
 		{
 			primed = true;
 			playSound(GadgetsSounds.ARM, 1, 1);
 		}
-		var entityCollisions = world.getEntitiesByClass(Entity.class, this.getBoundingBox(), entity -> entity != this);
+		var entityCollisions = world.getEntitiesOfClass(Entity.class, this.getBoundingBox(), entity -> entity != this);
 
 		if (primed && !entityCollisions.isEmpty())
 		{
 			explode();
 		}
 
-		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> true);
+		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, entity -> true);
 		if (hitResult.getType() != HitResult.Type.MISS)
 		{
-			vec3d = hitResult.getPos();
+			vec3d = hitResult.getLocation();
 		}
 		else
 		{
-			vec3d = this.getEntityPos().add(this.getVelocity());
+			vec3d = this.position().add(this.getDeltaMovement());
 		}
-		this.setPosition(vec3d);
-		this.tickBlockCollision();
+		this.setPos(vec3d);
+		this.applyEffectsFromBlocks();
 
 		super.tick();
 	}
 
 	@Override
-	protected void onBlockCollision(BlockState state)
+	protected void onInsideBlock(BlockState state)
 	{
 		inBlockState = state;
-		super.onBlockCollision(state);
+		super.onInsideBlock(state);
 	}
 
 	@Override
-	public boolean hasNoGravity()
+	public boolean isNoGravity()
 	{
 		return false;
 	}
 
 	@Override
-	public int getDefaultPortalCooldown()
+	public int getDimensionChangingDelay()
 	{
 		return 1;
 	}
 
 	@Override
-	protected void initDataTracker(DataTracker.Builder builder)
+	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
-		builder.add(IN_GROUND, false);
+		builder.define(IN_GROUND, false);
 	}
 
 	@Override
-	public boolean damage(ServerWorld world, DamageSource source, float amount)
+	public boolean hurtServer(ServerLevel world, DamageSource source, float amount)
 	{
 		return true;
 	}
 
 	@Override
-	protected void readCustomData(ReadView view)
+	protected void readAdditionalSaveData(ValueInput view)
 	{
 		if (view.contains("owner"))
 		{
-			this.setOwner(UUID.fromString(view.getString("owner", "")));
+			this.setOwner(UUID.fromString(view.getStringOr("owner", "")));
 		}
-		this.setInGround(view.getBoolean("inGround", false));
+		this.setInGround(view.getBooleanOr("inGround", false));
 		if (view.contains("inBlockState"))
 		{
 			this.inBlockState = view.read("inBlockState", BlockState.CODEC).get();
@@ -261,7 +257,7 @@ public class PressureMineEntity extends Entity implements Ownable
 	}
 
 	@Override
-	protected void writeCustomData(WriteView view)
+	protected void addAdditionalSaveData(ValueOutput view)
 	{
 		if (this.ownerUuid != null)
 		{
@@ -270,7 +266,7 @@ public class PressureMineEntity extends Entity implements Ownable
 		view.putBoolean("inGround", this.isInGround());
 		if (this.inBlockState != null)
 		{
-			view.put("inBlockState", BlockState.CODEC, inBlockState);
+			view.store("inBlockState", BlockState.CODEC, inBlockState);
 		}
 	}
 
@@ -278,7 +274,7 @@ public class PressureMineEntity extends Entity implements Ownable
 	@Nullable
 	protected Entity getEntity(UUID uuid)
 	{
-		return this.getEntityWorld() instanceof ServerWorld serverWorld ? serverWorld.getEntity(uuid) : null;
+		return this.level() instanceof ServerLevel serverWorld ? serverWorld.getEntity(uuid) : null;
 	}
 
 	@Override

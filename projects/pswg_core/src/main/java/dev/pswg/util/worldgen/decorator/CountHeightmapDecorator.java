@@ -1,25 +1,24 @@
 package dev.pswg.util.worldgen.decorator;
 
 import dev.pswg.util.worldgen.world.WorldGenView;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class CountHeightmapDecorator extends Decorator
 {
 	private final int count;
-	private final Heightmap.Type heightmap;
+	private final Heightmap.Types heightmap;
 
 	public CountHeightmapDecorator(int count)
 	{
-		this(count, Heightmap.Type.WORLD_SURFACE_WG);
+		this(count, Heightmap.Types.WORLD_SURFACE_WG);
 	}
 
-	public CountHeightmapDecorator(int count, Heightmap.Type heightmap)
+	public CountHeightmapDecorator(int count, Heightmap.Types heightmap)
 	{
 		this.count = count;
 		this.heightmap = heightmap;

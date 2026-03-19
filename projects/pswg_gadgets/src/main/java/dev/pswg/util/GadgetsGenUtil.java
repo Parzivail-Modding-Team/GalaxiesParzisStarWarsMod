@@ -3,10 +3,9 @@ package dev.pswg.util;
 import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.block.collection.*;
 import dev.pswg.container.GadgetsBlocks;
-import net.minecraft.block.Block;
-
 import java.lang.annotation.Annotation;
 import java.util.function.BiConsumer;
+import net.minecraft.world.level.block.Block;
 
 public class GadgetsGenUtil
 {

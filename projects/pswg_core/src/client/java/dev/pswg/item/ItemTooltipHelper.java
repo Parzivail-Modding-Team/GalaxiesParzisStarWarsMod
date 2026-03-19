@@ -1,7 +1,7 @@
 package dev.pswg.item;
 
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 /**
  * A set of utilities for working with item tooltips
@@ -18,7 +18,7 @@ public class ItemTooltipHelper
 	{
 		ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
 			// Only run the callback on the given item
-			if (!itemStack.isOf(item))
+			if (!itemStack.is(item))
 				return;
 
 			callback.getTooltip(itemStack, tooltipContext, tooltipType, list);

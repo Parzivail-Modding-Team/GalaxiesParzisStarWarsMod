@@ -2,45 +2,44 @@ package dev.pswg.block;
 
 import com.google.common.base.Suppliers;
 import dev.pswg.util.world.WorldUtil;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCollisionHandler;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-
 import java.util.function.Supplier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class RuiningDryingSlabBlock extends MutatingSlabBlock
 {
 	private final Supplier<VerticalSlabBlock> ruinedBlock;
 
-	public RuiningDryingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, Supplier<VerticalSlabBlock> ruinedBlock, AbstractBlock.Settings settings)
+	public RuiningDryingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, Supplier<VerticalSlabBlock> ruinedBlock, BlockBehaviour.Properties settings)
 	{
 		super(target, meanTransitionTime, settings);
 		this.ruinedBlock = Suppliers.memoize(ruinedBlock::get);
 	}
 
 	@Override
-	protected boolean canTransition(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected boolean canTransition(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
 		return WorldUtil.isSunLit(world, pos);
 	}
 
 	@Override
-	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl)
+	protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl)
 	{
-		if (world instanceof ServerWorld serverWorld)
+		if (world instanceof ServerLevel serverWorld)
 		{
-			if (entity instanceof LivingEntity && (entity instanceof PlayerEntity || serverWorld.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F)
-				world.setBlockState(pos, Block.pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getStateWithProperties(state), world, pos));
+			if (entity instanceof LivingEntity && (entity instanceof Player || serverWorld.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) && entity.getBbWidth() * entity.getBbWidth() * entity.getBbHeight() > 0.512F)
+				world.setBlockAndUpdate(pos, Block.pushEntitiesUp(state, ruinedBlock.get().withPropertiesOf(state), world, pos));
 		}
-		super.onEntityCollision(state, world, pos, entity, handler, bl);
+		super.entityInside(state, world, pos, entity, handler, bl);
 	}
 }

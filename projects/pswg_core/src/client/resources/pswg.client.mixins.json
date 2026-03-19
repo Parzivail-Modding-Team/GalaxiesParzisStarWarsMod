@@ -4,11 +4,11 @@
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"accessors.ClientPlayerInteractionManagerAccessor",
-		"accessors.ItemModelGeneratorAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
 		"attributes.MouseMixin",
 		"events.DrawContextMixin",
+		"events.GameRendererMixin",
 		"events.InGameHudMixin",
 		"handbobbing.HeldItemRendererMixin",
 		"leftuse.MinecraftClientMixin",

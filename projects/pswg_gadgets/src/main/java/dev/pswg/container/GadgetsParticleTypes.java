@@ -3,11 +3,11 @@ package dev.pswg.container;
 import dev.pswg.Gadgets;
 import dev.pswg.particle.GasParticleEffect;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.particle.TintedParticleEffect;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class GadgetsParticleTypes
 {
@@ -30,18 +30,18 @@ public class GadgetsParticleTypes
 
 	}
 
-	private static ParticleType<TintedParticleEffect> registerTinted(String id)
+	private static ParticleType<ColorParticleOption> registerTinted(String id)
 	{
-		return Registry.register(Registries.PARTICLE_TYPE, Gadgets.id(id), FabricParticleTypes.complex(true, TintedParticleEffect::createCodec, TintedParticleEffect::createPacketCodec));
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, Gadgets.id(id), FabricParticleTypes.complex(true, ColorParticleOption::codec, ColorParticleOption::streamCodec));
 	}
 
 	private static SimpleParticleType registerSimple(String id)
 	{
-		return Registry.register(Registries.PARTICLE_TYPE, Gadgets.id(id), FabricParticleTypes.simple());
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, Gadgets.id(id), FabricParticleTypes.simple());
 	}
 
 	private static ParticleType<GasParticleEffect> registerGas(String id)
 	{
-		return Registry.register(Registries.PARTICLE_TYPE, Gadgets.id(id), FabricParticleTypes.complex(true, GasParticleEffect::createCodec, GasParticleEffect::createPacketCodec));
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, Gadgets.id(id), FabricParticleTypes.complex(true, GasParticleEffect::createCodec, GasParticleEffect::createPacketCodec));
 	}
 }

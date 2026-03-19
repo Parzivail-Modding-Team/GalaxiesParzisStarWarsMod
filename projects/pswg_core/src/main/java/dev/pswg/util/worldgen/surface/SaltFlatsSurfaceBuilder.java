@@ -3,10 +3,8 @@ package dev.pswg.util.worldgen.surface;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.util.worldgen.noise.OctaveNoise;
 import dev.pswg.util.worldgen.world.ChunkView;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-
 import java.util.Random;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class SaltFlatsSurfaceBuilder implements SurfaceBuilder
 {
@@ -16,8 +14,8 @@ public class SaltFlatsSurfaceBuilder implements SurfaceBuilder
 
 	public SaltFlatsSurfaceBuilder()
 	{
-		this.salt = new TwoStateSurfaceBuilder(GalaxiesBlocks.CAKED_SALT.getDefaultState(), 3, GalaxiesBlocks.SMOOTH_DESERT_SANDSTONE.getDefaultState(), 16);
-		this.desert = new TwoStateSurfaceBuilder(GalaxiesBlocks.CANYON_SAND.getDefaultState(), 3, GalaxiesBlocks.SMOOTH_DESERT_SANDSTONE.getDefaultState(), 16);
+		this.salt = new TwoStateSurfaceBuilder(GalaxiesBlocks.CAKED_SALT.defaultBlockState(), 3, GalaxiesBlocks.SMOOTH_DESERT_SANDSTONE.defaultBlockState(), 16);
+		this.desert = new TwoStateSurfaceBuilder(GalaxiesBlocks.CANYON_SAND.defaultBlockState(), 3, GalaxiesBlocks.SMOOTH_DESERT_SANDSTONE.defaultBlockState(), 16);
 
 		long seed = 100;
 		this.noise = new OctaveNoise(2, new Random(seed), 120, 80, 1.0, 2.0, 2.0);

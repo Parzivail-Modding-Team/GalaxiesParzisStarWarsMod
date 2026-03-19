@@ -2,12 +2,11 @@ package dev.pswg.util.worldgen.decoration;
 
 import dev.pswg.util.worldgen.noise.OctaveNoise;
 import dev.pswg.util.worldgen.world.WorldGenView;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 
 public record RockDecoration(BlockState state, Block test) implements Decoration
 {
@@ -15,7 +14,7 @@ public record RockDecoration(BlockState state, Block test) implements Decoration
 	@Override
 	public boolean generate(WorldGenView world, ChunkGenerator generator, Random random, BlockPos pos)
 	{
-		if (world.getBlockState(pos.down()).getBlock() != test)
+		if (world.getBlockState(pos.below()).getBlock() != test)
 		{
 			return false;
 		}
@@ -39,7 +38,7 @@ public record RockDecoration(BlockState state, Block test) implements Decoration
 						continue;
 					}
 
-					world.setBlockState(pos.add(x, y, z), state);
+					world.setBlockState(pos.offset(x, y, z), state);
 				}
 			}
 		}

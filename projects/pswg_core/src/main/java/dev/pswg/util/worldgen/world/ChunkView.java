@@ -1,18 +1,18 @@
 package dev.pswg.util.worldgen.world;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.Heightmap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 
-public interface ChunkView extends BlockView
+public interface ChunkView extends BlockGetter
 {
 	ChunkPos getChunkPos();
 
-	int sampleHeightmap(Heightmap.Type type, int x, int z);
+	int sampleHeightmap(Heightmap.Types type, int x, int z);
 
 	void setBlockState(BlockPos pos, BlockState state);
 

@@ -1,6 +1,6 @@
 package dev.pswg.interaction;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import org.joml.Vector3f;
 
 /**

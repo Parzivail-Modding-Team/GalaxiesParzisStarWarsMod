@@ -1,9 +1,8 @@
 package dev.pswg.block.collection;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.DyeColor;
-
 import java.util.function.Function;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
 
 public class DyedBlocks extends Dyed<Block>
 {

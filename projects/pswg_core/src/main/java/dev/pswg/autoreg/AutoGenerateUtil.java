@@ -6,12 +6,11 @@ import dev.pswg.container.GalaxiesItems;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.function.BiConsumer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public class AutoGenerateUtil
 {

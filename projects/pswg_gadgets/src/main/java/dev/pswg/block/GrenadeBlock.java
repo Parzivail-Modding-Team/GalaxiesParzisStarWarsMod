@@ -2,40 +2,40 @@ package dev.pswg.block;
 
 import dev.pswg.entity.grenades.GrenadeEntity;
 import dev.pswg.util.VoxelShapeUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCollisionHandler;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.block.WireOrientation;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class GrenadeBlock extends WaterloggableRotatingBlock
 {
-	public static final IntProperty CLUSTER_SIZE = IntProperty.of("cluster_size", 1, 5);
+	public static final IntegerProperty CLUSTER_SIZE = IntegerProperty.create("cluster_size", 1, 5);
 	public static final int MAX_CLUSTER_SIZE = 5;
 
 	/**
@@ -56,7 +56,7 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 		return null;
 	}
 
-	public GrenadeBlock(Settings settings)
+	public GrenadeBlock(Properties settings)
 	{
 		super(settings);
 	}
@@ -64,37 +64,37 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	public VoxelShape getSingleShape()
 	{
 
-		return VoxelShapes.empty();
+		return Shapes.empty();
 	}
 
 	public VoxelShape getDoubleShape()
 	{
 
-		return VoxelShapes.empty();
+		return Shapes.empty();
 	}
 
 	public VoxelShape getTripleShape()
 	{
 
-		return VoxelShapes.empty();
+		return Shapes.empty();
 	}
 
 	public VoxelShape getQuadrupleShape()
 	{
 
-		return VoxelShapes.empty();
+		return Shapes.empty();
 	}
 
 	public VoxelShape getQuintupleShape()
 	{
 
-		return VoxelShapes.empty();
+		return Shapes.empty();
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
 	{
-		var size = state.get(CLUSTER_SIZE);
+		var size = state.getValue(CLUSTER_SIZE);
 
 		var shape = switch (size)
 		{
@@ -104,108 +104,107 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 			case 2 -> getDoubleShape();
 			default -> getSingleShape();
 		};
-		return VoxelShapeUtil.rotateToFace(shape, state.get(FACING));
+		return VoxelShapeUtil.rotateToFace(shape, state.getValue(FACING));
 	}
 
 	@Override
-	protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify)
+	protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation wireOrientation, boolean notify)
 	{
-		super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+		super.neighborChanged(state, world, pos, sourceBlock, wireOrientation, notify);
 	}
 
 	@Override
-	protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
-		int count = state.get(CLUSTER_SIZE);
-		world.setBlockState(pos, Blocks.AIR.getDefaultState());
+		int count = state.getValue(CLUSTER_SIZE);
+		world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		for (int i = 0; i < count; i++)
 		{
-			GrenadeEntity grenade = getEntityType().create(world, SpawnReason.EVENT);
-			float rx = world.random.nextBetween(-7, 7) / 100f;
-			float rz = world.random.nextBetween(-7, 7) / 100f;
-			grenade.setPos(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
-			grenade.setVelocity(rx, -0.1f, rz);
+			GrenadeEntity grenade = getEntityType().create(world, EntitySpawnReason.EVENT);
+			float rx = world.random.nextIntBetweenInclusive(-7, 7) / 100f;
+			float rz = world.random.nextIntBetweenInclusive(-7, 7) / 100f;
+			grenade.setPosRaw(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
+			grenade.setDeltaMovement(rx, -0.1f, rz);
 			grenade.setPrimed(false);
-			world.spawnEntity(grenade);
+			world.addFreshEntity(grenade);
 		}
-		super.scheduledTick(state, world, pos, random);
 	}
 
 	@Override
-	protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random)
+	protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random)
 	{
 		if (neighborState.isAir() && direction == Direction.DOWN)
 		{
-			tickView.scheduleBlockTick(pos, asBlock(), 0);
+			tickView.scheduleTick(pos, asBlock(), 0);
 		}
-		return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+		return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
 	}
 
 	@Override
-	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
+	protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit)
 	{
-		if (player.getMainHandStack().isOf(getItem()) && !player.isSneaking())
+		if (player.getMainHandItem().is(getItem()) && !player.isShiftKeyDown())
 		{
-			if (state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE)
+			if (state.getValue(CLUSTER_SIZE) < MAX_CLUSTER_SIZE)
 			{
 				if (!player.isCreative())
-					player.getMainHandStack().decrement(1);
+					player.getMainHandItem().shrink(1);
 
-				world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
-				return ActionResult.SUCCESS;
+				world.setBlockAndUpdate(pos, state.setValue(CLUSTER_SIZE, state.getValue(CLUSTER_SIZE) + 1));
+				return InteractionResult.SUCCESS;
 			}
 			else
 			{
-				return ActionResult.PASS;
+				return InteractionResult.PASS;
 			}
 		}
 
-		player.giveItemStack(new ItemStack(getItem()));
+		player.addItem(new ItemStack(getItem()));
 
-		if (state.get(CLUSTER_SIZE) == 1)
-			world.breakBlock(pos, false);
+		if (state.getValue(CLUSTER_SIZE) == 1)
+			world.destroyBlock(pos, false);
 		else
-			world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) - 1));
+			world.setBlockAndUpdate(pos, state.setValue(CLUSTER_SIZE, state.getValue(CLUSTER_SIZE) - 1));
 
-		return ActionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl)
+	protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl)
 	{
 		if (entity instanceof GrenadeEntity grenade && entity.getType() == getEntityType())
 		{
-			if (state.get(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && !grenade.isPrimed())
+			if (state.getValue(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && !grenade.isPrimed())
 			{
-				world.setBlockState(pos, state.with(CLUSTER_SIZE, state.get(CLUSTER_SIZE) + 1));
+				world.setBlockAndUpdate(pos, state.setValue(CLUSTER_SIZE, state.getValue(CLUSTER_SIZE) + 1));
 				entity.discard();
 			}
 		}
-		super.onEntityCollision(state, world, pos, entity, handler, bl);
+		super.entityInside(state, world, pos, entity, handler, bl);
 	}
 
 	@Override
-	protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData)
+	protected ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData)
 	{
 		return new ItemStack(getItem());
 	}
 
 	@Override
-	public boolean canReplace(BlockState state, ItemPlacementContext context)
+	public boolean canBeReplaced(BlockState state, BlockPlaceContext context)
 	{
 		return false;
 	}
 
 	@Override
-	public void onDestroyedByExplosion(ServerWorld world, BlockPos pos, Explosion explosion)
+	public void wasExploded(ServerLevel world, BlockPos pos, Explosion explosion)
 	{
 		float power;
-		if (world.getBlockState(pos).contains(CLUSTER_SIZE))
-			power = calculatePower(world.getBlockState(pos).get(CLUSTER_SIZE));
+		if (world.getBlockState(pos).hasProperty(CLUSTER_SIZE))
+			power = calculatePower(world.getBlockState(pos).getValue(CLUSTER_SIZE));
 		else
 			power = 5;
 		explode(world, pos, power);
-		super.onDestroyedByExplosion(world, pos, explosion);
+		super.wasExploded(world, pos, explosion);
 	}
 
 	public int calculatePower(int grenadeCount)
@@ -213,23 +212,23 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 		return grenadeCount;
 	}
 
-	public void explode(World world, BlockPos blockPos, float explosionPower)
+	public void explode(Level world, BlockPos blockPos, float explosionPower)
 	{
-		var grenade = getEntityType().create(world, SpawnReason.EVENT);
+		var grenade = getEntityType().create(world, EntitySpawnReason.EVENT);
 		grenade.setExplosionPower(explosionPower);
-		grenade.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+		grenade.setPosRaw(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 		grenade.setPrimed(true);
 		grenade.setLife(0);
 
-		world.setBlockState(blockPos, Blocks.AIR.getDefaultState());
+		world.setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
 
-		world.spawnEntity(grenade);
+		world.addFreshEntity(grenade);
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
 	{
-		super.appendProperties(builder);
+		super.createBlockStateDefinition(builder);
 		builder.add(CLUSTER_SIZE);
 	}
 }

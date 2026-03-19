@@ -3,17 +3,16 @@ package dev.pswg.interaction;
 import dev.pswg.item.ILeftClickUsable;
 import dev.pswg.networking.PlayerInteractItemLeftC2SPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.ServerPlayerInteractionManager;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.GameMode;
-import net.minecraft.world.World;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerPlayerGameMode;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import java.util.Objects;
 
 /**
@@ -37,64 +36,64 @@ public final class GalaxiesEntityLeftClickManager
 		context.server().execute(() -> {
 			var player = context.player();
 
-			ServerWorld serverWorld = player.getEntityWorld();
-			Hand hand = packet.hand();
-			ItemStack itemStack = player.getStackInHand(hand);
-			player.updateLastActionTime();
+			ServerLevel serverWorld = player.level();
+			InteractionHand hand = packet.hand();
+			ItemStack itemStack = player.getItemInHand(hand);
+			player.resetLastActionTime();
 
-			if (!itemStack.isEmpty() && itemStack.isItemEnabled(serverWorld.getEnabledFeatures()))
+			if (!itemStack.isEmpty() && itemStack.isItemEnabled(serverWorld.enabledFeatures()))
 			{
-				float f = MathHelper.wrapDegrees(packet.yaw());
-				float g = MathHelper.wrapDegrees(packet.pitch());
+				float f = Mth.wrapDegrees(packet.yaw());
+				float g = Mth.wrapDegrees(packet.pitch());
 
-				if (g != player.getPitch() || f != player.getYaw())
+				if (g != player.getXRot() || f != player.getYRot())
 				{
-					player.setAngles(f, g);
+					player.absSnapRotationTo(f, g);
 				}
 
-				var result = interactItemLeft(player.interactionManager, player, serverWorld, itemStack, hand, packet.repeat());
-				if (result instanceof ActionResult.Success success && success.swingSource() == ActionResult.SwingSource.SERVER)
+				var result = interactItemLeft(player.gameMode, player, serverWorld, itemStack, hand, packet.repeat());
+				if (result instanceof InteractionResult.Success success && success.swingSource() == InteractionResult.SwingSource.SERVER)
 				{
-					player.swingHand(hand, true);
+					player.swing(hand, true);
 				}
 			}
 		});
 	}
 
 	/**
-	 * Emulates the {@link ServerPlayerInteractionManager#interactItem} functionality for
+	 * Emulates the {@link ServerPlayerGameMode#useItem} functionality for
 	 * left-use items
 	 */
-	private static ActionResult interactItemLeft(ServerPlayerInteractionManager interactionManager, ServerPlayerEntity player, ServerWorld world, ItemStack stack, Hand hand, boolean repeatEvent)
+	private static InteractionResult interactItemLeft(ServerPlayerGameMode interactionManager, ServerPlayer player, ServerLevel world, ItemStack stack, InteractionHand hand, boolean repeatEvent)
 	{
-		if (interactionManager.getGameMode() == GameMode.SPECTATOR)
+		if (interactionManager.getGameModeForPlayer() == GameType.SPECTATOR)
 		{
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 		}
 		else
 		{
 			if (!(stack.getItem() instanceof ILeftClickUsable leftItem) || !(player instanceof ILeftClickingEntity leftClickingEntity))
-				return ActionResult.PASS;
+				return InteractionResult.PASS;
 
 			int i = stack.getCount();
-			int j = stack.getDamage();
+			int j = stack.getDamageValue();
 
-			ActionResult actionResult = useLeft(world, player, hand, stack, repeatEvent);
+			InteractionResult actionResult = useLeft(world, player, hand, stack, repeatEvent);
 			ItemStack itemStack;
-			if (actionResult instanceof ActionResult.Success success)
+			if (actionResult instanceof InteractionResult.Success success)
 			{
-				itemStack = Objects.requireNonNullElse(success.getNewHandStack(), player.getStackInHand(hand));
+				itemStack = Objects.requireNonNullElse(success.heldItemTransformedTo(), player.getItemInHand(hand));
 			}
 			else
 			{
-				itemStack = player.getStackInHand(hand);
+				itemStack = player.getItemInHand(hand);
 			}
 
-			if (itemStack == stack && itemStack.getCount() == i && leftItem.getMaxUseLeftTime(itemStack, player) <= 0 && itemStack.getDamage() == j)
+			if (itemStack == stack && itemStack.getCount() == i && leftItem.getMaxUseLeftTime(itemStack, player) <= 0 && itemStack.getDamageValue() == j)
 			{
 				return actionResult;
 			}
-			else if (actionResult instanceof ActionResult.Fail && leftItem.getMaxUseLeftTime(itemStack, player) > 0 && !leftClickingEntity.pswg$isLeftUsingItem())
+			else if (actionResult instanceof InteractionResult.Fail && leftItem.getMaxUseLeftTime(itemStack, player) > 0 && !leftClickingEntity.pswg$isLeftUsingItem())
 			{
 				return actionResult;
 			}
@@ -102,17 +101,17 @@ public final class GalaxiesEntityLeftClickManager
 			{
 				if (stack != itemStack)
 				{
-					player.setStackInHand(hand, itemStack);
+					player.setItemInHand(hand, itemStack);
 				}
 
 				if (itemStack.isEmpty())
 				{
-					player.setStackInHand(hand, ItemStack.EMPTY);
+					player.setItemInHand(hand, ItemStack.EMPTY);
 				}
 
 				if (!leftClickingEntity.pswg$isLeftUsingItem())
 				{
-					player.playerScreenHandler.syncState();
+					player.inventoryMenu.sendAllDataToRemote();
 				}
 
 				return actionResult;
@@ -123,28 +122,28 @@ public final class GalaxiesEntityLeftClickManager
 	/**
 	 * Emulates the {@link ItemStack#use} functionality for left-use items
 	 */
-	static ActionResult useLeft(World world, PlayerEntity user, Hand hand, ItemStack stack, boolean repeatEvent)
+	static InteractionResult useLeft(Level world, Player user, InteractionHand hand, ItemStack stack, boolean repeatEvent)
 	{
 		if (!(stack.getItem() instanceof ILeftClickUsable leftItem))
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 
 		boolean isInstantUseItem = leftItem.getMaxUseLeftTime(stack, user) <= 0;
-		ActionResult actionResult = leftItem.useLeft(world, user, hand, repeatEvent);
+		InteractionResult actionResult = leftItem.useLeft(world, user, hand, repeatEvent);
 
-		if (isInstantUseItem && actionResult instanceof ActionResult.Success success)
-			return success.withNewHandStack(success.getNewHandStack() == null ? stack : success.getNewHandStack());
+		if (isInstantUseItem && actionResult instanceof InteractionResult.Success success)
+			return success.heldItemTransformedTo(success.heldItemTransformedTo() == null ? stack : success.heldItemTransformedTo());
 
 		return actionResult;
 	}
 
 	/**
-	 * Invokes the emulated {@link PlayerEntity#stopUsingItem} functionality for left-use items
+	 * Invokes the emulated {@link Player#releaseUsingItem} functionality for left-use items
 	 */
 	public static void handleReleaseUseItem(ServerPlayNetworking.Context context)
 	{
 		context.server().execute(() -> {
 			var player = context.player();
-			player.updateLastActionTime();
+			player.resetLastActionTime();
 
 			if (!(player instanceof ILeftClickingEntity leftClickingEntity))
 				return;

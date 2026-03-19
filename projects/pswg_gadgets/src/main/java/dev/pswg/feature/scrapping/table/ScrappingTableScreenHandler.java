@@ -3,41 +3,41 @@ package dev.pswg.feature.scrapping.table;
 import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeFinder;
-import net.minecraft.recipe.RecipeInputProvider;
-import net.minecraft.recipe.book.RecipeBookType;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedItemContents;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.StackedContentsCompatible;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
 
-public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
+public class ScrappingTableScreenHandler extends RecipeBookMenu
 {
-	private final Inventory inventory;
-	private final PlayerInventory playerInventory;
-	private final PropertyDelegate propertyDelegate;
-	protected final World world;
+	private final Container inventory;
+	private final Inventory playerInventory;
+	private final ContainerData propertyDelegate;
+	protected final Level world;
 	public final int MAX_TOOL_PROGRESS = 480;
 
-	public ScrappingTableScreenHandler(int syncId, PlayerInventory playerInventory)
+	public ScrappingTableScreenHandler(int syncId, Inventory playerInventory)
 	{
-		this(syncId, playerInventory, new SimpleInventory(10), new ArrayPropertyDelegate(3));
+		this(syncId, playerInventory, new SimpleContainer(10), new SimpleContainerData(3));
 	}
 
-	public ScrappingTableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate)
+	public ScrappingTableScreenHandler(int syncId, Inventory playerInventory, Container inventory, ContainerData propertyDelegate)
 	{
 		super(GadgetsScreenHandlerTypes.SCRAPPING_TABLE, syncId);
 		this.inventory = inventory;
 		this.playerInventory = playerInventory;
-		this.world = playerInventory.player.getEntityWorld();
+		this.world = playerInventory.player.level();
 		this.propertyDelegate = propertyDelegate;
 		///  Cutter
 		this.addSlot(new ToolSlot(inventory, 0, 6, 46, GadgetsItems.CUTTER_ITEM));
@@ -55,9 +55,9 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 		this.addSlot(new OutputSlot(inventory, 8, 129, 90));
 		this.addSlot(new OutputSlot(inventory, 9, 150, 90));
 
-		this.addPlayerSlots(playerInventory, 8, 124);
+		this.addStandardInventorySlots(playerInventory, 8, 124);
 
-		this.addProperties(propertyDelegate);
+		this.addDataSlots(propertyDelegate);
 	}
 
 	public int getCutterProgress()
@@ -82,16 +82,16 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 
 	public ItemStack getInputItem()
 	{
-		return inventory.getStack(3);
+		return inventory.getItem(3);
 	}
 
 	@Override
-	public boolean onButtonClick(PlayerEntity player, int id)
+	public boolean clickMenuButton(Player player, int id)
 	{
 		if (id >= 0 && id < 3)
 		{
-			ItemStack stack = inventory.getStack(id);
-			int efficiency = (int)(100 - ((float)stack.getOrDefault(DataComponentTypes.DAMAGE, 0) / (float)stack.getOrDefault(DataComponentTypes.MAX_DAMAGE, 1) * 75));
+			ItemStack stack = inventory.getItem(id);
+			int efficiency = (int)(100 - ((float)stack.getOrDefault(DataComponents.DAMAGE, 0) / (float)stack.getOrDefault(DataComponents.MAX_DAMAGE, 1) * 75));
 			switch (id)
 			{
 				case 0:
@@ -108,59 +108,59 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 			}
 			return true;
 		}
-		return super.onButtonClick(player, id);
+		return super.clickMenuButton(player, id);
 	}
 
 
 	@Override
-	public PostFillAction fillInputSlots(boolean craftAll, boolean creative, RecipeEntry<?> recipe, ServerWorld world, PlayerInventory inventory)
+	public PostPlaceAction handlePlacement(boolean craftAll, boolean creative, RecipeHolder<?> recipe, ServerLevel world, Inventory inventory)
 	{
-		return PostFillAction.NOTHING;
+		return PostPlaceAction.NOTHING;
 	}
 
 	@Override
-	public void populateRecipeFinder(RecipeFinder finder)
+	public void fillCraftSlotsStackedContents(StackedItemContents finder)
 	{
-		if (this.inventory instanceof RecipeInputProvider recipeInputProvider)
+		if (this.inventory instanceof StackedContentsCompatible recipeInputProvider)
 		{
-			recipeInputProvider.provideRecipeInputs(finder);
+			recipeInputProvider.fillStackedContents(finder);
 		}
 	}
 
 	@Override
-	public RecipeBookType getCategory()
+	public RecipeBookType getRecipeBookType()
 	{
 		return RecipeBookType.CRAFTING;
 	}
 
 	@Override
-	public ItemStack quickMove(PlayerEntity player, int index)
+	public ItemStack quickMoveStack(Player player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;
 		var slot = this.slots.get(index);
-		if (slot != null && slot.hasStack())
+		if (slot != null && slot.hasItem())
 		{
-			var slotStack = slot.getStack();
+			var slotStack = slot.getItem();
 			itemStack = slotStack.copy();
-			if (index < this.inventory.size())
+			if (index < this.inventory.getContainerSize())
 			{
-				if (!this.insertItem(slotStack, this.inventory.size(), this.slots.size(), true))
+				if (!this.moveItemStackTo(slotStack, this.inventory.getContainerSize(), this.slots.size(), true))
 				{
 					return ItemStack.EMPTY;
 				}
 			}
-			else if (!this.insertItem(slotStack, 0, this.inventory.size(), false))
+			else if (!this.moveItemStackTo(slotStack, 0, this.inventory.getContainerSize(), false))
 			{
 				return ItemStack.EMPTY;
 			}
 
 			if (slotStack.isEmpty())
 			{
-				slot.setStack(ItemStack.EMPTY);
+				slot.setByPlayer(ItemStack.EMPTY);
 			}
 			else
 			{
-				slot.markDirty();
+				slot.setChanged();
 			}
 		}
 
@@ -168,8 +168,8 @@ public class ScrappingTableScreenHandler extends AbstractRecipeScreenHandler
 	}
 
 	@Override
-	public boolean canUse(PlayerEntity player)
+	public boolean stillValid(Player player)
 	{
-		return this.inventory.canPlayerUse(player);
+		return this.inventory.stillValid(player);
 	}
 }

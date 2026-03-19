@@ -1,66 +1,66 @@
 package dev.pswg.block;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.block.WireOrientation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 public class InvertedLampBlock extends Block
 {
-	public static final BooleanProperty LIT = Properties.LIT;
-	public static final BooleanProperty POWERED = Properties.POWERED;
-	public static final BooleanProperty INVERTED = Properties.INVERTED;
+	public static final BooleanProperty LIT = BlockStateProperties.LIT;
+	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+	public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
 
 	public static boolean isLit(BlockState state)
 	{
-		return state.get(POWERED) ^ state.get(INVERTED);
+		return state.getValue(POWERED) ^ state.getValue(INVERTED);
 	}
 
-	public InvertedLampBlock(AbstractBlock.Settings settings)
+	public InvertedLampBlock(BlockBehaviour.Properties settings)
 	{
 		super(settings);
-		this.setDefaultState(this.getDefaultState().with(POWERED, false).with(INVERTED, true).with(LIT, true));
+		this.registerDefaultState(this.defaultBlockState().setValue(POWERED, false).setValue(INVERTED, true).setValue(LIT, true));
 	}
 
 	@Override
 	@Nullable
-	public BlockState getPlacementState(ItemPlacementContext ctx)
+	public BlockState getStateForPlacement(BlockPlaceContext ctx)
 	{
-		return this.getDefaultState().with(POWERED, ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()));
+		return this.defaultBlockState().setValue(POWERED, ctx.getLevel().hasNeighborSignal(ctx.getClickedPos()));
 	}
 
 	@Override
-	protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify)
+	protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation wireOrientation, boolean notify)
 	{
-		if (!world.isClient())
-			updateState(state.with(POWERED, world.isReceivingRedstonePower(pos)), world, pos);
-		super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+		if (!world.isClientSide())
+			updateState(state.setValue(POWERED, world.hasNeighborSignal(pos)), world, pos);
+		super.neighborChanged(state, world, pos, sourceBlock, wireOrientation, notify);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
-		if (state.get(POWERED) && !world.isReceivingRedstonePower(pos))
+		if (state.getValue(POWERED) && !world.hasNeighborSignal(pos))
 			updateState(state.cycle(POWERED), world, pos);
 	}
 
-	protected static boolean updateState(BlockState state, World world, BlockPos pos)
+	protected static boolean updateState(BlockState state, Level world, BlockPos pos)
 	{
-		state = state.with(LIT, isLit(state));
-		return world.setBlockState(pos, state, Block.NOTIFY_LISTENERS | Block.NOTIFY_NEIGHBORS);
+		state = state.setValue(LIT, isLit(state));
+		return world.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS);
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
 	{
 		builder.add(LIT, POWERED, INVERTED);
 	}

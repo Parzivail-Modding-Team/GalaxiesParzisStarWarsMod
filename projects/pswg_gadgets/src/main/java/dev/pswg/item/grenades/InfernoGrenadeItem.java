@@ -5,12 +5,12 @@ import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.entity.grenades.InfernoGrenadeEntity;
 import dev.pswg.entity.grenades.ThermalDetonatorEntity;
 import dev.pswg.item.ThermalDetonatorSoundGroup;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 
 public class InfernoGrenadeItem extends GrenadeItem
 {
-	public InfernoGrenadeItem(Item.Settings settings)
+	public InfernoGrenadeItem(Item.Properties settings)
 	{
 		super(settings, GadgetsItems.INFERNO_GRENADE_ITEM, 80, new ThermalDetonatorSoundGroup());
 	}

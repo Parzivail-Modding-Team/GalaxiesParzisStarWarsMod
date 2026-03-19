@@ -1,11 +1,11 @@
 package dev.pswg.networking;
 
 import dev.pswg.Galaxies;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Hand;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.InteractionHand;
 
 /**
  * Encapsulates a fire-and-forget C2S player use-left item interaction
@@ -15,24 +15,24 @@ import net.minecraft.util.Hand;
  * @param pitch  The player's pitch at the time of the interaction
  * @param repeat Whether the input event was a repeat event
  */
-public record PlayerInteractItemLeftC2SPacket(Hand hand, float yaw, float pitch, boolean repeat) implements CustomPayload
+public record PlayerInteractItemLeftC2SPacket(InteractionHand hand, float yaw, float pitch, boolean repeat) implements CustomPacketPayload
 {
-	public static final CustomPayload.Id<PlayerInteractItemLeftC2SPacket> ID = new CustomPayload.Id<>(Galaxies.id("use_item_left"));
+	public static final CustomPacketPayload.Type<PlayerInteractItemLeftC2SPacket> ID = new CustomPacketPayload.Type<>(Galaxies.id("use_item_left"));
 
-	public static final PacketCodec<RegistryByteBuf, PlayerInteractItemLeftC2SPacket> CODEC = PacketCodec.tuple(
+	public static final StreamCodec<RegistryFriendlyByteBuf, PlayerInteractItemLeftC2SPacket> CODEC = StreamCodec.composite(
 			GalaxiesPacketCodecs.HAND,
 			PlayerInteractItemLeftC2SPacket::hand,
-			PacketCodecs.FLOAT,
+			ByteBufCodecs.FLOAT,
 			PlayerInteractItemLeftC2SPacket::yaw,
-			PacketCodecs.FLOAT,
+			ByteBufCodecs.FLOAT,
 			PlayerInteractItemLeftC2SPacket::pitch,
-			PacketCodecs.BOOLEAN,
+			ByteBufCodecs.BOOL,
 			PlayerInteractItemLeftC2SPacket::repeat,
 			PlayerInteractItemLeftC2SPacket::new
 	);
 
 	@Override
-	public CustomPayload.Id<? extends CustomPayload> getId()
+	public CustomPacketPayload.Type<? extends CustomPacketPayload> type()
 	{
 		return ID;
 	}

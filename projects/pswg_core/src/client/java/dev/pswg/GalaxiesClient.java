@@ -10,6 +10,7 @@ import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
 import dev.pswg.item.SwgDrinkTintSource;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
+import dev.pswg.networking.IPreciseSpawnDataEntity;
 import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particle.ShortFlameParticle;
 import dev.pswg.particle.SmallFlashParticle;
@@ -21,16 +22,14 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.Generic3x3ContainerScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.item.tint.TintSourceTypes;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import java.util.Optional;
 
 /**
@@ -38,7 +37,7 @@ import java.util.Optional;
  */
 public class GalaxiesClient implements ClientModInitializer
 {
-	private static final MinecraftClient client = MinecraftClient.getInstance();
+	private static final Minecraft client = Minecraft.getInstance();
 
 	/**
 	 * A resource loader for quad buffer files
@@ -64,7 +63,7 @@ public class GalaxiesClient implements ClientModInitializer
 	 */
 	public static float getTickDelta()
 	{
-		return client.getRenderTickCounter().getTickProgress(false);
+		return client.getDeltaTracker().getGameTimeDeltaPartialTick(false);
 	}
 
 	/**
@@ -75,9 +74,9 @@ public class GalaxiesClient implements ClientModInitializer
 	 *
 	 * @return A translatable text with the keybind value and hint text
 	 */
-	public static Text getKeybindHint(KeyBinding keyBinding, Text hint)
+	public static Component getKeybindHint(KeyMapping keyBinding, Component hint)
 	{
-		return Text.translatable(I18N_KEYBIND_HINT_KEY, keyBinding.getBoundKeyLocalizedText(), hint);
+		return Component.translatable(I18N_KEYBIND_HINT_KEY, keyBinding.getTranslatedKeyMessage(), hint);
 	}
 
 	/**
@@ -87,7 +86,7 @@ public class GalaxiesClient implements ClientModInitializer
 	 *
 	 * @return The translation key for the given identifier
 	 */
-	public static String getI18nKey(Identifier identifier)
+	public static String getI18nKey(ResourceLocation identifier)
 	{
 		return String.format("text.%s.%s", identifier.getNamespace(), identifier.getPath());
 	}
@@ -103,8 +102,22 @@ public class GalaxiesClient implements ClientModInitializer
 		// Forward spawn packets to the network handler
 		ClientPlayNetworking.registerGlobalReceiver(GalaxiesEntitySpawnS2CPacket.ID, (galaxiesEntitySpawnS2CPacket, context) -> {
 			Optional.ofNullable(context.client())
-			        .map(MinecraftClient::getNetworkHandler)
-			        .ifPresent(handler -> handler.onEntitySpawn(galaxiesEntitySpawnS2CPacket));
+			        .map(Minecraft::getConnection)
+			        .ifPresent(handler -> {
+				        handler.handleAddEntity(galaxiesEntitySpawnS2CPacket.toVanillaPacket());
+
+				        var world = context.client().level;
+				        if (world == null)
+				        {
+					        return;
+				        }
+
+				        var entity = world.getEntity(galaxiesEntitySpawnS2CPacket.getEntityId());
+				        if (entity instanceof IPreciseSpawnDataEntity preciseSpawnDataEntity)
+				        {
+					        preciseSpawnDataEntity.applySpawnData(galaxiesEntitySpawnS2CPacket);
+				        }
+			        });
 		});
 
 		ClientPlayNetworking.registerGlobalReceiver(PreciseVelocityParticleS2CPayload.ID, (preciseVelocityParticleS2CPayload, context) -> {
@@ -114,16 +127,16 @@ public class GalaxiesClient implements ClientModInitializer
 			double vX = preciseVelocityParticleS2CPayload.velocityVector().x;
 			double vY = preciseVelocityParticleS2CPayload.velocityVector().y;
 			double vZ = preciseVelocityParticleS2CPayload.velocityVector().z;
-			ParticleEffect particleEffect = preciseVelocityParticleS2CPayload.particleEffect();
-			context.client().particleManager.addParticle(particleEffect, x, y, z, vX, vY, vZ);
+			ParticleOptions particleEffect = preciseVelocityParticleS2CPayload.particleEffect();
+			context.client().particleEngine.createParticle(particleEffect, x, y, z, vX, vY, vZ);
 		});
 
 		// Register the quad buffer loader
-		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(GQB_LOADER.getId(), GQB_LOADER);
-		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).addReloaderOrdering(GQB_LOADER.getId(), ResourceReloaderKeys.Client.MODELS);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(GQB_LOADER.getId(), GQB_LOADER);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).addReloaderOrdering(GQB_LOADER.getId(), ResourceReloaderKeys.Client.MODELS);
 
 		//Register tints
-		TintSourceTypes.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);
+		ItemTintSources.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);
 
 		// Register particles
 		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);
@@ -131,7 +144,7 @@ public class GalaxiesClient implements ClientModInitializer
 		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SHORT_FLAME_PARTICLE, ShortFlameParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_SHORT_FLAME_PARTICLE, ShortFlameParticle.SmallFactory::new);
 
-		HandledScreens.register(GalaxiesScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
+		MenuScreens.register(GalaxiesScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
 
 		GalaxiesRenderLayers.init();
 

@@ -1,8 +1,5 @@
 package dev.pswg.feature.brewing;
 
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -11,6 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
 
 public class BrewingMap
 {
@@ -58,15 +58,15 @@ public class BrewingMap
 			case 'e':
 			{
 				List<String> args = Arrays.stream(string.split("\\.")).toList();
-				var effect = Registries.STATUS_EFFECT.getEntry(Identifier.of(args.get(1))).get();
-				cell = new EffectCell(new StatusEffectInstance(effect, Integer.parseInt(args.get(3)), args.get(2).charAt(0) - '1', false, false, true), BrewingCellType.Potion);
+				var effect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(args.get(1))).get();
+				cell = new EffectCell(new MobEffectInstance(effect, Integer.parseInt(args.get(3)), args.get(2).charAt(0) - '1', false, false, true), BrewingCellType.Potion);
 				break;
 			}
 			case 'd':
 			{
 				List<String> args = Arrays.stream(string.split("\\.")).toList();
-				var effect = Registries.STATUS_EFFECT.getEntry(Identifier.of(args.get(1))).get();
-				cell = new EffectCell(new StatusEffectInstance(effect, Integer.parseInt(args.get(3)), args.get(2).charAt(0) - '1', false, false, true), BrewingCellType.Danger);
+				var effect = BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(args.get(1))).get();
+				cell = new EffectCell(new MobEffectInstance(effect, Integer.parseInt(args.get(3)), args.get(2).charAt(0) - '1', false, false, true), BrewingCellType.Danger);
 				break;
 			}
 		}

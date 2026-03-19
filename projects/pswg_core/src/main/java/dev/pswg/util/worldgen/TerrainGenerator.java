@@ -8,16 +8,15 @@ import dev.pswg.util.worldgen.world.ChunkView;
 import dev.pswg.util.worldgen.world.WorldGenView;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleOpenHashMap;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public final class TerrainGenerator
 {
@@ -50,15 +49,15 @@ public final class TerrainGenerator
 
 	private void buildMinecraftChunk(MinecraftChunkView chunk, double[][] noises)
 	{
-		Heightmap floor = chunk.chunk().getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG);
-		Heightmap surface = chunk.chunk().getHeightmap(Heightmap.Type.WORLD_SURFACE_WG);
+		Heightmap floor = chunk.chunk().getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG);
+		Heightmap surface = chunk.chunk().getOrCreateHeightmapUnprimed(Heightmap.Types.WORLD_SURFACE_WG);
 		for (int nX = 0; nX < 4; nX++)
 		{
 			for (int nZ = 0; nZ < 4; nZ++)
 			{
 				for (int nY = 47; nY >= 0; nY--)
 				{
-					ChunkSection section = chunk.chunk().getSectionArray()[nY >> 1];
+					LevelChunkSection section = chunk.chunk().getSections()[nY >> 1];
 
 					double x0y0z0 = noises[getNoiseIndex(nX, nZ)][nY];
 					double x1y0z0 = noises[getNoiseIndex(nX + 1, nZ)][nY];
@@ -75,30 +74,30 @@ public final class TerrainGenerator
 						double yP = pY / 8.0;
 						int rY = (nY * 8 + pY) - 64;
 
-						double x0z0 = MathHelper.lerp(yP, x0y0z0, x0y1z0);
-						double x1z0 = MathHelper.lerp(yP, x1y0z0, x1y1z0);
-						double x0z1 = MathHelper.lerp(yP, x0y0z1, x0y1z1);
-						double x1z1 = MathHelper.lerp(yP, x1y0z1, x1y1z1);
+						double x0z0 = Mth.lerp(yP, x0y0z0, x0y1z0);
+						double x1z0 = Mth.lerp(yP, x1y0z0, x1y1z0);
+						double x0z1 = Mth.lerp(yP, x0y0z1, x0y1z1);
+						double x1z1 = Mth.lerp(yP, x1y0z1, x1y1z1);
 
 						for (int pX = 0; pX < 4; pX++)
 						{
 							double xP = pX / 4.0;
 							int rX = nX * 4 + pX;
 
-							double z0 = MathHelper.lerp(xP, x0z0, x1z0);
-							double z1 = MathHelper.lerp(xP, x0z1, x1z1);
+							double z0 = Mth.lerp(xP, x0z0, x1z0);
+							double z1 = Mth.lerp(xP, x0z1, x1z1);
 
 							for (int pZ = 0; pZ < 4; pZ++)
 							{
 								double zP = pZ / 4.0;
 								int rZ = nZ * 4 + pZ;
 
-								double noise = MathHelper.lerp(zP, z0, z1);
+								double noise = Mth.lerp(zP, z0, z1);
 
-								BlockState state = noise > 0 ? geology : Blocks.AIR.getDefaultState();
+								BlockState state = noise > 0 ? geology : Blocks.AIR.defaultBlockState();
 
-								floor.trackUpdate(rX, rY, rZ, state);
-								surface.trackUpdate(rX, rY, rZ, state);
+								floor.update(rX, rY, rZ, state);
+								surface.update(rX, rY, rZ, state);
 
 								section.setBlockState(rX, rY & 15, rZ, state, false);
 							}
@@ -113,7 +112,7 @@ public final class TerrainGenerator
 
 	private void buildGenericChunk(ChunkView chunk, double[][] noises)
 	{
-		BlockPos.Mutable pos = new BlockPos.Mutable();
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 		for (int nX = 0; nX < 4; nX++)
 		{
 			for (int nZ = 0; nZ < 4; nZ++)
@@ -135,28 +134,28 @@ public final class TerrainGenerator
 						double yP = pY / 8.0;
 						int rY = (nY * 8 + pY) - 64;
 
-						double x0z0 = MathHelper.lerp(yP, x0y0z0, x0y1z0);
-						double x1z0 = MathHelper.lerp(yP, x1y0z0, x1y1z0);
-						double x0z1 = MathHelper.lerp(yP, x0y0z1, x0y1z1);
-						double x1z1 = MathHelper.lerp(yP, x1y0z1, x1y1z1);
+						double x0z0 = Mth.lerp(yP, x0y0z0, x0y1z0);
+						double x1z0 = Mth.lerp(yP, x1y0z0, x1y1z0);
+						double x0z1 = Mth.lerp(yP, x0y0z1, x0y1z1);
+						double x1z1 = Mth.lerp(yP, x1y0z1, x1y1z1);
 
 						for (int pX = 0; pX < 4; pX++)
 						{
 							double xP = pX / 4.0;
 							int rX = nX * 4 + pX;
 
-							double z0 = MathHelper.lerp(xP, x0z0, x1z0);
-							double z1 = MathHelper.lerp(xP, x0z1, x1z1);
+							double z0 = Mth.lerp(xP, x0z0, x1z0);
+							double z1 = Mth.lerp(xP, x0z1, x1z1);
 
 							for (int pZ = 0; pZ < 4; pZ++)
 							{
 								double zP = pZ / 4.0;
 								int rZ = nZ * 4 + pZ;
 
-								double noise = MathHelper.lerp(zP, z0, z1);
+								double noise = Mth.lerp(zP, z0, z1);
 
 								pos.set(rX, rY, rZ);
-								chunk.setBlockState(pos, noise > 0 ? geology : Blocks.AIR.getDefaultState());
+								chunk.setBlockState(pos, noise > 0 ? geology : Blocks.AIR.defaultBlockState());
 							}
 						}
 					}
@@ -212,8 +211,8 @@ public final class TerrainGenerator
 				// TODO: biome interpolator class
 				TerrainBiome biome = biomes.getBiome(cx * 4 + (x >> 2), cz * 4 + (z >> 2));
 				random.setSeed((cx * 16L + x) * 341873128712L + (cz * 16L + z) * 132897987541L);
-				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z);
-				biome.surface().build(chunk, cx * 16 + x, cz * 16 + z, height, random, geology, Blocks.WATER.getDefaultState());
+				int height = chunk.sampleHeightmap(Heightmap.Types.WORLD_SURFACE_WG, x, z);
+				biome.surface().build(chunk, cx * 16 + x, cz * 16 + z, height, random, geology, Blocks.WATER.defaultBlockState());
 			}
 		}
 	}
@@ -229,7 +228,7 @@ public final class TerrainGenerator
 		{
 			setDecoratorSeed(random, popSeed, 1, ++i);
 
-			decoration.generate(world, this.cg, random, chunk.getChunkPos().getStartPos());
+			decoration.generate(world, this.cg, random, chunk.getChunkPos().getWorldPosition());
 		}
 	}
 

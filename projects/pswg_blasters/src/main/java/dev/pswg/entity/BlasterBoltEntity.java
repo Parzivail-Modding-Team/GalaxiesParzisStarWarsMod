@@ -2,41 +2,42 @@ package dev.pswg.entity;
 
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
 import dev.pswg.networking.GalaxiesNetworking;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.network.EntityTrackerEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.NbtReadView;
-import net.minecraft.storage.NbtWriteView;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.ErrorReporter;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import dev.pswg.networking.IPreciseSpawnDataEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
-public class BlasterBoltEntity extends Entity
+public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 {
-	public BlasterBoltEntity(EntityType<?> type, World world)
+	public BlasterBoltEntity(EntityType<?> type, Level world)
 	{
 		super(type, world);
 	}
 
 	@Override
-	protected void initDataTracker(DataTracker.Builder builder)
+	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
 	}
 
 	@Override
-	public boolean damage(ServerWorld world, DamageSource source, float amount)
+	public boolean hurtServer(ServerLevel world, DamageSource source, float amount)
 	{
 		return false;
 	}
@@ -44,15 +45,15 @@ public class BlasterBoltEntity extends Entity
 	@Override
 	public void tick()
 	{
-		HitResult hitResult = ProjectileUtil.getCollision(this, this::canHit);
-		Vec3d nextPos;
+		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHit);
+		Vec3 nextPos;
 
 		if (hitResult.getType() != HitResult.Type.MISS)
-			nextPos = hitResult.getPos();
+			nextPos = hitResult.getLocation();
 		else
-			nextPos = this.getEntityPos().add(this.getVelocity());
+			nextPos = this.position().add(this.getDeltaMovement());
 
-		this.setPosition(nextPos);
+		this.setPos(nextPos);
 
 		super.tick();
 
@@ -61,7 +62,7 @@ public class BlasterBoltEntity extends Entity
 			this.hitOrDeflect(hitResult);
 		}
 
-		if (this.age > 20)
+		if (this.tickCount > 20)
 			discard();
 	}
 
@@ -109,47 +110,49 @@ public class BlasterBoltEntity extends Entity
 	}
 
 	@Override
-	public void onSpawnPacket(EntitySpawnS2CPacket packet)
+	public void recreateFromPacket(ClientboundAddEntityPacket packet)
 	{
-		super.onSpawnPacket(packet);
+		super.recreateFromPacket(packet);
 
-		float yaw = packet.getYaw();
-		float pitch = packet.getPitch();
-		setAngles(yaw, pitch);
-
-		if (packet instanceof GalaxiesEntitySpawnS2CPacket precisePacket)
-		{
-			setVelocity(precisePacket.getVelocity());
-
-			var nbt = precisePacket.getCustomData(this, NbtCompound.CODEC).getOrThrow();
-			var readView = NbtReadView.create(ErrorReporter.EMPTY, getEntityWorld().getRegistryManager(), nbt);
-			readCustomData(readView);
-		}
+		float yaw = packet.getYRot();
+		float pitch = packet.getXRot();
+		absSnapRotationTo(yaw, pitch);
 	}
 
 	@Override
-	public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entityTrackerEntry)
+	public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entityTrackerEntry)
 	{
-		var nbt = NbtWriteView.create(ErrorReporter.EMPTY);
-		writeCustomData(nbt);
+		var nbt = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+		addAdditionalSaveData(nbt);
 
 		return GalaxiesNetworking.createPlayS2CPacket(new GalaxiesEntitySpawnS2CPacket(
 				this,
 				entityTrackerEntry,
-				NbtCompound.CODEC,
-				nbt.getNbt()
+				CompoundTag.CODEC,
+				nbt.buildResult()
 		));
 	}
 
 	@Override
-	protected void readCustomData(ReadView view)
+	protected void readAdditionalSaveData(ValueInput view)
 	{
 
 	}
 
 	@Override
-	protected void writeCustomData(WriteView view)
+	protected void addAdditionalSaveData(ValueOutput view)
 	{
 
+	}
+
+	@Override
+	public void applySpawnData(GalaxiesEntitySpawnS2CPacket packet)
+	{
+		absSnapRotationTo(packet.getYaw(), packet.getPitch());
+		setDeltaMovement(packet.getVelocity());
+
+		var nbt = packet.getCustomData(this, CompoundTag.CODEC).getOrThrow();
+		var readView = TagValueInput.create(ProblemReporter.DISCARDING, level().registryAccess(), nbt);
+		readAdditionalSaveData(readView);
 	}
 }

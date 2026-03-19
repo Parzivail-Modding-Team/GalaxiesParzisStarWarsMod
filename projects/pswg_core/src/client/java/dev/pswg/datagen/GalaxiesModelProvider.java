@@ -1,28 +1,37 @@
 package dev.pswg.datagen;
 
+import com.mojang.math.Quadrant;
 import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.item.SwgDrinkTintSource;
-import dev.pswg.mixin.client.accessors.ItemModelGeneratorAccessor;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.block.Block;
-import net.minecraft.block.enums.SlabType;
-import net.minecraft.client.data.*;
-import net.minecraft.client.render.item.model.ItemModel;
-import net.minecraft.client.render.item.tint.ConstantTintSource;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.client.render.model.json.ModelVariantOperator;
-import net.minecraft.client.render.model.json.WeightedVariant;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Weighted;
-import net.minecraft.util.math.AxisRotation;
-import net.minecraft.util.math.Direction;
-
+import net.minecraft.client.color.item.Constant;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import java.util.Optional;
 
 /**
@@ -47,9 +56,9 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	 * @param texture            The texture to assign to the item
 	 * @param model              The model that will be uploaded with the given texture
 	 */
-	protected static void register(ItemModelGenerator itemModelGenerator, Item item, Identifier texture, Model model)
+	protected static void register(ItemModelGenerators itemModelGenerator, Item item, ResourceLocation texture, ModelTemplate model)
 	{
-		register(itemModelGenerator, item, ItemModels.basic(registerDisjointModel(itemModelGenerator, item, texture, model)));
+		register(itemModelGenerator, item, ItemModelUtils.plainModel(registerDisjointModel(itemModelGenerator, item, texture, model)));
 	}
 
 	/**
@@ -63,9 +72,9 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	 *
 	 * @return The identifier of the registered item model
 	 */
-	protected static Identifier registerDisjointModel(ItemModelGenerator itemModelGenerator, Item item, Identifier texture, Model model)
+	protected static ResourceLocation registerDisjointModel(ItemModelGenerators itemModelGenerator, Item item, ResourceLocation texture, ModelTemplate model)
 	{
-		return model.upload(ModelIds.getItemModelId(item), TextureMap.layer0(texture), ((ItemModelGeneratorAccessor)itemModelGenerator).getModelCollector());
+		return model.create(ModelLocationUtils.getModelLocation(item), TextureMapping.layer0(texture), itemModelGenerator.modelOutput);
 	}
 
 	/**
@@ -75,286 +84,286 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	 * @param item               The item to generate a model for
 	 * @param model              The unbaked model that will be used for the item
 	 */
-	protected static void register(ItemModelGenerator itemModelGenerator, Item item, ItemModel.Unbaked model)
+	protected static void register(ItemModelGenerators itemModelGenerator, Item item, ItemModel.Unbaked model)
 	{
-		((ItemModelGeneratorAccessor)itemModelGenerator).getOutput().accept(item, model);
+		itemModelGenerator.itemModelOutput.accept(item, model);
 	}
 
-	public static WeightedVariant createWeightedVariant(Identifier id)
+	public static MultiVariant createWeightedVariant(ResourceLocation id)
 	{
-		return new WeightedVariant(Pool.of(new ModelVariant(id)));
+		return new MultiVariant(WeightedList.of(new Variant(id)));
 	}
 
-	protected static void registerReducedDryingRuinedStoneProducts(ReducedDryingRuiningStoneProducts dryingRuinedStoneProducts, BlockStateModelGenerator generator)
+	protected static void registerReducedDryingRuinedStoneProducts(ReducedDryingRuiningStoneProducts dryingRuinedStoneProducts, BlockModelGenerators generator)
 	{
-		generator.registerCubeAllModelTexturePool(dryingRuinedStoneProducts.block)
+		generator.family(dryingRuinedStoneProducts.block)
 		         .stairs(dryingRuinedStoneProducts.stairs);
 		registerVerticalSlabAllTextures(dryingRuinedStoneProducts.block, dryingRuinedStoneProducts.slab, generator);
 	}
 
-	protected static void registerReducedDryingStoneProducts(ReducedDryingStoneProducts dryingStoneProducts, BlockStateModelGenerator generator)
+	protected static void registerReducedDryingStoneProducts(ReducedDryingStoneProducts dryingStoneProducts, BlockModelGenerators generator)
 	{
-		generator.registerCubeAllModelTexturePool(dryingStoneProducts.block)
+		generator.family(dryingStoneProducts.block)
 		         .stairs(dryingStoneProducts.stairs);
 		registerVerticalSlabAllTextures(dryingStoneProducts.block, dryingStoneProducts.slab, generator);
 	}
 
-	protected static void registerReducedStoneProducts(ReducedStoneProducts stoneProducts, BlockStateModelGenerator generator)
+	protected static void registerReducedStoneProducts(ReducedStoneProducts stoneProducts, BlockModelGenerators generator)
 	{
-		generator.registerCubeAllModelTexturePool(stoneProducts.block)
+		generator.family(stoneProducts.block)
 		         .stairs(stoneProducts.stairs);
 		registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
 	}
 
-	protected static void registerStoneProducts(StoneProducts stoneProducts, BlockStateModelGenerator generator)
+	protected static void registerStoneProducts(StoneProducts stoneProducts, BlockModelGenerators generator)
 	{
-		generator.registerCubeAllModelTexturePool(stoneProducts.block)
+		generator.family(stoneProducts.block)
 		         .wall(stoneProducts.wall)
 		         .stairs(stoneProducts.stairs);
 		registerVerticalSlabAllTextures(stoneProducts.block, stoneProducts.slab, generator);
 	}
 
-	protected static void registerWoodProducts(WoodProducts woodProducts, BlockStateModelGenerator generator)
+	protected static void registerWoodProducts(WoodProducts woodProducts, BlockModelGenerators generator)
 	{
-		generator.registerCubeAllModelTexturePool(woodProducts.plank)
+		generator.family(woodProducts.plank)
 		         .fence(woodProducts.fence)
 		         .fenceGate(woodProducts.gate)
 		         .stairs(woodProducts.stairs);
-		generator.registerDoor(woodProducts.door);
-		generator.registerTrapdoor(woodProducts.trapdoor);
+		generator.createDoor(woodProducts.door);
+		generator.createTrapdoor(woodProducts.trapdoor);
 
 		registerVerticalSlabAllTextures(woodProducts.plank, woodProducts.slab, generator);
 	}
 
-	protected static void registerAccumulatingBlock(Block block, BlockStateModelGenerator generator)
+	protected static void registerAccumulatingBlock(Block block, BlockModelGenerators generator)
 	{
-		var id = TextureMap.getId(block);
+		var id = TextureMapping.getBlockTexture(block);
 
-		generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.LAYERS).generate(
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.LAYERS).generate(
 				height -> {
-					Identifier modelId = TexturedModel.makeFactory(block1 -> TextureMap.all(id).put(TextureKey.PARTICLE, id), blockModel("template_accumulating_height" + height * 2, TextureKey.ALL, TextureKey.PARTICLE)).upload(block, "_height" + height * 2, generator.modelCollector);
+					ResourceLocation modelId = TexturedModel.createDefault(block1 -> TextureMapping.cube(id).put(TextureSlot.PARTICLE, id), blockModel("template_accumulating_height" + height * 2, TextureSlot.ALL, TextureSlot.PARTICLE)).createWithSuffix(block, "_height" + height * 2, generator.modelOutput);
 					return createWeightedVariant(modelId);
 				}))
 		);
-		generator.registerParentedItemModel(block, ModelIds.getBlockSubModelId(block, "_height2"));
+		generator.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block, "_height2"));
 	}
 
-	protected static void registerCrossAge3(Block block, BlockStateModelGenerator generator)
+	protected static void registerCrossAge3(Block block, BlockModelGenerators generator)
 	{
-		generator.registerItemModel(block, "_stage3");
-		generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block)
-		                                                                        .with(BlockStateVariantMap.models(Properties.AGE_3)
-		                                                                                                  .generate(stage -> createWeightedVariant(generator.createSubModel(block, "_stage" + stage, Models.CROSS, TextureMap::cross)))));
+		generator.registerSimpleFlatItemModel(block, "_stage3");
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block)
+		                                                                        .with(PropertyDispatch.initial(BlockStateProperties.AGE_3)
+		                                                                                                  .generate(stage -> createWeightedVariant(generator.createSuffixedVariant(block, "_stage" + stage, ModelTemplates.CROSS, TextureMapping::cross)))));
 	}
 
-	protected static void registerCrossAge3Blooming(Block block, BlockStateModelGenerator generator)
+	protected static void registerCrossAge3Blooming(Block block, BlockModelGenerators generator)
 	{
-		generator.registerItemModel(block, "_stage3_blooming");
-		generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block)
-		                                                                        .with(BlockStateVariantMap.models(Properties.AGE_3, Properties.BLOOM)
+		generator.registerSimpleFlatItemModel(block, "_stage3_blooming");
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block)
+		                                                                        .with(PropertyDispatch.initial(BlockStateProperties.AGE_3, BlockStateProperties.BLOOM)
 		                                                                                                  .generate((stage, blooming) -> {
 			                                                                                                  String suffix = blooming ? ("_stage" + stage + "_blooming") : ("_stage" + stage);
-			                                                                                                  return createWeightedVariant(generator.createSubModel(block, suffix, Models.CROSS, TextureMap::cross));
+			                                                                                                  return createWeightedVariant(generator.createSuffixedVariant(block, suffix, ModelTemplates.CROSS, TextureMapping::cross));
 		                                                                                                  }))
 		);
 	}
 
-	protected static void registerJaporLeaves(Block block, BlockStateModelGenerator generator)
+	protected static void registerJaporLeaves(Block block, BlockModelGenerators generator)
 	{
-		Model model = new Model(Optional.of(Identifier.of(namespace, ("block/template_japor_leaves"))), Optional.empty(), TextureKey.TEXTURE);
-		TexturedModel texturedModel = TexturedModel.makeFactory(TextureMap::texture, model).get(block);
-		WeightedVariant weightedVariant = createWeightedVariant(texturedModel.upload(block, generator.modelCollector));
-		generator.blockStateCollector.accept(
-				VariantsBlockModelDefinitionCreator.of(block, weightedVariant).apply(BlockStateVariantMap.operations(Properties.FACING)
-				                                                                                         .register(Direction.DOWN, BlockStateModelGenerator.ROTATE_X_180)
-				                                                                                         .register(Direction.UP, BlockStateModelGenerator.NO_OP)
-				                                                                                         .register(Direction.EAST, BlockStateModelGenerator.ROTATE_Y_90.then(BlockStateModelGenerator.ROTATE_X_90))
-				                                                                                         .register(Direction.SOUTH, BlockStateModelGenerator.ROTATE_Y_180.then(BlockStateModelGenerator.ROTATE_X_90))
-				                                                                                         .register(Direction.WEST, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.ROTATE_X_90))
-				                                                                                         .register(Direction.NORTH, BlockStateModelGenerator.ROTATE_X_90)));
-		generator.registerItemModel(block);
+		ModelTemplate model = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(namespace, ("block/template_japor_leaves"))), Optional.empty(), TextureSlot.TEXTURE);
+		TexturedModel texturedModel = TexturedModel.createDefault(TextureMapping::defaultTexture, model).get(block);
+		MultiVariant weightedVariant = createWeightedVariant(texturedModel.create(block, generator.modelOutput));
+		generator.blockStateOutput.accept(
+				MultiVariantGenerator.dispatch(block, weightedVariant).with(PropertyDispatch.modify(BlockStateProperties.FACING)
+				                                                                                         .select(Direction.DOWN, BlockModelGenerators.X_ROT_180)
+				                                                                                         .select(Direction.UP, BlockModelGenerators.NOP)
+				                                                                                         .select(Direction.EAST, BlockModelGenerators.Y_ROT_90.then(BlockModelGenerators.X_ROT_90))
+				                                                                                         .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180.then(BlockModelGenerators.X_ROT_90))
+				                                                                                         .select(Direction.WEST, BlockModelGenerators.Y_ROT_270.then(BlockModelGenerators.X_ROT_90))
+				                                                                                         .select(Direction.NORTH, BlockModelGenerators.X_ROT_90)));
+		generator.registerSimpleFlatItemModel(block);
 	}
 
-	protected static void registerLog(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
+	protected static void registerLog(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator)
 	{
 		String logKey = getBlockKey(block).toString();
-		BlockStateModelGenerator.LogTexturePool texturePool = generator.createLogTexturePool(block).log(block);
+		BlockModelGenerators.WoodProvider texturePool = generator.woodProvider(block).logWithHorizontal(block);
 		if (dataGenBlock.model() == DataGenBlockModel.LOG_WITH_WOOD)
 		{
 			String woodKey = logKey.substring(0, logKey.indexOf("_log")) + "_wood";
-			Block woodBlock = Registries.BLOCK.get(Identifier.of(woodKey));
+			Block woodBlock = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(woodKey));
 			texturePool.wood(woodBlock);
 		}
 	}
 
-	protected static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Factory modelFactory, BlockStateModelGenerator generator)
+	protected static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Provider modelFactory, BlockModelGenerators generator)
 	{
 		switch (dataGenBlock.rotation())
 		{
-			case DEFAULT -> generator.registerSingleton(block, modelFactory);
+			case DEFAULT -> generator.createTrivialBlock(block, modelFactory);
 			case RANDOM_ROTATION_X ->
 			{
-				Identifier id = modelFactory.upload(block, generator.modelCollector);
-				var blockStateSupplier = MultipartBlockModelDefinitionCreator.create(block).with(new WeightedVariant(Pool.of(
-						new Weighted<>(new ModelVariant(id).withRotationX(AxisRotation.R0), 1),
-						new Weighted<>(new ModelVariant(id).withRotationX(AxisRotation.R90), 1),
-						new Weighted<>(new ModelVariant(id).withRotationX(AxisRotation.R180), 1),
-						new Weighted<>(new ModelVariant(id).withRotationX(AxisRotation.R270), 1)
+				ResourceLocation id = modelFactory.create(block, generator.modelOutput);
+				var blockStateSupplier = MultiPartGenerator.multiPart(block).with(new MultiVariant(WeightedList.of(
+						new Weighted<>(new Variant(id).withXRot(Quadrant.R0), 1),
+						new Weighted<>(new Variant(id).withXRot(Quadrant.R90), 1),
+						new Weighted<>(new Variant(id).withXRot(Quadrant.R180), 1),
+						new Weighted<>(new Variant(id).withXRot(Quadrant.R270), 1)
 				)));
-				generator.blockStateCollector.accept(blockStateSupplier);
+				generator.blockStateOutput.accept(blockStateSupplier);
 			}
 			case AXIS_ROTATED ->
 			{
-				Identifier id = modelFactory.upload(block, generator.modelCollector);
-				var blockStateSupplier = VariantsBlockModelDefinitionCreator.of(block, createWeightedVariant(id)).apply(BlockStateVariantMap.operations(Properties.AXIS)
-				                                                                                                                            .register(Direction.Axis.Y, ModelVariantOperator.MODEL.withValue(id))
-				                                                                                                                            .register(Direction.Axis.Z, ModelVariantOperator.MODEL.withValue(id)
-				                                                                                                                                                                                  .then(ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90)))
-				                                                                                                                            .register(Direction.Axis.X, ModelVariantOperator.MODEL.withValue(id)
-				                                                                                                                                                                                  .then(ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90))
-				                                                                                                                                                                                  .then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90))
+				ResourceLocation id = modelFactory.create(block, generator.modelOutput);
+				var blockStateSupplier = MultiVariantGenerator.dispatch(block, createWeightedVariant(id)).with(PropertyDispatch.modify(BlockStateProperties.AXIS)
+				                                                                                                                            .select(Direction.Axis.Y, VariantMutator.MODEL.withValue(id))
+				                                                                                                                            .select(Direction.Axis.Z, VariantMutator.MODEL.withValue(id)
+				                                                                                                                                                                                  .then(VariantMutator.X_ROT.withValue(Quadrant.R90)))
+				                                                                                                                            .select(Direction.Axis.X, VariantMutator.MODEL.withValue(id)
+				                                                                                                                                                                                  .then(VariantMutator.X_ROT.withValue(Quadrant.R90))
+				                                                                                                                                                                                  .then(VariantMutator.Y_ROT.withValue(Quadrant.R90))
 				                                                                                                                            )
 				);
-				generator.blockStateCollector.accept(blockStateSupplier);
+				generator.blockStateOutput.accept(blockStateSupplier);
 			}
 		}
 	}
 
-	protected static void registerStairs(Block stairs, BlockStateModelGenerator generator)
+	protected static void registerStairs(Block stairs, BlockModelGenerators generator)
 	{
-		Identifier stairsId = Models.STAIRS.upload(stairs, TextureMap.all(stairs), generator.modelCollector);
-		Identifier stairsOuterId = Models.OUTER_STAIRS.upload(stairs, TextureMap.all(stairs), generator.modelCollector);
-		Identifier stairsInnerId = Models.INNER_STAIRS.upload(stairs, TextureMap.all(stairs), generator.modelCollector);
+		ResourceLocation stairsId = ModelTemplates.STAIRS_STRAIGHT.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
+		ResourceLocation stairsOuterId = ModelTemplates.STAIRS_OUTER.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
+		ResourceLocation stairsInnerId = ModelTemplates.STAIRS_INNER.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
 
-		generator.blockStateCollector.accept(BlockStateModelGenerator.createStairsBlockState(stairs, createWeightedVariant(stairsInnerId), createWeightedVariant(stairsId), createWeightedVariant(stairsOuterId)));
-		generator.registerItemModel(stairs);
+		generator.blockStateOutput.accept(BlockModelGenerators.createStairs(stairs, createWeightedVariant(stairsInnerId), createWeightedVariant(stairsId), createWeightedVariant(stairsOuterId)));
+		generator.registerSimpleFlatItemModel(stairs);
 	}
 
-	protected static void registerVerticalSlab(Block slab, BlockStateModelGenerator generator)
+	protected static void registerVerticalSlab(Block slab, BlockModelGenerators generator)
 	{
 		registerVerticalSlabAllTextures(slab, slab, generator);
 	}
 
-	protected static void registerVerticalSlabAllTextures(Block textureBase, Block slab, BlockStateModelGenerator generator)
+	protected static void registerVerticalSlabAllTextures(Block textureBase, Block slab, BlockModelGenerators generator)
 	{
-		var textureId = TextureMap.getId(textureBase);
-		var textureMap = new TextureMap().put(TextureKey.SIDE, textureId).put(TextureKey.TOP, textureId).put(TextureKey.END, textureId);
-		Identifier bottomId = Models.SLAB.upload(slab, textureMap, generator.modelCollector);
-		Identifier topId = Models.SLAB_TOP.upload(slab, "_top", textureMap, generator.modelCollector);
-		Identifier doubleId = Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
+		var textureId = TextureMapping.getBlockTexture(textureBase);
+		var textureMap = new TextureMapping().put(TextureSlot.SIDE, textureId).put(TextureSlot.TOP, textureId).put(TextureSlot.END, textureId);
+		ResourceLocation bottomId = ModelTemplates.SLAB_BOTTOM.create(slab, textureMap, generator.modelOutput);
+		ResourceLocation topId = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "_top", textureMap, generator.modelOutput);
+		ResourceLocation doubleId = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double", textureMap, generator.modelOutput);
 
-		var blockState = VariantsBlockModelDefinitionCreator.of(slab, createWeightedVariant(bottomId)).
-		                                                    apply(BlockStateVariantMap.operations(Properties.AXIS)
-		                                                                              .register(Direction.Axis.Y, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R0))
-		                                                                              .register(Direction.Axis.Z, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R270).then(ModelVariantOperator.UV_LOCK.withValue(true)))
-		                                                                              .register(Direction.Axis.X, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90).then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)).then(ModelVariantOperator.UV_LOCK.withValue(true)))
-		                                                    ).apply(BlockStateVariantMap.operations(Properties.SLAB_TYPE)
-		                                                                                .register(SlabType.BOTTOM, ModelVariantOperator.MODEL.withValue(bottomId))
-		                                                                                .register(SlabType.DOUBLE, ModelVariantOperator.MODEL.withValue(doubleId))
-		                                                                                .register(SlabType.TOP, ModelVariantOperator.MODEL.withValue(topId))
+		var blockState = MultiVariantGenerator.dispatch(slab, createWeightedVariant(bottomId)).
+		                                                    with(PropertyDispatch.modify(BlockStateProperties.AXIS)
+		                                                                              .select(Direction.Axis.Y, VariantMutator.X_ROT.withValue(Quadrant.R0))
+		                                                                              .select(Direction.Axis.Z, VariantMutator.X_ROT.withValue(Quadrant.R270).then(VariantMutator.UV_LOCK.withValue(true)))
+		                                                                              .select(Direction.Axis.X, VariantMutator.X_ROT.withValue(Quadrant.R90).then(VariantMutator.Y_ROT.withValue(Quadrant.R90)).then(VariantMutator.UV_LOCK.withValue(true)))
+		                                                    ).with(PropertyDispatch.modify(BlockStateProperties.SLAB_TYPE)
+		                                                                                .select(SlabType.BOTTOM, VariantMutator.MODEL.withValue(bottomId))
+		                                                                                .select(SlabType.DOUBLE, VariantMutator.MODEL.withValue(doubleId))
+		                                                                                .select(SlabType.TOP, VariantMutator.MODEL.withValue(topId))
 				);
-		generator.blockStateCollector.accept(blockState);
+		generator.blockStateOutput.accept(blockState);
 	}
 
-	protected static void registerVerticalLightingSlab(BlockStateModelGenerator generator)
+	protected static void registerVerticalLightingSlab(BlockModelGenerators generator)
 	{
 
-		var textureIdTopBottom = TextureMap.getId(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
+		var textureIdTopBottom = TextureMapping.getBlockTexture(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3);
 		var slab = GalaxiesBlocks.GRAY_IMPERIAL_LIGHTING_SLAB;
-		var textureIdSide = TextureMap.getId(GalaxiesBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
-		var textureMap = new TextureMap().put(TextureKey.SIDE, textureIdSide).put(TextureKey.TOP, textureIdTopBottom).put(TextureKey.END, textureIdTopBottom);
-		var textureMapOn = new TextureMap().put(TextureKey.SIDE, textureIdSide.withSuffixedPath("_on")).put(TextureKey.TOP, textureIdTopBottom).put(TextureKey.END, textureIdTopBottom);
-		Identifier bottomId = Models.SLAB.upload(slab, textureMap, generator.modelCollector);
-		Identifier bottomIdOn = Models.SLAB.upload(slab, "_on", textureMapOn, generator.modelCollector);
-		Identifier topId = Models.SLAB_TOP.upload(slab, "", textureMap, generator.modelCollector);
-		Identifier topIdOn = Models.SLAB_TOP.upload(slab, "_on", textureMapOn, generator.modelCollector);
-		Identifier doubleId = Models.CUBE_COLUMN.upload(slab, "_double", textureMap, generator.modelCollector);
-		Identifier doubleIdOn = Models.CUBE_COLUMN.upload(slab, "_double_on", textureMapOn, generator.modelCollector);
+		var textureIdSide = TextureMapping.getBlockTexture(GalaxiesBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
+		var textureMap = new TextureMapping().put(TextureSlot.SIDE, textureIdSide).put(TextureSlot.TOP, textureIdTopBottom).put(TextureSlot.END, textureIdTopBottom);
+		var textureMapOn = new TextureMapping().put(TextureSlot.SIDE, textureIdSide.withSuffix("_on")).put(TextureSlot.TOP, textureIdTopBottom).put(TextureSlot.END, textureIdTopBottom);
+		ResourceLocation bottomId = ModelTemplates.SLAB_BOTTOM.create(slab, textureMap, generator.modelOutput);
+		ResourceLocation bottomIdOn = ModelTemplates.SLAB_BOTTOM.createWithSuffix(slab, "_on", textureMapOn, generator.modelOutput);
+		ResourceLocation topId = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "", textureMap, generator.modelOutput);
+		ResourceLocation topIdOn = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "_on", textureMapOn, generator.modelOutput);
+		ResourceLocation doubleId = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double", textureMap, generator.modelOutput);
+		ResourceLocation doubleIdOn = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double_on", textureMapOn, generator.modelOutput);
 
-		var blockState = VariantsBlockModelDefinitionCreator.of(slab, createWeightedVariant(bottomId)).
-		                                                    apply(BlockStateVariantMap.operations(Properties.AXIS)
-		                                                                              .register(Direction.Axis.Y, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R0))
-		                                                                              .register(Direction.Axis.Z, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R270))
-		                                                                              .register(Direction.Axis.X, ModelVariantOperator.ROTATION_X.withValue(AxisRotation.R90).then(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)))
-		                                                    ).apply(BlockStateVariantMap.operations(Properties.SLAB_TYPE, Properties.LIT)
-		                                                                                .register(SlabType.BOTTOM, false, ModelVariantOperator.MODEL.withValue(bottomId))
-		                                                                                .register(SlabType.BOTTOM, true, ModelVariantOperator.MODEL.withValue(bottomIdOn))
-		                                                                                .register(SlabType.DOUBLE, false, ModelVariantOperator.MODEL.withValue(doubleId))
-		                                                                                .register(SlabType.DOUBLE, true, ModelVariantOperator.MODEL.withValue(doubleIdOn))
-		                                                                                .register(SlabType.TOP, false, ModelVariantOperator.MODEL.withValue(topId))
-		                                                                                .register(SlabType.TOP, true, ModelVariantOperator.MODEL.withValue(topIdOn))
+		var blockState = MultiVariantGenerator.dispatch(slab, createWeightedVariant(bottomId)).
+		                                                    with(PropertyDispatch.modify(BlockStateProperties.AXIS)
+		                                                                              .select(Direction.Axis.Y, VariantMutator.X_ROT.withValue(Quadrant.R0))
+		                                                                              .select(Direction.Axis.Z, VariantMutator.X_ROT.withValue(Quadrant.R270))
+		                                                                              .select(Direction.Axis.X, VariantMutator.X_ROT.withValue(Quadrant.R90).then(VariantMutator.Y_ROT.withValue(Quadrant.R90)))
+		                                                    ).with(PropertyDispatch.modify(BlockStateProperties.SLAB_TYPE, BlockStateProperties.LIT)
+		                                                                                .select(SlabType.BOTTOM, false, VariantMutator.MODEL.withValue(bottomId))
+		                                                                                .select(SlabType.BOTTOM, true, VariantMutator.MODEL.withValue(bottomIdOn))
+		                                                                                .select(SlabType.DOUBLE, false, VariantMutator.MODEL.withValue(doubleId))
+		                                                                                .select(SlabType.DOUBLE, true, VariantMutator.MODEL.withValue(doubleIdOn))
+		                                                                                .select(SlabType.TOP, false, VariantMutator.MODEL.withValue(topId))
+		                                                                                .select(SlabType.TOP, true, VariantMutator.MODEL.withValue(topIdOn))
 				);
-		generator.blockStateCollector.accept(blockState);
+		generator.blockStateOutput.accept(blockState);
 	}
 
-	protected static void registerLightingPanel(Block block, BlockStateModelGenerator generator)
+	protected static void registerLightingPanel(Block block, BlockModelGenerators generator)
 	{
-		Identifier identifier = lightingPanelFactory().upload(block, generator.modelCollector);
-		Identifier identifier2 = generator.createSubModel(block, "_on", Models.CUBE_COLUMN, GalaxiesModelProvider::createLightingPanelTextureMap);
+		ResourceLocation identifier = lightingPanelFactory().create(block, generator.modelOutput);
+		ResourceLocation identifier2 = generator.createSuffixedVariant(block, "_on", ModelTemplates.CUBE_COLUMN, GalaxiesModelProvider::createLightingPanelTextureMap);
 
-		generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(BlockStateModelGenerator.createBooleanModelMap(Properties.LIT, createWeightedVariant(identifier2), createWeightedVariant(identifier))));
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, createWeightedVariant(identifier2), createWeightedVariant(identifier))));
 	}
 
-	public static TexturedModel.Factory lightingPanelFactory()
+	public static TexturedModel.Provider lightingPanelFactory()
 	{
-		return TexturedModel.makeFactory(GalaxiesModelProvider::createLightingPanelTextureMap, Models.CUBE_COLUMN);
+		return TexturedModel.createDefault(GalaxiesModelProvider::createLightingPanelTextureMap, ModelTemplates.CUBE_COLUMN);
 	}
 
-	public static TextureMap createLightingPanelTextureMap(Block block)
+	public static TextureMapping createLightingPanelTextureMap(Block block)
 	{
-		return createLightingPanelTextureMap(TextureMap.getId(block));
+		return createLightingPanelTextureMap(TextureMapping.getBlockTexture(block));
 	}
 
-	public static TextureMap createLightingPanelTextureMap(Identifier identifier)
+	public static TextureMapping createLightingPanelTextureMap(ResourceLocation identifier)
 	{
-		return new TextureMap().put(TextureKey.SIDE, identifier).put(TextureKey.END, TextureMap.getId(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
+		return new TextureMapping().put(TextureSlot.SIDE, identifier).put(TextureSlot.END, TextureMapping.getBlockTexture(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
 	}
 
-	public static final void registerCorrugatedCrate(BlockStateModelGenerator generator, Block block)
+	public static final void registerCorrugatedCrate(BlockModelGenerators generator, Block block)
 	{
-		var crateKey = getCorrugatedCrateKey(block).withPrefixedPath("block/model/corrugated_crate/");
-		TexturedModel.makeFactory(block1 -> TextureMap.all(crateKey).put(TextureKey.PARTICLE, crateKey.withSuffixedPath("_particle")), blockModel("template_corrugated_crate", TextureKey.ALL, TextureKey.PARTICLE)).upload(block, generator.modelCollector);
-		generator.registerSimpleState(block);
+		var crateKey = getCorrugatedCrateKey(block).withPrefix("block/model/corrugated_crate/");
+		TexturedModel.createDefault(block1 -> TextureMapping.cube(crateKey).put(TextureSlot.PARTICLE, crateKey.withSuffix("_particle")), blockModel("template_corrugated_crate", TextureSlot.ALL, TextureSlot.PARTICLE)).create(block, generator.modelOutput);
+		generator.createNonTemplateModelBlock(block);
 	}
 
-	protected static Model blockModel(String parent, TextureKey... requiredTextureKeys)
+	protected static ModelTemplate blockModel(String parent, TextureSlot... requiredTextureKeys)
 	{
-		return new Model(Optional.of(Identifier.of(namespace, ("block/" + parent))), Optional.empty(), requiredTextureKeys);
+		return new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(namespace, ("block/" + parent))), Optional.empty(), requiredTextureKeys);
 	}
 
-	public static Identifier getBlockKey(Block block)
+	public static ResourceLocation getBlockKey(Block block)
 	{
-		return block.getRegistryEntry().getKey().get().getValue();
+		return block.builtInRegistryHolder().unwrapKey().get().location();
 	}
 
-	public static Identifier getCorrugatedCrateKey(Block block)
+	public static ResourceLocation getCorrugatedCrateKey(Block block)
 	{
-		String string = block.getRegistryEntry().getKey().get().getValue().toString();
-		return Identifier.of(string.substring(0, string.indexOf("_corrugated_crate")));
+		String string = block.builtInRegistryHolder().unwrapKey().get().location().toString();
+		return ResourceLocation.parse(string.substring(0, string.indexOf("_corrugated_crate")));
 	}
 
-	public void registerDrink(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
+	public void registerDrink(ItemModelGenerators generator, Item item, DataGenItem dataGenItem)
 	{
-		Identifier modelId;
-		Identifier overlay = (dataGenItem.overlayTextureOverride().equals("")) ? Identifier.of(createItemKey(item, dataGenItem).withSuffixedPath("_overlay").toString().replace("_filled", "")) : Identifier.of(namespace, dataGenItem.overlayTextureOverride()).withPrefixedPath("item/");
-		Identifier base = Identifier.of(ModelIds.getItemModelId(item).toString().replace("_filled", ""));
+		ResourceLocation modelId;
+		ResourceLocation overlay = (dataGenItem.overlayTextureOverride().equals("")) ? ResourceLocation.parse(createItemKey(item, dataGenItem).withSuffix("_overlay").toString().replace("_filled", "")) : ResourceLocation.fromNamespaceAndPath(namespace, dataGenItem.overlayTextureOverride()).withPrefix("item/");
+		ResourceLocation base = ResourceLocation.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", ""));
 
 		if (dataGenItem.invertLayer())
 		{
-			modelId = generator.uploadTwoLayers(item, base, overlay);
-			generator.output.accept(item, ItemModels.tinted(modelId, new ConstantTintSource(16777215), new SwgDrinkTintSource()));
+			modelId = generator.generateLayeredItem(item, base, overlay);
+			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new Constant(16777215), new SwgDrinkTintSource()));
 		}
 		else
 		{
-			modelId = generator.uploadTwoLayers(item, overlay, base);
-			generator.output.accept(item, ItemModels.tinted(modelId, new SwgDrinkTintSource()));
+			modelId = generator.generateLayeredItem(item, overlay, base);
+			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new SwgDrinkTintSource()));
 		}
 	}
 
-	public static Identifier createItemKey(Item item, DataGenItem dataGenItem)
+	public static ResourceLocation createItemKey(Item item, DataGenItem dataGenItem)
 	{
 		if (dataGenItem.textureOverride().equals(""))
-			return item.getRegistryEntry().getKey().get().getValue().withPrefixedPath("item/");
-		return Identifier.of(namespace, dataGenItem.textureOverride()).withPrefixedPath("item/");
+			return item.builtInRegistryHolder().unwrapKey().get().location().withPrefix("item/");
+		return ResourceLocation.fromNamespaceAndPath(namespace, dataGenItem.textureOverride()).withPrefix("item/");
 	}
 }

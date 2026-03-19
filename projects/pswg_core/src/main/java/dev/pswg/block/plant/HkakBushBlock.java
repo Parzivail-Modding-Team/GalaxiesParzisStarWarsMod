@@ -3,140 +3,145 @@ package dev.pswg.block.plant;
 import com.mojang.serialization.MapCodec;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItems;
-import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class HkakBushBlock extends PlantBlock implements Fertilizable
+public class HkakBushBlock extends VegetationBlock implements BonemealableBlock
 {
 	static
 	{
-		AGE = Properties.AGE_3;
-		SMALL_SHAPE = Block.createCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
-		LARGE_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
+		AGE = BlockStateProperties.AGE_3;
+		SMALL_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
+		LARGE_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 	}
 
-	public static final IntProperty AGE;
+	public static final IntegerProperty AGE;
 	private static final VoxelShape SMALL_SHAPE;
 	private static final VoxelShape LARGE_SHAPE;
 
-	public static final MapCodec<HkakBushBlock> CODEC = createCodec(HkakBushBlock::new);
+	public static final MapCodec<HkakBushBlock> CODEC = simpleCodec(HkakBushBlock::new);
 
-	public HkakBushBlock(AbstractBlock.Settings settings)
+	public HkakBushBlock(BlockBehaviour.Properties settings)
 	{
 		super(settings);
-		this.setDefaultState(this.stateManager.getDefaultState().with(AGE, 0));
+		this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
 	}
 
 	@Override
-	protected MapCodec<? extends PlantBlock> getCodec()
+	protected MapCodec<? extends VegetationBlock> codec()
 	{
 		return CODEC;
 	}
 
 	@Override
-	protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData)
+	protected ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData)
 	{
 		return new ItemStack(GalaxiesItems.HKAK_BEAN);
 	}
 
 	@Override
-	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
+	protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos)
 	{
-		return floor.isIn(GalaxiesBlocks.Tags.BUSH_PLACEABLE);
+		return floor.is(GalaxiesBlocks.Tags.BUSH_PLACEABLE);
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
 	{
-		if (state.get(AGE) == 0)
+		if (state.getValue(AGE) == 0)
 		{
 			return SMALL_SHAPE;
 		}
 		else
 		{
-			return state.get(AGE) < 3 ? LARGE_SHAPE : super.getOutlineShape(state, world, pos, context);
+			return state.getValue(AGE) < 3 ? LARGE_SHAPE : super.getShape(state, world, pos, context);
 		}
 	}
 
 	@Override
-	public boolean hasRandomTicks(BlockState state)
+	public boolean isRandomlyTicking(BlockState state)
 	{
-		return state.get(AGE) < 3;
+		return state.getValue(AGE) < 3;
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
-		int i = state.get(AGE);
-		if (i < 3 && random.nextInt(5) == 0 && world.getBaseLightLevel(pos.up(), 0) >= 9)
+		int i = state.getValue(AGE);
+		if (i < 3 && random.nextInt(5) == 0 && world.getRawBrightness(pos.above(), 0) >= 9)
 		{
-			world.setBlockState(pos, state.with(AGE, i + 1), Block.NOTIFY_LISTENERS);
+			world.setBlock(pos, state.setValue(AGE, i + 1), Block.UPDATE_CLIENTS);
 		}
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
+	public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit)
 	{
-		int i = state.get(AGE);
+		int i = state.getValue(AGE);
 		var isMature = i == 3;
-		if (!isMature && player.getMainHandStack().isOf(Items.BONE_MEAL))
+		if (!isMature && player.getMainHandItem().is(Items.BONE_MEAL))
 		{
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 		}
 		else if (i > 1)
 		{
 			var j = 1 + world.random.nextInt(2);
-			dropStack(world, pos, new ItemStack(GalaxiesItems.HKAK_BEAN,j + (isMature ? 1 : 0)));
+			popResource(world, pos, new ItemStack(GalaxiesItems.HKAK_BEAN,j + (isMature ? 1 : 0)));
 
 			// TODO: new sound event
-			world.playSound(null, pos, SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
-			world.setBlockState(pos, state.with(AGE, 1), Block.NOTIFY_LISTENERS);
-			return ActionResult.SUCCESS;
+			world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
+			world.setBlock(pos, state.setValue(AGE, 1), Block.UPDATE_CLIENTS);
+			return InteractionResult.SUCCESS;
 		}
 		else
 		{
-			return super.onUse(state, world, pos, player, hit);
+			return super.useWithoutItem(state, world, pos, player, hit);
 		}
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
 	{
 		builder.add(AGE);
 	}
 
 	@Override
-	public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state)
+	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state)
 	{
-		return state.get(AGE) < 3;
+		return state.getValue(AGE) < 3;
 	}
 
 	@Override
-	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state)
+	public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state)
+	public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state)
 	{
-		var i = Math.min(3, state.get(AGE) + 1);
-		world.setBlockState(pos, state.with(AGE, i), Block.NOTIFY_LISTENERS);
+		var i = Math.min(3, state.getValue(AGE) + 1);
+		world.setBlock(pos, state.setValue(AGE, i), Block.UPDATE_CLIENTS);
 	}
 }

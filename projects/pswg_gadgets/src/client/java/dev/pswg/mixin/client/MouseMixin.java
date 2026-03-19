@@ -2,33 +2,33 @@ package dev.pswg.mixin.client;
 
 import dev.pswg.Gadgets;
 import dev.pswg.LaserCutterHandler;
-import net.minecraft.client.Mouse;
+import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Mouse.class)
+@Mixin(MouseHandler.class)
 public class MouseMixin
 {
 	@Shadow
-	private double cursorDeltaX;
+	private double accumulatedDX;
 	@Shadow
-	private double cursorDeltaY;
+	private double accumulatedDY;
 
-	@Inject(method = "updateMouse", at = @At(value = "HEAD"))
+	@Inject(method = "turnPlayer", at = @At(value = "HEAD"))
 	public void applyCutterChanges(double timeDelta, CallbackInfo ci)
 	{
 		double mod = LaserCutterHandler.modifier;
 
 		if (mod != 1)
 		{
-			double composite = Math.sqrt(cursorDeltaX * cursorDeltaX + cursorDeltaY * cursorDeltaY);
+			double composite = Math.sqrt(accumulatedDX * accumulatedDX + accumulatedDY * accumulatedDY);
 			if (composite > mod && composite != 0)
 			{
-				cursorDeltaX = cursorDeltaX * mod / composite;
-				cursorDeltaY = cursorDeltaY * mod / composite;
+				accumulatedDX = accumulatedDX * mod / composite;
+				accumulatedDY = accumulatedDY * mod / composite;
 			}
 		}
 	}

@@ -1,9 +1,9 @@
 package dev.pswg.mixin.events;
 
 import dev.pswg.Galaxies;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,14 +14,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LivingEntityMixin
 {
 	@Shadow
-	protected float lastDamageTaken;
+	protected float lastHurt;
 
-	@Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;getAttacker()Lnet/minecraft/entity/Entity;"))
-	public void damage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
+	@Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSource;getEntity()Lnet/minecraft/world/entity/Entity;"))
+	public void damage(ServerLevel world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
 	{
-		if (source.isIn(Galaxies.IGNORES_INVULNERABLE_FRAMES))
+		if (source.is(Galaxies.IGNORES_INVULNERABLE_FRAMES))
 		{
-			lastDamageTaken = 0;
+			lastHurt = 0;
 		}
 	}
 }

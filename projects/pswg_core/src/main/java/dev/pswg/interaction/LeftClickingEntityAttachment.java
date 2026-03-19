@@ -10,8 +10,8 @@ import dev.pswg.mutablerecord.MutableRecord;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * An attachment for entities that contains the data required to
@@ -24,7 +24,7 @@ public record LeftClickingEntityAttachment(
 		int itemLeftUseTimeLeft,
 		@UseCodec(
 				customCodec = @CodecSource(source = ItemStack.class, member = "OPTIONAL_CODEC"),
-				customPacket = @CodecSource(source = ItemStack.class, member = "OPTIONAL_PACKET_CODEC")
+				customPacket = @CodecSource(source = ItemStack.class, member = "OPTIONAL_STREAM_CODEC")
 		)
 		ItemStack leftActiveItemStack
 ) implements ILeftClickingEntityAttachmentBuilder, ILeftClickingEntityAttachmentCodec

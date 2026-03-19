@@ -1,14 +1,13 @@
 package dev.pswg.util.worldgen.decoration;
 
 import dev.pswg.util.worldgen.world.WorldGenView;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-
 import java.util.List;
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class PatchDecoration implements Decoration
 {
@@ -39,7 +38,7 @@ public class PatchDecoration implements Decoration
 			int y;
 			if (matchSurface)
 			{
-				y = world.getTopY(Heightmap.Type.WORLD_SURFACE, pos.getX() + rx, pos.getZ() + rz);
+				y = world.getTopY(Heightmap.Types.WORLD_SURFACE, pos.getX() + rx, pos.getZ() + rz);
 			}
 			else
 			{
@@ -48,7 +47,7 @@ public class PatchDecoration implements Decoration
 
 			BlockPos p = new BlockPos(pos.getX() + rx, y, pos.getZ() + rz);
 
-			if (targets.contains(world.getBlockState(p.down()).getBlock()) && world.isAir(p))
+			if (targets.contains(world.getBlockState(p.below()).getBlock()) && world.isAir(p))
 			{
 				world.setBlockState(p, state);
 			}

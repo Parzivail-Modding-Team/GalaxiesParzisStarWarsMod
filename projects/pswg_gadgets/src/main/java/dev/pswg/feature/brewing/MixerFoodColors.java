@@ -2,12 +2,11 @@ package dev.pswg.feature.brewing;
 
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GalaxiesItems;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Colors;
-
 import java.util.HashMap;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class MixerFoodColors
 {
@@ -15,7 +14,7 @@ public class MixerFoodColors
 
 	public static int getColor(ItemStack stack)
 	{
-		return colorMap.getOrDefault(stack.getItem(), Colors.GRAY);
+		return colorMap.getOrDefault(stack.getItem(), CommonColors.GRAY);
 	}
 
 	public static void init()

@@ -1,6 +1,6 @@
 package dev.pswg.models;
 
-import net.minecraft.client.render.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 
 public class GrenadeRenderState extends EntityRenderState
 {

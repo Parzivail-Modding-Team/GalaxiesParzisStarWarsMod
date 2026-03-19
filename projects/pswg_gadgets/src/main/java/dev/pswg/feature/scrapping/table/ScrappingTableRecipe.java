@@ -5,16 +5,19 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsRecipeSerializers;
 import dev.pswg.container.GadgetsRecipeTypes;
 import dev.pswg.util.GalaxiesPacketUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.*;
-import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.world.World;
-
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +28,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	private final ItemStack primaryResult;
 	private final ItemStack secondaryResult;
 	private final float secondaryChance;
-	private IngredientPlacement ingredientPlacement;
+	private PlacementInfo ingredientPlacement;
 
 	public ScrappingTableRecipe(Ingredient tool, Ingredient ingredient, ItemStack primaryResult, ItemStack secondaryResult, float secondaryChance)
 	{
@@ -34,7 +37,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 		this.primaryResult = primaryResult;
 		this.secondaryResult = secondaryResult;
 		this.secondaryChance = secondaryChance;
-		ingredientPlacement = IngredientPlacement.forMultipleSlots(List.of(tool(), scrapItem()));
+		ingredientPlacement = PlacementInfo.createFromOptionals(List.of(tool(), scrapItem()));
 	}
 
 	@Override
@@ -44,27 +47,27 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	}
 
 	@Override
-	public IngredientPlacement getIngredientPlacement()
+	public PlacementInfo placementInfo()
 	{
 		return ingredientPlacement;
 	}
 
 	@Override
-	public RecipeBookCategory getRecipeBookCategory()
+	public RecipeBookCategory recipeBookCategory()
 	{
 		return null;
 	}
 
 	@Override
-	public boolean matches(ScrappingTableRecipeInput input, World world)
+	public boolean matches(ScrappingTableRecipeInput input, Level world)
 	{
-		return Ingredient.matches(this.scrapItem(), input.scrapItem) && (this.tool().isEmpty() || this.tool().get().test(input.tool));
+		return Ingredient.testOptionalIngredient(this.scrapItem(), input.scrapItem) && (this.tool().isEmpty() || this.tool().get().test(input.tool));
 	}
 
 	@Override
-	public ItemStack craft(ScrappingTableRecipeInput input, RegistryWrapper.WrapperLookup registries)
+	public ItemStack assemble(ScrappingTableRecipeInput input, HolderLookup.Provider registries)
 	{
-		return primaryResult;
+		return primaryResult.copy();
 	}
 
 	public ItemStack craftSecondary()
@@ -73,7 +76,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	}
 
 	@Override
-	public boolean isIgnoredInRecipeBook()
+	public boolean isSpecial()
 	{
 		return true;
 	}
@@ -82,6 +85,12 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	public boolean showNotification()
 	{
 		return false;
+	}
+
+	@Override
+	public String group()
+	{
+		return "";
 	}
 
 	@Override
@@ -134,7 +143,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	public static class Serializer<T extends ScrappingTableRecipe> implements RecipeSerializer<T>
 	{
 		private final MapCodec<T> codec;
-		private final PacketCodec<RegistryByteBuf, T> packetCodec;
+		private final StreamCodec<RegistryFriendlyByteBuf, T> packetCodec;
 
 		public Serializer(ScrappingTableRecipe.RecipeFactory<T> recipeFactory)
 		{
@@ -142,22 +151,22 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 					instance -> instance.group(
 							                    Ingredient.CODEC.fieldOf("tool").forGetter(ScrappingTableRecipe::getTool),
 							                    Ingredient.CODEC.fieldOf("ingredient").forGetter(ScrappingTableRecipe::getIngredient),
-							                    ItemStack.VALIDATED_CODEC.fieldOf("primary_result").forGetter(ScrappingTableRecipe::getPrimaryResult),
-							                    ItemStack.VALIDATED_CODEC.fieldOf("secondary_result").forGetter(ScrappingTableRecipe::getSecondaryResult),
-							                    Codecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(ScrappingTableRecipe::getSecondaryChance)
+							                    ItemStack.STRICT_CODEC.fieldOf("primary_result").forGetter(ScrappingTableRecipe::getPrimaryResult),
+							                    ItemStack.STRICT_CODEC.fieldOf("secondary_result").forGetter(ScrappingTableRecipe::getSecondaryResult),
+							                    ExtraCodecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(ScrappingTableRecipe::getSecondaryChance)
 					                    )
 					                    .apply(instance, recipeFactory::create)
 			);
 			this.packetCodec = GalaxiesPacketUtil.quintuple(
-					Ingredient.PACKET_CODEC,
+					Ingredient.CONTENTS_STREAM_CODEC,
 					ScrappingTableRecipe::getTool,
-					Ingredient.PACKET_CODEC,
+					Ingredient.CONTENTS_STREAM_CODEC,
 					ScrappingTableRecipe::getIngredient,
-					ItemStack.PACKET_CODEC,
+					ItemStack.STREAM_CODEC,
 					ScrappingTableRecipe::getPrimaryResult,
-					ItemStack.PACKET_CODEC,
+					ItemStack.STREAM_CODEC,
 					ScrappingTableRecipe::getSecondaryResult,
-					PacketCodecs.FLOAT,
+					ByteBufCodecs.FLOAT,
 					ScrappingTableRecipe::getSecondaryChance,
 					recipeFactory::create
 			);
@@ -170,7 +179,7 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 		}
 
 		@Override
-		public PacketCodec<RegistryByteBuf, T> packetCodec()
+		public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec()
 		{
 			return this.packetCodec;
 		}

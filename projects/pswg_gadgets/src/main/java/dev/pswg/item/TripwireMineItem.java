@@ -3,89 +3,89 @@ package dev.pswg.item;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.entity.mines.TripwireMineEntity;
 import dev.pswg.world.TickConstants;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.consume.UseAction;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class TripwireMineItem extends Item
 {
-	public TripwireMineItem(Settings settings)
+	public TripwireMineItem(Properties settings)
 	{
 		super(settings);
 	}
 
-	public void throwEntity(World world, PlayerEntity player)
+	public void throwEntity(Level world, Player player)
 	{
-		TripwireMineEntity mine = GadgetsEntities.TRIPWIRE_MINE_ENTITY.create(world, SpawnReason.EVENT);
+		TripwireMineEntity mine = GadgetsEntities.TRIPWIRE_MINE_ENTITY.create(world, EntitySpawnReason.EVENT);
 
-		mine.onSpawnPacket(new EntitySpawnS2CPacket(mine.getId(), mine.getUuid(), player.getX(), player.getY() + 1.5, player.getZ(), -player.getPitch(), -player.getYaw(), mine.getType(), 0, Vec3d.ZERO, player.getHeadYaw()));
+		mine.recreateFromPacket(new ClientboundAddEntityPacket(mine.getId(), mine.getUUID(), player.getX(), player.getY() + 1.5, player.getZ(), -player.getXRot(), -player.getYRot(), mine.getType(), 0, Vec3.ZERO, player.getYHeadRot()));
 		mine.setOwner(player);
-		mine.setVelocity(player.getRotationVecClient().x * 0.6, player.getRotationVecClient().y * 0.4, player.getRotationVecClient().z * 0.6);
+		mine.setDeltaMovement(player.getForward().x * 0.6, player.getForward().y * 0.4, player.getForward().z * 0.6);
 
-		world.spawnEntity(mine);
+		world.addFreshEntity(mine);
 	}
 
 	@Override
-	public int getMaxUseTime(ItemStack stack, LivingEntity user)
+	public int getUseDuration(ItemStack stack, LivingEntity user)
 	{
 		return TickConstants.ONE_HOUR;
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack)
+	public ItemUseAnimation getUseAnimation(ItemStack stack)
 	{
-		return UseAction.NONE;
+		return ItemUseAnimation.NONE;
 	}
 
 	@Override
-	public ActionResult use(World world, PlayerEntity user, Hand hand)
+	public InteractionResult use(Level world, Player user, InteractionHand hand)
 	{
-		ItemStack stack = user.getStackInHand(hand);
-		if (user instanceof PlayerEntity playerEntity)
+		ItemStack stack = user.getItemInHand(hand);
+		if (user instanceof Player playerEntity)
 		{
-			boolean inCreative = playerEntity.getAbilities().creativeMode;
-			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
+			boolean inCreative = playerEntity.getAbilities().instabuild;
+			ItemStack itemStack = playerEntity.getItemInHand(InteractionHand.MAIN_HAND);
 			if (!itemStack.isEmpty())
 			{
 				throwEntity(world, playerEntity);
 
 				if (!inCreative)
 				{
-					stack.decrement(1);
+					stack.shrink(1);
 				}
-				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+				playerEntity.awardStat(Stats.ITEM_USED.get(this));
 			}
 		}
-		return ActionResult.CONSUME;
+		return InteractionResult.CONSUME;
 	}
 
 	@Override
-	public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
+	public boolean releaseUsing(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks)
 	{
-		if (user instanceof PlayerEntity playerEntity)
+		if (user instanceof Player playerEntity)
 		{
-			boolean inCreative = playerEntity.getAbilities().creativeMode;
-			ItemStack itemStack = playerEntity.getStackInHand(Hand.MAIN_HAND);
+			boolean inCreative = playerEntity.getAbilities().instabuild;
+			ItemStack itemStack = playerEntity.getItemInHand(InteractionHand.MAIN_HAND);
 			if (!itemStack.isEmpty())
 			{
 				throwEntity(world, playerEntity);
 
 				if (!inCreative)
 				{
-					stack.decrement(1);
+					stack.shrink(1);
 				}
-				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+				playerEntity.awardStat(Stats.ITEM_USED.get(this));
 			}
 		}
-		return super.onStoppedUsing(stack, world, user, remainingUseTicks);
+		return super.releaseUsing(stack, world, user, remainingUseTicks);
 	}
 }

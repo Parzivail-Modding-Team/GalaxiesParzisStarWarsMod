@@ -1,9 +1,8 @@
 package dev.pswg.item;
 
 import dev.pswg.util.Numbered;
-import net.minecraft.item.Item;
-
 import java.util.function.Function;
+import net.minecraft.world.item.Item;
 
 public class NumberedItems extends Numbered<Item>
 {

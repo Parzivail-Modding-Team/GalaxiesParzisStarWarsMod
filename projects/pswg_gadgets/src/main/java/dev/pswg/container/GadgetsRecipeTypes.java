@@ -4,7 +4,7 @@ import dev.pswg.Gadgets;
 import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipe;
 import dev.pswg.feature.scrapping.table.ScrappingTableRecipe;
 import dev.pswg.registry.Registrar;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class GadgetsRecipeTypes
 {

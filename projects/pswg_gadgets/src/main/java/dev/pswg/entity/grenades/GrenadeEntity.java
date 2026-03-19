@@ -5,39 +5,34 @@ import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.entity.mines.TripwireMineEntity;
 import dev.pswg.item.grenades.GrenadeItem;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
-import net.minecraft.world.explosion.ExplosionImpl;
+import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerExplosion;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
-public abstract class GrenadeEntity extends ThrownEntity
+public abstract class GrenadeEntity extends ThrowableProjectile
 {
 	public enum CollisionType
 	{
@@ -46,9 +41,9 @@ public abstract class GrenadeEntity extends ThrownEntity
 		EXPLODE
 	}
 
-	private static final TrackedData<Integer> LIFE = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final TrackedData<Boolean> PRIMED = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-	private static final TrackedData<Boolean> IN_GROUND = DataTracker.registerData(GrenadeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Integer> LIFE = SynchedEntityData.defineId(GrenadeEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> PRIMED = SynchedEntityData.defineId(GrenadeEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IN_GROUND = SynchedEntityData.defineId(GrenadeEntity.class, EntityDataSerializers.BOOLEAN);
 
 	private BlockState inBlockState;
 	private CollisionType collisionType;
@@ -58,23 +53,23 @@ public abstract class GrenadeEntity extends ThrownEntity
 	private boolean isVisible = true;
 	private float clientYaw;
 
-	public GrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world, CollisionType collisionType)
+	public GrenadeEntity(EntityType<? extends ThrowableProjectile> entityType, Level world, CollisionType collisionType)
 	{
 		super(entityType, world);
 		this.collisionType = collisionType;
 	}
-	public GrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world)
+	public GrenadeEntity(EntityType<? extends ThrowableProjectile> entityType, Level world)
 	{
 		super(entityType, world);
 		this.collisionType = CollisionType.BOUNCE;
 	}
 
 	@Override
-	protected void initDataTracker(DataTracker.Builder builder)
+	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
-		builder.add(LIFE, 75);
-		builder.add(PRIMED, false);
-		builder.add(IN_GROUND, false);
+		builder.define(LIFE, 75);
+		builder.define(PRIMED, false);
+		builder.define(IN_GROUND, false);
 	}
 
 	public abstract GrenadeItem getItem();
@@ -90,24 +85,24 @@ public abstract class GrenadeEntity extends ThrownEntity
 	}
 
 	@Override
-	public void onSpawnPacket(EntitySpawnS2CPacket packet)
+	public void recreateFromPacket(ClientboundAddEntityPacket packet)
 	{
-		super.onSpawnPacket(packet);
-		clientYaw = packet.getYaw();
+		super.recreateFromPacket(packet);
+		clientYaw = packet.getYRot();
 	}
 
 	public boolean isInGround()
 	{
-		return this.dataTracker.get(IN_GROUND);
+		return this.entityData.get(IN_GROUND);
 	}
 
 	protected void setInGround(boolean inGround)
 	{
-		this.dataTracker.set(IN_GROUND, inGround);
+		this.entityData.set(IN_GROUND, inGround);
 	}
 
 	@Override
-	public boolean hasNoGravity()
+	public boolean isNoGravity()
 	{
 		return isInGround();
 	}
@@ -120,16 +115,16 @@ public abstract class GrenadeEntity extends ThrownEntity
 	private void fall()
 	{
 		this.setInGround(false);
-		Vec3d vec3d = this.getVelocity();
-		this.setVelocity(vec3d.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
+		Vec3 vec3d = this.getDeltaMovement();
+		this.setDeltaMovement(vec3d.multiply((double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F), (double)(this.random.nextFloat() * 0.2F)));
 	}
 
 	@Override
 	public void tick()
 	{
-		BlockState blockState = getBlockStateAtPos();
+		BlockState blockState = getInBlockState();
 
-		if (this.inBlockState != blockState && !this.getEntityWorld().isClient() && this.isInGround())
+		if (this.inBlockState != blockState && !this.level().isClientSide() && this.isInGround())
 			this.fall();
 
 		if (shouldExplode)
@@ -141,7 +136,7 @@ public abstract class GrenadeEntity extends ThrownEntity
 		if (this.isInLava())
 			this.explode();
 
-		if (this.age > this.getLife())
+		if (this.tickCount > this.getLife())
 		{
 			if (isPrimed())
 				this.explode();
@@ -149,81 +144,81 @@ public abstract class GrenadeEntity extends ThrownEntity
 		super.tick();
 		if (hasDrag())
 		{
-			this.setVelocity(getVelocity().multiply(0.975d));
-			velocityModified = true;
+			this.setDeltaMovement(getDeltaMovement().scale(0.975d));
+			hurtMarked = true;
 		}
 	}
 
 	@Override
-	public ActionResult interact(PlayerEntity player, Hand hand)
+	public InteractionResult interact(Player player, InteractionHand hand)
 	{
-		if (!isPrimed() && age > getMinPickUpTime() && player.getMainHandStack().isEmpty())
+		if (!isPrimed() && tickCount > getMinPickUpTime() && player.getMainHandItem().isEmpty())
 		{
-			player.giveItemStack(new ItemStack(getItem()));
+			player.addItem(new ItemStack(getItem()));
 			this.remove(RemovalReason.DISCARDED);
 		}
 		return super.interact(player, hand);
 	}
 	@Override
-	protected void onBlockCollision(BlockState state)
+	protected void onInsideBlock(BlockState state)
 	{
-		if (state.isIn(GadgetsBlocks.Tags.DETONATES_GRENADE))
+		if (state.is(GadgetsBlocks.Tags.DETONATES_GRENADE))
 			explode();
-		super.onBlockCollision(state);
+		super.onInsideBlock(state);
 	}
 
 	@Override
-	protected void onCollision(HitResult hitResult)
+	protected void onHit(HitResult hitResult)
 	{
 		switch (collisionType)
 		{
 			case EXPLODE -> this.explode();
-			case STOP -> this.setVelocity(0, 0, 0, 0, 0);
+			case STOP -> this.shoot(0, 0, 0, 0, 0);
 			case BOUNCE -> this.bounce(hitResult);
 		}
-		super.onCollision(hitResult);
+		super.onHit(hitResult);
 	}
 
 	protected void bounce(HitResult hit)
 	{
 		if (hit.getType() == HitResult.Type.BLOCK)
 		{
-			Vec3d velocity = this.getVelocity();
+			Vec3 velocity = this.getDeltaMovement();
 			BlockHitResult blockHit = (BlockHitResult)hit;
 
-			BlockState hitState = this.getEntityWorld().getBlockState(blockHit.getBlockPos());
-			double hardness = hitState.getHardness(getEntityWorld(), blockHit.getBlockPos());
-			double restitution = MathHelper.clamp(0.4 - 0.25 / hardness, 0.1, 1);
+			BlockState hitState = this.level().getBlockState(blockHit.getBlockPos());
+			double hardness = hitState.getDestroySpeed(level(), blockHit.getBlockPos());
+			double restitution = Mth.clamp(0.4 - 0.25 / hardness, 0.1, 1);
 			double blockMultiplier = 1;
 
-			if (getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(GalaxiesBlocks.Tags.BOUNCY))
+			if (level().getBlockState(blockHit.getBlockPos()).is(GalaxiesBlocks.Tags.BOUNCY))
 				blockMultiplier = 2.5;
-			if (getEntityWorld().getBlockState(blockHit.getBlockPos()).isIn(GalaxiesBlocks.Tags.SOFT))
+			if (level().getBlockState(blockHit.getBlockPos()).is(GalaxiesBlocks.Tags.SOFT))
 				blockMultiplier = 0.75;
 
-			if (blockHit.getSide().equals(Direction.UP) && velocity.lengthSquared() < 0.01)
+			if (blockHit.getDirection().equals(Direction.UP) && velocity.lengthSqr() < 0.01)
 			{
-				inBlockState = getEntityWorld().getBlockState(blockHit.getBlockPos());
+				inBlockState = level().getBlockState(blockHit.getBlockPos());
 				setInGround(true);
-				setVelocity(Vec3d.ZERO);
+				setDeltaMovement(Vec3.ZERO);
 				return;
 			}
 
-			Vec3d dir = velocity.normalize();
+			Vec3 dir = velocity.normalize();
 
-			Vec3d normal = new Vec3d(blockHit.getSide().getUnitVector());
-			Vec3d newDir = normal.multiply(2 * normal.dotProduct(dir)).subtract(dir).multiply(-1);
-			this.setVelocity(newDir.multiply(velocity.length() * restitution * blockMultiplier));
-			if (Math.abs(getVelocity().length()) > 0.2f)
-				clientYaw = (float)(MathHelper.atan2(getVelocity().y, getVelocity().horizontalLength()) * (double)(180F / (float)Math.PI));
+			Vec3 normal = new Vec3(blockHit.getDirection().step());
+			Vec3 newDir = normal.scale(2 * normal.dot(dir)).subtract(dir).scale(-1);
+			this.setDeltaMovement(newDir.scale(velocity.length() * restitution * blockMultiplier));
+			if (Math.abs(getDeltaMovement().length()) > 0.2f)
+				clientYaw = (float)(Mth.atan2(getDeltaMovement().y, getDeltaMovement().horizontalDistance()) * (double)(180F / (float)Math.PI));
 		}
 	}
 
 	public void playCollisionSound(BlockHitResult blockHitResult)
 	{
-		BlockState state = getEntityWorld().getBlockState(blockHitResult.getBlockPos());
-		if (getVelocity().length() > 0.05f)
-			this.playSound(state.getSoundGroup().getHitSound(), 0.5f, 1f);
+		BlockState state = level().getBlockState(blockHitResult.getBlockPos());
+		if (getDeltaMovement().length() > 0.05f)
+			this.playSound(state.getSoundType().getHitSound(), 0.5f, 1f);
 	}
 
 	public float getExplosionPower()
@@ -233,22 +228,22 @@ public abstract class GrenadeEntity extends ThrownEntity
 
 	public int getLife()
 	{
-		return dataTracker.get(LIFE);
+		return entityData.get(LIFE);
 	}
 
 	public boolean isPrimed()
 	{
-		return dataTracker.get(PRIMED);
+		return entityData.get(PRIMED);
 	}
 
 	public void setLife(int life)
 	{
-		dataTracker.set(LIFE, life);
+		entityData.set(LIFE, life);
 	}
 
 	public void setPrimed(boolean isPrimed)
 	{
-		dataTracker.set(PRIMED, isPrimed);
+		entityData.set(PRIMED, isPrimed);
 	}
 
 	public void setExplosionPower(float explosionPower)
@@ -256,18 +251,18 @@ public abstract class GrenadeEntity extends ThrownEntity
 		this.explosionPower = explosionPower;
 	}
 	@Override
-	public boolean shouldRender(double distance)
+	public boolean shouldRenderAtSqrDistance(double distance)
 	{
-		return isVisible() && super.shouldRender(distance);
+		return isVisible() && super.shouldRenderAtSqrDistance(distance);
 	}
 
-	protected void createParticles(double x, double y, double z, ServerWorld serverWorld)
+	protected void createParticles(double x, double y, double z, ServerLevel serverWorld)
 	{
 	}
 	@Override
-	public boolean damage(ServerWorld world, DamageSource source, float amount)
+	public boolean hurtServer(ServerLevel world, DamageSource source, float amount)
 	{
-		if (source.isIn(DamageTypeTags.IS_EXPLOSION))
+		if (source.is(DamageTypeTags.IS_EXPLOSION))
 		{
 			if (!this.shouldExplode)
 			{
@@ -275,12 +270,12 @@ public abstract class GrenadeEntity extends ThrownEntity
 				this.shouldExplode = true;
 			}
 		}
-		else if (source.isIn(GadgetsDamage.DamageTags.IGNITES_EXPLOSIVES))
+		else if (source.is(GadgetsDamage.DamageTags.IGNITES_EXPLOSIVES))
 			if (!this.shouldExplode)
 				this.explode();
 
-		if (!getEntityWorld().isClient())
-			return super.damage((ServerWorld)getEntityWorld(), source, amount);
+		if (!level().isClientSide())
+			return super.hurtServer((ServerLevel)level(), source, amount);
 			else
 				return false;
 	}
@@ -293,27 +288,27 @@ public abstract class GrenadeEntity extends ThrownEntity
 
 	public void explode()
 	{
-		Vec3d pos = new Vec3d(getX(), getY(), getZ());
+		Vec3 pos = new Vec3(getX(), getY(), getZ());
 		explode(pos);
 	}
 
 	@Override
-	public float getTargetingMargin()
+	public float getPickRadius()
 	{
-		return (float)getBoundingBox().getAverageSideLength() / 2f;
+		return (float)getBoundingBox().getSize() / 2f;
 	}
 
 	@Override
-	public boolean canHit()
+	public boolean isPickable()
 	{
 		return true;
 	}
 
-	public void explode(Vec3d pos)
+	public void explode(Vec3 pos)
 	{
-		if (getEntityWorld() instanceof ServerWorld serverWorld)
+		if (level() instanceof ServerLevel serverWorld)
 		{
-			var explosion = new ExplosionImpl(serverWorld, this, getDamageSources().create(DamageTypes.EXPLOSION), (ExplosionBehavior)null, pos.add(0, 0.05f, 0), getExplosionPower(), false, Explosion.DestructionType.DESTROY_WITH_DECAY);
+			var explosion = new ServerExplosion(serverWorld, this, damageSources().source(DamageTypes.EXPLOSION), (ExplosionDamageCalculator)null, pos.add(0, 0.05f, 0), getExplosionPower(), false, Explosion.BlockInteraction.DESTROY_WITH_DECAY);
 			explosion.explode();
 			createParticles(getX(), getY(), getZ(), serverWorld);
 		}
@@ -321,24 +316,24 @@ public abstract class GrenadeEntity extends ThrownEntity
 	}
 
 	@Override
-	protected void writeCustomData(WriteView view)
+	protected void addAdditionalSaveData(ValueOutput view)
 	{
-		super.writeCustomData(view);
+		super.addAdditionalSaveData(view);
 
 		view.putInt("life", getLife());
 		view.putBoolean("primed", isPrimed());
 		view.putBoolean("in_ground", isInGround());
 		if (this.inBlockState != null)
-			view.put("inBlockState", BlockState.CODEC, this.inBlockState);
+			view.store("inBlockState", BlockState.CODEC, this.inBlockState);
 	}
 
 	@Override
-	protected void readCustomData(ReadView view)
+	protected void readAdditionalSaveData(ValueInput view)
 	{
-		super.readCustomData(view);
-		setLife(view.getInt("life", 1));
-		setPrimed(view.getBoolean("primed", false));
-		setInGround(view.getBoolean("in_ground", false));
+		super.readAdditionalSaveData(view);
+		setLife(view.getIntOr("life", 1));
+		setPrimed(view.getBooleanOr("primed", false));
+		setInGround(view.getBooleanOr("in_ground", false));
 		if (view.contains("inBlockState"))
 			this.inBlockState = view.read("inBlockState", BlockState.CODEC).get();
 	}

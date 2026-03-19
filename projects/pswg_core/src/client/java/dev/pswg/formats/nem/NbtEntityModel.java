@@ -2,11 +2,15 @@ package dev.pswg.formats.nem;
 
 import dev.pswg.data.DataResolution;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.function.Function;
 
@@ -16,20 +20,20 @@ public final class NbtEntityModel
 	 * The list of model parts required to successfully render a biped model
 	 */
 	private static final List<String> REQUIRED_BIPED_PARTS = List.of(
-			EntityModelPartNames.HEAD, EntityModelPartNames.HAT, EntityModelPartNames.BODY,
-			EntityModelPartNames.RIGHT_ARM, EntityModelPartNames.LEFT_ARM, EntityModelPartNames.RIGHT_LEG,
-			EntityModelPartNames.LEFT_LEG
+			PartNames.HEAD, PartNames.HAT, PartNames.BODY,
+			PartNames.RIGHT_ARM, PartNames.LEFT_ARM, PartNames.RIGHT_LEG,
+			PartNames.LEFT_LEG
 	);
 
 	/**
-	 * Loads a NBT Entity Model (*.nem) file into a {@link TexturedModelData}
+	 * Loads a NBT Entity Model (*.nem) file into a {@link LayerDefinition}
 	 *
 	 * @param nbt                The serialized model data
 	 * @param dependencyResolver A function that will resolve dependency identifiers to serialized model data
 	 *
-	 * @return A loaded {@link TexturedModelData} if all dependencies were resolved, or a list of missing dependencies otherwise
+	 * @return A loaded {@link LayerDefinition} if all dependencies were resolved, or a list of missing dependencies otherwise
 	 */
-	public static DataResolution<TexturedModelData> load(NbtCompound nbt, Function<Identifier, NbtCompound> dependencyResolver)
+	public static DataResolution<LayerDefinition> load(CompoundTag nbt, Function<ResourceLocation, CompoundTag> dependencyResolver)
 	{
 		var resolution = resolveDependencies(nbt, dependencyResolver);
 
@@ -46,9 +50,9 @@ public final class NbtEntityModel
 	 * @param nbt                The serialized model data
 	 * @param dependencyResolver A function that will resolve dependency identifiers to serialized model data
 	 *
-	 * @return A processed {@link NbtCompound} if all dependencies were resolved, or a list of missing dependencies otherwise
+	 * @return A processed {@link CompoundTag} if all dependencies were resolved, or a list of missing dependencies otherwise
 	 */
-	private static DataResolution<NbtCompound> resolveDependencies(NbtCompound nbt, Function<Identifier, NbtCompound> dependencyResolver)
+	private static DataResolution<CompoundTag> resolveDependencies(CompoundTag nbt, Function<ResourceLocation, CompoundTag> dependencyResolver)
 	{
 		var partsOpt = nbt.getCompound("parts");
 
@@ -60,7 +64,7 @@ public final class NbtEntityModel
 		var base = nbt.getString("base");
 		if (base.isPresent())
 		{
-			var baseId = Identifier.of(base.get());
+			var baseId = ResourceLocation.parse(base.get());
 
 			// resolve the serialized data of the dependency
 			var overrideNbt = dependencyResolver.apply(baseId);
@@ -82,38 +86,38 @@ public final class NbtEntityModel
 			{
 				var overrideParts = overridePartsOpt.get();
 
-				for (var entry : overrideParts.getKeys())
+				for (var entry : overrideParts.keySet())
 					if (!parts.contains(entry))
 						parts.put(entry, overrideParts.getCompound(entry).orElseThrow());
 			}
 		}
 
-		if (nbt.getBoolean("expand_biped", false))
+		if (nbt.getBooleanOr("expand_biped", false))
 		{
 			for (var part : REQUIRED_BIPED_PARTS)
 				if (!parts.contains(part))
-					parts.put(part, new NbtCompound());
+					parts.put(part, new CompoundTag());
 		}
 
 		return DataResolution.success(nbt);
 	}
 
 	/**
-	 * Converts a serialized model to a {@link TexturedModelData}
+	 * Converts a serialized model to a {@link LayerDefinition}
 	 *
 	 * @param nbt The serialized model data
 	 *
 	 * @return A textured model
 	 */
-	private static TexturedModelData buildModel(NbtCompound nbt)
+	private static LayerDefinition buildModel(CompoundTag nbt)
 	{
-		var modelData = new ModelData();
+		var modelData = new MeshDefinition();
 		var root = modelData.getRoot();
 
 		addChildren(root, nbt.getCompoundOrEmpty("parts"));
 
 		var texTag = nbt.getCompound("tex").orElseThrow();
-		return TexturedModelData.of(modelData, texTag.getInt("w", 0), texTag.getInt("h", 0));
+		return LayerDefinition.create(modelData, texTag.getIntOr("w", 0), texTag.getIntOr("h", 0));
 	}
 
 	/**
@@ -122,9 +126,9 @@ public final class NbtEntityModel
 	 * @param root  The model part into which the parts will be placed
 	 * @param parts The source of the parts to add
 	 */
-	private static void addChildren(ModelPartData root, NbtCompound parts)
+	private static void addChildren(PartDefinition root, CompoundTag parts)
 	{
-		for (var key : parts.getKeys())
+		for (var key : parts.keySet())
 			addChild(root, key, parts.getCompound(key).orElseThrow());
 	}
 
@@ -135,30 +139,30 @@ public final class NbtEntityModel
 	 * @param partName The name of the part to be added
 	 * @param part     The serialized value of the part to be added
 	 */
-	private static void addChild(ModelPartData parent, String partName, NbtCompound part)
+	private static void addChild(PartDefinition parent, String partName, CompoundTag part)
 	{
-		var partBuilder = ModelPartBuilder.create();
+		var partBuilder = CubeListBuilder.create();
 
 		if (part.isEmpty())
-			parent.addChild(partName, partBuilder, ModelTransform.NONE);
+			parent.addOrReplaceChild(partName, partBuilder, PartPose.ZERO);
 		else
 		{
 			var tex = part.getCompoundOrEmpty("tex");
-			var partU = tex.getInt("u", 0);
-			var partV = tex.getInt("v", 0);
-			var mirrored = tex.getBoolean("mirrored", false);
+			var partU = tex.getIntOr("u", 0);
+			var partV = tex.getIntOr("v", 0);
+			var mirrored = tex.getBooleanOr("mirrored", false);
 
 			var pos = part.getCompoundOrEmpty("pos");
-			var x = pos.getFloat("x", 0);
-			var y = pos.getFloat("y", 0);
-			var z = pos.getFloat("z", 0);
+			var x = pos.getFloatOr("x", 0);
+			var y = pos.getFloatOr("y", 0);
+			var z = pos.getFloatOr("z", 0);
 
 			var rot = part.getCompoundOrEmpty("rot");
-			var pitch = rot.getFloat("pitch", 0);
-			var yaw = rot.getFloat("yaw", 0);
-			var roll = rot.getFloat("roll", 0);
+			var pitch = rot.getFloatOr("pitch", 0);
+			var yaw = rot.getFloatOr("yaw", 0);
+			var roll = rot.getFloatOr("roll", 0);
 
-			var transform = ModelTransform.of(x, y, z, pitch, yaw, roll);
+			var transform = PartPose.offsetAndRotation(x, y, z, pitch, yaw, roll);
 
 			var cuboids = part.getListOrEmpty("cuboids");
 			for (var i = 0; i < cuboids.size(); i++)
@@ -166,35 +170,35 @@ public final class NbtEntityModel
 				var cuboid = cuboids.getCompoundOrEmpty(i);
 
 				var cPos = cuboid.getCompoundOrEmpty("pos");
-				var cX = cPos.getFloat("x", 0);
-				var cY = cPos.getFloat("y", 0);
-				var cZ = cPos.getFloat("z", 0);
+				var cX = cPos.getFloatOr("x", 0);
+				var cY = cPos.getFloatOr("y", 0);
+				var cZ = cPos.getFloatOr("z", 0);
 
 				var cSize = cuboid.getCompoundOrEmpty("size");
-				var cSX = cSize.getInt("x", 0);
-				var cSY = cSize.getInt("y", 0);
-				var cSZ = cSize.getInt("z", 0);
+				var cSX = cSize.getIntOr("x", 0);
+				var cSY = cSize.getIntOr("y", 0);
+				var cSZ = cSize.getIntOr("z", 0);
 
 				var cExpand = cuboid.getCompoundOrEmpty("expand");
-				var cEX = cExpand.getFloat("x", 0);
-				var cEY = cExpand.getFloat("y", 0);
-				var cEZ = cExpand.getFloat("z", 0);
+				var cEX = cExpand.getFloatOr("x", 0);
+				var cEY = cExpand.getFloatOr("y", 0);
+				var cEZ = cExpand.getFloatOr("z", 0);
 
 				var cTex = cuboid.getCompoundOrEmpty("tex");
-				var cU = cTex.getInt("u", 0);
-				var cV = cTex.getInt("v", 0);
-				var cMirrored = cTex.getBoolean("mirrored", false);
+				var cU = cTex.getIntOr("u", 0);
+				var cV = cTex.getIntOr("v", 0);
+				var cMirrored = cTex.getBooleanOr("mirrored", false);
 
-				partBuilder = partBuilder.mirrored(cMirrored ^ mirrored).cuboid(
+				partBuilder = partBuilder.mirror(cMirrored ^ mirrored).addBox(
 						"",
 						cX, cY, cZ,
 						cSX, cSY, cSZ,
-						new Dilation(cEX, cEY, cEZ),
+						new CubeDeformation(cEX, cEY, cEZ),
 						partU + cU, partV + cV
 				);
 			}
 
-			var childPart = parent.addChild(partName, partBuilder, transform);
+			var childPart = parent.addOrReplaceChild(partName, partBuilder, transform);
 
 			if (part.contains("children"))
 				addChildren(childPart, part.getCompound("children").orElseThrow());

@@ -1,12 +1,12 @@
 package dev.pswg.feature.brewing;
 
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.world.effect.MobEffectInstance;
 
 public class EffectCell extends BrewingCell
 {
-	public StatusEffectInstance statusEffect;
+	public MobEffectInstance statusEffect;
 
-	public EffectCell(StatusEffectInstance statusEffectInstance, BrewingCellType cellType)
+	public EffectCell(MobEffectInstance statusEffectInstance, BrewingCellType cellType)
 	{
 		super(cellType);
 		this.statusEffect = statusEffectInstance;

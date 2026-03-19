@@ -2,14 +2,11 @@ package dev.pswg.feature.brewing;
 
 import com.mojang.datafixers.util.Pair;
 import dev.pswg.container.GalaxiesItems;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Colors;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class MixerBrewingPaths
 {

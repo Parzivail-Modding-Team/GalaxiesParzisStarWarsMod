@@ -5,18 +5,22 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsRecipeSerializers;
 import dev.pswg.container.GadgetsRecipeTypes;
 import dev.pswg.util.GalaxiesPacketUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.*;
-import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.level.Level;
 
-public class LaserCuttingRecipe implements Recipe<SingleStackRecipeInput>
+public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 {
 
 	private final Ingredient ingredient;
@@ -33,13 +37,13 @@ public class LaserCuttingRecipe implements Recipe<SingleStackRecipeInput>
 	}
 
 	@Override
-	public boolean matches(SingleStackRecipeInput input, World world)
+	public boolean matches(SingleRecipeInput input, Level world)
 	{
 		return ingredient.test(input.item());
 	}
 
 	@Override
-	public ItemStack craft(SingleStackRecipeInput input, RegistryWrapper.WrapperLookup registries)
+	public ItemStack assemble(SingleRecipeInput input, HolderLookup.Provider registries)
 	{
 		return primaryResult.copy();
 	}
@@ -70,13 +74,13 @@ public class LaserCuttingRecipe implements Recipe<SingleStackRecipeInput>
 	}
 
 	@Override
-	public RecipeSerializer<? extends Recipe<SingleStackRecipeInput>> getSerializer()
+	public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer()
 	{
 		return GadgetsRecipeSerializers.LASER_CUTTING_SERIALIZER;
 	}
 
 	@Override
-	public boolean isIgnoredInRecipeBook()
+	public boolean isSpecial()
 	{
 		return true;
 	}
@@ -88,19 +92,25 @@ public class LaserCuttingRecipe implements Recipe<SingleStackRecipeInput>
 	}
 
 	@Override
-	public RecipeType<? extends Recipe<SingleStackRecipeInput>> getType()
+	public String group()
+	{
+		return "";
+	}
+
+	@Override
+	public RecipeType<? extends Recipe<SingleRecipeInput>> getType()
 	{
 		return GadgetsRecipeTypes.CUTTING;
 	}
 
 	@Override
-	public IngredientPlacement getIngredientPlacement()
+	public PlacementInfo placementInfo()
 	{
-		return IngredientPlacement.NONE;
+		return PlacementInfo.NOT_PLACEABLE;
 	}
 
 	@Override
-	public RecipeBookCategory getRecipeBookCategory()
+	public RecipeBookCategory recipeBookCategory()
 	{
 		return null;
 	}
@@ -114,27 +124,27 @@ public class LaserCuttingRecipe implements Recipe<SingleStackRecipeInput>
 	public static class Serializer<T extends LaserCuttingRecipe> implements RecipeSerializer<T>
 	{
 		private final MapCodec<T> codec;
-		private final PacketCodec<RegistryByteBuf, T> packetCodec;
+		private final StreamCodec<RegistryFriendlyByteBuf, T> packetCodec;
 
 		public Serializer(LaserCuttingRecipe.RecipeFactory<T> recipeFactory)
 		{
 			this.codec = RecordCodecBuilder.mapCodec(
 					instance -> instance.group(
 							                    Ingredient.CODEC.fieldOf("ingredient").forGetter(LaserCuttingRecipe::getIngredient),
-							                    ItemStack.VALIDATED_CODEC.fieldOf("primary_result").forGetter(LaserCuttingRecipe::getPrimaryResult),
-							                    ItemStack.VALIDATED_CODEC.fieldOf("secondary_result").forGetter(LaserCuttingRecipe::getSecondaryResult),
-							                    Codecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(LaserCuttingRecipe::getSecondaryChance)
+							                    ItemStack.STRICT_CODEC.fieldOf("primary_result").forGetter(LaserCuttingRecipe::getPrimaryResult),
+							                    ItemStack.STRICT_CODEC.fieldOf("secondary_result").forGetter(LaserCuttingRecipe::getSecondaryResult),
+							                    ExtraCodecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(LaserCuttingRecipe::getSecondaryChance)
 					                    )
 					                    .apply(instance, recipeFactory::create)
 			);
 			this.packetCodec = GalaxiesPacketUtil.quadruple(
-					Ingredient.PACKET_CODEC,
+					Ingredient.CONTENTS_STREAM_CODEC,
 					LaserCuttingRecipe::getIngredient,
-					ItemStack.PACKET_CODEC,
+					ItemStack.STREAM_CODEC,
 					LaserCuttingRecipe::getPrimaryResult,
-					ItemStack.PACKET_CODEC,
+					ItemStack.STREAM_CODEC,
 					LaserCuttingRecipe::getSecondaryResult,
-					PacketCodecs.FLOAT,
+					ByteBufCodecs.FLOAT,
 					LaserCuttingRecipe::getSecondaryChance,
 					recipeFactory::create
 			);
@@ -147,7 +157,7 @@ public class LaserCuttingRecipe implements Recipe<SingleStackRecipeInput>
 		}
 
 		@Override
-		public PacketCodec<RegistryByteBuf, T> packetCodec()
+		public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec()
 		{
 			return this.packetCodec;
 		}

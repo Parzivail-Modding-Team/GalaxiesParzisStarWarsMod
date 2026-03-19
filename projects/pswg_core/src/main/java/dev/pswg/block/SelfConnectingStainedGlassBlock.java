@@ -1,13 +1,13 @@
 package dev.pswg.block;
 
-import net.minecraft.block.Stainable;
-import net.minecraft.util.DyeColor;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.BeaconBeamBlock;
 
-public class SelfConnectingStainedGlassBlock extends SelfConnectingGlassBlock implements Stainable
+public class SelfConnectingStainedGlassBlock extends SelfConnectingGlassBlock implements BeaconBeamBlock
 {
 	private final DyeColor color;
 
-	public SelfConnectingStainedGlassBlock(DyeColor color, Settings settings)
+	public SelfConnectingStainedGlassBlock(DyeColor color, Properties settings)
 	{
 		super(settings);
 		this.color = color;

@@ -1,27 +1,27 @@
 package dev.pswg.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Fertilizable;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class FertileDirt extends Block
 {
-	public FertileDirt(Settings settings)
+	public FertileDirt(Properties settings)
 	{
 		super(settings);
 	}
 
 	@Override
-	protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
 		super.randomTick(state, world, pos, random);
-		var plantState = world.getBlockState(pos.up());
-		if (world instanceof ServerWorld serverWorld)
-			if (plantState.getBlock() instanceof Fertilizable fertilizableBlock)
-				if (fertilizableBlock.canGrow(serverWorld, serverWorld.random, pos.up(), plantState))
-					fertilizableBlock.grow(serverWorld, serverWorld.random, pos.up(), plantState);
+		var plantState = world.getBlockState(pos.above());
+		if (world instanceof ServerLevel serverWorld)
+			if (plantState.getBlock() instanceof BonemealableBlock fertilizableBlock)
+				if (fertilizableBlock.isBonemealSuccess(serverWorld, serverWorld.random, pos.above(), plantState))
+					fertilizableBlock.performBonemeal(serverWorld, serverWorld.random, pos.above(), plantState);
 	}
 }

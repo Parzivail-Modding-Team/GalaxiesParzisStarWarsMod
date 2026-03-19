@@ -6,18 +6,18 @@ import dev.pswg.particles.CustomRendererParticle;
 import dev.pswg.particles.GadgetsParticleRenderer;
 import dev.pswg.particles.renderers.FragmentationGrenadeWaveParticleRenderer;
 import dev.pswg.particles.renderers.GasParticleRenderer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.particle.ParticleRenderer;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.SubmittableBatch;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.particle.ParticleGroup;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.state.ParticlesRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ParticleManager.class)
+@Mixin(ParticleEngine.class)
 public class ParticleManagerMixin
 {
 	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Ljava/util/Queue;poll()Ljava/lang/Object;"))
@@ -30,29 +30,29 @@ public class ParticleManagerMixin
 		return particle;
 	}
 
-	private ParticleRenderer<?> createParticleRenderer(GadgetsParticleRenderer particleRenderer)
+	private ParticleGroup<?> createParticleRenderer(GadgetsParticleRenderer particleRenderer)
 	{
 		return switch (particleRenderer)
 		{
-			case Gas -> new GasParticleRenderer((ParticleManager)(Object)this);
-			case FragmentationGrenadeWave -> new FragmentationGrenadeWaveParticleRenderer((ParticleManager)(Object)this);
+			case Gas -> new GasParticleRenderer((ParticleEngine)(Object)this);
+			case FragmentationGrenadeWave -> new FragmentationGrenadeWaveParticleRenderer((ParticleEngine)(Object)this);
 		};
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void tick(CallbackInfo ci)
 	{
-		for (ParticleRenderer<?> particleRenderer : GadgetsClient.particleRenderers.values())
-			particleRenderer.tick();
+		for (ParticleGroup<?> particleRenderer : GadgetsClient.particleRenderers.values())
+			particleRenderer.tickParticles();
 	}
 
-	@Inject(method = "addToBatch", at = @At("HEAD"))
-	public void addToBatch(SubmittableBatch batch, Frustum frustum, Camera camera, float tickProgress, CallbackInfo ci)
+	@Inject(method = "extract", at = @At("HEAD"))
+	public void addToBatch(ParticlesRenderState batch, Frustum frustum, Camera camera, float tickProgress, CallbackInfo ci)
 	{
-		for (ParticleRenderer<?> particleRenderer : GadgetsClient.particleRenderers.values())
+		for (ParticleGroup<?> particleRenderer : GadgetsClient.particleRenderers.values())
 			if (!particleRenderer.isEmpty())
 			{
-				batch.add(particleRenderer.render(frustum, camera, tickProgress));
+				batch.add(particleRenderer.extractRenderState(frustum, camera, tickProgress));
 			}
 	}
 

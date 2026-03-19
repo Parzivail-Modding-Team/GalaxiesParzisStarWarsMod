@@ -1,8 +1,7 @@
 package dev.pswg.item;
 
-import net.minecraft.item.ItemStack;
-
 import java.util.Optional;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Provides an interface for items that can skip the hand animation when swapping

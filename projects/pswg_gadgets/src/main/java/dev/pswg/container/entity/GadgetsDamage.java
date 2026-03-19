@@ -2,37 +2,33 @@ package dev.pswg.container.entity;
 
 import dev.pswg.Gadgets;
 import dev.pswg.entity.effects.IntoxicatedEffect;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.World;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.level.Level;
 
 public class GadgetsDamage
 {
 	public static class DamageTags
 	{
-		public static final TagKey<DamageType> IGNITES_EXPLOSIVES = TagKey.of(RegistryKeys.DAMAGE_TYPE, Gadgets.id("ignites_explosives"));
+		public static final TagKey<DamageType> IGNITES_EXPLOSIVES = TagKey.create(Registries.DAMAGE_TYPE, Gadgets.id("ignites_explosives"));
 
 		public static void register()
 		{
 		}
 	}
 
-	public static final RegistryKey<DamageType> NERVE_GAS_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Gadgets.id("nerve_gas"));
+	public static final ResourceKey<DamageType> NERVE_GAS_DAMAGE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, Gadgets.id("nerve_gas"));
 
 	public static void register()
 	{
 
 	}
 
-	public static DamageSource create(World world, RegistryKey<DamageType> key)
+	public static DamageSource create(Level world, ResourceKey<DamageType> key)
 	{
-		return new DamageSource(world.getRegistryManager().getOrThrow(RegistryKeys.DAMAGE_TYPE).getOrThrow(key));
+		return new DamageSource(world.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(key));
 	}
 }

@@ -1,33 +1,32 @@
 package dev.pswg.util;
 
 import dev.pswg.block.collection.DyedBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-
 import java.util.function.ToIntFunction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class BlockUtil
 {
 	public static ToIntFunction<BlockState> createLightLevelFromBlockState(int litLevel)
 	{
-		return (blockState) -> (Boolean)blockState.get(Properties.LIT) ? litLevel : 0;
+		return (blockState) -> (Boolean)blockState.getValue(BlockStateProperties.LIT) ? litLevel : 0;
 	}
 
-	public static boolean never(BlockState blockState, BlockView blockView, BlockPos blockPos, EntityType<?> entityType)
+	public static boolean never(BlockState blockState, BlockGetter blockView, BlockPos blockPos, EntityType<?> entityType)
 	{
 		return false;
 	}
 
-	public static boolean never(BlockState blockState, BlockView blockView, BlockPos blockPos)
+	public static boolean never(BlockState blockState, BlockGetter blockView, BlockPos blockPos)
 	{
 		return false;
 	}
 
-	public static boolean always(BlockState blockState, BlockView blockView, BlockPos blockPos)
+	public static boolean always(BlockState blockState, BlockGetter blockView, BlockPos blockPos)
 	{
 		return true;
 	}

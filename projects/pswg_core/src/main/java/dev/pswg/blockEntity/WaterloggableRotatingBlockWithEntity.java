@@ -1,49 +1,49 @@
 package dev.pswg.blockEntity;
 
 import dev.pswg.block.WaterloggableRotatingBlock;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class WaterloggableRotatingBlockWithEntity extends WaterloggableRotatingBlock implements BlockEntityProvider
+public abstract class WaterloggableRotatingBlockWithEntity extends WaterloggableRotatingBlock implements EntityBlock
 {
-	protected WaterloggableRotatingBlockWithEntity(AbstractBlock.Settings settings)
+	protected WaterloggableRotatingBlockWithEntity(BlockBehaviour.Properties settings)
 	{
 		super(settings);
 	}
 
 	@Override
-	public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data)
+	public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int type, int data)
 	{
-		super.onSyncedBlockEvent(state, world, pos, type, data);
+		super.triggerEvent(state, world, pos, type, data);
 		var blockEntity = world.getBlockEntity(pos);
-		return blockEntity != null && blockEntity.onSyncedBlockEvent(type, data);
+		return blockEntity != null && blockEntity.triggerEvent(type, data);
 	}
 
 	@Override
 	@Nullable
-	public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos)
+	public MenuProvider getMenuProvider(BlockState state, Level world, BlockPos pos)
 	{
 		var blockEntity = world.getBlockEntity(pos);
-		return blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory)blockEntity : null;
+		return blockEntity instanceof MenuProvider ? (MenuProvider)blockEntity : null;
 	}
 
 	@Override
-	protected void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved)
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved)
 	{
 			var blockEntity = world.getBlockEntity(pos);
-			if (blockEntity instanceof Inventory)
+			if (blockEntity instanceof Container)
 			{
-				ItemScatterer.spawn(world, pos, (Inventory)blockEntity);
-				world.updateComparators(pos, this);
+				Containers.dropContents(world, pos, (Container)blockEntity);
+				world.updateNeighbourForOutputSignal(pos, this);
 			}
-		super.onStateReplaced(state, world, pos, moved);
+		super.affectNeighborsAfterRemoval(state, world, pos, moved);
 	}
 }

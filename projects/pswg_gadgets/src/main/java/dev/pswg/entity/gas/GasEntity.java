@@ -3,26 +3,25 @@ package dev.pswg.entity.gas;
 import com.mojang.serialization.Codec;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.particle.GasParticleEffect;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class GasEntity extends Entity
 {
@@ -37,7 +36,7 @@ public class GasEntity extends Entity
 	public int volume;
 	public int particlesCreated;
 
-	public GasEntity(EntityType<?> type, World world, int defaultVolume, int maxAge, float density, float diffusionCoefficient, ParticleType<GasParticleEffect> particle)
+	public GasEntity(EntityType<?> type, Level world, int defaultVolume, int maxAge, float density, float diffusionCoefficient, ParticleType<GasParticleEffect> particle)
 	{
 		super(type, world);
 		DEFAULT_VOLUME = defaultVolume;
@@ -52,7 +51,7 @@ public class GasEntity extends Entity
 	}
 
 	@Override
-	protected void initDataTracker(DataTracker.Builder builder)
+	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
 
 	}
@@ -68,13 +67,13 @@ public class GasEntity extends Entity
 	}
 
 	@Override
-	public boolean damage(ServerWorld world, DamageSource source, float amount)
+	public boolean hurtServer(ServerLevel world, DamageSource source, float amount)
 	{
 		return false;
 	}
 
 	@Override
-	protected void readCustomData(ReadView view)
+	protected void readAdditionalSaveData(ValueInput view)
 	{
 		var blockPosList = view.read("blockPosList", BlockPos.CODEC.listOf()).get();
 		var conList = view.read("concentrationList", Codec.FLOAT.listOf()).get();
@@ -83,7 +82,7 @@ public class GasEntity extends Entity
 	}
 
 	@Override
-	protected void writeCustomData(WriteView view)
+	protected void addAdditionalSaveData(ValueOutput view)
 	{
 		byte[] concentrationList = new byte[1024];
 		int i = 0;
@@ -92,25 +91,25 @@ public class GasEntity extends Entity
 			concentrationList[i] = f.byteValue();
 			i++;
 		}
-		view.put("blockPosList", BlockPos.CODEC.listOf(), massMap.keySet().stream().toList());
+		view.store("blockPosList", BlockPos.CODEC.listOf(), massMap.keySet().stream().toList());
 		view.putByteArray("concentrationList", concentrationList);
 	}
 
 	@Override
-	public boolean hasNoGravity()
+	public boolean isNoGravity()
 	{
 		return true;
 	}
 
 	@Override
-	public void onRemoved()
+	public void onClientRemoval()
 	{
-		super.onRemoved();
+		super.onClientRemoval();
 	}
 
 	public void debug()
 	{
-		var world = getEntityWorld();
+		var world = level();
 		float totalVolume = 0;
 		float maxConcentration = -1;
 		float minConcentration = Math.max(maxConcentration, DEFAULT_VOLUME);
@@ -123,9 +122,9 @@ public class GasEntity extends Entity
 				minConcentration = f;
 		}
 
-		for (PlayerEntity player : world.getPlayers())
+		for (Player player : world.players())
 		{
-			player.sendMessage(Text.of("block count: " + massMap.size() + " minC: " + minConcentration + " maxC: " + maxConcentration + " totalC: " + totalVolume), false);
+			player.displayClientMessage(Component.nullToEmpty("block count: " + massMap.size() + " minC: " + minConcentration + " maxC: " + maxConcentration + " totalC: " + totalVolume), false);
 		}
 	}
 
@@ -140,18 +139,18 @@ public class GasEntity extends Entity
 	public void setOriginalPos()
 	{
 		boolean foundPos = false;
-		var world = getEntityWorld();
-		var state = world.getBlockState(getBlockPos().up());
-		if (state.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !state.isSolid())
-			this.addDefaultPos(this.getBlockPos().up());
+		var world = level();
+		var state = world.getBlockState(blockPosition().above());
+		if (state.is(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !state.isSolid())
+			this.addDefaultPos(this.blockPosition().above());
 		else
 		{
 			for (Direction direction : Direction.values())
 			{
-				var offState = world.getBlockState(getBlockPos().offset(direction));
-				if (offState.isIn(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !offState.isSolid() && !foundPos)
+				var offState = world.getBlockState(blockPosition().relative(direction));
+				if (offState.is(GadgetsBlocks.Tags.GAS_PASS_THROUGH) || !offState.isSolid() && !foundPos)
 				{
-					this.addDefaultPos(this.getBlockPos());
+					this.addDefaultPos(this.blockPosition());
 					foundPos = true;
 				}
 			}
@@ -160,7 +159,7 @@ public class GasEntity extends Entity
 
 	public void updateFlowMap()
 	{
-		var world = getEntityWorld();
+		var world = level();
 		float totalNeighborPermeability = 0f;
 		///  Logic code
 		for (Map.Entry<BlockPos, Float> entry : massMap.entrySet())
@@ -169,19 +168,19 @@ public class GasEntity extends Entity
 			float mass = Math.max(0, entry.getValue());
 			for (Direction dir : Direction.values())
 			{
-				BlockPos offsetPos = pos.offset(dir);
+				BlockPos offsetPos = pos.relative(dir);
 				BlockState state = world.getBlockState(pos);
 				BlockState offsetState = world.getBlockState(offsetPos);
 
-				totalNeighborPermeability += ((!offsetState.isSideSolidFullSquare(world, pos, dir.getOpposite()) && !(state.isSideSolidFullSquare(world, offsetPos, dir)))) ? 1 : 0;
+				totalNeighborPermeability += ((!offsetState.isFaceSturdy(world, pos, dir.getOpposite()) && !(state.isFaceSturdy(world, offsetPos, dir)))) ? 1 : 0;
 			}
 
 			for (Direction dir : Direction.values())
 			{
-				BlockPos offsetPos = pos.offset(dir);
+				BlockPos offsetPos = pos.relative(dir);
 				BlockState state = world.getBlockState(pos);
 				BlockState offsetState = world.getBlockState(offsetPos);
-				float permeability = ((!offsetState.isSideSolidFullSquare(world, pos, dir.getOpposite()) && !(state.isSideSolidFullSquare(world, offsetPos, dir)))) ? 1 : 0;
+				float permeability = ((!offsetState.isFaceSturdy(world, pos, dir.getOpposite()) && !(state.isFaceSturdy(world, offsetPos, dir)))) ? 1 : 0;
 
 				if (permeability > 0)
 				{
@@ -200,7 +199,7 @@ public class GasEntity extends Entity
 				massMap.replace(pos, mass);
 		}
 		/// "Visual" code
-		if (this.age % 2 == 0)
+		if (this.tickCount % 2 == 0)
 		{
 			for (BlockPos pos : particleIdList.keySet())
 			{
@@ -226,15 +225,15 @@ public class GasEntity extends Entity
 				{
 					for (int i = 0; i < particleDelta; i++)
 					{
-						String particleId = this.getUuidAsString() + particlesCreated;
-						if (world.isClient())
+						String particleId = this.getStringUUID() + particlesCreated;
+						if (world.isClientSide())
 						{
-							world.addParticleClient(new GasParticleEffect(PARTICLE_TYPE, this.getUuidAsString(), particleId),
+							world.addParticle(new GasParticleEffect(PARTICLE_TYPE, this.getStringUUID(), particleId),
 							                        true,
 							                        true,
-							                        pos.getX() + 0.5 + (world.random.nextBetween(-475, 475) / 1000f),
-							                        pos.getY() + 0.5 + (world.random.nextBetween(-475, 475) / 1000f),
-							                        pos.getZ() + 0.5 + (world.random.nextBetween(-475, 475) / 1000f),
+							                        pos.getX() + 0.5 + (world.random.nextIntBetweenInclusive(-475, 475) / 1000f),
+							                        pos.getY() + 0.5 + (world.random.nextIntBetweenInclusive(-475, 475) / 1000f),
+							                        pos.getZ() + 0.5 + (world.random.nextIntBetweenInclusive(-475, 475) / 1000f),
 							                        0,
 							                        0,
 							                        0);
@@ -259,15 +258,15 @@ public class GasEntity extends Entity
 	@Override
 	public void tick()
 	{
-		if (this.age > this.MAX_AGE)
+		if (this.tickCount > this.MAX_AGE)
 		{
 			this.discard();
 			return;
 		}
-		if (this.firstUpdate)
+		if (this.firstTick)
 			setOriginalPos();
 
-		if (!this.firstUpdate)
+		if (!this.firstTick)
 		{
 			updateFlowMap();
 			for (Map.Entry<BlockPos, Float> entry : massMap.entrySet())

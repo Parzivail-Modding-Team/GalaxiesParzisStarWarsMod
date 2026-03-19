@@ -1,10 +1,10 @@
 package dev.pswg.entity.grenades;
 
 import dev.pswg.entity.gas.GasEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.level.Level;
 
 public abstract class GasGrenadeEntity extends GrenadeEntity
 {
@@ -15,14 +15,14 @@ public abstract class GasGrenadeEntity extends GrenadeEntity
 	//private float expellingRate;
 	private final EntityType<? extends GasEntity> gasEntityType;
 
-	public GasGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world, EntityType<? extends GasEntity> gasEntityType, CollisionType collisionType, int maxExpellingTime)
+	public GasGrenadeEntity(EntityType<? extends ThrowableProjectile> entityType, Level world, EntityType<? extends GasEntity> gasEntityType, CollisionType collisionType, int maxExpellingTime)
 	{
 		super(entityType, world, collisionType);
 		this.gasEntityType = gasEntityType;
 		MAX_EXPELLING_TIME = maxExpellingTime;
 	}
 
-	public GasGrenadeEntity(EntityType<? extends ThrownEntity> entityType, World world, int maxExpellingTime, EntityType<? extends GasEntity> gasEntityType)
+	public GasGrenadeEntity(EntityType<? extends ThrowableProjectile> entityType, Level world, int maxExpellingTime, EntityType<? extends GasEntity> gasEntityType)
 	{
 		super(entityType, world);
 		MAX_EXPELLING_TIME = maxExpellingTime;
@@ -34,13 +34,13 @@ public abstract class GasGrenadeEntity extends GrenadeEntity
 	{
 		if (!expellingGas)
 		{
-			var world = getEntityWorld();
-			var gasEntity = gasEntityType.create(world, SpawnReason.TRIGGERED);
-			gasEntity.setPosition(getX(), getY(), getZ());
+			var world = level();
+			var gasEntity = gasEntityType.create(world, EntitySpawnReason.TRIGGERED);
+			gasEntity.setPos(getX(), getY(), getZ());
 
 			expellingGas = true;
 
-			world.spawnEntity(gasEntity);
+			world.addFreshEntity(gasEntity);
 		}
 	}
 

@@ -1,13 +1,13 @@
 package dev.pswg.block;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ConnectingBlock;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class SelfConnectingBlock extends DelegatedConnectingBlock
 {
-	public SelfConnectingBlock(AbstractBlock.Settings settings)
+	public SelfConnectingBlock(BlockBehaviour.Properties settings)
 	{
 		super(settings);
 	}
@@ -15,12 +15,12 @@ public class SelfConnectingBlock extends DelegatedConnectingBlock
 	@Override
 	protected boolean shouldConnectTo(BlockState self, BlockState other)
 	{
-		return other.isOf(self.getBlock());
+		return other.is(self.getBlock());
 	}
 
 	@Override
-	protected MapCodec<? extends ConnectingBlock> getCodec()
+	protected MapCodec<? extends PipeBlock> codec()
 	{
-		return createCodec(SelfConnectingBlock::new);
+		return simpleCodec(SelfConnectingBlock::new);
 	}
 }

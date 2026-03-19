@@ -11,29 +11,29 @@ import dev.pswg.autoreg.AutoGenerateUtil;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.text.Text;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class GadgetsItemGroups
 {
 
-	public static final RegistryKey<ItemGroup> DEMOLITIONS_ITEMS_GROUP_KEY = registerGroup("demolitions_items");
-	public static final ItemGroup DEMOLITIONS_ITEMS_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(GadgetsItems.THERMAL_DETONATOR_ITEM)).displayName(Text.translatable("pswg_gadgets.demolitions_items_group")).build();
+	public static final ResourceKey<CreativeModeTab> DEMOLITIONS_ITEMS_GROUP_KEY = registerGroup("demolitions_items");
+	public static final CreativeModeTab DEMOLITIONS_ITEMS_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(GadgetsItems.THERMAL_DETONATOR_ITEM)).title(Component.translatable("pswg_gadgets.demolitions_items_group")).build();
 
-	private static RegistryKey<ItemGroup> registerGroup(String id)
+	private static ResourceKey<CreativeModeTab> registerGroup(String id)
 	{
-		return RegistryKey.of(RegistryKeys.ITEM_GROUP, Gadgets.id(id));
+		return ResourceKey.create(Registries.CREATIVE_MODE_TAB, Gadgets.id(id));
 	}
 
 	public static void register()
 	{
-		Registry.register(Registries.ITEM_GROUP, DEMOLITIONS_ITEMS_GROUP_KEY, DEMOLITIONS_ITEMS_GROUP);
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DEMOLITIONS_ITEMS_GROUP_KEY, DEMOLITIONS_ITEMS_GROUP);
 
 		ItemGroupEvents.modifyEntriesEvent(DEMOLITIONS_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.DEMOLITIONS_GADGETS));
 	}
@@ -43,25 +43,25 @@ public class GadgetsItemGroups
 
 		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> {
 			if (dataGenItem.itemGroup() == group)
-				itemGroup.add(item);
+				itemGroup.accept(item);
 		});
 		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
 			for (Item item : dyedItems.values())
 				if (dataGenItem.itemGroup() == group)
-					itemGroup.add(item);
+					itemGroup.accept(item);
 		});
 		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
 			for (Item item : numberedItems.stream().toList())
 				if (dataGenItem.itemGroup() == group)
-					itemGroup.add(item);
+					itemGroup.accept(item);
 		});
 		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
 			if (dataGenItem.itemGroup() == group)
 			{
-				itemGroup.add(armorItems.helmet);
-				itemGroup.add(armorItems.chestplate);
-				itemGroup.add(armorItems.leggings);
-				itemGroup.add(armorItems.boots);
+				itemGroup.accept(armorItems.helmet);
+				itemGroup.accept(armorItems.chestplate);
+				itemGroup.accept(armorItems.leggings);
+				itemGroup.accept(armorItems.boots);
 			}
 		});
 	}
@@ -70,7 +70,7 @@ public class GadgetsItemGroups
 	{
 		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 			if(dataGenBlock.itemGroup() == group)
-				itemGroup.add(block);
+				itemGroup.accept(block);
 		});
 	}
 }

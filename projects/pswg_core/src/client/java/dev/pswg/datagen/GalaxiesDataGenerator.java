@@ -18,20 +18,24 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.data.*;
-import net.minecraft.data.recipe.RecipeExporter;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagEntry;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -68,7 +72,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		}
 
 		@Override
-		public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator)
+		public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator)
 		{
 			registerVerticalLightingSlab(blockStateModelGenerator);
 
@@ -122,17 +126,17 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				}
 			});
 		}
-		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockStateModelGenerator generator)
+		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator)
 		{
 			switch (dataGenBlock.model())
 			{
-				case CUBE_ALL -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.CUBE_ALL, generator);
+				case CUBE_ALL -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.CUBE, generator);
 				case ACCUMULATING -> registerAccumulatingBlock(block, generator);
-				case COLUMN -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.END_FOR_TOP_CUBE_COLUMN, generator);
-				case CROSS -> generator.registerTintableCross(block, BlockStateModelGenerator.CrossType.NOT_TINTED);
+				case COLUMN -> registerCubeWithRotation(block, dataGenBlock, TexturedModel.COLUMN_ALT, generator);
+				case CROSS -> generator.createCrossBlockWithDefaultItem(block, BlockModelGenerators.PlantType.NOT_TINTED);
 				case CROSS_AGE_3 -> registerCrossAge3(block, generator);
 				case CROSS_AGE_3_BLOOMING -> registerCrossAge3Blooming(block, generator);
-				case CROP_AGE_2 -> generator.registerCrop(block, Properties.AGE_2, 0, 1, 2);
+				case CROP_AGE_2 -> generator.createCropBlock(block, BlockStateProperties.AGE_2, 0, 1, 2);
 				case CUSTOM ->
 				{
 					switch (dataGenBlock.dataGenModelKey())
@@ -151,7 +155,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		}
 
 		@Override
-		public void generateItemModels(ItemModelGenerator itemModelGenerator)
+		public void generateItemModels(ItemModelGenerators itemModelGenerator)
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
@@ -170,24 +174,24 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			});
 		}
 
-		public void registerItem(ItemModelGenerator generator, Item item, DataGenItem dataGenItem)
+		public void registerItem(ItemModelGenerators generator, Item item, DataGenItem dataGenItem)
 		{
 			if (dataGenItem.model() != ItemModel.NONE)
 			{
 				if (dataGenItem.wiz())
-					GalaxiesModelProvider.register(generator, item, Galaxies.id("item/wizard"), Models.GENERATED);
+					GalaxiesModelProvider.register(generator, item, Galaxies.id("item/wizard"), ModelTemplates.FLAT_ITEM);
 				else
 					switch (dataGenItem.model())
 					{
-						case GENERATED -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), Models.GENERATED);
-						case HANDHELD -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), Models.HANDHELD);
+						case GENERATED -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_ITEM);
+						case HANDHELD -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_HANDHELD_ITEM);
 						case DRINK -> registerDrink(generator, item, dataGenItem);
 					}
 			}
 		}
 	}
 
-	private static String generateDefaultLang(Identifier reg)
+	private static String generateDefaultLang(ResourceLocation reg)
 	{
 		var path = reg.getPath();
 		return Arrays.stream(path.split("_"))
@@ -201,13 +205,13 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class LangGenerator extends FabricLanguageProvider
 	{
-		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
+		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
 		{
 			super(dataOutput, "en_us", registryLookup);
 		}
 
 		@Override
-		public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder translationBuilder)
+		public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder)
 		{
 			// Hints
 			translationBuilder.add(GalaxiesClient.I18N_KEYBIND_HINT_KEY, "§9[§f%s§9]§r %s");
@@ -257,7 +261,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		public void addDatagenItem(TranslationBuilder translationBuilder, Item item, DataGenItem dataGenItem)
 		{
 			if (dataGenItem.langOverride().isEmpty())
-				translationBuilder.add(item, generateDefaultLang(item.getRegistryEntry().registryKey().getValue()));
+				translationBuilder.add(item, generateDefaultLang(item.builtInRegistryHolder().key().location()));
 			else
 				translationBuilder.add(item, dataGenItem.langOverride());
 		}
@@ -272,9 +276,9 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			}
 			else
 			{
-				translationBuilder.add(block, generateDefaultLang(block.getRegistryEntry().registryKey().getValue()));
+				translationBuilder.add(block, generateDefaultLang(block.builtInRegistryHolder().key().location()));
 				if (dataGenBlock.addItemTranslation())
-					translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().getRegistryEntry().registryKey().getValue()));
+					translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().location()));
 			}
 		}
 	}
@@ -285,26 +289,26 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class ItemTagGenerator extends FabricTagProvider.ItemTagProvider
 	{
-		public ItemTagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture)
+		public ItemTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
 
-		public static Identifier itemId(Item item)
+		public static TagEntry itemId(Item item)
 		{
-			return Registries.ITEM.getId(item);
+			return TagEntry.element(BuiltInRegistries.ITEM.getKey(item));
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
+		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
 			addItemsToTag(ItemTags.LEAVES, DGItemTag.LEAVES, this);
 
-			getTagBuilder(GalaxiesItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
+			getOrCreateRawBuilder(GalaxiesItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
 					.add(itemId(GalaxiesItems.BESKAR_INGOT));
-			getTagBuilder(GalaxiesItems.Tags.DURASTEEL_TOOL_MATERIALS_TAG)
+			getOrCreateRawBuilder(GalaxiesItems.Tags.DURASTEEL_TOOL_MATERIALS_TAG)
 					.add(itemId(GalaxiesItems.PLASTEEL_INGOT));
-			getTagBuilder(GalaxiesItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
+			getOrCreateRawBuilder(GalaxiesItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
 					.add(itemId(GalaxiesItems.TITANIUM_INGOT));
 		}
 
@@ -313,11 +317,11 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 				if (Arrays.stream(dataGenBlock.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
-					generator.getTagBuilder(tag).add(itemId(block.asItem()));
+					generator.getOrCreateRawBuilder(tag).add(itemId(block.asItem()));
 			});
 			AutoGenerateUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
 				if (Arrays.stream(dataGenItem.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
-					generator.getTagBuilder(tag).add(itemId(item));
+					generator.getOrCreateRawBuilder(tag).add(itemId(item));
 			});
 		}
 	}
@@ -328,53 +332,53 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class BlockTagGenerator extends FabricTagProvider.BlockTagProvider
 	{
-		public BlockTagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture)
+		public BlockTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
 
-		public static Identifier blockId(Block block)
+		public static TagEntry blockId(Block block)
 		{
-			return Registries.BLOCK.getId(block);
+			return TagEntry.element(BuiltInRegistries.BLOCK.getKey(block));
 		}
 
 		@Override
-		protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
+		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
 			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.LEAVES, this);
 			addBlocksToTag(BlockTags.LOGS, DGBlockTag.LOGS, this);
-			addBlocksToTag(BlockTags.AXE_MINEABLE, DGBlockTag.AXE_MINEABLE, this);
-			addBlocksToTag(BlockTags.PICKAXE_MINEABLE, DGBlockTag.PICKAXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DGBlockTag.AXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DGBlockTag.PICKAXE_MINEABLE, this);
 			addBlocksToTag(BlockTags.SAND, DGBlockTag.SAND, this);
-			addBlocksToTag(BlockTags.SHOVEL_MINEABLE, DGBlockTag.SHOVEL_MINEABLE, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DGBlockTag.SHOVEL_MINEABLE, this);
 			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LOGS_THAT_BURN, this);
 			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.STAIRS, this);
 			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DGBlockTag.BUSH_PLACEABLE, this);
-			getTagBuilder(GalaxiesBlocks.Tags.BUSH_PLACEABLE)
-					.addOptionalTag(BlockTags.SAND.id())
+			getOrCreateRawBuilder(GalaxiesBlocks.Tags.BUSH_PLACEABLE)
+					.addOptionalTag(BlockTags.SAND.location())
 					.add(blockId(Blocks.GRASS_BLOCK))
 					.add(blockId(Blocks.DIRT))
 					.add(blockId(Blocks.PODZOL))
 					.add(blockId(Blocks.COARSE_DIRT));
 			addBlocksToTag(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE, DGBlockTag.ARID_PLANT_PLACEABLE, this);
-			getTagBuilder(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE)
-					.addOptionalTag(BlockTags.SAND.id())
-					.addOptionalTag(BlockTags.TERRACOTTA.id())
+			getOrCreateRawBuilder(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE)
+					.addOptionalTag(BlockTags.SAND.location())
+					.addOptionalTag(BlockTags.TERRACOTTA.location())
 					.add(blockId(Blocks.GRASS_BLOCK))
 					.add(blockId(Blocks.DIRT))
 					.add(blockId(Blocks.PODZOL))
 					.add(blockId(Blocks.COARSE_DIRT));
 			addBlocksToTag(GalaxiesBlocks.Tags.BOUNCY, DGBlockTag.BOUNCY, this);
-			getTagBuilder(GalaxiesBlocks.Tags.BOUNCY)
+			getOrCreateRawBuilder(GalaxiesBlocks.Tags.BOUNCY)
 					.add(blockId(Blocks.HONEY_BLOCK))
 					.add(blockId(Blocks.SLIME_BLOCK));
 			addBlocksToTag(GalaxiesBlocks.Tags.SOFT, DGBlockTag.SOFT, this);
-			getTagBuilder(GalaxiesBlocks.Tags.SOFT)
-					.addOptionalTag(BlockTags.SNOW.id())
-					.addOptionalTag(BlockTags.BEDS.id())
-					.addOptionalTag(BlockTags.LEAVES.id())
-					.addOptionalTag(BlockTags.WOOL.id())
-					.addOptionalTag(BlockTags.WOOL_CARPETS.id())
+			getOrCreateRawBuilder(GalaxiesBlocks.Tags.SOFT)
+					.addOptionalTag(BlockTags.SNOW.location())
+					.addOptionalTag(BlockTags.BEDS.location())
+					.addOptionalTag(BlockTags.LEAVES.location())
+					.addOptionalTag(BlockTags.WOOL.location())
+					.addOptionalTag(BlockTags.WOOL_CARPETS.location())
 					.add(blockId(Blocks.MOSS_BLOCK))
 					.add(blockId(Blocks.MOSS_CARPET))
 					.add(blockId(Blocks.PALE_MOSS_BLOCK))
@@ -387,7 +391,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 				if (Arrays.stream(dataGenBlock.blockTags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag))
 				{
-					generator.getTagBuilder(tag).add(blockId(block));
+					generator.getOrCreateRawBuilder(tag).add(blockId(block));
 				}
 			});
 		}
@@ -395,18 +399,18 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 	private static class RecipesGenerator extends FabricRecipeProvider
 	{
-		public RecipesGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture)
+		public RecipesGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture)
 		{
 			super(output, registriesFuture);
 		}
 
 		@Override
-		protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter)
+		protected RecipeProvider createRecipeProvider(HolderLookup.Provider registryLookup, RecipeOutput exporter)
 		{
-			return new RecipeGenerator(registryLookup, exporter)
+			return new RecipeProvider(registryLookup, exporter)
 			{
 				@Override
-				public void generate()
+				public void buildRecipes()
 				{
 				}
 			};

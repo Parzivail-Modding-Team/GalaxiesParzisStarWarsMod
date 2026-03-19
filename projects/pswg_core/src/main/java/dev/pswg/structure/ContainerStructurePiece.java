@@ -4,82 +4,86 @@ import dev.pswg.Galaxies;
 import dev.pswg.container.GalaxiesLootTables;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.worldgen.GalaxiesStructurePieces;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.structure.*;
-import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
-public class ContainerStructurePiece extends SimpleStructurePiece
+public class ContainerStructurePiece extends TemplateStructurePiece
 {
-	private final Identifier templateId = Galaxies.id("derelict_imperial_container");
+	private final ResourceLocation templateId = Galaxies.id("derelict_imperial_container");
 
-	public ContainerStructurePiece(StructureTemplateManager manager, Identifier identifier, BlockPos pos, BlockRotation rotation)
+	public ContainerStructurePiece(StructureTemplateManager manager, ResourceLocation identifier, BlockPos pos, Rotation rotation)
 	{
 		super(GalaxiesStructurePieces.DERELICT_CONTAINER, 0, manager, identifier, identifier.toString(), createPlacementData(rotation, identifier), pos);
 	}
 
-	public ContainerStructurePiece(StructureTemplateManager templateManager, NbtCompound nbt)
+	public ContainerStructurePiece(StructureTemplateManager templateManager, CompoundTag nbt)
 	{
-		super(GalaxiesStructurePieces.DERELICT_CONTAINER, nbt, templateManager, identifier -> createPlacementData(BlockRotation.valueOf(nbt.getString("Rot").get()), identifier));
+		super(GalaxiesStructurePieces.DERELICT_CONTAINER, nbt, templateManager, identifier -> createPlacementData(Rotation.valueOf(nbt.getString("Rot").get()), identifier));
 	}
 
-	private static StructurePlacementData createPlacementData(BlockRotation rotation, Identifier identifier)
+	private static StructurePlaceSettings createPlacementData(Rotation rotation, ResourceLocation identifier)
 	{
-		return new StructurePlacementData()
+		return new StructurePlaceSettings()
 				.setRotation(rotation)
-				.setMirror(BlockMirror.NONE)
-				.setPosition(new BlockPos(0, 0, 0))
-				.addProcessor(BlockIgnoreStructureProcessor.IGNORE_STRUCTURE_BLOCKS)
-				.setLiquidSettings(StructureLiquidSettings.APPLY_WATERLOGGING);
+				.setMirror(Mirror.NONE)
+				.setRotationPivot(new BlockPos(0, 0, 0))
+				.addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK)
+				.setLiquidSettings(LiquidSettings.APPLY_WATERLOGGING);
 	}
 
-	private void loadTemplate(StructureTemplateManager templateManager, NbtCompound nbtCompound)
+	private void loadTemplate(StructureTemplateManager templateManager, CompoundTag nbtCompound)
 	{
-		this.template = templateManager.getTemplateOrBlank(templateId);
+		this.template = templateManager.getOrCreate(templateId);
 	}
 
 	@Override
-	protected void writeNbt(StructureContext context, NbtCompound nbt)
+	protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag nbt)
 	{
-		super.writeNbt(context, nbt);
-		nbt.putString("Rot", this.placementData.getRotation().name());
+		super.addAdditionalSaveData(context, nbt);
+		nbt.putString("Rot", this.placeSettings.getRotation().name());
 	}
 
 	@Override
-	public void generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, Random random, BlockBox chunkBox, ChunkPos chunkPos, BlockPos pivot)
+	public void postProcess(WorldGenLevel world, StructureManager structureAccessor, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox chunkBox, ChunkPos chunkPos, BlockPos pivot)
 	{
-		BlockPos blockPos = world.getTopPosition(Heightmap.Type.WORLD_SURFACE_WG, pos);
-		Identifier identifier = Identifier.of(this.templateIdString);
-		this.pos.withY(blockPos.getY() + random.nextBetween(-3, 0));
-		StructurePlacementData structurePlacementData = createPlacementData(this.placementData.getRotation(), identifier);
-		super.generate(world, structureAccessor, chunkGenerator, random, chunkBox, chunkPos, pivot);
+		BlockPos blockPos = world.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, templatePosition);
+		ResourceLocation identifier = ResourceLocation.parse(this.templateName);
+		this.templatePosition.atY(blockPos.getY() + random.nextIntBetweenInclusive(-3, 0));
+		StructurePlaceSettings structurePlacementData = createPlacementData(this.placeSettings.getRotation(), identifier);
+		super.postProcess(world, structureAccessor, chunkGenerator, random, chunkBox, chunkPos, pivot);
 	}
 
 	@Override
-	protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess world, Random random, BlockBox boundingBox)
+	protected void handleDataMarker(String metadata, BlockPos pos, ServerLevelAccessor world, RandomSource random, BoundingBox boundingBox)
 	{
 		if ("crate".equals(metadata))
 		{
 			if (random.nextFloat() > 0.33f)
 			{
 				Block crateBlock = StructUtil.getRandomCrate(random);
-				world.setBlockState(pos, crateBlock.getDefaultState(), Block.NOTIFY_ALL);
+				world.setBlock(pos, crateBlock.defaultBlockState(), Block.UPDATE_ALL);
 				BlockEntity be = world.getBlockEntity(pos);
-				if (be instanceof LootableContainerBlockEntity container)
+				if (be instanceof RandomizableContainerBlockEntity container)
 				{
 					// TODO: CHANGE LOOT HERE
 					if (crateBlock.equals(GalaxiesBlocks.IMPERIAL_CORRUGATED_CRATE))
@@ -90,7 +94,7 @@ public class ContainerStructurePiece extends SimpleStructurePiece
 						container.setLootTable(GalaxiesLootTables.MINING_CRATE);
 					else
 					{
-						int lootTable = random.nextBetween(1, 7);
+						int lootTable = random.nextIntBetweenInclusive(1, 7);
 						switch (lootTable)
 						{
 							case 1, 2, 3:

@@ -1,11 +1,11 @@
 package dev.pswg.item;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 /**
  * Provides an interface for items that can be left-clicked to
@@ -23,7 +23,7 @@ public interface ILeftClickUsable
 	 * finishes using the item}.
 	 *
 	 * <p>This method is called on both the logical client and logical server, so take caution when overriding this method.
-	 * The logical side can be checked using {@link net.minecraft.world.World#isClient() world.isClient()}.
+	 * The logical side can be checked using {@link net.minecraft.world.level.Level#isClientSide() world.isClient()}.
 	 *
 	 * @param world       The world the item was used in
 	 * @param user        The user who used the item
@@ -32,9 +32,9 @@ public interface ILeftClickUsable
 	 *
 	 * @return An action result that specifies whether using the item was successful.
 	 */
-	default ActionResult useLeft(World world, LivingEntity user, Hand hand, boolean repeatEvent)
+	default InteractionResult useLeft(Level world, LivingEntity user, InteractionHand hand, boolean repeatEvent)
 	{
-		return ActionResult.PASS;
+		return InteractionResult.PASS;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public interface ILeftClickUsable
 	 *
 	 * <p>This method is called on both the logical client and logical server, so take caution
 	 * when overriding this method. The logical side can be checked using {@link
-	 * World#isClient}.
+	 * Level#isClientSide}.
 	 *
 	 * @param stack The item stack to query
 	 * @param user  The user that is holding the stack
@@ -50,7 +50,7 @@ public interface ILeftClickUsable
 	 *
 	 * @return The new item stack after using the item
 	 */
-	default ItemStack finishUsingLeft(ItemStack stack, World world, LivingEntity user)
+	default ItemStack finishUsingLeft(ItemStack stack, Level world, LivingEntity user)
 	{
 		return stack;
 	}
@@ -62,14 +62,14 @@ public interface ILeftClickUsable
 	 *
 	 * <p>This method is called on both the logical client and logical server, so take caution
 	 * when overriding this method. The logical side can be checked using {@link
-	 * World#isClient}.
+	 * Level#isClientSide}.
 	 *
 	 * @param stack             The item stack to query
 	 * @param user              The user that is holding the stack
 	 * @param world             The world that the user is in
 	 * @param remainingUseTicks The remaining number of ticks until the {@link #getMaxUseLeftTime maximum use time}
 	 */
-	default void onStoppedUsingLeft(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
+	default void onStoppedUsingLeft(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks)
 	{
 	}
 
@@ -84,7 +84,7 @@ public interface ILeftClickUsable
 	 * @param world             The world that the user is in
 	 * @param remainingUseTicks How long it's left until the entity finishes using the item, in ticks
 	 */
-	default void usageTickLeft(World world, LivingEntity user, ItemStack stack, int remainingUseTicks)
+	default void usageTickLeft(Level world, LivingEntity user, ItemStack stack, int remainingUseTicks)
 	{
 	}
 

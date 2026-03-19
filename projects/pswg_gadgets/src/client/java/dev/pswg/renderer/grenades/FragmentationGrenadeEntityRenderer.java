@@ -1,46 +1,45 @@
 package dev.pswg.renderer.grenades;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.pswg.Gadgets;
 import dev.pswg.entity.grenades.FragmentationGrenadeEntity;
 import dev.pswg.models.FragmentationGrenadeModel;
 import dev.pswg.models.GrenadeRenderState;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.entity.state.EntityRenderState;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 
 public class FragmentationGrenadeEntityRenderer extends EntityRenderer<FragmentationGrenadeEntity, GrenadeRenderState>
 {
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Gadgets.id("fragmentation_grenade"), "temp");
-	public static final Identifier TEXTURE = Identifier.of("pswg_gadgets", "textures/items/fragmentation_grenade.png");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Gadgets.id("fragmentation_grenade"), "temp");
+	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("pswg_gadgets", "textures/items/fragmentation_grenade.png");
 	private final FragmentationGrenadeModel model;
 
-	public FragmentationGrenadeEntityRenderer(EntityRendererFactory.Context context)
+	public FragmentationGrenadeEntityRenderer(EntityRendererProvider.Context context)
 	{
 		super(context);
-		this.model = new FragmentationGrenadeModel(context.getPart(MODEL_LAYER));
+		this.model = new FragmentationGrenadeModel(context.bakeLayer(MODEL_LAYER));
 	}
 
 	@Override
-	public void render(GrenadeRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState)
+	public void submit(GrenadeRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState)
 	{
-		matrices.push();
+		matrices.pushPose();
 
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-state.yaw));
-		this.model.setAngles(state);
+		matrices.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+		this.model.setupAnim(state);
 
-		queue.submitModel(this.model, state, matrices, RenderLayer.getEntityCutout(TEXTURE), state.light, OverlayTexture.DEFAULT_UV, state.outlineColor, null);
+		queue.submitModel(this.model, state, matrices, RenderType.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
 
-		matrices.pop();
-		super.render(state, matrices, queue, cameraState);
+		matrices.popPose();
+		super.submit(state, matrices, queue, cameraState);
 	}
 
 	@Override
@@ -50,10 +49,10 @@ public class FragmentationGrenadeEntityRenderer extends EntityRenderer<Fragmenta
 	}
 
 	@Override
-	public void updateRenderState(FragmentationGrenadeEntity entity, GrenadeRenderState state, float tickDelta)
+	public void extractRenderState(FragmentationGrenadeEntity entity, GrenadeRenderState state, float tickDelta)
 	{
-		super.updateRenderState(entity, state, tickDelta);
-		state.pitch = entity.getLerpedPitch(tickDelta);
+		super.extractRenderState(entity, state, tickDelta);
+		state.pitch = entity.getXRot(tickDelta);
 		state.yaw = entity.getClientYaw();
 	}
 }

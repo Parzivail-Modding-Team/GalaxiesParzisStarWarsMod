@@ -9,20 +9,18 @@ import dev.pswg.item.grenades.GrenadeItem;
 import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
@@ -32,7 +30,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 	private boolean COLLISION_BELOW;
 	public boolean SHOULD_RENDER = true;
 
-	public FragmentationGrenadeEntity(EntityType<FragmentationGrenadeEntity> type, World world)
+	public FragmentationGrenadeEntity(EntityType<FragmentationGrenadeEntity> type, Level world)
 	{
 		super(type, world, CollisionType.BOUNCE);
 		setExplosionPower(4f);
@@ -55,36 +53,36 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 	{
 		if (!IS_EXPLODING)
 		{
-			if (getEntityWorld() instanceof ServerWorld serverWorld)
+			if (level() instanceof ServerLevel serverWorld)
 			{
-				serverWorld.spawnParticles(GadgetsParticleTypes.FRAGMENTATION_GRENADE_WAVE_PARTICLE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
+				serverWorld.sendParticles(GadgetsParticleTypes.FRAGMENTATION_GRENADE_WAVE_PARTICLE, false, true, getX(), getY() + 0.05d, getZ(), 1, 0, 0, 0, 0);
 			}
 			IS_EXPLODING = true;
 
-			int randomNum = Random.create().nextBetween(1, 4);
+			int randomNum = RandomSource.create().nextIntBetweenInclusive(1, 4);
 
 
 			switch (randomNum){
 				case 1:
-					getEntityWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION1, SoundCategory.PLAYERS, 4f, 1f);
+					level().playSound(null, blockPosition(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION1, SoundSource.PLAYERS, 4f, 1f);
 					break;
 				case 2:
-					getEntityWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION2, SoundCategory.PLAYERS, 4f, 1f);
+					level().playSound(null, blockPosition(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION2, SoundSource.PLAYERS, 4f, 1f);
 					break;
 				case 3:
-					getEntityWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION3, SoundCategory.PLAYERS, 4f, 1f);
+					level().playSound(null, blockPosition(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION3, SoundSource.PLAYERS, 4f, 1f);
 					break;
 				case 4:
-					getEntityWorld().playSound(null, getBlockPos(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION4, SoundCategory.PLAYERS, 4f, 1f);
+					level().playSound(null, blockPosition(), GadgetsSounds.FRAGMENTATION_GRENADE_EXPLOSION4, SoundSource.PLAYERS, 4f, 1f);
 					break;
 			}
 		}
 	}
 
 	@Override
-	public boolean shouldRender(double distance)
+	public boolean shouldRenderAtSqrDistance(double distance)
 	{
-		if (super.shouldRender(distance) && !IS_EXPLODING)
+		if (super.shouldRenderAtSqrDistance(distance) && !IS_EXPLODING)
 			return true;
 		return false;
 	}
@@ -97,55 +95,55 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 		//	SoundHelper.playFragmentationEntitySound(this);
 		if (IS_EXPLODING)
 		{
-			this.setVelocity(Vec3d.ZERO);
-			this.velocityModified = true;
+			this.setDeltaMovement(Vec3.ZERO);
+			this.hurtMarked = true;
 		}
 
 		if (EXPLOSION_TICK == 6)
 		{
-			List<LivingEntity> entities = getEntityWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> true);
+			List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f, getExplosionPower() / 4f * 3f), entity -> true);
 			for (LivingEntity entity : entities)
 			{
 				float x = (float)(entity.getX() - getX()) / (getExplosionPower() / 4f * 3f);
 				float z = (float)(entity.getZ() - getZ()) / (getExplosionPower() / 4f * 3f);
-				entity.addVelocity(-x, 0, -z);
+				entity.push(-x, 0, -z);
 			}
 		}
 		if (EXPLOSION_TICK == 7)
 		{
-			for (int i = 0; i < Random.create().nextBetween(70, 100); i++)
+			for (int i = 0; i < RandomSource.create().nextIntBetweenInclusive(70, 100); i++)
 			{
-				double vx = getEntityWorld().random.nextGaussian() * 0.5;
-				double vz = getEntityWorld().random.nextGaussian() * 0.5;
+				double vx = level().random.nextGaussian() * 0.5;
+				double vz = level().random.nextGaussian() * 0.5;
 				double vy;
 
 				if (COLLISION_BELOW)
-					vy = Math.abs(getEntityWorld().random.nextGaussian() * 0.8);
+					vy = Math.abs(level().random.nextGaussian() * 0.8);
 				else
-					vy = getEntityWorld().random.nextGaussian() * 0.4;
-				if (getEntityWorld() instanceof ServerWorld serverWorld)
+					vy = level().random.nextGaussian() * 0.4;
+				if (level() instanceof ServerLevel serverWorld)
 					createSparkParticle(serverWorld, getX(), getY(), getZ(), vx, vy, vz);
 			}
 		}
 		if (EXPLOSION_TICK >= 15)
 		{
-			super.explode(new Vec3d(getX(), getY() + 0.1d, getZ()));
+			super.explode(new Vec3(getX(), getY() + 0.1d, getZ()));
 		}
 		if (IS_EXPLODING)
 			EXPLOSION_TICK++;
 	}
 
-	private static void createSparkParticle(ServerWorld serverWorld, double x, double y, double z, double vx, double vy, double vz)
+	private static void createSparkParticle(ServerLevel serverWorld, double x, double y, double z, double vx, double vy, double vz)
 	{
-		var payload = new PreciseVelocityParticleS2CPayload(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, new Vec3d(x, y, z), new Vec3d(vx, vy, vz));
-		for (ServerPlayerEntity player : serverWorld.getPlayers())
+		var payload = new PreciseVelocityParticleS2CPayload(GadgetsParticleTypes.FRAGMENTATION_GRENADE_SPARK_PARTICLE, new Vec3(x, y, z), new Vec3(vx, vy, vz));
+		for (ServerPlayer player : serverWorld.players())
 			ServerPlayNetworking.send(player, payload);
 	}
 
 	@Override
-	public boolean canExplosionDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float explosionPower)
+	public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float explosionPower)
 	{
-		return state.isIn(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY);
+		return state.is(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY);
 	}
 
 }

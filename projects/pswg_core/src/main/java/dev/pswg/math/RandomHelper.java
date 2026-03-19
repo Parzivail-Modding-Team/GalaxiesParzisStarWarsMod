@@ -1,8 +1,7 @@
 package dev.pswg.math;
 
-import net.minecraft.util.math.random.Random;
-
 import java.util.List;
+import net.minecraft.util.RandomSource;
 
 /**
  * Utilities related to randomness
@@ -17,7 +16,7 @@ public final class RandomHelper
 	 *
 	 * @return A random value from the given array
 	 */
-	public static <T> T oneOf(Random random, T[] values)
+	public static <T> T oneOf(RandomSource random, T[] values)
 	{
 		return values[random.nextInt(values.length)];
 	}
@@ -30,7 +29,7 @@ public final class RandomHelper
 	 *
 	 * @return A random value from the given array
 	 */
-	public static <T> T oneOf(Random random, List<T> values)
+	public static <T> T oneOf(RandomSource random, List<T> values)
 	{
 		return values.get(random.nextInt(values.size()));
 	}
@@ -45,7 +44,7 @@ public final class RandomHelper
 	 *
 	 * @return A random value from the distribution
 	 */
-	public static double nextGaussian(Random random, double mean, double std)
+	public static double nextGaussian(RandomSource random, double mean, double std)
 	{
 		var normalizedGaussian = random.nextGaussian();
 		return normalizedGaussian * std + mean;
@@ -60,7 +59,7 @@ public final class RandomHelper
 	 *
 	 * @return A uniform float between the given min and max
 	 */
-	public static float floatBetween(Random random, float min, float max)
+	public static float floatBetween(RandomSource random, float min, float max)
 	{
 		return min + random.nextFloat() * (max - min);
 	}

@@ -2,7 +2,7 @@ package dev.pswg.mixin.recoil;
 
 import dev.pswg.interaction.IRecoilEntity;
 import dev.pswg.interaction.RecoilEntityAttachment;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,7 +35,7 @@ public abstract class LivingEntityMixin implements IRecoilEntity
 	@Override
 	public float pswg$getRecoilFovMultiplier(LivingEntity entity, float tickDelta)
 	{
-		var recoilTime = entity.getEntityWorld().getTime() - this.pswg$getRecoilTime() + tickDelta;
+		var recoilTime = entity.level().getGameTime() - this.pswg$getRecoilTime() + tickDelta;
 		if (recoilTime <= 0 || recoilTime >= 20)
 			return 1;
 
@@ -78,7 +78,7 @@ public abstract class LivingEntityMixin implements IRecoilEntity
 		      .set(self);
 	}
 
-	@Inject(method = "tickMovement()V", at = @At(value = "TAIL"))
+	@Inject(method = "aiStep()V", at = @At(value = "TAIL"))
 	private void tick(CallbackInfo ci)
 	{
 		var self = (LivingEntity)(Object)this;
@@ -89,8 +89,8 @@ public abstract class LivingEntityMixin implements IRecoilEntity
 		if (recoilVelocity.lengthSquared() > 1e-3)
 		{
 			// Apply the recoil to the entity's angle
-			self.setPitch(self.getPitch() + recoilVelocity.x);
-			self.setYaw(self.getYaw() + recoilVelocity.y);
+			self.setXRot(self.getXRot() + recoilVelocity.x);
+			self.setYRot(self.getYRot() + recoilVelocity.y);
 
 			// TODO: tune recoil decay
 			this.pswg$setRecoilVelocity(recoilVelocity.mul(IRecoilEntity.RECOIL_DAMPENING, new Vector3f()));

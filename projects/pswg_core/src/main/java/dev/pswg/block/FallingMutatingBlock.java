@@ -1,36 +1,36 @@
 package dev.pswg.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ColoredFallingBlock;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ColorCode;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ColorRGBA;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ColoredFallingBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class FallingMutatingBlock extends ColoredFallingBlock
 {
 	private final Block target;
 	private final int meanTransitionTime;
 
-	public FallingMutatingBlock(Block target, int meanTransitionTime, Settings settings, ColorCode colorCode)
+	public FallingMutatingBlock(Block target, int meanTransitionTime, Properties settings, ColorRGBA colorCode)
 	{
-		super(colorCode, settings.ticksRandomly());
+		super(colorCode, settings.randomTicks());
 		this.target = target;
 		this.meanTransitionTime = meanTransitionTime;
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
 		if (!canTransition(state, world, pos, random))
 			return;
 
 		if (random.nextInt(meanTransitionTime) == 0)
-			world.setBlockState(pos, target.getStateWithProperties(state), NOTIFY_LISTENERS);
+			world.setBlock(pos, target.withPropertiesOf(state), UPDATE_CLIENTS);
 	}
 
-	protected boolean canTransition(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected boolean canTransition(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
 		return true;
 	}

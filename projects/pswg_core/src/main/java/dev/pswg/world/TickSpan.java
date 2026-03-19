@@ -1,6 +1,6 @@
 package dev.pswg.world;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 /**
  * A conversion utility to convert between real-world time spans
@@ -17,8 +17,8 @@ public final class TickSpan
 	 *
 	 * @return A time span, in ticks
 	 */
-	public static int fromSeconds(World world, float seconds)
+	public static int fromSeconds(Level world, float seconds)
 	{
-		return (int)(seconds * world.getTickManager().getTickRate());
+		return (int)(seconds * world.tickRateManager().tickrate());
 	}
 }

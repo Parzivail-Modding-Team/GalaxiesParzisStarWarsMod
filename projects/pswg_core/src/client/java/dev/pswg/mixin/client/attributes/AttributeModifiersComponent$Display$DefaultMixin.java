@@ -1,34 +1,34 @@
 package dev.pswg.mixin.client.attributes;
 
 import dev.pswg.attributes.GalaxiesEntityAttributes;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Consumer;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 
-@Mixin(AttributeModifiersComponent.Display.Default.class)
+@Mixin(ItemAttributeModifiers.Display.Default.class)
 public abstract class AttributeModifiersComponent$Display$DefaultMixin
 {
 	/**
 	 * Replaces the default attribute text for some custom
 	 * attributes with custom formatting
 	 */
-	@Inject(method = "Lnet/minecraft/component/type/AttributeModifiersComponent$Display$Default;addTooltip(Ljava/util/function/Consumer;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/entity/attribute/EntityAttributeModifier;)V", at = @At("HEAD"), cancellable = true)
-	public void addTooltip(Consumer<Text> textConsumer, PlayerEntity player, RegistryEntry<EntityAttribute> attribute, EntityAttributeModifier modifier, CallbackInfo ci)
+	@Inject(method = "apply(Ljava/util/function/Consumer;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)V", at = @At("HEAD"), cancellable = true)
+	public void addTooltip(Consumer<Component> textConsumer, Player player, Holder<Attribute> attribute, AttributeModifier modifier, CallbackInfo ci)
 	{
-		if (attribute.matchesId(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM_ID))
+		if (attribute.is(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM_ID))
 		{
-			var d = modifier.value();
+			var d = modifier.amount();
 
-			textConsumer.accept(Text.translatable(GalaxiesEntityAttributes.I18N_ATTR_MULTIPLIER, AttributeModifiersComponent.DECIMAL_FORMAT.format(d), Text.translatable(attribute.value().getTranslationKey())).formatted(attribute.value().getFormatting(true)));
+			textConsumer.accept(Component.translatable(GalaxiesEntityAttributes.I18N_ATTR_MULTIPLIER, ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT.format(d), Component.translatable(attribute.value().getDescriptionId())).withStyle(attribute.value().getStyle(true)));
 
 			ci.cancel();
 		}

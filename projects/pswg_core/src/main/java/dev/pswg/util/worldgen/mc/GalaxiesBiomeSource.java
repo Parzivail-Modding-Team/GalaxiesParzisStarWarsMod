@@ -4,26 +4,25 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.util.worldgen.BiomeGenerator;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.biome.source.util.MultiNoiseUtil;
-
 import java.util.stream.Stream;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.biome.Climate;
 
 public class GalaxiesBiomeSource extends BiomeSource
 {
 	public static final MapCodec<GalaxiesBiomeSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-			RegistryOps.getEntryLookupCodec(RegistryKeys.BIOME)
+			RegistryOps.retrieveGetter(Registries.BIOME)
 	).apply(instance, GalaxiesBiomeSource::new));
 
 	private final BiomeGenerator backingGen = new BiomeGenerator(10000);
-	private final RegistryEntryLookup<Biome> biomes;
+	private final HolderGetter<Biome> biomes;
 
-	protected GalaxiesBiomeSource(RegistryEntryLookup<Biome> biomes)
+	protected GalaxiesBiomeSource(HolderGetter<Biome> biomes)
 	{
 		// TODO: implement this
 		super();
@@ -32,19 +31,19 @@ public class GalaxiesBiomeSource extends BiomeSource
 	}
 
 	@Override
-	protected MapCodec<? extends BiomeSource> getCodec()
+	protected MapCodec<? extends BiomeSource> codec()
 	{
 		return CODEC;
 	}
 
 	@Override
-	protected Stream<RegistryEntry<Biome>> biomeStream()
+	protected Stream<Holder<Biome>> collectPossibleBiomes()
 	{
 		return Stream.empty();
 	}
 
 	@Override
-	public RegistryEntry<Biome> getBiome(int x, int y, int z, MultiNoiseUtil.MultiNoiseSampler noise)
+	public Holder<Biome> getNoiseBiome(int x, int y, int z, Climate.Sampler noise)
 	{
 		return this.biomes.getOrThrow(this.backingGen.getBiome(x, z).backing());
 	}

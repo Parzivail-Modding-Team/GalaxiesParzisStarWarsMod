@@ -1,12 +1,12 @@
 package dev.pswg.rendering.models;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public record GQuad(GVertex a, GVertex b, GVertex c, GVertex d, String textureRef)
 {
-	public static final PacketCodec<ByteBuf, GQuad> PACKET_CODEC = new PacketCodec<>()
+	public static final StreamCodec<ByteBuf, GQuad> PACKET_CODEC = new StreamCodec<>()
 	{
 		@Override
 		public GQuad decode(ByteBuf buf)
@@ -15,7 +15,7 @@ public record GQuad(GVertex a, GVertex b, GVertex c, GVertex d, String textureRe
 			var b = GVertex.PACKET_CODEC.decode(buf);
 			var c = GVertex.PACKET_CODEC.decode(buf);
 			var d = GVertex.PACKET_CODEC.decode(buf);
-			var textureRef = PacketCodecs.STRING.decode(buf);
+			var textureRef = ByteBufCodecs.STRING_UTF8.decode(buf);
 			return new GQuad(a, b, c, d, textureRef);
 		}
 
@@ -26,7 +26,7 @@ public record GQuad(GVertex a, GVertex b, GVertex c, GVertex d, String textureRe
 			GVertex.PACKET_CODEC.encode(buf, value.b);
 			GVertex.PACKET_CODEC.encode(buf, value.c);
 			GVertex.PACKET_CODEC.encode(buf, value.d);
-			PacketCodecs.STRING.encode(buf, value.textureRef);
+			ByteBufCodecs.STRING_UTF8.encode(buf, value.textureRef);
 		}
 	};
 }

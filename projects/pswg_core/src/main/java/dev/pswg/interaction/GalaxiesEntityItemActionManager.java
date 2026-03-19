@@ -2,7 +2,7 @@ package dev.pswg.interaction;
 
 import dev.pswg.item.IPrimaryActionHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Handles player non-primary item interactions
@@ -16,17 +16,17 @@ public final class GalaxiesEntityItemActionManager
 	{
 		context.server().execute(() -> {
 			var player = context.player();
-			player.updateLastActionTime();
+			player.resetLastActionTime();
 
-			var hand = player.getActiveHand();
-			var activeStack = player.getStackInHand(hand);
+			var hand = player.getUsedItemHand();
+			var activeStack = player.getItemInHand(hand);
 			if (!(activeStack.getItem() instanceof IPrimaryActionHandler item))
 				return;
 
-			ItemStack resultStack = item.invokePrimaryAction(activeStack, player.getEntityWorld(), player);
+			ItemStack resultStack = item.invokePrimaryAction(activeStack, player.level(), player);
 			if (resultStack != activeStack)
 			{
-				player.setStackInHand(hand, resultStack);
+				player.setItemInHand(hand, resultStack);
 			}
 		});
 	}

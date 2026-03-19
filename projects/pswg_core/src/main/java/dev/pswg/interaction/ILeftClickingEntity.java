@@ -1,7 +1,7 @@
 package dev.pswg.interaction;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Prescribes the functionality that entities must support in order to
@@ -39,5 +39,5 @@ public interface ILeftClickingEntity
 
 	void pswg$consumeLeftItem();
 
-	void pswg$setCurrentHandLeft(Hand hand);
+	void pswg$setCurrentHandLeft(InteractionHand hand);
 }

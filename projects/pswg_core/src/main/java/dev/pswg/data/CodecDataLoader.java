@@ -4,9 +4,6 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import dev.pswg.Galaxies;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.SynchronousResourceReloader;
-import net.minecraft.util.Identifier;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 
@@ -15,11 +12,14 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.Predicate;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
 /**
  * A datapack loader for codec-backed data
  */
-public class CodecDataLoader<T> implements SynchronousResourceReloader
+public class CodecDataLoader<T> implements ResourceManagerReloadListener
 {
 	/**
 	 * The logger used while loading data
@@ -29,12 +29,12 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 	/**
 	 * The set of data definitions currently associated with the loaded world
 	 */
-	private final HashMap<Identifier, T> definitions = new HashMap<>();
+	private final HashMap<ResourceLocation, T> definitions = new HashMap<>();
 
 	/**
 	 * The id of the logger
 	 */
-	private final Identifier id;
+	private final ResourceLocation id;
 
 	/**
 	 * The path of the folder from which data will be loaded
@@ -49,7 +49,7 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 	/**
 	 * A filter that will be used to select files from within the specified folder
 	 */
-	private final Predicate<Identifier> filter;
+	private final Predicate<ResourceLocation> filter;
 
 	/**
 	 * The codec that will be used to decode the given type from the
@@ -65,7 +65,7 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 	 * @param filter          A filter that will be used to select files from within the specified folder.
 	 * @param codec           The codec that will be used to decode the files to the specified type.
 	 */
-	public CodecDataLoader(Identifier id, String folderName, boolean removeExtension, Predicate<Identifier> filter, Codec<? extends T> codec)
+	public CodecDataLoader(ResourceLocation id, String folderName, boolean removeExtension, Predicate<ResourceLocation> filter, Codec<? extends T> codec)
 	{
 		this.id = id;
 		this.folderName = folderName;
@@ -79,18 +79,18 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 	 * Gets the current set of data definitions associated with the loaded
 	 * world, keyed by the identifier deriving from their filename
 	 */
-	public HashMap<Identifier, T> getDefinitions()
+	public HashMap<ResourceLocation, T> getDefinitions()
 	{
 		return definitions;
 	}
 
-	public Identifier getId()
+	public ResourceLocation getId()
 	{
 		return id;
 	}
 
 	@Override
-	public void reload(ResourceManager manager)
+	public void onResourceManagerReload(ResourceManager manager)
 	{
 		definitions.clear();
 
@@ -98,7 +98,7 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 
 		var namespaces = new HashSet<String>();
 
-		for (var entry : manager.findResources(folderName, filter).entrySet())
+		for (var entry : manager.listResources(folderName, filter).entrySet())
 		{
 			var key = entry.getKey();
 			var resource = entry.getValue();
@@ -106,7 +106,7 @@ public class CodecDataLoader<T> implements SynchronousResourceReloader
 			logger.debug("Loading {}", key);
 
 			try (
-					var stream = resource.getInputStream();
+					var stream = resource.open();
 					var reader = new InputStreamReader(stream)
 			)
 			{

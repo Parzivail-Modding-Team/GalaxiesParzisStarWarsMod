@@ -1,32 +1,32 @@
 package dev.pswg.block;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class InteractableInvertedLampSlab extends InvertedLampSlab
 {
-	public InteractableInvertedLampSlab(AbstractBlock.Settings settings)
+	public InteractableInvertedLampSlab(BlockBehaviour.Properties settings)
 	{
 		super(settings);
 	}
 
 	@Override
-	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
+	protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit)
 	{
-		if (!player.getMainHandStack().isEmpty())
-			return super.onUse(state, world, pos, player, hit);
+		if (!player.getMainHandItem().isEmpty())
+			return super.useWithoutItem(state, world, pos, player, hit);
 
-		if (!player.getAbilities().allowModifyWorld)
-			return ActionResult.PASS;
+		if (!player.getAbilities().mayBuild)
+			return InteractionResult.PASS;
 		else
 		{
 			updateState(state.cycle(INVERTED), world, pos);
-			return ActionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 	}
 }

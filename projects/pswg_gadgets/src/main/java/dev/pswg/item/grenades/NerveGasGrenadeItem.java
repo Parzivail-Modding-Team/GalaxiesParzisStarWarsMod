@@ -4,12 +4,12 @@ import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.entity.grenades.GrenadeEntity;
 import dev.pswg.item.FragmentationGrenadeSoundGroup;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 
 public class NerveGasGrenadeItem extends GrenadeItem
 {
-	public NerveGasGrenadeItem(Item.Settings settings)
+	public NerveGasGrenadeItem(Item.Properties settings)
 	{
 		super(settings, GadgetsItems.NERVE_GAS_GRENADE_ITEM, 60, new FragmentationGrenadeSoundGroup());
 	}

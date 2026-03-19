@@ -19,40 +19,40 @@ import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
 import dev.pswg.sound.BlasterSounds;
 import dev.pswg.world.TickConstants;
-import net.minecraft.block.BlockState;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.consume.UseAction;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.function.UnaryOperator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler, IHandAnimationAware
 {
@@ -107,7 +107,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		}
 
 		public static final Codec<CoolingMode> CODEC = GalaxiesCodecs.forEnum(CoolingMode.class);
-		public static final PacketCodec<RegistryByteBuf, CoolingMode> PACKET_CODEC = GalaxiesPacketCodecs.forEnum(CoolingMode.class);
+		public static final StreamCodec<RegistryFriendlyByteBuf, CoolingMode> PACKET_CODEC = GalaxiesPacketCodecs.forEnum(CoolingMode.class);
 	}
 
 	/**
@@ -148,28 +148,28 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	@GenerateCodec
 	public record AvailableAttachmentsComponent(
-			Identifier hud,
+			ResourceLocation hud,
 			@UseCodec(
 					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
 					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
 			)
-			Map<Identifier, Identifier> defaults,
+			Map<ResourceLocation, ResourceLocation> defaults,
 			@UseCodec(
 					customCodec = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_CODEC"),
 					customPacket = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_PACKET_CODEC")
 			)
-			Map<Identifier, AttachmentDefinition> options
+			Map<ResourceLocation, AttachmentDefinition> options
 	) implements IAvailableAttachmentsComponentCodec
 	{
 		/**
 		 * The codec for the `options` field
 		 */
-		public static final UnboundedMapCodec<Identifier, AttachmentDefinition> OPTIONS_CODEC = Codec.unboundedMap(Identifier.CODEC, AttachmentDefinition.CODEC);
+		public static final UnboundedMapCodec<ResourceLocation, AttachmentDefinition> OPTIONS_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, AttachmentDefinition.CODEC);
 
 		/**
 		 * The packet codec for the `options` field
 		 */
-		public static final PacketCodec<RegistryByteBuf, Map<Identifier, AttachmentDefinition>> OPTIONS_PACKET_CODEC = PacketCodecs.map(HashMap::new, Identifier.PACKET_CODEC, AttachmentDefinition.PACKET_CODEC);
+		public static final StreamCodec<RegistryFriendlyByteBuf, Map<ResourceLocation, AttachmentDefinition>> OPTIONS_PACKET_CODEC = ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, AttachmentDefinition.PACKET_CODEC);
 	}
 
 	/**
@@ -180,12 +180,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	@GenerateCodec
 	public record AttachmentsComponent(
-			Identifier hud,
+			ResourceLocation hud,
 			@UseCodec(
 					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
 					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
 			)
-			Map<Identifier, Identifier> applied
+			Map<ResourceLocation, ResourceLocation> applied
 	) implements IAttachmentsComponentCodec
 	{
 		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent(
@@ -200,10 +200,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 *
 		 * @return An optional attachment definition if one is applied, empty otherwise
 		 */
-		public Optional<AttachmentDefinition> getAttachmentInSlot(Map<Identifier, AttachmentDefinition> options, Identifier slot)
+		public Optional<AttachmentDefinition> getAttachmentInSlot(Map<ResourceLocation, AttachmentDefinition> options, ResourceLocation slot)
 		{
 			// Find the ID of the attachment in the given slot
-			Identifier appliedEntryId = applied().getOrDefault(slot, null);
+			ResourceLocation appliedEntryId = applied().getOrDefault(slot, null);
 
 			if (appliedEntryId == null)
 				return Optional.empty();
@@ -222,7 +222,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 *
 		 * @return The evaluated attachment combinator
 		 */
-		public float getAttachmentsValue(Map<Identifier, AttachmentDefinition> options, AttachmentFunction function)
+		public float getAttachmentsValue(Map<ResourceLocation, AttachmentDefinition> options, AttachmentFunction function)
 		{
 			float identity = function.getCombinator().getIdentity();
 
@@ -243,9 +243,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	@GenerateCodec
 	public record AttachmentDefinition(
 			String translationKey,
-			@SelfCodec List<Identifier> slots,
-			Identifier function,
-			Identifier category,
+			@UseCodec(
+					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_LIST"),
+					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_LIST")
+			)
+			List<ResourceLocation> slots,
+			ResourceLocation function,
+			ResourceLocation category,
 			@CodecDefault("0f") float value
 	) implements IAttachmentDefinitionCodec
 	{
@@ -320,7 +324,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			float damage,
 			int range,
 			int automaticRepeatDelay,
-			Identifier fireSound,
+			ResourceLocation fireSound,
 			@SelfCodec Heat heat,
 			@SelfCodec Cooling cooling
 	) implements IStatsComponentCodec
@@ -329,7 +333,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				8,
 				48,
 				4,
-				Identifier.ofVanilla("entity.snowball.throw"),
+				ResourceLocation.withDefaultNamespace("entity.snowball.throw"),
 				Heat.DEFAULT,
 				Cooling.DEFAULT
 		);
@@ -340,13 +344,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @param isAiming            Determines if the blaster is currently aiming-down-sights
 	 * @param lastFired           The timestamp when the blaster was last fired. It is derived
-	 *                            from the global timestamp {@link World#getTime()}.
+	 *                            from the global timestamp {@link Level#getGameTime()}.
 	 * @param fireCooldown        Determines the next world tick when the blaster is able to be
-	 *                            fired again. It is derived from the global timestamp {@link World#getTime()}
+	 *                            fired again. It is derived from the global timestamp {@link Level#getGameTime()}
 	 * @param cooldownStart       The timestamp when the blaster will begin, or has begun, cooling down. The type of cooldown is/will be determined by {@link StateComponent#coolingMode()}
 	 * @param lastTotalHeat       The amount of heat the blaster contained the last time
 	 *                            heat was added. To get the current amount of heat, taking
-	 *                            into account cooling and other parameters, see {@link #getAccumulatedHeat(World, ItemStack, float)}.
+	 *                            into account cooling and other parameters, see {@link #getAccumulatedHeat(Level, ItemStack, float)}.
 	 * @param lastVentingHeat     The amount of heat at the time of cooling start. Can be different
 	 *                            from {@link StateComponent#lastTotalHeat()} if e.g. a heat penalty was applied
 	 * @param coolingMode         The cooling mode of the blaster, if any
@@ -405,10 +409,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		COOLING_MULTIPLIER(Blasters.id("cooling_multiplier"), Combinator.GEOMETRIC),
 		FIRE_RATE_MULTIPLIER(Blasters.id("fire_rate_multiplier"), Combinator.GEOMETRIC);
 
-		private final Identifier id;
+		private final ResourceLocation id;
 		private final Combinator combinator;
 
-		AttachmentFunction(Identifier id, Combinator combinator)
+		AttachmentFunction(ResourceLocation id, Combinator combinator)
 		{
 			this.id = id;
 			this.combinator = combinator;
@@ -419,7 +423,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 *
 		 * @return the function ID
 		 */
-		public Identifier getId()
+		public ResourceLocation getId()
 		{
 			return id;
 		}
@@ -435,7 +439,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		}
 	}
 
-	public static final Identifier MISSING_ID = Blasters.id("missingno");
+	public static final ResourceLocation MISSING_ID = Blasters.id("missingno");
 
 	/**
 	 * If a blaster us "used" for longer than this time, in ticks, then
@@ -445,67 +449,67 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	protected static final int TOGGLE_AIMING_USE_TIME_TICKS = 3;
 
 	/**
-	 * The attribute combinator that is applied to the {@link EntityAttributes#MOVEMENT_SPEED}
+	 * The attribute combinator that is applied to the {@link Attributes#MOVEMENT_SPEED}
 	 * attribute in players when they are aiming-down-sights.
 	 */
-	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED = new EntityAttributeModifier(
+	protected static final AttributeModifier ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED = new AttributeModifier(
 			Blasters.id("aiming_speed_penalty"),
 			-0.5F,
-			EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+			AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
 	);
 
 	/**
 	 * The attribute combinator that is applied to the {@link GalaxiesEntityAttributes#FIELD_OF_VIEW_ZOOM}
 	 * attribute in players when they are aiming-down-sights.
 	 */
-	protected static final EntityAttributeModifier ATTR_MODIFIER_AIMING_FOV_ENABLED = new EntityAttributeModifier(
+	protected static final AttributeModifier ATTR_MODIFIER_AIMING_FOV_ENABLED = new AttributeModifier(
 			Blasters.id("aiming_zoom"),
 			2,
-			EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+			AttributeModifier.Operation.ADD_MULTIPLIED_BASE
 	);
 
 	/**
 	 * The component that contains the datapack registrar ID of the blaster
 	 */
-	public static final ComponentType<Identifier> ID = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
+	public static final DataComponentType<ResourceLocation> ID = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			Blasters.id("id"),
-			ComponentType.<Identifier>builder().codec(Identifier.CODEC).packetCodec(Identifier.PACKET_CODEC).build()
+			DataComponentType.<ResourceLocation>builder().persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC).build()
 	);
 
 	/**
 	 * The component that contains the serial number of the blaster
 	 */
-	public static final ComponentType<Long> SERIAL = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
+	public static final DataComponentType<Long> SERIAL = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			Blasters.id("serial"),
-			ComponentType.<Long>builder().codec(Codec.LONG).packetCodec(PacketCodecs.LONG).build()
+			DataComponentType.<Long>builder().persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.LONG).build()
 	);
 
 	/**
 	 * The component that contains the mutable gameplay state of the blaster
 	 */
-	private static final ComponentType<StateComponent> STATE = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
+	private static final DataComponentType<StateComponent> STATE = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			Blasters.id("state"),
-			ComponentType.<StateComponent>builder().codec(StateComponent.CODEC).packetCodec(StateComponent.PACKET_CODEC).build()
+			DataComponentType.<StateComponent>builder().persistent(StateComponent.CODEC).networkSynchronized(StateComponent.PACKET_CODEC).build()
 	);
 
 	/**
 	 * The component that contains the mutable attachments of the blaster
 	 */
-	private static final ComponentType<AttachmentsComponent> ATTACHMENTS = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
+	private static final DataComponentType<AttachmentsComponent> ATTACHMENTS = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			Blasters.id("attachments"),
-			ComponentType.<AttachmentsComponent>builder().codec(AttachmentsComponent.CODEC).packetCodec(AttachmentsComponent.PACKET_CODEC).build()
+			DataComponentType.<AttachmentsComponent>builder().persistent(AttachmentsComponent.CODEC).networkSynchronized(AttachmentsComponent.PACKET_CODEC).build()
 	);
 
 	/**
 	 * @return A new instance of the item settings for this item
 	 */
-	public static Settings createSettings()
+	public static Properties createSettings()
 	{
-		return new Settings()
+		return new Properties()
 				.component(ID, MISSING_ID)
 				.component(ATTACHMENTS, AttachmentsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
@@ -519,12 +523,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return A new stack configured with the given definition.
 	 */
-	public static ItemStack createStack(Identifier id, BlasterDatapackDefinition definition)
+	public static ItemStack createStack(ResourceLocation id, BlasterDatapackDefinition definition)
 	{
 		var stack = new ItemStack(Blasters.BLASTER_ITEM);
 
 		// Set the item name to the model name by default
-		stack.set(DataComponentTypes.ITEM_NAME, Text.translatable(id.toTranslationKey()));
+		stack.set(DataComponents.ITEM_NAME, Component.translatable(id.toLanguageKey()));
 
 		stack.set(ID, id);
 		stack.set(ATTACHMENTS, createAvailableAttachments(definition.attachments()));
@@ -544,7 +548,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		return new AttachmentsComponent(attachments.hud(), attachments.defaults());
 	}
 
-	public BlasterItem(Settings settings)
+	public BlasterItem(Properties settings)
 	{
 		super(settings);
 	}
@@ -607,7 +611,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static void applyState(ItemStack stack, UnaryOperator<StateComponent> stateOperator)
 	{
-		stack.apply(STATE, StateComponent.DEFAULT, stateOperator);
+		stack.update(STATE, StateComponent.DEFAULT, stateOperator);
 	}
 
 	/**
@@ -620,20 +624,20 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	{
 		applyState(stack, state -> state.withIsAiming(aiming));
 
-		var attrs = stack.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
+		var attrs = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
 
 		if (aiming)
 		{
-			attrs = attrs.with(EntityAttributes.MOVEMENT_SPEED, ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED, AttributeModifierSlot.HAND);
-			attrs = attrs.with(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED, AttributeModifierSlot.HAND);
+			attrs = attrs.withModifierAdded(Attributes.MOVEMENT_SPEED, ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED, EquipmentSlotGroup.HAND);
+			attrs = attrs.withModifierAdded(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED, EquipmentSlotGroup.HAND);
 		}
 		else
 		{
-			attrs = AttributeUtil.without(attrs, EntityAttributes.MOVEMENT_SPEED, ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED);
+			attrs = AttributeUtil.without(attrs, Attributes.MOVEMENT_SPEED, ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED);
 			attrs = AttributeUtil.without(attrs, GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED);
 		}
 
-		stack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, attrs);
+		stack.set(DataComponents.ATTRIBUTE_MODIFIERS, attrs);
 	}
 
 	/**
@@ -646,13 +650,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return A float [0,1) if currently waiting to be able to fire, empty otherwise
 	 */
-	public static Optional<Float> getFireCooldownProgress(World world, ItemStack stack, float tickDelta)
+	public static Optional<Float> getFireCooldownProgress(Level world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
 
 		var lastFired = state.lastFired();
 		var cooldown = state.fireCooldown();
-		var time = world.getTime() + tickDelta;
+		var time = world.getGameTime() + tickDelta;
 
 		if (cooldown <= lastFired || cooldown < time)
 			return Optional.empty();
@@ -672,7 +676,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return A CoolingBypass if currently intersecting one, empty otherwise
 	 */
-	public static Optional<CoolingBypass> getCoolingBypass(World world, ItemStack stack, float tickDelta)
+	public static Optional<CoolingBypass> getCoolingBypass(Level world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
 		if (!state.coolingMode.canBypass())
@@ -715,11 +719,11 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return True if the blaster can be fired, false otherwise
 	 */
-	public static boolean canFire(World world, LivingEntity user, ItemStack stack)
+	public static boolean canFire(Level world, LivingEntity user, ItemStack stack)
 	{
 		var state = getState(stack);
 
-		var isWaitingToFire = state.fireCooldown() >= world.getTime();
+		var isWaitingToFire = state.fireCooldown() >= world.getGameTime();
 		if (isWaitingToFire)
 			return false;
 
@@ -737,7 +741,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The current remaining overcharge proportion
 	 */
-	public static Optional<Float> getOverchargeTimeRemaining(World world, ItemStack stack, float tickDelta)
+	public static Optional<Float> getOverchargeTimeRemaining(Level world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
 
@@ -749,7 +753,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var overchargeStart = state.overchargeStart();
 		var overchargeLength = stats.heat.overchargeBonus();
-		var time = world.getTime() + tickDelta;
+		var time = world.getGameTime() + tickDelta;
 
 		if (time > overchargeStart + overchargeLength)
 			return Optional.empty();
@@ -770,7 +774,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The current heat of the blaster
 	 */
-	public static Optional<Float> getAccumulatedHeat(World world, ItemStack stack, float tickDelta)
+	public static Optional<Float> getAccumulatedHeat(Level world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
 		if (state.coolingMode() != CoolingMode.PASSIVE)
@@ -784,7 +788,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var attachments = getAttachments(stack);
 
-		var time = world.getTime() + tickDelta;
+		var time = world.getGameTime() + tickDelta;
 
 		var lastCommittedHeat = state.lastTotalHeat();
 		var dissipationPerTick = getScaledHeatDrainSpeed(stats, attachments);
@@ -805,7 +809,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The current heat of the blaster
 	 */
-	public static Optional<Float> getVentingHeat(World world, ItemStack stack, float tickDelta)
+	public static Optional<Float> getVentingHeat(Level world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
 		if (state.coolingMode() == CoolingMode.PASSIVE)
@@ -819,7 +823,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var attachments = getAttachments(stack);
 
-		var time = world.getTime() + tickDelta;
+		var time = world.getGameTime() + tickDelta;
 
 		var lastVentingHeat = state.lastVentingHeat();
 		var dissipationPerTick = getScaledOverheatDrainSpeed(stats, attachments);
@@ -840,7 +844,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The cooling status of the blaster, including its current cooling mode and total accumulated or venting heat
 	 */
-	public static CoolingStatus getCoolingStatus(World world, ItemStack stack, float tickDelta)
+	public static CoolingStatus getCoolingStatus(Level world, ItemStack stack, float tickDelta)
 	{
 		var state = getState(stack);
 		return getVentingHeat(world, stack, tickDelta)
@@ -921,7 +925,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, @Nullable EquipmentSlot slot)
+	public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot)
 	{
 		// If the stack does not have a serial number, assign one
 		if (stack.get(SERIAL) == null)
@@ -941,77 +945,77 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	@Override
-	public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user)
+	public boolean canDestroyBlock(ItemStack stack, BlockState state, Level world, BlockPos pos, LivingEntity user)
 	{
 		return false;
 	}
 
 	@Override
-	public int getMaxUseTime(ItemStack stack, LivingEntity user)
+	public int getUseDuration(ItemStack stack, LivingEntity user)
 	{
 		var state = getState(stack);
 
 		if (state.isAiming())
 			return TickConstants.ONE_HOUR;
 
-		return super.getMaxUseTime(stack, user);
+		return super.getUseDuration(stack, user);
 	}
 
 	@Override
-	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user)
+	public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user)
 	{
-		onStoppedUsing(stack, world, user, 0);
+		releaseUsing(stack, world, user, 0);
 
 		return stack;
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack)
+	public ItemUseAnimation getUseAnimation(ItemStack stack)
 	{
-		return UseAction.NONE;
+		return ItemUseAnimation.NONE;
 	}
 
 	@Override
-	public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
+	public boolean releaseUsing(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks)
 	{
 		var state = getState(stack);
 
-		if (!world.isClient() && user.getItemUseTime() > TOGGLE_AIMING_USE_TIME_TICKS && state.isAiming())
+		if (!world.isClientSide() && user.getTicksUsingItem() > TOGGLE_AIMING_USE_TIME_TICKS && state.isAiming())
 			setAiming(stack, false);
 
-		return super.onStoppedUsing(stack, world, user, remainingUseTicks);
+		return super.releaseUsing(stack, world, user, remainingUseTicks);
 	}
 
 	@Override
-	public ActionResult use(World world, PlayerEntity user, Hand hand)
+	public InteractionResult use(Level world, Player user, InteractionHand hand)
 	{
-		var stack = user.getStackInHand(hand);
+		var stack = user.getItemInHand(hand);
 		var state = getState(stack);
 
-		if (!world.isClient())
+		if (!world.isClientSide())
 		{
 			setAiming(stack, !state.isAiming());
 
 			// this is required to "start using" the item instead of
 			// immediately consuming it.
-			user.setCurrentHand(hand);
+			user.startUsingItem(hand);
 
-			return ActionResult.CONSUME;
+			return InteractionResult.CONSUME;
 		}
 
-		return ActionResult.FAIL;
+		return InteractionResult.FAIL;
 	}
 
 	@Override
-	public ActionResult useLeft(World world, LivingEntity user, Hand hand, boolean repeatEvent)
+	public InteractionResult useLeft(Level world, LivingEntity user, InteractionHand hand, boolean repeatEvent)
 	{
 		// TODO: manual reload
 		// TODO: dryfire sound when no ammunition
 
-		ItemStack itemStack = user.getStackInHand(hand);
+		ItemStack itemStack = user.getItemInHand(hand);
 
 		if (!canFire(world, user, itemStack))
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 
 		var state = getState(itemStack);
 		var attachments = getAttachments(itemStack);
@@ -1020,20 +1024,20 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (optionalStats.isEmpty())
 		{
 			Blasters.LOGGER.warn("Blaster stats not found for blaster {}", itemStack);
-			return ActionResult.FAIL;
+			return InteractionResult.FAIL;
 		}
 
 		var optionalAvailableAttachments = getAvailableAttachments(itemStack);
 		if (optionalAvailableAttachments.isEmpty())
 		{
 			Blasters.LOGGER.warn("Blaster available attachments not found for blaster {}", itemStack);
-			return ActionResult.FAIL;
+			return InteractionResult.FAIL;
 		}
 
 		var stats = optionalStats.get();
 		var availableAttachments = optionalAvailableAttachments.get();
 
-		var timestamp = world.getTime();
+		var timestamp = world.getGameTime();
 
 		var coolingStatus = getCoolingStatus(world, itemStack, 0);
 
@@ -1045,7 +1049,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			if (!state.coolingMode().canBypass() || repeatEvent)
 			{
 				itemStack.set(STATE, state);
-				return ActionResult.FAIL;
+				return InteractionResult.FAIL;
 			}
 
 			var bypass = getCoolingBypass(world, itemStack, 0);
@@ -1057,19 +1061,19 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						user.getY(),
 						user.getZ(),
 						BlasterSounds.BYPASS_FAILED,
-						SoundCategory.PLAYERS,
+						SoundSource.PLAYERS,
 						1,
 						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 				);
 
-				if (world.isClient())
+				if (world.isClientSide())
 				{
 					itemStack.set(STATE, state);
-					return ActionResult.FAIL;
+					return InteractionResult.FAIL;
 				}
 
 				itemStack.set(STATE, state.withCoolingMode(CoolingMode.FAILED_OVERCHARGE));
-				return ActionResult.CONSUME;
+				return InteractionResult.CONSUME;
 			}
 			else if (bypass.get() == CoolingBypass.PRIMARY)
 			{
@@ -1079,15 +1083,15 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						user.getY(),
 						user.getZ(),
 						BlasterSounds.BYPASS_PRIMARY,
-						SoundCategory.PLAYERS,
+						SoundSource.PLAYERS,
 						1,
 						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 				);
 
-				if (world.isClient())
+				if (world.isClientSide())
 				{
 					itemStack.set(STATE, state);
-					return ActionResult.FAIL;
+					return InteractionResult.FAIL;
 				}
 
 				itemStack.set(
@@ -1095,7 +1099,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						state.withLastTotalHeat(0)
 						     .withCooling(CoolingMode.PASSIVE, timestamp)
 				);
-				return ActionResult.CONSUME;
+				return InteractionResult.CONSUME;
 			}
 			else if (bypass.get() == CoolingBypass.SECONDARY)
 			{
@@ -1107,15 +1111,15 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						user.getY(),
 						user.getZ(),
 						BlasterSounds.BYPASS_SECONDARY,
-						SoundCategory.PLAYERS,
+						SoundSource.PLAYERS,
 						1,
 						RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 				);
 
-				if (world.isClient())
+				if (world.isClientSide())
 				{
 					itemStack.set(STATE, state);
-					return ActionResult.FAIL;
+					return InteractionResult.FAIL;
 				}
 
 				itemStack.set(
@@ -1124,7 +1128,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 						     .withOverchargeStart(timestamp)
 						     .withCooling(CoolingMode.PASSIVE, timestamp)
 				);
-				return ActionResult.CONSUME;
+				return InteractionResult.CONSUME;
 			}
 		}
 
@@ -1137,7 +1141,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
 
-		if (world instanceof ServerWorld serverWorld)
+		if (world instanceof ServerLevel serverWorld)
 		{
 			fireBolt(user, serverWorld);
 
@@ -1163,8 +1167,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				user.getX(),
 				user.getY(),
 				user.getZ(),
-				RegistryEntry.of(SoundEvent.of(stats.fireSound())),
-				SoundCategory.NEUTRAL,
+				Holder.direct(SoundEvent.createVariableRangeEvent(stats.fireSound())),
+				SoundSource.NEUTRAL,
 				1,
 				RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 		);
@@ -1177,7 +1181,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 					user.getY(),
 					user.getZ(),
 					BlasterSounds.OVERHEAT,
-					SoundCategory.PLAYERS,
+					SoundSource.PLAYERS,
 					1,
 					RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 			);
@@ -1193,13 +1197,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		itemStack.set(STATE, state);
 
-		return ActionResult.CONSUME;
+		return InteractionResult.CONSUME;
 	}
 
 	@Override
-	public ItemStack invokePrimaryAction(ItemStack stack, World world, LivingEntity user)
+	public ItemStack invokePrimaryAction(ItemStack stack, Level world, LivingEntity user)
 	{
-		var timestamp = world.getTime();
+		var timestamp = world.getGameTime();
 
 		var coolingStatus = getCoolingStatus(world, stack, 0);
 		if (coolingStatus.coolingMode().isCooling())
@@ -1218,7 +1222,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				user.getY(),
 				user.getZ(),
 				BlasterSounds.VENT,
-				SoundCategory.PLAYERS,
+				SoundSource.PLAYERS,
 				1,
 				RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 		);
@@ -1226,22 +1230,22 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		return stack;
 	}
 
-	private static void fireBolt(LivingEntity user, ServerWorld serverWorld)
+	private static void fireBolt(LivingEntity user, ServerLevel serverWorld)
 	{
 		var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
 
 		// TODO: abstract into bolt-creating factory
-		projectile.setPosition(user.getX(), user.getY() + user.getEyeHeight(user.getPose()), user.getZ());
+		projectile.setPos(user.getX(), user.getY() + user.getEyeHeight(user.getPose()), user.getZ());
 
-		var pitch = user.getPitch();
-		var yaw = user.getHeadYaw();
+		var pitch = user.getXRot();
+		var yaw = user.getYHeadRot();
 
-		projectile.setVelocity(GMath.getForwardVector(yaw, pitch).multiply(5));
-		projectile.setAngles(yaw, pitch);
+		projectile.setDeltaMovement(GMath.getForwardVector(yaw, pitch).scale(5));
+		projectile.absSnapRotationTo(yaw, pitch);
 
 		//			Vec3d vec3d = user.getMovement();
 		//			projectile.setVelocity(projectile.getVelocity().add(vec3d));
 
-		serverWorld.spawnEntity(projectile);
+		serverWorld.addFreshEntity(projectile);
 	}
 }

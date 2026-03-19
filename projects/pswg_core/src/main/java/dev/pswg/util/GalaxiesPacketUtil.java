@@ -2,27 +2,26 @@ package dev.pswg.util;
 
 import com.mojang.datafixers.util.Function4;
 import com.mojang.datafixers.util.Function5;
-import net.minecraft.network.codec.PacketCodec;
-
 import java.util.function.Function;
+import net.minecraft.network.codec.StreamCodec;
 
 public class GalaxiesPacketUtil
 {
-	public static <B, C, T1, T2, T3, T4, T5> PacketCodec<B, C> quintuple(
-			PacketCodec<? super B, T1> codec1,
+	public static <B, C, T1, T2, T3, T4, T5> StreamCodec<B, C> quintuple(
+			StreamCodec<? super B, T1> codec1,
 			Function<C, T1> from1,
-			PacketCodec<? super B, T2> codec2,
+			StreamCodec<? super B, T2> codec2,
 			Function<C, T2> from2,
-			PacketCodec<? super B, T3> codec3,
+			StreamCodec<? super B, T3> codec3,
 			Function<C, T3> from3,
-			PacketCodec<? super B, T4> codec4,
+			StreamCodec<? super B, T4> codec4,
 			Function<C, T4> from4,
-			PacketCodec<? super B, T5> codec5,
+			StreamCodec<? super B, T5> codec5,
 			Function<C, T5> from5,
 			Function5<T1, T2, T3, T4, T5, C> to
 	)
 	{
-		return new PacketCodec<B, C>()
+		return new StreamCodec<B, C>()
 		{
 			@Override
 			public C decode(B object)
@@ -47,19 +46,19 @@ public class GalaxiesPacketUtil
 		};
 	}
 
-	public static <B, C, T1, T2, T3, T4> PacketCodec<B, C> quadruple(
-			PacketCodec<? super B, T1> codec1,
+	public static <B, C, T1, T2, T3, T4> StreamCodec<B, C> quadruple(
+			StreamCodec<? super B, T1> codec1,
 			Function<C, T1> from1,
-			PacketCodec<? super B, T2> codec2,
+			StreamCodec<? super B, T2> codec2,
 			Function<C, T2> from2,
-			PacketCodec<? super B, T3> codec3,
+			StreamCodec<? super B, T3> codec3,
 			Function<C, T3> from3,
-			PacketCodec<? super B, T4> codec4,
+			StreamCodec<? super B, T4> codec4,
 			Function<C, T4> from4,
 			Function4<T1, T2, T3, T4, C> to
 	)
 	{
-		return new PacketCodec<B, C>()
+		return new StreamCodec<B, C>()
 		{
 			@Override
 			public C decode(B object)

@@ -3,7 +3,7 @@ package dev.pswg.util.world;
 import dev.pswg.util.MathUtil;
 import dev.pswg.util.noise.InfiniteWorleyNoise;
 import dev.pswg.util.noise.OpenSimplex2F;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class ProcNoise
 {
@@ -137,7 +137,7 @@ public class ProcNoise
 			dSumX = dSumX + amp * nY * -nX;
 			dSumY = dSumY + amp * nZ * -nX;
 			freq = freq * lacunarity;
-			amp = amp * gain * MathHelper.clamp(sum, 0, 1);
+			amp = amp * gain * Mth.clamp(sum, 0, 1);
 		}
 
 		return sum;

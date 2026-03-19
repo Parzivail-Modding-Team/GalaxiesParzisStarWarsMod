@@ -6,7 +6,7 @@ import dev.pswg.compatability.FmlCompat;
 import dev.pswg.errorman.model.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModOrigin;
-import net.minecraft.util.crash.CrashReport;
+import net.minecraft.CrashReport;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import org.slf4j.Logger;
 
@@ -69,7 +69,7 @@ public final class ErrorManager
 		if (FmlCompat.isForge())
 			return;
 
-		var cause = report.getCause();
+		var cause = report.getException();
 		var atFault = false;
 
 		var depth = 0;
@@ -166,7 +166,7 @@ public final class ErrorManager
 
 		var traceStack = new Stack<RollbarTrace>();
 
-		var cause = report.getCause();
+		var cause = report.getException();
 		var depth = 0;
 		while (cause != null && depth < 10)
 		{
@@ -236,12 +236,12 @@ public final class ErrorManager
 
 				LOGGER.warn("Response: {}", rollbarResponse);
 
-				var section = report.addElement("PSWG Crash Submission Details");
-				section.add("Status", rollbarResponse.err());
+				var section = report.addCategory("PSWG Crash Submission Details");
+				section.setDetail("Status", rollbarResponse.err());
 				if (rollbarResponse.result() != null)
-					section.add("Report ID", rollbarResponse.result().uuid());
+					section.setDetail("Report ID", rollbarResponse.result().uuid());
 				else if (rollbarResponse.message() != null)
-					section.add("Error Message", rollbarResponse.message());
+					section.setDetail("Error Message", rollbarResponse.message());
 			}
 		}
 		catch (Throwable t)

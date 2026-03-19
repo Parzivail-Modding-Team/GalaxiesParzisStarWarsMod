@@ -1,35 +1,35 @@
 package dev.pswg.block;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class MutatingStairsBlock extends StairsBlock
+public class MutatingStairsBlock extends StairBlock
 {
-	private final StairsBlock target;
+	private final StairBlock target;
 	private final int meanTransitionTime;
 
-	public MutatingStairsBlock(BlockState baseBlockState, StairsBlock target, int meanTransitionTime, AbstractBlock.Settings settings)
+	public MutatingStairsBlock(BlockState baseBlockState, StairBlock target, int meanTransitionTime, BlockBehaviour.Properties settings)
 	{
-		super(baseBlockState, settings.ticksRandomly());
+		super(baseBlockState, settings.randomTicks());
 		this.target = target;
 		this.meanTransitionTime = meanTransitionTime;
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
 		if (!canTransition(state, world, pos, random))
 			return;
 
 		if (random.nextInt(meanTransitionTime) == 0)
-			world.setBlockState(pos, target.getStateWithProperties(state), NOTIFY_LISTENERS);
+			world.setBlock(pos, target.withPropertiesOf(state), UPDATE_CLIENTS);
 	}
 
-	protected boolean canTransition(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	protected boolean canTransition(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
 		return true;
 	}

@@ -1,8 +1,8 @@
 package dev.pswg.item;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 /**
  * Provides an interface for items that can have primary actions invoked on them
@@ -14,7 +14,7 @@ public interface IPrimaryActionHandler
 	 *
 	 * <p>This method is called on both the logical client and logical server, so take caution
 	 * when overriding this method. The logical side can be checked using {@link
-	 * World#isClient}.
+	 * Level#isClientSide}.
 	 *
 	 * @param stack The item stack to query
 	 * @param user  The user that is holding the stack
@@ -22,7 +22,7 @@ public interface IPrimaryActionHandler
 	 *
 	 * @return The new item stack after using the item
 	 */
-	default ItemStack invokePrimaryAction(ItemStack stack, World world, LivingEntity user)
+	default ItemStack invokePrimaryAction(ItemStack stack, Level world, LivingEntity user)
 	{
 		return stack;
 	}

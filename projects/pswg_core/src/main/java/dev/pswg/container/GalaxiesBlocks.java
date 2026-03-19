@@ -14,104 +14,112 @@ import dev.pswg.registry.Registrar;
 import dev.pswg.util.BlockUtil;
 import dev.pswg.util.VoxelShapeUtil;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.SlabType;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ColorCode;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-
+import net.minecraft.world.level.block.*;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.ColorRGBA;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ColoredFallingBlock;
+import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TintedParticleLeavesBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.function.ToIntFunction;
 
 public class GalaxiesBlocks
 {
 	public static final class Tags
 	{
-		public static final TagKey<Block> BOUNCY = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("bouncy"));
-		public static final TagKey<Block> SOFT = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("soft"));
-		public static final TagKey<Block> BUSH_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("bush_placeable"));
-		public static final TagKey<Block> ARID_PLANT_PLACEABLE = TagKey.of(RegistryKeys.BLOCK, Galaxies.id("arid_plant_placeable"));
+		public static final TagKey<Block> BOUNCY = TagKey.create(Registries.BLOCK, Galaxies.id("bouncy"));
+		public static final TagKey<Block> SOFT = TagKey.create(Registries.BLOCK, Galaxies.id("soft"));
+		public static final TagKey<Block> BUSH_PLACEABLE = TagKey.create(Registries.BLOCK, Galaxies.id("bush_placeable"));
+		public static final TagKey<Block> ARID_PLANT_PLACEABLE = TagKey.create(Registries.BLOCK, Galaxies.id("arid_plant_placeable"));
 	}
 	/// STONE
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final StoneProducts CANYON = new StoneProducts(AbstractBlock.Settings.create().strength(0.5F), "canyon_stone");
+	public static final StoneProducts CANYON = new StoneProducts(BlockBehaviour.Properties.of().strength(0.5F), "canyon_stone");
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block CANYON_BRICKS = createBlock("canyon_stone_bricks", AbstractBlock.Settings.create().strength(0.5F));
+	public static final Block CANYON_BRICKS = createBlock("canyon_stone_bricks", BlockBehaviour.Properties.of().strength(0.5F));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block POLISHED_CANYON = createBlock("polished_canyon_stone", AbstractBlock.Settings.create().strength(0.5F));
+	public static final Block POLISHED_CANYON = createBlock("polished_canyon_stone", BlockBehaviour.Properties.of().strength(0.5F));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block CHISELED_CANYON = createBlock("chiseled_canyon_stone", AbstractBlock.Settings.create().strength(0.5F));
+	public static final Block CHISELED_CANYON = createBlock("chiseled_canyon_stone", BlockBehaviour.Properties.of().strength(0.5F));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final StoneProducts CANYON_COBBLE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "canyon_cobblestone");
+	public static final StoneProducts CANYON_COBBLE = new StoneProducts(BlockBehaviour.Properties.of().strength(1.25F).requiresCorrectToolForDrops(), "canyon_cobblestone");
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final StoneProducts POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "pourstone");
+	public static final StoneProducts POURSTONE = new StoneProducts(BlockBehaviour.Properties.of().strength(1.25F).requiresCorrectToolForDrops(), "pourstone");
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final StoneProducts SMOOTH_POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "smooth_pourstone");
+	public static final StoneProducts SMOOTH_POURSTONE = new StoneProducts(BlockBehaviour.Properties.of().strength(1.25F).requiresCorrectToolForDrops(), "smooth_pourstone");
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final StoneProducts CRACKED_POURSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.0F).requiresTool(), "cracked_pourstone");
+	public static final StoneProducts CRACKED_POURSTONE = new StoneProducts(BlockBehaviour.Properties.of().strength(1.0F).requiresCorrectToolForDrops(), "cracked_pourstone");
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final DyedStoneProducts DYED_POURSTONE = new DyedStoneProducts(color -> new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), color.name().toLowerCase() + "_pourstone"));
+	public static final DyedStoneProducts DYED_POURSTONE = new DyedStoneProducts(color -> new StoneProducts(BlockBehaviour.Properties.of().strength(1.25F).requiresCorrectToolForDrops(), color.name().toLowerCase() + "_pourstone"));
 	@DataGenBlock
 	// TODO: find a way implement "connecting" blocks
-	public static final SelfConnectingBlock DURASTEEL_CONNECTING_POURSTONE = Registrar.block(Galaxies.id("durasteel_bordered_pourstone"), SelfConnectingBlock::new, AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+	public static final SelfConnectingBlock DURASTEEL_CONNECTING_POURSTONE = Registrar.block(Galaxies.id("durasteel_bordered_pourstone"), SelfConnectingBlock::new, BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(1.5F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final StoneProducts MASSASSI = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone");
+	public static final StoneProducts MASSASSI = new StoneProducts(BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops(), "massassi_stone");
 	@DataGenBlock
-	public static final ReducedStoneProducts MASSASSI_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2F).requiresTool(), "smooth_massassi_stone");
+	public static final ReducedStoneProducts MASSASSI_SMOOTH = new ReducedStoneProducts(BlockBehaviour.Properties.of().strength(2F).requiresCorrectToolForDrops(), "smooth_massassi_stone");
 	@DataGenBlock
-	public static final StoneProducts MASSASSI_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "massassi_stone_bricks");
+	public static final StoneProducts MASSASSI_BRICKS = new StoneProducts(BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops(), "massassi_stone_bricks");
 	@DataGenBlock
-	public static final ReducedStoneProducts MOSSY_MASSASSI_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2F).requiresTool(), "mossy_smooth_massassi_stone");
+	public static final ReducedStoneProducts MOSSY_MASSASSI_SMOOTH = new ReducedStoneProducts(BlockBehaviour.Properties.of().strength(2F).requiresCorrectToolForDrops(), "mossy_smooth_massassi_stone");
 	@DataGenBlock
-	public static final StoneProducts MOSSY_MASSASSI_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "mossy_massassi_stone_bricks");
+	public static final StoneProducts MOSSY_MASSASSI_BRICKS = new StoneProducts(BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops(), "mossy_massassi_stone_bricks");
 	@DataGenBlock
-	public static final StoneProducts ILUM = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "ilum_stone");
+	public static final StoneProducts ILUM = new StoneProducts(BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops(), "ilum_stone");
 	@DataGenBlock
-	public static final ReducedStoneProducts ILUM_SMOOTH = new ReducedStoneProducts(AbstractBlock.Settings.create().strength(2.0F).requiresTool(), "smooth_ilum_stone");
+	public static final ReducedStoneProducts ILUM_SMOOTH = new ReducedStoneProducts(BlockBehaviour.Properties.of().strength(2.0F).requiresCorrectToolForDrops(), "smooth_ilum_stone");
 	@DataGenBlock
-	public static final StoneProducts ILUM_BRICKS = new StoneProducts(AbstractBlock.Settings.create().strength(1.5F).requiresTool(), "ilum_stone_bricks");
+	public static final StoneProducts ILUM_BRICKS = new StoneProducts(BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops(), "ilum_stone_bricks");
 	@DataGenBlock
-	public static final Block ILUM_CHISELED_BRICKS = createBlock("chiseled_ilum_stone_bricks", AbstractBlock.Settings.create().strength(1.5F).requiresTool());
+	public static final Block ILUM_CHISELED_BRICKS = createBlock("chiseled_ilum_stone_bricks", BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops());
 	/// SANDSTONE
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final StoneProducts DESERT_SANDSTONE = new StoneProducts(AbstractBlock.Settings.create().strength(1.25F).requiresTool(), "desert_sandstone");
+	public static final StoneProducts DESERT_SANDSTONE = new StoneProducts(BlockBehaviour.Properties.of().strength(1.25F).requiresCorrectToolForDrops(), "desert_sandstone");
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block DUNESTONE = createBlock("dunestone", AbstractBlock.Settings.create().strength(1.25F).requiresTool());
+	public static final Block DUNESTONE = createBlock("dunestone", BlockBehaviour.Properties.of().strength(1.25F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block SMOOTH_DESERT_SANDSTONE = createBlock("smooth_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
+	public static final Block SMOOTH_DESERT_SANDSTONE = createBlock("smooth_desert_sandstone", BlockBehaviour.Properties.of().strength(0.5F));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block POLISHED_DESERT_SANDSTONE = createBlock("polished_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
+	public static final Block POLISHED_DESERT_SANDSTONE = createBlock("polished_desert_sandstone", BlockBehaviour.Properties.of().strength(0.5F));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block CHISELED_DESERT = createBlock("chiseled_desert_sandstone", AbstractBlock.Settings.create().strength(0.5F));
+	public static final Block CHISELED_DESERT = createBlock("chiseled_desert_sandstone", BlockBehaviour.Properties.of().strength(0.5F));
 	/// SAND
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final ColoredFallingBlock DESERT_SAND = createFallingBlock("desert_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFEDBB8A));
+	public static final ColoredFallingBlock DESERT_SAND = createFallingBlock("desert_sand", BlockBehaviour.Properties.of().sound(SoundType.SAND).strength(0.5F), new ColorRGBA(0xFFEDBB8A));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final ColoredFallingBlock PIT_SAND = createFallingBlock("pit_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFEAC795));
+	public static final ColoredFallingBlock PIT_SAND = createFallingBlock("pit_sand", BlockBehaviour.Properties.of().sound(SoundType.SAND).strength(0.5F), new ColorRGBA(0xFFEAC795));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final ColoredFallingBlock FINE_SAND = createFallingBlock("fine_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFE9C490));
+	public static final ColoredFallingBlock FINE_SAND = createFallingBlock("fine_sand", BlockBehaviour.Properties.of().sound(SoundType.SAND).strength(0.5F), new ColorRGBA(0xFFE9C490));
 	@DataGenBlock(model = DataGenBlockModel.ACCUMULATING)
-	public static final AccumulatingBlock LOOSE_DESERT_SAND = createAccumulatingBlock("loose_desert_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), DESERT_SAND);
+	public static final AccumulatingBlock LOOSE_DESERT_SAND = createAccumulatingBlock("loose_desert_sand", BlockBehaviour.Properties.of().sound(SoundType.SAND).strength(0.5F), DESERT_SAND);
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F), new ColorCode(0xFFC59572));
+	public static final ColoredFallingBlock CANYON_SAND = createFallingBlock("canyon_sand", BlockBehaviour.Properties.of().sound(SoundType.SAND).strength(0.5F), new ColorRGBA(0xFFC59572));
 	/// SALT
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, rotation = DGBlockRotation.RANDOM_ROTATION_X, blockTags = { DGBlockTag.BUSH_PLACEABLE, DGBlockTag.ARID_PLANT_PLACEABLE })
-	public static final Block CAKED_SALT = createBlock("caked_salt", AbstractBlock.Settings.create().sounds(BlockSoundGroup.SAND).strength(0.5F));
+	public static final Block CAKED_SALT = createBlock("caked_salt", BlockBehaviour.Properties.of().sound(SoundType.SAND).strength(0.5F));
 	/// GRAVEL
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, rotation = DGBlockRotation.RANDOM_ROTATION_X)
-	public static final FallingBlock JUNDLAND_GRAVEL = createFallingBlock("jundland_gravel", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F), new ColorCode(0xFF7A5346));
+	public static final FallingBlock JUNDLAND_GRAVEL = createFallingBlock("jundland_gravel", BlockBehaviour.Properties.of().sound(SoundType.GRAVEL).strength(0.5F), new ColorRGBA(0xFF7A5346));
 	/// DIRT
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorCode(0xFF986A39));
+	public static final ReducedDryingStoneProducts RUINED_WET_POURSTONE = new ReducedDryingStoneProducts(BlockBehaviour.Properties.of().sound(SoundType.GRAVEL).noCollision().strength(0.5F), "ruined_wet_pourstone", CRACKED_POURSTONE.block, 10, new ColorRGBA(0xFF986A39));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final ReducedDryingRuiningStoneProducts WET_POURSTONE = new ReducedDryingRuiningStoneProducts(AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorCode(0xFF9E6E3B));
+	public static final ReducedDryingRuiningStoneProducts WET_POURSTONE = new ReducedDryingRuiningStoneProducts(BlockBehaviour.Properties.of().sound(SoundType.GRAVEL).strength(0.5F).noCollision(), "wet_pourstone", POURSTONE.block, RUINED_WET_POURSTONE.block, 10, new ColorRGBA(0xFF9E6E3B));
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, rotation = DGBlockRotation.RANDOM_ROTATION_X, blockTags = { DGBlockTag.PICKAXE_MINEABLE, DGBlockTag.DEAD_BUSH_SUBSTRATE, DGBlockTag.BUSH_PLACEABLE, DGBlockTag.ARID_PLANT_PLACEABLE })
-	public static final Block DESERT_LOAM = createBlock("desert_loam", AbstractBlock.Settings.create().sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
+	public static final Block DESERT_LOAM = createBlock("desert_loam", BlockBehaviour.Properties.of().sound(SoundType.GRAVEL).strength(0.5F));
 
 	/// Plants
 	//TODO: vaporator mushroom colony & molo shrub
@@ -139,18 +147,18 @@ public class GalaxiesBlocks
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
 	@DataGenBlock(model = DataGenBlockModel.CROP_AGE_2, itemGroup = DataGenItemGroup.NONE, addItemTranslation = false)
-	public static final ChasukaCrop CHASUKA = Registrar.blockWithoutItem(Galaxies.id("chasuka"), ChasukaCrop::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+	public static final ChasukaCrop CHASUKA = Registrar.blockWithoutItem(Galaxies.id("chasuka"), ChasukaCrop::new, BlockBehaviour.Properties.of().noCollision().randomTicks().instabreak().sound(SoundType.CROP));
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
 	@DataGenBlock(model = DataGenBlockModel.CROSS_AGE_3, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final HkakBushBlock HKAK_BUSH = Registrar.block(Galaxies.id("hkak_bush"), HkakBushBlock::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+	public static final HkakBushBlock HKAK_BUSH = Registrar.block(Galaxies.id("hkak_bush"), HkakBushBlock::new, BlockBehaviour.Properties.of().noCollision().randomTicks().instabreak().sound(SoundType.CROP));
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
 	@DataGenBlock(model = DataGenBlockModel.CROSS_AGE_3_BLOOMING, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final MoloShrubBlock MOLO_SHRUB = Registrar.block(Galaxies.id("molo_shrub"), MoloShrubBlock::new, AbstractBlock.Settings.create().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+	public static final MoloShrubBlock MOLO_SHRUB = Registrar.block(Galaxies.id("molo_shrub"), MoloShrubBlock::new, BlockBehaviour.Properties.of().noCollision().randomTicks().instabreak().sound(SoundType.CROP));
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
 	@DataGenBlock(model = DataGenBlockModel.CROSS, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final VaporatorMushroomBlock VAPORATOR_MUSHROOM_COLONY = Registrar.block(Galaxies.id("vaporator_mushroom_colony"), VaporatorMushroomBlock::new, AbstractBlock.Settings.create().noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+	public static final VaporatorMushroomBlock VAPORATOR_MUSHROOM_COLONY = Registrar.block(Galaxies.id("vaporator_mushroom_colony"), VaporatorMushroomBlock::new, BlockBehaviour.Properties.of().noCollision().instabreak().sound(SoundType.GRASS));
 
 	/// Tree
 
@@ -161,96 +169,96 @@ public class GalaxiesBlocks
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(model = DataGenBlockModel.NONE, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block SEQUOIA_WOOD = createWoodBlock("sequoia_wood", MapColor.BROWN);
+	public static final Block SEQUOIA_WOOD = createWoodBlock("sequoia_wood", MapColor.COLOR_BROWN);
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG_WITH_WOOD, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = { DGBlockTag.LOGS }, itemTags = { DGItemTag.LOGS })
-	public static final PillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
+	public static final RotatedPillarBlock SEQUOIA_LOG = createLogBlock("sequoia_log", MapColor.WOOD, MapColor.COLOR_BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = { DGBlockTag.LOGS }, itemTags = { DGItemTag.LOGS })
-	public static final PillarBlock STRIPPED_SEQUOIA_LOG = createLogBlock("stripped_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
+	public static final RotatedPillarBlock STRIPPED_SEQUOIA_LOG = createLogBlock("stripped_sequoia_log", MapColor.WOOD, MapColor.COLOR_BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = { DGBlockTag.LOGS }, itemTags = { DGItemTag.LOGS })
-	public static final PillarBlock MOSSY_SEQUOIA_LOG = createLogBlock("mossy_sequoia_log", MapColor.OAK_TAN, MapColor.BROWN);
+	public static final RotatedPillarBlock MOSSY_SEQUOIA_LOG = createLogBlock("mossy_sequoia_log", MapColor.WOOD, MapColor.COLOR_BROWN);
 	@DataGenBlock
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
-	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
+	public static final WoodProducts SEQUOIA_PRODUCTS = new WoodProducts("sequoia", BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD));
 	@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.CUTOUT_MIPPED)
 	@DataGenBlock(model = DataGenBlockModel.JAPOR_LEAVES, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = { DGBlockTag.LEAVES, DGBlockTag.SHEARS_MINEABLE }, itemTags = { DGItemTag.LEAVES })
 	public static final BushLeavesBlock JAPOR_LEAVES = createBushLeavesBlock("japor_leaves");
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(model = DataGenBlockModel.NONE, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.BROWN);
+	public static final Block JAPOR_WOOD = createWoodBlock("japor_wood", MapColor.COLOR_BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG_WITH_WOOD, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = DGBlockTag.LOGS, itemTags = DGItemTag.LOGS)
-	public static final PillarBlock JAPOR_LOG = createLogBlock("japor_log", MapColor.OAK_TAN, MapColor.BROWN);
+	public static final RotatedPillarBlock JAPOR_LOG = createLogBlock("japor_log", MapColor.WOOD, MapColor.COLOR_BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 	@DataGenBlock
-	public static final WoodProducts JAPOR_PRODUCTS = new WoodProducts("japor", AbstractBlock.Settings.create().strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
+	public static final WoodProducts JAPOR_PRODUCTS = new WoodProducts("japor", BlockBehaviour.Properties.of().strength(2.0F, 3.0F).sound(SoundType.WOOD));
 
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(model = DataGenBlockModel.NONE, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block TATOOINE_WOOD = createWoodBlock("tatooine_wood", MapColor.BROWN);
+	public static final Block TATOOINE_WOOD = createWoodBlock("tatooine_wood", MapColor.COLOR_BROWN);
 	@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 	@DataGenBlock(rotation = DGBlockRotation.AXIS_ROTATED, model = DataGenBlockModel.LOG_WITH_WOOD, itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = DGBlockTag.LOGS, itemTags = DGItemTag.LOGS)
-	public static final PillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.OAK_TAN, MapColor.BROWN);
+	public static final RotatedPillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.WOOD, MapColor.COLOR_BROWN);
 
 
 	/// Ores
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block BESKAR_ORE = createBlock("beskar_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
+	public static final Block BESKAR_ORE = createBlock("beskar_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block BESKAR_BLOCK = createBlock("beskar_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+	public static final Block BESKAR_BLOCK = createBlock("beskar_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block CHROMIUM_ORE = createBlock("chromium_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
+	public static final Block CHROMIUM_ORE = createBlock("chromium_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block CHROMIUM_BLOCK = createBlock("chromium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
+	public static final Block CHROMIUM_BLOCK = createBlock("chromium_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block CORTOSIS_ORE = createBlock("cortosis_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
+	public static final Block CORTOSIS_ORE = createBlock("cortosis_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block CORTOSIS_BLOCK = createBlock("cortosis_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+	public static final Block CORTOSIS_BLOCK = createBlock("cortosis_block", BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block DESH_ORE = createBlock("desh_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
+	public static final Block DESH_ORE = createBlock("desh_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block DESH_BLOCK = createBlock("desh_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
+	public static final Block DESH_BLOCK = createBlock("desh_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block DIATIUM_ORE = createBlock("diatium_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
+	public static final Block DIATIUM_ORE = createBlock("diatium_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(blockTags = DGBlockTag.BLASTER_REFLECT)
-	public static final Block DIATIUM_BLOCK = createBlock("diatium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+	public static final Block DIATIUM_BLOCK = createBlock("diatium_block", BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block IONITE_ORE = createBlock("ionite_ore", AbstractBlock.Settings.create().strength(5.0F).requiresTool());
+	public static final Block IONITE_ORE = createBlock("ionite_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block IONITE_BLOCK = createBlock("ionite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).luminance(value -> 3).requiresTool());
+	public static final Block IONITE_BLOCK = createBlock("ionite_block", BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(5.0F).lightLevel(value -> 3).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block LOMMITE_ORE = createBlock("lommite_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
+	public static final Block LOMMITE_ORE = createBlock("lommite_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block LOMMITE_BLOCK = createBlock("lommite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+	public static final Block LOMMITE_BLOCK = createBlock("lommite_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block TITANIUM_ORE = createBlock("titanium_ore", AbstractBlock.Settings.create().strength(4.0F).requiresTool());
+	public static final Block TITANIUM_ORE = createBlock("titanium_ore", BlockBehaviour.Properties.of().strength(4.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block TITANIUM_BLOCK = createBlock("titanium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+	public static final Block TITANIUM_BLOCK = createBlock("titanium_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block ZERSIUM_ORE = createBlock("zersium_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
+	public static final Block ZERSIUM_ORE = createBlock("zersium_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block ZERSIUM_BLOCK = createBlock("zersium_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+	public static final Block ZERSIUM_BLOCK = createBlock("zersium_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block THORILIDE_ORE = createBlock("thorilide_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
+	public static final Block THORILIDE_ORE = createBlock("thorilide_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block THORILIDE_BLOCK = createBlock("thorilide_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+	public static final Block THORILIDE_BLOCK = createBlock("thorilide_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
-	public static final Block HELICITE_ORE = createBlock("helicite_ore", AbstractBlock.Settings.create().strength(3.0F).requiresTool());
+	public static final Block HELICITE_ORE = createBlock("helicite_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
-	public static final Block HELICITE_BLOCK = createBlock("helicite_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+	public static final Block HELICITE_BLOCK = createBlock("helicite_block", BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(5.0F).requiresCorrectToolForDrops());
 
 	/// COMPOSITE
 
 	@DataGenBlock
-	public static final Block DURASTEEL_BLOCK = createBlock("durasteel_block", AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+	public static final Block DURASTEEL_BLOCK = createBlock("durasteel_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 	//TODO: implement connecting for PLASTEEL_BLOCK
 	@DataGenBlock
-	public static final SelfConnectingBlock PLASTEEL_BLOCK = Registrar.block(Galaxies.id("plasteel_block"), SelfConnectingBlock::new, AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+	public static final SelfConnectingBlock PLASTEEL_BLOCK = Registrar.block(Galaxies.id("plasteel_block"), SelfConnectingBlock::new, BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 
 	/// GLASS
 
@@ -308,36 +316,36 @@ public class GalaxiesBlocks
 
 	/// PANEL
 
-	private static final AbstractBlock.Settings IMPERIAL_PANEL_SETTINGS = AbstractBlock.Settings.create().sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool();
+	private static final BlockBehaviour.Properties IMPERIAL_PANEL_SETTINGS = BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(1.5F).requiresCorrectToolForDrops();
 	@DataGenBlock
-	public static final SelfConnectingBlock RUSTED_METAL = createSelfConnectingBlock("rusted_metal", AbstractBlock.Settings.create().mapColor(MapColor.BROWN).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+	public static final SelfConnectingBlock RUSTED_METAL = createSelfConnectingBlock("rusted_metal", BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).sound(SoundType.COPPER).strength(1.5F).requiresCorrectToolForDrops());
 	// TODO: Implement "imperial cutout" blocks
 	@DataGenBlock
 	public static final StoneProducts BLACK_IMPERIAL_PANEL_BLANK = new StoneProducts(IMPERIAL_PANEL_SETTINGS, "black_imperial_panel_blank");
 	@DataGenBlock
-	public static final StoneProducts GRAY_IMPERIAL_PANEL_BLANK = new StoneProducts(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY), "gray_imperial_panel_blank");
+	public static final StoneProducts GRAY_IMPERIAL_PANEL_BLANK = new StoneProducts(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY), "gray_imperial_panel_blank");
 	@DataGenBlock
-	public static final StoneProducts LIGHT_GRAY_IMPERIAL_PANEL_BLANK = new StoneProducts(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.LIGHT_GRAY), "light_gray_imperial_panel_blank");
+	public static final StoneProducts LIGHT_GRAY_IMPERIAL_PANEL_BLANK = new StoneProducts(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_LIGHT_GRAY), "light_gray_imperial_panel_blank");
 	@DataGenBlock
 	public static final StoneProducts WHITE_IMPERIAL_PANEL_BLANK = new StoneProducts(IMPERIAL_PANEL_SETTINGS, "white_imperial_panel_blank");
 	@DataGenBlock
-	public static final Block BLACK_IMPERIAL_PANEL_TILE = createPanel("black_imperial_panel_tile", MapColor.GRAY);
+	public static final Block BLACK_IMPERIAL_PANEL_TILE = createPanel("black_imperial_panel_tile", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("black_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("black_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("black_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("black_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("black_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("black_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final SelfConnectingBlock GRAY_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("gray_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock GRAY_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("gray_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock GRAY_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("gray_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock GRAY_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("gray_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock GRAY_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("gray_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock GRAY_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("gray_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_1 = createSelfConnectingBlock("gray_imperial_tall_panel_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_1 = createSelfConnectingBlock("gray_imperial_tall_panel_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_2 = createSelfConnectingBlock("gray_imperial_tall_panel_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_2 = createSelfConnectingBlock("gray_imperial_tall_panel_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	// TODO: Implement connecting lighting panels
 	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_1 = createLightingPanelBlock("gray_imperial_light_half_1", 13);
@@ -370,126 +378,126 @@ public class GalaxiesBlocks
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_2 = createLightingPanelBlock("gray_imperial_light_2", 15);
 
 	@DataGenBlock
-	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("light_gray_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("light_gray_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("light_gray_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("light_gray_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("light_gray_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock LIGHT_GRAY_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("light_gray_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("white_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
+	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL = createSelfConnectingBlock("white_imperial_panel_sectional", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.QUARTZ));
 	@DataGenBlock
-	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("white_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
+	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("white_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.QUARTZ));
 	@DataGenBlock
-	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("white_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
+	public static final SelfConnectingBlock WHITE_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("white_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.QUARTZ));
 	@DataGenBlock
-	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_BORDERED = createSelfConnectingBlock("black_imperial_panel_bordered", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_BORDERED = createSelfConnectingBlock("black_imperial_panel_bordered", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SPLIT = createSelfConnectingBlock("black_imperial_panel_split", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SPLIT = createSelfConnectingBlock("black_imperial_panel_split", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_THIN_BORDERED = createSelfConnectingBlock("black_imperial_panel_thin_bordered", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_THIN_BORDERED = createSelfConnectingBlock("black_imperial_panel_thin_bordered", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final SelfConnectingBlock EXTERNAL_IMPERIAL_PLATING = createSelfConnectingBlock("external_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock EXTERNAL_IMPERIAL_PLATING = createSelfConnectingBlock("external_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock RUSTED_LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("rusted_large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock RUSTED_LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("rusted_large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock MOSSY_LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("mossy_large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock MOSSY_LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("mossy_large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final SelfConnectingBlock LARGE_LIGHT_GRAY_IMPERIAL_PLATING = createSelfConnectingBlock("large_light_gray_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+	public static final SelfConnectingBlock LARGE_LIGHT_GRAY_IMPERIAL_PLATING = createSelfConnectingBlock("large_light_gray_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
-	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_A = createNumberedBlocks("black_imperial_panel_pattern_a", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_A = createNumberedBlocks("black_imperial_panel_pattern_a", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_B = createNumberedBlocks("black_imperial_panel_pattern_b", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_B = createNumberedBlocks("black_imperial_panel_pattern_b", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_C = createNumberedBlocks("black_imperial_panel_pattern_c", 2, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_C = createNumberedBlocks("black_imperial_panel_pattern_c", 2, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_D = createNumberedBlocks("black_imperial_panel_pattern_d", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_D = createNumberedBlocks("black_imperial_panel_pattern_d", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_E = createNumberedBlocks("black_imperial_panel_pattern_e", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
+	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_E = createNumberedBlocks("black_imperial_panel_pattern_e", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("gray_imperial_panel_pattern_3", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("gray_imperial_panel_pattern_3", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("light_gray_imperial_panel_pattern_3", MapColor.LIGHT_GRAY);
+	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("light_gray_imperial_panel_pattern_3", MapColor.COLOR_LIGHT_GRAY);
 	@DataGenBlock
-	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("light_gray_imperial_panel_pattern_4", MapColor.LIGHT_GRAY);
+	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("light_gray_imperial_panel_pattern_4", MapColor.COLOR_LIGHT_GRAY);
 	@DataGenBlock
-	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("light_gray_imperial_panel_pattern_5", MapColor.LIGHT_GRAY);
+	public static final Block LIGHT_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("light_gray_imperial_panel_pattern_5", MapColor.COLOR_LIGHT_GRAY);
 	@DataGenBlock
-	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("rusted_gray_imperial_panel_pattern_3", MapColor.GRAY);
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("rusted_gray_imperial_panel_pattern_3", MapColor.COLOR_GRAY);
 	//@RegistryName("rusted_gray_imperial_panel_pattern_3_stairs")
 	//public static final Block RustedGrayImperialPanelPattern3Stairs = new StairsBlock(RustedGrayImperialPanelPattern3.getDefaultState(), FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
 	//@RegistryName("rusted_gray_imperial_panel_pattern_3_slab")
 	//public static final Block RustedGrayImperialPanelPattern3Slab = new VerticalSlabBlock(FabricBlockSettings.copy(RustedGrayImperialPanelPattern3));
 	@DataGenBlock
-	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("mossy_gray_imperial_panel_pattern_3", MapColor.GRAY);
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_3 = createPanel("mossy_gray_imperial_panel_pattern_3", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("gray_imperial_panel_pattern_4", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("gray_imperial_panel_pattern_4", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("rusted_gray_imperial_panel_pattern_4", MapColor.GRAY);
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("rusted_gray_imperial_panel_pattern_4", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("mossy_gray_imperial_panel_pattern_4", MapColor.GRAY);
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_4 = createPanel("mossy_gray_imperial_panel_pattern_4", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("gray_imperial_panel_pattern_5", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("gray_imperial_panel_pattern_5", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("rusted_gray_imperial_panel_pattern_5", MapColor.GRAY);
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("rusted_gray_imperial_panel_pattern_5", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("mossy_gray_imperial_panel_pattern_5", MapColor.GRAY);
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_5 = createPanel("mossy_gray_imperial_panel_pattern_5", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("gray_imperial_panel_pattern_6", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("gray_imperial_panel_pattern_6", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("rusted_gray_imperial_panel_pattern_6", MapColor.GRAY);
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("rusted_gray_imperial_panel_pattern_6", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("mossy_gray_imperial_panel_pattern_6", MapColor.GRAY);
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_6 = createPanel("mossy_gray_imperial_panel_pattern_6", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_7 = createPanel("gray_imperial_panel_pattern_7", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_7 = createPanel("gray_imperial_panel_pattern_7", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_8 = createPanel("gray_imperial_panel_pattern_8", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_8 = createPanel("gray_imperial_panel_pattern_8", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("gray_imperial_panel_pattern_9", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("gray_imperial_panel_pattern_9", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("rusted_gray_imperial_panel_pattern_9", MapColor.GRAY);
+	public static final Block RUSTED_GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("rusted_gray_imperial_panel_pattern_9", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("mossy_gray_imperial_panel_pattern_9", MapColor.GRAY);
+	public static final Block MOSSY_GRAY_IMPERIAL_PANEL_PATTERN_9 = createPanel("mossy_gray_imperial_panel_pattern_9", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_10 = createPanel("gray_imperial_panel_pattern_10", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_10 = createPanel("gray_imperial_panel_pattern_10", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_11 = createPanel("gray_imperial_panel_pattern_11", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_11 = createPanel("gray_imperial_panel_pattern_11", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_12 = createPanel("gray_imperial_panel_pattern_12", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_12 = createPanel("gray_imperial_panel_pattern_12", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_13 = createPanel("gray_imperial_panel_pattern_13", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_PANEL_PATTERN_13 = createPanel("gray_imperial_panel_pattern_13", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_FLOORING_0 = createPanel("gray_imperial_flooring_0", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_FLOORING_0 = createPanel("gray_imperial_flooring_0", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_FLOORING_3 = createPanel("gray_imperial_flooring_3", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_FLOORING_3 = createPanel("gray_imperial_flooring_3", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block GRAY_IMPERIAL_FLOORING_4 = createPanel("gray_imperial_flooring_4", MapColor.GRAY);
+	public static final Block GRAY_IMPERIAL_FLOORING_4 = createPanel("gray_imperial_flooring_4", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_0 = createPanel("light_gray_imperial_flooring_0", MapColor.GRAY);
+	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_0 = createPanel("light_gray_imperial_flooring_0", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_3 = createPanel("light_gray_imperial_flooring_3", MapColor.GRAY);
+	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_3 = createPanel("light_gray_imperial_flooring_3", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_4 = createPanel("light_gray_imperial_flooring_4", MapColor.GRAY);
+	public static final Block LIGHT_GRAY_IMPERIAL_FLOORING_4 = createPanel("light_gray_imperial_flooring_4", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block BLACK_IMPERIAL_FLOORING_3 = createPanel("black_imperial_flooring_3", MapColor.GRAY);
+	public static final Block BLACK_IMPERIAL_FLOORING_3 = createPanel("black_imperial_flooring_3", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block BLACK_IMPERIAL_FLOORING_4 = createPanel("black_imperial_flooring_4", MapColor.GRAY);
+	public static final Block BLACK_IMPERIAL_FLOORING_4 = createPanel("black_imperial_flooring_4", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block WHITE_IMPERIAL_FLOORING_3 = createPanel("white_imperial_flooring_3", MapColor.GRAY);
+	public static final Block WHITE_IMPERIAL_FLOORING_3 = createPanel("white_imperial_flooring_3", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block WHITE_IMPERIAL_FLOORING_4 = createPanel("white_imperial_flooring_4", MapColor.GRAY);
+	public static final Block WHITE_IMPERIAL_FLOORING_4 = createPanel("white_imperial_flooring_4", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block IMPERIAL_FLOORING_PATTERN_1 = createPanel("imperial_flooring_pattern_1", MapColor.GRAY);
+	public static final Block IMPERIAL_FLOORING_PATTERN_1 = createPanel("imperial_flooring_pattern_1", MapColor.COLOR_GRAY);
 	@DataGenBlock
-	public static final Block IMPERIAL_FLOORING_PATTERN_2 = createPanel("imperial_flooring_pattern_2", MapColor.GRAY);
+	public static final Block IMPERIAL_FLOORING_PATTERN_2 = createPanel("imperial_flooring_pattern_2", MapColor.COLOR_GRAY);
 
 	@DataGenBlock(itemGroup = DataGenItemGroup.NONE)
-	public static final Block LAB_WALL = createBlock("lab_wall", AbstractBlock.Settings.create());
+	public static final Block LAB_WALL = createBlock("lab_wall", BlockBehaviour.Properties.of());
 
 	/// CRATES
 	public static final VoxelShape CRATE_SHAPE = VoxelShapeUtil.getCenteredCube(14, 16);
-	public static final AbstractBlock.Settings CORRUGATED_CRATE_SETTINGS = AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F);
+	public static final BlockBehaviour.Properties CORRUGATED_CRATE_SETTINGS = BlockBehaviour.Properties.of().sound(SoundType.METAL).noOcclusion().strength(2.5F);
 
 	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
 	public static final Block IMPERIAL_CORRUGATED_CRATE = createCorrugatedCrate("imperial_corrugated_crate");
@@ -500,57 +508,57 @@ public class GalaxiesBlocks
 	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
 	public static final DyedBlocks CORRUGATED_CRATE = new DyedBlocks(color -> createCorrugatedCrate(color.name().toLowerCase() + "_corrugated_crate"));
 
-	private static Block createBlock(String key, AbstractBlock.Settings settings)
+	private static Block createBlock(String key, BlockBehaviour.Properties settings)
 	{
 		return Registrar.block(Galaxies.id(key), Block::new, settings);
 	}
-	private static PillarBlock createLogBlock(String key, MapColor topMapColor, MapColor sideMapColor)
+	private static RotatedPillarBlock createLogBlock(String key, MapColor topMapColor, MapColor sideMapColor)
 	{
-		return Registrar.block(Galaxies.id(key), PillarBlock::new, AbstractBlock.Settings.create().mapColor(blockState -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		return Registrar.block(Galaxies.id(key), RotatedPillarBlock::new, BlockBehaviour.Properties.of().mapColor(blockState -> blockState.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).sound(SoundType.WOOD));
 	}
 
 	private static AridPlant createAridPlantBlock(String key)
 	{
-		return Registrar.block(Galaxies.id(key), AridPlant::new, AbstractBlock.Settings.create().noCollision().breakInstantly().offset(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
+		return Registrar.block(Galaxies.id(key), AridPlant::new, BlockBehaviour.Properties.of().noCollision().instabreak().offsetType(BlockBehaviour.OffsetType.XZ).sound(SoundType.GRASS));
 	}
 
-	private static PillarBlock createWoodBlock(String key, MapColor mapColor)
+	private static RotatedPillarBlock createWoodBlock(String key, MapColor mapColor)
 	{
 		return createLogBlock(key, mapColor, mapColor);
 	}
 	private static LeavesBlock createLeavesBlock(String key)
 	{
-		return Registrar.block(Galaxies.id(key), settings -> new TintedParticleLeavesBlock(0.01F, settings), AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		return Registrar.block(Galaxies.id(key), settings -> new TintedParticleLeavesBlock(0.01F, settings), BlockBehaviour.Properties.of().strength(0.2F).sound(SoundType.GRASS).noOcclusion().isSuffocating(BlockUtil::never).isViewBlocking(BlockUtil::never));
 	}
-	private static AccumulatingBlock createAccumulatingBlock(String key, AbstractBlock.Settings settings, Block fullBlock){
-		return Registrar.block(Galaxies.id(key), blockSettings -> new AccumulatingBlock(settings, fullBlock::getPlacementState), settings);
+	private static AccumulatingBlock createAccumulatingBlock(String key, BlockBehaviour.Properties settings, Block fullBlock){
+		return Registrar.block(Galaxies.id(key), blockSettings -> new AccumulatingBlock(settings, fullBlock::getStateForPlacement), settings);
 	}
 
 	private static BushLeavesBlock createBushLeavesBlock(String key)
 	{
-		return Registrar.block(Galaxies.id(key), settings -> new BushLeavesBlock(8, 3, settings), AbstractBlock.Settings.create().strength(0.2F).sounds(BlockSoundGroup.GRASS).noCollision().pistonBehavior(PistonBehavior.DESTROY));
+		return Registrar.block(Galaxies.id(key), settings -> new BushLeavesBlock(8, 3, settings), BlockBehaviour.Properties.of().strength(0.2F).sound(SoundType.GRASS).noCollision().pushReaction(PushReaction.DESTROY));
 	}
 	private static InteractableInvertedLampBlock createLightingPanelBlock(String key, int luminosity)
 	{
-		return Registrar.block(Galaxies.id(key), InteractableInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.luminance(createLightLevelFromLit(luminosity)));
+		return Registrar.block(Galaxies.id(key), InteractableInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.lightLevel(createLightLevelFromLit(luminosity)));
 	}
 
 	public static ToIntFunction<BlockState> createLightLevelFromLit(int litLevel)
 	{
-		return state -> state.contains(Properties.LIT) && state.get(Properties.LIT) ? litLevel : 0;
+		return state -> state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT) ? litLevel : 0;
 	}
 
 	public static ToIntFunction<BlockState> createLightLevelFromLitAndSlab(int litLevelSingle, int litLevelDouble)
 	{
-		return state -> state.contains(Properties.LIT) && state.get(Properties.LIT) ? (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE ? litLevelDouble : litLevelSingle) : 0;
+		return state -> state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT) ? (state.hasProperty(BlockStateProperties.SLAB_TYPE) && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE ? litLevelDouble : litLevelSingle) : 0;
 	}
 
 	private static InteractableInvertedLampSlab createLightingPanelSlab(String key, int luminositySingle, int luminosityDouble)
 	{
-		return Registrar.block(Galaxies.id(key), InteractableInvertedLampSlab::new, IMPERIAL_PANEL_SETTINGS.luminance(createLightLevelFromLitAndSlab(luminositySingle, luminosityDouble)));
+		return Registrar.block(Galaxies.id(key), InteractableInvertedLampSlab::new, IMPERIAL_PANEL_SETTINGS.lightLevel(createLightLevelFromLitAndSlab(luminositySingle, luminosityDouble)));
 	}
 
-	private static NumberedBlocks createNumberedBlocks(String key, int count, AbstractBlock.Settings settings)
+	private static NumberedBlocks createNumberedBlocks(String key, int count, BlockBehaviour.Properties settings)
 	{
 		return new NumberedBlocks(count, integer -> Registrar.block(Galaxies.id(key + "_" + integer), Block::new, settings));
 	}
@@ -559,22 +567,22 @@ public class GalaxiesBlocks
 	{
 		return Registrar.block(Galaxies.id(key), blockSettings -> new WaterloggableRotatingBlockWithBoundsGuiEntity(CRATE_SHAPE, blockSettings, CrateCorrugatedBlockEntity::new), CORRUGATED_CRATE_SETTINGS);
 	}
-	private static SelfConnectingBlock createSelfConnectingBlock(String key, AbstractBlock.Settings settings)
+	private static SelfConnectingBlock createSelfConnectingBlock(String key, BlockBehaviour.Properties settings)
 	{
 		return Registrar.block(Galaxies.id(key), SelfConnectingBlock::new, settings);
 	}
 
-	private static RuiningDryingBlock createRuiningDryingBlock(String key, AbstractBlock.Settings blockSettings, int transitionTime, Block dryingTarget, Block ruinedBlock, ColorCode colorCode)
+	private static RuiningDryingBlock createRuiningDryingBlock(String key, BlockBehaviour.Properties blockSettings, int transitionTime, Block dryingTarget, Block ruinedBlock, ColorRGBA colorCode)
 	{
 		return Registrar.block(Galaxies.id(key), settings -> new RuiningDryingBlock(dryingTarget, transitionTime, () -> ruinedBlock, settings, colorCode), blockSettings);
 	}
 
-	private static ColoredFallingBlock createFallingBlock(String key, AbstractBlock.Settings blockSettings, ColorCode colorCode)
+	private static ColoredFallingBlock createFallingBlock(String key, BlockBehaviour.Properties blockSettings, ColorRGBA colorCode)
 	{
 		return Registrar.block(Galaxies.id(key), settings -> new ColoredFallingBlock(colorCode, settings), blockSettings);
 	}
 
-	private static VerticalSlabBlock createSlab(String key, AbstractBlock.Settings settings)
+	private static VerticalSlabBlock createSlab(String key, BlockBehaviour.Properties settings)
 	{
 		return Registrar.block(Galaxies.id(key), VerticalSlabBlock::new, settings);
 	}
@@ -582,17 +590,17 @@ public class GalaxiesBlocks
 
 	private static SelfConnectingGlassBlock createSelfConnectingGlass(String key)
 	{
-		return Registrar.block(Galaxies.id(key), SelfConnectingGlassBlock::new, AbstractBlock.Settings.create().strength(0.3F).sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		return Registrar.block(Galaxies.id(key), SelfConnectingGlassBlock::new, BlockBehaviour.Properties.of().strength(0.3F).sound(SoundType.GLASS).noOcclusion().isValidSpawn(BlockUtil::never).isRedstoneConductor(BlockUtil::never).isSuffocating(BlockUtil::never).isViewBlocking(BlockUtil::never));
 	}
 
 	private static SelfConnectingStainedGlassBlock createSelfConnectingStainedGlass(String key, DyeColor color)
 	{
-		return Registrar.block(Galaxies.id(key), settings -> new SelfConnectingStainedGlassBlock(color, settings), AbstractBlock.Settings.create().strength(0.3F).sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		return Registrar.block(Galaxies.id(key), settings -> new SelfConnectingStainedGlassBlock(color, settings), BlockBehaviour.Properties.of().strength(0.3F).sound(SoundType.GLASS).noOcclusion().isValidSpawn(BlockUtil::never).isRedstoneConductor(BlockUtil::never).isSuffocating(BlockUtil::never).isViewBlocking(BlockUtil::never));
 	}
 
 	private static Block createPanel(String key, MapColor topMapColor)
 	{
-		return createBlock(key, AbstractBlock.Settings.create().strength(1.5F).requiresTool().sounds(BlockSoundGroup.COPPER).mapColor(topMapColor));
+		return createBlock(key, BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops().sound(SoundType.COPPER).mapColor(topMapColor));
 	}
 	public static void register()
 	{

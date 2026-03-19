@@ -1,7 +1,7 @@
 package dev.pswg.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * A set of utilities for working with language generation
@@ -15,7 +15,7 @@ public final class LangGenHelper
 	 * @param identifier         The sound identifier
 	 * @param value              The translated string
 	 */
-	public static void soundSubtitle(FabricLanguageProvider.TranslationBuilder translationBuilder, Identifier identifier, String value)
+	public static void soundSubtitle(FabricLanguageProvider.TranslationBuilder translationBuilder, ResourceLocation identifier, String value)
 	{
 		translationBuilder.add("subtitle.%s.%s".formatted(identifier.getNamespace(), identifier.getPath()), value);
 	}

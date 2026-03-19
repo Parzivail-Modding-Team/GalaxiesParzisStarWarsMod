@@ -1,10 +1,9 @@
 package dev.pswg.util.worldgen.surface;
 
 import dev.pswg.util.worldgen.world.ChunkView;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TwoStateSurfaceBuilder implements SurfaceBuilder
 {
@@ -26,13 +25,13 @@ public class TwoStateSurfaceBuilder implements SurfaceBuilder
 	{
 		int genDepth = 1;
 
-		BlockPos.Mutable pos = new BlockPos.Mutable();
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		for (int y = height; y >= 0; y--)
 		{
 			pos.set(x, y, z);
 
-			if (chunk.getBlockState(pos).isOf(defaultBlock.getBlock()))
+			if (chunk.getBlockState(pos).is(defaultBlock.getBlock()))
 			{
 				if (genDepth <= surfaceDepth)
 				{

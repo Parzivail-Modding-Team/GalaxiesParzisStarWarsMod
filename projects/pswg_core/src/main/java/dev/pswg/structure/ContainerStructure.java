@@ -2,44 +2,43 @@ package dev.pswg.structure;
 
 import com.mojang.serialization.MapCodec;
 import dev.pswg.container.worldgen.GalaxiesStructureTypes;
-import net.minecraft.structure.StructurePiecesCollector;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.StructureType;
-
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
 public class ContainerStructure extends Structure
 {
-	public static final MapCodec<ContainerStructure> CODEC = createCodec(ContainerStructure::new);
+	public static final MapCodec<ContainerStructure> CODEC = simpleCodec(ContainerStructure::new);
 
-	protected ContainerStructure(Config config)
+	protected ContainerStructure(StructureSettings config)
 	{
 		super(config);
 	}
 
 	@Override
-	protected Optional<StructurePosition> getStructurePosition(Context context)
+	protected Optional<GenerationStub> findGenerationPoint(GenerationContext context)
 	{
-		return getStructurePosition(context, Heightmap.Type.WORLD_SURFACE_WG, structurePiecesCollector -> addPieces(structurePiecesCollector, context));
+		return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, structurePiecesCollector -> addPieces(structurePiecesCollector, context));
 
 	}
 
-	private void addPieces(StructurePiecesCollector collector, Structure.Context context)
+	private void addPieces(StructurePiecesBuilder collector, Structure.GenerationContext context)
 	{
 		ChunkPos chunkPos = context.chunkPos();
-		ChunkRandom chunkRandom = context.random();
-		BlockPos blockPos = new BlockPos(chunkPos.getStartX(), 60, chunkPos.getStartZ());
-		BlockRotation blockRotation = BlockRotation.random(chunkRandom);
+		WorldgenRandom chunkRandom = context.random();
+		BlockPos blockPos = new BlockPos(chunkPos.getMinBlockX(), 60, chunkPos.getMinBlockZ());
+		Rotation blockRotation = Rotation.getRandom(chunkRandom);
 		ContainerGenerator.addPieces(context.structureTemplateManager(), blockPos, blockRotation, collector, chunkRandom);
 	}
 
 	@Override
-	public StructureType<?> getType()
+	public StructureType<?> type()
 	{
 		return GalaxiesStructureTypes.CONTAINER_STRUCTURE;
 	}

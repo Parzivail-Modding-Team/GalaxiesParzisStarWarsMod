@@ -1,50 +1,50 @@
 package dev.pswg.blockEntity.screenHandler;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class InventoryScreenHandler extends ScreenHandler
+public class InventoryScreenHandler extends AbstractContainerMenu
 {
-	protected final Inventory inventory;
+	protected final Container inventory;
 
-	public InventoryScreenHandler(@Nullable ScreenHandlerType<?> type, int syncId, Inventory inventory)
+	public InventoryScreenHandler(@Nullable MenuType<?> type, int syncId, Container inventory)
 	{
 		super(type, syncId);
 		this.inventory = inventory;
 	}
 
 	@Override
-	public ItemStack quickMove(PlayerEntity player, int index)
+	public ItemStack quickMoveStack(Player player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;
 		var slot = this.slots.get(index);
-		if (slot != null && slot.hasStack())
+		if (slot != null && slot.hasItem())
 		{
-			var itemStack2 = slot.getStack();
+			var itemStack2 = slot.getItem();
 			itemStack = itemStack2.copy();
-			if (index < this.inventory.size())
+			if (index < this.inventory.getContainerSize())
 			{
-				if (!this.insertItem(itemStack2, this.inventory.size(), this.slots.size(), true))
+				if (!this.moveItemStackTo(itemStack2, this.inventory.getContainerSize(), this.slots.size(), true))
 				{
 					return ItemStack.EMPTY;
 				}
 			}
-			else if (!this.insertItem(itemStack2, 0, this.inventory.size(), false))
+			else if (!this.moveItemStackTo(itemStack2, 0, this.inventory.getContainerSize(), false))
 			{
 				return ItemStack.EMPTY;
 			}
 
 			if (itemStack2.isEmpty())
 			{
-				slot.setStack(ItemStack.EMPTY);
+				slot.setByPlayer(ItemStack.EMPTY);
 			}
 			else
 			{
-				slot.markDirty();
+				slot.setChanged();
 			}
 		}
 
@@ -52,8 +52,8 @@ public class InventoryScreenHandler extends ScreenHandler
 	}
 
 	@Override
-	public boolean canUse(PlayerEntity player)
+	public boolean stillValid(Player player)
 	{
-		return this.inventory.canPlayerUse(player);
+		return this.inventory.stillValid(player);
 	}
 }

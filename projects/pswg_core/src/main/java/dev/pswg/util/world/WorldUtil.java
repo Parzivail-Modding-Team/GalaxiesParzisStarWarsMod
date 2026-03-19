@@ -1,57 +1,57 @@
 package dev.pswg.util.world;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 public class WorldUtil
 {
-	public static boolean isSunLit(ServerWorld world, BlockPos pos)
+	public static boolean isSunLit(ServerLevel world, BlockPos pos)
 	{
 		return getSunlight(world, pos) > 0;
 	}
 
-	public static boolean isNightTime(ServerWorld world)
+	public static boolean isNightTime(ServerLevel world)
 	{
-		return (world.getTime() - 6000) % 24000 > 12000;
+		return (world.getGameTime() - 6000) % 24000 > 12000;
 	}
 
-	private static int getSunlight(ServerWorld world, BlockPos pos)
+	private static int getSunlight(ServerLevel world, BlockPos pos)
 	{
-		if (!world.getDimension().hasSkyLight())
+		if (!world.dimensionType().hasSkyLight())
 			return 0;
 
-		var skyLight = world.getLightLevel(LightType.SKY, pos) - world.getAmbientDarkness();
-		var skyAngle = world.getSkyAngleRadians(1.0F);
+		var skyLight = world.getBrightness(LightLayer.SKY, pos) - world.getSkyDarken();
+		var skyAngle = world.getSunAngle(1.0F);
 
 		var upperBoundAngle = skyAngle < Math.PI ? 0 : (2 * Math.PI);
 		skyAngle += (upperBoundAngle - skyAngle) * 0.2F;
-		skyLight = Math.round(skyLight * MathHelper.cos(skyAngle));
+		skyLight = Math.round(skyLight * Mth.cos(skyAngle));
 
-		return MathHelper.clamp(skyLight, 0, 15);
+		return Mth.clamp(skyLight, 0, 15);
 	}
 
-	public static void destroyDoubleBlockFromBottom(World world, BlockPos pos, BlockState state, PlayerEntity player)
+	public static void destroyDoubleBlockFromBottom(Level world, BlockPos pos, BlockState state, Player player)
 	{
-		DoubleBlockHalf doubleBlockHalf = state.get(Properties.DOUBLE_BLOCK_HALF);
+		DoubleBlockHalf doubleBlockHalf = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
 		if (doubleBlockHalf == DoubleBlockHalf.UPPER)
 		{
-			BlockPos blockPos = pos.down();
+			BlockPos blockPos = pos.below();
 			BlockState blockState = world.getBlockState(blockPos);
-			if (blockState.isOf(state.getBlock()) && blockState.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
+			if (blockState.is(state.getBlock()) && blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
 			{
-				BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-				world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-				world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+				BlockState blockState2 = blockState.hasProperty(BlockStateProperties.WATERLOGGED) && blockState.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
+				world.setBlock(blockPos, blockState2, Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+				world.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos, Block.getId(blockState));
 			}
 		}
 	}

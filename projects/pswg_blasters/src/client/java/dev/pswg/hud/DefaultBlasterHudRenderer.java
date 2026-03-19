@@ -5,12 +5,11 @@ import dev.pswg.GalaxiesClient;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.rendering.BlittableTexture;
 import dev.pswg.rendering.ItemHudRenderer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * The default blaster HUD renderer. Renders a rectangular cooldown bar
@@ -45,11 +44,11 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 	private static final BlittableTexture.Patch CURSOR = HUD_ELEMENTS.createPatch(0, 24, 3, 7);
 
 	@Override
-	public void render(ItemStack stack, DrawContext context, RenderTickCounter tickCounter)
+	public void render(ItemStack stack, GuiGraphics context, DeltaTracker tickCounter)
 	{
-		var client = MinecraftClient.getInstance();
+		var client = Minecraft.getInstance();
 
-		assert client.world != null;
+		assert client.level != null;
 
 		var optionalStats = BlasterItem.getStats(stack);
 		if (optionalStats.isEmpty())
@@ -59,11 +58,11 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 
 		var state = BlasterItem.getState(stack);
 
-		var m = context.getMatrices();
+		var m = context.pose();
 		m.pushMatrix();
 
-		var left = (int)(context.getScaledWindowWidth() / 2f);
-		var top = (int)(context.getScaledWindowHeight() / 2f);
+		var left = (int)(context.guiWidth() / 2f);
+		var top = (int)(context.guiHeight() / 2f);
 
 		var cooldownBarX = left - COOLDOWN_WIDTH / 2;
 
@@ -71,7 +70,7 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 
 		var tickDelta = GalaxiesClient.getTickDelta();
 
-		var overcharge = BlasterItem.getOverchargeTimeRemaining(client.world, stack, tickDelta);
+		var overcharge = BlasterItem.getOverchargeTimeRemaining(client.level, stack, tickDelta);
 		if (overcharge.isPresent())
 		{
 			OVERCHARGE_BAR.blit(
@@ -89,7 +88,7 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 		}
 		else
 		{
-			var coolingStatus = BlasterItem.getCoolingStatus(client.world, stack, tickDelta);
+			var coolingStatus = BlasterItem.getCoolingStatus(client.level, stack, tickDelta);
 			if (coolingStatus.coolingMode() == BlasterItem.CoolingMode.PASSIVE)
 			{
 				PASSIVE_HEAT_BAR.blit(

@@ -1,18 +1,18 @@
 package dev.pswg.structure;
 
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class ContainerLootCratesFeature extends Feature<DefaultFeatureConfig>
+public class ContainerLootCratesFeature extends Feature<NoneFeatureConfiguration>
 {
 	public ContainerLootCratesFeature()
 	{
-		super(DefaultFeatureConfig.CODEC);
+		super(NoneFeatureConfiguration.CODEC);
 	}
 
 	@Override
-	public boolean generate(FeatureContext<DefaultFeatureConfig> context)
+	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context)
 	{
 		return false;
 	}

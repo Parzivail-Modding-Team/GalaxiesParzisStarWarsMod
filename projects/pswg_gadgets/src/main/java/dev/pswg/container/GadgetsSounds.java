@@ -1,9 +1,9 @@
 package dev.pswg.container;
 
 import dev.pswg.Gadgets;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.sounds.SoundEvent;
 
 public class GadgetsSounds
 {
@@ -26,6 +26,6 @@ public class GadgetsSounds
 
 	private static SoundEvent registerSound(String string)
 	{
-		return Registry.register(Registries.SOUND_EVENT, Gadgets.id(string), SoundEvent.of(Gadgets.id(string)));
+		return Registry.register(BuiltInRegistries.SOUND_EVENT, Gadgets.id(string), SoundEvent.createVariableRangeEvent(Gadgets.id(string)));
 	}
 }

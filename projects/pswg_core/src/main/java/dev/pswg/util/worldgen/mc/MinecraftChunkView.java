@@ -1,17 +1,17 @@
 package dev.pswg.util.worldgen.mc;
 
 import dev.pswg.util.worldgen.world.ChunkView;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
-public record MinecraftChunkView(Chunk chunk) implements ChunkView
+public record MinecraftChunkView(ChunkAccess chunk) implements ChunkView
 {
 	@Override
 	public ChunkPos getChunkPos()
@@ -20,9 +20,9 @@ public record MinecraftChunkView(Chunk chunk) implements ChunkView
 	}
 
 	@Override
-	public int sampleHeightmap(Heightmap.Type type, int x, int z)
+	public int sampleHeightmap(Heightmap.Types type, int x, int z)
 	{
-		return chunk.sampleHeightmap(type, x, z);
+		return chunk.getHeight(type, x, z);
 	}
 
 	@Override
@@ -69,8 +69,8 @@ public record MinecraftChunkView(Chunk chunk) implements ChunkView
 	}
 
 	@Override
-	public int getBottomY()
+	public int getMinY()
 	{
-		return chunk.getBottomY();
+		return chunk.getMinY();
 	}
 }

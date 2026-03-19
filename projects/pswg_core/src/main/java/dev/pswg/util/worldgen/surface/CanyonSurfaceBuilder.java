@@ -3,9 +3,8 @@ package dev.pswg.util.worldgen.surface;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.util.worldgen.noise.OctaveNoise;
 import dev.pswg.util.worldgen.world.ChunkView;
-import net.minecraft.block.BlockState;
-
 import java.util.Random;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CanyonSurfaceBuilder implements SurfaceBuilder
 {
@@ -15,8 +14,8 @@ public class CanyonSurfaceBuilder implements SurfaceBuilder
 
 	public CanyonSurfaceBuilder()
 	{
-		this.stone = new TwoStateSurfaceBuilder(GalaxiesBlocks.CANYON.block.getDefaultState(), 3, GalaxiesBlocks.CANYON.block.getDefaultState(), 16);
-		this.sand = new TwoStateSurfaceBuilder(GalaxiesBlocks.CANYON_SAND.getDefaultState(), 3, GalaxiesBlocks.CANYON.block.getDefaultState(), 16);
+		this.stone = new TwoStateSurfaceBuilder(GalaxiesBlocks.CANYON.block.defaultBlockState(), 3, GalaxiesBlocks.CANYON.block.defaultBlockState(), 16);
+		this.sand = new TwoStateSurfaceBuilder(GalaxiesBlocks.CANYON_SAND.defaultBlockState(), 3, GalaxiesBlocks.CANYON.block.defaultBlockState(), 16);
 
 		long seed = 100;
 		this.noise = new OctaveNoise(3, new Random(seed), 120, 80, 1.0, 2.0, 2.0);

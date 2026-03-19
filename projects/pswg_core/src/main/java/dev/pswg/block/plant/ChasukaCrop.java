@@ -3,36 +3,40 @@ package dev.pswg.block.plant;
 import dev.pswg.container.GalaxiesItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ChasukaCrop extends CropBlock
 {
 	static
 	{
-		AGE = Properties.AGE_2;
-		AGE_TO_SHAPE = new VoxelShape[] { Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D), Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D) };
+		AGE = BlockStateProperties.AGE_2;
+		AGE_TO_SHAPE = new VoxelShape[] { Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D) };
 	}
 
-	public static final IntProperty AGE;
+	public static final IntegerProperty AGE;
 	private static final VoxelShape[] AGE_TO_SHAPE;
 
-	public ChasukaCrop(AbstractBlock.Settings settings)
+	public ChasukaCrop(BlockBehaviour.Properties settings)
 	{
 		super(settings);
 	}
 
 	@Override
-	public IntProperty getAgeProperty()
+	public IntegerProperty getAgeProperty()
 	{
 		return AGE;
 	}
@@ -44,13 +48,13 @@ public class ChasukaCrop extends CropBlock
 	}
 
 	@Override
-	protected ItemConvertible getSeedsItem()
+	protected ItemLike getBaseSeedId()
 	{
 		return GalaxiesItems.CHASUKA_SEEDS;
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
+	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
 		if (random.nextInt(3) != 0)
 		{
@@ -59,20 +63,20 @@ public class ChasukaCrop extends CropBlock
 	}
 
 	@Override
-	protected int getGrowthAmount(World world)
+	protected int getBonemealAgeIncrease(Level world)
 	{
-		return super.getGrowthAmount(world) / 3;
+		return super.getBonemealAgeIncrease(world) / 3;
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
 	{
 		builder.add(AGE);
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
 	{
-		return AGE_TO_SHAPE[state.get(this.getAgeProperty())];
+		return AGE_TO_SHAPE[state.getValue(this.getAgeProperty())];
 	}
 }

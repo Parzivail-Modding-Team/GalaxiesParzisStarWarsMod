@@ -4,7 +4,7 @@ import dev.pswg.Gadgets;
 import dev.pswg.feature.brewing.MixerBlockEntity;
 import dev.pswg.feature.scrapping.table.ScrappingTableBlockEntity;
 import dev.pswg.registry.Registrar;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class GadgetsBlockEntities
 {

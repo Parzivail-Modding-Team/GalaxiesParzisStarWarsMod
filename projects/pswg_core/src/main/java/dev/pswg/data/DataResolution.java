@@ -1,9 +1,8 @@
 package dev.pswg.data;
 
-import net.minecraft.util.Identifier;
-
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Represents data that has been loaded with optional dependencies
@@ -39,16 +38,16 @@ public final class DataResolution<T>
 	 *
 	 * @return An unsuccessful resolution result with failed dependencies
 	 */
-	public static <T> DataResolution<T> missingDependency(List<Identifier> dependencies)
+	public static <T> DataResolution<T> missingDependency(List<ResourceLocation> dependencies)
 	{
 		return new DataResolution<>(DataResolutionResult.MISSING_DEPENDENCY, null, dependencies);
 	}
 
 	private final DataResolutionResult result;
 	private final T data;
-	private final List<Identifier> dependencies;
+	private final List<ResourceLocation> dependencies;
 
-	private DataResolution(DataResolutionResult result, T data, List<Identifier> dependencies)
+	private DataResolution(DataResolutionResult result, T data, List<ResourceLocation> dependencies)
 	{
 		this.result = result;
 		this.data = data;
@@ -80,7 +79,7 @@ public final class DataResolution<T>
 	 *
 	 * @return The list of unresolved dependencies, or empty if there are none
 	 */
-	public Optional<List<Identifier>> getDependencies()
+	public Optional<List<ResourceLocation>> getDependencies()
 	{
 		return Optional.ofNullable(dependencies);
 	}

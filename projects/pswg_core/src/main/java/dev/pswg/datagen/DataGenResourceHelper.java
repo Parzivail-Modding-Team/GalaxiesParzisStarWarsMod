@@ -2,12 +2,14 @@ package dev.pswg.datagen;
 
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.fabricmc.fabric.impl.resource.v1.SetupMarkerResourceReloader;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.resource.*;
-import net.minecraft.resource.featuretoggle.FeatureSet;
+import net.minecraft.Util;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.util.Unit;
-import net.minecraft.util.Util;
-
+import net.minecraft.world.flag.FeatureFlagSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -23,20 +25,20 @@ public final class DataGenResourceHelper
 	 * @param reloaders The reloaders to load
 	 * @param type      The type of resources to load
 	 */
-	public static void loadResources(ResourceType type, ResourceReloader... reloaders)
+	public static void loadResources(PackType type, PreparableReloadListener... reloaders)
 	{
-		try (var resourceManager = new ReloadableResourceManagerImpl(type))
+		try (var resourceManager = new ReloadableResourceManager(type))
 		{
-			resourceManager.registerReloader(new SetupMarkerResourceReloader(new DynamicRegistryManager.ImmutableImpl(List.of()), FeatureSet.empty()));
+			resourceManager.registerReloadListener(new SetupMarkerResourceReloader(new RegistryAccess.ImmutableRegistryAccess(List.of()), FeatureFlagSet.of()));
 
 			for (var reloader : reloaders)
-				resourceManager.registerReloader(reloader);
+				resourceManager.registerReloadListener(reloader);
 
-			var list = new ArrayList<ResourcePack>();
-			new ModResourcePackCreator(type).register(resourcePackProfile -> list.add(resourcePackProfile.createResourcePack()));
+			var list = new ArrayList<PackResources>();
+			new ModResourcePackCreator(type).loadPacks(resourcePackProfile -> list.add(resourcePackProfile.open()));
 
-			resourceManager.reload(Util.getMainWorkerExecutor(), Util.getMainWorkerExecutor(), CompletableFuture.completedFuture(Unit.INSTANCE), list)
-			               .whenComplete()
+			resourceManager.createReload(Util.backgroundExecutor(), Util.backgroundExecutor(), CompletableFuture.completedFuture(Unit.INSTANCE), list)
+			               .done()
 			               .join();
 		}
 	}

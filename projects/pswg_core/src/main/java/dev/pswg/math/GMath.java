@@ -1,7 +1,6 @@
 package dev.pswg.math;
 
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Utilities related to math
@@ -17,7 +16,7 @@ public final class GMath
 	 *
 	 * @return The forward vector for the given yaw and pitch
 	 */
-	public static Vec3d getForwardVector(double yaw, double pitch)
+	public static Vec3 getForwardVector(double yaw, double pitch)
 	{
 		var rYaw = Math.toRadians(yaw);
 		var rPitch = Math.toRadians(pitch);
@@ -26,6 +25,6 @@ public final class GMath
 		var y = -Math.sin(rPitch);
 		var z = Math.cos(rYaw) * Math.cos(rPitch);
 
-		return new Vec3d(x, y, z);
+		return new Vec3(x, y, z);
 	}
 }

@@ -2,6 +2,7 @@ package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.data.*;
+import dev.pswg.data.SlimRegistry;
 import dev.pswg.events.HudRenderEvents;
 import dev.pswg.events.ItemRenderEvents;
 import dev.pswg.hud.DefaultBlasterHudRenderer;
@@ -15,18 +16,16 @@ import dev.pswg.rendering.ItemHudRenderer;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.render.entity.EntityRendererFactories;
-import net.minecraft.client.render.item.property.bool.BooleanProperties;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.text.Text;
-
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +47,7 @@ public class BlastersClient implements GalaxiesClientAddon
 	@Override
 	public void onGalaxiesClientReady()
 	{
-		EntityRendererFactories.register(Blasters.BLASTER_BOLT_ENTITY, BlasterBoltEntityRenderer::new);
+		EntityRenderers.register(Blasters.BLASTER_BOLT_ENTITY, BlasterBoltEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(BlasterBoltEntityRenderer.MODEL_LAYER, BlasterBoltEntityRenderer.Model::getTexturedModelData);
 
 		BLASTER_HUD_REGISTRY.register(Blasters.DEFAULT_HUD, new DefaultBlasterHudRenderer());
@@ -60,7 +59,7 @@ public class BlastersClient implements GalaxiesClientAddon
 		// Add the name of the blaster in the tool tip, with a fallback
 		ItemTooltipHelper.registerTooltip(Blasters.BLASTER_ITEM, BlastersClient::getTooltip);
 
-		BooleanProperties.ID_MAPPER.put(Blasters.id("has_attachment"), HasAttachmentProperty.CODEC);
+		ConditionalItemModelProperties.ID_MAPPER.put(Blasters.id("has_attachment"), HasAttachmentProperty.CODEC);
 
 		// TODO: I think we can use this to generate config UIs
 		//
@@ -76,21 +75,21 @@ public class BlastersClient implements GalaxiesClientAddon
 		Blasters.LOGGER.info("Client module initialized");
 	}
 
-	private static void getTooltip(ItemStack itemStack, Item.TooltipContext ctx, TooltipType type, List<Text> list)
+	private static void getTooltip(ItemStack itemStack, Item.TooltipContext ctx, TooltipFlag type, List<Component> list)
 	{
-		list.add(Text.translatable(itemStack.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID).toTranslationKey()));
-		list.add(GalaxiesClient.getKeybindHint(GalaxiesKeybinds.getPrimaryAction(), Text.translatable(I18N_VENT_BLASTER)));
+		list.add(Component.translatable(itemStack.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID).toLanguageKey()));
+		list.add(GalaxiesClient.getKeybindHint(GalaxiesKeybinds.getPrimaryAction(), Component.translatable(I18N_VENT_BLASTER)));
 	}
 
-	private static void renderItemBars(DrawContext context, TextRenderer textRenderer, ItemStack stack, int x, int y)
+	private static void renderItemBars(GuiGraphics context, Font textRenderer, ItemStack stack, int x, int y)
 	{
-		if (stack.isOf(Blasters.BLASTER_ITEM))
+		if (stack.is(Blasters.BLASTER_ITEM))
 		{
-			var client = MinecraftClient.getInstance();
-			assert client.world != null;
+			var client = Minecraft.getInstance();
+			assert client.level != null;
 
 			// TODO: better visual
-			BlasterItem.getFireCooldownProgress(client.world, stack, GalaxiesClient.getTickDelta())
+			BlasterItem.getFireCooldownProgress(client.level, stack, GalaxiesClient.getTickDelta())
 			           .ifPresent(value -> Drawables.itemDurability(context, value, x, y - 13, 13, 0x0000FF));
 
 			var optionalStats = BlasterItem.getStats(stack);
@@ -102,20 +101,20 @@ public class BlastersClient implements GalaxiesClientAddon
 			var state = BlasterItem.getState(stack);
 			if (state.coolingMode() == BlasterItem.CoolingMode.PASSIVE)
 			{
-				BlasterItem.getAccumulatedHeat(client.world, stack, GalaxiesClient.getTickDelta())
+				BlasterItem.getAccumulatedHeat(client.level, stack, GalaxiesClient.getTickDelta())
 				           .ifPresent(heat -> {
 					           Drawables.itemDurability(context, heat / stats.heat().capacity(), x, y - 10, 13, 0x30FF00);
 				           });
 			}
 			else
 			{
-				BlasterItem.getVentingHeat(client.world, stack, GalaxiesClient.getTickDelta())
+				BlasterItem.getVentingHeat(client.level, stack, GalaxiesClient.getTickDelta())
 				           .ifPresent(heat -> {
 					           Drawables.itemDurability(context, heat / stats.heat().capacity(), x, y - 10, 13, 0xFF3000);
 				           });
 			}
 
-			BlasterItem.getOverchargeTimeRemaining(client.world, stack, GalaxiesClient.getTickDelta())
+			BlasterItem.getOverchargeTimeRemaining(client.level, stack, GalaxiesClient.getTickDelta())
 			           .ifPresent(value -> Drawables.itemDurability(context, value, x, y - 7, 13, 0xFFFF00));
 		}
 	}
@@ -126,14 +125,14 @@ public class BlastersClient implements GalaxiesClientAddon
 		BLASTER_HUD_REGISTRY.freeze();
 	}
 
-	private static void renderCrosshair(DrawContext context, RenderTickCounter tickCounter)
+	private static void renderCrosshair(GuiGraphics context, DeltaTracker tickCounter)
 	{
-		var client = MinecraftClient.getInstance();
+		var client = Minecraft.getInstance();
 		if (client.player == null)
 			return;
 
-		var stack = client.player.getMainHandStack();
-		if (!stack.isOf(Blasters.BLASTER_ITEM))
+		var stack = client.player.getMainHandItem();
+		if (!stack.is(Blasters.BLASTER_ITEM))
 			return;
 
 		var attachments = BlasterItem.getAttachments(stack);
