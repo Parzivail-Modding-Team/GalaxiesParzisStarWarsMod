@@ -246,32 +246,67 @@ public final class VanillaLaunchService
 		Files.createDirectories(generatedConfiguration.getParent());
 		String latestLog = xmlPath(gameDirectory.resolve("logs").resolve("latest.log"));
 		String archivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("%d{yyyy-MM-dd}-%i.log.gz"));
+		String debugLog = xmlPath(gameDirectory.resolve("logs").resolve("debug.log"));
+		String debugArchivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("debug-%i.log.gz"));
 		String xml = """
 			<?xml version="1.0" encoding="UTF-8"?>
 			<Configuration status="WARN">
-			    <Appenders>
-			        <Console name="SysOut" target="SYSTEM_OUT">
-			            <PatternLayout disableAnsi="false" noConsoleNoAnsi="false" pattern="%%style{[%%d{HH:mm:ss}]}{black} %%highlight{[%%t/%%level]} %%msg{nolookups}%%n%%throwable" />
-			        </Console>
-			        <RollingRandomAccessFile name="File" fileName="%s" filePattern="%s">
-			            <PatternLayout pattern="[%%d{HH:mm:ss}] [%%t/%%level]: %%msg{nolookups}%%n%%throwable" />
-			            <Policies>
-			                <TimeBasedTriggeringPolicy />
-			                <OnStartupTriggeringPolicy />
-			            </Policies>
-			        </RollingRandomAccessFile>
-			    </Appenders>
-			    <Loggers>
-			        <Root level="info">
-			            <filters>
-			                <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
-			            </filters>
-			            <AppenderRef ref="SysOut"/>
-			            <AppenderRef ref="File"/>
-			        </Root>
-			    </Loggers>
+				<Appenders>
+
+					<Console name="SysOut" target="SYSTEM_OUT">
+						<Filters>
+							<RegexFilter regex="^Failed to verify authentication$" onMatch="DENY" onMismatch="NEUTRAL"/>
+							<RegexFilter regex="^Failed to fetch user properties$" onMatch="DENY" onMismatch="NEUTRAL"/>
+							<RegexFilter regex="^Couldn't connect to realms$" onMatch="DENY" onMismatch="NEUTRAL"/>
+							<RegexFilter regex="^Failed to fetch Realms feature flags$" onMatch="DENY" onMismatch="NEUTRAL"/>
+						</Filters>
+						<PatternLayout>
+							<LoggerNamePatternSelector defaultPattern="%%style{[%%d{HH:mm:ss}]}{blue} %%highlight{[%%t/%%level]}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=blue} %%style{(%%logger{1})}{cyan} %%highlight{%%msg%%n}{FATAL=red, ERROR=red, WARN=normal, INFO=normal, DEBUG=normal, TRACE=normal}" disableAnsi="${sys:fabric.log.disableAnsi:-true}">
+								<PatternMatch key="net.minecraft.,com.mojang." pattern="%%style{[%%d{HH:mm:ss}]}{blue} %%highlight{[%%t/%%level]}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=blue} %%style{(Minecraft)}{cyan} %%highlight{%%msg{nolookups}%%n}{FATAL=red, ERROR=red, WARN=normal, INFO=normal, DEBUG=normal, TRACE=normal}"/>
+							</LoggerNamePatternSelector>
+						</PatternLayout>
+					</Console>
+
+					<Queue name="ServerGuiConsole" ignoreExceptions="true">
+						<PatternLayout>
+							<LoggerNamePatternSelector defaultPattern="[%%d{HH:mm:ss} %%level] (%%logger{1}) %%msg{nolookups}%%n">
+								<PatternMatch key="net.minecraft.,com.mojang." pattern="[%%d{HH:mm:ss} %%level] %%msg{nolookups}%%n"/>
+							</LoggerNamePatternSelector>
+						</PatternLayout>
+					</Queue>
+
+					<RollingRandomAccessFile name="LatestFile" fileName="%s" filePattern="%s">
+						<PatternLayout>
+							<LoggerNamePatternSelector defaultPattern="[%%d{HH:mm:ss}] [%%t/%%level] (%%logger{1}) %%msg{nolookups}%%n">
+								<PatternMatch key="net.minecraft.,com.mojang." pattern="[%%d{HH:mm:ss}] [%%t/%%level] (Minecraft) %%msg{nolookups}%%n"/>
+							</LoggerNamePatternSelector>
+						</PatternLayout>
+						<Policies>
+							<TimeBasedTriggeringPolicy />
+							<OnStartupTriggeringPolicy />
+						</Policies>
+					</RollingRandomAccessFile>
+
+					<RollingRandomAccessFile name="DebugFile" fileName="%s" filePattern="%s">
+						<PatternLayout pattern="[%%d{HH:mm:ss}] [%%t/%%level] (%%logger) %%msg{nolookups}%%n" />
+						<DefaultRolloverStrategy max="5" fileIndex="min"/>
+						<Policies>
+							<SizeBasedTriggeringPolicy size="200MB"/>
+							<OnStartupTriggeringPolicy />
+						</Policies>
+					</RollingRandomAccessFile>
+				</Appenders>
+				<Loggers>
+					<Logger level="${sys:fabric.log.level:-info}" name="net.minecraft"/>
+					<Root level="${sys:fabric.log.debug.level:-debug}">
+						<AppenderRef ref="DebugFile" level="${sys:fabric.log.debug.level:-debug}"/>
+						<AppenderRef ref="SysOut" level="${sys:fabric.log.level:-info}"/>
+						<AppenderRef ref="LatestFile" level="${sys:fabric.log.level:-info}"/>
+						<AppenderRef ref="ServerGuiConsole" level="${sys:fabric.log.level:-info}"/>
+					</Root>
+				</Loggers>
 			</Configuration>
-			""".formatted(latestLog, archivedLogs);
+			""".formatted(latestLog, archivedLogs, debugLog, debugArchivedLogs);
 		Files.writeString(generatedConfiguration, xml);
 
 		if (metadata.logging() != null && metadata.logging().client() != null && metadata.logging().client().file() != null)

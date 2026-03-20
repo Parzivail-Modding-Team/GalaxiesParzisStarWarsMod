@@ -2,6 +2,8 @@ package dev.pswg.toolchain;
 
 import dev.pswg.toolchain.definition.BuildDefinition;
 import dev.pswg.toolchain.definition.PswgBuildDefinition;
+import dev.pswg.toolchain.fabric.FabricDevLaunchInspector;
+import dev.pswg.toolchain.fabric.FabricDevLaunchSummary;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.mojang.MojangMetadataClient;
@@ -70,6 +72,12 @@ public final class Main
 			if ("vanilla".equals(args[0]))
 			{
 				runVanillaCommand(args);
+				return;
+			}
+
+			if ("fabric".equals(args[0]))
+			{
+				runFabricCommand(args);
 				return;
 			}
 
@@ -181,6 +189,42 @@ public final class Main
 	}
 
 	/**
+	 * Executes Fabric inspection commands.
+	 *
+	 * @param args command line arguments
+	 * @throws IOException if inspection fails
+	 */
+	private static void runFabricCommand(String[] args) throws IOException
+	{
+		if (args.length >= 2 && "inspect-dev".equals(args[1]))
+		{
+			FabricDevLaunchSummary summary = new FabricDevLaunchInspector().inspectClient();
+
+			System.out.println("Minecraft: " + summary.minecraftVersion());
+			System.out.println("Fabric Loader: " + summary.loaderVersion());
+			System.out.println("Fabric API: " + summary.fabricApiVersion());
+			System.out.println("Loom: " + summary.loomVersion());
+			System.out.println("Default DLI main: " + summary.defaultDevLaunchMainClass());
+			System.out.println("Default client main fallback: " + summary.defaultClientMainClass());
+			System.out.println("Current IntelliJ main: " + summary.currentIdeaMainClass());
+			System.out.println("Current fabric.dli.main: " + summary.currentRuntimeMainClass());
+			System.out.println("Current fabric.dli.env: " + summary.currentEnvironment());
+			System.out.println("Current fabric.dli.config: " + summary.currentDliConfigPath());
+			System.out.println("launch.cfg sections:");
+
+			for (var entry : summary.launchConfig().sections().entrySet())
+			{
+				System.out.println(" - " + entry.getKey() + ": " + entry.getValue().size() + " entries");
+			}
+
+			return;
+		}
+
+		printUsage();
+		System.exit(1);
+	}
+
+	/**
 	 * Checks whether a flag is present in the argument list.
 	 *
 	 * @param args the command line arguments
@@ -229,5 +273,6 @@ public final class Main
 		System.out.println("  mojang download [id] [--refresh]");
 		System.out.println("  mojang runtime [id] [--refresh]");
 		System.out.println("  vanilla prepare-ij [id] [--refresh]");
+		System.out.println("  fabric inspect-dev");
 	}
 }

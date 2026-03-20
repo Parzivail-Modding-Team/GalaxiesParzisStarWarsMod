@@ -19,6 +19,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -326,7 +328,7 @@ public final class MojangMetadataClient
 			MojangAssetObject object = entry.getValue();
 			Path target = _paths.assetObjectFile(object.hash());
 
-			if (!refresh && Files.exists(target))
+			if (Files.exists(target) && (!refresh || hasMatchingSha1(target, object.hash())))
 			{
 				continue;
 			}
@@ -345,7 +347,6 @@ public final class MojangMetadataClient
 		ExecutorService executor = Executors.newFixedThreadPool(workerCount);
 		ExecutorCompletionService<AssetDownloadResult> completionService = new ExecutorCompletionService<>(executor);
 		List<AssetDownload> failures = new ArrayList<>();
-		List<String> failureMessages = new ArrayList<>();
 
 		try
 		{
@@ -375,14 +376,20 @@ public final class MojangMetadataClient
 					if (!result.success())
 					{
 						failures.add(result.download());
-						failureMessages.add(result.assetName() + ": " + result.message());
 					}
 				}
 				catch (ExecutionException exception)
 				{
 					Throwable cause = exception.getCause();
-					String message = cause == null ? exception.getMessage() : cause.getMessage();
-					failureMessages.add(message);
+
+					if (cause instanceof AssetDownloadException assetDownloadException)
+					{
+						failures.add(assetDownloadException.download());
+					}
+					else
+					{
+						throw new IOException("Unexpected asset download failure", cause == null ? exception : cause);
+					}
 				}
 			}
 		}
@@ -426,6 +433,58 @@ public final class MojangMetadataClient
 		}
 
 		return assetIndex.objects().size();
+	}
+
+	/**
+	 * Checks whether a local file already matches an expected SHA-1 hash.
+	 *
+	 * @param path the local file path
+	 * @param expectedSha1 the expected SHA-1 string
+	 * @return {@code true} if the local file already matches the expected hash
+	 * @throws IOException if the file cannot be hashed
+	 */
+	private boolean hasMatchingSha1(Path path, String expectedSha1) throws IOException
+	{
+		try
+		{
+			MessageDigest digest = MessageDigest.getInstance("SHA-1");
+
+			try (InputStream inputStream = Files.newInputStream(path))
+			{
+				byte[] buffer = new byte[8192];
+				int read;
+
+				while ((read = inputStream.read(buffer)) >= 0)
+				{
+					digest.update(buffer, 0, read);
+				}
+			}
+
+			return expectedSha1.equalsIgnoreCase(hex(digest.digest()));
+		}
+		catch (NoSuchAlgorithmException exception)
+		{
+			throw new IOException("SHA-1 hashing is not available", exception);
+		}
+	}
+
+	/**
+	 * Encodes bytes as a lowercase hexadecimal string.
+	 *
+	 * @param bytes the bytes to encode
+	 * @return the lowercase hexadecimal string
+	 */
+	private String hex(byte[] bytes)
+	{
+		StringBuilder builder = new StringBuilder(bytes.length * 2);
+
+		for (byte value : bytes)
+		{
+			builder.append(Character.forDigit((value >> 4) & 0xF, 16));
+			builder.append(Character.forDigit(value & 0xF, 16));
+		}
+
+		return builder.toString();
 	}
 
 	/**
@@ -881,13 +940,41 @@ public final class MojangMetadataClient
 			}
 			catch (IOException exception)
 			{
-				return new AssetDownloadResult(
-					_download,
-					_download.assetName(),
-					false,
-					exception.getMessage()
-				);
+				return new AssetDownloadResult(_download, _download.assetName(), false, exception.getMessage());
 			}
+		}
+	}
+
+	/**
+	 * Wraps an asset download failure with its associated work item.
+	 */
+	private static final class AssetDownloadException extends Exception
+	{
+		/**
+		 * The failed asset download work item.
+		 */
+		private final AssetDownload _download;
+
+		/**
+		 * Creates a new wrapped asset download failure.
+		 *
+		 * @param download the failed download
+		 * @param cause the failure cause
+		 */
+		private AssetDownloadException(AssetDownload download, Throwable cause)
+		{
+			super(cause);
+			_download = download;
+		}
+
+		/**
+		 * Gets the failed asset download work item.
+		 *
+		 * @return the failed download
+		 */
+		private AssetDownload download()
+		{
+			return _download;
 		}
 	}
 }
