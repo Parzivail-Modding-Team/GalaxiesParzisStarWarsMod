@@ -19,8 +19,18 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Resolves and caches Mojang launcher metadata used by the standalone toolchain.
@@ -31,6 +41,21 @@ public final class MojangMetadataClient
 	 * The official Mojang version manifest endpoint.
 	 */
 	public static final URI VERSION_MANIFEST_URI = URI.create("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json");
+
+	/**
+	 * The standard request timeout for Mojang downloads.
+	 */
+	private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(30);
+
+	/**
+	 * The maximum number of download retry attempts.
+	 */
+	private static final int MAX_DOWNLOAD_ATTEMPTS = 3;
+
+	/**
+	 * The default concurrent asset download worker count.
+	 */
+	private static final int ASSET_DOWNLOAD_CONCURRENCY = 8;
 
 	/**
 	 * The shared JSON object mapper.
@@ -53,7 +78,9 @@ public final class MojangMetadataClient
 	public MojangMetadataClient()
 	{
 		_mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		_httpClient = HttpClient.newHttpClient();
+		_httpClient = HttpClient.newBuilder()
+		                        .connectTimeout(REQUEST_TIMEOUT)
+		                        .build();
 		_paths = new MojangPaths();
 	}
 
@@ -193,17 +220,7 @@ public final class MojangMetadataClient
 			libraryCount++;
 		}
 
-		int assetObjectCount = 0;
-
-		for (Map.Entry<String, MojangAssetObject> entry : assetIndex.objects().entrySet())
-		{
-			MojangAssetObject object = entry.getValue();
-			Path target = _paths.assetObjectFile(object.hash());
-			String prefix = object.hash().substring(0, 2);
-			URI source = URI.create("https://resources.download.minecraft.net/" + prefix + "/" + object.hash());
-			ensureCached(source, target, refresh);
-			assetObjectCount++;
-		}
+		int assetObjectCount = downloadAssetObjects(assetIndex, refresh);
 
 		return new RuntimeDownloadResult(
 			libraryCount,
@@ -249,25 +266,185 @@ public final class MojangMetadataClient
 
 		Files.createDirectories(cacheFile.getParent());
 
-		HttpRequest request = HttpRequest.newBuilder(sourceUri).GET().build();
+		downloadToFile(sourceUri, cacheFile);
+	}
+
+	/**
+	 * Downloads asset objects concurrently with bounded parallelism, retries, and progress reporting.
+	 *
+	 * @param assetIndex the resolved asset index
+	 * @param refresh whether to force fresh downloads
+	 * @return the number of processed asset objects
+	 * @throws IOException if one or more downloads fail
+	 */
+	private int downloadAssetObjects(MojangAssetIndex assetIndex, boolean refresh) throws IOException
+	{
+		List<AssetDownload> downloads = new ArrayList<>();
+
+		for (Map.Entry<String, MojangAssetObject> entry : assetIndex.objects().entrySet())
+		{
+			MojangAssetObject object = entry.getValue();
+			Path target = _paths.assetObjectFile(object.hash());
+
+			if (!refresh && Files.exists(target))
+			{
+				continue;
+			}
+
+			String prefix = object.hash().substring(0, 2);
+			URI source = URI.create("https://resources.download.minecraft.net/" + prefix + "/" + object.hash());
+			downloads.add(new AssetDownload(entry.getKey(), source, target));
+		}
+
+		if (downloads.isEmpty())
+		{
+			return assetIndex.objects().size();
+		}
+
+		int workerCount = Math.max(1, Math.min(ASSET_DOWNLOAD_CONCURRENCY, downloads.size()));
+		ExecutorService executor = Executors.newFixedThreadPool(workerCount);
+		ExecutorCompletionService<AssetDownloadResult> completionService = new ExecutorCompletionService<>(executor);
+		List<String> failures = new ArrayList<>();
 
 		try
 		{
-			HttpResponse<Path> response = _httpClient.send(
-				request,
-				HttpResponse.BodyHandlers.ofFile(cacheFile)
-			);
-
-			if (response.statusCode() / 100 != 2)
+			for (AssetDownload download : downloads)
 			{
-				throw new IOException("Mojang request failed with HTTP " + response.statusCode() + " for " + sourceUri);
+				completionService.submit(new AssetDownloadTask(download));
+			}
+
+			int completed = 0;
+
+			while (completed < downloads.size())
+			{
+				Future<AssetDownloadResult> future = completionService.take();
+				completed++;
+
+				try
+				{
+					AssetDownloadResult result = future.get();
+
+					if (completed == downloads.size() || completed % 250 == 0)
+					{
+						System.out.println(
+							"Asset objects: " + completed + "/" + downloads.size() + " downloaded"
+						);
+					}
+
+					if (!result.success())
+					{
+						failures.add(result.assetName() + ": " + result.message());
+					}
+				}
+				catch (ExecutionException exception)
+				{
+					Throwable cause = exception.getCause();
+					failures.add(cause == null ? exception.getMessage() : cause.getMessage());
+				}
 			}
 		}
 		catch (InterruptedException exception)
 		{
 			Thread.currentThread().interrupt();
-			throw new IOException("Interrupted while downloading " + sourceUri, exception);
+			throw new IOException("Interrupted while downloading asset objects", exception);
 		}
+		finally
+		{
+			executor.shutdownNow();
+
+			try
+			{
+				executor.awaitTermination(5, TimeUnit.SECONDS);
+			}
+			catch (InterruptedException exception)
+			{
+				Thread.currentThread().interrupt();
+			}
+		}
+
+		if (!failures.isEmpty())
+		{
+			StringBuilder message = new StringBuilder("Failed asset object downloads: ").append(failures.size());
+			int sampleCount = Math.min(5, failures.size());
+
+			for (int i = 0; i < sampleCount; i++)
+			{
+				message.append(System.lineSeparator()).append(" - ").append(failures.get(i));
+			}
+
+			throw new IOException(message.toString());
+		}
+
+		return assetIndex.objects().size();
+	}
+
+	/**
+	 * Downloads a single file with retries and atomic replacement.
+	 *
+	 * @param sourceUri the source URI
+	 * @param targetFile the target cache file
+	 * @throws IOException if the download fails after all retries
+	 */
+	private void downloadToFile(URI sourceUri, Path targetFile) throws IOException
+	{
+		Files.createDirectories(targetFile.getParent());
+		Path temporaryFile = targetFile.resolveSibling(targetFile.getFileName() + ".part");
+		IOException lastFailure = null;
+
+		for (int attempt = 1; attempt <= MAX_DOWNLOAD_ATTEMPTS; attempt++)
+		{
+			HttpRequest request = HttpRequest.newBuilder(sourceUri)
+			                                 .timeout(REQUEST_TIMEOUT)
+			                                 .GET()
+			                                 .build();
+
+			try
+			{
+				HttpResponse<Path> response = _httpClient.send(
+					request,
+					HttpResponse.BodyHandlers.ofFile(temporaryFile)
+				);
+
+				if (response.statusCode() / 100 != 2)
+				{
+					Files.deleteIfExists(temporaryFile);
+					throw new IOException("HTTP " + response.statusCode() + " for " + sourceUri);
+				}
+
+				Files.move(
+					temporaryFile,
+					targetFile,
+					java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+					java.nio.file.StandardCopyOption.ATOMIC_MOVE
+				);
+				return;
+			}
+			catch (InterruptedException exception)
+			{
+				Thread.currentThread().interrupt();
+				throw new IOException("Interrupted while downloading " + sourceUri, exception);
+			}
+			catch (IOException exception)
+			{
+				lastFailure = exception;
+				Files.deleteIfExists(temporaryFile);
+
+				if (attempt < MAX_DOWNLOAD_ATTEMPTS)
+				{
+					try
+					{
+						Thread.sleep(250L * attempt);
+					}
+					catch (InterruptedException interruptedException)
+					{
+						Thread.currentThread().interrupt();
+						throw new IOException("Interrupted while retrying " + sourceUri, interruptedException);
+					}
+				}
+			}
+		}
+
+		throw new IOException("Failed to download " + sourceUri, lastFailure);
 	}
 
 	/**
@@ -365,5 +542,75 @@ public final class MojangMetadataClient
 		Path assetsObjectsRoot
 	)
 	{
+	}
+
+	/**
+	 * Immutable description of an asset object download.
+	 *
+	 * @param assetName the logical asset path
+	 * @param sourceUri the source URI
+	 * @param targetFile the cache target file
+	 */
+	private record AssetDownload(
+		String assetName,
+		URI sourceUri,
+		Path targetFile
+	)
+	{
+	}
+
+	/**
+	 * Immutable result for a completed asset download.
+	 *
+	 * @param assetName the logical asset path
+	 * @param success whether the download succeeded
+	 * @param message the failure message when unsuccessful
+	 */
+	private record AssetDownloadResult(
+		String assetName,
+		boolean success,
+		String message
+	)
+	{
+	}
+
+	/**
+	 * Worker that downloads a single asset object.
+	 */
+	private final class AssetDownloadTask implements Callable<AssetDownloadResult>
+	{
+		/**
+		 * The asset download work item.
+		 */
+		private final AssetDownload _download;
+
+		/**
+		 * Creates a new asset download task.
+		 *
+		 * @param download the download work item
+		 */
+		private AssetDownloadTask(AssetDownload download)
+		{
+			_download = download;
+		}
+
+		/**
+		 * Executes the asset object download.
+		 *
+		 * @return the download result
+		 */
+		@Override
+		public AssetDownloadResult call()
+		{
+			try
+			{
+				downloadToFile(_download.sourceUri(), _download.targetFile());
+				return new AssetDownloadResult(_download.assetName(), true, null);
+			}
+			catch (IOException exception)
+			{
+				return new AssetDownloadResult(_download.assetName(), false, exception.getMessage());
+			}
+		}
 	}
 }
