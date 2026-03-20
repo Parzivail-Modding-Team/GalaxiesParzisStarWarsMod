@@ -7,6 +7,7 @@ import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
+import dev.pswg.toolchain.template.XmlEscaper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -245,7 +246,7 @@ public final class IntelliJProjectSyncService
 	)
 	{
 		builder.append("      <profile name=\"PSWG Toolchain: ")
-		       .append(xml(projectName + ".projects." + module.id() + "." + sourceSetName))
+		       .append(XmlEscaper.escapeAttribute(projectName + ".projects." + module.id() + "." + sourceSetName))
 		       .append("\" enabled=\"true\">\n")
 		       .append("        <outputRelativeToContentRoot value=\"true\" />\n")
 		       .append("        <processorPath useClasspath=\"false\">\n");
@@ -253,13 +254,13 @@ public final class IntelliJProjectSyncService
 		for (Path entry : processorPathEntries)
 		{
 			builder.append("          <entry name=\"")
-			       .append(xml(projectRelativeMacro(entry)))
+			       .append(XmlEscaper.escapeAttribute(projectRelativeMacro(entry)))
 			       .append("\" />\n");
 		}
 
 		builder.append("        </processorPath>\n")
 		       .append("        <module name=\"")
-		       .append(xml(projectName + ".projects." + module.id() + "." + sourceSetName))
+		       .append(XmlEscaper.escapeAttribute(projectName + ".projects." + module.id() + "." + sourceSetName))
 		       .append("\" />\n")
 		       .append("      </profile>\n");
 	}
@@ -364,19 +365,19 @@ public final class IntelliJProjectSyncService
 	private String renderJavacOptions(String projectName, BuildGraph graph)
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("      <module name=\"").append(xml(projectName)).append("\" options=\"-Xmaxerrs 1000 -Xdiags:verbose\" />\n")
-		       .append("      <module name=\"").append(xml(projectName + ".main")).append("\" options=\"-Xmaxerrs 1000 -Xdiags:verbose\" />\n");
+		builder.append("      <module name=\"").append(XmlEscaper.escapeAttribute(projectName)).append("\" options=\"-Xmaxerrs 1000 -Xdiags:verbose\" />\n")
+		       .append("      <module name=\"").append(XmlEscaper.escapeAttribute(projectName + ".main")).append("\" options=\"-Xmaxerrs 1000 -Xdiags:verbose\" />\n");
 
 		for (ModuleSpec module : graph.modules())
 		{
 			builder.append("      <module name=\"")
-			       .append(xml(projectName + ".projects." + module.id() + "." + MAIN_SOURCE_SET))
+			       .append(XmlEscaper.escapeAttribute(projectName + ".projects." + module.id() + "." + MAIN_SOURCE_SET))
 			       .append("\" options=\"-Xmaxerrs 1000 -Xdiags:verbose\" />\n");
 
 			if (!module.clientSources().isEmpty() || !module.clientResources().isEmpty())
 			{
 				builder.append("      <module name=\"")
-				       .append(xml(projectName + ".projects." + module.id() + "." + CLIENT_SOURCE_SET))
+				       .append(XmlEscaper.escapeAttribute(projectName + ".projects." + module.id() + "." + CLIENT_SOURCE_SET))
 				       .append("\" options=\"-Xmaxerrs 1000 -Xdiags:verbose\" />\n");
 			}
 		}
@@ -398,8 +399,8 @@ public final class IntelliJProjectSyncService
 		for (Path generatedRoot : generatedRoots)
 		{
 			String url = "file://$PROJECT_DIR$/" + projectRoot.relativize(projectRoot.resolve(generatedRoot)).toString().replace('\\', '/');
-			builder.append("    <content url=\"").append(xml(url)).append("\">\n")
-			       .append("      <sourceFolder url=\"").append(xml(url)).append("\" isTestSource=\"false\" generated=\"true\" />\n")
+			builder.append("    <content url=\"").append(XmlEscaper.escapeAttribute(url)).append("\">\n")
+			       .append("      <sourceFolder url=\"").append(XmlEscaper.escapeAttribute(url)).append("\" isTestSource=\"false\" generated=\"true\" />\n")
 			       .append("    </content>\n");
 		}
 
@@ -414,27 +415,17 @@ public final class IntelliJProjectSyncService
 	 * @return the rendered facet block, or an empty string
 	 */
 	private String renderOptionalFabricFacet(ModuleSpec module, String minecraftVersion)
+		throws IOException
 	{
 		if (module.fabricModJson() == null)
 		{
 			return "";
 		}
 
-		return "  <component name=\"FacetManager\">\n"
-			+ "    <facet type=\"minecraft\" name=\"Minecraft\">\n"
-			+ "      <configuration>\n"
-			+ "        <autoDetectTypes>\n"
-			+ "          <platformType>FABRIC</platformType>\n"
-			+ "          <platformType>MIXIN</platformType>\n"
-			+ "          <platformType>MCP</platformType>\n"
-			+ "        </autoDetectTypes>\n"
-			+ "        <projectReimportVersion>1</projectReimportVersion>\n"
-			+ "      </configuration>\n"
-			+ "    </facet>\n"
-			+ "  </component>\n"
-			+ "  <component name=\"McpModuleSettings\">\n"
-			+ "    <option name=\"minecraftVersion\" value=\"" + xml(minecraftVersion) + "\" />\n"
-			+ "  </component>\n";
+		return FileTemplateRenderer.render(
+			"dev/pswg/toolchain/templates/intellij-fabric-facet.xml",
+			Map.of("MINECRAFT_VERSION", XmlEscaper.escapeAttribute(minecraftVersion))
+		);
 	}
 
 	/**
@@ -557,17 +548,4 @@ public final class IntelliJProjectSyncService
 		return substituted;
 	}
 
-	/**
-	 * Escapes XML attribute values.
-	 *
-	 * @param value the raw value
-	 * @return the escaped value
-	 */
-	private String xml(String value)
-	{
-		return value.replace("&", "&amp;")
-		            .replace("\"", "&quot;")
-		            .replace("<", "&lt;")
-		            .replace(">", "&gt;");
-	}
 }

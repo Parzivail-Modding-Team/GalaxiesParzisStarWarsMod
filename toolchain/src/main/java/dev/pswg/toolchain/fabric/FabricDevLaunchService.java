@@ -9,6 +9,7 @@ import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.runtime.VanillaLaunchService;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
+import dev.pswg.toolchain.template.XmlEscaper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -937,6 +938,6 @@ public final class FabricDevLaunchService
 	 */
 	private String xmlPath(Path path)
 	{
-		return path.toAbsolutePath().toString().replace('\\', '/').replace("&", "&amp;").replace("\"", "&quot;");
+		return XmlEscaper.escapePath(path);
 	}
 }

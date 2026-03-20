@@ -11,6 +11,7 @@ import dev.pswg.toolchain.mojang.model.MojangRule;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadataLibrary;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
+import dev.pswg.toolchain.template.XmlEscaper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -629,7 +630,7 @@ public final class VanillaLaunchService
 	 */
 	private String xmlPath(Path path)
 	{
-		return path.toAbsolutePath().toString().replace('\\', '/').replace("&", "&amp;").replace("\"", "&quot;");
+		return XmlEscaper.escapePath(path);
 	}
 
 	/**
