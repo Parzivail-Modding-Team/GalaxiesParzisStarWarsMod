@@ -59,6 +59,11 @@ public final class IntelliJDependencyResolver
 	private final Map<Path, Set<Path>> _expandedLibraryArtifactsCache;
 
 	/**
+	 * Applies compile-time class tweaker transformations to Minecraft jars before IntelliJ consumes them.
+	 */
+	private final IntelliJMinecraftJarTransformer _minecraftJarTransformer;
+
+	/**
 	 * Per-run cache of Mojang compile dependencies keyed by Minecraft version and refresh mode.
 	 */
 	private final Map<String, Set<Path>> _minecraftCompileDependenciesCache;
@@ -79,6 +84,7 @@ public final class IntelliJDependencyResolver
 		_expandedLibraryArtifactsCache = new LinkedHashMap<>();
 		_minecraftCompileDependenciesCache = new LinkedHashMap<>();
 		_fabricCompileDependenciesCache = new LinkedHashMap<>();
+		_minecraftJarTransformer = new IntelliJMinecraftJarTransformer();
 	}
 
 	/**
@@ -178,12 +184,15 @@ public final class IntelliJDependencyResolver
 		boolean includeClient
 	) throws IOException
 	{
-		Set<Path> dependencies = new LinkedHashSet<>(expandIntelliJLibraryArtifacts(
-			resolveImplicitCompileDependencies(graph, gradleProperties, refresh, module)
-		));
-		dependencies.addAll(expandIntelliJLibraryArtifacts(
+		Set<Path> dependencies = new LinkedHashSet<>();
+		Set<Path> declaredCompileDependencies = new LinkedHashSet<>(expandIntelliJLibraryArtifacts(
 			resolveExternalDependencies(module.compileDependencies(), gradleProperties, refresh)
 		));
+
+		dependencies.addAll(expandIntelliJLibraryArtifacts(
+			resolveImplicitCompileDependencies(graph, gradleProperties, refresh, module, declaredCompileDependencies)
+		));
+		dependencies.addAll(declaredCompileDependencies);
 
 		if (includeClient)
 		{
@@ -253,7 +262,8 @@ public final class IntelliJDependencyResolver
 		BuildGraph graph,
 		Properties gradleProperties,
 		boolean refresh,
-		ModuleSpec module
+		ModuleSpec module,
+		Collection<Path> declaredCompileDependencies
 	) throws IOException
 	{
 		Set<Path> dependencies = new LinkedHashSet<>();
@@ -263,8 +273,17 @@ public final class IntelliJDependencyResolver
 			return dependencies;
 		}
 
-		dependencies.addAll(resolveMinecraftCompileDependencies(graph.minecraftVersion(), refresh));
-		dependencies.addAll(resolveFabricCompileDependencies(gradleProperties.getProperty("loader_version"), refresh));
+		Set<Path> fabricDependencies = resolveFabricCompileDependencies(gradleProperties.getProperty("loader_version"), refresh);
+		Set<Path> modArtifacts = new LinkedHashSet<>(declaredCompileDependencies);
+		modArtifacts.addAll(fabricDependencies);
+		Set<Path> minecraftDependencies = resolveMinecraftCompileDependencies(
+			graph.minecraftVersion(),
+			refresh,
+			modArtifacts
+		);
+
+		dependencies.addAll(minecraftDependencies);
+		dependencies.addAll(fabricDependencies);
 		return dependencies;
 	}
 
@@ -276,9 +295,13 @@ public final class IntelliJDependencyResolver
 	 * @return the compile-time Minecraft jars
 	 * @throws IOException if resolution fails
 	 */
-	private Set<Path> resolveMinecraftCompileDependencies(String minecraftVersion, boolean refresh) throws IOException
+	private Set<Path> resolveMinecraftCompileDependencies(
+		String minecraftVersion,
+		boolean refresh,
+		Collection<Path> modArtifacts
+	) throws IOException
 	{
-		String cacheKey = minecraftVersion + "|" + refresh;
+		String cacheKey = minecraftVersion + "|" + refresh + "|" + modArtifacts.hashCode();
 		Set<Path> cached = _minecraftCompileDependenciesCache.get(cacheKey);
 
 		if (cached != null)
@@ -288,7 +311,8 @@ public final class IntelliJDependencyResolver
 
 		Set<Path> dependencies = new LinkedHashSet<>();
 		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(minecraftVersion, refresh);
-		dependencies.add(_mojangClient.downloadClientJar(minecraftVersion, refresh));
+		Path clientJar = _mojangClient.downloadClientJar(minecraftVersion, refresh);
+		dependencies.add(_minecraftJarTransformer.transformMinecraftJar(minecraftVersion, clientJar, modArtifacts));
 
 		for (MojangVersionMetadataLibrary library : metadata.libraries())
 		{
