@@ -74,11 +74,19 @@ public final class VanillaLaunchService
 
 		MojangPaths paths = _mojangClient.paths();
 		Path projectRoot = Path.of("").toAbsolutePath().normalize();
-		Path instanceRoot = paths.workRoot().resolve("instances").resolve("vanilla-client").resolve(versionId);
+		String platformId = currentPlatformId();
+		String platformDisplayName = currentPlatformDisplayName();
+		Path instanceRoot = paths.workRoot()
+		                        .resolve("instances")
+		                        .resolve("vanilla-client")
+		                        .resolve(platformId)
+		                        .resolve(versionId);
 		Path gameDirectory = instanceRoot.resolve("game");
 		Path nativesDirectory = instanceRoot.resolve("natives");
 		Path launchConfigFile = instanceRoot.resolve("launch.json");
-		Path ideaRunConfigurationFile = projectRoot.resolve(".idea").resolve("runConfigurations").resolve("Vanilla_Client.xml");
+		Path ideaRunConfigurationFile = projectRoot.resolve(".idea")
+		                                          .resolve("runConfigurations")
+		                                          .resolve("Vanilla_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml");
 
 		Files.createDirectories(gameDirectory);
 		Files.createDirectories(nativesDirectory);
@@ -86,7 +94,7 @@ public final class VanillaLaunchService
 
 		List<Path> classpath = buildClasspath(versionId, metadata);
 		extractNativeLibraries(metadata, nativesDirectory);
-		Path loggingConfiguration = downloadLoggingConfiguration(metadata, refresh);
+		Path loggingConfiguration = prepareLoggingConfiguration(instanceRoot, gameDirectory, metadata, refresh);
 
 		Map<String, String> variables = buildLaunchVariables(versionId, metadata, gameDirectory, nativesDirectory, classpath, loggingConfiguration);
 		List<String> jvmArgs = new ArrayList<>();
@@ -116,7 +124,7 @@ public final class VanillaLaunchService
 		);
 
 		writeLaunchConfig(launchConfigFile, config);
-		writeIntelliJRunConfiguration(projectRoot, ideaRunConfigurationFile, launchConfigFile);
+		writeIntelliJRunConfiguration(projectRoot, ideaRunConfigurationFile, launchConfigFile, platformDisplayName);
 		return config;
 	}
 
@@ -227,16 +235,52 @@ public final class VanillaLaunchService
 	 * @return the cached logging configuration path, or {@code null}
 	 * @throws IOException if the logging configuration cannot be downloaded
 	 */
-	private Path downloadLoggingConfiguration(MojangVersionMetadata metadata, boolean refresh) throws IOException
+	private Path prepareLoggingConfiguration(
+		Path instanceRoot,
+		Path gameDirectory,
+		MojangVersionMetadata metadata,
+		boolean refresh
+	) throws IOException
 	{
-		if (metadata.logging() == null || metadata.logging().client() == null || metadata.logging().client().file() == null)
+		Path generatedConfiguration = instanceRoot.resolve("config").resolve("log4j2-intellij.xml");
+		Files.createDirectories(generatedConfiguration.getParent());
+		String latestLog = xmlPath(gameDirectory.resolve("logs").resolve("latest.log"));
+		String archivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("%d{yyyy-MM-dd}-%i.log.gz"));
+		String xml = """
+			<?xml version="1.0" encoding="UTF-8"?>
+			<Configuration status="WARN">
+			    <Appenders>
+			        <Console name="SysOut" target="SYSTEM_OUT">
+			            <PatternLayout disableAnsi="false" noConsoleNoAnsi="false" pattern="%%style{[%%d{HH:mm:ss}]}{black} %%highlight{[%%t/%%level]} %%msg{nolookups}%%n%%throwable" />
+			        </Console>
+			        <RollingRandomAccessFile name="File" fileName="%s" filePattern="%s">
+			            <PatternLayout pattern="[%%d{HH:mm:ss}] [%%t/%%level]: %%msg{nolookups}%%n%%throwable" />
+			            <Policies>
+			                <TimeBasedTriggeringPolicy />
+			                <OnStartupTriggeringPolicy />
+			            </Policies>
+			        </RollingRandomAccessFile>
+			    </Appenders>
+			    <Loggers>
+			        <Root level="info">
+			            <filters>
+			                <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
+			            </filters>
+			            <AppenderRef ref="SysOut"/>
+			            <AppenderRef ref="File"/>
+			        </Root>
+			    </Loggers>
+			</Configuration>
+			""".formatted(latestLog, archivedLogs);
+		Files.writeString(generatedConfiguration, xml);
+
+		if (metadata.logging() != null && metadata.logging().client() != null && metadata.logging().client().file() != null)
 		{
-			return null;
+			Path target = _mojangClient.paths().mojangRoot().resolve("logging").resolve(metadata.logging().client().file().id());
+			_mojangClient.download(URI.create(metadata.logging().client().file().url()), target, refresh);
 		}
 
-		Path target = _mojangClient.paths().mojangRoot().resolve("logging").resolve(metadata.logging().client().file().id());
-		_mojangClient.download(URI.create(metadata.logging().client().file().url()), target, refresh);
-		return target;
+		return generatedConfiguration;
 	}
 
 	/**
@@ -428,14 +472,20 @@ public final class VanillaLaunchService
 	 * @param launchConfigPath the serialized launch configuration path
 	 * @throws IOException if the file cannot be written
 	 */
-	private void writeIntelliJRunConfiguration(Path projectRoot, Path path, Path launchConfigPath) throws IOException
+	private void writeIntelliJRunConfiguration(
+		Path projectRoot,
+		Path path,
+		Path launchConfigPath,
+		String platformDisplayName
+	) throws IOException
 	{
 		String moduleName = readIntelliJModuleName(projectRoot);
-		String launchConfigValue = "$PROJECT_DIR$/"
-			+ projectRoot.relativize(launchConfigPath.toAbsolutePath().normalize()).toString().replace('\\', '/');
+		String launchConfigValue = "&quot;$PROJECT_DIR$/"
+			+ projectRoot.relativize(launchConfigPath.toAbsolutePath().normalize()).toString().replace('\\', '/')
+			+ "&quot;";
 		String xml = """
 			<component name="ProjectRunConfigurationManager">
-			  <configuration default="false" factoryName="Application" name="Vanilla Client" type="Application">
+			  <configuration default="false" factoryName="Application" name="%s" type="Application">
 			    <option name="MAIN_CLASS_NAME" value="dev.pswg.toolchain.runtime.VanillaLaunchMain"/>
 			    <module name="%s"/>
 			    <option name="PROGRAM_PARAMETERS" value="%s"/>
@@ -447,6 +497,7 @@ public final class VanillaLaunchService
 			  <classpathModifications/></configuration>
 			</component>
 			""".formatted(
+			"Vanilla Client (" + platformDisplayName + ")",
 			moduleName,
 			launchConfigValue
 		);
@@ -492,6 +543,60 @@ public final class VanillaLaunchService
 	private boolean isWindows()
 	{
 		return System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("windows");
+	}
+
+	/**
+	 * Gets the current runtime platform identifier for launch file partitioning.
+	 *
+	 * @return the current platform identifier
+	 */
+	private String currentPlatformId()
+	{
+		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+
+		if (osName.contains("win"))
+		{
+			return "windows";
+		}
+
+		if (osName.contains("mac"))
+		{
+			return "macos";
+		}
+
+		if (osName.contains("linux"))
+		{
+			return "linux";
+		}
+
+		return "unknown";
+	}
+
+	/**
+	 * Gets the current runtime platform display name for IntelliJ run configurations.
+	 *
+	 * @return the current platform display name
+	 */
+	private String currentPlatformDisplayName()
+	{
+		return switch (currentPlatformId())
+		{
+			case "windows" -> "Windows";
+			case "macos" -> "macOS";
+			case "linux" -> "Linux";
+			default -> "Unknown";
+		};
+	}
+
+	/**
+	 * Escapes a filesystem path for safe use in XML attributes.
+	 *
+	 * @param path the path to escape
+	 * @return the escaped path string
+	 */
+	private String xmlPath(Path path)
+	{
+		return path.toAbsolutePath().toString().replace('\\', '/').replace("&", "&amp;").replace("\"", "&quot;");
 	}
 
 	/**

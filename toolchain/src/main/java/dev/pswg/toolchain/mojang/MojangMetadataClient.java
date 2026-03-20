@@ -45,12 +45,12 @@ public final class MojangMetadataClient
 	/**
 	 * The standard request timeout for Mojang downloads.
 	 */
-	private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(30);
+	private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(60);
 
 	/**
 	 * The maximum number of download retry attempts.
 	 */
-	private static final int MAX_DOWNLOAD_ATTEMPTS = 3;
+	private static final int MAX_DOWNLOAD_ATTEMPTS = 5;
 
 	/**
 	 * The default concurrent asset download worker count.
@@ -344,7 +344,8 @@ public final class MojangMetadataClient
 		int workerCount = Math.max(1, Math.min(ASSET_DOWNLOAD_CONCURRENCY, downloads.size()));
 		ExecutorService executor = Executors.newFixedThreadPool(workerCount);
 		ExecutorCompletionService<AssetDownloadResult> completionService = new ExecutorCompletionService<>(executor);
-		List<String> failures = new ArrayList<>();
+		List<AssetDownload> failures = new ArrayList<>();
+		List<String> failureMessages = new ArrayList<>();
 
 		try
 		{
@@ -373,13 +374,15 @@ public final class MojangMetadataClient
 
 					if (!result.success())
 					{
-						failures.add(result.assetName() + ": " + result.message());
+						failures.add(result.download());
+						failureMessages.add(result.assetName() + ": " + result.message());
 					}
 				}
 				catch (ExecutionException exception)
 				{
 					Throwable cause = exception.getCause();
-					failures.add(cause == null ? exception.getMessage() : cause.getMessage());
+					String message = cause == null ? exception.getMessage() : cause.getMessage();
+					failureMessages.add(message);
 				}
 			}
 		}
@@ -404,18 +407,50 @@ public final class MojangMetadataClient
 
 		if (!failures.isEmpty())
 		{
-			StringBuilder message = new StringBuilder("Failed asset object downloads: ").append(failures.size());
-			int sampleCount = Math.min(5, failures.size());
+			List<String> remainingFailures = retryFailedAssetDownloads(failures);
+
+			if (remainingFailures.isEmpty())
+			{
+				return assetIndex.objects().size();
+			}
+
+			StringBuilder message = new StringBuilder("Failed asset object downloads: ").append(remainingFailures.size());
+			int sampleCount = Math.min(5, remainingFailures.size());
 
 			for (int i = 0; i < sampleCount; i++)
 			{
-				message.append(System.lineSeparator()).append(" - ").append(failures.get(i));
+				message.append(System.lineSeparator()).append(" - ").append(remainingFailures.get(i));
 			}
 
 			throw new IOException(message.toString());
 		}
 
 		return assetIndex.objects().size();
+	}
+
+	/**
+	 * Retries failed asset downloads serially to smooth over transient network issues.
+	 *
+	 * @param failedDownloads the failed asset downloads from the concurrent pass
+	 * @return the remaining failure messages after retry
+	 */
+	private List<String> retryFailedAssetDownloads(List<AssetDownload> failedDownloads)
+	{
+		List<String> remainingFailures = new ArrayList<>();
+
+		for (AssetDownload download : failedDownloads)
+		{
+			try
+			{
+				downloadToFile(download.sourceUri(), download.targetFile());
+			}
+			catch (IOException exception)
+			{
+				remainingFailures.add(download.assetName() + ": " + exception.getMessage());
+			}
+		}
+
+		return remainingFailures;
 	}
 
 	/**
@@ -803,6 +838,7 @@ public final class MojangMetadataClient
 	 * @param message the failure message when unsuccessful
 	 */
 	private record AssetDownloadResult(
+		AssetDownload download,
 		String assetName,
 		boolean success,
 		String message
@@ -841,11 +877,16 @@ public final class MojangMetadataClient
 			try
 			{
 				downloadToFile(_download.sourceUri(), _download.targetFile());
-				return new AssetDownloadResult(_download.assetName(), true, null);
+				return new AssetDownloadResult(_download, _download.assetName(), true, null);
 			}
 			catch (IOException exception)
 			{
-				return new AssetDownloadResult(_download.assetName(), false, exception.getMessage());
+				return new AssetDownloadResult(
+					_download,
+					_download.assetName(),
+					false,
+					exception.getMessage()
+				);
 			}
 		}
 	}
