@@ -11,6 +11,7 @@ import dev.pswg.toolchain.mojang.MojangPaths;
 import dev.pswg.toolchain.mojang.model.MojangRule;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadataLibrary;
+import dev.pswg.toolchain.template.FileTemplateRenderer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -248,65 +250,15 @@ public final class VanillaLaunchService
 		String archivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("%d{yyyy-MM-dd}-%i.log.gz"));
 		String debugLog = xmlPath(gameDirectory.resolve("logs").resolve("debug.log"));
 		String debugArchivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("debug-%i.log.gz"));
-		String xml = """
-			<?xml version="1.0" encoding="UTF-8"?>
-			<Configuration status="WARN">
-				<Appenders>
-
-					<Console name="SysOut" target="SYSTEM_OUT">
-						<Filters>
-							<RegexFilter regex="^Failed to verify authentication$" onMatch="DENY" onMismatch="NEUTRAL"/>
-							<RegexFilter regex="^Failed to fetch user properties$" onMatch="DENY" onMismatch="NEUTRAL"/>
-							<RegexFilter regex="^Couldn't connect to realms$" onMatch="DENY" onMismatch="NEUTRAL"/>
-							<RegexFilter regex="^Failed to fetch Realms feature flags$" onMatch="DENY" onMismatch="NEUTRAL"/>
-						</Filters>
-						<PatternLayout>
-							<LoggerNamePatternSelector defaultPattern="%%style{[%%d{HH:mm:ss}]}{blue} %%highlight{[%%t/%%level]}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=blue} %%style{(%%logger{1})}{cyan} %%highlight{%%msg%%n}{FATAL=red, ERROR=red, WARN=normal, INFO=normal, DEBUG=normal, TRACE=normal}" disableAnsi="${sys:fabric.log.disableAnsi:-true}">
-								<PatternMatch key="net.minecraft.,com.mojang." pattern="%%style{[%%d{HH:mm:ss}]}{blue} %%highlight{[%%t/%%level]}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=blue} %%style{(Minecraft)}{cyan} %%highlight{%%msg{nolookups}%%n}{FATAL=red, ERROR=red, WARN=normal, INFO=normal, DEBUG=normal, TRACE=normal}"/>
-							</LoggerNamePatternSelector>
-						</PatternLayout>
-					</Console>
-
-					<Queue name="ServerGuiConsole" ignoreExceptions="true">
-						<PatternLayout>
-							<LoggerNamePatternSelector defaultPattern="[%%d{HH:mm:ss} %%level] (%%logger{1}) %%msg{nolookups}%%n">
-								<PatternMatch key="net.minecraft.,com.mojang." pattern="[%%d{HH:mm:ss} %%level] %%msg{nolookups}%%n"/>
-							</LoggerNamePatternSelector>
-						</PatternLayout>
-					</Queue>
-
-					<RollingRandomAccessFile name="LatestFile" fileName="%s" filePattern="%s">
-						<PatternLayout>
-							<LoggerNamePatternSelector defaultPattern="[%%d{HH:mm:ss}] [%%t/%%level] (%%logger{1}) %%msg{nolookups}%%n">
-								<PatternMatch key="net.minecraft.,com.mojang." pattern="[%%d{HH:mm:ss}] [%%t/%%level] (Minecraft) %%msg{nolookups}%%n"/>
-							</LoggerNamePatternSelector>
-						</PatternLayout>
-						<Policies>
-							<TimeBasedTriggeringPolicy />
-							<OnStartupTriggeringPolicy />
-						</Policies>
-					</RollingRandomAccessFile>
-
-					<RollingRandomAccessFile name="DebugFile" fileName="%s" filePattern="%s">
-						<PatternLayout pattern="[%%d{HH:mm:ss}] [%%t/%%level] (%%logger) %%msg{nolookups}%%n" />
-						<DefaultRolloverStrategy max="5" fileIndex="min"/>
-						<Policies>
-							<SizeBasedTriggeringPolicy size="200MB"/>
-							<OnStartupTriggeringPolicy />
-						</Policies>
-					</RollingRandomAccessFile>
-				</Appenders>
-				<Loggers>
-					<Logger level="${sys:fabric.log.level:-info}" name="net.minecraft"/>
-					<Root level="${sys:fabric.log.debug.level:-debug}">
-						<AppenderRef ref="DebugFile" level="${sys:fabric.log.debug.level:-debug}"/>
-						<AppenderRef ref="SysOut" level="${sys:fabric.log.level:-info}"/>
-						<AppenderRef ref="LatestFile" level="${sys:fabric.log.level:-info}"/>
-						<AppenderRef ref="ServerGuiConsole" level="${sys:fabric.log.level:-info}"/>
-					</Root>
-				</Loggers>
-			</Configuration>
-			""".formatted(latestLog, archivedLogs, debugLog, debugArchivedLogs);
+		Map<String, String> templateValues = new LinkedHashMap<>();
+		templateValues.put("LATEST_LOG", latestLog);
+		templateValues.put("ARCHIVED_LOGS", archivedLogs);
+		templateValues.put("DEBUG_LOG", debugLog);
+		templateValues.put("DEBUG_ARCHIVED_LOGS", debugArchivedLogs);
+		String xml = FileTemplateRenderer.render(
+			"dev/pswg/toolchain/templates/log4j2-intellij.xml",
+			templateValues
+		);
 		Files.writeString(generatedConfiguration, xml);
 
 		if (metadata.logging() != null && metadata.logging().client() != null && metadata.logging().client().file() != null)
@@ -518,23 +470,13 @@ public final class VanillaLaunchService
 		String launchConfigValue = "&quot;$PROJECT_DIR$/"
 			+ projectRoot.relativize(launchConfigPath.toAbsolutePath().normalize()).toString().replace('\\', '/')
 			+ "&quot;";
-		String xml = """
-			<component name="ProjectRunConfigurationManager">
-			  <configuration default="false" factoryName="Application" name="%s" type="Application">
-			    <option name="MAIN_CLASS_NAME" value="dev.pswg.toolchain.runtime.VanillaLaunchMain"/>
-			    <module name="%s"/>
-			    <option name="PROGRAM_PARAMETERS" value="%s"/>
-			    <shortenClasspath name="ARGS_FILE"/>
-			    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
-			    <method v="2">
-			      <option enabled="true" name="Make"/>
-			    </method>
-			  <classpathModifications/></configuration>
-			</component>
-			""".formatted(
-			"Vanilla Client (" + platformDisplayName + ")",
-			moduleName,
-			launchConfigValue
+		Map<String, String> templateValues = new LinkedHashMap<>();
+		templateValues.put("CONFIG_NAME", "Vanilla Client (" + platformDisplayName + ")");
+		templateValues.put("MODULE_NAME", moduleName);
+		templateValues.put("PROGRAM_PARAMETERS", launchConfigValue);
+		String xml = FileTemplateRenderer.render(
+			"dev/pswg/toolchain/templates/intellij-run-config.xml",
+			templateValues
 		);
 
 		Files.createDirectories(path.getParent());
