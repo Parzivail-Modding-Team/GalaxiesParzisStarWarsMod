@@ -1,9 +1,12 @@
 package dev.pswg.toolchain.fabric;
 
+import dev.pswg.toolchain.intellij.IntelliJModuleNames;
 import dev.pswg.toolchain.mojang.MojangPaths;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
+import dev.pswg.toolchain.model.SourceSetNames;
+import dev.pswg.toolchain.pswg.PswgRepositoryContext;
 import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
@@ -14,7 +17,6 @@ import dev.pswg.toolchain.template.XmlEscaper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,6 +33,11 @@ import java.util.Set;
 
 /**
  * Prepares a Fabric-style development launch configuration from toolchain metadata.
+ *
+ * <p>This service layers Fabric's dev-launch bootstrap on top of the vanilla runtime bundle built
+ * by {@link VanillaLaunchService}. Keeping the vanilla and Fabric steps separate makes it easier to
+ * debug launcher parity issues without having to mentally untangle Mojang runtime resolution from
+ * Fabric's additional classpath and `launch.cfg` conventions.
  */
 public final class FabricDevLaunchService
 {
@@ -60,16 +67,6 @@ public final class FabricDevLaunchService
 	public static final String INTELLIJ_OUTPUT_DIRECTORY = "out/production";
 
 	/**
-	 * The standard main source set name.
-	 */
-	public static final String MAIN_SOURCE_SET = "main";
-
-	/**
-	 * The standard client source set name.
-	 */
-	public static final String CLIENT_SOURCE_SET = "client";
-
-	/**
 	 * The shared JSON serializer.
 	 */
 	private final ObjectMapper _mapper;
@@ -92,7 +89,7 @@ public final class FabricDevLaunchService
 	 * Prepares a Fabric-style development launch bundle for the client environment.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force fresh runtime downloads
+	 * @param refresh whether to revalidate cached runtime artifacts before launch preparation
 	 * @return the prepared launch configuration
 	 * @throws IOException if generation fails
 	 */
@@ -105,7 +102,7 @@ public final class FabricDevLaunchService
 	 * Prepares a Fabric-style development launch bundle using the default development identity.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force fresh runtime downloads
+	 * @param refresh whether to revalidate cached runtime artifacts before launch preparation
 	 * @param moduleId the optional PSWG module identifier to inject
 	 * @return the prepared launch configuration
 	 * @throws IOException if generation fails
@@ -119,7 +116,7 @@ public final class FabricDevLaunchService
 	 * Prepares a Fabric-style development launch bundle for the client environment.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force fresh runtime downloads
+	 * @param refresh whether to revalidate cached runtime artifacts before launch preparation
 	 * @param moduleId the optional PSWG module identifier to inject
 	 * @param identity the launch-time player identity
 	 * @return the prepared launch configuration
@@ -132,12 +129,12 @@ public final class FabricDevLaunchService
 		LaunchIdentity identity
 	) throws IOException
 	{
-		Path projectRoot = Path.of("").toAbsolutePath().normalize();
-		Path repoRoot = projectRoot.getParent();
-		Properties gradleProperties = loadGradleProperties();
+		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		Path projectRoot = repository.toolchainRoot();
+		Path repoRoot = repository.projectRoot();
 		VanillaLaunchConfig vanillaLaunch = new VanillaLaunchService().prepareClientRuntime(versionId, refresh, identity);
-		FabricRuntimeArtifacts runtimeArtifacts = resolveFabricRuntimeArtifacts(gradleProperties, refresh);
-		FabricModuleInjection moduleInjection = resolveModuleInjection(repoRoot, moduleId, gradleProperties, refresh);
+		FabricRuntimeArtifacts runtimeArtifacts = resolveFabricRuntimeArtifacts(repository.gradleProperties(), refresh);
+		FabricModuleInjection moduleInjection = resolveModuleInjection(repoRoot, moduleId, repository.gradleProperties(), refresh);
 		FabricLaunchPaths launchPaths = createLaunchPaths(projectRoot, versionId);
 
 		prepareLaunchFiles(versionId, vanillaLaunch, moduleInjection.moduleRoots(), launchPaths);
@@ -169,7 +166,7 @@ public final class FabricDevLaunchService
 	 * Resolves the Fabric-side runtime artifacts implied by the tracked PSWG properties.
 	 *
 	 * @param gradleProperties the tracked repository Gradle properties
-	 * @param refresh whether to force fresh runtime downloads
+	 * @param refresh whether to revalidate cached runtime artifacts
 	 * @return the resolved Fabric runtime artifacts
 	 * @throws IOException if the runtime artifacts cannot be resolved
 	 */
@@ -185,7 +182,7 @@ public final class FabricDevLaunchService
 	 * @param repoRoot the tracked repository root
 	 * @param moduleId the optional module identifier
 	 * @param gradleProperties the tracked repository Gradle properties
-	 * @param refresh whether to force fresh artifact downloads
+	 * @param refresh whether to revalidate cached external runtime artifacts
 	 * @return the resolved module injection contract
 	 * @throws IOException if supporting external runtime dependencies cannot be resolved
 	 */
@@ -405,6 +402,7 @@ public final class FabricDevLaunchService
 	 * @param jvmArgs the resolved JVM arguments
 	 * @param loggingConfigPath the generated logging configuration path
 	 * @param vanillaLaunch the prepared vanilla launch baseline
+	 * @param identity the launch-time player identity
 	 * @return the serialized Fabric launch configuration
 	 */
 	private VanillaLaunchConfig createFabricLaunchConfig(
@@ -446,25 +444,6 @@ public final class FabricDevLaunchService
 
 		Files.createDirectories(target.getParent());
 		Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-	}
-
-	/**
-	 * Loads the tracked repository's Gradle properties.
-	 *
-	 * @return the parsed Gradle properties
-	 * @throws IOException if the properties file cannot be read
-	 */
-	private Properties loadGradleProperties() throws IOException
-	{
-		Properties properties = new Properties();
-		Path path = Path.of("").toAbsolutePath().normalize().getParent().resolve("gradle.properties");
-
-		try (InputStream inputStream = Files.newInputStream(path))
-		{
-			properties.load(inputStream);
-		}
-
-		return properties;
 	}
 
 	/**
@@ -521,6 +500,7 @@ public final class FabricDevLaunchService
 	 *
 	 * @param versionId the Minecraft version identifier
 	 * @param vanillaLaunch the prepared vanilla launch configuration
+	 * @param moduleRoots the injected grouped module roots that should be exposed as one logical mod
 	 * @param outputPath the target launch configuration path
 	 * @param loggingConfigPath the log4j configuration path
 	 * @throws IOException if the file cannot be written
@@ -638,7 +618,7 @@ public final class FabricDevLaunchService
 	 *
 	 * @param runtimeDependencies the declared runtime dependencies
 	 * @param gradleProperties the tracked repository Gradle properties
-	 * @param refresh whether to force fresh downloads
+	 * @param refresh whether to revalidate cached dependency downloads
 	 * @return the resolved runtime dependency jars
 	 * @throws IOException if any dependency cannot be resolved
 	 */
@@ -722,8 +702,8 @@ public final class FabricDevLaunchService
 	private List<Path> resolveOutputRoots(Path projectRoot, ModuleSpec module)
 	{
 		List<Path> roots = new ArrayList<>();
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, MAIN_SOURCE_SET));
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, CLIENT_SOURCE_SET));
+		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, SourceSetNames.MAIN));
+		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, SourceSetNames.CLIENT));
 
 		return roots.stream()
 		            .distinct()
@@ -741,8 +721,9 @@ public final class FabricDevLaunchService
 	 */
 	private List<Path> resolveSourceSetOutputRoots(Path projectRoot, ModuleSpec module, String sourceSetName)
 	{
-		// IntelliJ compiles module outputs into a single directory per source set module.
-		String moduleName = readProjectName(projectRoot) + ".projects." + module.id() + "." + sourceSetName;
+		// The long-term goal is to launch only from IntelliJ outputs. The Gradle fallback remains here
+		// only so launcher iteration can continue while compile ownership is still moving out of Gradle.
+		String moduleName = IntelliJModuleNames.sourceSetModuleName(readProjectName(projectRoot), module.id(), sourceSetName);
 		Path intellijOutput = projectRoot.resolve(INTELLIJ_OUTPUT_DIRECTORY).resolve(moduleName);
 
 		if (Files.isDirectory(intellijOutput))

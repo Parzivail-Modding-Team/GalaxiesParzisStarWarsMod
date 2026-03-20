@@ -36,6 +36,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Resolves and caches Mojang launcher metadata used by the standalone toolchain.
+ *
+ * <p>The cache behavior is intentionally iteration-friendly: "refresh" means "revalidate and heal
+ * stale files when necessary", not "always redownload". That distinction matters because this
+ * client feeds both launch preparation and IntelliJ sync, so unnecessary downloads quickly make the
+ * whole toolchain feel sluggish.
  */
 public final class MojangMetadataClient
 {
@@ -99,7 +104,7 @@ public final class MojangMetadataClient
 	/**
 	 * Resolves the version manifest from cache or Mojang.
 	 *
-	 * @param refresh whether to force a fresh download
+	 * @param refresh whether to revalidate the cached manifest before reuse
 	 * @return the resolved version manifest
 	 * @throws IOException if resolution fails
 	 */
@@ -118,7 +123,7 @@ public final class MojangMetadataClient
 	 * Resolves a specific version entry from the version manifest.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force a fresh manifest download
+	 * @param refresh whether to revalidate the cached manifest before reuse
 	 * @return the resolved version entry
 	 * @throws IOException if the version is missing or the manifest fails to resolve
 	 */
@@ -137,7 +142,7 @@ public final class MojangMetadataClient
 	 * Resolves a specific version metadata document from cache or Mojang.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force a fresh download
+	 * @param refresh whether to revalidate the cached metadata before reuse
 	 * @return the resolved version metadata
 	 * @throws IOException if resolution fails
 	 */
@@ -158,7 +163,7 @@ public final class MojangMetadataClient
 	 * Downloads the vanilla client jar for a resolved Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force a fresh download
+	 * @param refresh whether to revalidate the cached client jar before reuse
 	 * @return the cached client jar path
 	 * @throws IOException if the jar cannot be downloaded
 	 */
@@ -179,7 +184,7 @@ public final class MojangMetadataClient
 	 * Downloads the asset index JSON for a resolved Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force a fresh download
+	 * @param refresh whether to revalidate the cached asset index before reuse
 	 * @return the cached asset index path
 	 * @throws IOException if the asset index cannot be downloaded
 	 */
@@ -201,7 +206,7 @@ public final class MojangMetadataClient
 	 *
 	 * @param sourceUri the source URI
 	 * @param targetFile the target cache file
-	 * @param refresh whether to force a fresh download
+	 * @param refresh whether to revalidate the cached file before reuse
 	 * @throws IOException if the file cannot be downloaded
 	 */
 	public void download(URI sourceUri, Path targetFile, boolean refresh) throws IOException
@@ -240,7 +245,7 @@ public final class MojangMetadataClient
 	 * Downloads the runtime libraries and asset objects required by a selected version.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force fresh downloads
+	 * @param refresh whether to revalidate cached runtime artifacts before reuse
 	 * @return the runtime download summary
 	 * @throws IOException if runtime files cannot be downloaded
 	 */
@@ -295,7 +300,9 @@ public final class MojangMetadataClient
 	 *
 	 * @param sourceUri the source URI to fetch
 	 * @param cacheFile the local cache file
-	 * @param refresh whether to force a fresh download
+	 * @param expectedSha1 the authoritative SHA-1 when one is available
+	 * @param type the JSON payload type
+	 * @param refresh whether to revalidate the cached JSON before reuse
 	 * @return the parsed JSON object
 	 * @throws IOException if the file cannot be read or downloaded
 	 */
@@ -316,11 +323,12 @@ public final class MojangMetadataClient
 	}
 
 	/**
-	 * Ensures a cache file exists and contains the latest requested document.
+	 * Ensures a cache file exists and matches the authoritative content when one is known.
 	 *
 	 * @param sourceUri the source URI to fetch
 	 * @param cacheFile the local cache file
-	 * @param refresh whether to force a fresh download
+	 * @param expectedSha1 the authoritative SHA-1 when one is available
+	 * @param refresh whether to revalidate the cached file before reuse
 	 * @throws IOException if the document cannot be downloaded
 	 */
 	private void ensureCached(URI sourceUri, Path cacheFile, String expectedSha1, boolean refresh) throws IOException
@@ -334,6 +342,9 @@ public final class MojangMetadataClient
 
 			if (expectedSha1 != null && hasMatchingSha1(cacheFile, expectedSha1))
 			{
+				// For repeated toolchain sync and launch cycles, refresh means "revalidate against the
+				// authoritative hash" rather than "blindly redownload". That keeps iteration fast while
+				// still letting the cache self-heal when a local artifact is stale or corrupted.
 				return;
 			}
 		}
@@ -347,7 +358,7 @@ public final class MojangMetadataClient
 	 * Downloads asset objects concurrently with bounded parallelism, retries, and progress reporting.
 	 *
 	 * @param assetIndex the resolved asset index
-	 * @param refresh whether to force fresh downloads
+	 * @param refresh whether to revalidate cached asset objects before reuse
 	 * @return the number of processed asset objects
 	 * @throws IOException if one or more downloads fail
 	 */

@@ -1,15 +1,9 @@
 package dev.pswg.toolchain.intellij;
 
-import dev.pswg.toolchain.fabric.FabricRuntimeArtifacts;
-import dev.pswg.toolchain.fabric.FabricRuntimeResolver;
-import dev.pswg.toolchain.fabric.MavenArtifactResolver;
-import dev.pswg.toolchain.fabric.MavenCoordinate;
 import dev.pswg.toolchain.model.BuildGraph;
-import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
-import dev.pswg.toolchain.mojang.MojangMetadataClient;
-import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
-import dev.pswg.toolchain.mojang.model.MojangVersionMetadataLibrary;
+import dev.pswg.toolchain.model.SourceSetNames;
+import dev.pswg.toolchain.pswg.PswgRepositoryContext;
 import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
@@ -20,83 +14,36 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
- * Generates IntelliJ compiler and generated-source metadata from the authoritative PSWG graph.
+ * Generates the IntelliJ project metadata that lets PSWG compile from the authoritative toolchain
+ * graph instead of from IDE state imported out of Gradle.
+ *
+ * <p>This service deliberately owns the "shape" of the PSWG IntelliJ project: module registration,
+ * compiler configuration, generated-source markers, and project-library wiring. The lower-level
+ * details of what jars belong on those classpaths live in {@link IntelliJDependencyResolver}.
  */
 public final class IntelliJProjectSyncService
 {
 	/**
-	 * The source-set name used for main compilation.
+	 * Resolves IntelliJ-facing classpath and processor-path artifacts from the authoritative graph.
 	 */
-	public static final String MAIN_SOURCE_SET = "main";
-
-	/**
-	 * The source-set name used for client compilation.
-	 */
-	public static final String CLIENT_SOURCE_SET = "client";
-
-	/**
-	 * Shared Gradle properties file name.
-	 */
-	private static final String GRADLE_PROPERTIES_FILE = "gradle.properties";
-
-	/**
-	 * The shared Maven artifact resolver.
-	 */
-	private final MavenArtifactResolver _artifactResolver;
-
-	/**
-	 * The Mojang metadata resolver.
-	 */
-	private final MojangMetadataClient _mojangClient;
-
-	/**
-	 * The Fabric runtime resolver.
-	 */
-	private final FabricRuntimeResolver _fabricRuntimeResolver;
-
-	/**
-	 * Per-run cache of expanded IntelliJ library artifacts keyed by the original artifact path.
-	 */
-	private final Map<Path, Set<Path>> _expandedLibraryArtifactsCache;
-
-	/**
-	 * Per-run cache of Mojang compile dependencies keyed by Minecraft version and refresh mode.
-	 */
-	private final Map<String, Set<Path>> _minecraftCompileDependenciesCache;
-
-	/**
-	 * Per-run cache of Fabric compile dependencies keyed by loader version and refresh mode.
-	 */
-	private final Map<String, Set<Path>> _fabricCompileDependenciesCache;
+	private final IntelliJDependencyResolver _dependencyResolver;
 
 	/**
 	 * Creates a new IntelliJ metadata sync service.
 	 */
 	public IntelliJProjectSyncService()
 	{
-		_artifactResolver = new MavenArtifactResolver();
-		_mojangClient = new MojangMetadataClient();
-		_fabricRuntimeResolver = new FabricRuntimeResolver();
-		_expandedLibraryArtifactsCache = new LinkedHashMap<>();
-		_minecraftCompileDependenciesCache = new LinkedHashMap<>();
-		_fabricCompileDependenciesCache = new LinkedHashMap<>();
+		_dependencyResolver = new IntelliJDependencyResolver();
 	}
 
 	/**
@@ -107,11 +54,11 @@ public final class IntelliJProjectSyncService
 	 */
 	public void syncPswgProject(boolean refresh) throws IOException
 	{
-		Path toolchainRoot = Path.of("").toAbsolutePath().normalize();
-		Path projectRoot = toolchainRoot.getParent();
+		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		Path projectRoot = repository.projectRoot();
 		BuildGraph graph = new PswgBuildDefinition().define();
-		Properties gradleProperties = loadGradleProperties(projectRoot);
-		String projectName = readProjectName(projectRoot);
+		Properties gradleProperties = repository.gradleProperties();
+		String projectName = repository.projectName();
 
 		writeProjectRegistration(projectRoot, projectName, graph);
 		writeCompilerConfiguration(projectRoot, projectName, graph, gradleProperties, refresh);
@@ -179,14 +126,7 @@ public final class IntelliJProjectSyncService
 		boolean refresh
 	) throws IOException
 	{
-		Set<Path> resolvedArtifacts = new LinkedHashSet<>();
-
-		for (ModuleSpec module : graph.modules())
-		{
-			resolvedArtifacts.addAll(expandIntelliJLibraryArtifacts(resolveImplicitCompileDependencies(graph, gradleProperties, refresh, module)));
-			resolvedArtifacts.addAll(expandIntelliJLibraryArtifacts(resolveExternalDependencies(module.compileDependencies(), gradleProperties, refresh)));
-			resolvedArtifacts.addAll(expandIntelliJLibraryArtifacts(resolveExternalDependencies(module.clientDependencies(), gradleProperties, refresh)));
-		}
+		Set<Path> resolvedArtifacts = _dependencyResolver.resolveProjectLibraries(graph, gradleProperties, refresh);
 
 		Path librariesDirectory = projectRoot.resolve(".idea").resolve("libraries");
 		Files.createDirectories(librariesDirectory);
@@ -220,11 +160,11 @@ public final class IntelliJProjectSyncService
 	{
 		for (ModuleSpec module : graph.modules())
 		{
-			writeSourceSetModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh, module, MAIN_SOURCE_SET);
+			writeSourceSetModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh, module, SourceSetNames.MAIN);
 
 			if (hasClientSourceSet(module))
 			{
-				writeSourceSetModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh, module, CLIENT_SOURCE_SET);
+				writeSourceSetModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh, module, SourceSetNames.CLIENT);
 			}
 		}
 	}
@@ -255,7 +195,7 @@ public final class IntelliJProjectSyncService
 		                             .resolve("modules")
 		                             .resolve("projects")
 		                             .resolve(module.id())
-		                             .resolve(projectName + ".projects." + module.id() + "." + sourceSetName + ".iml");
+		                             .resolve(IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), sourceSetName));
 		IntelliJXmlWriter.write(
 			outputPath,
 			createModuleDocument(projectRoot, projectName, graph, gradleProperties, refresh, module, sourceSetName)
@@ -298,10 +238,11 @@ public final class IntelliJProjectSyncService
 			{
 				addAnnotationProfile(
 					annotationProcessing,
+					projectRoot,
 					projectName,
 					module,
-					MAIN_SOURCE_SET,
-					resolveExternalDependencies(module.annotationProcessorDependencies(), gradleProperties, refresh)
+					SourceSetNames.MAIN,
+					_dependencyResolver.resolveExternalDependencies(module.annotationProcessorDependencies(), gradleProperties, refresh)
 				);
 			}
 
@@ -309,20 +250,22 @@ public final class IntelliJProjectSyncService
 			{
 				addAnnotationProfile(
 					annotationProcessing,
+					projectRoot,
 					projectName,
 					module,
-					MAIN_SOURCE_SET,
-					resolveAnnotationProcessorModulePath(projectRoot, projectName, graph, module, gradleProperties, refresh)
+					SourceSetNames.MAIN,
+					_dependencyResolver.resolveAnnotationProcessorModulePath(projectRoot, projectName, graph, module, gradleProperties, refresh)
 				);
 
 				if (!module.clientSources().isEmpty() || !module.clientResources().isEmpty())
 				{
 					addAnnotationProfile(
 						annotationProcessing,
+						projectRoot,
 						projectName,
 						module,
-						CLIENT_SOURCE_SET,
-						resolveAnnotationProcessorModulePath(projectRoot, projectName, graph, module, gradleProperties, refresh)
+						SourceSetNames.CLIENT,
+						_dependencyResolver.resolveAnnotationProcessorModulePath(projectRoot, projectName, graph, module, gradleProperties, refresh)
 					);
 				}
 			}
@@ -342,6 +285,7 @@ public final class IntelliJProjectSyncService
 	 * Adds a single IntelliJ annotation processing profile.
 	 *
 	 * @param annotationProcessing the annotation processing element
+	 * @param projectRoot the PSWG project root
 	 * @param projectName the IntelliJ project name
 	 * @param module the module specification
 	 * @param sourceSetName the source-set name
@@ -349,6 +293,7 @@ public final class IntelliJProjectSyncService
 	 */
 	private void addAnnotationProfile(
 		Element annotationProcessing,
+		Path projectRoot,
 		String projectName,
 		ModuleSpec module,
 		String sourceSetName,
@@ -356,7 +301,7 @@ public final class IntelliJProjectSyncService
 	)
 	{
 		Element profile = annotationProcessing.addElement("profile");
-		profile.addAttribute("name", "PSWG Toolchain: " + projectName + ".projects." + module.id() + "." + sourceSetName);
+		profile.addAttribute("name", "PSWG Toolchain: " + IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
 		profile.addAttribute("enabled", "true");
 		profile.addElement("outputRelativeToContentRoot").addAttribute("value", "true");
 		Element processorPath = profile.addElement("processorPath");
@@ -364,88 +309,11 @@ public final class IntelliJProjectSyncService
 
 		for (Path entry : processorPathEntries)
 		{
-			processorPath.addElement("entry").addAttribute("name", projectRelativeMacro(entry));
+			processorPath.addElement("entry")
+			             .addAttribute("name", IntelliJPathMacros.projectRelativeMacro(projectRoot, entry));
 		}
 
-		profile.addElement("module").addAttribute("name", projectName + ".projects." + module.id() + "." + sourceSetName);
-	}
-
-	/**
-	 * Resolves the processor path for module-backed annotation processors.
-	 *
-	 * @param projectRoot the PSWG project root
-	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param module the target module
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
-	 * @return the ordered processor path entries
-	 * @throws IOException if external artifacts cannot be resolved
-	 */
-	private List<Path> resolveAnnotationProcessorModulePath(
-		Path projectRoot,
-		String projectName,
-		BuildGraph graph,
-		ModuleSpec module,
-		Properties gradleProperties,
-		boolean refresh
-	) throws IOException
-	{
-		Set<Path> entries = new LinkedHashSet<>();
-
-		for (String processorId : module.annotationProcessors())
-		{
-			ModuleSpec processorModule = requireModule(graph, processorId);
-			entries.add(projectRoot.resolve("out")
-			                      .resolve("production")
-			                      .resolve(projectName + ".projects." + processorId + "." + MAIN_SOURCE_SET));
-
-			for (String dependencyId : processorModule.dependencies())
-			{
-				entries.add(projectRoot.resolve("out")
-				                      .resolve("production")
-				                      .resolve(projectName + ".projects." + dependencyId + "." + MAIN_SOURCE_SET));
-			}
-
-			entries.addAll(resolveExternalDependencies(processorModule.compileDependencies(), gradleProperties, refresh));
-			entries.addAll(resolveExternalDependencies(processorModule.annotationProcessorDependencies(), gradleProperties, refresh));
-		}
-
-		return List.copyOf(entries);
-	}
-
-	/**
-	 * Resolves external Maven dependencies into cached artifact paths.
-	 *
-	 * @param dependencies the declared dependencies
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
-	 * @return the resolved artifact paths
-	 * @throws IOException if an artifact cannot be resolved
-	 */
-	private List<Path> resolveExternalDependencies(
-		List<MavenDependencySpec> dependencies,
-		Properties gradleProperties,
-		boolean refresh
-	) throws IOException
-	{
-		List<Path> paths = new ArrayList<>();
-
-		for (MavenDependencySpec dependency : dependencies)
-		{
-			Path artifact = _artifactResolver.resolve(
-				MavenCoordinate.parse(substituteProperties(dependency.notation(), gradleProperties)),
-				dependency.repository(),
-				refresh
-			);
-
-			if (!paths.contains(artifact))
-			{
-				paths.add(artifact);
-			}
-		}
-
-		return paths;
+		profile.addElement("module").addAttribute("name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
 	}
 
 	/**
@@ -467,13 +335,13 @@ public final class IntelliJProjectSyncService
 		for (ModuleSpec module : graph.modules())
 		{
 			additionalOptions.addElement("module")
-			                 .addAttribute("name", projectName + ".projects." + module.id() + "." + MAIN_SOURCE_SET)
+			                 .addAttribute("name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.MAIN))
 			                 .addAttribute("options", "-Xmaxerrs 1000 -Xdiags:verbose");
 
 			if (!module.clientSources().isEmpty() || !module.clientResources().isEmpty())
 			{
 				additionalOptions.addElement("module")
-				                 .addAttribute("name", projectName + ".projects." + module.id() + "." + CLIENT_SOURCE_SET)
+				                 .addAttribute("name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.CLIENT))
 				                 .addAttribute("options", "-Xmaxerrs 1000 -Xdiags:verbose");
 			}
 		}
@@ -551,115 +419,12 @@ public final class IntelliJProjectSyncService
 	 */
 	private List<Path> generatedRoots(ModuleSpec module, String sourceSetName)
 	{
-		if (CLIENT_SOURCE_SET.equals(sourceSetName))
+		if (SourceSetNames.CLIENT.equals(sourceSetName))
 		{
 			return module.generatedClientSources();
 		}
 
 		return module.generatedSources();
-	}
-
-	/**
-	 * Resolves a module from the authoritative graph.
-	 *
-	 * @param graph the authoritative build graph
-	 * @param moduleId the module identifier
-	 * @return the resolved module
-	 */
-	private ModuleSpec requireModule(BuildGraph graph, String moduleId)
-	{
-		return graph.modules()
-		            .stream()
-		            .filter(candidate -> moduleId.equals(candidate.id()))
-		            .findFirst()
-		            .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + moduleId));
-	}
-
-	/**
-	 * Loads the tracked Gradle properties from the PSWG project root.
-	 *
-	 * @param projectRoot the PSWG project root
-	 * @return the loaded properties
-	 * @throws IOException if the file cannot be read
-	 */
-	private Properties loadGradleProperties(Path projectRoot) throws IOException
-	{
-		Properties properties = new Properties();
-		Path path = projectRoot.resolve(GRADLE_PROPERTIES_FILE);
-
-		try (InputStream inputStream = Files.newInputStream(path))
-		{
-			properties.load(inputStream);
-		}
-
-		return properties;
-	}
-
-	/**
-	 * Reads the IntelliJ project name.
-	 *
-	 * @param projectRoot the PSWG project root
-	 * @return the project name
-	 */
-	private String readProjectName(Path projectRoot)
-	{
-		Path projectNameFile = projectRoot.resolve(".idea").resolve(".name");
-
-		try
-		{
-			if (Files.exists(projectNameFile))
-			{
-				String value = Files.readString(projectNameFile).trim();
-
-				if (!value.isBlank())
-				{
-					return value;
-				}
-			}
-		}
-		catch (IOException ignored)
-		{
-		}
-
-		return projectRoot.getFileName().toString();
-	}
-
-	/**
-	 * Converts a resolved path into a `$PROJECT_DIR$` macro path when possible.
-	 *
-	 * @param path the resolved path
-	 * @return the macro path
-	 */
-	private String projectRelativeMacro(Path path)
-	{
-		Path projectRoot = Path.of("").toAbsolutePath().normalize().getParent();
-		Path normalized = path.toAbsolutePath().normalize();
-
-		if (normalized.startsWith(projectRoot))
-		{
-			return "$PROJECT_DIR$/" + projectRoot.relativize(normalized).toString().replace('\\', '/');
-		}
-
-		return normalized.toString().replace('\\', '/');
-	}
-
-	/**
-	 * Applies simple Gradle-style property substitution to a dependency notation.
-	 *
-	 * @param value the raw notation value
-	 * @param properties the available properties
-	 * @return the substituted value
-	 */
-	private String substituteProperties(String value, Properties properties)
-	{
-		String substituted = value;
-
-		for (String propertyName : properties.stringPropertyNames())
-		{
-			substituted = substituted.replace("${" + propertyName + "}", properties.getProperty(propertyName));
-		}
-
-		return substituted;
 	}
 
 	/**
@@ -677,7 +442,7 @@ public final class IntelliJProjectSyncService
 		Element library = component.addElement("library");
 		library.addAttribute("name", projectLibraryName(artifact));
 		Element classes = library.addElement("CLASSES");
-		classes.addElement("root").addAttribute("url", jarUrl(projectRoot, artifact));
+		classes.addElement("root").addAttribute("url", IntelliJPathMacros.jarUrl(projectRoot, artifact));
 		library.addElement("JAVADOC");
 		library.addElement("SOURCES");
 		return document;
@@ -726,14 +491,14 @@ public final class IntelliJProjectSyncService
 		{
 			addRegisteredModule(
 				modules,
-				"$PROJECT_DIR$/.idea/modules/projects/" + module.id() + "/" + projectName + ".projects." + module.id() + "." + MAIN_SOURCE_SET + ".iml"
+				"$PROJECT_DIR$/.idea/modules/projects/" + module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.MAIN)
 			);
 
 			if (hasClientSourceSet(module))
 			{
 				addRegisteredModule(
 					modules,
-					"$PROJECT_DIR$/.idea/modules/projects/" + module.id() + "/" + projectName + ".projects." + module.id() + "." + CLIENT_SOURCE_SET + ".iml"
+					"$PROJECT_DIR$/.idea/modules/projects/" + module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.CLIENT)
 				);
 			}
 		}
@@ -803,18 +568,18 @@ public final class IntelliJProjectSyncService
 		Element rootManager = moduleElement.addElement("component");
 		rootManager.addAttribute("name", "NewModuleRootManager");
 		rootManager.addAttribute("inherit-compiler-output", "false");
-		rootManager.addElement("output").addAttribute("url", fileUrl(projectRoot, compileOutputDirectory(projectRoot, projectName, module, sourceSetName)));
+		rootManager.addElement("output").addAttribute("url", IntelliJPathMacros.fileUrl(projectRoot, compileOutputDirectory(projectRoot, projectName, module, sourceSetName)));
 		rootManager.addElement("exclude-output");
 
 		Element content = rootManager.addElement("content");
-		content.addAttribute("url", moduleFileUrl(moduleRoot, moduleRoot));
+		content.addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, moduleRoot));
 		addSourceFolders(projectRoot, content, module, sourceSetName);
 		addExcludedFolder(content, moduleRoot.resolve("build"), moduleRoot);
 
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
-		addModuleDependencyEntries(rootManager, projectName, graph, module, sourceSetName);
-		addLibraryDependencyEntries(rootManager, graph, projectRoot, gradleProperties, refresh, module, sourceSetName);
+		addModuleDependencyEntries(rootManager, projectName, module, sourceSetName);
+		addLibraryDependencyEntries(rootManager, graph, gradleProperties, refresh, module, sourceSetName);
 	}
 
 	/**
@@ -832,14 +597,14 @@ public final class IntelliJProjectSyncService
 		for (Path sourceRoot : sourceRoots(module, sourceSetName))
 		{
 			content.addElement("sourceFolder")
-			       .addAttribute("url", moduleFileUrl(moduleRoot, projectRoot.resolve(sourceRoot)))
+			       .addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, projectRoot.resolve(sourceRoot)))
 			       .addAttribute("isTestSource", "false");
 		}
 
 		for (Path resourceRoot : resourceRoots(module, sourceSetName))
 		{
 			content.addElement("sourceFolder")
-			       .addAttribute("url", moduleFileUrl(moduleRoot, projectRoot.resolve(resourceRoot)))
+			       .addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, projectRoot.resolve(resourceRoot)))
 			       .addAttribute("type", "java-resource")
 			       .addAttribute("isTestSource", "false");
 		}
@@ -847,7 +612,7 @@ public final class IntelliJProjectSyncService
 		for (Path generatedRoot : generatedRoots(module, sourceSetName))
 		{
 			content.addElement("sourceFolder")
-			       .addAttribute("url", moduleFileUrl(moduleRoot, projectRoot.resolve(generatedRoot)))
+			       .addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, projectRoot.resolve(generatedRoot)))
 			       .addAttribute("isTestSource", "false")
 			       .addAttribute("generated", "true");
 		}
@@ -856,13 +621,13 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Adds an excluded folder entry to the module content root.
 	 *
-	 * @param projectRoot the PSWG project root
 	 * @param content the module content element
 	 * @param path the excluded path
+	 * @param moduleRoot the module root used to derive a stable module-relative URL
 	 */
 	private void addExcludedFolder(Element content, Path path, Path moduleRoot)
 	{
-		content.addElement("excludeFolder").addAttribute("url", moduleFileUrl(moduleRoot, path));
+		content.addElement("excludeFolder").addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, path));
 	}
 
 	/**
@@ -870,14 +635,12 @@ public final class IntelliJProjectSyncService
 	 *
 	 * @param rootManager the root manager element
 	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
 	 * @param module the module specification
 	 * @param sourceSetName the source-set name
 	 */
 	private void addModuleDependencyEntries(
 		Element rootManager,
 		String projectName,
-		BuildGraph graph,
 		ModuleSpec module,
 		String sourceSetName
 	)
@@ -886,12 +649,12 @@ public final class IntelliJProjectSyncService
 
 		for (String dependencyId : module.dependencies())
 		{
-			dependencyModuleNames.add(projectName + ".projects." + dependencyId + "." + MAIN_SOURCE_SET);
+			dependencyModuleNames.add(IntelliJModuleNames.sourceSetModuleName(projectName, dependencyId, SourceSetNames.MAIN));
 		}
 
-		if (CLIENT_SOURCE_SET.equals(sourceSetName))
+		if (SourceSetNames.CLIENT.equals(sourceSetName))
 		{
-			dependencyModuleNames.add(projectName + ".projects." + module.id() + "." + MAIN_SOURCE_SET);
+			dependencyModuleNames.add(IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.MAIN));
 		}
 
 		for (String dependencyModuleName : dependencyModuleNames)
@@ -907,7 +670,7 @@ public final class IntelliJProjectSyncService
 	 * Adds project library dependency entries for a modeled source set.
 	 *
 	 * @param rootManager the root manager element
-	 * @param projectRoot the PSWG project root
+	 * @param graph the authoritative build graph
 	 * @param gradleProperties the tracked Gradle properties
 	 * @param refresh whether to refresh external artifact resolution
 	 * @param module the module specification
@@ -917,26 +680,19 @@ public final class IntelliJProjectSyncService
 	private void addLibraryDependencyEntries(
 		Element rootManager,
 		BuildGraph graph,
-		Path projectRoot,
 		Properties gradleProperties,
 		boolean refresh,
 		ModuleSpec module,
 		String sourceSetName
 	) throws IOException
 	{
-		Set<Path> dependencies = new LinkedHashSet<>(expandIntelliJLibraryArtifacts(
-			resolveImplicitCompileDependencies(graph, gradleProperties, refresh, module)
-		));
-		dependencies.addAll(expandIntelliJLibraryArtifacts(
-			resolveExternalDependencies(module.compileDependencies(), gradleProperties, refresh)
-		));
-
-		if (CLIENT_SOURCE_SET.equals(sourceSetName))
-		{
-			dependencies.addAll(expandIntelliJLibraryArtifacts(
-				resolveExternalDependencies(module.clientDependencies(), gradleProperties, refresh)
-			));
-		}
+		Set<Path> dependencies = _dependencyResolver.resolveModuleLibraries(
+			graph,
+			gradleProperties,
+			refresh,
+			module,
+			SourceSetNames.CLIENT.equals(sourceSetName)
+		);
 
 		for (Path dependency : dependencies)
 		{
@@ -948,207 +704,11 @@ public final class IntelliJProjectSyncService
 	}
 
 	/**
-	 * Resolves the implicit platform compile dependencies for a module.
-	 *
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh downloaded artifacts
-	 * @param module the module specification
-	 * @return the implicit compile artifacts
-	 * @throws IOException if dependency resolution fails
-	 */
-	private Set<Path> resolveImplicitCompileDependencies(
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh,
-		ModuleSpec module
-	) throws IOException
-	{
-		Set<Path> dependencies = new LinkedHashSet<>();
-
-		if (module.fabricModJson() == null)
-		{
-			return dependencies;
-		}
-
-		dependencies.addAll(resolveMinecraftCompileDependencies(graph.minecraftVersion(), refresh));
-		dependencies.addAll(resolveFabricCompileDependencies(gradleProperties.getProperty("loader_version"), refresh));
-		return dependencies;
-	}
-
-	/**
-	 * Resolves the compile-time Minecraft jars needed for official-namespace PSWG modules.
-	 *
-	 * @param minecraftVersion the tracked Minecraft version
-	 * @param refresh whether to refresh downloaded artifacts
-	 * @return the compile-time Minecraft jars
-	 * @throws IOException if resolution fails
-	 */
-	private Set<Path> resolveMinecraftCompileDependencies(String minecraftVersion, boolean refresh) throws IOException
-	{
-		String cacheKey = minecraftVersion + "|" + refresh;
-		Set<Path> cached = _minecraftCompileDependenciesCache.get(cacheKey);
-
-		if (cached != null)
-		{
-			return cached;
-		}
-
-		Set<Path> dependencies = new LinkedHashSet<>();
-		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(minecraftVersion, refresh);
-		dependencies.add(_mojangClient.downloadClientJar(minecraftVersion, refresh));
-
-		for (MojangVersionMetadataLibrary library : metadata.libraries())
-		{
-			if (!_mojangClient.isLibraryAllowed(library))
-			{
-				continue;
-			}
-
-			if (library.name() != null && library.name().contains(":natives-"))
-			{
-				continue;
-			}
-
-			if (library.downloads() == null || library.downloads().artifact() == null || library.downloads().artifact().path() == null)
-			{
-				continue;
-			}
-
-			Path target = _mojangClient.paths().libraryFile(library.downloads().artifact().path());
-			_mojangClient.download(
-				java.net.URI.create(library.downloads().artifact().url()),
-				target,
-				refresh
-			);
-			dependencies.add(target);
-		}
-
-		Set<Path> resolved = Set.copyOf(dependencies);
-		_minecraftCompileDependenciesCache.put(cacheKey, resolved);
-		return resolved;
-	}
-
-	/**
-	 * Resolves the compile-time Fabric jars needed for Fabric-backed PSWG modules.
-	 *
-	 * @param loaderVersion the tracked Fabric Loader version
-	 * @param refresh whether to refresh downloaded artifacts
-	 * @return the compile-time Fabric jars
-	 * @throws IOException if resolution fails
-	 */
-	private Set<Path> resolveFabricCompileDependencies(String loaderVersion, boolean refresh) throws IOException
-	{
-		String cacheKey = String.valueOf(loaderVersion) + "|" + refresh;
-		Set<Path> cached = _fabricCompileDependenciesCache.get(cacheKey);
-
-		if (cached != null)
-		{
-			return cached;
-		}
-
-		Set<Path> dependencies = new LinkedHashSet<>();
-
-		if (loaderVersion == null || loaderVersion.isBlank())
-		{
-			return dependencies;
-		}
-
-		FabricRuntimeArtifacts runtimeArtifacts = _fabricRuntimeResolver.resolveClientRuntime(loaderVersion, refresh);
-		dependencies.addAll(runtimeArtifacts.classpath());
-		Set<Path> resolved = Set.copyOf(dependencies);
-		_fabricCompileDependenciesCache.put(cacheKey, resolved);
-		return resolved;
-	}
-
-	/**
-	 * Expands artifacts for IntelliJ when a dependency jar is only a container for nested jars.
-	 *
-	 * @param artifacts the resolved artifacts
-	 * @return the IntelliJ-visible classpath artifacts
-	 * @throws IOException if nested jars cannot be extracted
-	 */
-	private Set<Path> expandIntelliJLibraryArtifacts(Collection<Path> artifacts) throws IOException
-	{
-		Set<Path> expandedArtifacts = new LinkedHashSet<>();
-
-		for (Path artifact : artifacts)
-		{
-			Set<Path> nestedArtifacts = _expandedLibraryArtifactsCache.get(artifact);
-
-			if (nestedArtifacts == null)
-			{
-				nestedArtifacts = Set.copyOf(extractNestedClasspathJars(artifact));
-				_expandedLibraryArtifactsCache.put(artifact, nestedArtifacts);
-			}
-
-			if (nestedArtifacts.isEmpty())
-			{
-				expandedArtifacts.add(artifact);
-				continue;
-			}
-
-			expandedArtifacts.add(artifact);
-			expandedArtifacts.addAll(nestedArtifacts);
-		}
-
-		return expandedArtifacts;
-	}
-
-	/**
-	 * Extracts nested `META-INF/jars/*.jar` classpath entries from a container jar when present.
-	 *
-	 * @param artifact the candidate artifact
-	 * @return the extracted nested jars, or an empty list if the artifact is a normal jar
-	 * @throws IOException if extraction fails
-	 */
-	private List<Path> extractNestedClasspathJars(Path artifact) throws IOException
-	{
-		if (!artifact.getFileName().toString().endsWith(".jar"))
-		{
-			return List.of();
-		}
-
-		List<Path> nestedArtifacts = new ArrayList<>();
-		Path extractionRoot = artifact.getParent().resolve(".intellij-exploded").resolve(projectLibraryName(artifact));
-
-		try (InputStream inputStream = Files.newInputStream(artifact);
-		     ZipInputStream zipInputStream = new ZipInputStream(inputStream))
-		{
-			ZipEntry entry;
-
-			while ((entry = zipInputStream.getNextEntry()) != null)
-			{
-				if (entry.isDirectory() || !entry.getName().startsWith("META-INF/jars/") || !entry.getName().endsWith(".jar"))
-				{
-					continue;
-				}
-
-				Path target = extractionRoot.resolve(Path.of(entry.getName()).getFileName().toString());
-				Files.createDirectories(target.getParent());
-
-				try (OutputStream outputStream = Files.newOutputStream(
-					target,
-					StandardOpenOption.CREATE,
-					StandardOpenOption.TRUNCATE_EXISTING,
-					StandardOpenOption.WRITE
-				))
-				{
-					zipInputStream.transferTo(outputStream);
-				}
-
-				nestedArtifacts.add(target);
-			}
-		}
-
-		return nestedArtifacts;
-	}
-
-	/**
 	 * Adds the generated-sources component used by IntelliJ to mark AP outputs.
 	 *
 	 * @param moduleElement the module element
 	 * @param projectRoot the PSWG project root
+	 * @param module the module specification
 	 * @param generatedRoots the generated roots for the source set
 	 */
 	private void addGeneratedSourcesComponent(Element moduleElement, Path projectRoot, ModuleSpec module, List<Path> generatedRoots)
@@ -1164,10 +724,12 @@ public final class IntelliJProjectSyncService
 
 		for (Path generatedRoot : generatedRoots)
 		{
+			// IntelliJ does not reliably preserve generated-root markers when they only exist under the
+			// main content root, so we mirror them into AdditionalModuleElements the same way Gradle/JPS does.
 			Element content = additional.addElement("content");
-			content.addAttribute("url", moduleFileUrl(moduleRoot, projectRoot.resolve(generatedRoot)));
+			content.addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, projectRoot.resolve(generatedRoot)));
 			content.addElement("sourceFolder")
-			       .addAttribute("url", moduleFileUrl(moduleRoot, projectRoot.resolve(generatedRoot)))
+			       .addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, projectRoot.resolve(generatedRoot)))
 			       .addAttribute("isTestSource", "false")
 			       .addAttribute("generated", "true");
 		}
@@ -1186,7 +748,7 @@ public final class IntelliJProjectSyncService
 	{
 		return projectRoot.resolve("out")
 		                  .resolve("production")
-		                  .resolve(projectName + ".projects." + module.id() + "." + sourceSetName);
+		                  .resolve(IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
 	}
 
 	/**
@@ -1198,7 +760,7 @@ public final class IntelliJProjectSyncService
 	 */
 	private List<Path> sourceRoots(ModuleSpec module, String sourceSetName)
 	{
-		if (CLIENT_SOURCE_SET.equals(sourceSetName))
+		if (SourceSetNames.CLIENT.equals(sourceSetName))
 		{
 			return module.clientSources();
 		}
@@ -1215,7 +777,7 @@ public final class IntelliJProjectSyncService
 	 */
 	private List<Path> resourceRoots(ModuleSpec module, String sourceSetName)
 	{
-		if (CLIENT_SOURCE_SET.equals(sourceSetName))
+		if (SourceSetNames.CLIENT.equals(sourceSetName))
 		{
 			return module.clientResources();
 		}
@@ -1255,57 +817,6 @@ public final class IntelliJProjectSyncService
 	private String sanitizeLibraryFileName(String name)
 	{
 		return name.replace(':', '_').replace('/', '_').replace('\\', '_').replace(' ', '_');
-	}
-
-	/**
-	 * Builds a `jar://...!/` URL for a resolved artifact.
-	 *
-	 * @param projectRoot the PSWG project root
-	 * @param artifact the resolved artifact path
-	 * @return the jar URL
-	 */
-	private String jarUrl(Path projectRoot, Path artifact)
-	{
-		return "jar://" + projectRelativeMacro(artifact) + "!/";
-	}
-
-	/**
-	 * Builds a `file://...` URL for a project-relative path.
-	 *
-	 * @param projectRoot the PSWG project root
-	 * @param path the target path
-	 * @return the file URL
-	 */
-	private String fileUrl(Path projectRoot, Path path)
-	{
-		return "file://" + projectRelativeMacro(path);
-	}
-
-	/**
-	 * Builds a module-local `file://...` URL for a path rooted under the module directory.
-	 *
-	 * @param moduleRoot the module root path
-	 * @param path the target path
-	 * @return the file URL
-	 */
-	private String moduleFileUrl(Path moduleRoot, Path path)
-	{
-		Path normalizedModuleRoot = moduleRoot.toAbsolutePath().normalize();
-		Path normalizedPath = path.toAbsolutePath().normalize();
-
-		if (normalizedPath.startsWith(normalizedModuleRoot))
-		{
-			Path relativePath = normalizedModuleRoot.relativize(normalizedPath);
-
-			if (relativePath.toString().isEmpty())
-			{
-				return "file://$MODULE_DIR$/../../../../projects/" + normalizedModuleRoot.getFileName();
-			}
-
-			return "file://$MODULE_DIR$/../../../../projects/" + normalizedModuleRoot.getFileName() + "/" + relativePath.toString().replace('\\', '/');
-		}
-
-		return "file://" + normalizedPath.toString().replace('\\', '/');
 	}
 
 	/**
