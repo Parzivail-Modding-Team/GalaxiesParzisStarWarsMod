@@ -1,5 +1,5 @@
 plugins {
-	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.2"
+	id("com.parzivail.internal.pswg-submodule-dependencies") version "0.3"
 	id("net.fabricmc.fabric-loom")
 	`maven-publish`
 }
