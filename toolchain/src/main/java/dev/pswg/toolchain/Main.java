@@ -3,6 +3,7 @@ package dev.pswg.toolchain;
 import dev.pswg.toolchain.definition.BuildDefinition;
 import dev.pswg.toolchain.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.fabric.FabricDevLaunchInspector;
+import dev.pswg.toolchain.fabric.FabricDevLaunchService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchSummary;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.ModuleSpec;
@@ -220,6 +221,26 @@ public final class Main
 			return;
 		}
 
+		if (args.length >= 2 && "prepare-dev".equals(args[1]))
+		{
+			String defaultVersion = new PswgBuildDefinition().define().minecraftVersion();
+			String versionId = positionalVersionArg(args, 2, defaultVersion);
+			boolean refresh = hasFlag(args, "--refresh");
+			String moduleId = flagValue(args, "--module");
+			VanillaLaunchConfig config = new FabricDevLaunchService().prepareClientLaunch(versionId, refresh, moduleId);
+
+			System.out.println("Version: " + config.versionId());
+			System.out.println("Main class: " + config.mainClass());
+			System.out.println("Working directory: " + config.workingDirectory().toAbsolutePath());
+			System.out.println("Assets root: " + config.assetsRoot().toAbsolutePath());
+			if (moduleId != null)
+			{
+				System.out.println("Injected module: " + moduleId);
+			}
+			System.out.println("DLI config is written beside the launch bundle.");
+			return;
+		}
+
 		printUsage();
 		System.exit(1);
 	}
@@ -242,6 +263,26 @@ public final class Main
 		}
 
 		return false;
+	}
+
+	/**
+	 * Resolves the value following a named flag.
+	 *
+	 * @param args the command line arguments
+	 * @param flag the flag to search for
+	 * @return the following value, or {@code null}
+	 */
+	private static String flagValue(String[] args, String flag)
+	{
+		for (int i = 0; i < args.length - 1; i++)
+		{
+			if (flag.equals(args[i]))
+			{
+				return args[i + 1];
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -274,5 +315,6 @@ public final class Main
 		System.out.println("  mojang runtime [id] [--refresh]");
 		System.out.println("  vanilla prepare-ij [id] [--refresh]");
 		System.out.println("  fabric inspect-dev");
+		System.out.println("  fabric prepare-dev [id] [--refresh]");
 	}
 }
