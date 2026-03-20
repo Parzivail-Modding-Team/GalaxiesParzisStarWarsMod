@@ -7,6 +7,10 @@ repositories {
 	mavenCentral()
 }
 
+dependencies {
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.21.1")
+}
+
 java {
 	sourceCompatibility = JavaVersion.VERSION_25
 	targetCompatibility = JavaVersion.VERSION_25

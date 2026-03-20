@@ -66,4 +66,69 @@ public final class MojangPaths
 	{
 		return _mojangRoot.resolve("versions").resolve(versionId + ".json");
 	}
+
+	/**
+	 * Gets the cached vanilla client jar path for a specific Minecraft version.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @return the cached client jar path
+	 */
+	public Path clientJarFile(String versionId)
+	{
+		return _mojangRoot.resolve("versions").resolve(versionId).resolve("client.jar");
+	}
+
+	/**
+	 * Gets the cached asset index path for a specific asset index identifier.
+	 *
+	 * @param assetIndexId the asset index identifier
+	 * @return the cached asset index path
+	 */
+	public Path assetIndexFile(String assetIndexId)
+	{
+		return _mojangRoot.resolve("assets").resolve("indexes").resolve(assetIndexId + ".json");
+	}
+
+	/**
+	 * Gets the cached runtime libraries root.
+	 *
+	 * @return the runtime libraries root
+	 */
+	public Path librariesRoot()
+	{
+		return _mojangRoot.resolve("libraries");
+	}
+
+	/**
+	 * Gets the cached asset objects root.
+	 *
+	 * @return the asset objects root
+	 */
+	public Path assetObjectsRoot()
+	{
+		return _mojangRoot.resolve("assets").resolve("objects");
+	}
+
+	/**
+	 * Gets the cached path for a Mojang library artifact.
+	 *
+	 * @param artifactPath the relative library artifact path
+	 * @return the cached library file path
+	 */
+	public Path libraryFile(String artifactPath)
+	{
+		return librariesRoot().resolve(artifactPath);
+	}
+
+	/**
+	 * Gets the cached asset object path for a specific object hash.
+	 *
+	 * @param hash the asset object hash
+	 * @return the cached asset object path
+	 */
+	public Path assetObjectFile(String hash)
+	{
+		String prefix = hash.substring(0, 2);
+		return assetObjectsRoot().resolve(prefix).resolve(hash);
+	}
 }

@@ -18,7 +18,8 @@ public record MojangVersionMetadata(
 	String assets,
 	MojangVersionMetadataAssetIndex assetIndex,
 	MojangVersionMetadataDownloads downloads,
-	List<MojangVersionMetadataLibrary> libraries
+	List<MojangVersionMetadataLibrary> libraries,
+	MojangVersionMetadataLogging logging
 )
 {
 }

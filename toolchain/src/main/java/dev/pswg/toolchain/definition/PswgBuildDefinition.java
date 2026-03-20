@@ -26,7 +26,7 @@ public final class PswgBuildDefinition implements BuildDefinition
 
 		return new BuildGraph(
 			"pswg",
-			"1.21.10",
+			"26.1-rc-1",
 			modules
 		);
 	}

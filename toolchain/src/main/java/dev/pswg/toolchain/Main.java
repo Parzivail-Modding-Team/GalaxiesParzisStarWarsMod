@@ -83,6 +83,7 @@ public final class Main
 	 */
 	private static void runMojangCommand(String[] args) throws IOException
 	{
+		String defaultVersion = new PswgBuildDefinition().define().minecraftVersion();
 		MojangMetadataClient client = new MojangMetadataClient();
 		boolean refresh = hasFlag(args, "--refresh");
 
@@ -96,9 +97,9 @@ public final class Main
 			return;
 		}
 
-		if (args.length >= 3 && "version".equals(args[1]))
+		if (args.length >= 2 && "version".equals(args[1]))
 		{
-			String versionId = args[2];
+			String versionId = positionalVersionArg(args, 2, defaultVersion);
 			MojangVersionManifestEntry entry = client.getVersion(versionId, refresh);
 			MojangVersionMetadata metadata = client.getVersionMetadata(versionId, refresh);
 
@@ -110,6 +111,31 @@ public final class Main
 			System.out.println("Assets: " + metadata.assetIndex().id());
 			System.out.println("Libraries: " + metadata.libraries().size());
 			System.out.println("Client download: " + metadata.downloads().client().url());
+			return;
+		}
+
+		if (args.length >= 2 && "download".equals(args[1]))
+		{
+			String versionId = positionalVersionArg(args, 2, defaultVersion);
+			MojangVersionMetadata metadata = client.getVersionMetadata(versionId, refresh);
+
+			System.out.println("Version: " + versionId);
+			System.out.println("Client jar: " + client.downloadClientJar(versionId, refresh));
+			System.out.println("Asset index: " + client.downloadAssetIndex(versionId, refresh));
+			System.out.println("Assets id: " + metadata.assetIndex().id());
+			return;
+		}
+
+		if (args.length >= 2 && "runtime".equals(args[1]))
+		{
+			String versionId = positionalVersionArg(args, 2, defaultVersion);
+			MojangMetadataClient.RuntimeDownloadResult result = client.downloadRuntime(versionId, refresh);
+
+			System.out.println("Version: " + versionId);
+			System.out.println("Libraries downloaded: " + result.libraryCount());
+			System.out.println("Asset objects downloaded: " + result.assetObjectCount());
+			System.out.println("Libraries root: " + result.librariesRoot());
+			System.out.println("Assets root: " + result.assetsObjectsRoot());
 			return;
 		}
 
@@ -138,12 +164,32 @@ public final class Main
 	}
 
 	/**
+	 * Resolves an optional positional version argument, falling back to the PSWG default version.
+	 *
+	 * @param args the command line arguments
+	 * @param index the version argument index
+	 * @param defaultVersion the default PSWG Minecraft version
+	 * @return the resolved version identifier
+	 */
+	private static String positionalVersionArg(String[] args, int index, String defaultVersion)
+	{
+		if (args.length > index && !args[index].startsWith("--"))
+		{
+			return args[index];
+		}
+
+		return defaultVersion;
+	}
+
+	/**
 	 * Prints the supported command usage.
 	 */
 	private static void printUsage()
 	{
 		System.out.println("Usage:");
 		System.out.println("  mojang manifest [--refresh]");
-		System.out.println("  mojang version <id> [--refresh]");
+		System.out.println("  mojang version [id] [--refresh]");
+		System.out.println("  mojang download [id] [--refresh]");
+		System.out.println("  mojang runtime [id] [--refresh]");
 	}
 }

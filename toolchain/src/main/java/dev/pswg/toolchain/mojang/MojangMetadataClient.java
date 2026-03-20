@@ -1,25 +1,25 @@
 package dev.pswg.toolchain.mojang;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dev.pswg.toolchain.mojang.model.MojangVersionManifest;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifestEntry;
-import dev.pswg.toolchain.mojang.model.MojangVersionManifestLatest;
+import dev.pswg.toolchain.mojang.model.MojangAssetIndex;
+import dev.pswg.toolchain.mojang.model.MojangAssetObject;
+import dev.pswg.toolchain.mojang.model.MojangRule;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
-import dev.pswg.toolchain.mojang.model.MojangVersionMetadataAssetIndex;
-import dev.pswg.toolchain.mojang.model.MojangVersionMetadataDownload;
-import dev.pswg.toolchain.mojang.model.MojangVersionMetadataDownloads;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadataLibrary;
-import dev.pswg.toolchain.util.json.JsonParser;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -31,6 +31,11 @@ public final class MojangMetadataClient
 	 * The official Mojang version manifest endpoint.
 	 */
 	public static final URI VERSION_MANIFEST_URI = URI.create("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json");
+
+	/**
+	 * The shared JSON object mapper.
+	 */
+	private final ObjectMapper _mapper;
 
 	/**
 	 * The shared HTTP client.
@@ -47,6 +52,7 @@ public final class MojangMetadataClient
 	 */
 	public MojangMetadataClient()
 	{
+		_mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		_httpClient = HttpClient.newHttpClient();
 		_paths = new MojangPaths();
 	}
@@ -70,35 +76,11 @@ public final class MojangMetadataClient
 	 */
 	public MojangVersionManifest getVersionManifest(boolean refresh) throws IOException
 	{
-		Map<String, Object> root = readCachedObject(
+		return readCachedJson(
 			VERSION_MANIFEST_URI,
 			_paths.versionManifestFile(),
+			MojangVersionManifest.class,
 			refresh
-		);
-
-		Map<String, Object> latest = requireObject(root, "latest");
-		List<Map<String, Object>> versions = requireObjectList(root, "versions");
-		List<MojangVersionManifestEntry> entries = new ArrayList<>();
-
-		for (Map<String, Object> version : versions)
-		{
-			entries.add(new MojangVersionManifestEntry(
-				requireString(version, "id"),
-				requireString(version, "type"),
-				requireString(version, "url"),
-				stringValue(version.get("time")),
-				stringValue(version.get("releaseTime")),
-				stringValue(version.get("sha1")),
-				intValue(version.get("complianceLevel"))
-			));
-		}
-
-		return new MojangVersionManifest(
-			new MojangVersionManifestLatest(
-				requireString(latest, "release"),
-				requireString(latest, "snapshot")
-			),
-			entries
 		);
 	}
 
@@ -132,42 +114,102 @@ public final class MojangMetadataClient
 	public MojangVersionMetadata getVersionMetadata(String versionId, boolean refresh) throws IOException
 	{
 		MojangVersionManifestEntry version = getVersion(versionId, refresh);
-		Map<String, Object> root = readCachedObject(
+
+		return readCachedJson(
 			URI.create(version.url()),
 			_paths.versionMetadataFile(versionId),
+			MojangVersionMetadata.class,
 			refresh
 		);
+	}
 
-		Map<String, Object> assetIndex = requireObject(root, "assetIndex");
-		Map<String, Object> downloads = requireObject(root, "downloads");
-		Map<String, Object> client = requireObject(downloads, "client");
-		List<Map<String, Object>> libraries = requireObjectList(root, "libraries");
-		List<MojangVersionMetadataLibrary> libraryEntries = new ArrayList<>();
+	/**
+	 * Downloads the vanilla client jar for a resolved Minecraft version.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param refresh whether to force a fresh download
+	 * @return the cached client jar path
+	 * @throws IOException if the jar cannot be downloaded
+	 */
+	public Path downloadClientJar(String versionId, boolean refresh) throws IOException
+	{
+		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
+		Path target = _paths.clientJarFile(versionId);
+		ensureCached(URI.create(metadata.downloads().client().url()), target, refresh);
+		return target;
+	}
 
-		for (Map<String, Object> library : libraries)
+	/**
+	 * Downloads the asset index JSON for a resolved Minecraft version.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param refresh whether to force a fresh download
+	 * @return the cached asset index path
+	 * @throws IOException if the asset index cannot be downloaded
+	 */
+	public Path downloadAssetIndex(String versionId, boolean refresh) throws IOException
+	{
+		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
+		Path target = _paths.assetIndexFile(metadata.assetIndex().id());
+		ensureCached(URI.create(metadata.assetIndex().url()), target, refresh);
+		return target;
+	}
+
+	/**
+	 * Downloads the runtime libraries and asset objects required by a selected version.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param refresh whether to force fresh downloads
+	 * @return the runtime download summary
+	 * @throws IOException if runtime files cannot be downloaded
+	 */
+	public RuntimeDownloadResult downloadRuntime(String versionId, boolean refresh) throws IOException
+	{
+		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
+		Path assetIndexPath = downloadAssetIndex(versionId, refresh);
+		MojangAssetIndex assetIndex = readCachedJson(
+			URI.create(metadata.assetIndex().url()),
+			assetIndexPath,
+			MojangAssetIndex.class,
+			false
+		);
+
+		int libraryCount = 0;
+
+		for (MojangVersionMetadataLibrary library : metadata.libraries())
 		{
-			libraryEntries.add(new MojangVersionMetadataLibrary(requireString(library, "name")));
+			if (!isAllowed(library.rules()))
+			{
+				continue;
+			}
+
+			if (library.downloads() == null || library.downloads().artifact() == null)
+			{
+				continue;
+			}
+
+			Path target = _paths.libraryFile(library.downloads().artifact().path());
+			ensureCached(URI.create(library.downloads().artifact().url()), target, refresh);
+			libraryCount++;
 		}
 
-		return new MojangVersionMetadata(
-			requireString(root, "id"),
-			requireString(root, "mainClass"),
-			requireString(root, "assets"),
-			new MojangVersionMetadataAssetIndex(
-				requireString(assetIndex, "id"),
-				stringValue(assetIndex.get("sha1")),
-				longValue(assetIndex.get("size")),
-				longValue(assetIndex.get("totalSize")),
-				requireString(assetIndex, "url")
-			),
-			new MojangVersionMetadataDownloads(
-				new MojangVersionMetadataDownload(
-					stringValue(client.get("sha1")),
-					longValue(client.get("size")),
-					requireString(client, "url")
-				)
-			),
-			libraryEntries
+		int assetObjectCount = 0;
+
+		for (Map.Entry<String, MojangAssetObject> entry : assetIndex.objects().entrySet())
+		{
+			MojangAssetObject object = entry.getValue();
+			Path target = _paths.assetObjectFile(object.hash());
+			String prefix = object.hash().substring(0, 2);
+			URI source = URI.create("https://resources.download.minecraft.net/" + prefix + "/" + object.hash());
+			ensureCached(source, target, refresh);
+			assetObjectCount++;
+		}
+
+		return new RuntimeDownloadResult(
+			libraryCount,
+			assetObjectCount,
+			_paths.librariesRoot(),
+			_paths.assetObjectsRoot()
 		);
 	}
 
@@ -180,20 +222,14 @@ public final class MojangMetadataClient
 	 * @return the parsed JSON object
 	 * @throws IOException if the file cannot be read or downloaded
 	 */
-	private Map<String, Object> readCachedObject(URI sourceUri, Path cacheFile, boolean refresh) throws IOException
+	private <T> T readCachedJson(URI sourceUri, Path cacheFile, Class<T> type, boolean refresh) throws IOException
 	{
 		ensureCached(sourceUri, cacheFile, refresh);
-		String json = Files.readString(cacheFile, StandardCharsets.UTF_8);
-		Object parsed = JsonParser.parse(json);
 
-		if (parsed instanceof Map<?, ?> map)
+		try (InputStream inputStream = Files.newInputStream(cacheFile))
 		{
-			@SuppressWarnings("unchecked")
-			Map<String, Object> object = (Map<String, Object>) map;
-			return object;
+			return _mapper.readValue(inputStream, type);
 		}
-
-		throw new IOException("Expected JSON object in " + cacheFile);
 	}
 
 	/**
@@ -235,112 +271,99 @@ public final class MojangMetadataClient
 	}
 
 	/**
-	 * Reads a required string field from an object.
+	 * Evaluates Mojang library rules for the current runtime environment.
 	 *
-	 * @param object the JSON object
-	 * @param key the field name
-	 * @return the string value
-	 * @throws IOException if the field is missing or invalid
+	 * @param rules the optional rule list
+	 * @return {@code true} if the library should be included
 	 */
-	private static String requireString(Map<String, Object> object, String key) throws IOException
+	private boolean isAllowed(java.util.List<MojangRule> rules)
 	{
-		Object value = object.get(key);
-
-		if (value instanceof String string)
+		if (rules == null || rules.isEmpty())
 		{
-			return string;
+			return true;
 		}
 
-		throw new IOException("Missing or invalid string field: " + key);
-	}
+		boolean allowed = false;
 
-	/**
-	 * Reads a required nested object field from an object.
-	 *
-	 * @param object the JSON object
-	 * @param key the field name
-	 * @return the nested object
-	 * @throws IOException if the field is missing or invalid
-	 */
-	private static Map<String, Object> requireObject(Map<String, Object> object, String key) throws IOException
-	{
-		Object value = object.get(key);
-
-		if (value instanceof Map<?, ?> map)
+		for (MojangRule rule : rules)
 		{
-			@SuppressWarnings("unchecked")
-			Map<String, Object> nested = (Map<String, Object>) map;
-			return nested;
-		}
-
-		throw new IOException("Missing or invalid object field: " + key);
-	}
-
-	/**
-	 * Reads a required array of nested objects from an object.
-	 *
-	 * @param object the JSON object
-	 * @param key the field name
-	 * @return the nested object list
-	 * @throws IOException if the field is missing or invalid
-	 */
-	private static List<Map<String, Object>> requireObjectList(Map<String, Object> object, String key) throws IOException
-	{
-		Object value = object.get(key);
-
-		if (!(value instanceof List<?> list))
-		{
-			throw new IOException("Missing or invalid array field: " + key);
-		}
-
-		List<Map<String, Object>> nestedObjects = new ArrayList<>();
-
-		for (Object entry : list)
-		{
-			if (entry instanceof Map<?, ?> map)
+			if (!matches(rule))
 			{
-				@SuppressWarnings("unchecked")
-				Map<String, Object> nested = (Map<String, Object>) map;
-				nestedObjects.add(nested);
 				continue;
 			}
 
-			throw new IOException("Expected object entry in array field: " + key);
+			if ("allow".equals(rule.action()))
+			{
+				allowed = true;
+			}
+			else if ("disallow".equals(rule.action()))
+			{
+				allowed = false;
+			}
 		}
 
-		return nestedObjects;
+		return allowed;
 	}
 
 	/**
-	 * Converts an optional value to a string.
+	 * Checks whether a rule matches the current runtime environment.
 	 *
-	 * @param value the source value
-	 * @return the string value, or {@code null}
+	 * @param rule the rule to evaluate
+	 * @return {@code true} if the rule matches
 	 */
-	private static String stringValue(Object value)
+	private boolean matches(MojangRule rule)
 	{
-		return value instanceof String string ? string : null;
+		if (rule == null || rule.os() == null)
+		{
+			return true;
+		}
+
+		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+		String osArch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
+
+		if (rule.os().name() != null)
+		{
+			String expectedOs = switch (rule.os().name())
+			{
+				case "windows" -> "windows";
+				case "osx" -> "mac";
+				case "linux" -> "linux";
+				default -> rule.os().name().toLowerCase(Locale.ROOT);
+			};
+
+			if (!osName.contains(expectedOs))
+			{
+				return false;
+			}
+		}
+
+		if (rule.os().arch() != null)
+		{
+			String expectedArch = rule.os().arch().toLowerCase(Locale.ROOT);
+
+			if (!osArch.equals(expectedArch))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
-	 * Converts an optional numeric value to an integer.
+	 * Summary of downloaded runtime inputs.
 	 *
-	 * @param value the source value
-	 * @return the integer value, or {@code null}
+	 * @param libraryCount the number of downloaded runtime libraries
+	 * @param assetObjectCount the number of downloaded asset objects
+	 * @param librariesRoot the cached libraries root
+	 * @param assetsObjectsRoot the cached asset objects root
 	 */
-	private static Integer intValue(Object value)
+	public record RuntimeDownloadResult(
+		int libraryCount,
+		int assetObjectCount,
+		Path librariesRoot,
+		Path assetsObjectsRoot
+	)
 	{
-		return value instanceof Number number ? number.intValue() : null;
-	}
-
-	/**
-	 * Converts an optional numeric value to a long.
-	 *
-	 * @param value the source value
-	 * @return the long value, or {@code null}
-	 */
-	private static Long longValue(Object value)
-	{
-		return value instanceof Number number ? number.longValue() : null;
 	}
 }
