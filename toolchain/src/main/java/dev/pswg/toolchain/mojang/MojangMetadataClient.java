@@ -564,7 +564,67 @@ public final class MojangMetadataClient
 			}
 		}
 
+		if (rule.os().versionRange() != null)
+		{
+			String osVersion = System.getProperty("os.version", "");
+			String minVersion = rule.os().versionRange().min();
+			String maxVersion = rule.os().versionRange().max();
+
+			if (minVersion != null && compareVersions(osVersion, minVersion) < 0)
+			{
+				return false;
+			}
+
+			if (maxVersion != null && compareVersions(osVersion, maxVersion) > 0)
+			{
+				return false;
+			}
+		}
+
 		return true;
+	}
+
+	/**
+	 * Compares dotted numeric version strings such as Windows build versions.
+	 *
+	 * @param left the first version
+	 * @param right the second version
+	 * @return a negative number if {@code left < right}, zero if equal, otherwise positive
+	 */
+	private int compareVersions(String left, String right)
+	{
+		String[] leftParts = left.split("[^0-9]+");
+		String[] rightParts = right.split("[^0-9]+");
+		int partCount = Math.max(leftParts.length, rightParts.length);
+
+		for (int i = 0; i < partCount; i++)
+		{
+			int leftValue = i < leftParts.length ? parseVersionPart(leftParts[i]) : 0;
+			int rightValue = i < rightParts.length ? parseVersionPart(rightParts[i]) : 0;
+
+			if (leftValue != rightValue)
+			{
+				return Integer.compare(leftValue, rightValue);
+			}
+		}
+
+		return 0;
+	}
+
+	/**
+	 * Parses a numeric version segment, treating blanks as zero.
+	 *
+	 * @param value the version segment
+	 * @return the parsed numeric value
+	 */
+	private int parseVersionPart(String value)
+	{
+		if (value == null || value.isBlank())
+		{
+			return 0;
+		}
+
+		return Integer.parseInt(value);
 	}
 
 	/**

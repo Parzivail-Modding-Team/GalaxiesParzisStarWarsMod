@@ -7,11 +7,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @param name the OS name
  * @param arch the OS architecture constraint
+ * @param versionRange the optional operating system version range constraint
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record MojangRuleOs(
 	String name,
-	String arch
+	String arch,
+	MojangVersionRange versionRange
 )
 {
 }
