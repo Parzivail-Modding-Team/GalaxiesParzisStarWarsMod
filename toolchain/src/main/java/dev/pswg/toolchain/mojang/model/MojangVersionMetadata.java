@@ -1,5 +1,7 @@
 package dev.pswg.toolchain.mojang.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,8 @@ import java.util.List;
  * @param assetIndex the asset index metadata
  * @param downloads the core downloadable artifacts
  * @param libraries the declared runtime libraries
+ * @param logging the logging metadata
+ * @param arguments the raw JVM and game argument tree
  */
 public record MojangVersionMetadata(
 	String id,
@@ -19,7 +23,8 @@ public record MojangVersionMetadata(
 	MojangVersionMetadataAssetIndex assetIndex,
 	MojangVersionMetadataDownloads downloads,
 	List<MojangVersionMetadataLibrary> libraries,
-	MojangVersionMetadataLogging logging
+	MojangVersionMetadataLogging logging,
+	JsonNode arguments
 )
 {
 }

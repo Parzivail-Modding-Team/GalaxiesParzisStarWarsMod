@@ -178,8 +178,48 @@ public final class MojangMetadataClient
 	{
 		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
 		Path target = _paths.assetIndexFile(metadata.assetIndex().id());
-		ensureCached(URI.create(metadata.assetIndex().url()), target, refresh);
+		download(URI.create(metadata.assetIndex().url()), target, refresh);
 		return target;
+	}
+
+	/**
+	 * Downloads a single file into the toolchain cache.
+	 *
+	 * @param sourceUri the source URI
+	 * @param targetFile the target cache file
+	 * @param refresh whether to force a fresh download
+	 * @throws IOException if the file cannot be downloaded
+	 */
+	public void download(URI sourceUri, Path targetFile, boolean refresh) throws IOException
+	{
+		ensureCached(sourceUri, targetFile, refresh);
+	}
+
+	/**
+	 * Checks whether a runtime library should be included for the current host platform.
+	 *
+	 * @param library the library to evaluate
+	 * @return {@code true} if the library should be included
+	 */
+	public boolean isLibraryAllowed(MojangVersionMetadataLibrary library)
+	{
+		if (!isAllowed(library.rules()))
+		{
+			return false;
+		}
+
+		return matchesLibraryPlatform(library);
+	}
+
+	/**
+	 * Checks whether a Mojang rule matches the current host platform.
+	 *
+	 * @param rule the rule to evaluate
+	 * @return {@code true} if the rule matches
+	 */
+	public boolean matchesRule(MojangRule rule)
+	{
+		return matches(rule);
 	}
 
 	/**
@@ -205,7 +245,7 @@ public final class MojangMetadataClient
 
 		for (MojangVersionMetadataLibrary library : metadata.libraries())
 		{
-			if (!isAllowed(library.rules()))
+			if (!isLibraryAllowed(library))
 			{
 				continue;
 			}
@@ -525,6 +565,142 @@ public final class MojangMetadataClient
 		}
 
 		return true;
+	}
+
+	/**
+	 * Checks whether a library classifier matches the current host platform.
+	 *
+	 * @param library the library to inspect
+	 * @return {@code true} if the library matches the current host platform
+	 */
+	private boolean matchesLibraryPlatform(MojangVersionMetadataLibrary library)
+	{
+		if (library.name() == null)
+		{
+			return true;
+		}
+
+		String[] parts = library.name().split(":");
+
+		if (parts.length < 4)
+		{
+			return true;
+		}
+
+		String classifier = parts[3].toLowerCase(Locale.ROOT);
+		String currentOs = currentOs();
+		String currentArch = currentArch();
+
+		if (classifier.contains("windows"))
+		{
+			if (!"windows".equals(currentOs))
+			{
+				return false;
+			}
+
+			if (classifier.contains("arm64"))
+			{
+				return "arm64".equals(currentArch);
+			}
+
+			if (classifier.contains("x86"))
+			{
+				return "x86".equals(currentArch);
+			}
+
+			return true;
+		}
+
+		if (classifier.contains("linux"))
+		{
+			if (!"linux".equals(currentOs))
+			{
+				return false;
+			}
+
+			if (classifier.contains("aarch_64") || classifier.contains("arm64"))
+			{
+				return "arm64".equals(currentArch);
+			}
+
+			if (classifier.contains("x86_64") || classifier.contains("amd64"))
+			{
+				return "x86_64".equals(currentArch);
+			}
+
+			return true;
+		}
+
+		if (classifier.contains("macos") || classifier.contains("osx"))
+		{
+			if (!"osx".equals(currentOs))
+			{
+				return false;
+			}
+
+			if (classifier.contains("arm64"))
+			{
+				return "arm64".equals(currentArch);
+			}
+
+			return true;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Resolves the current host operating system to Mojang's canonical names.
+	 *
+	 * @return the current host operating system
+	 */
+	private String currentOs()
+	{
+		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+
+		if (osName.contains("win"))
+		{
+			return "windows";
+		}
+
+		if (osName.contains("mac"))
+		{
+			return "osx";
+		}
+
+		if (osName.contains("linux"))
+		{
+			return "linux";
+		}
+
+		return osName;
+	}
+
+	/**
+	 * Resolves the current host architecture to normalized classifier names.
+	 *
+	 * @return the current host architecture
+	 */
+	private String currentArch()
+	{
+		String osArch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
+
+		if ("amd64".equals(osArch) || "x86_64".equals(osArch))
+		{
+			return "x86_64";
+		}
+
+		if ("x86".equals(osArch) || "i386".equals(osArch))
+		{
+			return "x86";
+		}
+
+		if ("aarch64".equals(osArch) || "arm64".equals(osArch))
+		{
+			return "arm64";
+		}
+
+		return osArch;
 	}
 
 	/**

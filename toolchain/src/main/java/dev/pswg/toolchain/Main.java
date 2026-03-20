@@ -8,6 +8,8 @@ import dev.pswg.toolchain.mojang.MojangMetadataClient;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifest;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifestEntry;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
+import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
+import dev.pswg.toolchain.runtime.VanillaLaunchService;
 
 import java.io.IOException;
 
@@ -62,6 +64,12 @@ public final class Main
 			if ("mojang".equals(args[0]))
 			{
 				runMojangCommand(args);
+				return;
+			}
+
+			if ("vanilla".equals(args[0]))
+			{
+				runVanillaCommand(args);
 				return;
 			}
 
@@ -144,6 +152,35 @@ public final class Main
 	}
 
 	/**
+	 * Executes vanilla client preparation commands.
+	 *
+	 * @param args command line arguments
+	 * @throws IOException if launch preparation fails
+	 */
+	private static void runVanillaCommand(String[] args) throws IOException
+	{
+		String defaultVersion = new PswgBuildDefinition().define().minecraftVersion();
+		boolean refresh = hasFlag(args, "--refresh");
+
+		if (args.length >= 2 && "prepare-ij".equals(args[1]))
+		{
+			String versionId = positionalVersionArg(args, 2, defaultVersion);
+			VanillaLaunchConfig config = new VanillaLaunchService().prepareIntelliJLaunch(versionId, refresh);
+
+			System.out.println("Version: " + config.versionId());
+			System.out.println("Main class: " + config.mainClass());
+			System.out.println("Launch config: " + config.workingDirectory().getParent().resolve("launch.json").toAbsolutePath());
+			System.out.println("Game directory: " + config.gameDirectory().toAbsolutePath());
+			System.out.println("Assets root: " + config.assetsRoot().toAbsolutePath());
+			System.out.println("Natives directory: " + config.nativesDirectory().toAbsolutePath());
+			return;
+		}
+
+		printUsage();
+		System.exit(1);
+	}
+
+	/**
 	 * Checks whether a flag is present in the argument list.
 	 *
 	 * @param args the command line arguments
@@ -191,5 +228,6 @@ public final class Main
 		System.out.println("  mojang version [id] [--refresh]");
 		System.out.println("  mojang download [id] [--refresh]");
 		System.out.println("  mojang runtime [id] [--refresh]");
+		System.out.println("  vanilla prepare-ij [id] [--refresh]");
 	}
 }
