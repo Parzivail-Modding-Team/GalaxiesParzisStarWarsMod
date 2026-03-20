@@ -13,11 +13,11 @@ import dev.pswg.feature.brewing.MixerBrewingPaths;
 import dev.pswg.feature.brewing.MixerFoodColors;
 import dev.pswg.networking.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import org.slf4j.Logger;
 
 import java.io.InputStream;
@@ -71,27 +71,17 @@ public final class Gadgets implements GalaxiesAddon
 
 		PayloadTypeRegistry.clientboundPlay().register(MixerSyncS2CPayload.ID, MixerSyncS2CPayload.CODEC);
 
-		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener()
+		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(Gadgets.id("brewing_maps"), (ResourceManagerReloadListener)manager ->
 		{
-			@Override
-			public Identifier getFabricId()
+			for (Identifier id : manager.listResources("brewing_map", path -> true).keySet())
 			{
-				return Gadgets.id("brewing_maps");
-			}
-
-			@Override
-			public void onResourceManagerReload(ResourceManager manager)
-			{
-				for (Identifier id : manager.listResources("brewing_map", path -> true).keySet())
+				try (InputStream stream = manager.getResource(id).get().open())
 				{
-					try (InputStream stream = manager.getResource(id).get().open())
-					{
-						BrewingMap.init(stream);
-					}
-					catch (Exception e)
-					{
-						Gadgets.LOGGER.error("Error occurred while loading brewing map " + id.toString(), e);
-					}
+					BrewingMap.init(stream);
+				}
+				catch (Exception e)
+				{
+					Gadgets.LOGGER.error("Error occurred while loading brewing map " + id.toString(), e);
 				}
 			}
 		});

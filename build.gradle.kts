@@ -90,11 +90,13 @@ allprojects {
 		implementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
 	}
 
+	val resolvedVersion = version.toString()
+
 	tasks.processResources {
-		inputs.property("version", project.version)
+		inputs.property("version", resolvedVersion)
 
 		filesMatching("fabric.mod.json") {
-			expand("version" to project.version)
+			expand("version" to resolvedVersion)
 		}
 	}
 

@@ -1,5 +1,6 @@
 package dev.pswg.rendering.models;
 
+import com.google.common.base.Suppliers;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -42,18 +43,13 @@ public class GqbItemModel implements ItemModel
 	 * @param properties     The resolved render properties.
 	 * @param transformation The local transformation to apply.
 	 */
-	public GqbItemModel(
-			List<ItemTintSource> tints,
-			QuadCollection quads,
-			ModelRenderProperties properties,
-			Matrix4fc transformation
-	)
+	public GqbItemModel(List<ItemTintSource> tints, QuadCollection quads, ModelRenderProperties properties, Matrix4fc transformation)
 	{
 		_tints = tints;
 		_quads = quads;
 		_properties = properties;
 		_transformation = transformation;
-		_extents = new MemoizedSupplier<>(() -> computeExtents(quads.getAll()));
+		_extents = Suppliers.memoize(() -> computeExtents(quads.getAll()));
 	}
 
 	@Override
@@ -123,35 +119,15 @@ public class GqbItemModel implements ItemModel
 		return result.toArray(Vector3fc[]::new);
 	}
 
+	/**
+	 * Returns true if the given item stack has a special animated texture.
+	 *
+	 * @param itemStack The item stack to check.
+	 *
+	 * @return True if the item stack has a special animated texture, false otherwise.
+	 */
 	private static boolean hasSpecialAnimatedTexture(ItemStack itemStack)
 	{
-		return itemStack.is(ItemTags.COMPASSES) || itemStack.is(Items.CLOCK);
-	}
-
-	/**
-	 * A tiny memoizing supplier to avoid adding Guava here.
-	 *
-	 * @param <T> The supplied type.
-	 */
-	private static final class MemoizedSupplier<T> implements Supplier<T>
-	{
-		private final Supplier<T> _delegate;
-		private @Nullable T _value;
-
-		private MemoizedSupplier(Supplier<T> delegate)
-		{
-			_delegate = delegate;
-		}
-
-		@Override
-		public T get()
-		{
-			if (_value == null)
-			{
-				_value = _delegate.get();
-			}
-
-			return _value;
-		}
+		return false;
 	}
 }
