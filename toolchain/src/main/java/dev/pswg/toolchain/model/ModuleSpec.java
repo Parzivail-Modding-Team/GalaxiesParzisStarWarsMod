@@ -63,9 +63,29 @@ public final class ModuleSpec
 	private final List<Path> _generatedSources;
 
 	/**
+	 * The generated client source roots.
+	 */
+	private final List<Path> _generatedClientSources;
+
+	/**
 	 * The declared mixin configuration files.
 	 */
 	private final List<Path> _mixins;
+
+	/**
+	 * The declared external compile Maven dependencies.
+	 */
+	private final List<MavenDependencySpec> _compileDependencies;
+
+	/**
+	 * The declared external client-only compile Maven dependencies.
+	 */
+	private final List<MavenDependencySpec> _clientDependencies;
+
+	/**
+	 * The declared external annotation processor Maven dependencies.
+	 */
+	private final List<MavenDependencySpec> _annotationProcessorDependencies;
 
 	/**
 	 * The declared external runtime Maven dependencies.
@@ -99,7 +119,11 @@ public final class ModuleSpec
 		_dependencies = new ArrayList<>();
 		_annotationProcessors = new ArrayList<>();
 		_generatedSources = new ArrayList<>();
+		_generatedClientSources = new ArrayList<>();
 		_mixins = new ArrayList<>();
+		_compileDependencies = new ArrayList<>();
+		_clientDependencies = new ArrayList<>();
+		_annotationProcessorDependencies = new ArrayList<>();
 		_runtimeDependencies = new ArrayList<>();
 	}
 
@@ -204,6 +228,16 @@ public final class ModuleSpec
 	}
 
 	/**
+	 * Gets the generated client source roots.
+	 *
+	 * @return the immutable generated client source roots
+	 */
+	public List<Path> generatedClientSources()
+	{
+		return List.copyOf(_generatedClientSources);
+	}
+
+	/**
 	 * Gets the declared mixin configuration files.
 	 *
 	 * @return the immutable mixin configuration paths
@@ -221,6 +255,36 @@ public final class ModuleSpec
 	public List<MavenDependencySpec> runtimeDependencies()
 	{
 		return List.copyOf(_runtimeDependencies);
+	}
+
+	/**
+	 * Gets the declared external compile Maven dependencies.
+	 *
+	 * @return the immutable compile Maven dependencies
+	 */
+	public List<MavenDependencySpec> compileDependencies()
+	{
+		return List.copyOf(_compileDependencies);
+	}
+
+	/**
+	 * Gets the declared external client-only compile Maven dependencies.
+	 *
+	 * @return the immutable client-only compile Maven dependencies
+	 */
+	public List<MavenDependencySpec> clientDependencies()
+	{
+		return List.copyOf(_clientDependencies);
+	}
+
+	/**
+	 * Gets the declared external annotation processor Maven dependencies.
+	 *
+	 * @return the immutable annotation processor Maven dependencies
+	 */
+	public List<MavenDependencySpec> annotationProcessorDependencies()
+	{
+		return List.copyOf(_annotationProcessorDependencies);
 	}
 
 	/**
@@ -340,6 +404,18 @@ public final class ModuleSpec
 	}
 
 	/**
+	 * Adds a generated client source root.
+	 *
+	 * @param path the generated client source root
+	 * @return this module specification
+	 */
+	public ModuleSpec generatedClientSources(Path path)
+	{
+		_generatedClientSources.add(path);
+		return this;
+	}
+
+	/**
 	 * Declares a mixin configuration file.
 	 *
 	 * @param path the mixin configuration file
@@ -348,6 +424,45 @@ public final class ModuleSpec
 	public ModuleSpec mixin(Path path)
 	{
 		_mixins.add(path);
+		return this;
+	}
+
+	/**
+	 * Declares an external compile Maven dependency.
+	 *
+	 * @param notation the dependency coordinate notation
+	 * @param repository the repository that serves the dependency
+	 * @return this module specification
+	 */
+	public ModuleSpec compileDependency(String notation, URI repository)
+	{
+		_compileDependencies.add(new MavenDependencySpec(notation, repository));
+		return this;
+	}
+
+	/**
+	 * Declares an external client-only compile Maven dependency.
+	 *
+	 * @param notation the dependency coordinate notation
+	 * @param repository the repository that serves the dependency
+	 * @return this module specification
+	 */
+	public ModuleSpec clientDependency(String notation, URI repository)
+	{
+		_clientDependencies.add(new MavenDependencySpec(notation, repository));
+		return this;
+	}
+
+	/**
+	 * Declares an external annotation processor Maven dependency.
+	 *
+	 * @param notation the dependency coordinate notation
+	 * @param repository the repository that serves the dependency
+	 * @return this module specification
+	 */
+	public ModuleSpec annotationProcessorDependency(String notation, URI repository)
+	{
+		_annotationProcessorDependencies.add(new MavenDependencySpec(notation, repository));
 		return this;
 	}
 

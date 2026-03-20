@@ -1,6 +1,7 @@
 package dev.pswg.toolchain.pswg.definition;
 
 import dev.pswg.toolchain.definition.ClientCommonFabricModuleDefinition;
+import dev.pswg.toolchain.maven.ToolchainMavenCoordinates;
 import dev.pswg.toolchain.maven.ToolchainMavenRepositories;
 import dev.pswg.toolchain.model.ModuleSpec;
 
@@ -30,8 +31,10 @@ public final class PswgCoreDefinition extends ClientCommonFabricModuleDefinition
 	{
 		spec.dependency("framework");
 		spec.annotationProcessor("framework-generator");
-		spec.runtimeDependency("net.fabricmc.fabric-api:fabric-api:${fabric_version}", ToolchainMavenRepositories.FABRIC);
+		spec.compileDependency(ToolchainMavenCoordinates.FABRIC_API, ToolchainMavenRepositories.FABRIC);
+		spec.runtimeDependency(ToolchainMavenCoordinates.FABRIC_API, ToolchainMavenRepositories.FABRIC);
 		spec.generatedSources(spec.paths().generatedAnnotationProcessorMain());
+		spec.generatedClientSources(spec.paths().generatedAnnotationProcessorClient());
 		spec.datagenOutput(spec.paths().generatedDatagen());
 		spec.mixin(spec.paths().mainResource("pswg.mixins.json"));
 		spec.mixin(spec.paths().mainResource("errorman.mixins.json"));

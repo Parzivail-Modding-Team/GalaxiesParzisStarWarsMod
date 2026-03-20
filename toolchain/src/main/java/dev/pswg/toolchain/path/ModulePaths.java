@@ -83,6 +83,16 @@ public final class ModulePaths
 	}
 
 	/**
+	 * Gets the standard client annotation processor output root.
+	 *
+	 * @return the generated client source root
+	 */
+	public Path generatedAnnotationProcessorClient()
+	{
+		return resolve("build/generated/sources/annotationProcessor/java/client");
+	}
+
+	/**
 	 * Gets the standard checked-in datagen output root.
 	 *
 	 * @return the datagen output root

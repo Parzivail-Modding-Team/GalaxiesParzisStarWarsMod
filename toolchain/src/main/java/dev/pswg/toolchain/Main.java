@@ -4,6 +4,7 @@ import dev.pswg.toolchain.definition.BuildDefinition;
 import dev.pswg.toolchain.fabric.FabricDevLaunchInspector;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchSummary;
+import dev.pswg.toolchain.intellij.IntelliJProjectSyncService;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.mojang.MojangMetadataClient;
@@ -73,6 +74,12 @@ public final class Main
 			if ("fabric".equals(args[0]))
 			{
 				runFabricCommand(args);
+				return;
+			}
+
+			if ("idea".equals(args[0]))
+			{
+				runIdeaCommand(args);
 				return;
 			}
 
@@ -219,6 +226,26 @@ public final class Main
 	}
 
 	/**
+	 * Executes IntelliJ metadata generation commands.
+	 *
+	 * @param args command line arguments
+	 * @throws IOException if metadata generation fails
+	 */
+	private static void runIdeaCommand(String[] args) throws IOException
+	{
+		if (args.length >= 2 && "sync-pswg".equals(args[1]))
+		{
+			boolean refresh = hasFlag(args, "--refresh");
+			new IntelliJProjectSyncService().syncPswgProject(refresh);
+			System.out.println("Synchronized IntelliJ compiler metadata into the PSWG repo.");
+			return;
+		}
+
+		printUsage();
+		System.exit(1);
+	}
+
+	/**
 	 * Checks whether a flag is present in the argument list.
 	 *
 	 * @param args the command line arguments
@@ -305,5 +332,6 @@ public final class Main
 		System.out.println("  mojang runtime [id] [--refresh]");
 		System.out.println("  fabric inspect-dev");
 		System.out.println("  fabric prepare-dev [id] [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
+		System.out.println("  idea sync-pswg [--refresh]");
 	}
 }

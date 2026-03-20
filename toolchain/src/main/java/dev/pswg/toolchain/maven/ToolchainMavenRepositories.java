@@ -8,6 +8,11 @@ import java.net.URI;
 public final class ToolchainMavenRepositories
 {
 	/**
+	 * Maven Central.
+	 */
+	public static final URI MAVEN_CENTRAL = URI.create("https://repo1.maven.org/maven2/");
+
+	/**
 	 * The Fabric Maven repository root.
 	 */
 	public static final URI FABRIC = URI.create("https://maven.fabricmc.net/");
