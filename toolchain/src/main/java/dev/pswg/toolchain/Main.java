@@ -1,7 +1,6 @@
 package dev.pswg.toolchain;
 
 import dev.pswg.toolchain.definition.BuildDefinition;
-import dev.pswg.toolchain.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.fabric.FabricDevLaunchInspector;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchSummary;
@@ -11,8 +10,9 @@ import dev.pswg.toolchain.mojang.MojangMetadataClient;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifest;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifestEntry;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
+import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
+import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
-import dev.pswg.toolchain.runtime.VanillaLaunchService;
 
 import java.io.IOException;
 
@@ -67,12 +67,6 @@ public final class Main
 			if ("mojang".equals(args[0]))
 			{
 				runMojangCommand(args);
-				return;
-			}
-
-			if ("vanilla".equals(args[0]))
-			{
-				runVanillaCommand(args);
 				return;
 			}
 
@@ -161,36 +155,7 @@ public final class Main
 	}
 
 	/**
-	 * Executes vanilla client preparation commands.
-	 *
-	 * @param args command line arguments
-	 * @throws IOException if launch preparation fails
-	 */
-	private static void runVanillaCommand(String[] args) throws IOException
-	{
-		String defaultVersion = new PswgBuildDefinition().define().minecraftVersion();
-		boolean refresh = hasFlag(args, "--refresh");
-
-		if (args.length >= 2 && "prepare-ij".equals(args[1]))
-		{
-			String versionId = positionalVersionArg(args, 2, defaultVersion);
-			VanillaLaunchConfig config = new VanillaLaunchService().prepareIntelliJLaunch(versionId, refresh);
-
-			System.out.println("Version: " + config.versionId());
-			System.out.println("Main class: " + config.mainClass());
-			System.out.println("Launch config: " + config.workingDirectory().getParent().resolve("launch.json").toAbsolutePath());
-			System.out.println("Game directory: " + config.gameDirectory().toAbsolutePath());
-			System.out.println("Assets root: " + config.assetsRoot().toAbsolutePath());
-			System.out.println("Natives directory: " + config.nativesDirectory().toAbsolutePath());
-			return;
-		}
-
-		printUsage();
-		System.exit(1);
-	}
-
-	/**
-	 * Executes Fabric inspection commands.
+	 * Executes Fabric inspection and launch-preparation commands.
 	 *
 	 * @param args command line arguments
 	 * @throws IOException if inspection fails
@@ -227,7 +192,13 @@ public final class Main
 			String versionId = positionalVersionArg(args, 2, defaultVersion);
 			boolean refresh = hasFlag(args, "--refresh");
 			String moduleId = flagValue(args, "--module");
-			VanillaLaunchConfig config = new FabricDevLaunchService().prepareClientLaunch(versionId, refresh, moduleId);
+			LaunchIdentity identity = resolveLaunchIdentity(args);
+			VanillaLaunchConfig config = new FabricDevLaunchService().prepareClientLaunch(
+				versionId,
+				refresh,
+				moduleId,
+				identity
+			);
 
 			System.out.println("Version: " + config.versionId());
 			System.out.println("Main class: " + config.mainClass());
@@ -237,6 +208,8 @@ public final class Main
 			{
 				System.out.println("Injected module: " + moduleId);
 			}
+			System.out.println("Username: " + identity.username());
+			System.out.println("UUID: " + identity.uuid());
 			System.out.println("DLI config is written beside the launch bundle.");
 			return;
 		}
@@ -286,6 +259,23 @@ public final class Main
 	}
 
 	/**
+	 * Resolves the launch identity from CLI flags, falling back to the default development identity.
+	 *
+	 * @param args the command line arguments
+	 * @return the resolved launch identity
+	 */
+	private static LaunchIdentity resolveLaunchIdentity(String[] args)
+	{
+		String username = flagValue(args, "--username");
+		String uuid = flagValue(args, "--uuid");
+
+		return new LaunchIdentity(
+			username == null || username.isBlank() ? LaunchIdentity.DEFAULT_USERNAME : username,
+			uuid == null || uuid.isBlank() ? LaunchIdentity.DEFAULT_UUID : uuid
+		);
+	}
+
+	/**
 	 * Resolves an optional positional version argument, falling back to the PSWG default version.
 	 *
 	 * @param args the command line arguments
@@ -313,8 +303,7 @@ public final class Main
 		System.out.println("  mojang version [id] [--refresh]");
 		System.out.println("  mojang download [id] [--refresh]");
 		System.out.println("  mojang runtime [id] [--refresh]");
-		System.out.println("  vanilla prepare-ij [id] [--refresh]");
 		System.out.println("  fabric inspect-dev");
-		System.out.println("  fabric prepare-dev [id] [--refresh]");
+		System.out.println("  fabric prepare-dev [id] [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
 	}
 }

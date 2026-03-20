@@ -2,6 +2,7 @@ package dev.pswg.toolchain.model;
 
 import dev.pswg.toolchain.path.ModulePaths;
 
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,11 @@ public final class ModuleSpec
 	private final List<Path> _mixins;
 
 	/**
+	 * The declared external runtime Maven dependencies.
+	 */
+	private final List<MavenDependencySpec> _runtimeDependencies;
+
+	/**
 	 * The optional Fabric mod descriptor path.
 	 */
 	private Path _fabricModJson;
@@ -94,6 +100,7 @@ public final class ModuleSpec
 		_annotationProcessors = new ArrayList<>();
 		_generatedSources = new ArrayList<>();
 		_mixins = new ArrayList<>();
+		_runtimeDependencies = new ArrayList<>();
 	}
 
 	/**
@@ -204,6 +211,16 @@ public final class ModuleSpec
 	public List<Path> mixins()
 	{
 		return List.copyOf(_mixins);
+	}
+
+	/**
+	 * Gets the declared external runtime Maven dependencies.
+	 *
+	 * @return the immutable runtime Maven dependencies
+	 */
+	public List<MavenDependencySpec> runtimeDependencies()
+	{
+		return List.copyOf(_runtimeDependencies);
 	}
 
 	/**
@@ -331,6 +348,19 @@ public final class ModuleSpec
 	public ModuleSpec mixin(Path path)
 	{
 		_mixins.add(path);
+		return this;
+	}
+
+	/**
+	 * Declares an external runtime Maven dependency.
+	 *
+	 * @param notation the dependency coordinate notation
+	 * @param repository the repository that serves the dependency
+	 * @return this module specification
+	 */
+	public ModuleSpec runtimeDependency(String notation, URI repository)
+	{
+		_runtimeDependencies.add(new MavenDependencySpec(notation, repository));
 		return this;
 	}
 

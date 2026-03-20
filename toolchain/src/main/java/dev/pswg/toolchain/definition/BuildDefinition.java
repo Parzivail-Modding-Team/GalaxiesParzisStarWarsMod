@@ -3,7 +3,7 @@ package dev.pswg.toolchain.definition;
 import dev.pswg.toolchain.model.BuildGraph;
 
 /**
- * Defines a complete PSWG build graph.
+ * Defines a complete toolchain build graph.
  */
 public interface BuildDefinition
 {

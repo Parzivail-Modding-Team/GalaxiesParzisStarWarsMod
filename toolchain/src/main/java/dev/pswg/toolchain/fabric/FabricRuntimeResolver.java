@@ -1,5 +1,8 @@
 package dev.pswg.toolchain.fabric;
 
+import dev.pswg.toolchain.maven.ToolchainMavenRepositories;
+import dev.pswg.toolchain.model.MavenDependencySpec;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -10,6 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -22,7 +26,7 @@ public final class FabricRuntimeResolver
 	/**
 	 * The Fabric Maven repository.
 	 */
-	public static final URI FABRIC_MAVEN = URI.create("https://maven.fabricmc.net/");
+	public static final URI FABRIC_MAVEN = ToolchainMavenRepositories.FABRIC;
 
 	/**
 	 * Loom's current development launch injector version.
@@ -98,6 +102,28 @@ public final class FabricRuntimeResolver
 			runtimeMainClass,
 			List.copyOf(classpath),
 			mixinJavaAgentJar
+		);
+	}
+
+	/**
+	 * Resolves a declared module runtime dependency against the provided properties.
+	 *
+	 * @param dependency the declared runtime dependency
+	 * @param properties the available property substitutions
+	 * @param refresh whether to force a fresh download
+	 * @return the resolved dependency artifact
+	 * @throws IOException if the artifact cannot be downloaded
+	 */
+	public Path resolveRuntimeDependency(
+		MavenDependencySpec dependency,
+		Properties properties,
+		boolean refresh
+	) throws IOException
+	{
+		return _artifactResolver.resolve(
+			MavenCoordinate.parse(substituteProperties(dependency.notation(), properties)),
+			dependency.repository(),
+			refresh
 		);
 	}
 
@@ -201,5 +227,24 @@ public final class FabricRuntimeResolver
 		}
 
 		throw new IOException("Fabric installer metadata is missing from " + loaderJar);
+	}
+
+	/**
+	 * Applies simple Gradle-style property substitution to a notation string.
+	 *
+	 * @param value the raw notation value
+	 * @param properties the available properties
+	 * @return the substituted notation value
+	 */
+	private String substituteProperties(String value, Properties properties)
+	{
+		String substituted = value;
+
+		for (String propertyName : properties.stringPropertyNames())
+		{
+			substituted = substituted.replace("${" + propertyName + "}", properties.getProperty(propertyName));
+		}
+
+		return substituted;
 	}
 }

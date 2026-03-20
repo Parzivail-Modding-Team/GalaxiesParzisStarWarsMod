@@ -1,5 +1,6 @@
-package dev.pswg.toolchain.definition;
+package dev.pswg.toolchain.pswg.definition;
 
+import dev.pswg.toolchain.definition.BuildDefinition;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.ModuleSpec;
 

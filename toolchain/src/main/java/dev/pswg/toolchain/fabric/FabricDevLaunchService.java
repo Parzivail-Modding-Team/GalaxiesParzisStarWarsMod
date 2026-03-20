@@ -1,9 +1,11 @@
 package dev.pswg.toolchain.fabric;
 
-import dev.pswg.toolchain.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.mojang.MojangPaths;
 import dev.pswg.toolchain.model.BuildGraph;
+import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
+import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
+import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.runtime.VanillaLaunchService;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
@@ -22,8 +24,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Prepares a Fabric-style development launch configuration from toolchain metadata.
@@ -34,6 +37,36 @@ public final class FabricDevLaunchService
 	 * The Fabric dev launch injector entrypoint.
 	 */
 	public static final String DEV_LAUNCH_MAIN_CLASS = "net.fabricmc.devlaunchinjector.Main";
+
+	/**
+	 * The default namespace used for development-time mod distribution.
+	 */
+	public static final String DEFAULT_MOD_DISTRIBUTION_NAMESPACE = "official";
+
+	/**
+	 * The default Mixin remap mode for the current dev runtime model.
+	 */
+	public static final String DEFAULT_MIXIN_REMAP_TYPE = "static";
+
+	/**
+	 * Whether ANSI logging is enabled in generated development launches.
+	 */
+	public static final boolean DEFAULT_ANSI_LOGGING_ENABLED = true;
+
+	/**
+	 * The IntelliJ output directory segment used for compiled module outputs.
+	 */
+	public static final String INTELLIJ_OUTPUT_DIRECTORY = "out/production";
+
+	/**
+	 * The standard main source set name.
+	 */
+	public static final String MAIN_SOURCE_SET = "main";
+
+	/**
+	 * The standard client source set name.
+	 */
+	public static final String CLIENT_SOURCE_SET = "client";
 
 	/**
 	 * The shared JSON serializer.
@@ -64,11 +97,11 @@ public final class FabricDevLaunchService
 	 */
 	public VanillaLaunchConfig prepareClientLaunch(String versionId, boolean refresh) throws IOException
 	{
-		return prepareClientLaunch(versionId, refresh, null);
+		return prepareClientLaunch(versionId, refresh, null, LaunchIdentity.defaults());
 	}
 
 	/**
-	 * Prepares a Fabric-style development launch bundle for the client environment.
+	 * Prepares a Fabric-style development launch bundle using the default development identity.
 	 *
 	 * @param versionId the Minecraft version identifier
 	 * @param refresh whether to force fresh runtime downloads
@@ -78,11 +111,138 @@ public final class FabricDevLaunchService
 	 */
 	public VanillaLaunchConfig prepareClientLaunch(String versionId, boolean refresh, String moduleId) throws IOException
 	{
-		VanillaLaunchConfig vanillaLaunch = new VanillaLaunchService().prepareIntelliJLaunch(versionId, refresh);
-		String loaderVersion = loadGradleProperties().getProperty("loader_version");
-		FabricRuntimeArtifacts runtimeArtifacts = _runtimeResolver.resolveClientRuntime(loaderVersion, refresh);
+		return prepareClientLaunch(versionId, refresh, moduleId, LaunchIdentity.defaults());
+	}
+
+	/**
+	 * Prepares a Fabric-style development launch bundle for the client environment.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param refresh whether to force fresh runtime downloads
+	 * @param moduleId the optional PSWG module identifier to inject
+	 * @param identity the launch-time player identity
+	 * @return the prepared launch configuration
+	 * @throws IOException if generation fails
+	 */
+	public VanillaLaunchConfig prepareClientLaunch(
+		String versionId,
+		boolean refresh,
+		String moduleId,
+		LaunchIdentity identity
+	) throws IOException
+	{
 		Path projectRoot = Path.of("").toAbsolutePath().normalize();
-		List<Path> moduleRoots = resolveModuleRuntimeRoots(projectRoot.getParent(), moduleId);
+		Path repoRoot = projectRoot.getParent();
+		Properties gradleProperties = loadGradleProperties();
+		VanillaLaunchConfig vanillaLaunch = new VanillaLaunchService().prepareClientRuntime(versionId, refresh, identity);
+		FabricRuntimeArtifacts runtimeArtifacts = resolveFabricRuntimeArtifacts(gradleProperties, refresh);
+		FabricModuleInjection moduleInjection = resolveModuleInjection(repoRoot, moduleId, gradleProperties, refresh);
+		FabricLaunchPaths launchPaths = createLaunchPaths(projectRoot, versionId);
+
+		prepareLaunchFiles(versionId, vanillaLaunch, moduleInjection.moduleRoots(), launchPaths);
+		List<String> jvmArgs = buildFabricJvmArgs(
+			vanillaLaunch,
+			runtimeArtifacts,
+			moduleInjection,
+			launchPaths
+		);
+		VanillaLaunchConfig fabricLaunch = createFabricLaunchConfig(
+			versionId,
+			jvmArgs,
+			launchPaths.loggingConfigPath(),
+			vanillaLaunch,
+			identity
+		);
+
+		writeLaunchJson(launchPaths.serializedLaunchPath(), fabricLaunch);
+		writeIdeaRunConfiguration(
+			projectRoot,
+			launchPaths.ideaRunConfigurationPath(),
+			launchPaths.serializedLaunchPath(),
+			launchPaths.platformDisplayName()
+		);
+		return fabricLaunch;
+	}
+
+	/**
+	 * Resolves the Fabric-side runtime artifacts implied by the tracked PSWG properties.
+	 *
+	 * @param gradleProperties the tracked repository Gradle properties
+	 * @param refresh whether to force fresh runtime downloads
+	 * @return the resolved Fabric runtime artifacts
+	 * @throws IOException if the runtime artifacts cannot be resolved
+	 */
+	private FabricRuntimeArtifacts resolveFabricRuntimeArtifacts(Properties gradleProperties, boolean refresh) throws IOException
+	{
+		String loaderVersion = gradleProperties.getProperty("loader_version");
+		return _runtimeResolver.resolveClientRuntime(loaderVersion, refresh);
+	}
+
+	/**
+	 * Resolves the optional module injection contract for a generated Fabric launch.
+	 *
+	 * @param repoRoot the tracked repository root
+	 * @param moduleId the optional module identifier
+	 * @param gradleProperties the tracked repository Gradle properties
+	 * @param refresh whether to force fresh artifact downloads
+	 * @return the resolved module injection contract
+	 * @throws IOException if supporting external runtime dependencies cannot be resolved
+	 */
+	private FabricModuleInjection resolveModuleInjection(
+		Path repoRoot,
+		String moduleId,
+		Properties gradleProperties,
+		boolean refresh
+	) throws IOException
+	{
+		if (moduleId == null || moduleId.isBlank())
+		{
+			return new FabricModuleInjection(
+				null,
+				List.of(),
+				List.of(),
+				List.of()
+			);
+		}
+
+		BuildGraph graph = new PswgBuildDefinition().define();
+		ModuleSpec rootModule = requireModule(graph, moduleId);
+		List<Path> moduleRoots = resolveOutputRoots(repoRoot, rootModule);
+		List<Path> dependencyRoots = new ArrayList<>();
+		List<MavenDependencySpec> runtimeDependencies = new ArrayList<>(rootModule.runtimeDependencies());
+		Set<String> visited = new LinkedHashSet<>();
+
+		for (String dependencyId : rootModule.dependencies())
+		{
+			collectDependencyRuntimeData(
+				repoRoot,
+				graph,
+				dependencyId,
+				visited,
+				dependencyRoots,
+				runtimeDependencies
+			);
+		}
+
+		List<Path> externalRuntimeArtifacts = resolveRuntimeDependencies(runtimeDependencies, gradleProperties, refresh);
+
+		return new FabricModuleInjection(
+			moduleId,
+			moduleRoots,
+			dependencyRoots.stream().distinct().toList(),
+			externalRuntimeArtifacts
+		);
+	}
+
+	/**
+	 * Creates the standard path layout for a generated Fabric client launch bundle.
+	 *
+	 * @param projectRoot the toolchain project root
+	 * @param versionId the Minecraft version identifier
+	 * @return the derived launch paths
+	 */
+	private FabricLaunchPaths createLaunchPaths(Path projectRoot, String versionId)
+	{
 		String platformId = currentPlatformId();
 		String platformDisplayName = currentPlatformDisplayName(platformId);
 		Path instanceRoot = projectRoot.resolve("work")
@@ -91,40 +251,170 @@ public final class FabricDevLaunchService
 		                               .resolve(platformId)
 		                               .resolve(versionId);
 		Path configDirectory = instanceRoot.resolve("config");
-		Path launchConfigPath = configDirectory.resolve("launch.cfg");
-		Path loggingConfigPath = configDirectory.resolve("log4j2-intellij.xml");
-		Path serializedLaunchPath = instanceRoot.resolve("launch.json");
-		Path ideaRunConfigurationPath = projectRoot.resolve(".idea")
-		                                          .resolve("runConfigurations")
-		                                          .resolve("Fabric_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml");
 
-		Files.createDirectories(configDirectory);
-		Files.createDirectories(instanceRoot);
-		writeLoggingConfig(vanillaLaunch, loggingConfigPath);
+		return new FabricLaunchPaths(
+			platformId,
+			platformDisplayName,
+			instanceRoot,
+			configDirectory.resolve("launch.cfg"),
+			configDirectory.resolve("log4j2-intellij.xml"),
+			instanceRoot.resolve("launch.json"),
+			projectRoot.resolve(".idea")
+			           .resolve("runConfigurations")
+			           .resolve("Fabric_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml")
+		);
+	}
+
+	/**
+	 * Prepares generated files that sit beside a Fabric client launch bundle.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param vanillaLaunch the prepared vanilla launch baseline
+	 * @param moduleRoots the injected grouped module roots
+	 * @param launchPaths the generated launch path layout
+	 * @throws IOException if any generated file cannot be written
+	 */
+	private void prepareLaunchFiles(
+		String versionId,
+		VanillaLaunchConfig vanillaLaunch,
+		List<Path> moduleRoots,
+		FabricLaunchPaths launchPaths
+	) throws IOException
+	{
+		Files.createDirectories(launchPaths.configDirectory());
+		Files.createDirectories(launchPaths.instanceRoot());
+		writeLoggingConfig(vanillaLaunch, launchPaths.loggingConfigPath());
 		prepareFabricAssetIndex(versionId, vanillaLaunch.assetIndexId());
-		writeDevLaunchConfig(versionId, vanillaLaunch, moduleRoots, launchConfigPath, loggingConfigPath);
+		writeDevLaunchConfig(
+			versionId,
+			vanillaLaunch,
+			moduleRoots,
+			launchPaths.launchConfigPath(),
+			launchPaths.loggingConfigPath()
+		);
+	}
 
+	/**
+	 * Builds the final JVM argument list for a generated Fabric client launch.
+	 *
+	 * @param vanillaLaunch the prepared vanilla launch baseline
+	 * @param runtimeArtifacts the resolved Fabric runtime artifacts
+	 * @param moduleInjection the resolved module injection contract
+	 * @param launchPaths the generated launch path layout
+	 * @return the final JVM argument list
+	 */
+	private List<String> buildFabricJvmArgs(
+		VanillaLaunchConfig vanillaLaunch,
+		FabricRuntimeArtifacts runtimeArtifacts,
+		FabricModuleInjection moduleInjection,
+		FabricLaunchPaths launchPaths
+	)
+	{
 		List<String> jvmArgs = new ArrayList<>(vanillaLaunch.jvmArgs());
-		List<Path> prependedClasspath = new ArrayList<>(moduleRoots);
-		prependedClasspath.addAll(runtimeArtifacts.classpath());
+		List<Path> prependedClasspath = buildPrependedClasspath(moduleInjection, runtimeArtifacts);
 		replaceClasspath(jvmArgs, prependedClasspath);
+		replaceLoggingConfiguration(jvmArgs, launchPaths.loggingConfigPath());
+		addFabricRuntimeProperties(jvmArgs, runtimeArtifacts, launchPaths);
+		addHostCompatibilityFlags(jvmArgs);
+		addMixinJavaAgent(jvmArgs, runtimeArtifacts);
+		return jvmArgs;
+	}
+
+	/**
+	 * Builds the classpath entries that must appear ahead of the vanilla runtime.
+	 *
+	 * @param moduleInjection the resolved module injection contract
+	 * @param runtimeArtifacts the resolved Fabric runtime artifacts
+	 * @return the ordered prepended classpath entries
+	 */
+	private List<Path> buildPrependedClasspath(
+		FabricModuleInjection moduleInjection,
+		FabricRuntimeArtifacts runtimeArtifacts
+	)
+	{
+		List<Path> prependedClasspath = new ArrayList<>(moduleInjection.moduleRoots());
+		prependedClasspath.addAll(moduleInjection.dependencyRoots());
+		prependedClasspath.addAll(moduleInjection.externalRuntimeArtifacts());
+		prependedClasspath.addAll(runtimeArtifacts.classpath());
+		return prependedClasspath;
+	}
+
+	/**
+	 * Replaces the logging configuration path inherited from the vanilla baseline.
+	 *
+	 * @param jvmArgs the JVM argument list
+	 * @param loggingConfigPath the generated Fabric logging configuration path
+	 */
+	private void replaceLoggingConfiguration(List<String> jvmArgs, Path loggingConfigPath)
+	{
 		jvmArgs.removeIf(argument -> argument.startsWith("-Dlog4j.configurationFile="));
-		jvmArgs.add("-Dfabric.dli.config=" + launchConfigPath.toAbsolutePath());
+		jvmArgs.add("-Dlog4j.configurationFile=" + loggingConfigPath.toAbsolutePath());
+		jvmArgs.add("-Dlog4j2.formatMsgNoLookups=true");
+		jvmArgs.add("-Dfabric.log.disableAnsi=" + !DEFAULT_ANSI_LOGGING_ENABLED);
+	}
+
+	/**
+	 * Adds the core Fabric dev-launch runtime properties.
+	 *
+	 * @param jvmArgs the JVM argument list
+	 * @param runtimeArtifacts the resolved Fabric runtime artifacts
+	 * @param launchPaths the generated launch path layout
+	 */
+	private void addFabricRuntimeProperties(
+		List<String> jvmArgs,
+		FabricRuntimeArtifacts runtimeArtifacts,
+		FabricLaunchPaths launchPaths
+	)
+	{
+		jvmArgs.add("-Dfabric.dli.config=" + launchPaths.launchConfigPath().toAbsolutePath());
 		jvmArgs.add("-Dfabric.dli.env=client");
 		jvmArgs.add("-Dfabric.dli.main=" + runtimeArtifacts.runtimeMainClass());
 		jvmArgs.add("-Dfabric.development=true");
-		jvmArgs.add("-Dlog4j.configurationFile=" + loggingConfigPath.toAbsolutePath());
-		jvmArgs.add("-Dlog4j2.formatMsgNoLookups=true");
-		jvmArgs.add("-Dfabric.log.disableAnsi=false");
+	}
+
+	/**
+	 * Adds conservative JVM compatibility flags used by modern Minecraft launches.
+	 *
+	 * @param jvmArgs the JVM argument list
+	 */
+	private void addHostCompatibilityFlags(List<String> jvmArgs)
+	{
 		addIfMissing(jvmArgs, "--sun-misc-unsafe-memory-access=allow");
 		addIfMissing(jvmArgs, "--enable-native-access=ALL-UNNAMED");
+	}
 
+	/**
+	 * Adds the optional Mixin javaagent when the resolved runtime requires it.
+	 *
+	 * @param jvmArgs the JVM argument list
+	 * @param runtimeArtifacts the resolved Fabric runtime artifacts
+	 */
+	private void addMixinJavaAgent(List<String> jvmArgs, FabricRuntimeArtifacts runtimeArtifacts)
+	{
 		if (runtimeArtifacts.mixinJavaAgentJar() != null)
 		{
 			addIfMissing(jvmArgs, "-javaagent:" + runtimeArtifacts.mixinJavaAgentJar().toAbsolutePath());
 		}
+	}
 
-		VanillaLaunchConfig fabricLaunch = new VanillaLaunchConfig(
+	/**
+	 * Creates the final serialized Fabric launch config.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param jvmArgs the resolved JVM arguments
+	 * @param loggingConfigPath the generated logging configuration path
+	 * @param vanillaLaunch the prepared vanilla launch baseline
+	 * @return the serialized Fabric launch configuration
+	 */
+	private VanillaLaunchConfig createFabricLaunchConfig(
+		String versionId,
+		List<String> jvmArgs,
+		Path loggingConfigPath,
+		VanillaLaunchConfig vanillaLaunch,
+		LaunchIdentity identity
+	)
+	{
+		return new VanillaLaunchConfig(
 			versionId,
 			DEV_LAUNCH_MAIN_CLASS,
 			vanillaLaunch.javaExecutable(),
@@ -136,12 +426,8 @@ public final class FabricDevLaunchService
 			loggingConfigPath,
 			vanillaLaunch.classpath(),
 			jvmArgs,
-			List.of("--username", "Dev")
+			List.of("--username", identity.username(), "--uuid", identity.uuid())
 		);
-
-		writeLaunchJson(serializedLaunchPath, fabricLaunch);
-		writeIdeaRunConfiguration(projectRoot, ideaRunConfigurationPath, serializedLaunchPath, platformDisplayName);
-		return fabricLaunch;
 	}
 
 	/**
@@ -248,8 +534,8 @@ public final class FabricDevLaunchService
 	{
 		Map<String, String> values = new LinkedHashMap<>();
 		values.put("LOG4J_CONFIGURATION_FILE", loggingConfigPath.toAbsolutePath().toString());
-		values.put("FABRIC_DEFAULT_MOD_DISTRIBUTION_NAMESPACE", "official");
-		values.put("FABRIC_DEFAULT_MIXIN_REMAP_TYPE", "static");
+		values.put("FABRIC_DEFAULT_MOD_DISTRIBUTION_NAMESPACE", DEFAULT_MOD_DISTRIBUTION_NAMESPACE);
+		values.put("FABRIC_DEFAULT_MIXIN_REMAP_TYPE", DEFAULT_MIXIN_REMAP_TYPE);
 		values.put("OPTIONAL_COMMON_PROPERTIES", optionalCommonProperties(moduleRoots));
 		values.put("ASSET_INDEX", versionId + "-" + vanillaLaunch.assetIndexId());
 		values.put("ASSETS_DIR", vanillaLaunch.assetsRoot().toAbsolutePath().toString());
@@ -285,35 +571,144 @@ public final class FabricDevLaunchService
 			return "";
 		}
 
+		// Fabric groups split class/resource roots into a single logical mod using pathSeparator-delimited entries.
 		return "\tfabric.classPathGroups=" + joinedRoots + "\n";
 	}
 
 	/**
-	 * Resolves the runtime-visible output roots for an injected PSWG module.
+	 * Resolves a module from the authoritative PSWG graph.
+	 *
+	 * @param graph the authoritative build graph
+	 * @param moduleId the module identifier
+	 * @return the resolved module specification
+	 */
+	private ModuleSpec requireModule(BuildGraph graph, String moduleId)
+	{
+		return graph.modules()
+		            .stream()
+		            .filter(candidate -> moduleId.equals(candidate.id()))
+		            .findFirst()
+		            .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + moduleId));
+	}
+
+	/**
+	 * Collects runtime roots and runtime Maven dependencies for a transitive modeled dependency.
 	 *
 	 * @param projectRoot the tracked repository root
-	 * @param moduleId the optional module identifier
-	 * @return the ordered classpath roots to inject
+	 * @param graph the build graph
+	 * @param moduleId the dependency module identifier
+	 * @param visited the visited dependency identifiers
+	 * @param roots the accumulated runtime roots
+	 * @param runtimeDependencies the accumulated runtime Maven dependencies
 	 */
-	private List<Path> resolveModuleRuntimeRoots(Path projectRoot, String moduleId)
+	private void collectDependencyRuntimeData(
+		Path projectRoot,
+		BuildGraph graph,
+		String moduleId,
+		Set<String> visited,
+		List<Path> roots,
+		List<MavenDependencySpec> runtimeDependencies
+	)
 	{
-		if (moduleId == null || moduleId.isBlank())
+		if (!visited.add(moduleId))
 		{
-			return List.of();
+			return;
 		}
 
-		BuildGraph graph = new PswgBuildDefinition().define();
-		Optional<ModuleSpec> module = graph.modules()
-		                                  .stream()
-		                                  .filter(candidate -> moduleId.equals(candidate.id()))
-		                                  .findFirst();
+		ModuleSpec module = requireModule(graph, moduleId);
+		roots.addAll(resolveOutputRoots(projectRoot, module));
+		runtimeDependencies.addAll(module.runtimeDependencies());
 
-		if (module.isEmpty())
+		for (String dependencyId : module.dependencies())
 		{
-			throw new IllegalArgumentException("Unknown module id: " + moduleId);
+			collectDependencyRuntimeData(
+				projectRoot,
+				graph,
+				dependencyId,
+				visited,
+				roots,
+				runtimeDependencies
+			);
+		}
+	}
+
+	/**
+	 * Resolves declared module runtime Maven dependencies into concrete jars.
+	 *
+	 * @param runtimeDependencies the declared runtime dependencies
+	 * @param gradleProperties the tracked repository Gradle properties
+	 * @param refresh whether to force fresh downloads
+	 * @return the resolved runtime dependency jars
+	 * @throws IOException if any dependency cannot be resolved
+	 */
+	private List<Path> resolveRuntimeDependencies(
+		List<MavenDependencySpec> runtimeDependencies,
+		Properties gradleProperties,
+		boolean refresh
+	) throws IOException
+	{
+		List<Path> artifacts = new ArrayList<>();
+
+		for (MavenDependencySpec runtimeDependency : runtimeDependencies)
+		{
+			Path artifact = _runtimeResolver.resolveRuntimeDependency(runtimeDependency, gradleProperties, refresh);
+
+			if (!artifacts.contains(artifact))
+			{
+				artifacts.add(artifact);
+			}
 		}
 
-		return resolveOutputRoots(projectRoot, module.get());
+		return artifacts;
+	}
+
+	/**
+	 * Derived path layout for a generated Fabric client launch bundle.
+	 *
+	 * @param platformId the current platform identifier
+	 * @param platformDisplayName the current platform display name
+	 * @param instanceRoot the Fabric instance root
+	 * @param launchConfigPath the generated DLI launch config path
+	 * @param loggingConfigPath the generated log4j configuration path
+	 * @param serializedLaunchPath the serialized launch JSON path
+	 * @param ideaRunConfigurationPath the generated IntelliJ run configuration path
+	 */
+	private record FabricLaunchPaths(
+		String platformId,
+		String platformDisplayName,
+		Path instanceRoot,
+		Path launchConfigPath,
+		Path loggingConfigPath,
+		Path serializedLaunchPath,
+		Path ideaRunConfigurationPath
+	)
+	{
+		/**
+		 * Gets the generated configuration directory.
+		 *
+		 * @return the configuration directory
+		 */
+		public Path configDirectory()
+		{
+			return launchConfigPath.getParent();
+		}
+	}
+
+	/**
+	 * The resolved module injection contract for a generated Fabric launch.
+	 *
+	 * @param moduleId the optional injected module identifier
+	 * @param moduleRoots the roots that form the injected grouped mod
+	 * @param dependencyRoots the plain classpath roots for modeled module dependencies
+	 * @param externalRuntimeArtifacts the external runtime artifacts required by the injected module
+	 */
+	private record FabricModuleInjection(
+		String moduleId,
+		List<Path> moduleRoots,
+		List<Path> dependencyRoots,
+		List<Path> externalRuntimeArtifacts
+	)
+	{
 	}
 
 	/**
@@ -326,8 +721,8 @@ public final class FabricDevLaunchService
 	private List<Path> resolveOutputRoots(Path projectRoot, ModuleSpec module)
 	{
 		List<Path> roots = new ArrayList<>();
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, "main"));
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, "client"));
+		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, MAIN_SOURCE_SET));
+		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, CLIENT_SOURCE_SET));
 
 		return roots.stream()
 		            .distinct()
@@ -345,8 +740,9 @@ public final class FabricDevLaunchService
 	 */
 	private List<Path> resolveSourceSetOutputRoots(Path projectRoot, ModuleSpec module, String sourceSetName)
 	{
+		// IntelliJ compiles module outputs into a single directory per source set module.
 		String moduleName = readProjectName(projectRoot) + ".projects." + module.id() + "." + sourceSetName;
-		Path intellijOutput = projectRoot.resolve("out").resolve("production").resolve(moduleName);
+		Path intellijOutput = projectRoot.resolve(INTELLIJ_OUTPUT_DIRECTORY).resolve(moduleName);
 
 		if (Files.isDirectory(intellijOutput))
 		{

@@ -1,7 +1,6 @@
 package dev.pswg.toolchain.runtime;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,14 +31,19 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Prepares serialized vanilla launch configurations and IntelliJ run configurations.
+ * Prepares the shared Mojang client runtime baseline used by generated development launches.
  */
 public final class VanillaLaunchService
 {
 	/**
-	 * The IntelliJ module name for the standalone toolchain main source set.
+	 * The launcher brand exposed to Minecraft.
 	 */
-	private static final String INTELLIJ_MODULE_NAME = "pswg-toolchain.main";
+	public static final String DEFAULT_LAUNCHER_NAME = "PSWG Toolchain";
+
+	/**
+	 * The launcher version exposed to Minecraft.
+	 */
+	public static final String DEFAULT_LAUNCHER_VERSION = "0.1";
 
 	/**
 	 * The standalone Mojang metadata client.
@@ -61,44 +65,166 @@ public final class VanillaLaunchService
 	}
 
 	/**
-	 * Prepares a vanilla client launch configuration and an IntelliJ run configuration file.
+	 * Prepares the shared Mojang client runtime baseline for downstream launchers.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param refresh whether to force fresh runtime downloads
+	 * @param identity the launch-time player identity
+	 * @return the prepared launch configuration
+	 * @throws IOException if preparation fails
+	 */
+	public VanillaLaunchConfig prepareClientRuntime(
+		String versionId,
+		boolean refresh,
+		LaunchIdentity identity
+	) throws IOException
+	{
+		MojangVersionMetadata metadata = prepareVanillaRuntime(versionId, refresh);
+		VanillaLaunchPaths launchPaths = createLaunchPaths(versionId);
+		prepareLaunchDirectories(launchPaths);
+		List<Path> classpath = buildClasspath(versionId, metadata);
+		extractNativeLibraries(metadata, launchPaths.nativesDirectory());
+		Path loggingConfiguration = prepareLoggingConfiguration(
+			launchPaths.instanceRoot(),
+			launchPaths.gameDirectory(),
+			metadata,
+			refresh
+		);
+		Map<String, String> variables = buildLaunchVariables(
+			versionId,
+			loggingConfiguration,
+			classpath,
+			launchPaths,
+			metadata,
+			identity
+		);
+		List<String> jvmArgs = buildJvmArgs(metadata, variables, loggingConfiguration);
+		List<String> gameArgs = buildGameArgs(metadata, variables);
+
+		return new VanillaLaunchConfig(
+			versionId,
+			metadata.mainClass(),
+			findJavaExecutable(),
+			launchPaths.gameDirectory(),
+			launchPaths.gameDirectory(),
+			_mojangClient.paths().mojangRoot().resolve("assets"),
+			metadata.assetIndex().id(),
+			launchPaths.nativesDirectory(),
+			loggingConfiguration,
+			classpath,
+			jvmArgs,
+			gameArgs
+		);
+	}
+
+	/**
+	 * Prepares the shared Mojang client runtime baseline using the default development identity.
 	 *
 	 * @param versionId the Minecraft version identifier
 	 * @param refresh whether to force fresh runtime downloads
 	 * @return the prepared launch configuration
 	 * @throws IOException if preparation fails
 	 */
-	public VanillaLaunchConfig prepareIntelliJLaunch(String versionId, boolean refresh) throws IOException
+	public VanillaLaunchConfig prepareClientRuntime(String versionId, boolean refresh) throws IOException
+	{
+		return prepareClientRuntime(versionId, refresh, LaunchIdentity.defaults());
+	}
+
+	/**
+	 * Resolves the vanilla runtime inputs required before launch config assembly.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param refresh whether to force fresh downloads
+	 * @return the resolved Mojang version metadata
+	 * @throws IOException if the runtime cannot be prepared
+	 */
+	private MojangVersionMetadata prepareVanillaRuntime(String versionId, boolean refresh) throws IOException
 	{
 		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(versionId, refresh);
 		_mojangClient.downloadClientJar(versionId, refresh);
 		_mojangClient.downloadRuntime(versionId, refresh);
+		return metadata;
+	}
 
+	/**
+	 * Creates the standard path layout for the shared Mojang runtime baseline.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @return the derived launch paths
+	 */
+	private VanillaLaunchPaths createLaunchPaths(String versionId)
+	{
 		MojangPaths paths = _mojangClient.paths();
-		Path projectRoot = Path.of("").toAbsolutePath().normalize();
 		String platformId = currentPlatformId();
-		String platformDisplayName = currentPlatformDisplayName();
 		Path instanceRoot = paths.workRoot()
 		                        .resolve("instances")
-		                        .resolve("vanilla-client")
+		                        .resolve("client-runtime")
 		                        .resolve(platformId)
 		                        .resolve(versionId);
-		Path gameDirectory = instanceRoot.resolve("game");
-		Path nativesDirectory = instanceRoot.resolve("natives");
-		Path launchConfigFile = instanceRoot.resolve("launch.json");
-		Path ideaRunConfigurationFile = projectRoot.resolve(".idea")
-		                                          .resolve("runConfigurations")
-		                                          .resolve("Vanilla_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml");
 
-		Files.createDirectories(gameDirectory);
-		Files.createDirectories(nativesDirectory);
-		Files.createDirectories(ideaRunConfigurationFile.getParent());
+		return new VanillaLaunchPaths(
+			instanceRoot,
+			instanceRoot.resolve("game"),
+			instanceRoot.resolve("natives")
+		);
+	}
 
-		List<Path> classpath = buildClasspath(versionId, metadata);
-		extractNativeLibraries(metadata, nativesDirectory);
-		Path loggingConfiguration = prepareLoggingConfiguration(instanceRoot, gameDirectory, metadata, refresh);
+	/**
+	 * Creates the directories needed by a generated vanilla launch bundle.
+	 *
+	 * @param launchPaths the generated path layout
+	 * @throws IOException if any directory cannot be created
+	 */
+	private void prepareLaunchDirectories(VanillaLaunchPaths launchPaths) throws IOException
+	{
+		Files.createDirectories(launchPaths.gameDirectory());
+		Files.createDirectories(launchPaths.nativesDirectory());
+	}
 
-		Map<String, String> variables = buildLaunchVariables(versionId, metadata, gameDirectory, nativesDirectory, classpath, loggingConfiguration);
+	/**
+	 * Builds the variable map used by Mojang argument templates.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param loggingConfiguration the optional logging configuration path
+	 * @param classpath the resolved runtime classpath
+	 * @param launchPaths the generated path layout
+	 * @param metadata the resolved Mojang version metadata
+	 * @return the resolved variable map
+	 */
+	private Map<String, String> buildLaunchVariables(
+		String versionId,
+		Path loggingConfiguration,
+		List<Path> classpath,
+		VanillaLaunchPaths launchPaths,
+		MojangVersionMetadata metadata,
+		LaunchIdentity identity
+	)
+	{
+		return buildLaunchVariables(
+			versionId,
+			metadata,
+			launchPaths.gameDirectory(),
+			launchPaths.nativesDirectory(),
+			classpath,
+			loggingConfiguration,
+			identity
+		);
+	}
+
+	/**
+	 * Builds the JVM argument list from Mojang version metadata.
+	 *
+	 * @param metadata the resolved Mojang version metadata
+	 * @param variables the argument substitution variables
+	 * @param loggingConfiguration the optional logging configuration path
+	 * @return the resolved JVM arguments
+	 */
+	private List<String> buildJvmArgs(
+		MojangVersionMetadata metadata,
+		Map<String, String> variables,
+		Path loggingConfiguration
+	)
+	{
 		List<String> jvmArgs = new ArrayList<>();
 		jvmArgs.addAll(evaluateArguments(metadata.arguments() == null ? null : metadata.arguments().path("default-user-jvm"), variables));
 		jvmArgs.addAll(evaluateArguments(metadata.arguments() == null ? null : metadata.arguments().path("jvm"), variables));
@@ -108,26 +234,19 @@ public final class VanillaLaunchService
 			jvmArgs.add(metadata.logging().client().argument().replace("${path}", loggingConfiguration.toAbsolutePath().toString()));
 		}
 
-		List<String> gameArgs = evaluateArguments(metadata.arguments() == null ? null : metadata.arguments().path("game"), variables);
+		return jvmArgs;
+	}
 
-		VanillaLaunchConfig config = new VanillaLaunchConfig(
-			versionId,
-			metadata.mainClass(),
-			findJavaExecutable(),
-			gameDirectory,
-			gameDirectory,
-			paths.mojangRoot().resolve("assets"),
-			metadata.assetIndex().id(),
-			nativesDirectory,
-			loggingConfiguration,
-			classpath,
-			jvmArgs,
-			gameArgs
-		);
-
-		writeLaunchConfig(launchConfigFile, config);
-		writeIntelliJRunConfiguration(projectRoot, ideaRunConfigurationFile, launchConfigFile, platformDisplayName);
-		return config;
+	/**
+	 * Builds the game argument list from Mojang version metadata.
+	 *
+	 * @param metadata the resolved Mojang version metadata
+	 * @param variables the argument substitution variables
+	 * @return the resolved game arguments
+	 */
+	private List<String> buildGameArgs(MojangVersionMetadata metadata, Map<String, String> variables)
+	{
+		return evaluateArguments(metadata.arguments() == null ? null : metadata.arguments().path("game"), variables);
 	}
 
 	/**
@@ -287,24 +406,25 @@ public final class VanillaLaunchService
 		Path gameDirectory,
 		Path nativesDirectory,
 		List<Path> classpath,
-		Path loggingConfiguration
+		Path loggingConfiguration,
+		LaunchIdentity identity
 	)
 	{
 		Map<String, String> variables = new HashMap<>();
 		String classpathSeparator = System.getProperty("path.separator");
 
-		variables.put("auth_player_name", "Dev");
+		variables.put("auth_player_name", identity.username());
 		variables.put("version_name", versionId);
 		variables.put("game_directory", gameDirectory.toAbsolutePath().toString());
 		variables.put("assets_root", _mojangClient.paths().mojangRoot().resolve("assets").toAbsolutePath().toString());
 		variables.put("assets_index_name", metadata.assetIndex().id());
-		variables.put("auth_uuid", "00000000-0000-0000-0000-000000000000");
+		variables.put("auth_uuid", identity.uuid());
 		variables.put("auth_access_token", "0");
 		variables.put("clientid", "0");
 		variables.put("auth_xuid", "0");
 		variables.put("version_type", metadata.id());
-		variables.put("launcher_name", "PSWG Toolchain");
-		variables.put("launcher_version", "0.1");
+		variables.put("launcher_name", DEFAULT_LAUNCHER_NAME);
+		variables.put("launcher_version", DEFAULT_LAUNCHER_VERSION);
 		variables.put("natives_directory", nativesDirectory.toAbsolutePath().toString());
 		variables.put("classpath", classpath.stream().map(path -> path.toAbsolutePath().toString()).reduce((a, b) -> a + classpathSeparator + b).orElse(""));
 
@@ -440,66 +560,18 @@ public final class VanillaLaunchService
 	}
 
 	/**
-	 * Writes a serialized launch configuration file.
+	 * Derived path layout for a shared Mojang client runtime baseline.
 	 *
-	 * @param path the launch configuration output path
-	 * @param config the launch configuration
-	 * @throws IOException if the file cannot be written
+	 * @param instanceRoot the shared runtime instance root
+	 * @param gameDirectory the game directory
+	 * @param nativesDirectory the natives extraction directory
 	 */
-	private void writeLaunchConfig(Path path, VanillaLaunchConfig config) throws IOException
+	private record VanillaLaunchPaths(
+		Path instanceRoot,
+		Path gameDirectory,
+		Path nativesDirectory
+	)
 	{
-		Files.createDirectories(path.getParent());
-		_mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), config);
-	}
-
-	/**
-	 * Writes an IntelliJ Application run configuration that launches the bootstrap main.
-	 *
-	 * @param path the IntelliJ run configuration output path
-	 * @param launchConfigPath the serialized launch configuration path
-	 * @throws IOException if the file cannot be written
-	 */
-	private void writeIntelliJRunConfiguration(
-		Path projectRoot,
-		Path path,
-		Path launchConfigPath,
-		String platformDisplayName
-	) throws IOException
-	{
-		String moduleName = readIntelliJModuleName(projectRoot);
-		String launchConfigValue = "&quot;$PROJECT_DIR$/"
-			+ projectRoot.relativize(launchConfigPath.toAbsolutePath().normalize()).toString().replace('\\', '/')
-			+ "&quot;";
-		Map<String, String> templateValues = new LinkedHashMap<>();
-		templateValues.put("CONFIG_NAME", "Vanilla Client (" + platformDisplayName + ")");
-		templateValues.put("MODULE_NAME", moduleName);
-		templateValues.put("PROGRAM_PARAMETERS", launchConfigValue);
-		String xml = FileTemplateRenderer.render(
-			"dev/pswg/toolchain/templates/intellij-run-config.xml",
-			templateValues
-		);
-
-		Files.createDirectories(path.getParent());
-		Files.writeString(path, xml);
-	}
-
-	/**
-	 * Resolves the IntelliJ module name for the standalone toolchain main source set.
-	 *
-	 * @param projectRoot the IntelliJ project root
-	 * @return the IntelliJ module name
-	 * @throws IOException if project metadata cannot be read
-	 */
-	private String readIntelliJModuleName(Path projectRoot) throws IOException
-	{
-		Path projectNameFile = projectRoot.resolve(".idea").resolve(".name");
-
-		if (Files.exists(projectNameFile))
-		{
-			return Files.readString(projectNameFile).trim() + ".main";
-		}
-
-		return INTELLIJ_MODULE_NAME;
 	}
 
 	/**
@@ -547,22 +619,6 @@ public final class VanillaLaunchService
 		}
 
 		return "unknown";
-	}
-
-	/**
-	 * Gets the current runtime platform display name for IntelliJ run configurations.
-	 *
-	 * @return the current platform display name
-	 */
-	private String currentPlatformDisplayName()
-	{
-		return switch (currentPlatformId())
-		{
-			case "windows" -> "Windows";
-			case "macos" -> "macOS";
-			case "linux" -> "Linux";
-			default -> "Unknown";
-		};
 	}
 
 	/**
