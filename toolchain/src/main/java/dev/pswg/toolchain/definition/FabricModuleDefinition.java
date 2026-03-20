@@ -1,5 +1,7 @@
 package dev.pswg.toolchain.definition;
 
+import dev.pswg.toolchain.maven.ToolchainMavenCoordinates;
+import dev.pswg.toolchain.maven.ToolchainMavenRepositories;
 import dev.pswg.toolchain.model.ModuleSpec;
 
 /**
@@ -17,5 +19,9 @@ public abstract class FabricModuleDefinition extends JavaModuleDefinition
 	{
 		super.applyDefaults(spec);
 		spec.fabricModJson(spec.paths().mainResource("fabric.mod.json"));
+		spec.compileDependency(
+			ToolchainMavenCoordinates.JETBRAINS_ANNOTATIONS,
+			ToolchainMavenRepositories.MAVEN_CENTRAL
+		);
 	}
 }

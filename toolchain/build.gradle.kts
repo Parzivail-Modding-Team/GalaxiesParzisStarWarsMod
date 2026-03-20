@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.21.1")
+	implementation("org.dom4j:dom4j:2.2.0")
 }
 
 java {

@@ -108,6 +108,7 @@ public final class MojangMetadataClient
 		return readCachedJson(
 			VERSION_MANIFEST_URI,
 			_paths.versionManifestFile(),
+			null,
 			MojangVersionManifest.class,
 			refresh
 		);
@@ -147,6 +148,7 @@ public final class MojangMetadataClient
 		return readCachedJson(
 			URI.create(version.url()),
 			_paths.versionMetadataFile(versionId),
+			version.sha1(),
 			MojangVersionMetadata.class,
 			refresh
 		);
@@ -164,7 +166,12 @@ public final class MojangMetadataClient
 	{
 		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
 		Path target = _paths.clientJarFile(versionId);
-		ensureCached(URI.create(metadata.downloads().client().url()), target, refresh);
+		ensureCached(
+			URI.create(metadata.downloads().client().url()),
+			target,
+			metadata.downloads().client().sha1(),
+			refresh
+		);
 		return target;
 	}
 
@@ -180,7 +187,12 @@ public final class MojangMetadataClient
 	{
 		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
 		Path target = _paths.assetIndexFile(metadata.assetIndex().id());
-		download(URI.create(metadata.assetIndex().url()), target, refresh);
+		ensureCached(
+			URI.create(metadata.assetIndex().url()),
+			target,
+			metadata.assetIndex().sha1(),
+			refresh
+		);
 		return target;
 	}
 
@@ -194,7 +206,7 @@ public final class MojangMetadataClient
 	 */
 	public void download(URI sourceUri, Path targetFile, boolean refresh) throws IOException
 	{
-		ensureCached(sourceUri, targetFile, refresh);
+		ensureCached(sourceUri, targetFile, null, refresh);
 	}
 
 	/**
@@ -239,6 +251,7 @@ public final class MojangMetadataClient
 		MojangAssetIndex assetIndex = readCachedJson(
 			URI.create(metadata.assetIndex().url()),
 			assetIndexPath,
+			metadata.assetIndex().sha1(),
 			MojangAssetIndex.class,
 			false
 		);
@@ -258,7 +271,12 @@ public final class MojangMetadataClient
 			}
 
 			Path target = _paths.libraryFile(library.downloads().artifact().path());
-			ensureCached(URI.create(library.downloads().artifact().url()), target, refresh);
+			ensureCached(
+				URI.create(library.downloads().artifact().url()),
+				target,
+				library.downloads().artifact().sha1(),
+				refresh
+			);
 			libraryCount++;
 		}
 
@@ -281,9 +299,15 @@ public final class MojangMetadataClient
 	 * @return the parsed JSON object
 	 * @throws IOException if the file cannot be read or downloaded
 	 */
-	private <T> T readCachedJson(URI sourceUri, Path cacheFile, Class<T> type, boolean refresh) throws IOException
+	private <T> T readCachedJson(
+		URI sourceUri,
+		Path cacheFile,
+		String expectedSha1,
+		Class<T> type,
+		boolean refresh
+	) throws IOException
 	{
-		ensureCached(sourceUri, cacheFile, refresh);
+		ensureCached(sourceUri, cacheFile, expectedSha1, refresh);
 
 		try (InputStream inputStream = Files.newInputStream(cacheFile))
 		{
@@ -299,11 +323,19 @@ public final class MojangMetadataClient
 	 * @param refresh whether to force a fresh download
 	 * @throws IOException if the document cannot be downloaded
 	 */
-	private void ensureCached(URI sourceUri, Path cacheFile, boolean refresh) throws IOException
+	private void ensureCached(URI sourceUri, Path cacheFile, String expectedSha1, boolean refresh) throws IOException
 	{
-		if (!refresh && Files.exists(cacheFile))
+		if (Files.exists(cacheFile))
 		{
-			return;
+			if (!refresh)
+			{
+				return;
+			}
+
+			if (expectedSha1 != null && hasMatchingSha1(cacheFile, expectedSha1))
+			{
+				return;
+			}
 		}
 
 		Files.createDirectories(cacheFile.getParent());
