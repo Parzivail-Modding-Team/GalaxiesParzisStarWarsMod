@@ -179,6 +179,7 @@ public final class IntelliJDependencyResolver
 	 */
 	public Set<Path> resolveModuleLibraries(
 		BuildGraph graph,
+		Path projectRoot,
 		Properties gradleProperties,
 		boolean refresh,
 		ModuleSpec module,
@@ -191,7 +192,7 @@ public final class IntelliJDependencyResolver
 		));
 
 		dependencies.addAll(expandIntelliJLibraryArtifacts(
-			resolveImplicitCompileDependencies(graph, gradleProperties, refresh, module, declaredCompileDependencies)
+			resolveImplicitCompileDependencies(graph, projectRoot, gradleProperties, refresh, module, declaredCompileDependencies)
 		));
 		dependencies.addAll(declaredCompileDependencies);
 
@@ -216,6 +217,7 @@ public final class IntelliJDependencyResolver
 	 */
 	public Set<Path> resolveProjectLibraries(
 		BuildGraph graph,
+		Path projectRoot,
 		Properties gradleProperties,
 		boolean refresh
 	) throws IOException
@@ -225,7 +227,7 @@ public final class IntelliJDependencyResolver
 		for (ModuleSpec module : graph.modules())
 		{
 			ToolchainLog.info("idea", "Resolving libraries for module " + module.id());
-			resolvedArtifacts.addAll(resolveModuleLibraries(graph, gradleProperties, refresh, module, true));
+			resolvedArtifacts.addAll(resolveModuleLibraries(graph, projectRoot, gradleProperties, refresh, module, true));
 		}
 
 		return resolvedArtifacts;
@@ -262,6 +264,7 @@ public final class IntelliJDependencyResolver
 	 */
 	private Set<Path> resolveImplicitCompileDependencies(
 		BuildGraph graph,
+		Path projectRoot,
 		Properties gradleProperties,
 		boolean refresh,
 		ModuleSpec module,
@@ -278,10 +281,12 @@ public final class IntelliJDependencyResolver
 		Set<Path> fabricDependencies = resolveFabricCompileDependencies(gradleProperties.getProperty("loader_version"), refresh);
 		Set<Path> modArtifacts = new LinkedHashSet<>(declaredCompileDependencies);
 		modArtifacts.addAll(fabricDependencies);
+		Set<Path> localFabricModJsons = collectLocalFabricModJsons(graph, projectRoot, module);
 		Set<Path> minecraftDependencies = resolveMinecraftCompileDependencies(
 			graph.minecraftVersion(),
 			refresh,
-			modArtifacts
+			modArtifacts,
+			localFabricModJsons
 		);
 
 		dependencies.addAll(minecraftDependencies);
@@ -300,10 +305,11 @@ public final class IntelliJDependencyResolver
 	private Set<Path> resolveMinecraftCompileDependencies(
 		String minecraftVersion,
 		boolean refresh,
-		Collection<Path> modArtifacts
+		Collection<Path> modArtifacts,
+		Collection<Path> localFabricModJsons
 	) throws IOException
 	{
-		String cacheKey = minecraftVersion + "|" + refresh + "|" + modArtifacts.hashCode();
+		String cacheKey = minecraftVersion + "|" + refresh + "|" + modArtifacts.hashCode() + "|" + localFabricModJsons.hashCode();
 		Set<Path> cached = _minecraftCompileDependenciesCache.get(cacheKey);
 
 		if (cached != null)
@@ -315,7 +321,7 @@ public final class IntelliJDependencyResolver
 		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(minecraftVersion, refresh);
 		Path clientJar = _mojangClient.downloadClientJar(minecraftVersion, refresh);
 		ToolchainLog.info("transform", "Preparing transformed Minecraft compile jar for " + minecraftVersion);
-		dependencies.add(_minecraftJarTransformer.transformMinecraftJar(minecraftVersion, clientJar, modArtifacts));
+		dependencies.add(_minecraftJarTransformer.transformMinecraftJar(minecraftVersion, clientJar, modArtifacts, localFabricModJsons));
 
 		for (MojangVersionMetadataLibrary library : metadata.libraries())
 		{
@@ -346,6 +352,61 @@ public final class IntelliJDependencyResolver
 		Set<Path> resolved = Set.copyOf(dependencies);
 		_minecraftCompileDependenciesCache.put(cacheKey, resolved);
 		return resolved;
+	}
+
+	/**
+	 * Collects local Fabric mod metadata files whose interface injections should be reflected in the
+	 * module-specific Minecraft compile jar.
+	 *
+	 * @param graph the authoritative build graph
+	 * @param projectRoot the tracked PSWG repository root
+	 * @param module the module currently being compiled
+	 * @return the local Fabric mod metadata files
+	 */
+	private Set<Path> collectLocalFabricModJsons(
+		BuildGraph graph,
+		Path projectRoot,
+		ModuleSpec module
+	)
+	{
+		Set<Path> paths = new LinkedHashSet<>();
+		collectLocalFabricModJsons(graph, projectRoot, module.id(), paths, new LinkedHashSet<>());
+		return paths;
+	}
+
+	/**
+	 * Recursively collects local Fabric mod metadata files from a module dependency chain.
+	 *
+	 * @param graph the authoritative build graph
+	 * @param projectRoot the tracked PSWG repository root
+	 * @param moduleId the module identifier to inspect
+	 * @param paths the accumulated metadata paths
+	 * @param visited the visited module identifiers
+	 */
+	private void collectLocalFabricModJsons(
+		BuildGraph graph,
+		Path projectRoot,
+		String moduleId,
+		Set<Path> paths,
+		Set<String> visited
+	)
+	{
+		if (!visited.add(moduleId))
+		{
+			return;
+		}
+
+		ModuleSpec candidate = requireModule(graph, moduleId);
+
+		if (candidate.fabricModJson() != null)
+		{
+			paths.add(projectRoot.resolve(candidate.fabricModJson()));
+		}
+
+		for (String dependencyId : candidate.dependencies())
+		{
+			collectLocalFabricModJsons(graph, projectRoot, dependencyId, paths, visited);
+		}
 	}
 
 	/**
@@ -427,6 +488,11 @@ public final class IntelliJDependencyResolver
 			return List.of();
 		}
 
+		if (isMinecraftCompileJar(artifact))
+		{
+			return List.of();
+		}
+
 		List<Path> nestedArtifacts = new ArrayList<>();
 		Path extractionRoot = artifact.getParent().resolve(".intellij-exploded").resolve(projectLibraryName(artifact));
 
@@ -460,6 +526,21 @@ public final class IntelliJDependencyResolver
 		}
 
 		return nestedArtifacts;
+	}
+
+	/**
+	 * Checks whether an artifact is one of the IntelliJ-facing Minecraft compile jars.
+	 *
+	 * <p>These jars are already fully materialized by the toolchain and do not need Fabric-style
+	 * nested-jar expansion.
+	 *
+	 * @param artifact the candidate artifact
+	 * @return whether the artifact is a Minecraft compile jar
+	 */
+	private boolean isMinecraftCompileJar(Path artifact)
+	{
+		String fileName = artifact.getFileName().toString();
+		return fileName.startsWith("minecraft-client-");
 	}
 
 	/**

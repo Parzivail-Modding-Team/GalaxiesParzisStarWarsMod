@@ -133,7 +133,7 @@ public final class IntelliJProjectSyncService
 		boolean refresh
 	) throws IOException
 	{
-		Set<Path> resolvedArtifacts = _dependencyResolver.resolveProjectLibraries(graph, gradleProperties, refresh);
+		Set<Path> resolvedArtifacts = _dependencyResolver.resolveProjectLibraries(graph, projectRoot, gradleProperties, refresh);
 		ToolchainLog.info("idea", "Resolved " + resolvedArtifacts.size() + " project libraries");
 
 		Path librariesDirectory = projectRoot.resolve(".idea").resolve("libraries");
@@ -595,7 +595,7 @@ public final class IntelliJProjectSyncService
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
 		addModuleDependencyEntries(rootManager, projectName, module, sourceSetName);
-		addLibraryDependencyEntries(rootManager, graph, gradleProperties, refresh, module, sourceSetName);
+		addLibraryDependencyEntries(rootManager, graph, projectRoot, gradleProperties, refresh, module, sourceSetName);
 	}
 
 	/**
@@ -687,6 +687,7 @@ public final class IntelliJProjectSyncService
 	 *
 	 * @param rootManager the root manager element
 	 * @param graph the authoritative build graph
+	 * @param projectRoot the PSWG project root
 	 * @param gradleProperties the tracked Gradle properties
 	 * @param refresh whether to refresh external artifact resolution
 	 * @param module the module specification
@@ -696,6 +697,7 @@ public final class IntelliJProjectSyncService
 	private void addLibraryDependencyEntries(
 		Element rootManager,
 		BuildGraph graph,
+		Path projectRoot,
 		Properties gradleProperties,
 		boolean refresh,
 		ModuleSpec module,
@@ -704,6 +706,7 @@ public final class IntelliJProjectSyncService
 	{
 		Set<Path> dependencies = _dependencyResolver.resolveModuleLibraries(
 			graph,
+			projectRoot,
 			gradleProperties,
 			refresh,
 			module,

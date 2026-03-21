@@ -89,6 +89,12 @@ public final class Main
 		catch (IOException exception)
 		{
 			System.err.println("I/O error: " + exception.getMessage());
+
+			if (exception.getCause() != null && exception.getCause().getMessage() != null)
+			{
+				System.err.println("Cause: " + exception.getCause().getMessage());
+			}
+
 			System.exit(1);
 		}
 	}

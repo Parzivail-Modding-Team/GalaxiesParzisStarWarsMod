@@ -1,12 +1,14 @@
 package dev.pswg.toolchain.intellij;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.pswg.toolchain.util.ToolchainLog;
 
 import net.fabricmc.classtweaker.api.ClassTweaker;
 import net.fabricmc.classtweaker.api.ClassTweakerReader;
+import net.fabricmc.classtweaker.api.ClassTweakerWriter;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -57,25 +59,34 @@ public final class IntelliJMinecraftJarTransformer
 	}
 
 	/**
-	 * Applies all discovered transitive class tweakers to the supplied Minecraft compile jar.
+	 * Applies all discovered dependency and local-module class tweakers to the supplied Minecraft
+	 * compile jar.
 	 *
 	 * @param minecraftVersion the tracked Minecraft version
 	 * @param minecraftJar the raw Minecraft compile jar
 	 * @param modArtifacts the mod jars whose transitive class tweakers should be applied
+	 * @param localFabricModJsons the local Fabric mod metadata files whose injected interfaces should
+	 *                            also be reflected in the compile jar
 	 * @return the transformed Minecraft compile jar, or the original jar when no tweaks are present
 	 * @throws IOException if discovery or transformation fails
 	 */
 	public Path transformMinecraftJar(
 		String minecraftVersion,
 		Path minecraftJar,
-		Collection<Path> modArtifacts
+		Collection<Path> modArtifacts,
+		Collection<Path> localFabricModJsons
 	) throws IOException
 	{
-		List<ClassTweakerEntry> classTweakers = discoverClassTweakers(modArtifacts);
+		List<ClassTweakerEntry> classTweakers = new ArrayList<>();
+		classTweakers.addAll(discoverClassTweakers(modArtifacts));
+		classTweakers.addAll(discoverLocalInjectedInterfaces(localFabricModJsons));
+		classTweakers = classTweakers.stream()
+		                             .sorted(Comparator.comparing(ClassTweakerEntry::sortKey))
+		                             .toList();
 
 		if (classTweakers.isEmpty())
 		{
-			ToolchainLog.info("transform", "No transitive class tweakers discovered for " + minecraftVersion + "; using raw Minecraft jar");
+			ToolchainLog.info("transform", "No class tweaker inputs discovered for " + minecraftVersion + "; using raw Minecraft jar");
 			return minecraftJar;
 		}
 
@@ -85,11 +96,13 @@ public final class IntelliJMinecraftJarTransformer
 			"Discovered " + classTweakers.size() + " class tweaker inputs for " + minecraftVersion
 		);
 
-		if (Files.exists(outputPath))
+		if (isUsableTransformedJar(outputPath))
 		{
 			ToolchainLog.info("transform", "Reusing transformed Minecraft jar " + outputPath.getFileName());
 			return outputPath;
 		}
+
+		deleteExistingCacheTarget(outputPath);
 
 		ClassTweaker classTweaker = ClassTweaker.newInstance();
 
@@ -106,7 +119,34 @@ public final class IntelliJMinecraftJarTransformer
 	}
 
 	/**
-	 * Discovers class tweaker declarations from Fabric mod jars.
+	 * Checks whether a cached transformed jar can actually be consumed.
+	 *
+	 * <p>Mounted filesystems may report a ghost entry as existing after an interrupted write. Treat
+	 * those as cache misses so the jar is rebuilt instead of being handed to later IntelliJ metadata
+	 * steps as if it were valid.
+	 *
+	 * @param outputPath the candidate transformed jar path
+	 * @return whether the cached jar is usable
+	 */
+	private boolean isUsableTransformedJar(Path outputPath)
+	{
+		if (!Files.isRegularFile(outputPath))
+		{
+			return false;
+		}
+
+		try (JarFile ignored = new JarFile(outputPath.toFile()))
+		{
+			return true;
+		}
+		catch (IOException ignored)
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * Discovers class tweaker declarations from dependency Fabric mod jars.
 	 *
 	 * @param modArtifacts the candidate mod artifacts
 	 * @return the discovered class tweaker entries
@@ -157,9 +197,75 @@ public final class IntelliJMinecraftJarTransformer
 			}
 		}
 
-		return entries.stream()
-		              .sorted(Comparator.comparing(ClassTweakerEntry::sortKey))
-		              .toList();
+		return entries;
+	}
+
+	/**
+	 * Synthesizes class tweaker inputs from local `loom:injected_interfaces` declarations.
+	 *
+	 * @param localFabricModJsons the local Fabric mod metadata files
+	 * @return the synthesized class tweaker entries
+	 * @throws IOException if a metadata file cannot be read
+	 */
+	private List<ClassTweakerEntry> discoverLocalInjectedInterfaces(Collection<Path> localFabricModJsons) throws IOException
+	{
+		List<ClassTweakerEntry> entries = new ArrayList<>();
+
+		for (Path fabricModJsonPath : new LinkedHashSet<>(localFabricModJsons))
+		{
+			if (!Files.exists(fabricModJsonPath))
+			{
+				continue;
+			}
+
+			JsonNode root = _mapper.readTree(Files.newInputStream(fabricModJsonPath));
+			JsonNode injectedInterfacesNode = root.path("custom").path("loom:injected_interfaces");
+
+			if (injectedInterfacesNode.isMissingNode() || !injectedInterfacesNode.isObject())
+			{
+				continue;
+			}
+
+			String modId = root.path("id").asText("unknown");
+			ClassTweakerWriter writer = ClassTweakerWriter.create(3);
+			writer.visitHeader("official");
+			boolean hasEntries = false;
+
+			for (var fields = injectedInterfacesNode.fields(); fields.hasNext(); )
+			{
+				var entry = fields.next();
+				String className = entry.getKey();
+				JsonNode interfacesNode = entry.getValue();
+
+				if (!interfacesNode.isArray())
+				{
+					continue;
+				}
+
+				for (JsonNode interfaceNode : interfacesNode)
+				{
+					if (!interfaceNode.isTextual())
+					{
+						continue;
+					}
+
+					writer.visitInjectedInterface(className, interfaceNode.asText(), false);
+					hasEntries = true;
+				}
+			}
+
+			if (hasEntries)
+			{
+				entries.add(new ClassTweakerEntry(
+					modId,
+					fabricModJsonPath,
+					"loom:injected_interfaces",
+					writer.getOutputAsString().getBytes(StandardCharsets.UTF_8)
+				));
+			}
+		}
+
+		return entries;
 	}
 
 	/**
@@ -193,51 +299,95 @@ public final class IntelliJMinecraftJarTransformer
 	) throws IOException
 	{
 		Files.createDirectories(outputJar.getParent());
-		Path temporaryOutput = outputJar.resolveSibling(outputJar.getFileName() + ".part");
+		Path temporaryOutput = Files.createTempFile("pswg-minecraft-transform-", ".jar.part");
 		Set<String> targets = classTweaker.getTargets();
-
-		try (JarFile jarFile = new JarFile(inputJar.toFile());
-		     OutputStream fileOutputStream = Files.newOutputStream(temporaryOutput);
-		     JarOutputStream outputStream = new JarOutputStream(fileOutputStream))
-		{
-			Enumeration<JarEntry> entries = jarFile.entries();
-
-			while (entries.hasMoreElements())
-			{
-				JarEntry inputEntry = entries.nextElement();
-				JarEntry outputEntry = new JarEntry(inputEntry.getName());
-				outputEntry.setTime(inputEntry.getTime());
-				outputStream.putNextEntry(outputEntry);
-
-				if (!inputEntry.isDirectory())
-				{
-					byte[] content = readBytes(jarFile, inputEntry);
-
-					if (inputEntry.getName().endsWith(".class"))
-					{
-						String className = inputEntry.getName().substring(0, inputEntry.getName().length() - 6);
-
-						if (targets.contains(className))
-						{
-							content = transformClass(classTweaker, className, content);
-						}
-					}
-
-					outputStream.write(content);
-				}
-
-				outputStream.closeEntry();
-			}
-		}
 
 		try
 		{
-			Files.move(temporaryOutput, outputJar, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+			try (JarFile jarFile = new JarFile(inputJar.toFile());
+			     OutputStream fileOutputStream = Files.newOutputStream(temporaryOutput);
+			     JarOutputStream outputStream = new JarOutputStream(fileOutputStream))
+			{
+				Enumeration<JarEntry> entries = jarFile.entries();
+
+				while (entries.hasMoreElements())
+				{
+					JarEntry inputEntry = entries.nextElement();
+					JarEntry outputEntry = new JarEntry(inputEntry.getName());
+					outputEntry.setTime(inputEntry.getTime());
+					outputStream.putNextEntry(outputEntry);
+
+					if (!inputEntry.isDirectory())
+					{
+						byte[] content = readBytes(jarFile, inputEntry);
+
+						if (inputEntry.getName().endsWith(".class"))
+						{
+							String className = inputEntry.getName().substring(0, inputEntry.getName().length() - 6);
+
+							if (targets.contains(className))
+							{
+								content = transformClass(classTweaker, className, content);
+							}
+						}
+
+						outputStream.write(content);
+					}
+
+					outputStream.closeEntry();
+				}
+			}
+
+			finalizeTransformedJar(temporaryOutput, outputJar);
 		}
-		catch (IOException ignored)
+		finally
 		{
-			ToolchainLog.info("transform", "Atomic move was unavailable; falling back to a non-atomic finalize step");
-			Files.move(temporaryOutput, outputJar, StandardCopyOption.REPLACE_EXISTING);
+			Files.deleteIfExists(temporaryOutput);
+		}
+	}
+
+	/**
+	 * Finalizes a freshly written transformed jar into its cache location.
+	 *
+	 * <p>Workspace-mounted filesystems in the sandbox have proven unreliable for `move`-based
+	 * replacement here, even when the temporary jar was already fully written. A copy-and-delete
+	 * finalize step is slower, but it is predictable across the sandbox and the user's Windows
+	 * workspace.
+	 *
+	 * @param temporaryOutput the completed temporary jar
+	 * @param outputJar the cache target
+	 * @throws IOException if the cache target cannot be finalized
+	 */
+	private void finalizeTransformedJar(
+		Path temporaryOutput,
+		Path outputJar
+	) throws IOException
+	{
+		deleteExistingCacheTarget(outputJar);
+		Files.copy(temporaryOutput, outputJar);
+		Files.deleteIfExists(outputJar.resolveSibling(outputJar.getFileName() + ".part"));
+		Files.deleteIfExists(temporaryOutput);
+	}
+
+	/**
+	 * Removes any pre-existing cache target before writing a replacement jar.
+	 *
+	 * <p>The mounted workspace filesystem can leave behind broken target entries after interrupted
+	 * writes. Deleting the target first is more reliable here than expecting `REPLACE_EXISTING` to
+	 * recover from that state.
+	 *
+	 * @param outputJar the cache target
+	 * @throws IOException if an existing target cannot be removed
+	 */
+	private void deleteExistingCacheTarget(Path outputJar) throws IOException
+	{
+		try
+		{
+			Files.deleteIfExists(outputJar);
+		}
+		catch (IOException exception)
+		{
+			throw new IOException("Failed to clear existing transformed jar target: " + outputJar, exception);
 		}
 	}
 
@@ -357,8 +507,8 @@ public final class IntelliJMinecraftJarTransformer
 	 * One discovered class tweaker input.
 	 *
 	 * @param modId the declaring Fabric mod identifier
-	 * @param artifact the containing artifact
-	 * @param path the declared class tweaker path inside the jar
+	 * @param artifact the containing artifact or metadata file
+	 * @param path the declared class tweaker origin within that artifact
 	 * @param content the raw class tweaker bytes
 	 */
 	private record ClassTweakerEntry(
