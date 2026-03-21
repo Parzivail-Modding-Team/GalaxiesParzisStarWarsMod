@@ -30,6 +30,8 @@ public final class FrameworkGeneratorDefinition extends JavaModuleDefinition
 	protected void configure(ModuleSpec spec)
 	{
 		spec.dependency("framework");
+		spec.providedAnnotationProcessorClass("dev.pswg.codecgenerator.CodecGenerationProcessor");
+		spec.providedAnnotationProcessorClass("dev.pswg.mutablerecord.MutableRecordProcessor");
 		spec.compileDependency(ToolchainMavenCoordinates.JAVAPOET, ToolchainMavenRepositories.MAVEN_CENTRAL);
 		spec.compileDependency(ToolchainMavenCoordinates.AUTO_SERVICE_ANNOTATIONS, ToolchainMavenRepositories.MAVEN_CENTRAL);
 		for (String notation : ToolchainMavenCoordinates.AUTO_SERVICE_PROCESSOR_PATH)

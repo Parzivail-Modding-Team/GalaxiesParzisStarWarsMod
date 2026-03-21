@@ -22,6 +22,11 @@ public final class PswgRepositoryContext
 	private static final String GRADLE_PROPERTIES_FILE = "gradle.properties";
 
 	/**
+	 * The standalone toolchain directory name.
+	 */
+	private static final String TOOLCHAIN_DIRECTORY = "toolchain";
+
+	/**
 	 * The standalone toolchain project root.
 	 */
 	private final Path _toolchainRoot;
@@ -58,15 +63,17 @@ public final class PswgRepositoryContext
 	}
 
 	/**
-	 * Discovers the tracked repository context from the standalone toolchain working directory.
+	 * Discovers the tracked repository context from either the standalone toolchain directory or the
+	 * PSWG repository root.
 	 *
 	 * @return the discovered repository context
 	 * @throws IOException if tracked metadata cannot be read
 	 */
 	public static PswgRepositoryContext discoverFromToolchainWorkingDirectory() throws IOException
 	{
-		Path toolchainRoot = Path.of("").toAbsolutePath().normalize();
-		Path projectRoot = toolchainRoot.getParent();
+		Path workingDirectory = Path.of("").toAbsolutePath().normalize();
+		Path projectRoot = discoverProjectRoot(workingDirectory);
+		Path toolchainRoot = projectRoot.resolve(TOOLCHAIN_DIRECTORY);
 		Properties gradleProperties = loadGradleProperties(projectRoot);
 		String projectName = readProjectName(projectRoot);
 
@@ -76,6 +83,34 @@ public final class PswgRepositoryContext
 			projectName,
 			gradleProperties
 		);
+	}
+
+	/**
+	 * Discovers the tracked PSWG repository root from the current working directory.
+	 *
+	 * <p>The standalone toolchain now runs both from its own project root and from the PSWG root
+	 * IntelliJ project. Walking upward keeps repository discovery stable in both modes.
+	 *
+	 * @param workingDirectory the current working directory
+	 * @return the discovered repository root
+	 * @throws IOException if no compatible repository root can be found
+	 */
+	private static Path discoverProjectRoot(Path workingDirectory) throws IOException
+	{
+		for (Path candidate = workingDirectory; candidate != null; candidate = candidate.getParent())
+		{
+			if (!Files.isRegularFile(candidate.resolve(GRADLE_PROPERTIES_FILE)))
+			{
+				continue;
+			}
+
+			if (Files.isDirectory(candidate.resolve(TOOLCHAIN_DIRECTORY)))
+			{
+				return candidate;
+			}
+		}
+
+		throw new IOException("Could not discover the PSWG repository root from " + workingDirectory);
 	}
 
 	/**

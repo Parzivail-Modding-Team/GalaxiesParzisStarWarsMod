@@ -332,6 +332,10 @@ public final class IntelliJProjectSyncService
 		Document document = DocumentHelper.createDocument();
 		Element project = document.addElement("project");
 		project.addAttribute("version", "4");
+		Element compilerProjectExtension = project.addElement("component");
+		compilerProjectExtension.addAttribute("name", "CompilerProjectExtension");
+		compilerProjectExtension.addElement("output")
+		                        .addAttribute("url", "file://$PROJECT_DIR$/out");
 		Element compilerConfiguration = project.addElement("component");
 		compilerConfiguration.addAttribute("name", "CompilerConfiguration");
 		Element annotationProcessing = compilerConfiguration.addElement("annotationProcessing");
@@ -348,22 +352,26 @@ public final class IntelliJProjectSyncService
 					annotationProcessing,
 					projectRoot,
 					projectName,
+					graph,
 					module,
 					SourceSetNames.MAIN,
+					generatedRoots(module, SourceSetNames.MAIN),
 					_dependencyResolver.resolveExternalDependencies(module.annotationProcessorDependencies(), gradleProperties, refresh)
 				);
 			}
 
 			if (!module.annotationProcessors().isEmpty())
 			{
-				addAnnotationProfile(
-					annotationProcessing,
-					projectRoot,
-					projectName,
-					module,
-					SourceSetNames.MAIN,
-					_dependencyResolver.resolveAnnotationProcessorModulePath(projectRoot, projectName, graph, module, gradleProperties, refresh)
-				);
+					addAnnotationProfile(
+						annotationProcessing,
+						projectRoot,
+						projectName,
+						graph,
+						module,
+						SourceSetNames.MAIN,
+						generatedRoots(module, SourceSetNames.MAIN),
+						_dependencyResolver.resolveAnnotationProcessorModulePath(projectRoot, projectName, graph, module, gradleProperties, refresh)
+					);
 
 				if (!module.clientSources().isEmpty() || !module.clientResources().isEmpty())
 				{
@@ -371,8 +379,10 @@ public final class IntelliJProjectSyncService
 						annotationProcessing,
 						projectRoot,
 						projectName,
+						graph,
 						module,
 						SourceSetNames.CLIENT,
+						generatedRoots(module, SourceSetNames.CLIENT),
 						_dependencyResolver.resolveAnnotationProcessorModulePath(projectRoot, projectName, graph, module, gradleProperties, refresh)
 					);
 				}
@@ -395,16 +405,20 @@ public final class IntelliJProjectSyncService
 	 * @param annotationProcessing the annotation processing element
 	 * @param projectRoot the PSWG project root
 	 * @param projectName the IntelliJ project name
+	 * @param graph the authoritative build graph
 	 * @param module the module specification
 	 * @param sourceSetName the source-set name
+	 * @param generatedRoots the generated roots for this source set
 	 * @param processorPathEntries the resolved processor path entries
 	 */
 	private void addAnnotationProfile(
 		Element annotationProcessing,
 		Path projectRoot,
 		String projectName,
+		BuildGraph graph,
 		ModuleSpec module,
 		String sourceSetName,
+		List<Path> generatedRoots,
 		List<Path> processorPathEntries
 	)
 	{
@@ -412,16 +426,68 @@ public final class IntelliJProjectSyncService
 		profile.addAttribute("name", "PSWG Toolchain: " + IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
 		profile.addAttribute("enabled", "true");
 		profile.addElement("outputRelativeToContentRoot").addAttribute("value", "true");
+
+		if (!generatedRoots.isEmpty())
+		{
+			Path moduleRoot = projectRoot.resolve(module.paths().root()).toAbsolutePath().normalize();
+			Path generatedRoot = projectRoot.resolve(generatedRoots.getFirst()).toAbsolutePath().normalize();
+			profile.addElement("sourceOutputDir")
+			       .addAttribute("name", moduleRoot.relativize(generatedRoot).toString().replace('\\', '/'));
+		}
+
 		Element processorPath = profile.addElement("processorPath");
-		processorPath.addAttribute("useClasspath", "false");
+		boolean useClasspath = !module.annotationProcessors().isEmpty();
+		processorPath.addAttribute("useClasspath", Boolean.toString(useClasspath));
 
 		for (Path entry : processorPathEntries)
 		{
+			if (useClasspath)
+			{
+				break;
+			}
+
 			processorPath.addElement("entry")
 			             .addAttribute("name", IntelliJPathMacros.projectRelativeMacro(projectRoot, entry));
 		}
 
+		for (String processorClassName : annotationProcessorClassNames(graph, module))
+		{
+			profile.addElement("processor").addAttribute("name", processorClassName);
+		}
+
 		profile.addElement("module").addAttribute("name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
+	}
+
+	/**
+	 * Collects the explicit annotation processor classes contributed by module-backed processor
+	 * dependencies.
+	 *
+	 * @param graph the authoritative build graph
+	 * @param module the consumer module specification
+	 * @return the ordered processor class names
+	 */
+	private List<String> annotationProcessorClassNames(BuildGraph graph, ModuleSpec module)
+	{
+		List<String> processorClassNames = new ArrayList<>();
+
+		for (String processorId : module.annotationProcessors())
+		{
+			ModuleSpec processorModule = graph.modules()
+			                                .stream()
+			                                .filter(candidate -> processorId.equals(candidate.id()))
+			                                .findFirst()
+			                                .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + processorId));
+
+			for (String className : processorModule.providedAnnotationProcessorClasses())
+			{
+				if (!processorClassNames.contains(className))
+				{
+					processorClassNames.add(className);
+				}
+			}
+		}
+
+		return processorClassNames;
 	}
 
 	/**
@@ -701,7 +767,8 @@ public final class IntelliJProjectSyncService
 		Element rootManager = moduleElement.addElement("component");
 		rootManager.addAttribute("name", "NewModuleRootManager");
 		rootManager.addAttribute("inherit-compiler-output", "false");
-		rootManager.addElement("output").addAttribute("url", IntelliJPathMacros.fileUrl(projectRoot, compileOutputDirectory(projectRoot, projectName, module, sourceSetName)));
+		rootManager.addElement("output")
+		           .addAttribute("url", IntelliJPathMacros.generatedModuleOutputUrl(IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName)));
 		rootManager.addElement("exclude-output");
 
 		Element content = rootManager.addElement("content");
@@ -734,13 +801,7 @@ public final class IntelliJProjectSyncService
 		rootManager.addAttribute("name", "NewModuleRootManager");
 		rootManager.addAttribute("inherit-compiler-output", "false");
 		rootManager.addElement("output")
-		           .addAttribute(
-			           "url",
-			           IntelliJPathMacros.fileUrl(
-				           projectRoot,
-				           projectRoot.resolve("out").resolve("production").resolve(IntelliJModuleNames.toolchainModuleName(projectName))
-			           )
-		           );
+		           .addAttribute("url", IntelliJPathMacros.generatedModuleOutputUrl(IntelliJModuleNames.toolchainModuleName(projectName)));
 		rootManager.addElement("exclude-output");
 
 		Element content = rootManager.addElement("content");
@@ -849,6 +910,14 @@ public final class IntelliJProjectSyncService
 			           .addAttribute("module-name", dependencyModuleName)
 			           .addAttribute("exported", "");
 		}
+
+		for (String processorId : module.annotationProcessors())
+		{
+			rootManager.addElement("orderEntry")
+			           .addAttribute("type", "module")
+			           .addAttribute("module-name", IntelliJModuleNames.sourceSetModuleName(projectName, processorId, SourceSetNames.MAIN))
+			           .addAttribute("scope", "PROVIDED");
+		}
 	}
 
 	/**
@@ -889,6 +958,54 @@ public final class IntelliJProjectSyncService
 			           .addAttribute("name", projectLibraryName(dependency))
 			           .addAttribute("level", "project");
 		}
+
+		for (Path dependency : resolveAnnotationProcessorSupportLibraries(graph, gradleProperties, refresh, module))
+		{
+			rootManager.addElement("orderEntry")
+			           .addAttribute("type", "library")
+			           .addAttribute("name", projectLibraryName(dependency))
+			           .addAttribute("level", "project")
+			           .addAttribute("scope", "PROVIDED");
+		}
+	}
+
+	/**
+	 * Resolves the external support libraries needed by module-backed annotation processors.
+	 *
+	 * @param graph the authoritative build graph
+	 * @param gradleProperties the tracked Gradle properties
+	 * @param refresh whether to refresh external artifact resolution
+	 * @param module the consumer module
+	 * @return the ordered external support libraries
+	 * @throws IOException if dependency resolution fails
+	 */
+	private List<Path> resolveAnnotationProcessorSupportLibraries(
+		BuildGraph graph,
+		Properties gradleProperties,
+		boolean refresh,
+		ModuleSpec module
+	) throws IOException
+	{
+		if (module.annotationProcessors().isEmpty())
+		{
+			return List.of();
+		}
+
+		List<Path> libraries = new ArrayList<>();
+
+		for (String processorId : module.annotationProcessors())
+		{
+			ModuleSpec processorModule = graph.modules()
+			                                .stream()
+			                                .filter(candidate -> processorId.equals(candidate.id()))
+			                                .findFirst()
+			                                .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + processorId));
+
+			addDistinctPaths(libraries, _dependencyResolver.resolveExternalDependencies(processorModule.compileDependencies(), gradleProperties, refresh));
+			addDistinctPaths(libraries, _dependencyResolver.resolveExternalDependencies(processorModule.annotationProcessorDependencies(), gradleProperties, refresh));
+		}
+
+		return libraries;
 	}
 
 	/**
@@ -937,6 +1054,23 @@ public final class IntelliJProjectSyncService
 		return projectRoot.resolve("out")
 		                  .resolve("production")
 		                  .resolve(IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
+	}
+
+	/**
+	 * Adds paths to an output list while preserving order and avoiding duplicates.
+	 *
+	 * @param output the accumulated output list
+	 * @param values the candidate paths
+	 */
+	private void addDistinctPaths(List<Path> output, List<Path> values)
+	{
+		for (Path value : values)
+		{
+			if (!output.contains(value))
+			{
+				output.add(value);
+			}
+		}
 	}
 
 	/**

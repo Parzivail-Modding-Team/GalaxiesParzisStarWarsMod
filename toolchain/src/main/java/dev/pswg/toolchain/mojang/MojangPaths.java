@@ -1,5 +1,7 @@
 package dev.pswg.toolchain.mojang;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -7,6 +9,11 @@ import java.nio.file.Path;
  */
 public final class MojangPaths
 {
+	/**
+	 * The standalone toolchain directory name.
+	 */
+	private static final String TOOLCHAIN_DIRECTORY = "toolchain";
+
 	/**
 	 * The toolchain work directory root.
 	 */
@@ -22,8 +29,36 @@ public final class MojangPaths
 	 */
 	public MojangPaths()
 	{
-		_workRoot = Path.of("work");
+		_workRoot = discoverToolchainRoot().resolve("work");
 		_mojangRoot = _workRoot.resolve("cache").resolve("mojang");
+	}
+
+	/**
+	 * Discovers the standalone toolchain root from either the toolchain project directory or the PSWG
+	 * repository root.
+	 *
+	 * @return the resolved toolchain root
+	 */
+	private static Path discoverToolchainRoot()
+	{
+		Path workingDirectory = Path.of("").toAbsolutePath().normalize();
+
+		for (Path candidate = workingDirectory; candidate != null; candidate = candidate.getParent())
+		{
+			if (TOOLCHAIN_DIRECTORY.equals(candidate.getFileName() == null ? null : candidate.getFileName().toString()))
+			{
+				return candidate;
+			}
+
+			Path nestedToolchain = candidate.resolve(TOOLCHAIN_DIRECTORY);
+
+			if (Files.isDirectory(nestedToolchain))
+			{
+				return nestedToolchain;
+			}
+		}
+
+		throw new IllegalStateException("Could not discover toolchain root from " + workingDirectory);
 	}
 
 	/**

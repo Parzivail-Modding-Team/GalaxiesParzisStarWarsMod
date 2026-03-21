@@ -121,4 +121,16 @@ public final class IntelliJPathMacros
 
 		return "file://" + normalizedPath.toString().replace('\\', '/');
 	}
+
+	/**
+	 * Builds the module-relative output URL used by generated `.iml` files under
+	 * `.idea/modules/projects/...`.
+	 *
+	 * @param outputName the IntelliJ output directory name
+	 * @return the file URL
+	 */
+	public static String generatedModuleOutputUrl(String outputName)
+	{
+		return "file://$MODULE_DIR$/../../../../out/production/" + outputName;
+	}
 }

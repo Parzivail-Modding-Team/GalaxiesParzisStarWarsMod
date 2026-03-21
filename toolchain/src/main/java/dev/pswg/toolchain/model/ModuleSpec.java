@@ -58,6 +58,12 @@ public final class ModuleSpec
 	private final List<String> _annotationProcessors;
 
 	/**
+	 * The annotation processor classes contributed by this module when other modules place it on
+	 * their processor path.
+	 */
+	private final List<String> _providedAnnotationProcessorClasses;
+
+	/**
 	 * The generated source roots.
 	 */
 	private final List<Path> _generatedSources;
@@ -118,6 +124,7 @@ public final class ModuleSpec
 		_clientResources = new ArrayList<>();
 		_dependencies = new ArrayList<>();
 		_annotationProcessors = new ArrayList<>();
+		_providedAnnotationProcessorClasses = new ArrayList<>();
 		_generatedSources = new ArrayList<>();
 		_generatedClientSources = new ArrayList<>();
 		_mixins = new ArrayList<>();
@@ -215,6 +222,16 @@ public final class ModuleSpec
 	public List<String> annotationProcessors()
 	{
 		return List.copyOf(_annotationProcessors);
+	}
+
+	/**
+	 * Gets the annotation processor classes provided by this module.
+	 *
+	 * @return the immutable processor class names
+	 */
+	public List<String> providedAnnotationProcessorClasses()
+	{
+		return List.copyOf(_providedAnnotationProcessorClasses);
 	}
 
 	/**
@@ -388,6 +405,18 @@ public final class ModuleSpec
 	public ModuleSpec annotationProcessor(String processorId)
 	{
 		_annotationProcessors.add(processorId);
+		return this;
+	}
+
+	/**
+	 * Declares an annotation processor class provided by this module.
+	 *
+	 * @param className the processor class name
+	 * @return this module specification
+	 */
+	public ModuleSpec providedAnnotationProcessorClass(String className)
+	{
+		_providedAnnotationProcessorClasses.add(className);
 		return this;
 	}
 

@@ -13,6 +13,7 @@ import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.runtime.VanillaLaunchService;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
+import dev.pswg.toolchain.util.ToolchainLog;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,6 +46,11 @@ public final class FabricDevLaunchService
 	 * The Fabric dev launch injector entrypoint.
 	 */
 	public static final String DEV_LAUNCH_MAIN_CLASS = "net.fabricmc.devlaunchinjector.Main";
+
+	/**
+	 * The IntelliJ-facing bootstrap main used by PSWG-root run configurations.
+	 */
+	public static final String FABRIC_IDEA_LAUNCH_MAIN_CLASS = "dev.pswg.toolchain.fabric.FabricLaunchMain";
 
 	/**
 	 * The default namespace used for development-time mod distribution.
@@ -156,7 +162,9 @@ public final class FabricDevLaunchService
 		writeIdeaRunConfiguration(
 			repository,
 			launchPaths.ideaRunConfigurationPath(),
-			launchPaths.serializedLaunchPath(),
+			versionId,
+			moduleInjection.moduleId(),
+			identity,
 			launchPaths.platformDisplayName()
 		);
 		return fabricLaunch;
@@ -733,6 +741,7 @@ public final class FabricDevLaunchService
 
 		if (Files.isDirectory(intellijOutput))
 		{
+			ToolchainLog.info("fabric", "Using IntelliJ output for " + module.id() + "." + sourceSetName + ": " + intellijOutput);
 			return List.of(intellijOutput);
 		}
 
@@ -743,12 +752,19 @@ public final class FabricDevLaunchService
 
 		if (Files.isDirectory(gradleClasses))
 		{
+			ToolchainLog.info("fabric", "Falling back to Gradle classes for " + module.id() + "." + sourceSetName + ": " + gradleClasses);
 			roots.add(gradleClasses);
 		}
 
 		if (Files.isDirectory(gradleResources))
 		{
+			ToolchainLog.info("fabric", "Falling back to Gradle resources for " + module.id() + "." + sourceSetName + ": " + gradleResources);
 			roots.add(gradleResources);
+		}
+
+		if (roots.isEmpty())
+		{
+			ToolchainLog.info("fabric", "No compiled output roots found for " + module.id() + "." + sourceSetName);
 		}
 
 		return roots;
@@ -831,20 +847,17 @@ public final class FabricDevLaunchService
 	private void writeIdeaRunConfiguration(
 		PswgRepositoryContext repository,
 		Path outputPath,
-		Path launchJsonPath,
+		String versionId,
+		String moduleId,
+		LaunchIdentity identity,
 		String platformDisplayName
 	) throws IOException
 	{
-		Path projectRoot = repository.projectRoot();
 		Map<String, String> values = new LinkedHashMap<>();
 		values.put("CONFIG_NAME", "Fabric Client (" + platformDisplayName + ")");
+		values.put("MAIN_CLASS_NAME", FABRIC_IDEA_LAUNCH_MAIN_CLASS);
 		values.put("MODULE_NAME", IntelliJModuleNames.toolchainModuleName(repository.projectName()));
-		values.put(
-			"PROGRAM_PARAMETERS",
-			"&quot;$PROJECT_DIR$/"
-				+ projectRoot.relativize(launchJsonPath.toAbsolutePath().normalize()).toString().replace('\\', '/')
-				+ "&quot;"
-		);
+		values.put("PROGRAM_PARAMETERS", renderIdeaProgramParameters(versionId, moduleId, identity));
 		String rendered = FileTemplateRenderer.render(
 			"dev/pswg/toolchain/templates/intellij-run-config.xml",
 			values
@@ -852,6 +865,51 @@ public final class FabricDevLaunchService
 
 		Files.createDirectories(outputPath.getParent());
 		Files.writeString(outputPath, rendered);
+	}
+
+	/**
+	 * Renders IntelliJ program parameters for the PSWG-root Fabric launcher bootstrap.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param moduleId the optional module identifier
+	 * @param identity the launch-time player identity
+	 * @return the rendered program parameters
+	 */
+	private String renderIdeaProgramParameters(
+		String versionId,
+		String moduleId,
+		LaunchIdentity identity
+	)
+	{
+		List<String> arguments = new ArrayList<>();
+		arguments.add("--version");
+		arguments.add(versionId);
+
+		if (moduleId != null && !moduleId.isBlank())
+		{
+			arguments.add("--module");
+			arguments.add(moduleId);
+		}
+
+		arguments.add("--username");
+		arguments.add(identity.username());
+		arguments.add("--uuid");
+		arguments.add(identity.uuid());
+		return arguments.stream()
+		                .map(this::quoteIdeaArgument)
+		                .reduce((left, right) -> left + " " + right)
+		                .orElse("");
+	}
+
+	/**
+	 * Quotes an IntelliJ program argument for XML serialization.
+	 *
+	 * @param argument the argument to quote
+	 * @return the quoted argument
+	 */
+	private String quoteIdeaArgument(String argument)
+	{
+		return "&quot;" + XmlEscaper.escapeAttribute(argument) + "&quot;";
 	}
 
 	/**

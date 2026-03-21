@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" factoryName="Application" name="{{CONFIG_NAME}}" type="Application">
-    <option name="MAIN_CLASS_NAME" value="dev.pswg.toolchain.runtime.VanillaLaunchMain"/>
+    <option name="MAIN_CLASS_NAME" value="{{MAIN_CLASS_NAME}}"/>
     <module name="{{MODULE_NAME}}"/>
     <option name="PROGRAM_PARAMETERS" value="{{PROGRAM_PARAMETERS}}"/>
     <shortenClasspath name="ARGS_FILE"/>

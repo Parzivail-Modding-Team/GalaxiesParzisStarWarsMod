@@ -46,6 +46,18 @@ public final class VanillaLaunchMain
 			config = mapper.readValue(inputStream, VanillaLaunchConfig.class);
 		}
 
+		launch(config);
+	}
+
+	/**
+	 * Launches a child JVM from an already-resolved launch configuration.
+	 *
+	 * @param config the prepared launch configuration
+	 * @throws IOException if the child process cannot be started
+	 * @throws InterruptedException if the child process is interrupted
+	 */
+	public static void launch(VanillaLaunchConfig config) throws IOException, InterruptedException
+	{
 		List<String> command = new ArrayList<>();
 		command.add(config.javaExecutable());
 		command.addAll(config.jvmArgs());
