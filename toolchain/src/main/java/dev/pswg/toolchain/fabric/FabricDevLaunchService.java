@@ -1,6 +1,9 @@
 package dev.pswg.toolchain.fabric;
 
+import dev.pswg.toolchain.intellij.IntelliJDependencyResolver;
+import dev.pswg.toolchain.intellij.IntelliJPathMacros;
 import dev.pswg.toolchain.intellij.IntelliJModuleNames;
+import dev.pswg.toolchain.intellij.IntelliJXmlWriter;
 import dev.pswg.toolchain.mojang.MojangPaths;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.MavenDependencySpec;
@@ -16,9 +19,11 @@ import dev.pswg.toolchain.template.XmlEscaper;
 import dev.pswg.toolchain.util.ToolchainLog;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
 import java.io.IOException;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -45,11 +50,6 @@ public final class FabricDevLaunchService
 	 * The Fabric dev launch injector entrypoint.
 	 */
 	public static final String DEV_LAUNCH_MAIN_CLASS = "net.fabricmc.devlaunchinjector.Main";
-
-	/**
-	 * The IntelliJ-facing bootstrap main used by PSWG-root run configurations.
-	 */
-	public static final String FABRIC_IDEA_LAUNCH_MAIN_CLASS = "dev.pswg.toolchain.fabric.FabricLaunchMain";
 
 	/**
 	 * The default namespace used for development-time mod distribution.
@@ -82,12 +82,18 @@ public final class FabricDevLaunchService
 	private final FabricRuntimeResolver _runtimeResolver;
 
 	/**
+	 * Resolves IntelliJ compile classpaths so generated launches can exclude non-runtime entries.
+	 */
+	private final IntelliJDependencyResolver _ideaDependencyResolver;
+
+	/**
 	 * Creates a new Fabric dev launch service.
 	 */
 	public FabricDevLaunchService()
 	{
 		_mapper = new ObjectMapper();
 		_runtimeResolver = new FabricRuntimeResolver();
+		_ideaDependencyResolver = new IntelliJDependencyResolver();
 	}
 
 	/**
@@ -140,7 +146,7 @@ public final class FabricDevLaunchService
 		VanillaLaunchConfig vanillaLaunch = new VanillaLaunchService().prepareClientRuntime(versionId, refresh, identity);
 		FabricRuntimeArtifacts runtimeArtifacts = resolveFabricRuntimeArtifacts(repository.gradleProperties(), refresh);
 		FabricModuleInjection moduleInjection = resolveModuleInjection(repoRoot, moduleId, repository.gradleProperties(), refresh);
-		FabricLaunchPaths launchPaths = createLaunchPaths(toolchainRoot, repoRoot, versionId);
+		FabricLaunchPaths launchPaths = createLaunchPaths(toolchainRoot, repoRoot, repository.projectName(), versionId);
 
 		prepareLaunchFiles(versionId, vanillaLaunch, moduleInjection.moduleRoots(), launchPaths);
 		List<String> jvmArgs = buildFabricJvmArgs(
@@ -158,13 +164,20 @@ public final class FabricDevLaunchService
 		);
 
 		writeLaunchJson(launchPaths.serializedLaunchPath(), fabricLaunch);
+		writeIdeaLaunchModule(
+			repository,
+			moduleInjection,
+			fabricLaunch,
+			launchPaths
+		);
 		writeIdeaRunConfiguration(
 			repository,
 			launchPaths.ideaRunConfigurationPath(),
-			versionId,
-			moduleInjection.moduleId(),
-			identity,
-			launchPaths.platformDisplayName()
+			fabricLaunch,
+			moduleInjection,
+			launchPaths,
+			launchPaths.platformDisplayName(),
+			refresh
 		);
 		return fabricLaunch;
 	}
@@ -211,8 +224,9 @@ public final class FabricDevLaunchService
 		}
 
 		BuildGraph graph = new PswgBuildDefinition().define();
+		String projectName = repositoryProjectName(gradleProperties, repoRoot);
 		ModuleSpec rootModule = requireModule(graph, moduleId);
-		List<Path> moduleRoots = resolveOutputRoots(repoRoot, rootModule);
+		List<Path> moduleRoots = resolveOutputRoots(repoRoot, projectName, rootModule);
 		List<Path> dependencyRoots = new ArrayList<>();
 		List<MavenDependencySpec> runtimeDependencies = new ArrayList<>(rootModule.runtimeDependencies());
 		Set<String> visited = new LinkedHashSet<>();
@@ -221,6 +235,7 @@ public final class FabricDevLaunchService
 		{
 			collectDependencyRuntimeData(
 				repoRoot,
+				projectName,
 				graph,
 				dependencyId,
 				visited,
@@ -250,6 +265,7 @@ public final class FabricDevLaunchService
 	private FabricLaunchPaths createLaunchPaths(
 		Path toolchainRoot,
 		Path repoRoot,
+		String projectName,
 		String versionId
 	)
 	{
@@ -269,6 +285,11 @@ public final class FabricDevLaunchService
 			configDirectory.resolve("launch.cfg"),
 			configDirectory.resolve("log4j2-intellij.xml"),
 			instanceRoot.resolve("launch.json"),
+			repoRoot.resolve(".idea")
+			        .resolve("modules")
+			        .resolve("launch")
+			        .resolve("fabric")
+			        .resolve(IntelliJModuleNames.fabricLaunchModuleFileName(projectName, platformId)),
 			repoRoot.resolve(".idea")
 			        .resolve("runConfigurations")
 			        .resolve("Fabric_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml")
@@ -556,7 +577,7 @@ public final class FabricDevLaunchService
 
 		String joinedRoots = moduleRoots.stream()
 		                               .map(path -> path.toAbsolutePath().toString())
-		                               .reduce((left, right) -> left + File.pathSeparator + right)
+		                               .reduce((left, right) -> left + System.getProperty("path.separator") + right)
 		                               .orElse("");
 
 		if (joinedRoots.isBlank())
@@ -596,6 +617,7 @@ public final class FabricDevLaunchService
 	 */
 	private void collectDependencyRuntimeData(
 		Path projectRoot,
+		String projectName,
 		BuildGraph graph,
 		String moduleId,
 		Set<String> visited,
@@ -609,13 +631,14 @@ public final class FabricDevLaunchService
 		}
 
 		ModuleSpec module = requireModule(graph, moduleId);
-		roots.addAll(resolveOutputRoots(projectRoot, module));
+		roots.addAll(resolveOutputRoots(projectRoot, projectName, module));
 		runtimeDependencies.addAll(module.runtimeDependencies());
 
 		for (String dependencyId : module.dependencies())
 		{
 			collectDependencyRuntimeData(
 				projectRoot,
+				projectName,
 				graph,
 				dependencyId,
 				visited,
@@ -664,6 +687,7 @@ public final class FabricDevLaunchService
 	 * @param launchConfigPath the generated DLI launch config path
 	 * @param loggingConfigPath the generated log4j configuration path
 	 * @param serializedLaunchPath the serialized launch JSON path
+	 * @param ideaLaunchModulePath the generated IntelliJ launch module path
 	 * @param ideaRunConfigurationPath the generated IntelliJ run configuration path
 	 */
 	private record FabricLaunchPaths(
@@ -673,6 +697,7 @@ public final class FabricDevLaunchService
 		Path launchConfigPath,
 		Path loggingConfigPath,
 		Path serializedLaunchPath,
+		Path ideaLaunchModulePath,
 		Path ideaRunConfigurationPath
 	)
 	{
@@ -711,11 +736,11 @@ public final class FabricDevLaunchService
 	 * @param module the module specification
 	 * @return the ordered output roots
 	 */
-	private List<Path> resolveOutputRoots(Path projectRoot, ModuleSpec module)
+	private List<Path> resolveOutputRoots(Path projectRoot, String projectName, ModuleSpec module)
 	{
 		List<Path> roots = new ArrayList<>();
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, SourceSetNames.MAIN));
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, module, SourceSetNames.CLIENT));
+		roots.addAll(resolveSourceSetOutputRoots(projectRoot, projectName, module, SourceSetNames.MAIN));
+		roots.addAll(resolveSourceSetOutputRoots(projectRoot, projectName, module, SourceSetNames.CLIENT));
 
 		return roots.stream()
 		            .distinct()
@@ -730,11 +755,16 @@ public final class FabricDevLaunchService
 	 * @param sourceSetName the source set name
 	 * @return the ordered output roots
 	 */
-	private List<Path> resolveSourceSetOutputRoots(Path projectRoot, ModuleSpec module, String sourceSetName)
+	private List<Path> resolveSourceSetOutputRoots(
+		Path projectRoot,
+		String projectName,
+		ModuleSpec module,
+		String sourceSetName
+	)
 	{
 		// The long-term goal is to launch only from IntelliJ outputs. The Gradle fallback remains here
 		// only so launcher iteration can continue while compile ownership is still moving out of Gradle.
-		String moduleName = IntelliJModuleNames.sourceSetModuleName(readProjectName(projectRoot), module.id(), sourceSetName);
+		String moduleName = IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName);
 		Path intellijOutput = projectRoot.resolve(INTELLIJ_OUTPUT_DIRECTORY).resolve(moduleName);
 
 		if (Files.isDirectory(intellijOutput))
@@ -769,29 +799,19 @@ public final class FabricDevLaunchService
 	}
 
 	/**
-	 * Reads the IntelliJ project name used in generated module output directories.
+	 * Resolves the IntelliJ project name used for generated output directories.
 	 *
-	 * @param projectRoot the IntelliJ project root
-	 * @return the project name
+	 * @param gradleProperties the tracked repository properties
+	 * @param projectRoot the tracked repository root
+	 * @return the authoritative project name
 	 */
-	private String readProjectName(Path projectRoot)
+	private String repositoryProjectName(Properties gradleProperties, Path projectRoot)
 	{
-		Path projectNameFile = projectRoot.resolve(".idea").resolve(".name");
+		String archivesBaseName = gradleProperties.getProperty("archives_base_name");
 
-		try
+		if (archivesBaseName != null && !archivesBaseName.isBlank())
 		{
-			if (Files.exists(projectNameFile))
-			{
-				String value = Files.readString(projectNameFile).trim();
-
-				if (!value.isBlank())
-				{
-					return value;
-				}
-			}
-		}
-		catch (IOException ignored)
-		{
+			return archivesBaseName;
 		}
 
 		return projectRoot.getFileName().toString();
@@ -834,28 +854,422 @@ public final class FabricDevLaunchService
 	}
 
 	/**
+	 * Writes the generated IntelliJ launch module that owns the direct DLI runtime classpath.
+	 *
+	 * @param repository the discovered PSWG repository context
+	 * @param moduleInjection the resolved injected module contract
+	 * @param fabricLaunch the prepared Fabric launch configuration
+	 * @param launchPaths the generated launch path layout
+	 * @throws IOException if the launch module metadata cannot be written
+	 */
+	private void writeIdeaLaunchModule(
+		PswgRepositoryContext repository,
+		FabricModuleInjection moduleInjection,
+		VanillaLaunchConfig fabricLaunch,
+		FabricLaunchPaths launchPaths
+	) throws IOException
+	{
+		writeIdeaLaunchLibraries(repository, launchPaths.platformId(), effectiveRuntimeClasspath(fabricLaunch));
+		IntelliJXmlWriter.write(
+			launchPaths.ideaLaunchModulePath(),
+			createIdeaLaunchModuleDocument(repository, moduleInjection, fabricLaunch, launchPaths)
+		);
+		registerIdeaLaunchModule(repository, launchPaths);
+	}
+
+	/**
+	 * Creates the IntelliJ launch module document used for direct Fabric DLI launches.
+	 *
+	 * @param repository the discovered PSWG repository context
+	 * @param moduleInjection the resolved injected module contract
+	 * @param fabricLaunch the prepared Fabric launch configuration
+	 * @param launchPaths the generated launch path layout
+	 * @return the generated launch module document
+	 */
+	private Document createIdeaLaunchModuleDocument(
+		PswgRepositoryContext repository,
+		FabricModuleInjection moduleInjection,
+		VanillaLaunchConfig fabricLaunch,
+		FabricLaunchPaths launchPaths
+	)
+	{
+		Document document = DocumentHelper.createDocument();
+		Element module = document.addElement("module");
+		module.addAttribute("version", "4");
+
+		Element rootManager = module.addElement("component");
+		rootManager.addAttribute("name", "NewModuleRootManager");
+		rootManager.addAttribute("inherit-compiler-output", "true");
+		rootManager.addElement("exclude-output");
+
+		Element content = rootManager.addElement("content");
+		content.addAttribute("url", IntelliJPathMacros.fileUrl(repository.projectRoot(), launchPaths.instanceRoot()));
+		content.addElement("excludeFolder")
+		       .addAttribute("url", IntelliJPathMacros.fileUrl(repository.projectRoot(), launchPaths.instanceRoot()));
+
+		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
+		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
+
+		for (String moduleName : launchDependencyModuleNames(repository, moduleInjection))
+		{
+			rootManager.addElement("orderEntry")
+			           .addAttribute("type", "module")
+			           .addAttribute("module-name", moduleName)
+			           .addAttribute("scope", "PROVIDED");
+		}
+
+		for (Path classpathEntry : effectiveRuntimeClasspath(fabricLaunch))
+		{
+			rootManager.addElement("orderEntry")
+			           .addAttribute("type", "library")
+			           .addAttribute("name", launchProjectLibraryName(launchPaths.platformId(), classpathEntry))
+			           .addAttribute("level", "project");
+		}
+
+		return document;
+	}
+
+	/**
+	 * Writes the dedicated IntelliJ project libraries used only by a generated Fabric launch module.
+	 *
+	 * <p>These are intentionally separate from the normal IntelliJ compile libraries. The direct DLI
+	 * launch must resolve the exact prepared runtime classpath, while the compile graph is free to
+	 * point at transformed jars and exploded mod containers that would be invalid at runtime.
+	 *
+	 * @param projectRoot the PSWG project root
+	 * @param platformId the target platform identifier
+	 * @param classpathEntries the prepared runtime classpath entries
+	 * @throws IOException if the generated library metadata cannot be written
+	 */
+	private void writeIdeaLaunchLibraries(
+		PswgRepositoryContext repository,
+		String platformId,
+		List<Path> classpathEntries
+	) throws IOException
+	{
+		Path librariesDirectory = repository.projectRoot().resolve(".idea").resolve("libraries");
+		Set<String> expectedFileNames = new LinkedHashSet<>();
+
+		for (Path classpathEntry : classpathEntries)
+		{
+			String fileName = launchProjectLibraryFileName(platformId, classpathEntry);
+			expectedFileNames.add(fileName);
+			IntelliJXmlWriter.write(
+				librariesDirectory.resolve(fileName),
+				createIdeaLaunchLibraryDocument(repository.projectRoot(), platformId, classpathEntry)
+			);
+		}
+
+		deleteObsoleteLaunchLibraries(librariesDirectory, platformId, expectedFileNames);
+	}
+
+	/**
+	 * Creates a generated project library document for a prepared runtime classpath entry.
+	 *
+	 * @param projectRoot the PSWG project root
+	 * @param platformId the target platform identifier
+	 * @param classpathEntry the prepared runtime classpath entry
+	 * @return the launch library document
+	 */
+	private Document createIdeaLaunchLibraryDocument(Path projectRoot, String platformId, Path classpathEntry)
+	{
+		Document document = DocumentHelper.createDocument();
+		Element component = document.addElement("component");
+		component.addAttribute("name", "libraryTable");
+		Element library = component.addElement("library");
+		library.addAttribute("name", launchProjectLibraryName(platformId, classpathEntry));
+		Element classes = library.addElement("CLASSES");
+		String url = Files.isDirectory(classpathEntry)
+			? IntelliJPathMacros.fileUrl(projectRoot, classpathEntry)
+			: IntelliJPathMacros.jarUrl(projectRoot, classpathEntry);
+		classes.addElement("root").addAttribute("url", url);
+		library.addElement("JAVADOC");
+		library.addElement("SOURCES");
+		return document;
+	}
+
+	/**
+	 * Deletes obsolete generated launch-library metadata for a platform after regeneration.
+	 *
+	 * @param librariesDirectory the IntelliJ libraries directory
+	 * @param platformId the target platform identifier
+	 * @param expectedFileNames the expected generated launch-library files
+	 * @throws IOException if stale launch-library files cannot be removed
+	 */
+	private void deleteObsoleteLaunchLibraries(
+		Path librariesDirectory,
+		String platformId,
+		Set<String> expectedFileNames
+	) throws IOException
+	{
+		if (!Files.isDirectory(librariesDirectory))
+		{
+			return;
+		}
+
+		String prefix = launchProjectLibraryPrefix(platformId);
+
+		try (var entries = Files.list(librariesDirectory))
+		{
+			for (Path entry : entries.toList())
+			{
+				if (!Files.isRegularFile(entry))
+				{
+					continue;
+				}
+
+				String fileName = entry.getFileName().toString();
+
+				if (!fileName.startsWith(prefix) || expectedFileNames.contains(fileName))
+				{
+					continue;
+				}
+
+				Files.deleteIfExists(entry);
+			}
+		}
+	}
+
+	/**
+	 * Extracts the exact runtime classpath that the prepared launch would pass to Java.
+	 *
+	 * <p>The generated direct-DLI IntelliJ module must mirror the prepared `-cp` exactly. Using
+	 * IntelliJ module dependencies here is wrong because it pulls in compile-time libraries from PSWG
+	 * modules, including transformed Minecraft compile jars that must never appear on the real game
+	 * runtime.
+	 *
+	 * @param fabricLaunch the prepared launch configuration
+	 * @return the ordered runtime classpath entries
+	 */
+	private List<Path> effectiveRuntimeClasspath(VanillaLaunchConfig fabricLaunch)
+	{
+		List<Path> entries = new ArrayList<>();
+		String separator = System.getProperty("path.separator");
+
+		for (int i = 0; i < fabricLaunch.jvmArgs().size() - 1; i++)
+		{
+			String argument = fabricLaunch.jvmArgs().get(i);
+
+			if (!"-cp".equals(argument) && !"-classpath".equals(argument))
+			{
+				continue;
+			}
+
+			String classpath = fabricLaunch.jvmArgs().get(i + 1);
+
+			for (String rawEntry : classpath.split(java.util.regex.Pattern.quote(separator)))
+			{
+				if (rawEntry.isBlank())
+				{
+					continue;
+				}
+
+				Path entry = Path.of(rawEntry);
+
+				if (!entries.contains(entry))
+				{
+					entries.add(entry);
+				}
+			}
+
+			return entries;
+		}
+
+		for (Path entry : fabricLaunch.classpath())
+		{
+			if (!entries.contains(entry))
+			{
+				entries.add(entry);
+			}
+		}
+
+		return entries;
+	}
+
+	/**
+	 * Resolves the IntelliJ module dependencies that should be built before the generated launch module runs.
+	 *
+	 * <p>These are intentionally `PROVIDED` module edges in the launch module metadata so IntelliJ's
+	 * `Make` step rebuilds PSWG outputs before launch, without letting those modules leak their
+	 * compile-only classpaths into the actual direct-DLI runtime.
+	 *
+	 * @param repository the discovered PSWG repository context
+	 * @param moduleInjection the resolved injected module contract
+	 * @return the ordered module dependency names
+	 */
+	private List<String> launchDependencyModuleNames(
+		PswgRepositoryContext repository,
+		FabricModuleInjection moduleInjection
+	)
+	{
+		if (moduleInjection.moduleId() == null || moduleInjection.moduleId().isBlank())
+		{
+			return List.of();
+		}
+
+		BuildGraph graph = new PswgBuildDefinition().define();
+		List<String> moduleNames = new ArrayList<>();
+
+		for (ModuleSpec module : launchDependencyModules(graph, moduleInjection.moduleId()))
+		{
+			moduleNames.add(IntelliJModuleNames.sourceSetModuleName(repository.projectName(), module.id(), SourceSetNames.MAIN));
+
+			if (!module.clientSources().isEmpty() || !module.clientResources().isEmpty())
+			{
+				moduleNames.add(IntelliJModuleNames.sourceSetModuleName(repository.projectName(), module.id(), SourceSetNames.CLIENT));
+			}
+		}
+
+		return moduleNames;
+	}
+
+	/**
+	 * Resolves the authoritative module closure that should be built before a generated launch starts.
+	 *
+	 * @param graph the authoritative build graph
+	 * @param rootModuleId the requested root module id
+	 * @return the ordered module closure
+	 */
+	private List<ModuleSpec> launchDependencyModules(
+		BuildGraph graph,
+		String rootModuleId
+	)
+	{
+		List<ModuleSpec> modules = new ArrayList<>();
+		Set<String> visited = new LinkedHashSet<>();
+		collectLaunchDependencyModules(graph, rootModuleId, visited, modules);
+		return modules;
+	}
+
+	/**
+	 * Collects the authoritative module closure for a generated launch.
+	 *
+	 * @param graph the authoritative build graph
+	 * @param moduleId the module identifier to collect
+	 * @param visited the visited module ids
+	 * @param modules the accumulated module closure
+	 */
+	private void collectLaunchDependencyModules(
+		BuildGraph graph,
+		String moduleId,
+		Set<String> visited,
+		List<ModuleSpec> modules
+	)
+	{
+		if (!visited.add(moduleId))
+		{
+			return;
+		}
+
+		ModuleSpec module = requireModule(graph, moduleId);
+		modules.add(module);
+
+		for (String dependencyId : module.dependencies())
+		{
+			collectLaunchDependencyModules(graph, dependencyId, visited, modules);
+		}
+	}
+
+	/**
+	 * Builds the shared prefix used for generated launch-only IntelliJ project libraries.
+	 *
+	 * @param platformId the target platform identifier
+	 * @return the library prefix
+	 */
+	private String launchProjectLibraryPrefix(String platformId)
+	{
+		return "fabric-launch-" + platformId + "-";
+	}
+
+	/**
+	 * Builds the generated IntelliJ project-library name for a prepared runtime classpath entry.
+	 *
+	 * @param platformId the target platform identifier
+	 * @param classpathEntry the prepared runtime classpath entry
+	 * @return the launch library name
+	 */
+	private String launchProjectLibraryName(String platformId, Path classpathEntry)
+	{
+		return launchProjectLibraryPrefix(platformId) + classpathEntry.getFileName().toString();
+	}
+
+	/**
+	 * Builds the generated IntelliJ project-library metadata file name for a prepared runtime classpath entry.
+	 *
+	 * @param platformId the target platform identifier
+	 * @param classpathEntry the prepared runtime classpath entry
+	 * @return the generated metadata file name
+	 */
+	private String launchProjectLibraryFileName(String platformId, Path classpathEntry)
+	{
+		return launchProjectLibraryName(platformId, classpathEntry)
+			.replace(':', '_')
+			.replace('/', '_')
+			.replace('\\', '_')
+			.replace(' ', '_')
+			+ ".xml";
+	}
+
+	/**
+	 * Ensures the generated Fabric launch module is registered in the root IntelliJ project.
+	 *
+	 * @param repository the discovered PSWG repository context
+	 * @param launchPaths the generated launch path layout
+	 * @throws IOException if the project registration cannot be updated
+	 */
+	private void registerIdeaLaunchModule(
+		PswgRepositoryContext repository,
+		FabricLaunchPaths launchPaths
+	) throws IOException
+	{
+		Path modulesXmlPath = repository.projectRoot().resolve(".idea").resolve("modules.xml");
+		Document document = readOrCreateProjectDocument(modulesXmlPath);
+		Element project = document.getRootElement();
+		Element component = firstOrCreate(project, "component", "name", "ProjectModuleManager");
+		Element modules = firstOrCreate(component, "modules");
+		String filePath = "$PROJECT_DIR$/.idea/modules/launch/fabric/"
+			+ IntelliJModuleNames.fabricLaunchModuleFileName(repository.projectName(), launchPaths.platformId());
+
+		removeRegisteredModule(modules, filePath);
+		modules.addElement("module")
+		       .addAttribute("fileurl", "file://" + filePath)
+		       .addAttribute("filepath", filePath);
+		IntelliJXmlWriter.write(modulesXmlPath, document);
+	}
+
+	/**
 	 * Writes the IntelliJ Application run configuration for the Fabric client launch bundle.
 	 *
 	 * @param repository the discovered PSWG repository context
 	 * @param outputPath the IntelliJ run configuration path
-	 * @param launchJsonPath the serialized launch JSON path
+	 * @param fabricLaunch the prepared Fabric launch configuration
+	 * @param launchPaths the generated launch path layout
 	 * @param platformDisplayName the current platform display name
 	 * @throws IOException if the run configuration cannot be written
 	 */
 	private void writeIdeaRunConfiguration(
 		PswgRepositoryContext repository,
 		Path outputPath,
-		String versionId,
-		String moduleId,
-		LaunchIdentity identity,
-		String platformDisplayName
+		VanillaLaunchConfig fabricLaunch,
+		FabricModuleInjection moduleInjection,
+		FabricLaunchPaths launchPaths,
+		String platformDisplayName,
+		boolean refresh
 	) throws IOException
 	{
 		Map<String, String> values = new LinkedHashMap<>();
 		values.put("CONFIG_NAME", "Fabric Client (" + platformDisplayName + ")");
-		values.put("MAIN_CLASS_NAME", FABRIC_IDEA_LAUNCH_MAIN_CLASS);
-		values.put("MODULE_NAME", IntelliJModuleNames.toolchainModuleName(repository.projectName()));
-		values.put("PROGRAM_PARAMETERS", renderIdeaProgramParameters(versionId, moduleId, identity));
+		values.put("MAIN_CLASS_NAME", DEV_LAUNCH_MAIN_CLASS);
+		values.put("MODULE_NAME", IntelliJModuleNames.fabricLaunchModuleName(repository.projectName(), launchPaths.platformId()));
+		values.put("PROGRAM_PARAMETERS", renderIdeaArguments(fabricLaunch.gameArgs()));
+		values.put("VM_PARAMETERS", renderIdeaArguments(ideaVmArguments(fabricLaunch.jvmArgs())));
+		values.put("WORKING_DIRECTORY", xmlPath(fabricLaunch.workingDirectory()));
+		values.put(
+			"CLASSPATH_MODIFICATIONS",
+			renderIdeaClasspathModifications(
+				launchClasspathExclusions(repository, moduleInjection, fabricLaunch, refresh)
+			)
+		);
 		String rendered = FileTemplateRenderer.render(
 			"dev/pswg/toolchain/templates/intellij-run-config.xml",
 			values
@@ -866,33 +1280,45 @@ public final class FabricDevLaunchService
 	}
 
 	/**
-	 * Renders IntelliJ program parameters for the PSWG-root Fabric launcher bootstrap.
+	 * Filters the prepared JVM arguments down to the values IntelliJ should pass directly when it
+	 * launches Fabric's dev-launch injector itself.
 	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param moduleId the optional module identifier
-	 * @param identity the launch-time player identity
-	 * @return the rendered program parameters
+	 * @param jvmArgs the prepared launch JVM arguments
+	 * @return the IntelliJ VM arguments
 	 */
-	private String renderIdeaProgramParameters(
-		String versionId,
-		String moduleId,
-		LaunchIdentity identity
-	)
+	private List<String> ideaVmArguments(List<String> jvmArgs)
 	{
 		List<String> arguments = new ArrayList<>();
-		arguments.add("--version");
-		arguments.add(versionId);
 
-		if (moduleId != null && !moduleId.isBlank())
+		for (int i = 0; i < jvmArgs.size(); i++)
 		{
-			arguments.add("--module");
-			arguments.add(moduleId);
+			String argument = jvmArgs.get(i);
+
+			if ("-cp".equals(argument) || "-classpath".equals(argument))
+			{
+				i++;
+				continue;
+			}
+
+			if (argument.startsWith("-javaagent:"))
+			{
+				continue;
+			}
+
+			arguments.add(argument);
 		}
 
-		arguments.add("--username");
-		arguments.add(identity.username());
-		arguments.add("--uuid");
-		arguments.add(identity.uuid());
+		return arguments;
+	}
+
+	/**
+	 * Renders IntelliJ command-line arguments for XML serialization.
+	 *
+	 * @param arguments the arguments to render
+	 * @return the rendered argument string
+	 */
+	private String renderIdeaArguments(List<String> arguments)
+	{
 		return arguments.stream()
 		                .map(this::quoteIdeaArgument)
 		                .reduce((left, right) -> left + " " + right)
@@ -908,6 +1334,188 @@ public final class FabricDevLaunchService
 	private String quoteIdeaArgument(String argument)
 	{
 		return "&quot;" + XmlEscaper.escapeAttribute(argument) + "&quot;";
+	}
+
+	/**
+	 * Resolves the compile-time classpath entries IntelliJ should exclude from a generated launch.
+	 *
+	 * <p>The launch module intentionally keeps `PROVIDED` module edges so IntelliJ will rebuild the
+	 * requested PSWG modules before launch. IntelliJ also threads those compile libraries into the
+	 * Application runtime classpath, so this exclusion list trims the run config back down to the
+	 * exact prepared Fabric runtime classpath.
+	 *
+	 * @param repository the discovered PSWG repository context
+	 * @param moduleInjection the resolved injected module contract
+	 * @param fabricLaunch the prepared Fabric launch configuration
+	 * @param refresh whether dependency resolution should refresh cached artifacts
+	 * @return the ordered classpath exclusions
+	 * @throws IOException if dependency resolution fails
+	 */
+	private List<Path> launchClasspathExclusions(
+		PswgRepositoryContext repository,
+		FabricModuleInjection moduleInjection,
+		VanillaLaunchConfig fabricLaunch,
+		boolean refresh
+	) throws IOException
+	{
+		if (moduleInjection.moduleId() == null || moduleInjection.moduleId().isBlank())
+		{
+			return List.of();
+		}
+
+		BuildGraph graph = new PswgBuildDefinition().define();
+		Set<Path> runtimeClasspath = new LinkedHashSet<>();
+
+		for (Path entry : effectiveRuntimeClasspath(fabricLaunch))
+		{
+			runtimeClasspath.add(entry.toAbsolutePath().normalize());
+		}
+
+		Set<Path> exclusions = new LinkedHashSet<>();
+
+		for (ModuleSpec module : launchDependencyModules(graph, moduleInjection.moduleId()))
+		{
+			for (Path dependency : _ideaDependencyResolver.resolveModuleLibraries(
+				graph,
+				repository.projectRoot(),
+				repository.gradleProperties(),
+				refresh,
+				module,
+				true
+			))
+			{
+				Path normalized = dependency.toAbsolutePath().normalize();
+
+				if (!runtimeClasspath.contains(normalized))
+				{
+					exclusions.add(normalized);
+				}
+			}
+		}
+
+		return List.copyOf(exclusions);
+	}
+
+	/**
+	 * Renders the IntelliJ Application `classpathModifications` block.
+	 *
+	 * @param exclusions the ordered excluded classpath entries
+	 * @return the serialized XML fragment
+	 */
+	private String renderIdeaClasspathModifications(List<Path> exclusions)
+	{
+		if (exclusions.isEmpty())
+		{
+			return "<classpathModifications/>";
+		}
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("<classpathModifications>");
+
+		for (Path exclusion : exclusions)
+		{
+			builder.append("<entry exclude=\"true\" path=\"")
+			       .append(XmlEscaper.escapeAttribute(exclusion.toString()))
+			       .append("\"/>");
+		}
+
+		builder.append("</classpathModifications>");
+		return builder.toString();
+	}
+
+	/**
+	 * Reads an IntelliJ project XML document when present, or creates a new empty project document.
+	 *
+	 * @param path the IntelliJ project document path
+	 * @return the parsed or synthesized document
+	 * @throws IOException if the existing document cannot be parsed
+	 */
+	private Document readOrCreateProjectDocument(Path path) throws IOException
+	{
+		if (!Files.exists(path))
+		{
+			Document document = DocumentHelper.createDocument();
+			document.addElement("project").addAttribute("version", "4");
+			return document;
+		}
+
+		try
+		{
+			return DocumentHelper.parseText(Files.readString(path));
+		}
+		catch (Exception exception)
+		{
+			throw new IOException("Failed to parse IntelliJ document " + path, exception);
+		}
+	}
+
+	/**
+	 * Gets the first child element matching a name/attribute pair, creating it when absent.
+	 *
+	 * @param parent the parent element
+	 * @param elementName the child element name
+	 * @param attributeName the attribute name
+	 * @param attributeValue the attribute value
+	 * @return the existing or created element
+	 */
+	private Element firstOrCreate(Element parent, String elementName, String attributeName, String attributeValue)
+	{
+		for (Object candidate : parent.elements(elementName))
+		{
+			Element element = (Element) candidate;
+
+			if (attributeValue.equals(element.attributeValue(attributeName)))
+			{
+				return element;
+			}
+		}
+
+		Element created = parent.addElement(elementName);
+		created.addAttribute(attributeName, attributeValue);
+		return created;
+	}
+
+	/**
+	 * Gets the first child element with the given name, creating it when absent.
+	 *
+	 * @param parent the parent element
+	 * @param elementName the child element name
+	 * @return the existing or created element
+	 */
+	private Element firstOrCreate(Element parent, String elementName)
+	{
+		for (Object candidate : parent.elements(elementName))
+		{
+			return (Element) candidate;
+		}
+
+		return parent.addElement(elementName);
+	}
+
+	/**
+	 * Removes an IntelliJ module registration entry when it already exists.
+	 *
+	 * @param modules the `modules` element
+	 * @param filePath the IntelliJ macro file path
+	 */
+	private void removeRegisteredModule(Element modules, String filePath)
+	{
+		List<Element> toRemove = new ArrayList<>();
+
+		for (Object candidate : modules.elements("module"))
+		{
+			Element module = (Element) candidate;
+
+			if (filePath.equals(module.attributeValue("filepath")))
+			{
+				toRemove.add(module);
+			}
+		}
+
+		for (Element module : toRemove)
+		{
+			modules.remove(module);
+		}
 	}
 
 	/**

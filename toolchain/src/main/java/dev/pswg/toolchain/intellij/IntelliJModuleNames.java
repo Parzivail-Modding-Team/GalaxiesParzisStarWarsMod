@@ -61,4 +61,28 @@ public final class IntelliJModuleNames
 	{
 		return toolchainModuleName(projectName) + ".iml";
 	}
+
+	/**
+	 * Builds the IntelliJ module name for a generated Fabric launch classpath module.
+	 *
+	 * @param projectName the IntelliJ project name
+	 * @param platformId the target platform identifier
+	 * @return the launch module name
+	 */
+	public static String fabricLaunchModuleName(String projectName, String platformId)
+	{
+		return projectName + ".launch.fabric." + platformId;
+	}
+
+	/**
+	 * Builds the IntelliJ module file name for a generated Fabric launch classpath module.
+	 *
+	 * @param projectName the IntelliJ project name
+	 * @param platformId the target platform identifier
+	 * @return the launch module file name
+	 */
+	public static String fabricLaunchModuleFileName(String projectName, String platformId)
+	{
+		return fabricLaunchModuleName(projectName, platformId) + ".iml";
+	}
 }

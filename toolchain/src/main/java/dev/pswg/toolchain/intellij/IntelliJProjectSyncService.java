@@ -50,7 +50,7 @@ public final class IntelliJProjectSyncService
 	 * The external libraries needed to compile and run the standalone toolchain module from the PSWG
 	 * root IntelliJ project.
 	 */
-	private static final List<MavenDependencySpec> TOOLCHAIN_DEPENDENCIES = List.of(
+	static final List<MavenDependencySpec> TOOLCHAIN_DEPENDENCIES = List.of(
 		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-databind:2.21.1", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-annotations:2.21", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-core:2.21.1", URI.create("https://repo1.maven.org/maven2")),
@@ -119,7 +119,7 @@ public final class IntelliJProjectSyncService
 	{
 		Path projectMetadataRoot = projectRoot.resolve(".idea");
 		IntelliJXmlWriter.write(projectMetadataRoot.resolve(projectName + ".iml"), createRootModuleDocument());
-		IntelliJXmlWriter.write(projectMetadataRoot.resolve("modules.xml"), createModulesDocument(projectName, graph));
+		IntelliJXmlWriter.write(projectMetadataRoot.resolve("modules.xml"), createModulesDocument(projectRoot, projectName, graph));
 	}
 
 	/**
@@ -237,7 +237,7 @@ public final class IntelliJProjectSyncService
 		Set<String> expectedModuleFiles = new LinkedHashSet<>();
 		ToolchainLog.info("idea", "Writing module metadata for toolchain");
 		expectedModuleFiles.add("toolchain/" + IntelliJModuleNames.toolchainModuleFileName(projectName));
-		writeToolchainModuleMetadata(projectRoot, projectName, graph);
+		writeToolchainModuleMetadata(projectRoot, projectName, gradleProperties, refresh);
 
 		for (ModuleSpec module : graph.modules())
 		{
@@ -300,7 +300,8 @@ public final class IntelliJProjectSyncService
 	private void writeToolchainModuleMetadata(
 		Path projectRoot,
 		String projectName,
-		BuildGraph graph
+		Properties gradleProperties,
+		boolean refresh
 	) throws IOException
 	{
 		Path outputPath = projectRoot.resolve(".idea")
@@ -308,7 +309,7 @@ public final class IntelliJProjectSyncService
 		                             .resolve("projects")
 		                             .resolve("toolchain")
 		                             .resolve(IntelliJModuleNames.toolchainModuleFileName(projectName));
-		IntelliJXmlWriter.write(outputPath, createToolchainModuleDocument(projectRoot, projectName, graph));
+		IntelliJXmlWriter.write(outputPath, createToolchainModuleDocument(projectRoot, projectName, gradleProperties, refresh));
 	}
 
 	/**
@@ -673,7 +674,7 @@ public final class IntelliJProjectSyncService
 	 * @param graph the authoritative build graph
 	 * @return the modules registration document
 	 */
-	private Document createModulesDocument(String projectName, BuildGraph graph)
+	private Document createModulesDocument(Path projectRoot, String projectName, BuildGraph graph) throws IOException
 	{
 		Document document = DocumentHelper.createDocument();
 		Element project = document.addElement("project");
@@ -701,6 +702,11 @@ public final class IntelliJProjectSyncService
 			}
 		}
 
+		for (String preservedModulePath : preservedGeneratedLaunchModules(projectRoot))
+		{
+			addRegisteredModule(modules, preservedModulePath);
+		}
+
 		return document;
 	}
 
@@ -716,13 +722,14 @@ public final class IntelliJProjectSyncService
 	private Document createToolchainModuleDocument(
 		Path projectRoot,
 		String projectName,
-		BuildGraph graph
+		Properties gradleProperties,
+		boolean refresh
 	) throws IOException
 	{
 		Document document = DocumentHelper.createDocument();
 		Element moduleElement = document.addElement("module");
 		moduleElement.addAttribute("version", "4");
-		addToolchainRootManager(moduleElement, projectRoot, projectName, graph);
+		addToolchainRootManager(moduleElement, projectRoot, projectName, gradleProperties, refresh);
 		return document;
 	}
 
@@ -815,7 +822,8 @@ public final class IntelliJProjectSyncService
 		Element moduleElement,
 		Path projectRoot,
 		String projectName,
-		BuildGraph graph
+		Properties gradleProperties,
+		boolean refresh
 	) throws IOException
 	{
 		Path toolchainRoot = projectRoot.resolve("toolchain");
@@ -840,9 +848,8 @@ public final class IntelliJProjectSyncService
 
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
-		addToolchainBuildDependencyEntries(rootManager, projectName, graph);
 
-		for (Path dependency : _dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, new Properties(), false))
+		for (Path dependency : _dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, gradleProperties, refresh))
 		{
 			rootManager.addElement("orderEntry")
 			           .addAttribute("type", "library")
@@ -852,37 +859,39 @@ public final class IntelliJProjectSyncService
 	}
 
 	/**
-	 * Adds module dependencies that force IntelliJ's `Make` step for the toolchain bootstrap module
-	 * to also compile the PSWG modules required by the generated launch workflows.
+	 * Preserves previously generated launch modules that live outside the static PSWG source-set graph.
 	 *
-	 * <p>This remains a temporary build-order bridge. Annotation processing is disabled explicitly for
-	 * `toolchain.main`, so these edges should not leak PSWG processors into toolchain compilation.
+	 * <p>`idea sync-pswg` owns the bulk of `modules.xml`, but version/platform-specific launch modules
+	 * are generated later by Fabric launch preparation. Preserving those entries keeps IntelliJ from
+	 * dropping the launch module registration every time the project metadata is resynced.
 	 *
-	 * @param rootManager the toolchain root manager element
-	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
+	 * @param projectRoot the PSWG project root
+	 * @return the generated launch module file paths already present on disk
+	 * @throws IOException if the launch module directory cannot be scanned
 	 */
-	private void addToolchainBuildDependencyEntries(
-		Element rootManager,
-		String projectName,
-		BuildGraph graph
-	)
+	private List<String> preservedGeneratedLaunchModules(Path projectRoot) throws IOException
 	{
-		for (ModuleSpec module : graph.modules())
-		{
-			rootManager.addElement("orderEntry")
-			           .addAttribute("type", "module")
-			           .addAttribute("module-name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.MAIN))
-			           .addAttribute("scope", "PROVIDED");
+		Path launchModulesDirectory = projectRoot.resolve(".idea")
+		                                        .resolve("modules")
+		                                        .resolve("launch");
 
-			if (hasClientSourceSet(module))
-			{
-				rootManager.addElement("orderEntry")
-				           .addAttribute("type", "module")
-				           .addAttribute("module-name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.CLIENT))
-				           .addAttribute("scope", "PROVIDED");
-			}
+		if (!Files.isDirectory(launchModulesDirectory))
+		{
+			return List.of();
 		}
+
+		List<String> modulePaths = new ArrayList<>();
+
+		try (var paths = Files.walk(launchModulesDirectory))
+		{
+			paths.filter(path -> Files.isRegularFile(path) && path.getFileName().toString().endsWith(".iml"))
+			     .sorted()
+			     .forEach(path -> modulePaths.add(
+			     	"$PROJECT_DIR$/.idea/modules/launch/" + launchModulesDirectory.relativize(path).toString().replace('\\', '/')
+			     ));
+		}
+
+		return modulePaths;
 	}
 
 	/**
@@ -1303,7 +1312,9 @@ public final class IntelliJProjectSyncService
 
 				String fileName = entry.getFileName().toString();
 
-				if (!fileName.endsWith(".xml") || expectedFileNames.contains(fileName))
+				if (!fileName.endsWith(".xml")
+				    || expectedFileNames.contains(fileName)
+				    || fileName.startsWith("fabric-launch-"))
 				{
 					continue;
 				}

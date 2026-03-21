@@ -1,5 +1,6 @@
 package dev.pswg.interaction;
 
+import dev.pswg.Galaxies;
 import dev.pswg.item.IPrimaryActionHandler;
 import dev.pswg.networking.GalaxiesPlayerActionC2SPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
