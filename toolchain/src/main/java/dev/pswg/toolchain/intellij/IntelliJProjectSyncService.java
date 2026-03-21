@@ -138,15 +138,19 @@ public final class IntelliJProjectSyncService
 
 		Path librariesDirectory = projectRoot.resolve(".idea").resolve("libraries");
 		Files.createDirectories(librariesDirectory);
+		Set<String> expectedFileNames = new LinkedHashSet<>();
 
 		for (Path artifact : resolvedArtifacts)
 		{
+			String fileName = sanitizeLibraryFileName(projectLibraryName(artifact)) + ".xml";
+			expectedFileNames.add(fileName);
 			IntelliJXmlWriter.write(
-				librariesDirectory.resolve(sanitizeLibraryFileName(projectLibraryName(artifact)) + ".xml"),
+				librariesDirectory.resolve(fileName),
 				createProjectLibraryDocument(projectRoot, artifact)
 			);
 		}
 
+		deleteObsoleteGeneratedFiles(librariesDirectory, expectedFileNames);
 		ToolchainLog.info("idea", "Wrote " + resolvedArtifacts.size() + " project library definitions");
 	}
 
@@ -169,19 +173,24 @@ public final class IntelliJProjectSyncService
 	) throws IOException
 	{
 		ToolchainLog.info("idea", "Generating metadata for " + graph.modules().size() + " modeled modules");
+		Path modulesDirectory = projectRoot.resolve(".idea").resolve("modules").resolve("projects");
+		Set<String> expectedModuleFiles = new LinkedHashSet<>();
 
 		for (ModuleSpec module : graph.modules())
 		{
 			ToolchainLog.info("idea", "Writing module metadata for " + module.id());
+			expectedModuleFiles.add(module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.MAIN));
 			writeSourceSetModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh, module, SourceSetNames.MAIN);
 
 			if (hasClientSourceSet(module))
 			{
 				ToolchainLog.info("idea", "Writing client source set metadata for " + module.id());
+				expectedModuleFiles.add(module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.CLIENT));
 				writeSourceSetModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh, module, SourceSetNames.CLIENT);
 			}
 		}
 
+		deleteObsoleteGeneratedProjectModuleFiles(modulesDirectory, expectedModuleFiles);
 		ToolchainLog.info("idea", "Finished module metadata generation");
 	}
 
@@ -849,6 +858,81 @@ public final class IntelliJProjectSyncService
 		modules.addElement("module")
 		       .addAttribute("fileurl", "file://" + filePath)
 		       .addAttribute("filepath", filePath);
+	}
+
+	/**
+	 * Deletes obsolete generated IntelliJ project-library metadata files.
+	 *
+	 * <p>The toolchain owns the contents of `.idea/libraries`, so stale files from old transformed
+	 * jars or dependency graph changes should be removed as part of each sync.
+	 *
+	 * @param directory the IntelliJ libraries directory
+	 * @param expectedFileNames the generated library metadata files expected after this sync
+	 * @throws IOException if stale files cannot be removed
+	 */
+	private void deleteObsoleteGeneratedFiles(
+		Path directory,
+		Set<String> expectedFileNames
+	) throws IOException
+	{
+		if (!Files.isDirectory(directory))
+		{
+			return;
+		}
+
+		try (var entries = Files.list(directory))
+		{
+			for (Path entry : entries.toList())
+			{
+				if (!Files.isRegularFile(entry))
+				{
+					continue;
+				}
+
+				String fileName = entry.getFileName().toString();
+
+				if (!fileName.endsWith(".xml") || expectedFileNames.contains(fileName))
+				{
+					continue;
+				}
+
+				Files.deleteIfExists(entry);
+			}
+		}
+	}
+
+	/**
+	 * Deletes obsolete generated source-set module metadata from `.idea/modules/projects`.
+	 *
+	 * @param modulesDirectory the generated project-modules root
+	 * @param expectedModuleFiles the module-relative `.iml` files expected after this sync
+	 * @throws IOException if stale files cannot be removed
+	 */
+	private void deleteObsoleteGeneratedProjectModuleFiles(
+		Path modulesDirectory,
+		Set<String> expectedModuleFiles
+	) throws IOException
+	{
+		if (!Files.isDirectory(modulesDirectory))
+		{
+			return;
+		}
+
+		try (var entries = Files.walk(modulesDirectory))
+		{
+			for (Path entry : entries.filter(Files::isRegularFile).toList())
+			{
+				Path relativePath = modulesDirectory.relativize(entry);
+				String normalizedPath = relativePath.toString().replace('\\', '/');
+
+				if (!normalizedPath.endsWith(".iml") || expectedModuleFiles.contains(normalizedPath))
+				{
+					continue;
+				}
+
+				Files.deleteIfExists(entry);
+			}
+		}
 	}
 
 }
