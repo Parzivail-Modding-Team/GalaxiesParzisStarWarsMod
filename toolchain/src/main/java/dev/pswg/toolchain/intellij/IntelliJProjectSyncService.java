@@ -1161,7 +1161,17 @@ public final class IntelliJProjectSyncService
 			return module.clientResources();
 		}
 
-		return module.mainResources();
+		List<Path> roots = new ArrayList<>(module.mainResources());
+
+		if (module.datagenOutput() != null && !roots.contains(module.datagenOutput()))
+		{
+			// Checked-in datagen output is part of the runtime resource surface and must be copied into
+			// IntelliJ outputs alongside src/main/resources so models, blockstates, and lang files are
+			// visible during root-project Fabric launches.
+			roots.add(module.datagenOutput());
+		}
+
+		return roots;
 	}
 
 	/**
