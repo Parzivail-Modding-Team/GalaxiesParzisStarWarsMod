@@ -7,6 +7,7 @@ import dev.pswg.toolchain.pswg.PswgRepositoryContext;
 import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
+import dev.pswg.toolchain.util.ToolchainLog;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -54,16 +55,22 @@ public final class IntelliJProjectSyncService
 	 */
 	public void syncPswgProject(boolean refresh) throws IOException
 	{
+		ToolchainLog.info("idea", "Discovering PSWG repository context");
 		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
 		Path projectRoot = repository.projectRoot();
 		BuildGraph graph = new PswgBuildDefinition().define();
 		Properties gradleProperties = repository.gradleProperties();
 		String projectName = repository.projectName();
 
+		ToolchainLog.info("idea", "Writing project registration");
 		writeProjectRegistration(projectRoot, projectName, graph);
+		ToolchainLog.info("idea", "Writing compiler configuration");
 		writeCompilerConfiguration(projectRoot, projectName, graph, gradleProperties, refresh);
+		ToolchainLog.info("idea", "Writing project libraries");
 		writeProjectLibraries(projectRoot, graph, gradleProperties, refresh);
+		ToolchainLog.info("idea", "Writing module metadata");
 		writeModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh);
+		ToolchainLog.info("idea", "IntelliJ sync complete");
 	}
 
 	/**
@@ -127,6 +134,7 @@ public final class IntelliJProjectSyncService
 	) throws IOException
 	{
 		Set<Path> resolvedArtifacts = _dependencyResolver.resolveProjectLibraries(graph, gradleProperties, refresh);
+		ToolchainLog.info("idea", "Resolved " + resolvedArtifacts.size() + " project libraries");
 
 		Path librariesDirectory = projectRoot.resolve(".idea").resolve("libraries");
 		Files.createDirectories(librariesDirectory);
@@ -138,6 +146,8 @@ public final class IntelliJProjectSyncService
 				createProjectLibraryDocument(projectRoot, artifact)
 			);
 		}
+
+		ToolchainLog.info("idea", "Wrote " + resolvedArtifacts.size() + " project library definitions");
 	}
 
 	/**
@@ -158,15 +168,21 @@ public final class IntelliJProjectSyncService
 		boolean refresh
 	) throws IOException
 	{
+		ToolchainLog.info("idea", "Generating metadata for " + graph.modules().size() + " modeled modules");
+
 		for (ModuleSpec module : graph.modules())
 		{
+			ToolchainLog.info("idea", "Writing module metadata for " + module.id());
 			writeSourceSetModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh, module, SourceSetNames.MAIN);
 
 			if (hasClientSourceSet(module))
 			{
+				ToolchainLog.info("idea", "Writing client source set metadata for " + module.id());
 				writeSourceSetModuleMetadata(projectRoot, projectName, graph, gradleProperties, refresh, module, SourceSetNames.CLIENT);
 			}
 		}
+
+		ToolchainLog.info("idea", "Finished module metadata generation");
 	}
 
 	/**

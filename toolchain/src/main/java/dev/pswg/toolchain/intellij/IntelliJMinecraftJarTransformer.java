@@ -3,6 +3,8 @@ package dev.pswg.toolchain.intellij;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.pswg.toolchain.util.ToolchainLog;
+
 import net.fabricmc.classtweaker.api.ClassTweaker;
 import net.fabricmc.classtweaker.api.ClassTweakerReader;
 
@@ -73,13 +75,19 @@ public final class IntelliJMinecraftJarTransformer
 
 		if (classTweakers.isEmpty())
 		{
+			ToolchainLog.info("transform", "No transitive class tweakers discovered for " + minecraftVersion + "; using raw Minecraft jar");
 			return minecraftJar;
 		}
 
 		Path outputPath = transformedJarPath(minecraftVersion, minecraftJar, classTweakers);
+		ToolchainLog.info(
+			"transform",
+			"Discovered " + classTweakers.size() + " class tweaker inputs for " + minecraftVersion
+		);
 
 		if (Files.exists(outputPath))
 		{
+			ToolchainLog.info("transform", "Reusing transformed Minecraft jar " + outputPath.getFileName());
 			return outputPath;
 		}
 
@@ -87,10 +95,13 @@ public final class IntelliJMinecraftJarTransformer
 
 		for (ClassTweakerEntry entry : classTweakers)
 		{
+			ToolchainLog.info("transform", "Applying class tweaker input " + entry.sortKey());
 			ClassTweakerReader.create(classTweaker).read(entry.content(), entry.modId());
 		}
 
+		ToolchainLog.info("transform", "Writing transformed Minecraft jar to " + outputPath);
 		writeTransformedJar(minecraftJar, outputPath, classTweaker);
+		ToolchainLog.info("transform", "Finished transformed Minecraft jar " + outputPath.getFileName());
 		return outputPath;
 	}
 
@@ -105,6 +116,7 @@ public final class IntelliJMinecraftJarTransformer
 	{
 		List<ClassTweakerEntry> entries = new ArrayList<>();
 		Set<Path> inspectedArtifacts = new LinkedHashSet<>(modArtifacts);
+		ToolchainLog.info("transform", "Scanning " + inspectedArtifacts.size() + " candidate mod artifacts for class tweakers");
 
 		for (Path artifact : inspectedArtifacts)
 		{
@@ -224,6 +236,7 @@ public final class IntelliJMinecraftJarTransformer
 		}
 		catch (IOException ignored)
 		{
+			ToolchainLog.info("transform", "Atomic move was unavailable; falling back to a non-atomic finalize step");
 			Files.move(temporaryOutput, outputJar, StandardCopyOption.REPLACE_EXISTING);
 		}
 	}

@@ -11,6 +11,7 @@ import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.mojang.MojangMetadataClient;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadataLibrary;
+import dev.pswg.toolchain.util.ToolchainLog;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -223,6 +224,7 @@ public final class IntelliJDependencyResolver
 
 		for (ModuleSpec module : graph.modules())
 		{
+			ToolchainLog.info("idea", "Resolving libraries for module " + module.id());
 			resolvedArtifacts.addAll(resolveModuleLibraries(graph, gradleProperties, refresh, module, true));
 		}
 
@@ -312,6 +314,7 @@ public final class IntelliJDependencyResolver
 		Set<Path> dependencies = new LinkedHashSet<>();
 		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(minecraftVersion, refresh);
 		Path clientJar = _mojangClient.downloadClientJar(minecraftVersion, refresh);
+		ToolchainLog.info("transform", "Preparing transformed Minecraft compile jar for " + minecraftVersion);
 		dependencies.add(_minecraftJarTransformer.transformMinecraftJar(minecraftVersion, clientJar, modArtifacts));
 
 		for (MojangVersionMetadataLibrary library : metadata.libraries())
