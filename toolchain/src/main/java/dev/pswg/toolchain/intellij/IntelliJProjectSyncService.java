@@ -237,7 +237,7 @@ public final class IntelliJProjectSyncService
 		Set<String> expectedModuleFiles = new LinkedHashSet<>();
 		ToolchainLog.info("idea", "Writing module metadata for toolchain");
 		expectedModuleFiles.add("toolchain/" + IntelliJModuleNames.toolchainModuleFileName(projectName));
-		writeToolchainModuleMetadata(projectRoot, projectName);
+		writeToolchainModuleMetadata(projectRoot, projectName, graph);
 
 		for (ModuleSpec module : graph.modules())
 		{
@@ -299,7 +299,8 @@ public final class IntelliJProjectSyncService
 	 */
 	private void writeToolchainModuleMetadata(
 		Path projectRoot,
-		String projectName
+		String projectName,
+		BuildGraph graph
 	) throws IOException
 	{
 		Path outputPath = projectRoot.resolve(".idea")
@@ -307,7 +308,7 @@ public final class IntelliJProjectSyncService
 		                             .resolve("projects")
 		                             .resolve("toolchain")
 		                             .resolve(IntelliJModuleNames.toolchainModuleFileName(projectName));
-		IntelliJXmlWriter.write(outputPath, createToolchainModuleDocument(projectRoot, projectName));
+		IntelliJXmlWriter.write(outputPath, createToolchainModuleDocument(projectRoot, projectName, graph));
 	}
 
 	/**
@@ -343,6 +344,10 @@ public final class IntelliJProjectSyncService
 		defaultProfile.addAttribute("default", "true");
 		defaultProfile.addAttribute("name", "Default");
 		defaultProfile.addAttribute("enabled", "true");
+		addDisabledAnnotationProfile(
+			annotationProcessing,
+			IntelliJModuleNames.toolchainModuleName(projectName)
+		);
 
 		for (ModuleSpec module : graph.modules())
 		{
@@ -488,6 +493,21 @@ public final class IntelliJProjectSyncService
 		}
 
 		return processorClassNames;
+	}
+
+	/**
+	 * Adds a disabled annotation processing profile for a module that must never discover processors
+	 * from its classpath.
+	 *
+	 * @param annotationProcessing the annotation processing component
+	 * @param moduleName the IntelliJ module name
+	 */
+	private void addDisabledAnnotationProfile(Element annotationProcessing, String moduleName)
+	{
+		Element profile = annotationProcessing.addElement("profile");
+		profile.addAttribute("name", "PSWG Toolchain: Disabled AP for " + moduleName);
+		profile.addAttribute("enabled", "false");
+		profile.addElement("module").addAttribute("name", moduleName);
 	}
 
 	/**
@@ -695,13 +715,14 @@ public final class IntelliJProjectSyncService
 	 */
 	private Document createToolchainModuleDocument(
 		Path projectRoot,
-		String projectName
+		String projectName,
+		BuildGraph graph
 	) throws IOException
 	{
 		Document document = DocumentHelper.createDocument();
 		Element moduleElement = document.addElement("module");
 		moduleElement.addAttribute("version", "4");
-		addToolchainRootManager(moduleElement, projectRoot, projectName);
+		addToolchainRootManager(moduleElement, projectRoot, projectName, graph);
 		return document;
 	}
 
@@ -793,7 +814,8 @@ public final class IntelliJProjectSyncService
 	private void addToolchainRootManager(
 		Element moduleElement,
 		Path projectRoot,
-		String projectName
+		String projectName,
+		BuildGraph graph
 	) throws IOException
 	{
 		Path toolchainRoot = projectRoot.resolve("toolchain");
@@ -818,6 +840,7 @@ public final class IntelliJProjectSyncService
 
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
+		addToolchainBuildDependencyEntries(rootManager, projectName, graph);
 
 		for (Path dependency : _dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, new Properties(), false))
 		{
@@ -825,6 +848,40 @@ public final class IntelliJProjectSyncService
 			           .addAttribute("type", "library")
 			           .addAttribute("name", projectLibraryName(dependency))
 			           .addAttribute("level", "project");
+		}
+	}
+
+	/**
+	 * Adds module dependencies that force IntelliJ's `Make` step for the toolchain bootstrap module
+	 * to also compile the PSWG modules required by the generated launch workflows.
+	 *
+	 * <p>This remains a temporary build-order bridge. Annotation processing is disabled explicitly for
+	 * `toolchain.main`, so these edges should not leak PSWG processors into toolchain compilation.
+	 *
+	 * @param rootManager the toolchain root manager element
+	 * @param projectName the IntelliJ project name
+	 * @param graph the authoritative build graph
+	 */
+	private void addToolchainBuildDependencyEntries(
+		Element rootManager,
+		String projectName,
+		BuildGraph graph
+	)
+	{
+		for (ModuleSpec module : graph.modules())
+		{
+			rootManager.addElement("orderEntry")
+			           .addAttribute("type", "module")
+			           .addAttribute("module-name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.MAIN))
+			           .addAttribute("scope", "PROVIDED");
+
+			if (hasClientSourceSet(module))
+			{
+				rootManager.addElement("orderEntry")
+				           .addAttribute("type", "module")
+				           .addAttribute("module-name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.CLIENT))
+				           .addAttribute("scope", "PROVIDED");
+			}
 		}
 	}
 
