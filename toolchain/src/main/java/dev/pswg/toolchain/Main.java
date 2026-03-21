@@ -1,17 +1,15 @@
 package dev.pswg.toolchain;
 
-import dev.pswg.toolchain.definition.BuildDefinition;
 import dev.pswg.toolchain.fabric.FabricDevLaunchInspector;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchSummary;
 import dev.pswg.toolchain.intellij.IntelliJProjectSyncService;
-import dev.pswg.toolchain.model.BuildGraph;
-import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.mojang.MojangMetadataClient;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifest;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifestEntry;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
-import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
+import dev.pswg.toolchain.pswg.PswgDevelopmentService;
+import dev.pswg.toolchain.pswg.PswgRepositoryContext;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 
@@ -36,67 +34,111 @@ public final class Main
 	 */
 	public static void main(String[] args)
 	{
-		if (args.length > 0)
+		try
 		{
-			runCommand(args);
-			return;
+			if (args.length > 0)
+			{
+				runCommand(args);
+				return;
+			}
+
+			printOverview();
 		}
-
-		BuildDefinition definition = new PswgBuildDefinition();
-		BuildGraph graph = definition.define();
-
-		System.out.println("PSWG Toolchain Bootstrap");
-		System.out.println("Project: " + graph.projectId());
-		System.out.println("Minecraft: " + graph.minecraftVersion());
-		System.out.println("Modules:");
-
-		for (ModuleSpec module : graph.modules())
+		catch (IOException exception)
 		{
-			System.out.println(" - " + module.id() + " @ " + module.paths().root());
+			reportIoError(exception);
 		}
+	}
+
+	/**
+	 * Prints the high-level toolchain overview and supported quickstart path.
+	 *
+	 * @throws IOException if repository discovery fails
+	 */
+	private static void printOverview() throws IOException
+	{
+		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		System.out.println("PSWG Toolchain");
+		System.out.println("Project: " + repository.projectName());
+		System.out.println("Minecraft: " + repository.minecraftVersion());
+		System.out.println("Supported workflow:");
+		System.out.println("  dev setup-intellij [--refresh] [--module <id>]");
+		System.out.println("Default development module: " + PswgDevelopmentService.DEFAULT_FABRIC_DEVELOPMENT_MODULE_ID);
+		System.out.println("This synchronizes IntelliJ metadata and refreshes the generated Fabric client run configuration.");
+		System.out.println();
+		printUsage();
 	}
 
 	/**
 	 * Executes a command-oriented toolchain entrypoint.
 	 *
 	 * @param args command line arguments
+	 * @throws IOException if command execution fails
 	 */
-	private static void runCommand(String[] args)
+	private static void runCommand(String[] args) throws IOException
 	{
-		try
+		switch (args[0])
 		{
-			if ("mojang".equals(args[0]))
+			case "dev" ->
+			{
+				runDevelopmentCommand(args);
+				return;
+			}
+
+			case "mojang" ->
 			{
 				runMojangCommand(args);
 				return;
 			}
 
-			if ("fabric".equals(args[0]))
+			case "fabric" ->
 			{
 				runFabricCommand(args);
 				return;
 			}
 
-			if ("idea".equals(args[0]))
+			case "idea" ->
 			{
 				runIdeaCommand(args);
 				return;
 			}
 
-			printUsage();
-			System.exit(1);
-		}
-		catch (IOException exception)
-		{
-			System.err.println("I/O error: " + exception.getMessage());
-
-			if (exception.getCause() != null && exception.getCause().getMessage() != null)
+			default ->
 			{
-				System.err.println("Cause: " + exception.getCause().getMessage());
+				printUsage();
+				System.exit(1);
 			}
-
-			System.exit(1);
 		}
+	}
+
+	/**
+	 * Executes the supported PSWG development workflow commands.
+	 *
+	 * @param args command line arguments
+	 * @throws IOException if setup fails
+	 */
+	private static void runDevelopmentCommand(String[] args) throws IOException
+	{
+		if (args.length >= 2 && "setup-intellij".equals(args[1]))
+		{
+			boolean refresh = hasFlag(args, "--refresh");
+			String requestedModuleId = flagValue(args, "--module");
+			String effectiveModuleId = PswgDevelopmentService.effectiveDevelopmentModuleId(requestedModuleId);
+			VanillaLaunchConfig config = new PswgDevelopmentService().setupSupportedIntelliJDevelopment(
+				refresh,
+				requestedModuleId
+			);
+
+			System.out.println("Supported IntelliJ development workflow is ready.");
+			System.out.println("Minecraft: " + config.versionId());
+			System.out.println("Injected module: " + effectiveModuleId);
+			System.out.println("Working directory: " + config.workingDirectory().toAbsolutePath());
+			System.out.println("Next step: reload IntelliJ if needed, then run the generated Fabric Client configuration.");
+			return;
+		}
+
+		printUsage();
+		System.exit(1);
 	}
 
 	/**
@@ -107,7 +149,7 @@ public final class Main
 	 */
 	private static void runMojangCommand(String[] args) throws IOException
 	{
-		String defaultVersion = new PswgBuildDefinition().define().minecraftVersion();
+		String defaultVersion = PswgRepositoryContext.discoverFromToolchainWorkingDirectory().minecraftVersion();
 		MojangMetadataClient client = new MojangMetadataClient();
 		boolean refresh = hasFlag(args, "--refresh");
 
@@ -201,7 +243,7 @@ public final class Main
 
 		if (args.length >= 2 && "prepare-dev".equals(args[1]))
 		{
-			String defaultVersion = new PswgBuildDefinition().define().minecraftVersion();
+			String defaultVersion = PswgRepositoryContext.discoverFromToolchainWorkingDirectory().minecraftVersion();
 			String versionId = positionalVersionArg(args, 2, defaultVersion);
 			boolean refresh = hasFlag(args, "--refresh");
 			String moduleId = flagValue(args, "--module");
@@ -248,6 +290,23 @@ public final class Main
 		}
 
 		printUsage();
+		System.exit(1);
+	}
+
+	/**
+	 * Reports a top-level I/O failure.
+	 *
+	 * @param exception the failure to report
+	 */
+	private static void reportIoError(IOException exception)
+	{
+		System.err.println("I/O error: " + exception.getMessage());
+
+		if (exception.getCause() != null && exception.getCause().getMessage() != null)
+		{
+			System.err.println("Cause: " + exception.getCause().getMessage());
+		}
+
 		System.exit(1);
 	}
 
@@ -331,13 +390,18 @@ public final class Main
 	 */
 	private static void printUsage()
 	{
-		System.out.println("Usage:");
+		System.out.println("Commands:");
+		System.out.println("  dev setup-intellij [--refresh] [--module <id>]");
+		System.out.println("    Supported workflow. Synchronizes IntelliJ metadata and refreshes the generated Fabric client launch.");
+		System.out.println("  idea sync-pswg [--refresh]");
+		System.out.println("    Low-level IntelliJ metadata generation.");
+		System.out.println("  fabric prepare-dev [id] [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
+		System.out.println("    Low-level Fabric launch generation.");
+		System.out.println("  fabric inspect-dev");
+		System.out.println("    Inspect the currently generated Fabric launch contract.");
 		System.out.println("  mojang manifest [--refresh]");
 		System.out.println("  mojang version [id] [--refresh]");
 		System.out.println("  mojang download [id] [--refresh]");
 		System.out.println("  mojang runtime [id] [--refresh]");
-		System.out.println("  fabric inspect-dev");
-		System.out.println("  fabric prepare-dev [id] [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
-		System.out.println("  idea sync-pswg [--refresh]");
 	}
 }

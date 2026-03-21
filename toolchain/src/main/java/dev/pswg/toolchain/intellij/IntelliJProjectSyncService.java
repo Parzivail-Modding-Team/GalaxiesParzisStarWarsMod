@@ -5,7 +5,6 @@ import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.pswg.PswgRepositoryContext;
-import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
 import dev.pswg.toolchain.util.ToolchainLog;
@@ -86,10 +85,11 @@ public final class IntelliJProjectSyncService
 		ToolchainLog.info("idea", "Discovering PSWG repository context");
 		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
 		Path projectRoot = repository.projectRoot();
-		BuildGraph graph = new PswgBuildDefinition().define();
+		BuildGraph graph = repository.buildGraph();
 		Properties gradleProperties = repository.gradleProperties();
 		String projectName = repository.projectName();
 
+		// Keep the sync phases explicit so future maintainers can line them up with IntelliJ files on disk.
 		ToolchainLog.info("idea", "Writing project registration");
 		writeProjectRegistration(projectRoot, projectName, graph);
 		ToolchainLog.info("idea", "Writing project settings");

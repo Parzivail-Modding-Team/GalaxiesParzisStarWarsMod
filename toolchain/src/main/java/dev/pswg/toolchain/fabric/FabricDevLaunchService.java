@@ -10,7 +10,6 @@ import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.pswg.PswgRepositoryContext;
-import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.runtime.VanillaLaunchService;
@@ -145,7 +144,7 @@ public final class FabricDevLaunchService
 		Path repoRoot = repository.projectRoot();
 		VanillaLaunchConfig vanillaLaunch = new VanillaLaunchService().prepareClientRuntime(versionId, refresh, identity);
 		FabricRuntimeArtifacts runtimeArtifacts = resolveFabricRuntimeArtifacts(repository.gradleProperties(), refresh);
-		FabricModuleInjection moduleInjection = resolveModuleInjection(repoRoot, moduleId, repository.gradleProperties(), refresh);
+		FabricModuleInjection moduleInjection = resolveModuleInjection(repository, moduleId, refresh);
 		FabricLaunchPaths launchPaths = createLaunchPaths(toolchainRoot, repoRoot, repository.projectName(), versionId);
 
 		prepareLaunchFiles(versionId, vanillaLaunch, moduleInjection.moduleRoots(), launchPaths);
@@ -199,17 +198,15 @@ public final class FabricDevLaunchService
 	/**
 	 * Resolves the optional module injection contract for a generated Fabric launch.
 	 *
-	 * @param repoRoot the tracked repository root
+	 * @param repository the discovered PSWG repository context
 	 * @param moduleId the optional module identifier
-	 * @param gradleProperties the tracked repository Gradle properties
 	 * @param refresh whether to revalidate cached external runtime artifacts
 	 * @return the resolved module injection contract
 	 * @throws IOException if supporting external runtime dependencies cannot be resolved
 	 */
 	private FabricModuleInjection resolveModuleInjection(
-		Path repoRoot,
+		PswgRepositoryContext repository,
 		String moduleId,
-		Properties gradleProperties,
 		boolean refresh
 	) throws IOException
 	{
@@ -223,8 +220,9 @@ public final class FabricDevLaunchService
 			);
 		}
 
-		BuildGraph graph = new PswgBuildDefinition().define();
-		String projectName = repositoryProjectName(gradleProperties, repoRoot);
+		BuildGraph graph = repository.buildGraph();
+		Path repoRoot = repository.projectRoot();
+		String projectName = repository.projectName();
 		ModuleSpec rootModule = requireModule(graph, moduleId);
 		List<Path> moduleRoots = resolveOutputRoots(repoRoot, projectName, rootModule);
 		List<Path> dependencyRoots = new ArrayList<>();
@@ -244,7 +242,11 @@ public final class FabricDevLaunchService
 			);
 		}
 
-		List<Path> externalRuntimeArtifacts = resolveRuntimeDependencies(runtimeDependencies, gradleProperties, refresh);
+		List<Path> externalRuntimeArtifacts = resolveRuntimeDependencies(
+			runtimeDependencies,
+			repository.gradleProperties(),
+			refresh
+		);
 
 		return new FabricModuleInjection(
 			moduleId,
@@ -730,7 +732,7 @@ public final class FabricDevLaunchService
 	}
 
 	/**
-	 * Resolves usable output roots for a module, preferring IntelliJ outputs when available.
+	 * Resolves the IntelliJ output roots for an injected module.
 	 *
 	 * @param projectRoot the tracked repository root
 	 * @param module the module specification
@@ -748,7 +750,7 @@ public final class FabricDevLaunchService
 	}
 
 	/**
-	 * Resolves usable output roots for a single module source set.
+	 * Resolves the IntelliJ output root for a single module source set.
 	 *
 	 * @param projectRoot the tracked repository root
 	 * @param module the module specification
@@ -762,8 +764,6 @@ public final class FabricDevLaunchService
 		String sourceSetName
 	)
 	{
-		// The long-term goal is to launch only from IntelliJ outputs. The Gradle fallback remains here
-		// only so launcher iteration can continue while compile ownership is still moving out of Gradle.
 		String moduleName = IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName);
 		Path intellijOutput = projectRoot.resolve(INTELLIJ_OUTPUT_DIRECTORY).resolve(moduleName);
 
@@ -773,48 +773,11 @@ public final class FabricDevLaunchService
 			return List.of(intellijOutput);
 		}
 
-		Path moduleRoot = projectRoot.resolve(module.paths().root());
-		List<Path> roots = new ArrayList<>();
-		Path gradleClasses = moduleRoot.resolve("build").resolve("classes").resolve("java").resolve(sourceSetName);
-		Path gradleResources = moduleRoot.resolve("build").resolve("resources").resolve(sourceSetName);
-
-		if (Files.isDirectory(gradleClasses))
-		{
-			ToolchainLog.info("fabric", "Falling back to Gradle classes for " + module.id() + "." + sourceSetName + ": " + gradleClasses);
-			roots.add(gradleClasses);
-		}
-
-		if (Files.isDirectory(gradleResources))
-		{
-			ToolchainLog.info("fabric", "Falling back to Gradle resources for " + module.id() + "." + sourceSetName + ": " + gradleResources);
-			roots.add(gradleResources);
-		}
-
-		if (roots.isEmpty())
-		{
-			ToolchainLog.info("fabric", "No compiled output roots found for " + module.id() + "." + sourceSetName);
-		}
-
-		return roots;
-	}
-
-	/**
-	 * Resolves the IntelliJ project name used for generated output directories.
-	 *
-	 * @param gradleProperties the tracked repository properties
-	 * @param projectRoot the tracked repository root
-	 * @return the authoritative project name
-	 */
-	private String repositoryProjectName(Properties gradleProperties, Path projectRoot)
-	{
-		String archivesBaseName = gradleProperties.getProperty("archives_base_name");
-
-		if (archivesBaseName != null && !archivesBaseName.isBlank())
-		{
-			return archivesBaseName;
-		}
-
-		return projectRoot.getFileName().toString();
+		ToolchainLog.info(
+			"fabric",
+			"No IntelliJ output found for " + module.id() + "." + sourceSetName + ". Build the generated Fabric Client configuration in IntelliJ first."
+		);
+		return List.of();
 	}
 
 	/**
@@ -1107,7 +1070,7 @@ public final class FabricDevLaunchService
 			return List.of();
 		}
 
-		BuildGraph graph = new PswgBuildDefinition().define();
+		BuildGraph graph = repository.buildGraph();
 		List<String> moduleNames = new ArrayList<>();
 
 		for (ModuleSpec module : launchDependencyModules(graph, moduleInjection.moduleId()))
@@ -1363,7 +1326,7 @@ public final class FabricDevLaunchService
 			return List.of();
 		}
 
-		BuildGraph graph = new PswgBuildDefinition().define();
+		BuildGraph graph = repository.buildGraph();
 		Set<Path> runtimeClasspath = new LinkedHashSet<>();
 
 		for (Path entry : effectiveRuntimeClasspath(fabricLaunch))

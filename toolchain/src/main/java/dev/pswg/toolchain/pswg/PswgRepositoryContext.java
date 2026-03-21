@@ -1,5 +1,8 @@
 package dev.pswg.toolchain.pswg;
 
+import dev.pswg.toolchain.model.BuildGraph;
+import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -47,19 +50,26 @@ public final class PswgRepositoryContext
 	private final Properties _gradleProperties;
 
 	/**
+	 * The authoritative PSWG build graph.
+	 */
+	private final BuildGraph _buildGraph;
+
+	/**
 	 * Creates a repository context from resolved paths and metadata.
 	 */
 	private PswgRepositoryContext(
 		Path toolchainRoot,
 		Path projectRoot,
 		String projectName,
-		Properties gradleProperties
+		Properties gradleProperties,
+		BuildGraph buildGraph
 	)
 	{
 		_toolchainRoot = toolchainRoot;
 		_projectRoot = projectRoot;
 		_projectName = projectName;
 		_gradleProperties = gradleProperties;
+		_buildGraph = buildGraph;
 	}
 
 	/**
@@ -76,12 +86,14 @@ public final class PswgRepositoryContext
 		Path toolchainRoot = projectRoot.resolve(TOOLCHAIN_DIRECTORY);
 		Properties gradleProperties = loadGradleProperties(projectRoot);
 		String projectName = readProjectName(projectRoot);
+		BuildGraph buildGraph = new PswgBuildDefinition().define();
 
 		return new PswgRepositoryContext(
 			toolchainRoot,
 			projectRoot,
 			projectName,
-			gradleProperties
+			gradleProperties,
+			buildGraph
 		);
 	}
 
@@ -151,6 +163,26 @@ public final class PswgRepositoryContext
 	public Properties gradleProperties()
 	{
 		return _gradleProperties;
+	}
+
+	/**
+	 * Gets the authoritative PSWG build graph.
+	 *
+	 * @return the build graph
+	 */
+	public BuildGraph buildGraph()
+	{
+		return _buildGraph;
+	}
+
+	/**
+	 * Gets the tracked Minecraft version from the authoritative graph.
+	 *
+	 * @return the tracked Minecraft version
+	 */
+	public String minecraftVersion()
+	{
+		return _buildGraph.minecraftVersion();
 	}
 
 	/**
