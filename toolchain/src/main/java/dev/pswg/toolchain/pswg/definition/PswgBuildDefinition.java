@@ -22,12 +22,14 @@ public final class PswgBuildDefinition implements BuildDefinition
 		List<ModuleSpec> modules = List.of(
 			new FrameworkDefinition().define(),
 			new FrameworkGeneratorDefinition().define(),
-			new PswgCoreDefinition().define()
+			new PswgCoreDefinition().define(),
+			new PswgBlastersDefinition().define()
 		);
 
 		return new BuildGraph(
 			"pswg",
 			"26.1-rc-1",
+			"pswg_core",
 			modules
 		);
 	}

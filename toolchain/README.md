@@ -26,14 +26,17 @@ The primary command is:
 
 ```bash
 cd toolchain
-./gradlew run --args="dev setup-intellij"
+./gradlew run --args="dev setup-intellij --username parzi --uuid 76554910-92a9-4507-8e5b-6340d7e77d50"
 ```
 
 That command:
 
 - synchronizes the PSWG root IntelliJ metadata
 - refreshes the generated Fabric client launch bundle
-- defaults the injected development module to `pswg_core`
+- defaults the injected development module from the authoritative build graph
+- accepts optional launch identity overrides through `--username` and `--uuid`
+
+The current graph default is `pswg_core`.
 
 If you need a different injected module:
 

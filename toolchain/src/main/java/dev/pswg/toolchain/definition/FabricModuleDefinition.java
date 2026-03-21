@@ -20,6 +20,14 @@ public abstract class FabricModuleDefinition extends JavaModuleDefinition
 		super.applyDefaults(spec);
 		spec.fabricModJson(spec.paths().mainResource("fabric.mod.json"));
 		spec.compileDependency(
+			ToolchainMavenCoordinates.FABRIC_API,
+			ToolchainMavenRepositories.FABRIC
+		);
+		spec.runtimeDependency(
+			ToolchainMavenCoordinates.FABRIC_API,
+			ToolchainMavenRepositories.FABRIC
+		);
+		spec.compileDependency(
 			ToolchainMavenCoordinates.JETBRAINS_ANNOTATIONS,
 			ToolchainMavenRepositories.MAVEN_CENTRAL
 		);

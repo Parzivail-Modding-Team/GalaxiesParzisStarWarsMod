@@ -806,7 +806,7 @@ public final class IntelliJProjectSyncService
 
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
-		addModuleDependencyEntries(rootManager, projectName, module, sourceSetName);
+		addModuleDependencyEntries(rootManager, projectName, graph, module, sourceSetName);
 		addLibraryDependencyEntries(rootManager, graph, projectRoot, gradleProperties, refresh, module, sourceSetName);
 	}
 
@@ -953,6 +953,7 @@ public final class IntelliJProjectSyncService
 	private void addModuleDependencyEntries(
 		Element rootManager,
 		String projectName,
+		BuildGraph graph,
 		ModuleSpec module,
 		String sourceSetName
 	)
@@ -961,7 +962,13 @@ public final class IntelliJProjectSyncService
 
 		for (String dependencyId : module.dependencies())
 		{
-			dependencyModuleNames.add(IntelliJModuleNames.sourceSetModuleName(projectName, dependencyId, SourceSetNames.MAIN));
+			dependencyModuleNames.add(
+				IntelliJModuleNames.sourceSetModuleName(
+					projectName,
+					dependencyId,
+					dependencySourceSetName(graph, dependencyId, sourceSetName)
+				)
+			);
 		}
 
 		if (SourceSetNames.CLIENT.equals(sourceSetName))
@@ -984,6 +991,38 @@ public final class IntelliJProjectSyncService
 			           .addAttribute("module-name", IntelliJModuleNames.sourceSetModuleName(projectName, processorId, SourceSetNames.MAIN))
 			           .addAttribute("scope", "PROVIDED");
 		}
+	}
+
+	/**
+	 * Resolves which source set of a dependent module should be visible to the current source set.
+	 *
+	 * <p>Client source sets must see client-only API from their dependencies, not just common code.
+	 * Without this, modules like `pswg_blasters.client` can compile against `pswg_core.main` but fail
+	 * to resolve symbols that live under `pswg_core/src/client`.
+	 *
+	 * @param graph the authoritative build graph
+	 * @param dependencyId the dependent module identifier
+	 * @param consumerSourceSetName the consuming source-set name
+	 * @return the source-set name to depend on
+	 */
+	private String dependencySourceSetName(
+		BuildGraph graph,
+		String dependencyId,
+		String consumerSourceSetName
+	)
+	{
+		if (!SourceSetNames.CLIENT.equals(consumerSourceSetName))
+		{
+			return SourceSetNames.MAIN;
+		}
+
+		ModuleSpec dependency = graph.modules()
+		                             .stream()
+		                             .filter(candidate -> dependencyId.equals(candidate.id()))
+		                             .findFirst()
+		                             .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + dependencyId));
+
+		return hasClientSourceSet(dependency) ? SourceSetNames.CLIENT : SourceSetNames.MAIN;
 	}
 
 	/**

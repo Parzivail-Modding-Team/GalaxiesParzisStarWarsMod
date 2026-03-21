@@ -62,8 +62,8 @@ public final class Main
 		System.out.println("Project: " + repository.projectName());
 		System.out.println("Minecraft: " + repository.minecraftVersion());
 		System.out.println("Supported workflow:");
-		System.out.println("  dev setup-intellij [--refresh] [--module <id>]");
-		System.out.println("Default development module: " + PswgDevelopmentService.DEFAULT_FABRIC_DEVELOPMENT_MODULE_ID);
+		System.out.println("  dev setup-intellij [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
+		System.out.println("Default development module: " + repository.buildGraph().developmentModuleId());
 		System.out.println("This synchronizes IntelliJ metadata and refreshes the generated Fabric client run configuration.");
 		System.out.println();
 		printUsage();
@@ -121,17 +121,25 @@ public final class Main
 	{
 		if (args.length >= 2 && "setup-intellij".equals(args[1]))
 		{
+			PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
 			boolean refresh = hasFlag(args, "--refresh");
 			String requestedModuleId = flagValue(args, "--module");
-			String effectiveModuleId = PswgDevelopmentService.effectiveDevelopmentModuleId(requestedModuleId);
+			LaunchIdentity identity = resolveLaunchIdentity(args);
+			String effectiveModuleId = PswgDevelopmentService.effectiveDevelopmentModuleId(
+				repository.buildGraph(),
+				requestedModuleId
+			);
 			VanillaLaunchConfig config = new PswgDevelopmentService().setupSupportedIntelliJDevelopment(
 				refresh,
-				requestedModuleId
+				requestedModuleId,
+				identity
 			);
 
 			System.out.println("Supported IntelliJ development workflow is ready.");
 			System.out.println("Minecraft: " + config.versionId());
 			System.out.println("Injected module: " + effectiveModuleId);
+			System.out.println("Username: " + identity.username());
+			System.out.println("UUID: " + identity.uuid());
 			System.out.println("Working directory: " + config.workingDirectory().toAbsolutePath());
 			System.out.println("Next step: reload IntelliJ if needed, then run the generated Fabric Client configuration.");
 			return;
@@ -391,7 +399,7 @@ public final class Main
 	private static void printUsage()
 	{
 		System.out.println("Commands:");
-		System.out.println("  dev setup-intellij [--refresh] [--module <id>]");
+		System.out.println("  dev setup-intellij [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
 		System.out.println("    Supported workflow. Synchronizes IntelliJ metadata and refreshes the generated Fabric client launch.");
 		System.out.println("  idea sync-pswg [--refresh]");
 		System.out.println("    Low-level IntelliJ metadata generation.");

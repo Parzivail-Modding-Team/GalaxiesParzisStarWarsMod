@@ -4,9 +4,9 @@ import dev.pswg.toolchain.definition.ClientCommonFabricModuleDefinition;
 import dev.pswg.toolchain.model.ModuleSpec;
 
 /**
- * Definition for the first modeled PSWG runtime module.
+ * Definition for the PSWG blasters module.
  */
-public final class PswgCoreDefinition extends ClientCommonFabricModuleDefinition
+public final class PswgBlastersDefinition extends ClientCommonFabricModuleDefinition
 {
 	/**
 	 * Gets the module identifier.
@@ -16,7 +16,7 @@ public final class PswgCoreDefinition extends ClientCommonFabricModuleDefinition
 	@Override
 	public String getId()
 	{
-		return "pswg_core";
+		return "pswg_blasters";
 	}
 
 	/**
@@ -27,13 +27,12 @@ public final class PswgCoreDefinition extends ClientCommonFabricModuleDefinition
 	@Override
 	protected void configure(ModuleSpec spec)
 	{
-		spec.dependency("framework");
+		spec.dependency("pswg_core");
 		spec.annotationProcessor("framework-generator");
 		spec.generatedSources(spec.paths().generatedAnnotationProcessorMain());
 		spec.generatedClientSources(spec.paths().generatedAnnotationProcessorClient());
 		spec.datagenOutput(spec.paths().generatedDatagen());
-		spec.mixin(spec.paths().mainResource("pswg.mixins.json"));
-		spec.mixin(spec.paths().mainResource("errorman.mixins.json"));
-		spec.mixin(spec.paths().clientResource("pswg.client.mixins.json"));
+		spec.mixin(spec.paths().mainResource("pswg_blasters.mixins.json"));
+		spec.mixin(spec.paths().clientResource("pswg_blasters.client.mixins.json"));
 	}
 }

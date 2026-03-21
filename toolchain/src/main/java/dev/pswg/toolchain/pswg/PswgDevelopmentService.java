@@ -2,6 +2,7 @@ package dev.pswg.toolchain.pswg;
 
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
 import dev.pswg.toolchain.intellij.IntelliJProjectSyncService;
+import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.util.ToolchainLog;
@@ -18,11 +19,6 @@ import java.io.IOException;
 public final class PswgDevelopmentService
 {
 	/**
-	 * The default injected module for the supported Fabric development workflow.
-	 */
-	public static final String DEFAULT_FABRIC_DEVELOPMENT_MODULE_ID = "pswg_core";
-
-	/**
 	 * Runs the supported IntelliJ-first setup workflow using the default PSWG development module.
 	 *
 	 * @param refresh whether external metadata and cached artifacts should be refreshed
@@ -31,7 +27,13 @@ public final class PswgDevelopmentService
 	 */
 	public VanillaLaunchConfig setupSupportedIntelliJDevelopment(boolean refresh) throws IOException
 	{
-		return setupSupportedIntelliJDevelopment(refresh, DEFAULT_FABRIC_DEVELOPMENT_MODULE_ID);
+		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		return setupSupportedIntelliJDevelopment(
+			repository,
+			refresh,
+			repository.buildGraph().developmentModuleId(),
+			LaunchIdentity.defaults()
+		);
 	}
 
 	/**
@@ -48,7 +50,50 @@ public final class PswgDevelopmentService
 	) throws IOException
 	{
 		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
-		String effectiveModuleId = effectiveDevelopmentModuleId(moduleId);
+		return setupSupportedIntelliJDevelopment(
+			repository,
+			refresh,
+			moduleId,
+			LaunchIdentity.defaults()
+		);
+	}
+
+	/**
+	 * Runs the supported IntelliJ-first setup workflow for the requested injected module.
+	 *
+	 * @param refresh whether external metadata and cached artifacts should be refreshed
+	 * @param moduleId the optional requested injected module id
+	 * @param identity the launch identity to embed in the generated run configuration
+	 * @return the prepared Fabric launch configuration
+	 * @throws IOException if setup fails
+	 */
+	public VanillaLaunchConfig setupSupportedIntelliJDevelopment(
+		boolean refresh,
+		String moduleId,
+		LaunchIdentity identity
+	) throws IOException
+	{
+		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		return setupSupportedIntelliJDevelopment(repository, refresh, moduleId, identity);
+	}
+
+	/**
+	 * Runs the supported IntelliJ-first setup workflow for the requested injected module.
+	 *
+	 * @param repository the discovered PSWG repository context
+	 * @param refresh whether external metadata and cached artifacts should be refreshed
+	 * @param moduleId the optional requested injected module id
+	 * @return the prepared Fabric launch configuration
+	 * @throws IOException if setup fails
+	 */
+	private VanillaLaunchConfig setupSupportedIntelliJDevelopment(
+		PswgRepositoryContext repository,
+		boolean refresh,
+		String moduleId,
+		LaunchIdentity identity
+	) throws IOException
+	{
+		String effectiveModuleId = effectiveDevelopmentModuleId(repository.buildGraph(), moduleId);
 		ToolchainLog.info("dev", "Synchronizing IntelliJ metadata for " + repository.projectName());
 		new IntelliJProjectSyncService().syncPswgProject(refresh);
 		ToolchainLog.info(
@@ -59,21 +104,25 @@ public final class PswgDevelopmentService
 			repository.minecraftVersion(),
 			refresh,
 			effectiveModuleId,
-			LaunchIdentity.defaults()
+			identity
 		);
 	}
 
 	/**
 	 * Resolves the effective module id for the supported development workflow.
 	 *
+	 * @param graph the authoritative build graph
 	 * @param moduleId the optional requested module id
 	 * @return the effective module id
 	 */
-	public static String effectiveDevelopmentModuleId(String moduleId)
+	public static String effectiveDevelopmentModuleId(
+		BuildGraph graph,
+		String moduleId
+	)
 	{
 		if (moduleId == null || moduleId.isBlank())
 		{
-			return DEFAULT_FABRIC_DEVELOPMENT_MODULE_ID;
+			return graph.developmentModuleId();
 		}
 
 		return moduleId;

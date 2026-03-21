@@ -7,7 +7,6 @@
     <shortenClasspath name="ARGS_FILE"/>
     <option name="WORKING_DIRECTORY" value="{{WORKING_DIRECTORY}}"/>
     <method v="2">
-      <option enabled="true" name="BuildProject"/>
       <option enabled="true" name="Make"/>
     </method>
     {{CLASSPATH_MODIFICATIONS}}
