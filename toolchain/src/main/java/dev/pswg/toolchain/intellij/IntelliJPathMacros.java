@@ -92,4 +92,33 @@ public final class IntelliJPathMacros
 
 		return "file://" + normalizedPath.toString().replace('\\', '/');
 	}
+
+	/**
+	 * Builds a module-local `file://...` URL for the standalone toolchain module registered under the
+	 * PSWG root project.
+	 *
+	 * @param toolchainRoot the standalone toolchain root
+	 * @param path the target path
+	 * @return the file URL
+	 */
+	public static String toolchainModuleFileUrl(Path toolchainRoot, Path path)
+	{
+		Path normalizedToolchainRoot = toolchainRoot.toAbsolutePath().normalize();
+		Path normalizedPath = path.toAbsolutePath().normalize();
+
+		if (normalizedPath.startsWith(normalizedToolchainRoot))
+		{
+			Path relativePath = normalizedToolchainRoot.relativize(normalizedPath);
+
+			if (relativePath.toString().isEmpty())
+			{
+				return "file://$MODULE_DIR$/../../../../toolchain";
+			}
+
+			return "file://$MODULE_DIR$/../../../../toolchain/"
+				+ relativePath.toString().replace('\\', '/');
+		}
+
+		return "file://" + normalizedPath.toString().replace('\\', '/');
+	}
 }

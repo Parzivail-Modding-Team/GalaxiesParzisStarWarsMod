@@ -1,6 +1,7 @@
 package dev.pswg.toolchain.intellij;
 
 import dev.pswg.toolchain.model.BuildGraph;
+import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.pswg.PswgRepositoryContext;
@@ -15,6 +16,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -34,6 +36,32 @@ import java.util.Set;
  */
 public final class IntelliJProjectSyncService
 {
+	/**
+	 * The root-relative toolchain source directory.
+	 */
+	private static final Path TOOLCHAIN_MAIN_SOURCES = Path.of("toolchain", "src", "main", "java");
+
+	/**
+	 * The root-relative toolchain resource directory.
+	 */
+	private static final Path TOOLCHAIN_MAIN_RESOURCES = Path.of("toolchain", "src", "main", "resources");
+
+	/**
+	 * The external libraries needed to compile and run the standalone toolchain module from the PSWG
+	 * root IntelliJ project.
+	 */
+	private static final List<MavenDependencySpec> TOOLCHAIN_DEPENDENCIES = List.of(
+		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-databind:2.21.1", URI.create("https://repo1.maven.org/maven2")),
+		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-annotations:2.21", URI.create("https://repo1.maven.org/maven2")),
+		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-core:2.21.1", URI.create("https://repo1.maven.org/maven2")),
+		new MavenDependencySpec("org.dom4j:dom4j:2.2.0", URI.create("https://repo1.maven.org/maven2")),
+		new MavenDependencySpec("net.fabricmc:class-tweaker:0.1.1", URI.create("https://maven.fabricmc.net/")),
+		new MavenDependencySpec("net.fabricmc:tiny-remapper:0.11.2", URI.create("https://maven.fabricmc.net/")),
+		new MavenDependencySpec("org.ow2.asm:asm:9.9", URI.create("https://repo1.maven.org/maven2")),
+		new MavenDependencySpec("org.ow2.asm:asm-commons:9.8", URI.create("https://repo1.maven.org/maven2")),
+		new MavenDependencySpec("org.ow2.asm:asm-tree:9.8", URI.create("https://repo1.maven.org/maven2"))
+	);
+
 	/**
 	 * Resolves IntelliJ-facing classpath and processor-path artifacts from the authoritative graph.
 	 */
@@ -64,6 +92,8 @@ public final class IntelliJProjectSyncService
 
 		ToolchainLog.info("idea", "Writing project registration");
 		writeProjectRegistration(projectRoot, projectName, graph);
+		ToolchainLog.info("idea", "Writing project settings");
+		writeProjectSettings(projectRoot);
 		ToolchainLog.info("idea", "Writing compiler configuration");
 		writeCompilerConfiguration(projectRoot, projectName, graph, gradleProperties, refresh);
 		ToolchainLog.info("idea", "Writing project libraries");
@@ -118,6 +148,33 @@ public final class IntelliJProjectSyncService
 	}
 
 	/**
+	 * Writes project-level IntelliJ settings that affect how JPS materializes compiler outputs.
+	 *
+	 * <p>Without an explicit project output root in `misc.xml`, IntelliJ may fall back to its
+	 * compile-server cache even when module `.iml` files declare per-module output paths. The root
+	 * output entry keeps PSWG-root builds and launches anchored in the tracked repo.
+	 *
+	 * @param projectRoot the PSWG project root
+	 * @throws IOException if the project settings cannot be written
+	 */
+	private void writeProjectSettings(Path projectRoot) throws IOException
+	{
+		Path miscPath = projectRoot.resolve(".idea").resolve("misc.xml");
+		Document document = readExistingProjectDocument(miscPath);
+		Element project = document.getRootElement();
+		Element projectRootManager = findOrCreateComponent(project, "ProjectRootManager");
+		Element output = projectRootManager.element("output");
+
+		if (output == null)
+		{
+			output = projectRootManager.addElement("output");
+		}
+
+		output.addAttribute("url", "file://$PROJECT_DIR$/out");
+		IntelliJXmlWriter.write(miscPath, document);
+	}
+
+	/**
 	 * Writes project library metadata for external compile and client dependencies.
 	 *
 	 * @param projectRoot the PSWG project root
@@ -133,7 +190,10 @@ public final class IntelliJProjectSyncService
 		boolean refresh
 	) throws IOException
 	{
-		Set<Path> resolvedArtifacts = _dependencyResolver.resolveProjectLibraries(graph, projectRoot, gradleProperties, refresh);
+		Set<Path> resolvedArtifacts = new LinkedHashSet<>(
+			_dependencyResolver.resolveProjectLibraries(graph, projectRoot, gradleProperties, refresh)
+		);
+		resolvedArtifacts.addAll(_dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, gradleProperties, refresh));
 		ToolchainLog.info("idea", "Resolved " + resolvedArtifacts.size() + " project libraries");
 
 		Path librariesDirectory = projectRoot.resolve(".idea").resolve("libraries");
@@ -175,6 +235,9 @@ public final class IntelliJProjectSyncService
 		ToolchainLog.info("idea", "Generating metadata for " + graph.modules().size() + " modeled modules");
 		Path modulesDirectory = projectRoot.resolve(".idea").resolve("modules").resolve("projects");
 		Set<String> expectedModuleFiles = new LinkedHashSet<>();
+		ToolchainLog.info("idea", "Writing module metadata for toolchain");
+		expectedModuleFiles.add("toolchain/" + IntelliJModuleNames.toolchainModuleFileName(projectName));
+		writeToolchainModuleMetadata(projectRoot, projectName);
 
 		for (ModuleSpec module : graph.modules())
 		{
@@ -225,6 +288,26 @@ public final class IntelliJProjectSyncService
 			outputPath,
 			createModuleDocument(projectRoot, projectName, graph, gradleProperties, refresh, module, sourceSetName)
 		);
+	}
+
+	/**
+	 * Writes the PSWG-root IntelliJ module metadata for the standalone toolchain sources.
+	 *
+	 * @param projectRoot the PSWG project root
+	 * @param projectName the IntelliJ project name
+	 * @throws IOException if the metadata cannot be written
+	 */
+	private void writeToolchainModuleMetadata(
+		Path projectRoot,
+		String projectName
+	) throws IOException
+	{
+		Path outputPath = projectRoot.resolve(".idea")
+		                             .resolve("modules")
+		                             .resolve("projects")
+		                             .resolve("toolchain")
+		                             .resolve(IntelliJModuleNames.toolchainModuleFileName(projectName));
+		IntelliJXmlWriter.write(outputPath, createToolchainModuleDocument(projectRoot, projectName));
 	}
 
 	/**
@@ -355,6 +438,9 @@ public final class IntelliJProjectSyncService
 		                 .addAttribute("options", "-Xmaxerrs 1000 -Xdiags:verbose");
 		additionalOptions.addElement("module")
 		                 .addAttribute("name", projectName + ".main")
+		                 .addAttribute("options", "-Xmaxerrs 1000 -Xdiags:verbose");
+		additionalOptions.addElement("module")
+		                 .addAttribute("name", IntelliJModuleNames.toolchainModuleName(projectName))
 		                 .addAttribute("options", "-Xmaxerrs 1000 -Xdiags:verbose");
 
 		for (ModuleSpec module : graph.modules())
@@ -511,6 +597,7 @@ public final class IntelliJProjectSyncService
 		Element modules = component.addElement("modules");
 
 		addRegisteredModule(modules, "$PROJECT_DIR$/.idea/" + projectName + ".iml");
+		addRegisteredModule(modules, "$PROJECT_DIR$/.idea/modules/projects/toolchain/" + IntelliJModuleNames.toolchainModuleFileName(projectName));
 
 		for (ModuleSpec module : graph.modules())
 		{
@@ -528,6 +615,27 @@ public final class IntelliJProjectSyncService
 			}
 		}
 
+		return document;
+	}
+
+	/**
+	 * Creates the IntelliJ module document for the standalone toolchain sources inside the PSWG root
+	 * project.
+	 *
+	 * @param projectRoot the PSWG project root
+	 * @param projectName the IntelliJ project name
+	 * @return the toolchain module document
+	 * @throws IOException if external toolchain dependencies cannot be resolved
+	 */
+	private Document createToolchainModuleDocument(
+		Path projectRoot,
+		String projectName
+	) throws IOException
+	{
+		Document document = DocumentHelper.createDocument();
+		Element moduleElement = document.addElement("module");
+		moduleElement.addAttribute("version", "4");
+		addToolchainRootManager(moduleElement, projectRoot, projectName);
 		return document;
 	}
 
@@ -605,6 +713,58 @@ public final class IntelliJProjectSyncService
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
 		addModuleDependencyEntries(rootManager, projectName, module, sourceSetName);
 		addLibraryDependencyEntries(rootManager, graph, projectRoot, gradleProperties, refresh, module, sourceSetName);
+	}
+
+	/**
+	 * Adds the root manager and classpath model for the toolchain module.
+	 *
+	 * @param moduleElement the module element
+	 * @param projectRoot the PSWG project root
+	 * @param projectName the IntelliJ project name
+	 * @throws IOException if external toolchain dependencies cannot be resolved
+	 */
+	private void addToolchainRootManager(
+		Element moduleElement,
+		Path projectRoot,
+		String projectName
+	) throws IOException
+	{
+		Path toolchainRoot = projectRoot.resolve("toolchain");
+		Element rootManager = moduleElement.addElement("component");
+		rootManager.addAttribute("name", "NewModuleRootManager");
+		rootManager.addAttribute("inherit-compiler-output", "false");
+		rootManager.addElement("output")
+		           .addAttribute(
+			           "url",
+			           IntelliJPathMacros.fileUrl(
+				           projectRoot,
+				           projectRoot.resolve("out").resolve("production").resolve(IntelliJModuleNames.toolchainModuleName(projectName))
+			           )
+		           );
+		rootManager.addElement("exclude-output");
+
+		Element content = rootManager.addElement("content");
+		content.addAttribute("url", IntelliJPathMacros.toolchainModuleFileUrl(toolchainRoot, toolchainRoot));
+		content.addElement("sourceFolder")
+		       .addAttribute("url", IntelliJPathMacros.toolchainModuleFileUrl(toolchainRoot, projectRoot.resolve(TOOLCHAIN_MAIN_SOURCES)))
+		       .addAttribute("isTestSource", "false");
+		content.addElement("sourceFolder")
+		       .addAttribute("url", IntelliJPathMacros.toolchainModuleFileUrl(toolchainRoot, projectRoot.resolve(TOOLCHAIN_MAIN_RESOURCES)))
+		       .addAttribute("type", "java-resource")
+		       .addAttribute("isTestSource", "false");
+		content.addElement("excludeFolder")
+		       .addAttribute("url", IntelliJPathMacros.toolchainModuleFileUrl(toolchainRoot, toolchainRoot.resolve("build")));
+
+		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
+		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
+
+		for (Path dependency : _dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, new Properties(), false))
+		{
+			rootManager.addElement("orderEntry")
+			           .addAttribute("type", "library")
+			           .addAttribute("name", projectLibraryName(dependency))
+			           .addAttribute("level", "project");
+		}
 	}
 
 	/**
@@ -858,6 +1018,57 @@ public final class IntelliJProjectSyncService
 		modules.addElement("module")
 		       .addAttribute("fileurl", "file://" + filePath)
 		       .addAttribute("filepath", filePath);
+	}
+
+	/**
+	 * Reads an existing IntelliJ project document when present, or creates a new empty project
+	 * document otherwise.
+	 *
+	 * @param path the target IntelliJ project XML path
+	 * @return the parsed or synthesized project document
+	 * @throws IOException if the existing document cannot be parsed
+	 */
+	private Document readExistingProjectDocument(Path path) throws IOException
+	{
+		if (!Files.exists(path))
+		{
+			Document document = DocumentHelper.createDocument();
+			document.addElement("project").addAttribute("version", "4");
+			return document;
+		}
+
+		try
+		{
+			return DocumentHelper.parseText(Files.readString(path));
+		}
+		catch (DocumentException exception)
+		{
+			throw new IOException("Failed to parse IntelliJ project document: " + path, exception);
+		}
+	}
+
+	/**
+	 * Finds an IntelliJ `<component>` by name, creating it when missing.
+	 *
+	 * @param project the root `project` element
+	 * @param name the component name
+	 * @return the existing or newly created component
+	 */
+	private Element findOrCreateComponent(Element project, String name)
+	{
+		for (Object child : project.elements("component"))
+		{
+			Element component = (Element) child;
+
+			if (name.equals(component.attributeValue("name")))
+			{
+				return component;
+			}
+		}
+
+		Element component = project.addElement("component");
+		component.addAttribute("name", name);
+		return component;
 	}
 
 	/**

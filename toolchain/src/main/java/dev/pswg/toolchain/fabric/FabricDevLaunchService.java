@@ -130,12 +130,12 @@ public final class FabricDevLaunchService
 	) throws IOException
 	{
 		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
-		Path projectRoot = repository.toolchainRoot();
+		Path toolchainRoot = repository.toolchainRoot();
 		Path repoRoot = repository.projectRoot();
 		VanillaLaunchConfig vanillaLaunch = new VanillaLaunchService().prepareClientRuntime(versionId, refresh, identity);
 		FabricRuntimeArtifacts runtimeArtifacts = resolveFabricRuntimeArtifacts(repository.gradleProperties(), refresh);
 		FabricModuleInjection moduleInjection = resolveModuleInjection(repoRoot, moduleId, repository.gradleProperties(), refresh);
-		FabricLaunchPaths launchPaths = createLaunchPaths(projectRoot, versionId);
+		FabricLaunchPaths launchPaths = createLaunchPaths(toolchainRoot, repoRoot, versionId);
 
 		prepareLaunchFiles(versionId, vanillaLaunch, moduleInjection.moduleRoots(), launchPaths);
 		List<String> jvmArgs = buildFabricJvmArgs(
@@ -154,7 +154,7 @@ public final class FabricDevLaunchService
 
 		writeLaunchJson(launchPaths.serializedLaunchPath(), fabricLaunch);
 		writeIdeaRunConfiguration(
-			projectRoot,
+			repository,
 			launchPaths.ideaRunConfigurationPath(),
 			launchPaths.serializedLaunchPath(),
 			launchPaths.platformDisplayName()
@@ -235,15 +235,20 @@ public final class FabricDevLaunchService
 	/**
 	 * Creates the standard path layout for a generated Fabric client launch bundle.
 	 *
-	 * @param projectRoot the toolchain project root
+	 * @param toolchainRoot the toolchain project root
+	 * @param repoRoot the tracked PSWG repository root
 	 * @param versionId the Minecraft version identifier
 	 * @return the derived launch paths
 	 */
-	private FabricLaunchPaths createLaunchPaths(Path projectRoot, String versionId)
+	private FabricLaunchPaths createLaunchPaths(
+		Path toolchainRoot,
+		Path repoRoot,
+		String versionId
+	)
 	{
 		String platformId = currentPlatformId();
 		String platformDisplayName = currentPlatformDisplayName(platformId);
-		Path instanceRoot = projectRoot.resolve("work")
+		Path instanceRoot = toolchainRoot.resolve("work")
 		                               .resolve("instances")
 		                               .resolve("fabric-client")
 		                               .resolve(platformId)
@@ -257,9 +262,9 @@ public final class FabricDevLaunchService
 			configDirectory.resolve("launch.cfg"),
 			configDirectory.resolve("log4j2-intellij.xml"),
 			instanceRoot.resolve("launch.json"),
-			projectRoot.resolve(".idea")
-			           .resolve("runConfigurations")
-			           .resolve("Fabric_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml")
+			repoRoot.resolve(".idea")
+			        .resolve("runConfigurations")
+			        .resolve("Fabric_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml")
 		);
 	}
 
@@ -817,22 +822,23 @@ public final class FabricDevLaunchService
 	/**
 	 * Writes the IntelliJ Application run configuration for the Fabric client launch bundle.
 	 *
-	 * @param projectRoot the toolchain project root
+	 * @param repository the discovered PSWG repository context
 	 * @param outputPath the IntelliJ run configuration path
 	 * @param launchJsonPath the serialized launch JSON path
 	 * @param platformDisplayName the current platform display name
 	 * @throws IOException if the run configuration cannot be written
 	 */
 	private void writeIdeaRunConfiguration(
-		Path projectRoot,
+		PswgRepositoryContext repository,
 		Path outputPath,
 		Path launchJsonPath,
 		String platformDisplayName
 	) throws IOException
 	{
+		Path projectRoot = repository.projectRoot();
 		Map<String, String> values = new LinkedHashMap<>();
 		values.put("CONFIG_NAME", "Fabric Client (" + platformDisplayName + ")");
-		values.put("MODULE_NAME", readIntelliJModuleName(projectRoot));
+		values.put("MODULE_NAME", IntelliJModuleNames.toolchainModuleName(repository.projectName()));
 		values.put(
 			"PROGRAM_PARAMETERS",
 			"&quot;$PROJECT_DIR$/"
@@ -846,25 +852,6 @@ public final class FabricDevLaunchService
 
 		Files.createDirectories(outputPath.getParent());
 		Files.writeString(outputPath, rendered);
-	}
-
-	/**
-	 * Resolves the IntelliJ module name for the standalone toolchain main source set.
-	 *
-	 * @param projectRoot the IntelliJ project root
-	 * @return the IntelliJ module name
-	 * @throws IOException if project metadata cannot be read
-	 */
-	private String readIntelliJModuleName(Path projectRoot) throws IOException
-	{
-		Path projectNameFile = projectRoot.resolve(".idea").resolve(".name");
-
-		if (Files.exists(projectNameFile))
-		{
-			return Files.readString(projectNameFile).trim() + ".main";
-		}
-
-		return "pswg-toolchain.main";
 	}
 
 	/**
