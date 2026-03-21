@@ -33,6 +33,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Resolves and caches Mojang launcher metadata used by the standalone toolchain.
@@ -181,6 +183,38 @@ public final class MojangMetadataClient
 	}
 
 	/**
+	 * Downloads the vanilla server jar for a resolved Minecraft version.
+	 *
+	 * <p>Recent Minecraft versions often distribute a small bootstrap server jar that contains the
+	 * real dedicated-server jar under `META-INF/versions`. This method transparently extracts that
+	 * nested jar and returns the extracted path so callers can compile against actual server classes
+	 * instead of the bootstrap launcher wrapper.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param refresh whether to revalidate the cached server jar before reuse
+	 * @return the cached extracted server jar path when bundled, otherwise the cached raw server jar
+	 * @throws IOException if the jar cannot be downloaded or extracted
+	 */
+	public Path downloadServerJar(String versionId, boolean refresh) throws IOException
+	{
+		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
+
+		if (metadata.downloads().server() == null)
+		{
+			throw new IOException("Minecraft " + versionId + " does not expose a server download");
+		}
+
+		Path target = _paths.serverJarFile(versionId);
+		ensureCached(
+			URI.create(metadata.downloads().server().url()),
+			target,
+			metadata.downloads().server().sha1(),
+			refresh
+		);
+		return extractBundledServerJar(versionId, target, refresh);
+	}
+
+	/**
 	 * Downloads the asset index JSON for a resolved Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
@@ -212,6 +246,100 @@ public final class MojangMetadataClient
 	public void download(URI sourceUri, Path targetFile, boolean refresh) throws IOException
 	{
 		ensureCached(sourceUri, targetFile, null, refresh);
+	}
+
+	/**
+	 * Extracts the real dedicated-server jar from a bootstrap bundle when present.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param bundledServerJar the downloaded server bootstrap jar
+	 * @param refresh whether cache refresh was requested
+	 * @return the extracted jar when bundled metadata is present, otherwise the original jar
+	 * @throws IOException if extraction fails
+	 */
+	private Path extractBundledServerJar(
+		String versionId,
+		Path bundledServerJar,
+		boolean refresh
+	) throws IOException
+	{
+		String bundledEntryPath = bundledServerEntryPath(bundledServerJar);
+
+		if (bundledEntryPath == null)
+		{
+			return bundledServerJar;
+		}
+
+		Path extractedServerJar = _paths.extractedServerJarFile(versionId);
+
+		if (!refresh
+			&& Files.isRegularFile(extractedServerJar)
+			&& Files.getLastModifiedTime(extractedServerJar).compareTo(Files.getLastModifiedTime(bundledServerJar)) >= 0)
+		{
+			return extractedServerJar;
+		}
+
+		Files.createDirectories(extractedServerJar.getParent());
+
+		try (JarFile jarFile = new JarFile(bundledServerJar.toFile()))
+		{
+			JarEntry entry = jarFile.getJarEntry(bundledEntryPath);
+
+			if (entry == null)
+			{
+				throw new IOException("Bundled server jar is missing " + bundledEntryPath + " in " + bundledServerJar);
+			}
+
+			try (InputStream inputStream = jarFile.getInputStream(entry))
+			{
+				Files.copy(inputStream, extractedServerJar, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			}
+		}
+
+		return extractedServerJar;
+	}
+
+	/**
+	 * Locates the nested server jar entry inside a bundled server bootstrap jar.
+	 *
+	 * @param bundledServerJar the downloaded server bootstrap jar
+	 * @return the bundled server jar entry path, or {@code null} when the server jar is already
+	 *         directly usable
+	 * @throws IOException if the bundle metadata cannot be read
+	 */
+	private String bundledServerEntryPath(Path bundledServerJar) throws IOException
+	{
+		try (JarFile jarFile = new JarFile(bundledServerJar.toFile()))
+		{
+			JarEntry versionsList = jarFile.getJarEntry("META-INF/versions.list");
+
+			if (versionsList == null)
+			{
+				return null;
+			}
+
+			try (InputStream inputStream = jarFile.getInputStream(versionsList))
+			{
+				for (String line : new String(inputStream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n"))
+				{
+					String trimmed = line.trim();
+
+					if (trimmed.isEmpty())
+					{
+						continue;
+					}
+
+					String[] parts = trimmed.split("\t");
+
+					if (parts.length == 3)
+					{
+						return "META-INF/versions/" + parts[2];
+					}
+				}
+			}
+		}
+
+		throw new IOException("Bundled server jar metadata is present but no server entry could be resolved from " + bundledServerJar);
 	}
 
 	/**

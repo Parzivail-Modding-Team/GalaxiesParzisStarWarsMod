@@ -114,6 +114,32 @@ public final class MojangPaths
 	}
 
 	/**
+	 * Gets the cached vanilla server bootstrap jar path for a specific Minecraft version.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @return the cached server bootstrap jar path
+	 */
+	public Path serverJarFile(String versionId)
+	{
+		return _mojangRoot.resolve("versions").resolve(versionId).resolve("server.jar");
+	}
+
+	/**
+	 * Gets the cached extracted vanilla server jar path for a specific Minecraft version.
+	 *
+	 * <p>Modern versions may ship the server as a bootstrap bundle containing the actual runnable jar
+	 * under `META-INF/versions`. The toolchain extracts that nested jar here so common/main source
+	 * sets can compile against the real dedicated-server classes.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @return the cached extracted server jar path
+	 */
+	public Path extractedServerJarFile(String versionId)
+	{
+		return _mojangRoot.resolve("versions").resolve(versionId).resolve("server-extracted.jar");
+	}
+
+	/**
 	 * Gets the cached asset index path for a specific asset index identifier.
 	 *
 	 * @param assetIndexId the asset index identifier

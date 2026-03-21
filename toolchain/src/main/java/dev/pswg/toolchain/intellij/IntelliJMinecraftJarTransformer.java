@@ -433,8 +433,10 @@ public final class IntelliJMinecraftJarTransformer
 		Path cacheDirectory = minecraftJar.getParent()
 		                                 .resolve(".intellij-transformed")
 		                                 .resolve(minecraftVersion);
+		String jarName = minecraftJar.getFileName().toString();
+		String stem = jarName.endsWith(".jar") ? jarName.substring(0, jarName.length() - 4) : jarName;
 
-		return cacheDirectory.resolve("minecraft-client-" + cacheKey + ".jar");
+		return cacheDirectory.resolve(stem + "-" + cacheKey + ".jar");
 	}
 
 	/**

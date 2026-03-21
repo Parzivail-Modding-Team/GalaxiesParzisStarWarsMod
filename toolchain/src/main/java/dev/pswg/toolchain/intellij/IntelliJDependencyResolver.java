@@ -192,7 +192,15 @@ public final class IntelliJDependencyResolver
 		));
 
 		dependencies.addAll(expandIntelliJLibraryArtifacts(
-			resolveImplicitCompileDependencies(graph, projectRoot, gradleProperties, refresh, module, declaredCompileDependencies)
+			resolveImplicitCompileDependencies(
+				graph,
+				projectRoot,
+				gradleProperties,
+				refresh,
+				module,
+				declaredCompileDependencies,
+				includeClient
+			)
 		));
 		dependencies.addAll(declaredCompileDependencies);
 
@@ -227,6 +235,7 @@ public final class IntelliJDependencyResolver
 		for (ModuleSpec module : graph.modules())
 		{
 			ToolchainLog.info("idea", "Resolving libraries for module " + module.id());
+			resolvedArtifacts.addAll(resolveModuleLibraries(graph, projectRoot, gradleProperties, refresh, module, false));
 			resolvedArtifacts.addAll(resolveModuleLibraries(graph, projectRoot, gradleProperties, refresh, module, true));
 		}
 
@@ -268,7 +277,8 @@ public final class IntelliJDependencyResolver
 		Properties gradleProperties,
 		boolean refresh,
 		ModuleSpec module,
-		Collection<Path> declaredCompileDependencies
+		Collection<Path> declaredCompileDependencies,
+		boolean includeClient
 	) throws IOException
 	{
 		Set<Path> dependencies = new LinkedHashSet<>();
@@ -286,7 +296,8 @@ public final class IntelliJDependencyResolver
 			graph.minecraftVersion(),
 			refresh,
 			modArtifacts,
-			localFabricModJsons
+			localFabricModJsons,
+			includeClient
 		);
 
 		dependencies.addAll(minecraftDependencies);
@@ -306,10 +317,11 @@ public final class IntelliJDependencyResolver
 		String minecraftVersion,
 		boolean refresh,
 		Collection<Path> modArtifacts,
-		Collection<Path> localFabricModJsons
+		Collection<Path> localFabricModJsons,
+		boolean includeClient
 	) throws IOException
 	{
-		String cacheKey = minecraftVersion + "|" + refresh + "|" + modArtifacts.hashCode() + "|" + localFabricModJsons.hashCode();
+		String cacheKey = minecraftVersion + "|" + includeClient + "|" + refresh + "|" + modArtifacts.hashCode() + "|" + localFabricModJsons.hashCode();
 		Set<Path> cached = _minecraftCompileDependenciesCache.get(cacheKey);
 
 		if (cached != null)
@@ -319,9 +331,21 @@ public final class IntelliJDependencyResolver
 
 		Set<Path> dependencies = new LinkedHashSet<>();
 		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(minecraftVersion, refresh);
-		Path clientJar = _mojangClient.downloadClientJar(minecraftVersion, refresh);
-		ToolchainLog.info("transform", "Preparing transformed Minecraft compile jar for " + minecraftVersion);
-		dependencies.add(_minecraftJarTransformer.transformMinecraftJar(minecraftVersion, clientJar, modArtifacts, localFabricModJsons));
+		Path minecraftCompileJar = includeClient
+			? _mojangClient.downloadClientJar(minecraftVersion, refresh)
+			: _mojangClient.downloadServerJar(minecraftVersion, refresh);
+		ToolchainLog.info(
+			"transform",
+			"Preparing transformed " + (includeClient ? "client" : "common/server") + " Minecraft compile jar for " + minecraftVersion
+		);
+		dependencies.add(
+			_minecraftJarTransformer.transformMinecraftJar(
+				minecraftVersion,
+				minecraftCompileJar,
+				modArtifacts,
+				localFabricModJsons
+			)
+		);
 
 		for (MojangVersionMetadataLibrary library : metadata.libraries())
 		{
@@ -540,7 +564,7 @@ public final class IntelliJDependencyResolver
 	private boolean isMinecraftCompileJar(Path artifact)
 	{
 		String fileName = artifact.getFileName().toString();
-		return fileName.startsWith("minecraft-client-");
+		return fileName.startsWith("minecraft-client-") || fileName.startsWith("minecraft-server-") || fileName.startsWith("server-extracted-");
 	}
 
 	/**
