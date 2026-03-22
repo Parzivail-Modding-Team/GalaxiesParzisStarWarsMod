@@ -120,19 +120,6 @@ public final class VanillaLaunchService
 	}
 
 	/**
-	 * Prepares the shared Mojang client runtime baseline using the default development identity.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force fresh runtime downloads
-	 * @return the prepared launch configuration
-	 * @throws IOException if preparation fails
-	 */
-	public VanillaLaunchConfig prepareClientRuntime(String versionId, boolean refresh) throws IOException
-	{
-		return prepareClientRuntime(versionId, refresh, LaunchIdentity.defaults());
-	}
-
-	/**
 	 * Resolves the vanilla runtime inputs required before launch config assembly.
 	 *
 	 * @param versionId the Minecraft version identifier

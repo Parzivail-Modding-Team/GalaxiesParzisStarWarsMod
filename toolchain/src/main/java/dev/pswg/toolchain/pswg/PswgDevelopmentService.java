@@ -19,46 +19,6 @@ import java.io.IOException;
 public final class PswgDevelopmentService
 {
 	/**
-	 * Runs the supported IntelliJ-first setup workflow using the default PSWG development module.
-	 *
-	 * @param refresh whether external metadata and cached artifacts should be refreshed
-	 * @return the prepared Fabric launch configuration
-	 * @throws IOException if setup fails
-	 */
-	public VanillaLaunchConfig setupSupportedIntelliJDevelopment(boolean refresh) throws IOException
-	{
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
-		return setupSupportedIntelliJDevelopment(
-			repository,
-			refresh,
-			repository.buildGraph().developmentModuleId(),
-			LaunchIdentity.defaults()
-		);
-	}
-
-	/**
-	 * Runs the supported IntelliJ-first setup workflow for the requested injected module.
-	 *
-	 * @param refresh whether external metadata and cached artifacts should be refreshed
-	 * @param moduleId the optional requested injected module id
-	 * @return the prepared Fabric launch configuration
-	 * @throws IOException if setup fails
-	 */
-	public VanillaLaunchConfig setupSupportedIntelliJDevelopment(
-		boolean refresh,
-		String moduleId
-	) throws IOException
-	{
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
-		return setupSupportedIntelliJDevelopment(
-			repository,
-			refresh,
-			moduleId,
-			LaunchIdentity.defaults()
-		);
-	}
-
-	/**
 	 * Runs the supported IntelliJ-first setup workflow for the requested injected module.
 	 *
 	 * @param refresh whether external metadata and cached artifacts should be refreshed

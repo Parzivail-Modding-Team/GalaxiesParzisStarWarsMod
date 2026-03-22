@@ -100,33 +100,6 @@ public final class FabricDevLaunchService
 	 *
 	 * @param versionId the Minecraft version identifier
 	 * @param refresh whether to revalidate cached runtime artifacts before launch preparation
-	 * @return the prepared launch configuration
-	 * @throws IOException if generation fails
-	 */
-	public VanillaLaunchConfig prepareClientLaunch(String versionId, boolean refresh) throws IOException
-	{
-		return prepareClientLaunch(versionId, refresh, null, LaunchIdentity.defaults());
-	}
-
-	/**
-	 * Prepares a Fabric-style development launch bundle using the default development identity.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate cached runtime artifacts before launch preparation
-	 * @param moduleId the optional PSWG module identifier to inject
-	 * @return the prepared launch configuration
-	 * @throws IOException if generation fails
-	 */
-	public VanillaLaunchConfig prepareClientLaunch(String versionId, boolean refresh, String moduleId) throws IOException
-	{
-		return prepareClientLaunch(versionId, refresh, moduleId, LaunchIdentity.defaults());
-	}
-
-	/**
-	 * Prepares a Fabric-style development launch bundle for the client environment.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate cached runtime artifacts before launch preparation
 	 * @param moduleId the optional PSWG module identifier to inject
 	 * @param identity the launch-time player identity
 	 * @return the prepared launch configuration
