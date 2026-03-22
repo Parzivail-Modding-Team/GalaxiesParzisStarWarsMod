@@ -3,6 +3,7 @@ package dev.pswg.toolchain.pswg;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
 import dev.pswg.toolchain.intellij.IntelliJProjectSyncService;
 import dev.pswg.toolchain.model.BuildGraph;
+import dev.pswg.toolchain.runtime.LaunchEnvironment;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.util.ToolchainLog;
@@ -14,7 +15,7 @@ import java.io.IOException;
  *
  * <p>This service exists so fresh-clone setup and day-to-day maintenance have one obvious entry
  * point. The lower-level `idea` and `fabric` commands still exist for diagnosis, but the normal
- * workflow is "synchronize IntelliJ metadata, then refresh the generated Fabric client launch".
+ * workflow is "synchronize IntelliJ metadata, then refresh the generated Fabric development launch".
  */
 public final class PswgDevelopmentService
 {
@@ -30,11 +31,12 @@ public final class PswgDevelopmentService
 	public VanillaLaunchConfig setupSupportedIntelliJDevelopment(
 		boolean refresh,
 		String moduleId,
+		LaunchEnvironment environment,
 		LaunchIdentity identity
 	) throws IOException
 	{
 		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
-		return setupSupportedIntelliJDevelopment(repository, refresh, moduleId, identity);
+		return setupSupportedIntelliJDevelopment(repository, refresh, moduleId, environment, identity);
 	}
 
 	/**
@@ -50,6 +52,7 @@ public final class PswgDevelopmentService
 		PswgRepositoryContext repository,
 		boolean refresh,
 		String moduleId,
+		LaunchEnvironment environment,
 		LaunchIdentity identity
 	) throws IOException
 	{
@@ -58,12 +61,13 @@ public final class PswgDevelopmentService
 		new IntelliJProjectSyncService().syncPswgProject(refresh);
 		ToolchainLog.info(
 			"dev",
-			"Preparing Fabric client launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
+			"Preparing Fabric " + environment.displayName().toLowerCase() + " launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
 		);
-		return new FabricDevLaunchService().prepareClientLaunch(
+		return new FabricDevLaunchService().prepareLaunch(
 			repository.minecraftVersion(),
 			refresh,
 			effectiveModuleId,
+			environment,
 			identity
 		);
 	}

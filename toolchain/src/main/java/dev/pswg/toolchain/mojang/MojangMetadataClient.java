@@ -217,6 +217,61 @@ public final class MojangMetadataClient
 	}
 
 	/**
+	 * Extracts bundled dedicated-server libraries from a bootstrap server jar when present.
+	 *
+	 * <p>Modern dedicated server downloads package additional runtime dependencies under
+	 * `META-INF/libraries`. The split-source-set toolchain still wants the extracted server jar for
+	 * compilation, but the actual dedicated-server runtime also needs these bundled libraries on the
+	 * classpath. Loom models them explicitly through {@code BundleMetadata}; this helper mirrors that
+	 * behavior for the standalone toolchain.
+	 *
+	 * @param versionId the Minecraft version identifier
+	 * @param refresh whether to force cache refresh
+	 * @return the extracted bundled library paths in declared order
+	 * @throws IOException if extraction fails
+	 */
+	public List<Path> extractBundledServerLibraries(String versionId, boolean refresh) throws IOException
+	{
+		Path bundledServerJar = _paths.serverJarFile(versionId);
+		List<BundledServerLibrary> libraries = bundledServerLibraries(bundledServerJar);
+
+		if (libraries.isEmpty())
+		{
+			return List.of();
+		}
+
+		List<Path> extractedLibraries = new ArrayList<>();
+
+		try (JarFile jarFile = new JarFile(bundledServerJar.toFile()))
+		{
+			for (BundledServerLibrary library : libraries)
+			{
+				Path target = _paths.libraryFile(library.artifactPath());
+
+				if (refresh || !Files.isRegularFile(target))
+				{
+					Files.createDirectories(target.getParent());
+					JarEntry entry = jarFile.getJarEntry(library.jarEntryPath());
+
+					if (entry == null)
+					{
+						throw new IOException("Bundled server jar is missing " + library.jarEntryPath() + " in " + bundledServerJar);
+					}
+
+					try (InputStream inputStream = jarFile.getInputStream(entry))
+					{
+						Files.copy(inputStream, target, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+					}
+				}
+
+				extractedLibraries.add(target);
+			}
+		}
+
+		return extractedLibraries;
+	}
+
+	/**
 	 * Downloads the asset index JSON for a resolved Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
@@ -450,6 +505,71 @@ public final class MojangMetadataClient
 		{
 			return _mapper.readValue(inputStream, type);
 		}
+	}
+
+	/**
+	 * Reads bundled dedicated-server library entries from a bootstrap server jar.
+	 *
+	 * @param bundledServerJar the downloaded server bootstrap jar
+	 * @return the bundled server library entries, or an empty list for legacy non-bundled jars
+	 * @throws IOException if the bundle metadata cannot be read
+	 */
+	private List<BundledServerLibrary> bundledServerLibraries(Path bundledServerJar) throws IOException
+	{
+		try (JarFile jarFile = new JarFile(bundledServerJar.toFile()))
+		{
+			JarEntry librariesList = jarFile.getJarEntry("META-INF/libraries.list");
+
+			if (librariesList == null)
+			{
+				return List.of();
+			}
+
+			List<BundledServerLibrary> libraries = new ArrayList<>();
+
+			try (InputStream inputStream = jarFile.getInputStream(librariesList))
+			{
+				for (String line : new String(inputStream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n"))
+				{
+					String trimmed = line.trim();
+
+					if (trimmed.isEmpty())
+					{
+						continue;
+					}
+
+					String[] parts = trimmed.split("\t");
+
+					if (parts.length != 3)
+					{
+						continue;
+					}
+
+					libraries.add(new BundledServerLibrary(
+						parts[1],
+						parts[2],
+						"META-INF/libraries/" + parts[2]
+					));
+				}
+			}
+
+			return libraries;
+		}
+	}
+
+	/**
+	 * One bundled dedicated-server library entry from {@code META-INF/libraries.list}.
+	 *
+	 * @param notation the Maven-like coordinate string
+	 * @param artifactPath the relative library artifact path
+	 * @param jarEntryPath the entry path inside the bundled server jar
+	 */
+	private record BundledServerLibrary(
+		String notation,
+		String artifactPath,
+		String jarEntryPath
+	)
+	{
 	}
 
 	/**

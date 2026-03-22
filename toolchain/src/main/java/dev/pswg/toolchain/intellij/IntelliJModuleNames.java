@@ -77,6 +77,19 @@ public final class IntelliJModuleNames
 	}
 
 	/**
+	 * Builds the IntelliJ module name for a generated Fabric launch classpath module.
+	 *
+	 * @param projectName the IntelliJ project name
+	 * @param environmentId the launch environment identifier
+	 * @param platformId the target platform identifier
+	 * @return the launch module name
+	 */
+	public static String fabricLaunchModuleName(String projectName, String environmentId, String platformId)
+	{
+		return projectName + ".launch.fabric." + environmentId + "." + platformId;
+	}
+
+	/**
 	 * Builds the IntelliJ module file name for a generated Fabric launch classpath module.
 	 *
 	 * @param projectName the IntelliJ project name
@@ -89,6 +102,19 @@ public final class IntelliJModuleNames
 	}
 
 	/**
+	 * Builds the IntelliJ module file name for a generated Fabric launch classpath module.
+	 *
+	 * @param projectName the IntelliJ project name
+	 * @param environmentId the launch environment identifier
+	 * @param platformId the target platform identifier
+	 * @return the launch module file name
+	 */
+	public static String fabricLaunchModuleFileName(String projectName, String environmentId, String platformId)
+	{
+		return fabricLaunchModuleName(projectName, environmentId, platformId) + ".iml";
+	}
+
+	/**
 	 * Builds the generated IntelliJ Fabric client run-configuration file name for one platform.
 	 *
 	 * @param platformId the target platform identifier
@@ -97,5 +123,20 @@ public final class IntelliJModuleNames
 	public static String fabricClientRunConfigurationFileName(String platformId)
 	{
 		return "Fabric_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml";
+	}
+
+	/**
+	 * Builds the generated IntelliJ Fabric run-configuration file name for one environment and
+	 * platform.
+	 *
+	 * @param environmentId the launch environment identifier
+	 * @param platformId the target platform identifier
+	 * @return the run-configuration file name
+	 */
+	public static String fabricRunConfigurationFileName(String environmentId, String platformId)
+	{
+		return "Fabric_" + environmentId.substring(0, 1).toUpperCase(Locale.ROOT)
+			+ environmentId.substring(1).toLowerCase(Locale.ROOT)
+			+ "_" + platformId.toUpperCase(Locale.ROOT) + ".xml";
 	}
 }

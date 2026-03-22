@@ -1,6 +1,7 @@
 package dev.pswg.toolchain.fabric;
 
 import dev.pswg.toolchain.intellij.IntelliJModuleNames;
+import dev.pswg.toolchain.runtime.LaunchEnvironment;
 import dev.pswg.toolchain.util.HostPlatform;
 
 import org.w3c.dom.Document;
@@ -68,8 +69,31 @@ public final class FabricDevLaunchInspector
 	 */
 	public FabricDevLaunchSummary inspectClient() throws IOException
 	{
+		return inspect(LaunchEnvironment.CLIENT);
+	}
+
+	/**
+	 * Inspects the current server dev-launch contract.
+	 *
+	 * @return the collected inspection summary
+	 * @throws IOException if inspection fails
+	 */
+	public FabricDevLaunchSummary inspectServer() throws IOException
+	{
+		return inspect(LaunchEnvironment.SERVER);
+	}
+
+	/**
+	 * Inspects the current dev-launch contract for one environment.
+	 *
+	 * @param environment the target environment
+	 * @return the collected inspection summary
+	 * @throws IOException if inspection fails
+	 */
+	public FabricDevLaunchSummary inspect(LaunchEnvironment environment) throws IOException
+	{
 		Properties properties = loadGradleProperties();
-		Path runConfigPath = generatedRunConfigurationPath();
+		Path runConfigPath = generatedRunConfigurationPath(environment);
 		IdeaRunConfiguration runConfiguration = parseIdeaRunConfiguration(runConfigPath);
 		String runtimeMainClass = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.main");
 		String dliConfigPath = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.config");
@@ -82,7 +106,7 @@ public final class FabricDevLaunchInspector
 			properties.getProperty("fabric_version"),
 			properties.getProperty("loom_version"),
 			DEFAULT_DEV_LAUNCH_MAIN_CLASS,
-			DEFAULT_CLIENT_MAIN_CLASS,
+			defaultRuntimeMainClass(environment),
 			runConfiguration.mainClass(),
 			runtimeMainClass,
 			dliEnvironment,
@@ -224,11 +248,11 @@ public final class FabricDevLaunchInspector
 	 * @return the run configuration path
 	 * @throws IOException if the generated file does not exist
 	 */
-	private Path generatedRunConfigurationPath() throws IOException
+	private Path generatedRunConfigurationPath(LaunchEnvironment environment) throws IOException
 	{
 		Path path = _projectRoot.resolve(".idea")
 		                        .resolve("runConfigurations")
-		                        .resolve(IntelliJModuleNames.fabricClientRunConfigurationFileName(HostPlatform.current().id()));
+		                        .resolve(IntelliJModuleNames.fabricRunConfigurationFileName(environment.id(), HostPlatform.current().id()));
 
 		if (!Files.isRegularFile(path))
 		{
@@ -236,6 +260,17 @@ public final class FabricDevLaunchInspector
 		}
 
 		return path;
+	}
+
+	/**
+	 * Gets the fallback runtime main class for one environment.
+	 *
+	 * @param environment the inspected environment
+	 * @return the fallback runtime main class
+	 */
+	private String defaultRuntimeMainClass(LaunchEnvironment environment)
+	{
+		return environment.isClient() ? DEFAULT_CLIENT_MAIN_CLASS : DEFAULT_SERVER_MAIN_CLASS;
 	}
 
 	/**

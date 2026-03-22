@@ -2,6 +2,7 @@ package dev.pswg.toolchain.fabric;
 
 import dev.pswg.toolchain.maven.ToolchainMavenRepositories;
 import dev.pswg.toolchain.model.MavenDependencySpec;
+import dev.pswg.toolchain.runtime.LaunchEnvironment;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,6 +72,37 @@ public final class FabricRuntimeResolver
 	 */
 	public FabricRuntimeArtifacts resolveClientRuntime(String loaderVersion, boolean refresh) throws IOException
 	{
+		return resolveRuntime(loaderVersion, refresh, LaunchEnvironment.CLIENT);
+	}
+
+	/**
+	 * Resolves the server-side Fabric development runtime artifacts for a loader version.
+	 *
+	 * @param loaderVersion the Fabric Loader version
+	 * @param refresh whether to force a fresh download
+	 * @return the resolved runtime artifact bundle
+	 * @throws IOException if runtime metadata or jars cannot be resolved
+	 */
+	public FabricRuntimeArtifacts resolveServerRuntime(String loaderVersion, boolean refresh) throws IOException
+	{
+		return resolveRuntime(loaderVersion, refresh, LaunchEnvironment.SERVER);
+	}
+
+	/**
+	 * Resolves the Fabric development runtime artifacts for one environment and loader version.
+	 *
+	 * @param loaderVersion the Fabric Loader version
+	 * @param refresh whether to force a fresh download
+	 * @param environment the target launch environment
+	 * @return the resolved runtime artifact bundle
+	 * @throws IOException if runtime metadata or jars cannot be resolved
+	 */
+	public FabricRuntimeArtifacts resolveRuntime(
+		String loaderVersion,
+		boolean refresh,
+		LaunchEnvironment environment
+	) throws IOException
+	{
 		Path loaderJar = _artifactResolver.resolve(
 			MavenCoordinate.parse("net.fabricmc:fabric-loader:" + loaderVersion),
 			FABRIC_MAVEN,
@@ -90,12 +122,12 @@ public final class FabricRuntimeResolver
 		));
 		classpath.add(loaderJar);
 		classpath.addAll(resolveLibraries(installerMetadata.path("libraries").path("common"), refresh));
-		classpath.addAll(resolveLibraries(installerMetadata.path("libraries").path("client"), refresh));
+		classpath.addAll(resolveLibraries(installerMetadata.path("libraries").path(environment.id()), refresh));
 		classpath.addAll(resolveLibraries(installerMetadata.path("libraries").path("development"), refresh));
 
 		Path mixinJavaAgentJar = resolveMixinJavaAgent(installerMetadata, refresh);
-		String runtimeMainClass = installerMetadata.path("mainClass").path("client").asText(
-			FabricDevLaunchInspector.DEFAULT_CLIENT_MAIN_CLASS
+		String runtimeMainClass = installerMetadata.path("mainClass").path(environment.id()).asText(
+			defaultRuntimeMainClass(environment)
 		);
 
 		return new FabricRuntimeArtifacts(
@@ -103,6 +135,19 @@ public final class FabricRuntimeResolver
 			List.copyOf(classpath),
 			mixinJavaAgentJar
 		);
+	}
+
+	/**
+	 * Gets the fallback Fabric runtime main class for one environment.
+	 *
+	 * @param environment the target environment
+	 * @return the fallback runtime main class
+	 */
+	private String defaultRuntimeMainClass(LaunchEnvironment environment)
+	{
+		return environment.isClient()
+			? FabricDevLaunchInspector.DEFAULT_CLIENT_MAIN_CLASS
+			: FabricDevLaunchInspector.DEFAULT_SERVER_MAIN_CLASS;
 	}
 
 	/**

@@ -10,6 +10,7 @@ import dev.pswg.toolchain.mojang.model.MojangVersionManifestEntry;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
 import dev.pswg.toolchain.pswg.PswgDevelopmentService;
 import dev.pswg.toolchain.pswg.PswgRepositoryContext;
+import dev.pswg.toolchain.runtime.LaunchEnvironment;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 
@@ -62,9 +63,9 @@ public final class Main
 		System.out.println("Project: " + repository.projectName());
 		System.out.println("Minecraft: " + repository.minecraftVersion());
 		System.out.println("Supported workflow:");
-		System.out.println("  dev setup-intellij [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
+		System.out.println("  dev setup-intellij [--refresh] [--environment <client|server>] [--module <id>] [--username <name>] [--uuid <uuid>]");
 		System.out.println("Default development module: " + repository.buildGraph().developmentModuleId());
-		System.out.println("This synchronizes IntelliJ metadata and refreshes the generated Fabric client run configuration.");
+		System.out.println("This synchronizes IntelliJ metadata and refreshes the generated Fabric development run configuration.");
 		System.out.println();
 		printUsage();
 	}
@@ -123,6 +124,7 @@ public final class Main
 		{
 			PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
 			boolean refresh = hasFlag(args, "--refresh");
+			LaunchEnvironment environment = resolveLaunchEnvironment(args);
 			String requestedModuleId = flagValue(args, "--module");
 			LaunchIdentity identity = resolveLaunchIdentity(args);
 			String effectiveModuleId = PswgDevelopmentService.effectiveDevelopmentModuleId(
@@ -132,16 +134,21 @@ public final class Main
 			VanillaLaunchConfig config = new PswgDevelopmentService().setupSupportedIntelliJDevelopment(
 				refresh,
 				requestedModuleId,
+				environment,
 				identity
 			);
 
 			System.out.println("Supported IntelliJ development workflow is ready.");
 			System.out.println("Minecraft: " + config.versionId());
 			System.out.println("Injected module: " + effectiveModuleId);
-			System.out.println("Username: " + identity.username());
-			System.out.println("UUID: " + identity.uuid());
+			System.out.println("Environment: " + environment.id());
+			if (environment.isClient())
+			{
+				System.out.println("Username: " + identity.username());
+				System.out.println("UUID: " + identity.uuid());
+			}
 			System.out.println("Working directory: " + config.workingDirectory().toAbsolutePath());
-			System.out.println("Next step: reload IntelliJ if needed, then run the generated Fabric Client configuration.");
+			System.out.println("Next step: reload IntelliJ if needed, then run the generated Fabric " + environment.displayName() + " configuration.");
 			return;
 		}
 
@@ -227,14 +234,16 @@ public final class Main
 	{
 		if (args.length >= 2 && "inspect-dev".equals(args[1]))
 		{
-			FabricDevLaunchSummary summary = new FabricDevLaunchInspector().inspectClient();
+			LaunchEnvironment environment = resolveLaunchEnvironment(args);
+			FabricDevLaunchSummary summary = new FabricDevLaunchInspector().inspect(environment);
 
 			System.out.println("Minecraft: " + summary.minecraftVersion());
 			System.out.println("Fabric Loader: " + summary.loaderVersion());
 			System.out.println("Fabric API: " + summary.fabricApiVersion());
 			System.out.println("Loom: " + summary.loomVersion());
+			System.out.println("Environment: " + environment.id());
 			System.out.println("Default DLI main: " + summary.defaultDevLaunchMainClass());
-			System.out.println("Default client main fallback: " + summary.defaultClientMainClass());
+			System.out.println("Default runtime main fallback: " + summary.defaultRuntimeMainClass());
 			System.out.println("Current IntelliJ main: " + summary.currentIdeaMainClass());
 			System.out.println("Current fabric.dli.main: " + summary.currentRuntimeMainClass());
 			System.out.println("Current fabric.dli.env: " + summary.currentEnvironment());
@@ -254,16 +263,19 @@ public final class Main
 			String defaultVersion = PswgRepositoryContext.discoverFromToolchainWorkingDirectory().minecraftVersion();
 			String versionId = positionalVersionArg(args, 2, defaultVersion);
 			boolean refresh = hasFlag(args, "--refresh");
+			LaunchEnvironment environment = resolveLaunchEnvironment(args);
 			String moduleId = flagValue(args, "--module");
 			LaunchIdentity identity = resolveLaunchIdentity(args);
-			VanillaLaunchConfig config = new FabricDevLaunchService().prepareClientLaunch(
+			VanillaLaunchConfig config = new FabricDevLaunchService().prepareLaunch(
 				versionId,
 				refresh,
 				moduleId,
+				environment,
 				identity
 			);
 
 			System.out.println("Version: " + config.versionId());
+			System.out.println("Environment: " + environment.id());
 			System.out.println("Main class: " + config.mainClass());
 			System.out.println("Working directory: " + config.workingDirectory().toAbsolutePath());
 			System.out.println("Assets root: " + config.assetsRoot().toAbsolutePath());
@@ -271,8 +283,11 @@ public final class Main
 			{
 				System.out.println("Injected module: " + moduleId);
 			}
-			System.out.println("Username: " + identity.username());
-			System.out.println("UUID: " + identity.uuid());
+			if (environment.isClient())
+			{
+				System.out.println("Username: " + identity.username());
+				System.out.println("UUID: " + identity.uuid());
+			}
 			System.out.println("DLI config is written beside the launch bundle.");
 			return;
 		}
@@ -376,6 +391,17 @@ public final class Main
 	}
 
 	/**
+	 * Resolves the requested launch environment from CLI flags.
+	 *
+	 * @param args the command line arguments
+	 * @return the resolved launch environment
+	 */
+	private static LaunchEnvironment resolveLaunchEnvironment(String[] args)
+	{
+		return LaunchEnvironment.fromId(flagValue(args, "--environment"));
+	}
+
+	/**
 	 * Resolves an optional positional version argument, falling back to the PSWG default version.
 	 *
 	 * @param args the command line arguments
@@ -399,13 +425,13 @@ public final class Main
 	private static void printUsage()
 	{
 		System.out.println("Commands:");
-		System.out.println("  dev setup-intellij [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
-		System.out.println("    Supported workflow. Synchronizes IntelliJ metadata and refreshes the generated Fabric client launch.");
+		System.out.println("  dev setup-intellij [--refresh] [--environment <client|server>] [--module <id>] [--username <name>] [--uuid <uuid>]");
+		System.out.println("    Supported workflow. Synchronizes IntelliJ metadata and refreshes the generated Fabric development launch.");
 		System.out.println("  idea sync-pswg [--refresh]");
 		System.out.println("    Low-level IntelliJ metadata generation.");
-		System.out.println("  fabric prepare-dev [id] [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
+		System.out.println("  fabric prepare-dev [id] [--refresh] [--environment <client|server>] [--module <id>] [--username <name>] [--uuid <uuid>]");
 		System.out.println("    Low-level Fabric launch generation.");
-		System.out.println("  fabric inspect-dev");
+		System.out.println("  fabric inspect-dev [--environment <client|server>]");
 		System.out.println("    Inspect the currently generated Fabric launch contract.");
 		System.out.println("  mojang manifest [--refresh]");
 		System.out.println("  mojang version [id] [--refresh]");

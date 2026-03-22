@@ -8,7 +8,7 @@ package dev.pswg.toolchain.fabric;
  * @param fabricApiVersion the repository Fabric API version
  * @param loomVersion the repository Loom version
  * @param defaultDevLaunchMainClass Loom's default dev-launch entrypoint
- * @param defaultClientMainClass Loom's fallback client runtime main class
+ * @param defaultRuntimeMainClass Loom's fallback runtime main class for the inspected environment
  * @param currentIdeaMainClass the current generated IntelliJ entrypoint
  * @param currentRuntimeMainClass the current runtime main passed via fabric.dli.main
  * @param currentEnvironment the current dev-launch environment
@@ -21,7 +21,7 @@ public record FabricDevLaunchSummary(
 	String fabricApiVersion,
 	String loomVersion,
 	String defaultDevLaunchMainClass,
-	String defaultClientMainClass,
+	String defaultRuntimeMainClass,
 	String currentIdeaMainClass,
 	String currentRuntimeMainClass,
 	String currentEnvironment,
