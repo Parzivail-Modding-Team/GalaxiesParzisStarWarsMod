@@ -65,38 +65,25 @@ Normal iteration after that is just IntelliJ:
 
 - run or debug `Fabric Client (platform)`
 
-## Logical Overview
+## Version Upgrades
 
-- Gradle:
-  Builds and runs the standalone `toolchain/` project itself.
-- Toolchain:
-  Owns PSWG graph definition, IntelliJ metadata generation, and Fabric runtime bundle generation.
-- IntelliJ:
-  Owns compilation of PSWG modules for normal development runs.
+Most routine version bumps start in the tracked repository's `gradle.properties`.
 
-The toolchain still reads a small amount of repo-owned version metadata from `gradle.properties`, but Gradle no longer owns the development runtime shape.
+- Minecraft:
+  update `minecraft_version`, then rerun `dev setup-intellij` so the toolchain regenerates the
+  transformed compile jars, IntelliJ metadata, and Fabric launch bundle for the new version.
+- Fabric Loader or Fabric API:
+  update `loader_version` and/or `fabric_version`, then rerun `dev setup-intellij` and verify one
+  real IntelliJ debug launch.
+- Other Maven dependencies:
+  update the owning module declaration in the toolchain graph or the tracked Gradle properties,
+  then rerun `dev setup-intellij` so IntelliJ project libraries and launch inputs stay aligned.
 
-The toolchain writes and maintains a few key outputs in the tracked repository:
+After any version change:
 
-- `.idea/modules.xml`
-- `.idea/compiler.xml`
-- `.idea/misc.xml`
-- `.idea/modules/projects/...`
-- `.idea/modules/launch/fabric/...`
-- `.idea/libraries/...`
-- `.idea/runConfigurations/Fabric_Client_*.xml`
+1. run `./gradlew run --args="dev setup-intellij"`
+2. run `./gradlew run --args="fabric inspect-dev"` if the launch contract might have changed
+3. verify the generated `Fabric Client (platform)` configuration still launches and debugs cleanly
 
-It also writes the generated runtime bundle under `toolchain/work/instances/...`.
-
-## Advanced Commands
-
-Low-level commands still exist for inspection and diagnosis:
-
-```bash
-./gradlew run --args="idea sync-pswg"
-./gradlew run --args="fabric prepare-dev --module pswg_entrypoint"
-./gradlew run --args="fabric inspect-dev"
-./gradlew run --args="mojang manifest"
-```
-
-These are useful when debugging the toolchain itself.
+If the update involves dev-launch-injector behavior, Fabric bootstrap changes, or launch-property
+changes, see `toolchain/DEVELOPMENT.md` before changing the launch workflow code.

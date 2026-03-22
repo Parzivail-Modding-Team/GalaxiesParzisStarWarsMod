@@ -9,14 +9,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * Inspects the current repository's Fabric dev-launch contract using Loom-generated artifacts.
+ * Inspects the current repository's Fabric dev-launch contract using the generated PSWG artifacts.
  */
 public final class FabricDevLaunchInspector
 {
@@ -63,13 +67,12 @@ public final class FabricDevLaunchInspector
 	public FabricDevLaunchSummary inspectClient() throws IOException
 	{
 		Properties properties = loadGradleProperties();
-		Path launchConfigPath = _projectRoot.resolve(".gradle").resolve("loom-cache").resolve("launch.cfg");
-		Path runConfigPath = _projectRoot.resolve(".idea").resolve("runConfigurations").resolve("Minecraft_Client.xml");
-		FabricDevLaunchConfig launchConfig = parseLaunchConfig(launchConfigPath);
+		Path runConfigPath = generatedRunConfigurationPath();
 		IdeaRunConfiguration runConfiguration = parseIdeaRunConfiguration(runConfigPath);
 		String runtimeMainClass = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.main");
 		String dliConfigPath = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.config");
 		String dliEnvironment = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.env");
+		FabricDevLaunchConfig launchConfig = parseLaunchConfig(resolveLaunchConfigPath(dliConfigPath));
 
 		return new FabricDevLaunchSummary(
 			properties.getProperty("minecraft_version"),
@@ -201,17 +204,82 @@ public final class FabricDevLaunchInspector
 			return null;
 		}
 
-		String prefix = "-D" + key + "=";
+		Matcher matcher = Pattern.compile(
+			"(?:^|\\s|\")-D" + Pattern.quote(key) + "=([^\"\\s]+(?:\\s[^\"\\s]+)*)"
+		).matcher(vmParameters);
 
-		for (String token : vmParameters.split(" "))
+		if (matcher.find())
 		{
-			if (token.startsWith(prefix))
-			{
-				return token.substring(prefix.length());
-			}
+			return matcher.group(1);
 		}
 
 		return null;
+	}
+
+	/**
+	 * Resolves the generated IntelliJ run configuration path for the current host platform.
+	 *
+	 * @return the run configuration path
+	 * @throws IOException if the generated file does not exist
+	 */
+	private Path generatedRunConfigurationPath() throws IOException
+	{
+		Path path = _projectRoot.resolve(".idea")
+		                        .resolve("runConfigurations")
+		                        .resolve("Fabric_Client_" + currentPlatformId().toUpperCase(Locale.ROOT) + ".xml");
+
+		if (!Files.isRegularFile(path))
+		{
+			throw new IOException("Generated Fabric run configuration not found: " + path);
+		}
+
+		return path;
+	}
+
+	/**
+	 * Resolves the generated DLI launch config path from the IntelliJ VM properties.
+	 *
+	 * @param dliConfigPath the configured `fabric.dli.config` path
+	 * @return the launch config path
+	 * @throws IOException if the property is missing or the file does not exist
+	 */
+	private Path resolveLaunchConfigPath(String dliConfigPath) throws IOException
+	{
+		if (dliConfigPath == null || dliConfigPath.isBlank())
+		{
+			throw new IOException("Generated run configuration is missing -Dfabric.dli.config");
+		}
+
+		Path path = Paths.get(dliConfigPath);
+
+		if (!Files.isRegularFile(path))
+		{
+			throw new IOException("Generated DLI config not found: " + path);
+		}
+
+		return path;
+	}
+
+	/**
+	 * Resolves the current host platform identifier used by generated run configuration names.
+	 *
+	 * @return the platform identifier
+	 */
+	private String currentPlatformId()
+	{
+		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+
+		if (osName.contains("win"))
+		{
+			return "windows";
+		}
+
+		if (osName.contains("mac"))
+		{
+			return "macos";
+		}
+
+		return "linux";
 	}
 
 	/**
