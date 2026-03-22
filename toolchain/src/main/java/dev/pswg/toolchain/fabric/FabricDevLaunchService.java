@@ -518,7 +518,7 @@ public final class FabricDevLaunchService
 			jvmArgs,
 			environment.isClient()
 				? List.of("--username", identity.username(), "--uuid", identity.uuid())
-				: List.of()
+				: List.of("nogui")
 		);
 	}
 

@@ -20,23 +20,35 @@ import java.io.IOException;
 public final class PswgDevelopmentService
 {
 	/**
+	 * The combined result of the supported IntelliJ setup workflow.
+	 *
+	 * @param clientLaunch the prepared Fabric client launch
+	 * @param serverLaunch the prepared Fabric server launch
+	 */
+	public record SetupResult(
+		VanillaLaunchConfig clientLaunch,
+		VanillaLaunchConfig serverLaunch
+	)
+	{
+	}
+
+	/**
 	 * Runs the supported IntelliJ-first setup workflow for the requested injected module.
 	 *
 	 * @param refresh whether external metadata and cached artifacts should be refreshed
 	 * @param moduleId the optional requested injected module id
 	 * @param identity the launch identity to embed in the generated run configuration
-	 * @return the prepared Fabric launch configuration
+	 * @return the prepared client and server launch configurations
 	 * @throws IOException if setup fails
 	 */
-	public VanillaLaunchConfig setupSupportedIntelliJDevelopment(
+	public SetupResult setupSupportedIntelliJDevelopment(
 		boolean refresh,
 		String moduleId,
-		LaunchEnvironment environment,
 		LaunchIdentity identity
 	) throws IOException
 	{
 		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
-		return setupSupportedIntelliJDevelopment(repository, refresh, moduleId, environment, identity);
+		return setupSupportedIntelliJDevelopment(repository, refresh, moduleId, identity);
 	}
 
 	/**
@@ -45,31 +57,44 @@ public final class PswgDevelopmentService
 	 * @param repository the discovered PSWG repository context
 	 * @param refresh whether external metadata and cached artifacts should be refreshed
 	 * @param moduleId the optional requested injected module id
-	 * @return the prepared Fabric launch configuration
+	 * @return the prepared client and server launch configurations
 	 * @throws IOException if setup fails
 	 */
-	private VanillaLaunchConfig setupSupportedIntelliJDevelopment(
+	private SetupResult setupSupportedIntelliJDevelopment(
 		PswgRepositoryContext repository,
 		boolean refresh,
 		String moduleId,
-		LaunchEnvironment environment,
 		LaunchIdentity identity
 	) throws IOException
 	{
 		String effectiveModuleId = effectiveDevelopmentModuleId(repository.buildGraph(), moduleId);
 		ToolchainLog.info("dev", "Synchronizing IntelliJ metadata for " + repository.projectName());
 		new IntelliJProjectSyncService().syncPswgProject(refresh);
+
+		FabricDevLaunchService launchService = new FabricDevLaunchService();
 		ToolchainLog.info(
 			"dev",
-			"Preparing Fabric " + environment.displayName().toLowerCase() + " launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
+			"Preparing Fabric client launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
 		);
-		return new FabricDevLaunchService().prepareLaunch(
+		VanillaLaunchConfig clientLaunch = launchService.prepareLaunch(
 			repository.minecraftVersion(),
 			refresh,
 			effectiveModuleId,
-			environment,
+			LaunchEnvironment.CLIENT,
 			identity
 		);
+		ToolchainLog.info(
+			"dev",
+			"Preparing Fabric server launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
+		);
+		VanillaLaunchConfig serverLaunch = launchService.prepareLaunch(
+			repository.minecraftVersion(),
+			refresh,
+			effectiveModuleId,
+			LaunchEnvironment.SERVER,
+			LaunchIdentity.defaults()
+		);
+		return new SetupResult(clientLaunch, serverLaunch);
 	}
 
 	/**

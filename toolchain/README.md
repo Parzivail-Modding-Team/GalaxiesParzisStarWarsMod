@@ -22,15 +22,14 @@ The primary command is:
 
 ```bash
 cd toolchain
-./gradlew run --args="dev setup-intellij --environment client --username Dev --uuid 00000000-0000-0000-0000-000000000000"
+./gradlew run --args="dev setup-intellij --username Dev --uuid 00000000-0000-0000-0000-000000000000"
 ```
 
 That command:
 
 - synchronizes the PSWG root IntelliJ metadata
-- refreshes the generated Fabric development launch bundle for the requested environment
+- refreshes the generated Fabric client and server development launch bundles
 - defaults the injected development module from the authoritative build graph
-- defaults the environment to `client` when `--environment` is omitted
 - accepts optional launch identity overrides through `--username` and `--uuid`
 
 The current graph default is `pswg_entrypoint`, which pulls the modeled bundle modules into the
@@ -42,12 +41,6 @@ If you need a different injected module:
 ./gradlew run --args="dev setup-intellij --module <id>"
 ```
 
-If you need the dedicated server workflow instead of the client workflow:
-
-```bash
-./gradlew run --args="dev setup-intellij --environment server --module <id>"
-```
-
 ## Getting Started
 
 From a fresh clone:
@@ -55,7 +48,7 @@ From a fresh clone:
 1. run `./gradlew run --args="dev setup-intellij"` from `toolchain/`
 2. open the tracked repository root in IntelliJ
 3. let IntelliJ reload the generated project metadata
-4. run the generated `Fabric Client (...)` configuration, or regenerate with `--environment server` and run `Fabric Server (...)`
+4. run the generated `Fabric Client (...)` or `Fabric Server (...)` configuration
 
 The first IDE launch will populate the IntelliJ-owned module outputs under `out/production/...`.
 

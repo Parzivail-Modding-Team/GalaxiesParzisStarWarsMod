@@ -20,6 +20,7 @@ The toolchain writes and maintains a few key outputs in the tracked repository:
 - `.idea/modules/launch/fabric/...`
 - `.idea/libraries/...`
 - `.idea/runConfigurations/Fabric_Client_*.xml`
+- `.idea/runConfigurations/Fabric_Server_*.xml`
 
 It also writes the generated runtime bundle under `toolchain/work/instances/...`.
 
@@ -29,8 +30,10 @@ Low-level commands still exist for inspection and diagnosis:
 
 ```bash
 ./gradlew run --args="idea sync-pswg"
-./gradlew run --args="fabric prepare-dev --module pswg_entrypoint"
-./gradlew run --args="fabric inspect-dev"
+./gradlew run --args="fabric prepare-dev --environment client --module pswg_entrypoint"
+./gradlew run --args="fabric prepare-dev --environment server --module pswg_entrypoint"
+./gradlew run --args="fabric inspect-dev --environment client"
+./gradlew run --args="fabric inspect-dev --environment server"
 ./gradlew run --args="mojang manifest"
 ```
 
@@ -38,18 +41,20 @@ These are useful when debugging the toolchain itself.
 
 ## Updating Fabric DLI
 
-The supported PSWG development workflow launches Fabric through `net.fabricmc.devlaunchinjector.Main`
-instead of through Loom's older bootstrap path. When Fabric Loader, Loom, or the dev-launch-injector
-changes, treat the update as a contract check across a few focused surfaces:
+The supported PSWG development workflow launches both Fabric client and Fabric server through
+`net.fabricmc.devlaunchinjector.Main` instead of through Loom's older bootstrap path. When Fabric
+Loader, Loom, or the dev-launch-injector changes, treat the update as a contract check across a
+few focused surfaces:
 
 - Version pins:
   `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricRuntimeResolver.java`
   currently owns the pinned `DEV_LAUNCH_INJECTOR_VERSION` and related Fabric runtime helper versions.
   Compare these against the vendored Loom runtime catalog before changing them.
 - Contract inspection:
-  `./gradlew run --args="fabric inspect-dev"` reports the current Loom-side defaults, including the
-  DLI main class, `fabric.dli.main`, `fabric.dli.env`, and the generated launch config path. Run this
-  first when upgrading.
+  `./gradlew run --args="fabric inspect-dev --environment <client|server>"` reports the current
+  Loom-side defaults for one environment, including the DLI main class, `fabric.dli.main`,
+  `fabric.dli.env`, and the generated launch config path. Run this for both environments first when
+  upgrading.
 - Launch assembly:
   `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDevLaunchService.java` is the authoritative
   implementation of PSWG's direct-DLI workflow. If DLI changes required JVM properties, launch-config
@@ -59,12 +64,16 @@ changes, treat the update as a contract check across a few focused surfaces:
   `toolchain/src/main/resources/dev/pswg/toolchain/templates/fabric-dev-launch.cfg`,
   `toolchain/src/main/resources/dev/pswg/toolchain/templates/intellij-run-config.xml`,
   `.idea/modules/launch/fabric/...`, and `.idea/runConfigurations/Fabric_Client_*.xml`.
+  The supported workflow now also generates `.idea/runConfigurations/Fabric_Server_*.xml`.
   Keep those generated outputs aligned with the runtime contract after any DLI update.
 - Runtime classpath shaping:
   the generated IntelliJ launch module intentionally mirrors the prepared runtime classpath exactly.
   If a DLI update changes bootstrap jars, classpath ordering, or the handoff from DLI to Knot, review
   the launch-module generation and IntelliJ `classpathModifications` handling in
-  `FabricDevLaunchService` before changing broader IntelliJ metadata.
+  `FabricDevLaunchService` before changing broader IntelliJ metadata. Verify both the prepended
+  Fabric/module classpath and the vanilla baseline classpath continue to flow into the generated
+  launch module; dedicated server launches now depend on bundled bootstrap libraries from Mojang's
+  `META-INF/libraries.list`.
 
 Common failure signals:
 
@@ -73,6 +82,9 @@ Common failure signals:
 - `SHA-384 digest error` followed by widespread mixin target misses
   usually means IntelliJ compile-time jars leaked into the direct runtime classpath, not a DLI ABI
   break.
+- dedicated server startup fails with missing `joptsimple`, `brigadier`, or `datafixerupper`
+  usually means the generated launch module no longer includes the vanilla baseline classpath or the
+  Mojang bundled server libraries were not unpacked from `META-INF/libraries.list`.
 - Missing or renamed `fabric.dli.*` properties
   usually means the DLI contract changed and both the inspector and launch-service property writers
   need to be updated together.
@@ -82,9 +94,10 @@ Recommended update loop:
 1. inspect the current Loom contract with `fabric inspect-dev`
 2. update runtime version pins in `FabricRuntimeResolver`
 3. adjust `FabricDevLaunchService` and the launch templates to match the new DLI contract
-4. run `./gradlew run --args="dev setup-intellij"` and compare the generated run config against the
-   inspected Loom contract
-5. verify one real IntelliJ debug launch before changing unrelated toolchain code
+4. run `./gradlew run --args="dev setup-intellij"` and compare the generated client and server run
+   configs against the inspected Loom contract
+5. verify one real IntelliJ debug launch for both environments before changing unrelated toolchain
+   code
 
 ## Updating IntelliJ Metadata Generation
 
@@ -117,7 +130,8 @@ Recommended update loop:
 1. regenerate with `dev setup-intellij`
 2. reload IntelliJ and let indexing/build finish
 3. compare generated `.idea` files before and after IntelliJ touches them
-4. verify one rebuild and one debug launch before changing unrelated metadata generation
+4. verify one rebuild and one debug launch for both client and server before changing unrelated
+   metadata generation
 
 ## Updating Mojang Metadata And Runtime Resolution
 
@@ -130,7 +144,8 @@ library download schema remaining compatible with the toolchain models.
   and `toolchain/src/main/java/dev/pswg/toolchain/runtime/VanillaLaunchService.java`.
 - Sensitive areas:
   version-manifest fields, `downloads.client/server`, library artifact paths, rule evaluation,
-  asset index aliases, and the client logging config descriptor.
+  asset index aliases, the client logging config descriptor, and bundled dedicated-server metadata
+  such as `META-INF/versions.list`, `META-INF/main-class`, and `META-INF/libraries.list`.
 - What to compare:
   use `mojang manifest`, `mojang version`, and `mojang runtime` to inspect the current live payloads
   before changing model classes or launch assembly logic.
@@ -141,6 +156,8 @@ Common failure signals:
   usually mean the launcher metadata schema changed.
 - runtime launch builds but missing libraries or natives fail at startup
   usually mean library `downloads` or Mojang rule handling drifted.
+- dedicated server launch resolves metadata but fails with missing bootstrap classes
+  usually mean bundled server-library extraction or server-classpath assembly drifted.
 - missing assets or broken logging config on launch
   usually mean asset-index or logging-file handling changed.
 
