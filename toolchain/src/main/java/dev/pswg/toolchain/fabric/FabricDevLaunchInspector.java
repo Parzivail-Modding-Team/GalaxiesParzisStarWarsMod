@@ -1,5 +1,8 @@
 package dev.pswg.toolchain.fabric;
 
+import dev.pswg.toolchain.intellij.IntelliJModuleNames;
+import dev.pswg.toolchain.util.HostPlatform;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -13,7 +16,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -226,7 +228,7 @@ public final class FabricDevLaunchInspector
 	{
 		Path path = _projectRoot.resolve(".idea")
 		                        .resolve("runConfigurations")
-		                        .resolve("Fabric_Client_" + currentPlatformId().toUpperCase(Locale.ROOT) + ".xml");
+		                        .resolve(IntelliJModuleNames.fabricClientRunConfigurationFileName(HostPlatform.current().id()));
 
 		if (!Files.isRegularFile(path))
 		{
@@ -258,28 +260,6 @@ public final class FabricDevLaunchInspector
 		}
 
 		return path;
-	}
-
-	/**
-	 * Resolves the current host platform identifier used by generated run configuration names.
-	 *
-	 * @return the platform identifier
-	 */
-	private String currentPlatformId()
-	{
-		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
-
-		if (osName.contains("win"))
-		{
-			return "windows";
-		}
-
-		if (osName.contains("mac"))
-		{
-			return "macos";
-		}
-
-		return "linux";
 	}
 
 	/**

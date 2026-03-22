@@ -1,5 +1,7 @@
 package dev.pswg.toolchain.intellij;
 
+import java.util.Locale;
+
 /**
  * Shared IntelliJ module and metadata naming conventions used by the toolchain.
  */
@@ -84,5 +86,16 @@ public final class IntelliJModuleNames
 	public static String fabricLaunchModuleFileName(String projectName, String platformId)
 	{
 		return fabricLaunchModuleName(projectName, platformId) + ".iml";
+	}
+
+	/**
+	 * Builds the generated IntelliJ Fabric client run-configuration file name for one platform.
+	 *
+	 * @param platformId the target platform identifier
+	 * @return the run-configuration file name
+	 */
+	public static String fabricClientRunConfigurationFileName(String platformId)
+	{
+		return "Fabric_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml";
 	}
 }

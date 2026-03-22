@@ -3,6 +3,7 @@ package dev.pswg.toolchain.mojang;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.pswg.toolchain.util.HostPlatform;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifest;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifestEntry;
 import dev.pswg.toolchain.mojang.model.MojangAssetIndex;
@@ -981,24 +982,7 @@ public final class MojangMetadataClient
 	 */
 	private String currentOs()
 	{
-		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
-
-		if (osName.contains("win"))
-		{
-			return "windows";
-		}
-
-		if (osName.contains("mac"))
-		{
-			return "osx";
-		}
-
-		if (osName.contains("linux"))
-		{
-			return "linux";
-		}
-
-		return osName;
+		return HostPlatform.current().mojangOsName();
 	}
 
 	/**

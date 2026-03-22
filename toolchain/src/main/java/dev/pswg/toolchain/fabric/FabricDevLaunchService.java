@@ -15,6 +15,7 @@ import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.runtime.VanillaLaunchService;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
+import dev.pswg.toolchain.util.HostPlatform;
 import dev.pswg.toolchain.util.ToolchainLog;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +30,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.LinkedHashSet;
@@ -271,8 +271,8 @@ public final class FabricDevLaunchService
 		String versionId
 	)
 	{
-		String platformId = currentPlatformId();
-		String platformDisplayName = currentPlatformDisplayName(platformId);
+		HostPlatform platform = HostPlatform.current();
+		String platformId = platform.id();
 		Path instanceRoot = toolchainRoot.resolve("work")
 		                               .resolve("instances")
 		                               .resolve("fabric-client")
@@ -282,7 +282,7 @@ public final class FabricDevLaunchService
 
 		return new FabricLaunchPaths(
 			platformId,
-			platformDisplayName,
+			platform.displayName(),
 			instanceRoot,
 			configDirectory.resolve("launch.cfg"),
 			configDirectory.resolve("log4j2-intellij.xml"),
@@ -294,7 +294,7 @@ public final class FabricDevLaunchService
 			        .resolve(IntelliJModuleNames.fabricLaunchModuleFileName(projectName, platformId)),
 			repoRoot.resolve(".idea")
 			        .resolve("runConfigurations")
-			        .resolve("Fabric_Client_" + platformId.toUpperCase(Locale.ROOT) + ".xml")
+			        .resolve(IntelliJModuleNames.fabricClientRunConfigurationFileName(platformId))
 		);
 	}
 
@@ -1479,50 +1479,6 @@ public final class FabricDevLaunchService
 		{
 			modules.remove(module);
 		}
-	}
-
-	/**
-	 * Resolves the current runtime platform identifier.
-	 *
-	 * @return the current platform identifier
-	 */
-	private String currentPlatformId()
-	{
-		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
-
-		if (osName.contains("win"))
-		{
-			return "windows";
-		}
-
-		if (osName.contains("mac"))
-		{
-			return "macos";
-		}
-
-		if (osName.contains("linux"))
-		{
-			return "linux";
-		}
-
-		return "unknown";
-	}
-
-	/**
-	 * Resolves a platform display name from the platform identifier.
-	 *
-	 * @param platformId the platform identifier
-	 * @return the platform display name
-	 */
-	private String currentPlatformDisplayName(String platformId)
-	{
-		return switch (platformId)
-		{
-			case "windows" -> "Windows";
-			case "macos" -> "macOS";
-			case "linux" -> "Linux";
-			default -> "Unknown";
-		};
 	}
 
 	/**

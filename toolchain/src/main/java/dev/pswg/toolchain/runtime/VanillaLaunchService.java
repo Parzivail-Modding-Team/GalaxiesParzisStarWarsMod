@@ -12,6 +12,7 @@ import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadataLibrary;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
+import dev.pswg.toolchain.util.HostPlatform;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -156,7 +157,7 @@ public final class VanillaLaunchService
 	private VanillaLaunchPaths createLaunchPaths(String versionId)
 	{
 		MojangPaths paths = _mojangClient.paths();
-		String platformId = currentPlatformId();
+		String platformId = HostPlatform.current().id();
 		Path instanceRoot = paths.workRoot()
 		                        .resolve("instances")
 		                        .resolve("client-runtime")
@@ -582,44 +583,7 @@ public final class VanillaLaunchService
 	 */
 	private String findJavaExecutable()
 	{
-		return Path.of(System.getProperty("java.home"), "bin", isWindows() ? "java.exe" : "java").toString();
-	}
-
-	/**
-	 * Checks whether the current runtime is Windows.
-	 *
-	 * @return {@code true} if running on Windows
-	 */
-	private boolean isWindows()
-	{
-		return System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("windows");
-	}
-
-	/**
-	 * Gets the current runtime platform identifier for launch file partitioning.
-	 *
-	 * @return the current platform identifier
-	 */
-	private String currentPlatformId()
-	{
-		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
-
-		if (osName.contains("win"))
-		{
-			return "windows";
-		}
-
-		if (osName.contains("mac"))
-		{
-			return "macos";
-		}
-
-		if (osName.contains("linux"))
-		{
-			return "linux";
-		}
-
-		return "unknown";
+		return Path.of(System.getProperty("java.home"), "bin", HostPlatform.current().isWindows() ? "java.exe" : "java").toString();
 	}
 
 	/**
