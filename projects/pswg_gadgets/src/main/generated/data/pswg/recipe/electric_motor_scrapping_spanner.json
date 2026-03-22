@@ -2,7 +2,6 @@
   "type": "pswg_gadgets:scrapping",
   "ingredient": "pswg:electric_motor",
   "primary_result": {
-    "count": 1,
     "id": "pswg:turbine"
   },
   "secondary_chance": 0.25,

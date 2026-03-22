@@ -7,7 +7,6 @@
   },
   "secondary_chance": 0.25,
   "secondary_result": {
-    "count": 1,
     "id": "pswg:durasteel_ingot"
   },
   "tool": "pswg_gadgets:spanner"
