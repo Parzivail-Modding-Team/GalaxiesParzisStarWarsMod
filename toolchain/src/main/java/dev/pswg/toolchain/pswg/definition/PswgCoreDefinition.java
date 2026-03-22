@@ -27,6 +27,7 @@ public final class PswgCoreDefinition extends ClientCommonFabricModuleDefinition
 	@Override
 	protected void configure(ModuleSpec spec)
 	{
+		spec.fabricModId("pswg");
 		spec.dependency("framework");
 		spec.annotationProcessor("framework-generator");
 		spec.generatedSources(spec.paths().generatedAnnotationProcessorMain());

@@ -21,6 +21,7 @@ The toolchain writes and maintains a few key outputs in the tracked repository:
 - `.idea/libraries/...`
 - `.idea/runConfigurations/Fabric_Client_*.xml`
 - `.idea/runConfigurations/Fabric_Server_*.xml`
+- `.idea/runConfigurations/Fabric_Datagen_*.xml`
 
 It also writes the generated runtime bundle under `toolchain/work/instances/...`.
 
@@ -32,6 +33,7 @@ Low-level commands still exist for inspection and diagnosis:
 ./gradlew run --args="idea sync-pswg"
 ./gradlew run --args="fabric prepare-dev --environment client --module pswg_entrypoint"
 ./gradlew run --args="fabric prepare-dev --environment server --module pswg_entrypoint"
+./gradlew run --args="fabric prepare-datagen --module pswg_core"
 ./gradlew run --args="fabric inspect-dev --environment client"
 ./gradlew run --args="fabric inspect-dev --environment server"
 ./gradlew run --args="mojang manifest"
@@ -98,6 +100,46 @@ Recommended update loop:
    configs against the inspected Loom contract
 5. verify one real IntelliJ debug launch for both environments before changing unrelated toolchain
    code
+
+## Updating Datagen Workflow
+
+PSWG datagen is intentionally simpler than Loom's general-purpose model:
+
+- the toolchain only generates client-derived datagen runs
+- the datagen runtime classpath is an aggregate PSWG closure rooted at the graph's development
+  module
+- the generated IntelliJ run configurations fence output ownership by setting both
+  `fabric-api.datagen.modid` and `fabric-api.datagen.output-dir`
+
+Contract owners:
+
+- `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDataGenerationService.java`
+- `toolchain/src/main/java/dev/pswg/toolchain/model/ModuleSpec.java`
+- the PSWG module definitions under `toolchain/src/main/java/dev/pswg/toolchain/pswg/definition/...`
+
+Sensitive areas:
+
+- `ModuleSpec.fabricModId` and `ModuleSpec.datagenOutput`
+- the aggregate datagen launch-module classpath
+- the generated `Fabric_Datagen_*.xml` run configurations
+
+Common failure signals:
+
+- datagen writes into the wrong module's `src/main/generated`
+  usually means the generated run config lost either the `fabric-api.datagen.modid` or
+  `fabric-api.datagen.output-dir` property.
+- a downstream module's datagen run cannot see upstream data or code
+  usually means the aggregate datagen launch no longer includes the full modeled PSWG dependency
+  closure.
+- datagen starts behaving differently from Loom after a Fabric API update
+  usually means the Fabric API datagen properties or client-inheritance assumptions changed.
+
+Recommended update loop:
+
+1. compare Loom's current datagen setup against `FabricApiDataGeneration`
+2. regenerate with `fabric prepare-datagen` or `dev setup-intellij`
+3. inspect the generated `Fabric_Datagen_*.xml` files for the target module id and output dir
+4. verify at least one real datagen run for an upstream module and one downstream module
 
 ## Updating IntelliJ Metadata Generation
 

@@ -104,6 +104,11 @@ public final class ModuleSpec
 	private Path _fabricModJson;
 
 	/**
+	 * The optional Fabric mod identifier exposed by this module.
+	 */
+	private String _fabricModId;
+
+	/**
 	 * The optional checked-in datagen output path.
 	 */
 	private Path _datagenOutput;
@@ -315,6 +320,16 @@ public final class ModuleSpec
 	}
 
 	/**
+	 * Gets the optional Fabric mod identifier.
+	 *
+	 * @return the Fabric mod identifier, or {@code null}
+	 */
+	public String fabricModId()
+	{
+		return _fabricModId;
+	}
+
+	/**
 	 * Gets the optional checked-in datagen output path.
 	 *
 	 * @return the datagen output path, or {@code null}
@@ -517,6 +532,18 @@ public final class ModuleSpec
 	public ModuleSpec fabricModJson(Path path)
 	{
 		_fabricModJson = path;
+		return this;
+	}
+
+	/**
+	 * Declares the Fabric mod identifier.
+	 *
+	 * @param id the Fabric mod identifier
+	 * @return this module specification
+	 */
+	public ModuleSpec fabricModId(String id)
+	{
+		_fabricModId = id;
 		return this;
 	}
 

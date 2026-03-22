@@ -1,5 +1,6 @@
 package dev.pswg.toolchain;
 
+import dev.pswg.toolchain.fabric.FabricDataGenerationService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchInspector;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchSummary;
@@ -15,6 +16,7 @@ import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Entrypoint for the standalone PSWG toolchain.
@@ -65,7 +67,7 @@ public final class Main
 		System.out.println("Supported workflow:");
 		System.out.println("  dev setup-intellij [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
 		System.out.println("Default development module: " + repository.buildGraph().developmentModuleId());
-		System.out.println("This synchronizes IntelliJ metadata and refreshes the generated Fabric client and server run configurations.");
+		System.out.println("This synchronizes IntelliJ metadata and refreshes the generated Fabric client, server, and datagen run configurations.");
 		System.out.println();
 		printUsage();
 	}
@@ -145,7 +147,8 @@ public final class Main
 			System.out.println("Client UUID: " + identity.uuid());
 			System.out.println("Client working directory: " + clientLaunch.workingDirectory().toAbsolutePath());
 			System.out.println("Server working directory: " + serverLaunch.workingDirectory().toAbsolutePath());
-			System.out.println("Next step: reload IntelliJ if needed, then run the generated Fabric Client or Fabric Server configuration.");
+			System.out.println("Datagen configs: " + setup.datagenConfigurations().size());
+			System.out.println("Next step: reload IntelliJ if needed, then run the generated Fabric Client, Fabric Server, or Fabric Datagen configuration.");
 			return;
 		}
 
@@ -289,6 +292,34 @@ public final class Main
 			return;
 		}
 
+		if (args.length >= 2 && "prepare-datagen".equals(args[1]))
+		{
+			String defaultVersion = PswgRepositoryContext.discoverFromToolchainWorkingDirectory().minecraftVersion();
+			String versionId = positionalVersionArg(args, 2, defaultVersion);
+			boolean refresh = hasFlag(args, "--refresh");
+			String moduleId = flagValue(args, "--module");
+			LaunchIdentity identity = resolveLaunchIdentity(args);
+			List<FabricDataGenerationService.DatagenConfiguration> configurations = new FabricDataGenerationService()
+				.prepareRunConfigurations(
+					versionId,
+					refresh,
+					moduleId,
+					identity
+				);
+
+			System.out.println("Version: " + versionId);
+			System.out.println("Datagen configs generated: " + configurations.size());
+
+			for (FabricDataGenerationService.DatagenConfiguration configuration : configurations)
+			{
+				System.out.println(" - " + configuration.moduleId() + " -> " + configuration.outputDirectory().toAbsolutePath());
+			}
+
+			System.out.println("Client username: " + identity.username());
+			System.out.println("Client UUID: " + identity.uuid());
+			return;
+		}
+
 		printUsage();
 		System.exit(1);
 	}
@@ -423,11 +454,13 @@ public final class Main
 	{
 		System.out.println("Commands:");
 		System.out.println("  dev setup-intellij [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
-		System.out.println("    Supported workflow. Synchronizes IntelliJ metadata and refreshes the generated Fabric development launch.");
+		System.out.println("    Supported workflow. Synchronizes IntelliJ metadata and refreshes the generated Fabric client, server, and datagen launches.");
 		System.out.println("  idea sync-pswg [--refresh]");
 		System.out.println("    Low-level IntelliJ metadata generation.");
 		System.out.println("  fabric prepare-dev [id] [--refresh] [--environment <client|server>] [--module <id>] [--username <name>] [--uuid <uuid>]");
 		System.out.println("    Low-level Fabric launch generation.");
+		System.out.println("  fabric prepare-datagen [id] [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
+		System.out.println("    Generate module-scoped Fabric datagen run configurations.");
 		System.out.println("  fabric inspect-dev [--environment <client|server>]");
 		System.out.println("    Inspect the currently generated Fabric launch contract.");
 		System.out.println("  mojang manifest [--refresh]");

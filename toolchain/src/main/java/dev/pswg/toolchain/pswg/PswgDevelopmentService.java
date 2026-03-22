@@ -1,5 +1,6 @@
 package dev.pswg.toolchain.pswg;
 
+import dev.pswg.toolchain.fabric.FabricDataGenerationService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
 import dev.pswg.toolchain.intellij.IntelliJProjectSyncService;
 import dev.pswg.toolchain.model.BuildGraph;
@@ -10,6 +11,7 @@ import dev.pswg.toolchain.util.ToolchainLog;
 
 import java.io.IOException;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +30,8 @@ public final class PswgDevelopmentService
 	 * @param serverLaunch the prepared Fabric server launch
 	 */
 	public record SetupResult(
-		Map<LaunchEnvironment, VanillaLaunchConfig> launches
+		Map<LaunchEnvironment, VanillaLaunchConfig> launches,
+		List<FabricDataGenerationService.DatagenConfiguration> datagenConfigurations
 	)
 	{
 		/**
@@ -89,6 +92,7 @@ public final class PswgDevelopmentService
 		ToolchainLog.info("dev", "Synchronizing IntelliJ metadata for " + repository.projectName());
 		new IntelliJProjectSyncService().syncPswgProject(refresh);
 		FabricDevLaunchService launchService = new FabricDevLaunchService();
+		FabricDataGenerationService datagenService = new FabricDataGenerationService();
 		Map<LaunchEnvironment, VanillaLaunchConfig> launches = new EnumMap<>(LaunchEnvironment.class);
 
 		for (LaunchEnvironment environment : LaunchEnvironment.values())
@@ -109,7 +113,15 @@ public final class PswgDevelopmentService
 			);
 		}
 
-		return new SetupResult(Map.copyOf(launches));
+		ToolchainLog.info("dev", "Preparing Fabric datagen launches");
+		List<FabricDataGenerationService.DatagenConfiguration> datagenConfigurations = datagenService.prepareRunConfigurations(
+			repository.minecraftVersion(),
+			refresh,
+			null,
+			identity
+		);
+
+		return new SetupResult(Map.copyOf(launches), List.copyOf(datagenConfigurations));
 	}
 
 	/**

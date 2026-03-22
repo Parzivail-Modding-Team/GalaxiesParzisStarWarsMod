@@ -115,6 +115,30 @@ public final class IntelliJModuleNames
 	}
 
 	/**
+	 * Builds the IntelliJ module name for the aggregate Fabric datagen launch classpath module.
+	 *
+	 * @param projectName the IntelliJ project name
+	 * @param platformId the target platform identifier
+	 * @return the datagen launch module name
+	 */
+	public static String fabricDatagenLaunchModuleName(String projectName, String platformId)
+	{
+		return projectName + ".launch.fabric.datagen." + platformId;
+	}
+
+	/**
+	 * Builds the IntelliJ module file name for the aggregate Fabric datagen launch classpath module.
+	 *
+	 * @param projectName the IntelliJ project name
+	 * @param platformId the target platform identifier
+	 * @return the datagen launch module file name
+	 */
+	public static String fabricDatagenLaunchModuleFileName(String projectName, String platformId)
+	{
+		return fabricDatagenLaunchModuleName(projectName, platformId) + ".iml";
+	}
+
+	/**
 	 * Builds the generated IntelliJ Fabric client run-configuration file name for one platform.
 	 *
 	 * @param platformId the target platform identifier
@@ -138,5 +162,17 @@ public final class IntelliJModuleNames
 		return "Fabric_" + environmentId.substring(0, 1).toUpperCase(Locale.ROOT)
 			+ environmentId.substring(1).toLowerCase(Locale.ROOT)
 			+ "_" + platformId.toUpperCase(Locale.ROOT) + ".xml";
+	}
+
+	/**
+	 * Builds the generated IntelliJ Fabric datagen run-configuration file name for one module and platform.
+	 *
+	 * @param moduleId the logical PSWG module identifier
+	 * @param platformId the target platform identifier
+	 * @return the datagen run-configuration file name
+	 */
+	public static String fabricDatagenRunConfigurationFileName(String moduleId, String platformId)
+	{
+		return "Fabric_Datagen_" + moduleId + "_" + platformId.toUpperCase(Locale.ROOT) + ".xml";
 	}
 }

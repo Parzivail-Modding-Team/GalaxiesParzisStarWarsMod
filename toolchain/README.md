@@ -8,15 +8,15 @@ Its job is to:
 
 - define the PSWG module graph in Java
 - generate IntelliJ project metadata for the modules
-- prepare the Fabric development runtime bundle and generated run configurations
+- prepare the Fabric development runtime bundles and generated run configurations
 
 ## Workflow
 
 The supported day-to-day workflow is IntelliJ-first:
 
-1. the toolchain generates the root-project IntelliJ metadata and Fabric run configuration
+1. the toolchain generates the root-project IntelliJ metadata and Fabric run configurations
 2. IntelliJ builds PSWG module outputs into `out/production/...`
-3. the generated `Fabric Client (platform)` or `Fabric Server (platform)` run configuration launches `net.fabricmc.devlaunchinjector.Main`
+3. the generated `Fabric Client (platform)`, `Fabric Server (platform)`, or `Fabric Datagen <module> (platform)` run configuration launches `net.fabricmc.devlaunchinjector.Main`
 
 The primary command is:
 
@@ -28,7 +28,7 @@ cd toolchain
 That command:
 
 - synchronizes the PSWG root IntelliJ metadata
-- refreshes the generated Fabric client and server development launch bundles
+- refreshes the generated Fabric client, server, and datagen development launch bundles
 - defaults the injected development module from the authoritative build graph
 - accepts optional launch identity overrides through `--username` and `--uuid`
 
@@ -48,7 +48,7 @@ From a fresh clone:
 1. run `./gradlew run --args="dev setup-intellij"` from `toolchain/`
 2. open the tracked repository root in IntelliJ
 3. let IntelliJ reload the generated project metadata
-4. run the generated `Fabric Client (...)` or `Fabric Server (...)` configuration
+4. run the generated `Fabric Client (...)`, `Fabric Server (...)`, or module-scoped `Fabric Datagen ...` configuration
 
 The first IDE launch will populate the IntelliJ-owned module outputs under `out/production/...`.
 
@@ -64,6 +64,17 @@ Use the same setup command whenever one of these changes:
 Normal iteration after that is just IntelliJ:
 
 - run or debug `Fabric Client (platform)` or `Fabric Server (platform)`
+- run the generated `Fabric Datagen <module> (platform)` configuration for the module whose checked-in `src/main/generated` output you want to refresh
+
+Datagen is always client-derived in the bespoke toolchain. Each generated datagen configuration is
+scoped to one module by:
+
+- `fabric-api.datagen.modid=<that module's Fabric mod id>`
+- `fabric-api.datagen.output-dir=<that module's checked-in src/main/generated>`
+
+That keeps the runtime classpath broad enough for downstream generators to build on upstream
+modules, while still preventing the common "ran the wrong datagen config and wrote into the wrong
+module" failure mode.
 
 ## Version Upgrades
 

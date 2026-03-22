@@ -20,6 +20,7 @@ public abstract class ResourceOnlyFabricModuleDefinition extends ModuleDefinitio
 		spec.javaVersion(25);
 		spec.mainResources(spec.paths().mainResources());
 		spec.fabricModJson(spec.paths().mainResource("fabric.mod.json"));
+		spec.fabricModId(spec.id());
 		spec.compileDependency(
 			ToolchainMavenCoordinates.FABRIC_API,
 			ToolchainMavenRepositories.FABRIC
