@@ -67,45 +67,61 @@ public final class VanillaLaunchService
 	}
 
 	/**
-	 * Prepares the shared Mojang client runtime baseline for downstream launchers.
+	 * Prepares the shared Mojang runtime baseline for one environment.
 	 *
 	 * @param versionId the Minecraft version identifier
 	 * @param refresh whether to force fresh runtime downloads
-	 * @param identity the launch-time player identity
+	 * @param environment the launch environment
+	 * @param identity the requested client identity
 	 * @return the prepared launch configuration
 	 * @throws IOException if preparation fails
 	 */
-	public VanillaLaunchConfig prepareClientRuntime(
+	public VanillaLaunchConfig prepareRuntime(
 		String versionId,
 		boolean refresh,
+		LaunchEnvironment environment,
 		LaunchIdentity identity
 	) throws IOException
 	{
-		MojangVersionMetadata metadata = prepareVanillaRuntime(versionId, refresh, LaunchEnvironment.CLIENT);
-		VanillaLaunchPaths launchPaths = createLaunchPaths(versionId, LaunchEnvironment.CLIENT);
+		MojangVersionMetadata metadata = prepareVanillaRuntime(versionId, refresh, environment);
+		VanillaLaunchPaths launchPaths = createLaunchPaths(versionId, environment);
 		prepareLaunchDirectories(launchPaths);
-		List<Path> classpath = buildClasspath(versionId, metadata, LaunchEnvironment.CLIENT, List.of());
-		extractNativeLibraries(metadata, launchPaths.nativesDirectory());
+		List<Path> bundledServerLibraries = environment.isServer()
+			? _mojangClient.extractBundledServerLibraries(versionId, refresh)
+			: List.of();
+		List<Path> classpath = buildClasspath(versionId, metadata, environment, bundledServerLibraries);
+
+		if (environment.isClient())
+		{
+			extractNativeLibraries(metadata, launchPaths.nativesDirectory());
+		}
+
 		Path loggingConfiguration = prepareLoggingConfiguration(
 			launchPaths.instanceRoot(),
 			launchPaths.gameDirectory(),
 			metadata,
 			refresh
 		);
+		LaunchIdentity effectiveIdentity = environment.effectiveIdentity(identity);
 		Map<String, String> variables = buildLaunchVariables(
 			versionId,
-			loggingConfiguration,
-			classpath,
-			launchPaths,
 			metadata,
-			identity
+			launchPaths.gameDirectory(),
+			launchPaths.nativesDirectory(),
+			classpath,
+			loggingConfiguration,
+			effectiveIdentity
 		);
-		List<String> jvmArgs = buildJvmArgs(metadata, variables, loggingConfiguration);
-		List<String> gameArgs = buildGameArgs(metadata, variables);
+		List<String> jvmArgs = environment.isClient()
+			? buildJvmArgs(metadata, variables, loggingConfiguration)
+			: buildServerJvmArgs(metadata, variables);
+		List<String> gameArgs = environment.isClient()
+			? buildGameArgs(metadata, variables)
+			: List.of();
 
 		return new VanillaLaunchConfig(
 			versionId,
-			metadata.mainClass(),
+			environment.isClient() ? metadata.mainClass() : "net.minecraft.server.Main",
 			findJavaExecutable(),
 			launchPaths.gameDirectory(),
 			launchPaths.gameDirectory(),
@@ -116,62 +132,6 @@ public final class VanillaLaunchService
 			classpath,
 			jvmArgs,
 			gameArgs
-		);
-	}
-
-	/**
-	 * Prepares the shared Mojang server runtime baseline for downstream launchers.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force fresh runtime downloads
-	 * @return the prepared launch configuration
-	 * @throws IOException if preparation fails
-	 */
-	public VanillaLaunchConfig prepareServerRuntime(
-		String versionId,
-		boolean refresh
-	) throws IOException
-	{
-		MojangVersionMetadata metadata = prepareVanillaRuntime(versionId, refresh, LaunchEnvironment.SERVER);
-		VanillaLaunchPaths launchPaths = createLaunchPaths(versionId, LaunchEnvironment.SERVER);
-		prepareLaunchDirectories(launchPaths);
-		List<Path> bundledServerLibraries = _mojangClient.extractBundledServerLibraries(versionId, refresh);
-		List<Path> classpath = buildClasspath(
-			versionId,
-			metadata,
-			LaunchEnvironment.SERVER,
-			bundledServerLibraries
-		);
-		Path loggingConfiguration = prepareLoggingConfiguration(
-			launchPaths.instanceRoot(),
-			launchPaths.gameDirectory(),
-			metadata,
-			refresh
-		);
-		Map<String, String> variables = buildLaunchVariables(
-			versionId,
-			metadata,
-			launchPaths.gameDirectory(),
-			launchPaths.nativesDirectory(),
-			classpath,
-			loggingConfiguration,
-			LaunchIdentity.defaults()
-		);
-		List<String> jvmArgs = buildServerJvmArgs(metadata, variables);
-
-		return new VanillaLaunchConfig(
-			versionId,
-			"net.minecraft.server.Main",
-			findJavaExecutable(),
-			launchPaths.gameDirectory(),
-			launchPaths.gameDirectory(),
-			_mojangClient.paths().mojangRoot().resolve("assets"),
-			metadata.assetIndex().id(),
-			launchPaths.nativesDirectory(),
-			loggingConfiguration,
-			classpath,
-			jvmArgs,
-			List.of()
 		);
 	}
 
@@ -215,7 +175,7 @@ public final class VanillaLaunchService
 		String platformId = HostPlatform.current().id();
 		Path instanceRoot = paths.workRoot()
 		                        .resolve("instances")
-		                        .resolve(environment.isClient() ? "client-runtime" : "server-runtime")
+		                        .resolve(environment.runtimeInstanceDirectoryName())
 		                        .resolve(platformId)
 		                        .resolve(versionId);
 

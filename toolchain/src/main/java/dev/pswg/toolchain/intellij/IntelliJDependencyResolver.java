@@ -11,6 +11,7 @@ import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.mojang.MojangMetadataClient;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadataLibrary;
+import dev.pswg.toolchain.runtime.LaunchEnvironment;
 import dev.pswg.toolchain.util.ToolchainLog;
 
 import java.io.IOException;
@@ -458,7 +459,11 @@ public final class IntelliJDependencyResolver
 			return dependencies;
 		}
 
-		FabricRuntimeArtifacts runtimeArtifacts = _fabricRuntimeResolver.resolveClientRuntime(loaderVersion, refresh);
+		FabricRuntimeArtifacts runtimeArtifacts = _fabricRuntimeResolver.resolveRuntime(
+			loaderVersion,
+			refresh,
+			LaunchEnvironment.CLIENT
+		);
 		dependencies.addAll(runtimeArtifacts.classpath());
 		Set<Path> resolved = Set.copyOf(dependencies);
 		_fabricCompileDependenciesCache.put(cacheKey, resolved);

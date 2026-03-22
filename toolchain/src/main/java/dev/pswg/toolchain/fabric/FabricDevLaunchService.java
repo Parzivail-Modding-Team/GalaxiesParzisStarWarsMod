@@ -97,44 +97,6 @@ public final class FabricDevLaunchService
 	}
 
 	/**
-	 * Prepares a Fabric-style development launch bundle for the client environment.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate cached runtime artifacts before launch preparation
-	 * @param moduleId the optional PSWG module identifier to inject
-	 * @param identity the launch-time player identity
-	 * @return the prepared launch configuration
-	 * @throws IOException if generation fails
-	 */
-	public VanillaLaunchConfig prepareClientLaunch(
-		String versionId,
-		boolean refresh,
-		String moduleId,
-		LaunchIdentity identity
-	) throws IOException
-	{
-		return prepareLaunch(versionId, refresh, moduleId, LaunchEnvironment.CLIENT, identity);
-	}
-
-	/**
-	 * Prepares a Fabric-style development launch bundle for the server environment.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate cached runtime artifacts before launch preparation
-	 * @param moduleId the optional PSWG module identifier to inject
-	 * @return the prepared launch configuration
-	 * @throws IOException if generation fails
-	 */
-	public VanillaLaunchConfig prepareServerLaunch(
-		String versionId,
-		boolean refresh,
-		String moduleId
-	) throws IOException
-	{
-		return prepareLaunch(versionId, refresh, moduleId, LaunchEnvironment.SERVER, LaunchIdentity.defaults());
-	}
-
-	/**
 	 * Prepares a Fabric-style development launch bundle for one environment.
 	 *
 	 * @param versionId the Minecraft version identifier
@@ -215,9 +177,7 @@ public final class FabricDevLaunchService
 	) throws IOException
 	{
 		VanillaLaunchService service = new VanillaLaunchService();
-		return environment.isClient()
-			? service.prepareClientRuntime(versionId, refresh, identity)
-			: service.prepareServerRuntime(versionId, refresh);
+		return service.prepareRuntime(versionId, refresh, environment, identity);
 	}
 
 	/**
@@ -322,7 +282,7 @@ public final class FabricDevLaunchService
 		String platformId = platform.id();
 		Path instanceRoot = toolchainRoot.resolve("work")
 		                               .resolve("instances")
-		                               .resolve("fabric-" + environment.id())
+		                               .resolve(environment.fabricInstanceDirectoryName())
 		                               .resolve(platformId)
 		                               .resolve(versionId);
 		Path configDirectory = instanceRoot.resolve("config");
@@ -516,9 +476,7 @@ public final class FabricDevLaunchService
 			loggingConfigPath,
 			vanillaLaunch.classpath(),
 			jvmArgs,
-			environment.isClient()
-				? List.of("--username", identity.username(), "--uuid", identity.uuid())
-				: List.of("nogui")
+			environment.programArguments(environment.effectiveIdentity(identity))
 		);
 	}
 

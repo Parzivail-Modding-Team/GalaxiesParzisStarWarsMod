@@ -63,32 +63,6 @@ public final class FabricRuntimeResolver
 	}
 
 	/**
-	 * Resolves the client-side Fabric development runtime artifacts for a loader version.
-	 *
-	 * @param loaderVersion the Fabric Loader version
-	 * @param refresh whether to force a fresh download
-	 * @return the resolved runtime artifact bundle
-	 * @throws IOException if runtime metadata or jars cannot be resolved
-	 */
-	public FabricRuntimeArtifacts resolveClientRuntime(String loaderVersion, boolean refresh) throws IOException
-	{
-		return resolveRuntime(loaderVersion, refresh, LaunchEnvironment.CLIENT);
-	}
-
-	/**
-	 * Resolves the server-side Fabric development runtime artifacts for a loader version.
-	 *
-	 * @param loaderVersion the Fabric Loader version
-	 * @param refresh whether to force a fresh download
-	 * @return the resolved runtime artifact bundle
-	 * @throws IOException if runtime metadata or jars cannot be resolved
-	 */
-	public FabricRuntimeArtifacts resolveServerRuntime(String loaderVersion, boolean refresh) throws IOException
-	{
-		return resolveRuntime(loaderVersion, refresh, LaunchEnvironment.SERVER);
-	}
-
-	/**
 	 * Resolves the Fabric development runtime artifacts for one environment and loader version.
 	 *
 	 * @param loaderVersion the Fabric Loader version

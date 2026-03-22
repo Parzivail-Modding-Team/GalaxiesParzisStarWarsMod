@@ -62,28 +62,6 @@ public final class FabricDevLaunchInspector
 	}
 
 	/**
-	 * Inspects the current client dev-launch contract.
-	 *
-	 * @return the collected inspection summary
-	 * @throws IOException if inspection fails
-	 */
-	public FabricDevLaunchSummary inspectClient() throws IOException
-	{
-		return inspect(LaunchEnvironment.CLIENT);
-	}
-
-	/**
-	 * Inspects the current server dev-launch contract.
-	 *
-	 * @return the collected inspection summary
-	 * @throws IOException if inspection fails
-	 */
-	public FabricDevLaunchSummary inspectServer() throws IOException
-	{
-		return inspect(LaunchEnvironment.SERVER);
-	}
-
-	/**
 	 * Inspects the current dev-launch contract for one environment.
 	 *
 	 * @param environment the target environment

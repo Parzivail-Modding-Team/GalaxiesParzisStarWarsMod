@@ -135,14 +135,16 @@ public final class Main
 				requestedModuleId,
 				identity
 			);
+			VanillaLaunchConfig clientLaunch = setup.launch(LaunchEnvironment.CLIENT);
+			VanillaLaunchConfig serverLaunch = setup.launch(LaunchEnvironment.SERVER);
 
 			System.out.println("Supported IntelliJ development workflow is ready.");
-			System.out.println("Minecraft: " + setup.clientLaunch().versionId());
+			System.out.println("Minecraft: " + clientLaunch.versionId());
 			System.out.println("Injected module: " + effectiveModuleId);
 			System.out.println("Client username: " + identity.username());
 			System.out.println("Client UUID: " + identity.uuid());
-			System.out.println("Client working directory: " + setup.clientLaunch().workingDirectory().toAbsolutePath());
-			System.out.println("Server working directory: " + setup.serverLaunch().workingDirectory().toAbsolutePath());
+			System.out.println("Client working directory: " + clientLaunch.workingDirectory().toAbsolutePath());
+			System.out.println("Server working directory: " + serverLaunch.workingDirectory().toAbsolutePath());
 			System.out.println("Next step: reload IntelliJ if needed, then run the generated Fabric Client or Fabric Server configuration.");
 			return;
 		}

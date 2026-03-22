@@ -1,5 +1,6 @@
 package dev.pswg.toolchain.runtime;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -77,6 +78,50 @@ public enum LaunchEnvironment
 	public boolean isServer()
 	{
 		return this == SERVER;
+	}
+
+	/**
+	 * Gets the standard instance-directory name for the shared vanilla runtime baseline.
+	 *
+	 * @return the vanilla runtime instance-directory name
+	 */
+	public String runtimeInstanceDirectoryName()
+	{
+		return isClient() ? "client-runtime" : "server-runtime";
+	}
+
+	/**
+	 * Gets the standard instance-directory name for the generated Fabric launch bundle.
+	 *
+	 * @return the Fabric launch instance-directory name
+	 */
+	public String fabricInstanceDirectoryName()
+	{
+		return "fabric-" + id();
+	}
+
+	/**
+	 * Resolves the launch identity that should be embedded for this environment.
+	 *
+	 * @param clientIdentity the requested client identity
+	 * @return the effective launch identity
+	 */
+	public LaunchIdentity effectiveIdentity(LaunchIdentity clientIdentity)
+	{
+		return isClient() ? clientIdentity : LaunchIdentity.defaults();
+	}
+
+	/**
+	 * Resolves the generated program arguments for this environment.
+	 *
+	 * @param identity the effective launch identity
+	 * @return the generated program arguments
+	 */
+	public List<String> programArguments(LaunchIdentity identity)
+	{
+		return isClient()
+			? List.of("--username", identity.username(), "--uuid", identity.uuid())
+			: List.of("nogui");
 	}
 
 	/**

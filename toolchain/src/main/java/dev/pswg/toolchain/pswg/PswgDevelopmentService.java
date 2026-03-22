@@ -9,6 +9,8 @@ import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.util.ToolchainLog;
 
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * High-level developer workflow helpers for the supported PSWG IntelliJ setup path.
@@ -26,10 +28,26 @@ public final class PswgDevelopmentService
 	 * @param serverLaunch the prepared Fabric server launch
 	 */
 	public record SetupResult(
-		VanillaLaunchConfig clientLaunch,
-		VanillaLaunchConfig serverLaunch
+		Map<LaunchEnvironment, VanillaLaunchConfig> launches
 	)
 	{
+		/**
+		 * Gets the prepared launch for one environment.
+		 *
+		 * @param environment the launch environment
+		 * @return the prepared launch
+		 */
+		public VanillaLaunchConfig launch(LaunchEnvironment environment)
+		{
+			VanillaLaunchConfig launch = launches.get(environment);
+
+			if (launch == null)
+			{
+				throw new IllegalArgumentException("Missing prepared launch for " + environment.id());
+			}
+
+			return launch;
+		}
 	}
 
 	/**
@@ -70,31 +88,28 @@ public final class PswgDevelopmentService
 		String effectiveModuleId = effectiveDevelopmentModuleId(repository.buildGraph(), moduleId);
 		ToolchainLog.info("dev", "Synchronizing IntelliJ metadata for " + repository.projectName());
 		new IntelliJProjectSyncService().syncPswgProject(refresh);
-
 		FabricDevLaunchService launchService = new FabricDevLaunchService();
-		ToolchainLog.info(
-			"dev",
-			"Preparing Fabric client launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
-		);
-		VanillaLaunchConfig clientLaunch = launchService.prepareLaunch(
-			repository.minecraftVersion(),
-			refresh,
-			effectiveModuleId,
-			LaunchEnvironment.CLIENT,
-			identity
-		);
-		ToolchainLog.info(
-			"dev",
-			"Preparing Fabric server launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
-		);
-		VanillaLaunchConfig serverLaunch = launchService.prepareLaunch(
-			repository.minecraftVersion(),
-			refresh,
-			effectiveModuleId,
-			LaunchEnvironment.SERVER,
-			LaunchIdentity.defaults()
-		);
-		return new SetupResult(clientLaunch, serverLaunch);
+		Map<LaunchEnvironment, VanillaLaunchConfig> launches = new EnumMap<>(LaunchEnvironment.class);
+
+		for (LaunchEnvironment environment : LaunchEnvironment.values())
+		{
+			ToolchainLog.info(
+				"dev",
+				"Preparing Fabric " + environment.displayName().toLowerCase() + " launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
+			);
+			launches.put(
+				environment,
+				launchService.prepareLaunch(
+					repository.minecraftVersion(),
+					refresh,
+					effectiveModuleId,
+					environment,
+					environment.effectiveIdentity(identity)
+				)
+			);
+		}
+
+		return new SetupResult(Map.copyOf(launches));
 	}
 
 	/**
