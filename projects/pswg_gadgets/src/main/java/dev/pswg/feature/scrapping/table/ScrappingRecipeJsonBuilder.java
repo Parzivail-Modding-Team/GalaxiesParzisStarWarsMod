@@ -5,7 +5,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -14,11 +14,18 @@ public class ScrappingRecipeJsonBuilder
 	private final HolderGetter<Item> registryLookup;
 	private final Ingredient tool;
 	private final Ingredient input;
-	private final ItemStack primaryOutput;
-	private final ItemStack secondaryOutput;
+	private final ItemStackTemplate primaryOutput;
+	private final ItemStackTemplate secondaryOutput;
 	private final float secondaryChance;
 
-	public ScrappingRecipeJsonBuilder(HolderGetter<Item> registryLookup, Ingredient tool, Ingredient input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+	public ScrappingRecipeJsonBuilder(
+		HolderGetter<Item> registryLookup,
+		Ingredient tool,
+		Ingredient input,
+		ItemStackTemplate primaryOutput,
+		ItemStackTemplate secondaryOutput,
+		float secondaryChance
+	)
 	{
 		this.registryLookup = registryLookup;
 		this.tool = tool;
@@ -28,7 +35,14 @@ public class ScrappingRecipeJsonBuilder
 		this.secondaryChance = secondaryChance;
 	}
 
-	public static ScrappingRecipeJsonBuilder create(HolderGetter<Item> registryLookup, Ingredient tool, Ingredient input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+	public static ScrappingRecipeJsonBuilder create(
+		HolderGetter<Item> registryLookup,
+		Ingredient tool,
+		Ingredient input,
+		ItemStackTemplate primaryOutput,
+		ItemStackTemplate secondaryOutput,
+		float secondaryChance
+	)
 	{
 		return new ScrappingRecipeJsonBuilder(registryLookup, tool, input, primaryOutput, secondaryOutput, secondaryChance);
 	}

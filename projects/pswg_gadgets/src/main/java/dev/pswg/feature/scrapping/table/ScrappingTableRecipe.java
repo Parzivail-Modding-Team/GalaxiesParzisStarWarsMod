@@ -10,6 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
@@ -26,12 +27,18 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 {
 	private final Ingredient tool;
 	private final Ingredient ingredient;
-	private final ItemStack primaryResult;
-	private final ItemStack secondaryResult;
+	private final ItemStackTemplate primaryResult;
+	private final ItemStackTemplate secondaryResult;
 	private final float secondaryChance;
 	private PlacementInfo ingredientPlacement;
 
-	public ScrappingTableRecipe(Ingredient tool, Ingredient ingredient, ItemStack primaryResult, ItemStack secondaryResult, float secondaryChance)
+	public ScrappingTableRecipe(
+		Ingredient tool,
+		Ingredient ingredient,
+		ItemStackTemplate primaryResult,
+		ItemStackTemplate secondaryResult,
+		float secondaryChance
+	)
 	{
 		this.tool = tool;
 		this.ingredient = ingredient;
@@ -68,12 +75,12 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 	@Override
 	public ItemStack assemble(ScrappingTableRecipeInput input)
 	{
-		return primaryResult.copy();
+		return primaryResult.create();
 	}
 
 	public ItemStack craftSecondary()
 	{
-		return secondaryResult;
+		return secondaryResult.create();
 	}
 
 	@Override
@@ -125,20 +132,20 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 		return tool;
 	}
 
-	ItemStack getPrimaryResult()
+	ItemStackTemplate getPrimaryResult()
 	{
-		return primaryResult.copy();
+		return primaryResult;
 	}
 
-	ItemStack getSecondaryResult()
+	ItemStackTemplate getSecondaryResult()
 	{
-		return secondaryResult.copy();
+		return secondaryResult;
 	}
 
 	@FunctionalInterface
 	public interface RecipeFactory<T extends ScrappingTableRecipe>
 	{
-		T create(Ingredient tool, Ingredient ingredient, ItemStack result, ItemStack secondaryResult, float secondaryChance);
+		T create(Ingredient tool, Ingredient ingredient, ItemStackTemplate result, ItemStackTemplate secondaryResult, float secondaryChance);
 	}
 
 	public static <T extends ScrappingTableRecipe> RecipeSerializer<T> createSerializer(ScrappingTableRecipe.RecipeFactory<T> recipeFactory)
@@ -147,8 +154,8 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 				instance -> instance.group(
 						                    Ingredient.CODEC.fieldOf("tool").forGetter(ScrappingTableRecipe::getTool),
 						                    Ingredient.CODEC.fieldOf("ingredient").forGetter(ScrappingTableRecipe::getIngredient),
-						                    ItemStack.CODEC.fieldOf("primary_result").forGetter(ScrappingTableRecipe::getPrimaryResult),
-						                    ItemStack.CODEC.fieldOf("secondary_result").forGetter(ScrappingTableRecipe::getSecondaryResult),
+						                    ItemStackTemplate.CODEC.fieldOf("primary_result").forGetter(ScrappingTableRecipe::getPrimaryResult),
+						                    ItemStackTemplate.CODEC.fieldOf("secondary_result").forGetter(ScrappingTableRecipe::getSecondaryResult),
 						                    ExtraCodecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(ScrappingTableRecipe::getSecondaryChance)
 				                    )
 				                    .apply(instance, recipeFactory::create)
@@ -158,9 +165,9 @@ public class ScrappingTableRecipe implements Recipe<ScrappingTableRecipeInput>
 				ScrappingTableRecipe::getTool,
 				Ingredient.CONTENTS_STREAM_CODEC,
 				ScrappingTableRecipe::getIngredient,
-				ItemStack.STREAM_CODEC,
+				ItemStackTemplate.STREAM_CODEC,
 				ScrappingTableRecipe::getPrimaryResult,
-				ItemStack.STREAM_CODEC,
+				ItemStackTemplate.STREAM_CODEC,
 				ScrappingTableRecipe::getSecondaryResult,
 				ByteBufCodecs.FLOAT,
 				ScrappingTableRecipe::getSecondaryChance,
