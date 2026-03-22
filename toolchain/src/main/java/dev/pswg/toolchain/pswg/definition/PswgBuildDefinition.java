@@ -23,13 +23,15 @@ public final class PswgBuildDefinition implements BuildDefinition
 			new FrameworkDefinition().define(),
 			new FrameworkGeneratorDefinition().define(),
 			new PswgCoreDefinition().define(),
-			new PswgBlastersDefinition().define()
+			new PswgBlastersDefinition().define(),
+			new PswgGadgetsDefinition().define(),
+			new PswgEntrypointDefinition().define()
 		);
 
 		return new BuildGraph(
 			"pswg",
 			"26.1-rc-1",
-			"pswg_core",
+			"pswg_entrypoint",
 			modules
 		);
 	}

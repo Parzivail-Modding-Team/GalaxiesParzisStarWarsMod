@@ -1,32 +1,28 @@
 # PSWG Toolchain
 
-## Purpose
+## Background
 
-The `toolchain/` project is the authoritative developer workflow for PSWG.
+The `toolchain/` project is the project setup and build pipeline for PSWG.
 
 Its job is to:
 
 - define the PSWG module graph in Java
-- generate IntelliJ project metadata for the tracked repository
+- generate IntelliJ project metadata for the modules
 - prepare the Fabric development runtime bundle and generated run configurations
-- keep the supported development path understandable after a fresh clone
 
-The toolchain is not a generic external build system. It is a PSWG-specific development helper.
-
-## Supported Workflow
+## Workflow
 
 The supported day-to-day workflow is IntelliJ-first:
 
 1. the toolchain generates the root-project IntelliJ metadata and Fabric run configuration
 2. IntelliJ builds PSWG module outputs into `out/production/...`
-3. the generated `Fabric Client (...)` run configuration launches `net.fabricmc.devlaunchinjector.Main`
-4. breakpoints, stop, and hotswap all happen through the normal IntelliJ debugger flow
+3. the generated `Fabric Client (platform)` run configuration launches `net.fabricmc.devlaunchinjector.Main`
 
 The primary command is:
 
 ```bash
 cd toolchain
-./gradlew run --args="dev setup-intellij --username parzi --uuid 76554910-92a9-4507-8e5b-6340d7e77d50"
+./gradlew run --args="dev setup-intellij --username Dev --uuid 00000000-0000-0000-0000-000000000000"
 ```
 
 That command:
@@ -36,7 +32,8 @@ That command:
 - defaults the injected development module from the authoritative build graph
 - accepts optional launch identity overrides through `--username` and `--uuid`
 
-The current graph default is `pswg_core`.
+The current graph default is `pswg_entrypoint`, which pulls the modeled bundle modules into the
+generated launch closure.
 
 If you need a different injected module:
 
@@ -44,7 +41,7 @@ If you need a different injected module:
 ./gradlew run --args="dev setup-intellij --module <id>"
 ```
 
-## Fresh Clone Setup
+## Getting Started
 
 From a fresh clone:
 
@@ -55,7 +52,7 @@ From a fresh clone:
 
 The first IDE launch will populate the IntelliJ-owned module outputs under `out/production/...`.
 
-## Day-To-Day Development
+## Normal Use
 
 Use the same setup command whenever one of these changes:
 
@@ -66,14 +63,9 @@ Use the same setup command whenever one of these changes:
 
 Normal iteration after that is just IntelliJ:
 
-- edit code
-- run or debug `Fabric Client (...)`
-- rely on IntelliJ `Make` for module compilation
-- rely on debugger hotswap for supported changes
+- run or debug `Fabric Client (platform)`
 
-## Ownership Model
-
-The easiest way to understand the current system is to separate concerns:
+## Logical Overview
 
 - Gradle:
   Builds and runs the standalone `toolchain/` project itself.
@@ -83,8 +75,6 @@ The easiest way to understand the current system is to separate concerns:
   Owns compilation of PSWG modules for normal development runs.
 
 The toolchain still reads a small amount of repo-owned version metadata from `gradle.properties`, but Gradle no longer owns the development runtime shape.
-
-## Important Outputs
 
 The toolchain writes and maintains a few key outputs in the tracked repository:
 
@@ -104,20 +94,9 @@ Low-level commands still exist for inspection and diagnosis:
 
 ```bash
 ./gradlew run --args="idea sync-pswg"
-./gradlew run --args="fabric prepare-dev --module pswg_core"
+./gradlew run --args="fabric prepare-dev --module pswg_entrypoint"
 ./gradlew run --args="fabric inspect-dev"
 ./gradlew run --args="mojang manifest"
 ```
 
-These are useful when debugging the toolchain itself. They are not the primary onboarding path.
-
-## Design Notes
-
-The current codebase intentionally optimizes for one supported workflow instead of many partial ones:
-
-- generated Fabric runs launch DLI directly
-- IntelliJ output directories are the only supported PSWG module runtime inputs
-- launch-time classpath shaping follows the prepared runtime bundle exactly
-- low-level commands are retained for diagnostics, but the default mental model is `dev setup-intellij`
-
-When changing the toolchain, prefer making that supported path simpler instead of adding another parallel path.
+These are useful when debugging the toolchain itself.
