@@ -10,6 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
@@ -24,11 +25,16 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 {
 
 	private final Ingredient ingredient;
-	private final ItemStack primaryResult;
-	private final ItemStack secondaryResult;
+	private final ItemStackTemplate primaryResult;
+	private final ItemStackTemplate secondaryResult;
 	private final float secondaryChance;
 
-	public LaserCuttingRecipe(Ingredient ingredient, ItemStack primaryResult, ItemStack secondaryResult, float secondaryChance)
+	public LaserCuttingRecipe(
+		Ingredient ingredient,
+		ItemStackTemplate primaryResult,
+		ItemStackTemplate secondaryResult,
+		float secondaryChance
+	)
 	{
 		this.ingredient = ingredient;
 		this.primaryResult = primaryResult;
@@ -45,12 +51,12 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 	@Override
 	public ItemStack assemble(SingleRecipeInput input)
 	{
-		return primaryResult.copy();
+		return primaryResult.create();
 	}
 
 	public ItemStack craftSecondary()
 	{
-		return secondaryResult.copy();
+		return secondaryResult.create();
 	}
 
 	public Ingredient getIngredient()
@@ -58,12 +64,12 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 		return ingredient;
 	}
 
-	public ItemStack getPrimaryResult()
+	public ItemStackTemplate getPrimaryResult()
 	{
 		return primaryResult;
 	}
 
-	public ItemStack getSecondaryResult()
+	public ItemStackTemplate getSecondaryResult()
 	{
 		return secondaryResult;
 	}
@@ -118,7 +124,7 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 	@FunctionalInterface
 	public interface RecipeFactory<T extends LaserCuttingRecipe>
 	{
-		T create(Ingredient ingredient, ItemStack result, ItemStack secondaryResult, float secondaryChance);
+		T create(Ingredient ingredient, ItemStackTemplate result, ItemStackTemplate secondaryResult, float secondaryChance);
 	}
 
 	public static <T extends LaserCuttingRecipe> RecipeSerializer<T> createSerializer(LaserCuttingRecipe.RecipeFactory<T> recipeFactory)
@@ -126,8 +132,8 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 		MapCodec<T> codec = RecordCodecBuilder.mapCodec(
 				instance -> instance.group(
 						                    Ingredient.CODEC.fieldOf("ingredient").forGetter(LaserCuttingRecipe::getIngredient),
-						                    ItemStack.CODEC.fieldOf("primary_result").forGetter(LaserCuttingRecipe::getPrimaryResult),
-						                    ItemStack.CODEC.fieldOf("secondary_result").forGetter(LaserCuttingRecipe::getSecondaryResult),
+						                    ItemStackTemplate.CODEC.fieldOf("primary_result").forGetter(LaserCuttingRecipe::getPrimaryResult),
+						                    ItemStackTemplate.CODEC.fieldOf("secondary_result").forGetter(LaserCuttingRecipe::getSecondaryResult),
 						                    ExtraCodecs.POSITIVE_FLOAT.fieldOf("secondary_chance").forGetter(LaserCuttingRecipe::getSecondaryChance)
 				                    )
 				                    .apply(instance, recipeFactory::create)
@@ -135,9 +141,9 @@ public class LaserCuttingRecipe implements Recipe<SingleRecipeInput>
 		StreamCodec<RegistryFriendlyByteBuf, T> packetCodec = GalaxiesPacketUtil.quadruple(
 				Ingredient.CONTENTS_STREAM_CODEC,
 				LaserCuttingRecipe::getIngredient,
-				ItemStack.STREAM_CODEC,
+				ItemStackTemplate.STREAM_CODEC,
 				LaserCuttingRecipe::getPrimaryResult,
-				ItemStack.STREAM_CODEC,
+				ItemStackTemplate.STREAM_CODEC,
 				LaserCuttingRecipe::getSecondaryResult,
 				ByteBufCodecs.FLOAT,
 				LaserCuttingRecipe::getSecondaryChance,

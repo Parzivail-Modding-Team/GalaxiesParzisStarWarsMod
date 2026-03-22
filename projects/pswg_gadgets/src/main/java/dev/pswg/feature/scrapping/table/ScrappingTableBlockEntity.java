@@ -135,8 +135,8 @@ public class ScrappingTableBlockEntity extends BaseContainerBlockEntity implemen
 					boolean canOutput = false;
 					if (recipeEntry != null)
 					{
-						outputStack = recipeEntry.value().getPrimaryResult();
-						secondaryOutputStack = recipeEntry.value().getSecondaryResult();
+						outputStack = recipeEntry.value().getPrimaryResult().create();
+						secondaryOutputStack = recipeEntry.value().getSecondaryResult().create();
 						canOutput = scrappingBlockEntity.areOutputSlotsAvailable(outputStack, secondaryOutputStack, toolIndex);
 					}
 

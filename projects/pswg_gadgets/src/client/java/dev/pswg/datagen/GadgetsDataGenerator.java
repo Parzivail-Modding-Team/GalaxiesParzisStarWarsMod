@@ -37,7 +37,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -466,25 +466,25 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					createPanelCuttingRecipe(GalaxiesBlocks.IMPERIAL_FLOORING_PATTERN_2);
 					createPanelCuttingRecipe(GalaxiesBlocks.LAB_WALL);
 
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_ROD, new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.PLASTEEL_ROD, new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BALL_BEARING, new ItemStack(GalaxiesItems.DURASTEEL_INGOT), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_CUP, new ItemStack(GalaxiesItems.DESH_NUGGET, 6), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_CUP, new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_WIRE, new ItemStack(GalaxiesItems.DESH_NUGGET, 6), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_COIL, new ItemStack(GalaxiesItems.DESH_INGOT, 2), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DESH_WIRE, new ItemStack(GalaxiesItems.DESH_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 6), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.DESH_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.IONITE_INGOT), new ItemStack(GalaxiesItems.IONITE_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.PLASTEEL_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.CHROMIUM_INGOT), new ItemStack(GalaxiesItems.CHROMIUM_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.ELECTRIC_MOTOR, new ItemStack(GalaxiesItems.TURBINE), new ItemStack(GalaxiesItems.DURASTEEL_ROD, 2), 0.25f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.ELECTRIC_MOTOR, new ItemStack(GalaxiesItems.DESH_COIL), new ItemStack(GalaxiesItems.DESH_WIRE, 3), 0.25f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.LIGHT_PANEL, new ItemStack(GalaxiesItems.PLASTEEL_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.LIGHT_PANEL, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.TURBINE, new ItemStack(GalaxiesItems.DURASTEEL_INGOT, 2), new ItemStack(GalaxiesItems.DURASTEEL_INGOT), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_ROD, stack(GalaxiesItems.DURASTEEL_NUGGET, 6), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.PLASTEEL_ROD, stack(GalaxiesItems.PLASTEEL_NUGGET, 6), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BALL_BEARING, stack(GalaxiesItems.DURASTEEL_INGOT), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_CUP, stack(GalaxiesItems.DESH_NUGGET, 6), stack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_CUP, stack(GalaxiesItems.DURASTEEL_NUGGET, 6), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_WIRE, stack(GalaxiesItems.DESH_NUGGET, 6), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_COIL, stack(GalaxiesItems.DESH_INGOT, 2), stack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DESH_WIRE, stack(GalaxiesItems.DESH_INGOT), stack(GalaxiesItems.PLASTEEL_NUGGET, 6), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, stack(GalaxiesItems.DESH_INGOT), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, stack(GalaxiesItems.DESH_WIRE), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, stack(GalaxiesItems.IONITE_INGOT), stack(GalaxiesItems.IONITE_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DISPLAY_PANEL, stack(GalaxiesItems.PLASTEEL_INGOT), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.DISPLAY_PANEL, stack(GalaxiesItems.CHROMIUM_INGOT), stack(GalaxiesItems.CHROMIUM_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DISPLAY_PANEL, stack(GalaxiesItems.DESH_WIRE), stack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.ELECTRIC_MOTOR, stack(GalaxiesItems.TURBINE), stack(GalaxiesItems.DURASTEEL_ROD, 2), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.ELECTRIC_MOTOR, stack(GalaxiesItems.DESH_COIL), stack(GalaxiesItems.DESH_WIRE, 3), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.LIGHT_PANEL, stack(GalaxiesItems.PLASTEEL_INGOT), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.LIGHT_PANEL, stack(GalaxiesItems.DESH_WIRE), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.TURBINE, stack(GalaxiesItems.DURASTEEL_INGOT, 2), stack(GalaxiesItems.DURASTEEL_INGOT), 0.25f);
 
 				}
 
@@ -504,16 +504,26 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 				public void createPanelCuttingRecipe(ItemLike panel)
 				{
-					createLaserCuttingRecipe(panel, new ItemStack(GalaxiesItems.DURASTEEL_INGOT), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createLaserCuttingRecipe(panel, stack(GalaxiesItems.DURASTEEL_INGOT), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
 				}
 
-				public void createLaserCuttingRecipe(ItemLike input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+				private ItemStackTemplate stack(ItemLike item)
+				{
+					return new ItemStackTemplate(item.asItem());
+				}
+
+				private ItemStackTemplate stack(ItemLike item, int count)
+				{
+					return new ItemStackTemplate(item.asItem(), count);
+				}
+
+				public void createLaserCuttingRecipe(ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
 				{
 					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
 					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_cutting")));
 				}
 
-				public void createScrappingRecipe(ScrappingToolType tool, ItemLike input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+				public void createScrappingRecipe(ScrappingToolType tool, ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
 				{
 					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
 					Ingredient toolIngredient = null;
