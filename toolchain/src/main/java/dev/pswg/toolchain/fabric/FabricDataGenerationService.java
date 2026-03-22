@@ -293,6 +293,7 @@ public final class FabricDataGenerationService
 	{
 		Files.createDirectories(launchPaths.configDirectory());
 		Files.createDirectories(launchPaths.instanceRoot());
+		Files.createDirectories(launchPaths.instanceRoot().resolve("game"));
 		writeLoggingConfig(vanillaLaunch, launchPaths.loggingConfigPath());
 		prepareFabricAssetIndex(versionId, vanillaLaunch.assetIndexId());
 		writeDevLaunchConfig(
