@@ -122,4 +122,26 @@ public enum HostPlatform
 	{
 		return this == WINDOWS;
 	}
+
+	/**
+	 * Resolves a Mojang rule OS name to the substring expected inside Java's `os.name` property.
+	 *
+	 * @param mojangRuleOsName the Mojang rule OS name
+	 * @return the expected `os.name` token
+	 */
+	public static String expectedOsNameToken(String mojangRuleOsName)
+	{
+		if (mojangRuleOsName == null)
+		{
+			return null;
+		}
+
+		return switch (mojangRuleOsName.toLowerCase(Locale.ROOT))
+		{
+			case "windows" -> "windows";
+			case "osx" -> "mac";
+			case "linux" -> "linux";
+			default -> mojangRuleOsName.toLowerCase(Locale.ROOT);
+		};
+	}
 }

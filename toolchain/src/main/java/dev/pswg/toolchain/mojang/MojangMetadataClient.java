@@ -3,6 +3,7 @@ package dev.pswg.toolchain.mojang;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.pswg.toolchain.util.HostArchitecture;
 import dev.pswg.toolchain.util.HostPlatform;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifest;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifestEntry;
@@ -806,13 +807,7 @@ public final class MojangMetadataClient
 
 		if (rule.os().name() != null)
 		{
-			String expectedOs = switch (rule.os().name())
-			{
-				case "windows" -> "windows";
-				case "osx" -> "mac";
-				case "linux" -> "linux";
-				default -> rule.os().name().toLowerCase(Locale.ROOT);
-			};
+			String expectedOs = HostPlatform.expectedOsNameToken(rule.os().name());
 
 			if (!osName.contains(expectedOs))
 			{
@@ -914,8 +909,8 @@ public final class MojangMetadataClient
 		}
 
 		String classifier = parts[3].toLowerCase(Locale.ROOT);
-		String currentOs = currentOs();
-		String currentArch = currentArch();
+		String currentOs = HostPlatform.current().mojangOsName();
+		HostArchitecture currentArch = HostArchitecture.current();
 
 		if (classifier.contains("windows"))
 		{
@@ -926,12 +921,12 @@ public final class MojangMetadataClient
 
 			if (classifier.contains("arm64"))
 			{
-				return "arm64".equals(currentArch);
+				return currentArch.isArm64();
 			}
 
 			if (classifier.contains("x86"))
 			{
-				return "x86".equals(currentArch);
+				return currentArch.isX86();
 			}
 
 			return true;
@@ -946,12 +941,12 @@ public final class MojangMetadataClient
 
 			if (classifier.contains("aarch_64") || classifier.contains("arm64"))
 			{
-				return "arm64".equals(currentArch);
+				return currentArch.isArm64();
 			}
 
 			if (classifier.contains("x86_64") || classifier.contains("amd64"))
 			{
-				return "x86_64".equals(currentArch);
+				return currentArch.isX86_64();
 			}
 
 			return true;
@@ -966,50 +961,13 @@ public final class MojangMetadataClient
 
 			if (classifier.contains("arm64"))
 			{
-				return "arm64".equals(currentArch);
+				return currentArch.isArm64();
 			}
 
 			return true;
 		}
 
 		return true;
-	}
-
-	/**
-	 * Resolves the current host operating system to Mojang's canonical names.
-	 *
-	 * @return the current host operating system
-	 */
-	private String currentOs()
-	{
-		return HostPlatform.current().mojangOsName();
-	}
-
-	/**
-	 * Resolves the current host architecture to normalized classifier names.
-	 *
-	 * @return the current host architecture
-	 */
-	private String currentArch()
-	{
-		String osArch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
-
-		if ("amd64".equals(osArch) || "x86_64".equals(osArch))
-		{
-			return "x86_64";
-		}
-
-		if ("x86".equals(osArch) || "i386".equals(osArch))
-		{
-			return "x86";
-		}
-
-		if ("aarch64".equals(osArch) || "arm64".equals(osArch))
-		{
-			return "arm64";
-		}
-
-		return osArch;
 	}
 
 	/**
