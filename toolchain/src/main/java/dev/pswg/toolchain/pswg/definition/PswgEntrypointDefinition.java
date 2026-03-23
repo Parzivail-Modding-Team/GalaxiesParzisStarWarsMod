@@ -28,7 +28,7 @@ public final class PswgEntrypointDefinition extends ResourceOnlyFabricModuleDefi
 	protected void configure(ModuleSpec spec)
 	{
 		spec.fabricModId("pswg_bundle");
-		spec.dependency("pswg_blasters");
-		spec.dependency("pswg_gadgets");
+		spec.aggregateMember("pswg_blasters");
+		spec.aggregateMember("pswg_gadgets");
 	}
 }

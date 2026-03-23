@@ -35,6 +35,10 @@ That command:
 The current graph default is `pswg_entrypoint`, which pulls the modeled bundle modules into the
 generated launch closure.
 
+That aggregation is now owned by the authoritative toolchain graph itself. `pswg_entrypoint`
+declares aggregate members for development-time launch and datagen workflows instead of relying on
+Gradle-era `include(...)` wiring to describe the bundle shape.
+
 If you need a different injected module:
 
 ```bash

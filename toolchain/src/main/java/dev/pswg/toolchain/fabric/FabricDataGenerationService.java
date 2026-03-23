@@ -7,6 +7,7 @@ import dev.pswg.toolchain.intellij.IntelliJXmlWriter;
 import dev.pswg.toolchain.mojang.MojangPaths;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.MavenDependencySpec;
+import dev.pswg.toolchain.model.ModuleAggregationResolver;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.pswg.PswgRepositoryContext;
@@ -201,23 +202,15 @@ public final class FabricDataGenerationService
 		BuildGraph graph = repository.buildGraph();
 		Path repoRoot = repository.projectRoot();
 		String projectName = repository.projectName();
-		ModuleSpec rootModule = requireModule(graph, moduleId);
+		ModuleSpec rootModule = ModuleAggregationResolver.requireModule(graph, moduleId);
 		List<Path> moduleRoots = resolveOutputRoots(repoRoot, projectName, rootModule);
 		List<Path> dependencyRoots = new ArrayList<>();
 		List<MavenDependencySpec> runtimeDependencies = new ArrayList<>(rootModule.runtimeDependencies());
-		Set<String> visited = new LinkedHashSet<>();
 
-		for (String dependencyId : rootModule.dependencies())
+		for (ModuleSpec dependencyModule : ModuleAggregationResolver.aggregatedDependencies(graph, moduleId))
 		{
-			collectDependencyRuntimeData(
-				repoRoot,
-				projectName,
-				graph,
-				dependencyId,
-				visited,
-				dependencyRoots,
-				runtimeDependencies
-			);
+			dependencyRoots.addAll(resolveOutputRoots(repoRoot, projectName, dependencyModule));
+			runtimeDependencies.addAll(dependencyModule.runtimeDependencies());
 		}
 
 		List<Path> externalRuntimeArtifacts = resolveRuntimeDependencies(
@@ -626,15 +619,6 @@ public final class FabricDataGenerationService
 	 * @param moduleId the module identifier
 	 * @return the resolved module specification
 	 */
-	private ModuleSpec requireModule(BuildGraph graph, String moduleId)
-	{
-		return graph.modules()
-		            .stream()
-		            .filter(candidate -> moduleId.equals(candidate.id()))
-		            .findFirst()
-		            .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + moduleId));
-	}
-
 	/**
 	 * Resolves the module targets that should receive datagen run configurations.
 	 *
@@ -657,7 +641,7 @@ public final class FabricDataGenerationService
 			return supportedModules;
 		}
 
-		ModuleSpec requested = requireModule(graph, requestedModuleId);
+		ModuleSpec requested = ModuleAggregationResolver.requireModule(graph, requestedModuleId);
 
 		if (!supportsDatagen(requested))
 		{
@@ -679,49 +663,6 @@ public final class FabricDataGenerationService
 			&& module.fabricModJson() != null
 			&& module.fabricModId() != null
 			&& !module.fabricModId().isBlank();
-	}
-
-	/**
-	 * Collects runtime roots and runtime Maven dependencies for a transitive modeled dependency.
-	 *
-	 * @param projectRoot the tracked repository root
-	 * @param graph the build graph
-	 * @param moduleId the dependency module identifier
-	 * @param visited the visited dependency identifiers
-	 * @param roots the accumulated runtime roots
-	 * @param runtimeDependencies the accumulated runtime Maven dependencies
-	 */
-	private void collectDependencyRuntimeData(
-		Path projectRoot,
-		String projectName,
-		BuildGraph graph,
-		String moduleId,
-		Set<String> visited,
-		List<Path> roots,
-		List<MavenDependencySpec> runtimeDependencies
-	)
-	{
-		if (!visited.add(moduleId))
-		{
-			return;
-		}
-
-		ModuleSpec module = requireModule(graph, moduleId);
-		roots.addAll(resolveOutputRoots(projectRoot, projectName, module));
-		runtimeDependencies.addAll(module.runtimeDependencies());
-
-		for (String dependencyId : module.dependencies())
-		{
-			collectDependencyRuntimeData(
-				projectRoot,
-				projectName,
-				graph,
-				dependencyId,
-				visited,
-				roots,
-				runtimeDependencies
-			);
-		}
 	}
 
 	/**
@@ -1160,39 +1101,7 @@ public final class FabricDataGenerationService
 		String rootModuleId
 	)
 	{
-		List<ModuleSpec> modules = new ArrayList<>();
-		Set<String> visited = new LinkedHashSet<>();
-		collectLaunchDependencyModules(graph, rootModuleId, visited, modules);
-		return modules;
-	}
-
-	/**
-	 * Collects the authoritative module closure for the aggregate datagen launch.
-	 *
-	 * @param graph the authoritative build graph
-	 * @param moduleId the module identifier to collect
-	 * @param visited the visited module ids
-	 * @param modules the accumulated module closure
-	 */
-	private void collectLaunchDependencyModules(
-		BuildGraph graph,
-		String moduleId,
-		Set<String> visited,
-		List<ModuleSpec> modules
-	)
-	{
-		if (!visited.add(moduleId))
-		{
-			return;
-		}
-
-		ModuleSpec module = requireModule(graph, moduleId);
-		modules.add(module);
-
-		for (String dependencyId : module.dependencies())
-		{
-			collectLaunchDependencyModules(graph, dependencyId, visited, modules);
-		}
+		return ModuleAggregationResolver.aggregatedModules(graph, rootModuleId);
 	}
 
 	/**

@@ -53,6 +53,11 @@ public final class ModuleSpec
 	private final List<String> _dependencies;
 
 	/**
+	 * The declared aggregate module members.
+	 */
+	private final List<String> _aggregateMembers;
+
+	/**
 	 * The declared annotation processor module dependencies.
 	 */
 	private final List<String> _annotationProcessors;
@@ -128,6 +133,7 @@ public final class ModuleSpec
 		_mainResources = new ArrayList<>();
 		_clientResources = new ArrayList<>();
 		_dependencies = new ArrayList<>();
+		_aggregateMembers = new ArrayList<>();
 		_annotationProcessors = new ArrayList<>();
 		_providedAnnotationProcessorClasses = new ArrayList<>();
 		_generatedSources = new ArrayList<>();
@@ -217,6 +223,16 @@ public final class ModuleSpec
 	public List<String> dependencies()
 	{
 		return List.copyOf(_dependencies);
+	}
+
+	/**
+	 * Gets the declared aggregate module members.
+	 *
+	 * @return the immutable aggregate member identifiers
+	 */
+	public List<String> aggregateMembers()
+	{
+		return List.copyOf(_aggregateMembers);
 	}
 
 	/**
@@ -408,6 +424,22 @@ public final class ModuleSpec
 	public ModuleSpec dependency(String dependencyId)
 	{
 		_dependencies.add(dependencyId);
+		return this;
+	}
+
+	/**
+	 * Adds an aggregate module member.
+	 *
+	 * <p>Aggregate members are packaged and launched alongside this module by
+	 * the bespoke toolchain, but they are not ordinary compile-time dependency
+	 * edges in the module graph.
+	 *
+	 * @param memberId the aggregate member identifier
+	 * @return this module specification
+	 */
+	public ModuleSpec aggregateMember(String memberId)
+	{
+		_aggregateMembers.add(memberId);
 		return this;
 	}
 
