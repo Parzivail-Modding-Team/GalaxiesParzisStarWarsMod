@@ -454,12 +454,7 @@ public final class ArtifactAssemblyService
 	 */
 	private String artifactId(ModuleSpec module)
 	{
-		if ("pswg_entrypoint".equals(module.id()))
-		{
-			return "pswg";
-		}
-
-		return module.id();
+		return module.artifactId();
 	}
 
 	/**

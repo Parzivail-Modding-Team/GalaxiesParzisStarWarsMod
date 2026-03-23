@@ -114,6 +114,11 @@ public final class ModuleSpec
 	private String _fabricModId;
 
 	/**
+	 * The optional packaged artifact identifier override.
+	 */
+	private String _artifactId;
+
+	/**
 	 * The optional checked-in datagen output path.
 	 */
 	private Path _datagenOutput;
@@ -343,6 +348,21 @@ public final class ModuleSpec
 	public String fabricModId()
 	{
 		return _fabricModId;
+	}
+
+	/**
+	 * Gets the packaged artifact identifier.
+	 *
+	 * @return the packaged artifact identifier
+	 */
+	public String artifactId()
+	{
+		if (_artifactId == null || _artifactId.isBlank())
+		{
+			return _id;
+		}
+
+		return _artifactId;
 	}
 
 	/**
@@ -576,6 +596,18 @@ public final class ModuleSpec
 	public ModuleSpec fabricModId(String id)
 	{
 		_fabricModId = id;
+		return this;
+	}
+
+	/**
+	 * Declares the packaged artifact identifier.
+	 *
+	 * @param id the packaged artifact identifier
+	 * @return this module specification
+	 */
+	public ModuleSpec artifactId(String id)
+	{
+		_artifactId = id;
 		return this;
 	}
 
