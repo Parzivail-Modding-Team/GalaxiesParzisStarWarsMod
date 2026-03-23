@@ -1,5 +1,6 @@
 package dev.pswg.toolchain;
 
+import dev.pswg.toolchain.artifact.ArtifactAssemblyService;
 import dev.pswg.toolchain.fabric.FabricDataGenerationService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchInspector;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
@@ -103,6 +104,12 @@ public final class Main
 			case "idea" ->
 			{
 				runIdeaCommand(args);
+				return;
+			}
+
+			case "artifacts" ->
+			{
+				runArtifactCommand(args);
 				return;
 			}
 
@@ -345,6 +352,33 @@ public final class Main
 	}
 
 	/**
+	 * Executes artifact assembly commands.
+	 *
+	 * @param args command line arguments
+	 * @throws IOException if artifact assembly fails
+	 */
+	private static void runArtifactCommand(String[] args) throws IOException
+	{
+		if (args.length >= 2 && "assemble".equals(args[1]))
+		{
+			String moduleId = flagValue(args, "--module");
+			var artifacts = new ArtifactAssemblyService().assemble(moduleId);
+
+			System.out.println("Assembled artifacts: " + artifacts.size());
+
+			for (var artifact : artifacts)
+			{
+				System.out.println(" - " + artifact.artifactId() + " -> " + artifact.outputJar().toAbsolutePath());
+			}
+
+			return;
+		}
+
+		printUsage();
+		System.exit(1);
+	}
+
+	/**
 	 * Reports a top-level I/O failure.
 	 *
 	 * @param exception the failure to report
@@ -463,6 +497,8 @@ public final class Main
 		System.out.println("    Generate module-scoped Fabric datagen run configurations.");
 		System.out.println("  fabric inspect-dev [--environment <client|server>]");
 		System.out.println("    Inspect the currently generated Fabric launch contract.");
+		System.out.println("  artifacts assemble [--module <id>]");
+		System.out.println("    Assemble local PSWG artifact jars from IntelliJ outputs.");
 		System.out.println("  mojang manifest [--refresh]");
 		System.out.println("  mojang version [id] [--refresh]");
 		System.out.println("  mojang download [id] [--refresh]");

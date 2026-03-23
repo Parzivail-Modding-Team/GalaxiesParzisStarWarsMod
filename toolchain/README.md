@@ -70,6 +70,24 @@ Normal iteration after that is just IntelliJ:
 - run or debug `Fabric Client (platform)` or `Fabric Server (platform)`
 - run the generated `Fabric Datagen <module> (platform)` configuration for the module whose checked-in `src/main/generated` output you want to refresh
 
+## Artifact Assembly
+
+The toolchain can now assemble local release-style jars from IntelliJ-owned outputs:
+
+```bash
+./gradlew run --args="artifacts assemble --module pswg_entrypoint"
+```
+
+That command:
+
+- reads compiled classes and resources from `out/production/...`
+- expands `${version}` inside packaged `fabric.mod.json`
+- writes standalone module jars and aggregate bundle jars under `toolchain/work/artifacts/<version>/`
+
+The current artifact workflow is local assembly only. It does not yet publish to Maven Central,
+Modrinth, or CurseForge, and it expects the relevant modules to have already been compiled by
+IntelliJ before packaging.
+
 Datagen is always client-derived in the bespoke toolchain. Each generated datagen configuration is
 scoped to one module by:
 
