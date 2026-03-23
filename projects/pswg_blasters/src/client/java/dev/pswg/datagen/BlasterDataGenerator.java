@@ -277,7 +277,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 
 		public GqdCompiledModelGenerator(FabricPackOutput output)
 		{
-			this.resolver = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "");
+			this.resolver = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models");
 		}
 
 		@Override
@@ -313,7 +313,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 				// Split the geometry and model into multiple files
 				for (var fileEntry : entry.getValue().files().get().entrySet())
 				{
-					var nonDatagenId = entry.getKey().withPath("models/" + GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.of(fileEntry.getKey())));
+					var nonDatagenId = entry.getKey().withPath(GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.of(fileEntry.getKey())));
 					var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
 					var jsonOutputPath = resolver.file(nonDatagenId, "json");
 
@@ -328,7 +328,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			}
 			else
 			{
-				var nonDatagenId = entry.getKey().withPath("models/" + GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.empty()));
+				var nonDatagenId = entry.getKey().withPath(GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.empty()));
 				var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
 				var jsonOutputPath = resolver.file(nonDatagenId, "json");
 
