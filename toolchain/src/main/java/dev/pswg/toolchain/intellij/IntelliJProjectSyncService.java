@@ -4,6 +4,8 @@ import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
+import dev.pswg.toolchain.model.SourceSetDependencyResolver;
+import dev.pswg.toolchain.model.SourceSetLayout;
 import dev.pswg.toolchain.pswg.PswgRepositoryContext;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
@@ -617,12 +619,7 @@ public final class IntelliJProjectSyncService
 	 */
 	private List<Path> generatedRoots(ModuleSpec module, String sourceSetName)
 	{
-		if (SourceSetNames.CLIENT.equals(sourceSetName))
-		{
-			return module.generatedClientSources();
-		}
-
-		return module.generatedSources();
+		return SourceSetLayout.generatedRoots(module, sourceSetName);
 	}
 
 	/**
@@ -966,7 +963,7 @@ public final class IntelliJProjectSyncService
 				IntelliJModuleNames.sourceSetModuleName(
 					projectName,
 					dependencyId,
-					dependencySourceSetName(graph, dependencyId, sourceSetName)
+					SourceSetDependencyResolver.dependencySourceSetName(graph, dependencyId, sourceSetName)
 				)
 			);
 		}
@@ -991,38 +988,6 @@ public final class IntelliJProjectSyncService
 			           .addAttribute("module-name", IntelliJModuleNames.sourceSetModuleName(projectName, processorId, SourceSetNames.MAIN))
 			           .addAttribute("scope", "PROVIDED");
 		}
-	}
-
-	/**
-	 * Resolves which source set of a dependent module should be visible to the current source set.
-	 *
-	 * <p>Client source sets must see client-only API from their dependencies, not just common code.
-	 * Without this, modules like `pswg_blasters.client` can compile against `pswg_core.main` but fail
-	 * to resolve symbols that live under `pswg_core/src/client`.
-	 *
-	 * @param graph the authoritative build graph
-	 * @param dependencyId the dependent module identifier
-	 * @param consumerSourceSetName the consuming source-set name
-	 * @return the source-set name to depend on
-	 */
-	private String dependencySourceSetName(
-		BuildGraph graph,
-		String dependencyId,
-		String consumerSourceSetName
-	)
-	{
-		if (!SourceSetNames.CLIENT.equals(consumerSourceSetName))
-		{
-			return SourceSetNames.MAIN;
-		}
-
-		ModuleSpec dependency = graph.modules()
-		                             .stream()
-		                             .filter(candidate -> dependencyId.equals(candidate.id()))
-		                             .findFirst()
-		                             .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + dependencyId));
-
-		return hasClientSourceSet(dependency) ? SourceSetNames.CLIENT : SourceSetNames.MAIN;
 	}
 
 	/**
@@ -1187,12 +1152,7 @@ public final class IntelliJProjectSyncService
 	 */
 	private List<Path> sourceRoots(ModuleSpec module, String sourceSetName)
 	{
-		if (SourceSetNames.CLIENT.equals(sourceSetName))
-		{
-			return module.clientSources();
-		}
-
-		return module.mainSources();
+		return SourceSetLayout.sourceRoots(module, sourceSetName);
 	}
 
 	/**
@@ -1204,22 +1164,7 @@ public final class IntelliJProjectSyncService
 	 */
 	private List<Path> resourceRoots(ModuleSpec module, String sourceSetName)
 	{
-		if (SourceSetNames.CLIENT.equals(sourceSetName))
-		{
-			return module.clientResources();
-		}
-
-		List<Path> roots = new ArrayList<>(module.mainResources());
-
-		if (module.datagenOutput() != null && !roots.contains(module.datagenOutput()))
-		{
-			// Checked-in datagen output is part of the runtime resource surface and must be copied into
-			// IntelliJ outputs alongside src/main/resources so models, blockstates, and lang files are
-			// visible during root-project Fabric launches.
-			roots.add(module.datagenOutput());
-		}
-
-		return roots;
+		return SourceSetLayout.resourceRoots(module, sourceSetName);
 	}
 
 	/**
@@ -1230,7 +1175,7 @@ public final class IntelliJProjectSyncService
 	 */
 	private boolean hasClientSourceSet(ModuleSpec module)
 	{
-		return !module.clientSources().isEmpty() || !module.clientResources().isEmpty() || !module.generatedClientSources().isEmpty();
+		return SourceSetLayout.hasClientSourceSet(module);
 	}
 
 	/**

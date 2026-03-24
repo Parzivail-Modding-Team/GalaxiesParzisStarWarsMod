@@ -1,6 +1,6 @@
 package dev.pswg.toolchain.artifact;
 
-import dev.pswg.toolchain.intellij.IntelliJModuleNames;
+import dev.pswg.toolchain.build.CompilationOutputLayout;
 import dev.pswg.toolchain.model.ModuleAggregationResolver;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
@@ -89,6 +89,19 @@ public final class ArtifactAssemblyService
 	 */
 	public List<AssembledArtifact> assemble(String requestedModuleId) throws IOException
 	{
+		return assemble(requestedModuleId, null);
+	}
+
+	/**
+	 * Assembles artifacts for the requested module from a selected compiled output root.
+	 *
+	 * @param requestedModuleId the optional requested root module id
+	 * @param compiledOutputRoot the optional compiled output root override
+	 * @return the assembled artifact list
+	 * @throws IOException if assembly fails
+	 */
+	public List<AssembledArtifact> assemble(String requestedModuleId, Path compiledOutputRoot) throws IOException
+	{
 		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
 		String rootModuleId = requestedModuleId == null || requestedModuleId.isBlank()
 			? repository.buildGraph().developmentModuleId()
@@ -104,12 +117,12 @@ public final class ArtifactAssemblyService
 
 			for (ModuleSpec member : aggregatedArtifactMembers(repository, rootModuleId))
 			{
-				AssembledArtifact nestedArtifact = assembleStandaloneArtifact(repository, member, version, outputDirectory, true);
+				AssembledArtifact nestedArtifact = assembleStandaloneArtifact(repository, compiledOutputRoot, member, version, outputDirectory, true);
 				artifacts.add(nestedArtifact);
 				nestedJars.add(nestedArtifact.outputJar());
 			}
 
-			artifacts.add(assembleAggregateArtifact(repository, rootModule, version, outputDirectory, nestedJars));
+			artifacts.add(assembleAggregateArtifact(repository, compiledOutputRoot, rootModule, version, outputDirectory, nestedJars));
 			return List.copyOf(artifacts);
 		}
 
@@ -118,7 +131,7 @@ public final class ArtifactAssemblyService
 			throw new IOException("Module does not describe a packaged Fabric artifact: " + rootModuleId);
 		}
 
-		artifacts.add(assembleStandaloneArtifact(repository, rootModule, version, outputDirectory, false));
+		artifacts.add(assembleStandaloneArtifact(repository, compiledOutputRoot, rootModule, version, outputDirectory, false));
 		return List.copyOf(artifacts);
 	}
 
@@ -160,6 +173,7 @@ public final class ArtifactAssemblyService
 	 */
 	private AssembledArtifact assembleStandaloneArtifact(
 		PswgRepositoryContext repository,
+		Path compiledOutputRoot,
 		ModuleSpec module,
 		String version,
 		Path outputDirectory,
@@ -169,8 +183,8 @@ public final class ArtifactAssemblyService
 		String artifactId = artifactId(module);
 		Path outputJar = outputDirectory.resolve(artifactId + "-" + version + ".jar");
 		Map<String, byte[]> entries = new LinkedHashMap<>();
-		Path mainOutput = outputRoot(repository, module, SourceSetNames.MAIN);
-		Path clientOutput = outputRoot(repository, module, SourceSetNames.CLIENT);
+		Path mainOutput = outputRoot(repository, compiledOutputRoot, module, SourceSetNames.MAIN);
+		Path clientOutput = outputRoot(repository, compiledOutputRoot, module, SourceSetNames.CLIENT);
 
 		addOutputDirectory(entries, mainOutput, version);
 		addOutputDirectory(entries, clientOutput, version);
@@ -199,6 +213,7 @@ public final class ArtifactAssemblyService
 	 */
 	private AssembledArtifact assembleAggregateArtifact(
 		PswgRepositoryContext repository,
+		Path compiledOutputRoot,
 		ModuleSpec rootModule,
 		String version,
 		Path outputDirectory,
@@ -208,8 +223,8 @@ public final class ArtifactAssemblyService
 		String artifactId = artifactId(rootModule);
 		Path outputJar = outputDirectory.resolve(artifactId + "-" + version + ".jar");
 		Map<String, byte[]> entries = new LinkedHashMap<>();
-		Path mainOutput = outputRoot(repository, rootModule, SourceSetNames.MAIN);
-		Path clientOutput = outputRoot(repository, rootModule, SourceSetNames.CLIENT);
+		Path mainOutput = outputRoot(repository, compiledOutputRoot, rootModule, SourceSetNames.MAIN);
+		Path clientOutput = outputRoot(repository, compiledOutputRoot, rootModule, SourceSetNames.CLIENT);
 
 		addOutputDirectory(entries, mainOutput, version);
 		addOutputDirectory(entries, clientOutput, version);
@@ -307,11 +322,6 @@ public final class ArtifactAssemblyService
 			{
 				String relativePath = outputRoot.relativize(path).toString().replace('\\', '/');
 
-				if (shouldExclude(relativePath))
-				{
-					continue;
-				}
-
 				if ("fabric.mod.json".equals(relativePath))
 				{
 					entries.put(relativePath, expandedFabricModJson(path, version));
@@ -403,19 +413,20 @@ public final class ArtifactAssemblyService
 	 */
 	private Path outputRoot(
 		PswgRepositoryContext repository,
+		Path compiledOutputRoot,
 		ModuleSpec module,
 		String sourceSetName
 	)
 	{
-		String moduleName = IntelliJModuleNames.sourceSetModuleName(
+		Path baseOutputRoot = compiledOutputRoot != null
+			? compiledOutputRoot
+			: repository.projectRoot().resolve(INTELLIJ_OUTPUT_DIRECTORY);
+		return CompilationOutputLayout.sourceSetOutputRoot(
+			baseOutputRoot,
 			repository.projectName(),
 			module.id(),
 			sourceSetName
 		);
-
-		return repository.projectRoot()
-		                 .resolve(INTELLIJ_OUTPUT_DIRECTORY)
-		                 .resolve(moduleName);
 	}
 
 	/**
@@ -457,15 +468,4 @@ public final class ArtifactAssemblyService
 		return module.artifactId();
 	}
 
-	/**
-	 * Checks whether one output entry should be omitted from a packaged artifact.
-	 *
-	 * @param relativePath the normalized relative path
-	 * @return whether the path should be excluded
-	 */
-	private boolean shouldExclude(String relativePath)
-	{
-		String normalized = relativePath.replace('\\', '/');
-		return normalized.contains("/datagen/");
-	}
 }

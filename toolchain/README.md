@@ -78,15 +78,26 @@ The toolchain can now assemble local release-style jars from IntelliJ-owned outp
 ./gradlew run --args="artifacts assemble --module pswg_entrypoint"
 ```
 
+For CI or other environments without IntelliJ-managed compilation, use the toolchain-owned compile
+path first:
+
+```bash
+./gradlew run --args="artifacts assemble --module pswg_entrypoint --ci-build"
+```
+
 That command:
 
 - reads compiled classes and resources from `out/production/...`
 - expands `${version}` inside packaged `fabric.mod.json`
 - writes standalone module jars and aggregate bundle jars under `toolchain/work/artifacts/<version>/`
 
+With `--ci-build`, the toolchain first compiles the required module closure into
+`toolchain/work/ci-build/out/production/...` using the JDK compiler and the same authoritative
+module graph used by IntelliJ metadata generation.
+
 The current artifact workflow is local assembly only. It does not yet publish to Maven Central,
 Modrinth, or CurseForge, and it expects the relevant modules to have already been compiled by
-IntelliJ before packaging.
+IntelliJ before packaging unless `--ci-build` is used.
 
 Datagen is always client-derived in the bespoke toolchain. Each generated datagen configuration is
 scoped to one module by:

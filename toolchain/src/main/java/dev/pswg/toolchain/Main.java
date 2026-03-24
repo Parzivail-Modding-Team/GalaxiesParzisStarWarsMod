@@ -1,6 +1,7 @@
 package dev.pswg.toolchain;
 
 import dev.pswg.toolchain.artifact.ArtifactAssemblyService;
+import dev.pswg.toolchain.build.CiCompilationService;
 import dev.pswg.toolchain.fabric.FabricDataGenerationService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchInspector;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
@@ -17,6 +18,7 @@ import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -362,7 +364,15 @@ public final class Main
 		if (args.length >= 2 && "assemble".equals(args[1]))
 		{
 			String moduleId = flagValue(args, "--module");
-			var artifacts = new ArtifactAssemblyService().assemble(moduleId);
+			boolean ciBuild = hasFlag(args, "--ci-build");
+			Path compiledOutputRoot = null;
+
+			if (ciBuild)
+			{
+				compiledOutputRoot = new CiCompilationService().compileArtifactInputs(moduleId, hasFlag(args, "--refresh"));
+			}
+
+			var artifacts = new ArtifactAssemblyService().assemble(moduleId, compiledOutputRoot);
 
 			System.out.println("Assembled artifacts: " + artifacts.size());
 
@@ -497,8 +507,8 @@ public final class Main
 		System.out.println("    Generate module-scoped Fabric datagen run configurations.");
 		System.out.println("  fabric inspect-dev [--environment <client|server>]");
 		System.out.println("    Inspect the currently generated Fabric launch contract.");
-		System.out.println("  artifacts assemble [--module <id>]");
-		System.out.println("    Assemble local PSWG artifact jars from IntelliJ outputs.");
+		System.out.println("  artifacts assemble [--module <id>] [--ci-build] [--refresh]");
+		System.out.println("    Assemble local PSWG artifact jars from IntelliJ outputs, or compile into a toolchain-owned output tree first with --ci-build.");
 		System.out.println("  mojang manifest [--refresh]");
 		System.out.println("  mojang version [id] [--refresh]");
 		System.out.println("  mojang download [id] [--refresh]");
