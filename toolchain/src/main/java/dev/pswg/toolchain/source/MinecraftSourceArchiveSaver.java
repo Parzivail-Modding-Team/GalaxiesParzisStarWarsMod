@@ -1,18 +1,17 @@
 package dev.pswg.toolchain.source;
 
 import org.jetbrains.java.decompiler.main.DecompilerContext;
+import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
+import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.main.extern.IResultSaver;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -29,14 +28,19 @@ public final class MinecraftSourceArchiveSaver implements IResultSaver
 	private final Path _sourcesArchive;
 
 	/**
-	 * The output streams keyed by Fernflower archive identity.
+	 * The open archive output stream.
 	 */
-	private final Map<String, ZipOutputStream> _outputStreams;
+	private ZipOutputStream _outputStream;
 
 	/**
-	 * The single-threaded save executors keyed by Fernflower archive identity.
+	 * The written archive entry names.
 	 */
-	private final Map<String, ExecutorService> _saveExecutors;
+	private final Set<String> _entries;
+
+	/**
+	 * The optional line-map writer.
+	 */
+	private Writer _lineMapWriter;
 
 	/**
 	 * Creates a saver for one source archive.
@@ -46,28 +50,22 @@ public final class MinecraftSourceArchiveSaver implements IResultSaver
 	public MinecraftSourceArchiveSaver(Path sourcesArchive)
 	{
 		_sourcesArchive = sourcesArchive;
-		_outputStreams = new ConcurrentHashMap<>();
-		_saveExecutors = new ConcurrentHashMap<>();
+		_entries = new HashSet<>();
 	}
 
 	@Override
 	public void createArchive(String path, String archiveName, Manifest manifest)
 	{
-		String key = archiveKey(path, archiveName);
-
 		try
 		{
 			Files.createDirectories(_sourcesArchive.getParent());
-			ZipOutputStream outputStream = manifest == null
+			_outputStream = manifest == null
 				? new ZipOutputStream(Files.newOutputStream(_sourcesArchive))
 				: new JarOutputStream(Files.newOutputStream(_sourcesArchive), manifest);
-
-			_outputStreams.put(key, outputStream);
-			_saveExecutors.put(key, Executors.newSingleThreadExecutor());
 		}
 		catch (IOException exception)
 		{
-			throw new UncheckedIOException("Failed to create Minecraft source archive.", exception);
+			throw new RuntimeException("Failed to create Minecraft source archive.", exception);
 		}
 	}
 
@@ -87,62 +85,59 @@ public final class MinecraftSourceArchiveSaver implements IResultSaver
 		int[] mapping
 	)
 	{
-		String key = archiveKey(path, archiveName);
-		ExecutorService executor = _saveExecutors.get(key);
-
-		executor.submit(() ->
+		if (!_entries.add(entryName))
 		{
-			ZipOutputStream outputStream = _outputStreams.get(key);
+			DecompilerContext.getLogger().writeMessage(
+				"Zip entry " + entryName + " already exists in " + _sourcesArchive,
+				IFernflowerLogger.Severity.WARN
+			);
+			return;
+		}
 
-			try
+		try
+		{
+			ZipEntry zipEntry = new ZipEntry(entryName);
+
+			if (mapping != null && DecompilerContext.getOption(IFernflowerPreferences.DUMP_CODE_LINES))
 			{
-				outputStream.putNextEntry(new ZipEntry(entryName));
-
-				if (content != null)
-				{
-					outputStream.write(content.getBytes(StandardCharsets.UTF_8));
-				}
-
-				outputStream.closeEntry();
+				zipEntry.setExtra(getCodeLineData(mapping));
 			}
-			catch (IOException exception)
+
+			_outputStream.putNextEntry(zipEntry);
+
+			if (content != null)
 			{
-				DecompilerContext.getLogger().writeMessage("Cannot write entry " + entryName, exception);
+				_outputStream.write(content.getBytes(StandardCharsets.UTF_8));
 			}
-		});
+
+			_outputStream.closeEntry();
+		}
+		catch (IOException exception)
+		{
+			DecompilerContext.getLogger().writeMessage("Cannot write entry " + entryName, exception);
+		}
 	}
 
 	@Override
 	public void closeArchive(String path, String archiveName)
 	{
-		String key = archiveKey(path, archiveName);
-		ExecutorService executor = _saveExecutors.get(key);
-		Future<?> closeFuture = executor.submit(() ->
-		{
-			try
-			{
-				_outputStreams.get(key).close();
-			}
-			catch (IOException exception)
-			{
-				throw new UncheckedIOException("Failed to close Minecraft source archive.", exception);
-			}
-		});
-
-		executor.shutdown();
-
 		try
 		{
-			closeFuture.get();
+			if (_outputStream != null)
+			{
+				_outputStream.close();
+				_outputStream = null;
+			}
+
+			if (_lineMapWriter != null)
+			{
+				_lineMapWriter.close();
+				_lineMapWriter = null;
+			}
 		}
-		catch (Exception exception)
+		catch (IOException exception)
 		{
 			throw new RuntimeException("Failed to finalize Minecraft source archive.", exception);
-		}
-		finally
-		{
-			_outputStreams.remove(key);
-			_saveExecutors.remove(key);
 		}
 	}
 
@@ -171,15 +166,4 @@ public final class MinecraftSourceArchiveSaver implements IResultSaver
 	{
 	}
 
-	/**
-	 * Builds the Fernflower archive key.
-	 *
-	 * @param path the save path
-	 * @param archiveName the archive name
-	 * @return the archive key
-	 */
-	private static String archiveKey(String path, String archiveName)
-	{
-		return path + "/" + archiveName;
-	}
 }
