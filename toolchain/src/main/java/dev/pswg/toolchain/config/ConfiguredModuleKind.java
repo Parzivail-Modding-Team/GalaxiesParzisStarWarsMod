@@ -13,7 +13,7 @@ public enum ConfiguredModuleKind
 	/**
 	 * A Fabric module with shared main and client roots.
 	 */
-	FABRIC_COMMON_CLIENT,
+	FABRIC_SPLIT_SOURCES,
 
 	/**
 	 * A Fabric module that only contributes resources.
@@ -31,7 +31,7 @@ public enum ConfiguredModuleKind
 		return switch (value)
 		{
 			case "java" -> JAVA;
-			case "fabric_common_client" -> FABRIC_COMMON_CLIENT;
+			case "fabric_split_sources", "fabric_common_client" -> FABRIC_SPLIT_SOURCES;
 			case "fabric_resource_only" -> FABRIC_RESOURCE_ONLY;
 			default -> throw new IllegalArgumentException("Unsupported module kind: " + value);
 		};

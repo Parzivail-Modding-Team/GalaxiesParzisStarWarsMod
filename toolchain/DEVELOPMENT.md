@@ -29,6 +29,14 @@ The tracked host repo now supplies most PSWG-specific structure through `toolcha
 repo root. That file is the intended boundary between the reusable toolchain engine and one host
 project's module graph.
 
+Keep `toolchain.toml` ergonomic. Prefer the shortest clear form:
+
+- `fabric_split_sources` over the legacy `fabric_common_client` token
+- singular keys like `dependency` or `annotation_processor` when only one item is present
+- resource-relative `main_mixins` / `client_mixins` instead of full `src/...` paths
+- `generated_sources = true`, `generated_client_sources = true`, and `datagen = true` when using standard roots
+- string dependency shorthand `<notation> @ <repository>` for one-off Maven coordinates
+
 ## Advanced Commands
 
 Low-level commands still exist for inspection and diagnosis:

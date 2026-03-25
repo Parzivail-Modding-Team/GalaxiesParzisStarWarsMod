@@ -15,6 +15,14 @@ project id/name, tracked Minecraft version, default development module, and the 
 dependencies, aggregate members, artifact ids, Fabric mod ids, mixins, and datagen outputs that
 the reusable toolchain engine consumes.
 
+The preferred TOML shape is intentionally compact:
+
+- use `kind = "fabric_split_sources"` for normal Fabric modules with shared `src/main` and `src/client`
+- use `dependency = "..."` and `annotation_processor = "..."` when only one entry is needed
+- use `main_mixins = ["..."]` and `client_mixins = ["..."]` with resource-relative file names
+- use `generated_sources = true`, `generated_client_sources = true`, or `datagen = true` when the default roots are correct
+- use external dependency shorthand like `"group:artifact:version @ maven_central"` when table syntax is unnecessary
+
 ## Workflow
 
 The supported day-to-day workflow is IntelliJ-first:
