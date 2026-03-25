@@ -6,9 +6,14 @@ The `toolchain/` project is the project setup and build pipeline for PSWG.
 
 Its job is to:
 
-- define the PSWG module graph in Java
+- load the PSWG project and module graph from `../toolchain.toml`
 - generate IntelliJ project metadata for the modules
 - prepare the Fabric development runtime bundles and generated run configurations
+
+`toolchain.toml` is now the authoritative PSWG-specific configuration boundary. It captures the
+project id/name, tracked Minecraft version, default development module, and the per-module roots,
+dependencies, aggregate members, artifact ids, Fabric mod ids, mixins, and datagen outputs that
+the reusable toolchain engine consumes.
 
 ## Workflow
 
@@ -120,7 +125,7 @@ Most routine version bumps start in the tracked repository's `gradle.properties`
   update `loader_version` and/or `fabric_version`, then rerun `dev setup-intellij` and verify one
   real IntelliJ debug launch.
 - Other Maven dependencies:
-  update the owning module declaration in the toolchain graph or the tracked Gradle properties,
+  update the owning module declaration in `toolchain.toml` or the tracked Gradle properties,
   then rerun `dev setup-intellij` so IntelliJ project libraries and launch inputs stay aligned.
 
 After any version change:

@@ -1,0 +1,77 @@
+[project]
+id = "pswg"
+name = "GalaxiesParzisStarWarsMod"
+minecraft_version = "26.1-rc-1"
+default_development_module = "pswg_entrypoint"
+
+[modules.framework]
+kind = "java"
+
+[modules."framework-generator"]
+kind = "java"
+dependencies = ["framework"]
+provided_annotation_processor_classes = [
+	"dev.pswg.codecgenerator.CodecGenerationProcessor",
+	"dev.pswg.mutablerecord.MutableRecordProcessor",
+]
+generated_sources = ["build/generated/sources/annotationProcessor/java/main"]
+compile_dependencies = [
+	{ notation = "com.palantir.javapoet:javapoet:0.5.0", repository = "maven_central" },
+	{ notation = "com.google.auto.service:auto-service-annotations:1.1.1", repository = "maven_central" },
+]
+annotation_processor_dependencies = [
+	{ notation = "com.google.auto.service:auto-service:1.1.1", repository = "maven_central" },
+	{ notation = "com.google.auto.service:auto-service-annotations:1.1.1", repository = "maven_central" },
+	{ notation = "com.google.auto:auto-common:1.2.1", repository = "maven_central" },
+	{ notation = "com.google.guava:guava:32.0.1-jre", repository = "maven_central" },
+	{ notation = "com.google.guava:failureaccess:1.0.1", repository = "maven_central" },
+	{ notation = "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava", repository = "maven_central" },
+	{ notation = "com.google.code.findbugs:jsr305:3.0.2", repository = "maven_central" },
+	{ notation = "org.checkerframework:checker-qual:3.33.0", repository = "maven_central" },
+	{ notation = "com.google.errorprone:error_prone_annotations:2.18.0", repository = "maven_central" },
+	{ notation = "com.google.j2objc:j2objc-annotations:2.8", repository = "maven_central" },
+]
+
+[modules.pswg_core]
+kind = "fabric_common_client"
+fabric_mod_id = "pswg"
+dependencies = ["framework"]
+annotation_processors = ["framework-generator"]
+generated_sources = ["build/generated/sources/annotationProcessor/java/main"]
+generated_client_sources = ["build/generated/sources/annotationProcessor/java/client"]
+mixins = [
+	"src/main/resources/pswg.mixins.json",
+	"src/main/resources/errorman.mixins.json",
+	"src/client/resources/pswg.client.mixins.json",
+]
+datagen_output = "src/main/generated"
+
+[modules.pswg_blasters]
+kind = "fabric_common_client"
+dependencies = ["pswg_core"]
+annotation_processors = ["framework-generator"]
+generated_sources = ["build/generated/sources/annotationProcessor/java/main"]
+generated_client_sources = ["build/generated/sources/annotationProcessor/java/client"]
+mixins = [
+	"src/main/resources/pswg_blasters.mixins.json",
+	"src/client/resources/pswg_blasters.client.mixins.json",
+]
+datagen_output = "src/main/generated"
+
+[modules.pswg_gadgets]
+kind = "fabric_common_client"
+dependencies = ["pswg_core"]
+annotation_processors = ["framework-generator"]
+generated_sources = ["build/generated/sources/annotationProcessor/java/main"]
+generated_client_sources = ["build/generated/sources/annotationProcessor/java/client"]
+mixins = [
+	"src/main/resources/pswg_gadgets.mixins.json",
+	"src/client/resources/pswg_gadgets.client.mixins.json",
+]
+datagen_output = "src/main/generated"
+
+[modules.pswg_entrypoint]
+kind = "fabric_resource_only"
+artifact_id = "pswg"
+fabric_mod_id = "pswg_bundle"
+aggregate_members = ["pswg_blasters", "pswg_gadgets"]

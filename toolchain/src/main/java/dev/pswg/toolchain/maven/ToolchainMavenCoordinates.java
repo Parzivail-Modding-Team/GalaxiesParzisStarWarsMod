@@ -49,6 +49,21 @@ public final class ToolchainMavenCoordinates
 	public static final String FABRIC_API = "net.fabricmc.fabric-api:fabric-api:${fabric_version}";
 
 	/**
+	 * The jtoml implementation bundle.
+	 */
+	public static final String JTOML = "io.github.wasabithumb:jtoml:1.5.0";
+
+	/**
+	 * The jtoml compile-time API artifact.
+	 */
+	public static final String JTOML_API = "io.github.wasabithumb:jtoml-api:1.5.0";
+
+	/**
+	 * The jtoml runtime internals artifact.
+	 */
+	public static final String JTOML_INTERNALS = "io.github.wasabithumb:jtoml-internals:1.5.0";
+
+	/**
 	 * Prevents construction.
 	 */
 	private ToolchainMavenCoordinates()

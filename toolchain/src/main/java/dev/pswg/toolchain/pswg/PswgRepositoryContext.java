@@ -1,7 +1,8 @@
 package dev.pswg.toolchain.pswg;
 
+import dev.pswg.toolchain.config.ToolchainProjectConfig;
+import dev.pswg.toolchain.config.ToolchainProjectConfigLoader;
 import dev.pswg.toolchain.model.BuildGraph;
-import dev.pswg.toolchain.pswg.definition.PswgBuildDefinition;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,10 +11,10 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 /**
- * Discovers and caches the tracked PSWG repository metadata that the standalone toolchain still
+ * Discovers and caches the tracked host-project metadata that the standalone toolchain still
  * consumes while version and dependency properties remain repo-owned.
  *
- * <p>This is the main bridge between the standalone toolchain project and the tracked PSWG repo.
+ * <p>This is the main bridge between the standalone toolchain project and the tracked host repo.
  * Keeping that relationship explicit makes it easier to replace the remaining `gradle.properties`
  * reads later without hunting through launch and IntelliJ generation code.
  */
@@ -35,7 +36,7 @@ public final class PswgRepositoryContext
 	private final Path _toolchainRoot;
 
 	/**
-	 * The tracked PSWG repository root.
+	 * The tracked host-project repository root.
 	 */
 	private final Path _projectRoot;
 
@@ -50,7 +51,7 @@ public final class PswgRepositoryContext
 	private final Properties _gradleProperties;
 
 	/**
-	 * The authoritative PSWG build graph.
+	 * The authoritative configured build graph.
 	 */
 	private final BuildGraph _buildGraph;
 
@@ -74,7 +75,7 @@ public final class PswgRepositoryContext
 
 	/**
 	 * Discovers the tracked repository context from either the standalone toolchain directory or the
-	 * PSWG repository root.
+	 * tracked host-project root.
 	 *
 	 * @return the discovered repository context
 	 * @throws IOException if tracked metadata cannot be read
@@ -84,9 +85,10 @@ public final class PswgRepositoryContext
 		Path workingDirectory = Path.of("").toAbsolutePath().normalize();
 		Path projectRoot = discoverProjectRoot(workingDirectory);
 		Path toolchainRoot = projectRoot.resolve(TOOLCHAIN_DIRECTORY);
+		ToolchainProjectConfig projectConfig = new ToolchainProjectConfigLoader().load(projectRoot);
 		Properties gradleProperties = loadGradleProperties(projectRoot);
-		String projectName = readProjectName(projectRoot);
-		BuildGraph buildGraph = new PswgBuildDefinition().define();
+		String projectName = projectConfig.projectName();
+		BuildGraph buildGraph = projectConfig.toBuildGraph();
 
 		return new PswgRepositoryContext(
 			toolchainRoot,
@@ -98,9 +100,9 @@ public final class PswgRepositoryContext
 	}
 
 	/**
-	 * Discovers the tracked PSWG repository root from the current working directory.
+	 * Discovers the tracked host-project repository root from the current working directory.
 	 *
-	 * <p>The standalone toolchain now runs both from its own project root and from the PSWG root
+	 * <p>The standalone toolchain now runs both from its own project root and from the tracked root
 	 * IntelliJ project. Walking upward keeps repository discovery stable in both modes.
 	 *
 	 * @param workingDirectory the current working directory
@@ -122,7 +124,7 @@ public final class PswgRepositoryContext
 			}
 		}
 
-		throw new IOException("Could not discover the PSWG repository root from " + workingDirectory);
+		throw new IOException("Could not discover the tracked project root from " + workingDirectory);
 	}
 
 	/**
@@ -136,9 +138,9 @@ public final class PswgRepositoryContext
 	}
 
 	/**
-	 * Gets the tracked PSWG repository root.
+	 * Gets the tracked host-project repository root.
 	 *
-	 * @return the PSWG repository root
+	 * @return the tracked project root
 	 */
 	public Path projectRoot()
 	{
@@ -166,7 +168,7 @@ public final class PswgRepositoryContext
 	}
 
 	/**
-	 * Gets the authoritative PSWG build graph.
+	 * Gets the authoritative configured build graph.
 	 *
 	 * @return the build graph
 	 */
@@ -188,7 +190,7 @@ public final class PswgRepositoryContext
 	/**
 	 * Loads the tracked repository Gradle properties.
 	 *
-	 * @param projectRoot the PSWG repository root
+	 * @param projectRoot the tracked project root
 	 * @return the parsed Gradle properties
 	 * @throws IOException if the properties file cannot be read
 	 */
@@ -203,34 +205,5 @@ public final class PswgRepositoryContext
 		}
 
 		return properties;
-	}
-
-	/**
-	 * Reads the IntelliJ project name, falling back to the repository directory name.
-	 *
-	 * @param projectRoot the PSWG repository root
-	 * @return the IntelliJ project name
-	 */
-	private static String readProjectName(Path projectRoot)
-	{
-		Path projectNameFile = projectRoot.resolve(".idea").resolve(".name");
-
-		try
-		{
-			if (Files.exists(projectNameFile))
-			{
-				String value = Files.readString(projectNameFile).trim();
-
-				if (!value.isBlank())
-				{
-					return value;
-				}
-			}
-		}
-		catch (IOException ignored)
-		{
-		}
-
-		return projectRoot.getFileName().toString();
 	}
 }

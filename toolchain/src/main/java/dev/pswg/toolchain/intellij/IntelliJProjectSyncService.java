@@ -1,5 +1,7 @@
 package dev.pswg.toolchain.intellij;
 
+import dev.pswg.toolchain.maven.ToolchainMavenCoordinates;
+import dev.pswg.toolchain.maven.ToolchainMavenRepositories;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleSpec;
@@ -55,6 +57,9 @@ public final class IntelliJProjectSyncService
 		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-databind:2.21.1", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-annotations:2.21", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-core:2.21.1", URI.create("https://repo1.maven.org/maven2")),
+		new MavenDependencySpec(ToolchainMavenCoordinates.JTOML, ToolchainMavenRepositories.MAVEN_CENTRAL),
+		new MavenDependencySpec(ToolchainMavenCoordinates.JTOML_API, ToolchainMavenRepositories.MAVEN_CENTRAL),
+		new MavenDependencySpec(ToolchainMavenCoordinates.JTOML_INTERNALS, ToolchainMavenRepositories.MAVEN_CENTRAL),
 		new MavenDependencySpec("org.dom4j:dom4j:2.2.0", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("net.fabricmc:class-tweaker:0.1.1", URI.create("https://maven.fabricmc.net/")),
 		new MavenDependencySpec("net.fabricmc:tiny-remapper:0.11.2", URI.create("https://maven.fabricmc.net/")),

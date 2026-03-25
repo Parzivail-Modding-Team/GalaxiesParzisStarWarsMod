@@ -5,7 +5,7 @@
 - Gradle:
   Builds and runs the standalone `toolchain/` project itself.
 - Toolchain:
-  Owns PSWG graph definition, IntelliJ metadata generation, and Fabric runtime bundle generation.
+  Loads `../toolchain.toml`, then owns IntelliJ metadata generation and Fabric runtime bundle generation.
 - IntelliJ:
   Owns compilation of PSWG modules for normal development runs.
 
@@ -24,6 +24,10 @@ The toolchain writes and maintains a few key outputs in the tracked repository:
 - `.idea/runConfigurations/Fabric_Datagen_*.xml`
 
 It also writes the generated runtime bundle under `toolchain/work/instances/...`.
+
+The tracked host repo now supplies most PSWG-specific structure through `toolchain.toml` at the
+repo root. That file is the intended boundary between the reusable toolchain engine and one host
+project's module graph.
 
 ## Advanced Commands
 
@@ -115,7 +119,7 @@ Contract owners:
 
 - `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDataGenerationService.java`
 - `toolchain/src/main/java/dev/pswg/toolchain/model/ModuleSpec.java`
-- the PSWG module definitions under `toolchain/src/main/java/dev/pswg/toolchain/pswg/definition/...`
+- `toolchain.toml`
 
 Sensitive areas:
 
