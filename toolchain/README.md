@@ -15,6 +15,8 @@ project id/name, tracked Minecraft version, default development module, and the 
 dependencies, aggregate members, artifact ids, Fabric mod ids, mixins, and datagen outputs that
 the reusable toolchain engine consumes.
 
+For the full schema and worked examples, see `toolchain/PROJECT_SPEC.md`.
+
 The preferred TOML shape is intentionally compact:
 
 - use `kind = "fabric_split_sources"` for normal Fabric modules with shared `src/main` and `src/client`
