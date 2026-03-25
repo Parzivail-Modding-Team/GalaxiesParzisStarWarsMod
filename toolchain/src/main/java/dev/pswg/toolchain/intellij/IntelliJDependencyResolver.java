@@ -92,7 +92,7 @@ public final class IntelliJDependencyResolver
 	/**
 	 * Resolves the processor path for module-backed annotation processors.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param module the target module
@@ -384,7 +384,7 @@ public final class IntelliJDependencyResolver
 	 * module-specific Minecraft compile jar.
 	 *
 	 * @param graph the authoritative build graph
-	 * @param projectRoot the tracked PSWG repository root
+	 * @param projectRoot the tracked repository root
 	 * @param module the module currently being compiled
 	 * @return the local Fabric mod metadata files
 	 */
@@ -403,7 +403,7 @@ public final class IntelliJDependencyResolver
 	 * Recursively collects local Fabric mod metadata files from a module dependency chain.
 	 *
 	 * @param graph the authoritative build graph
-	 * @param projectRoot the tracked PSWG repository root
+	 * @param projectRoot the tracked repository root
 	 * @param moduleId the module identifier to inspect
 	 * @param paths the accumulated metadata paths
 	 * @param visited the visited module identifiers

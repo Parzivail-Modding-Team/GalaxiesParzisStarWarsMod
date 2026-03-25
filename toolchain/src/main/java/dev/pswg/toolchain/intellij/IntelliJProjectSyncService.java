@@ -8,7 +8,7 @@ import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.model.SourceSetDependencyResolver;
 import dev.pswg.toolchain.model.SourceSetLayout;
-import dev.pswg.toolchain.pswg.PswgRepositoryContext;
+import dev.pswg.toolchain.project.RepositoryContext;
 import dev.pswg.toolchain.source.SourceAttachmentResolver;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
@@ -31,10 +31,10 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * Generates the IntelliJ project metadata that lets PSWG compile from the authoritative toolchain
+ * Generates the IntelliJ project metadata that lets the host project compile from the authoritative toolchain
  * graph instead of from IDE state imported out of Gradle.
  *
- * <p>This service deliberately owns the "shape" of the PSWG IntelliJ project: module registration,
+ * <p>This service deliberately owns the "shape" of the IntelliJ project: module registration,
  * compiler configuration, generated-source markers, and project-library wiring. The lower-level
  * details of what jars belong on those classpaths live in {@link IntelliJDependencyResolver}.
  */
@@ -90,15 +90,15 @@ public final class IntelliJProjectSyncService
 	}
 
 	/**
-	 * Synchronizes compiler and generated-source metadata into the PSWG IntelliJ project.
+	 * Synchronizes compiler and generated-source metadata into the IntelliJ project.
 	 *
 	 * @param refresh whether to refresh externally resolved Maven artifacts
 	 * @throws IOException if metadata generation fails
 	 */
-	public void syncPswgProject(boolean refresh) throws IOException
+	public void syncProject(boolean refresh) throws IOException
 	{
-		ToolchainLog.info("idea", "Discovering PSWG repository context");
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		ToolchainLog.info("idea", "Discovering repository context");
+		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
 		Path projectRoot = repository.projectRoot();
 		BuildGraph graph = repository.buildGraph();
 		Properties gradleProperties = repository.gradleProperties();
@@ -121,7 +121,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes the active IntelliJ project registration files so the generated modules are actually loaded.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @throws IOException if the registration files cannot be written
@@ -140,7 +140,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes the root IntelliJ compiler configuration file.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param gradleProperties the tracked Gradle properties
@@ -169,7 +169,7 @@ public final class IntelliJProjectSyncService
 	 * compile-server cache even when module `.iml` files declare per-module output paths. The root
 	 * output entry keeps PSWG-root builds and launches anchored in the tracked repo.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @throws IOException if the project settings cannot be written
 	 */
 	private void writeProjectSettings(Path projectRoot) throws IOException
@@ -192,7 +192,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes project library metadata for external compile and client dependencies.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param graph the authoritative build graph
 	 * @param gradleProperties the tracked Gradle properties
 	 * @param refresh whether to refresh external artifact resolution
@@ -233,7 +233,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes IntelliJ module metadata for modeled PSWG source sets.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param gradleProperties the tracked Gradle properties
@@ -276,7 +276,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes a single source-set module `.iml`.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param gradleProperties the tracked Gradle properties
@@ -309,7 +309,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes the PSWG-root IntelliJ module metadata for the standalone toolchain sources.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @throws IOException if the metadata cannot be written
 	 */
@@ -331,7 +331,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Creates the IntelliJ compiler configuration XML document.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param gradleProperties the tracked Gradle properties
@@ -425,7 +425,7 @@ public final class IntelliJProjectSyncService
 	 * Adds a single IntelliJ annotation processing profile.
 	 *
 	 * @param annotationProcessing the annotation processing element
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param module the module specification
@@ -445,7 +445,7 @@ public final class IntelliJProjectSyncService
 	)
 	{
 		Element profile = annotationProcessing.addElement("profile");
-		profile.addAttribute("name", "PSWG Toolchain: " + IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
+		profile.addAttribute("name", "Toolchain: " + IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
 		profile.addAttribute("enabled", "true");
 		profile.addElement("outputRelativeToContentRoot").addAttribute("value", "true");
 
@@ -522,7 +522,7 @@ public final class IntelliJProjectSyncService
 	private void addDisabledAnnotationProfile(Element annotationProcessing, String moduleName)
 	{
 		Element profile = annotationProcessing.addElement("profile");
-		profile.addAttribute("name", "PSWG Toolchain: Disabled AP for " + moduleName);
+		profile.addAttribute("name", "Toolchain: Disabled AP for " + moduleName);
 		profile.addAttribute("enabled", "false");
 		profile.addElement("module").addAttribute("name", moduleName);
 	}
@@ -639,7 +639,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Creates a project library XML document for a resolved external artifact.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param artifact the resolved artifact path
 	 * @return the library document
 	 */
@@ -731,7 +731,7 @@ public final class IntelliJProjectSyncService
 	 * Creates the IntelliJ module document for the standalone toolchain sources inside the PSWG root
 	 * project.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @return the toolchain module document
 	 * @throws IOException if external toolchain dependencies cannot be resolved
@@ -753,7 +753,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Creates a fully modeled IntelliJ module document for a selected source set.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param gradleProperties the tracked Gradle properties
@@ -788,7 +788,7 @@ public final class IntelliJProjectSyncService
 	 * Adds the IntelliJ root manager and classpath model to a module document.
 	 *
 	 * @param moduleElement the module element
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param gradleProperties the tracked Gradle properties
@@ -831,7 +831,7 @@ public final class IntelliJProjectSyncService
 	 * Adds the root manager and classpath model for the toolchain module.
 	 *
 	 * @param moduleElement the module element
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @throws IOException if external toolchain dependencies cannot be resolved
 	 */
@@ -882,7 +882,7 @@ public final class IntelliJProjectSyncService
 	 * are generated later by Fabric launch preparation. Preserving those entries keeps IntelliJ from
 	 * dropping the launch module registration every time the project metadata is resynced.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @return the generated launch module file paths already present on disk
 	 * @throws IOException if the launch module directory cannot be scanned
 	 */
@@ -914,7 +914,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Adds IntelliJ source and resource folder declarations for a source set.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param content the module content element
 	 * @param module the module specification
 	 * @param sourceSetName the source-set name
@@ -1015,7 +1015,7 @@ public final class IntelliJProjectSyncService
 	 *
 	 * @param rootManager the root manager element
 	 * @param graph the authoritative build graph
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param gradleProperties the tracked Gradle properties
 	 * @param refresh whether to refresh external artifact resolution
 	 * @param module the module specification
@@ -1102,7 +1102,7 @@ public final class IntelliJProjectSyncService
 	 * Adds the generated-sources component used by IntelliJ to mark AP outputs.
 	 *
 	 * @param moduleElement the module element
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param module the module specification
 	 * @param generatedRoots the generated roots for the source set
 	 */
@@ -1133,7 +1133,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Gets the compile output directory for a modeled source set.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param module the module specification
 	 * @param sourceSetName the source-set name

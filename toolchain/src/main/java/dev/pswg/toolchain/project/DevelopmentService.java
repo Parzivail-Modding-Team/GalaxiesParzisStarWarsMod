@@ -1,4 +1,4 @@
-package dev.pswg.toolchain.pswg;
+package dev.pswg.toolchain.project;
 
 import dev.pswg.toolchain.fabric.FabricDataGenerationService;
 import dev.pswg.toolchain.fabric.FabricDevLaunchService;
@@ -15,19 +15,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * High-level developer workflow helpers for the supported PSWG IntelliJ setup path.
+ * High-level developer workflow helpers for the supported IntelliJ setup path.
  *
- * <p>This service exists so fresh-clone setup and day-to-day maintenance have one obvious entry
- * point. The lower-level `idea` and `fabric` commands still exist for diagnosis, but the normal
- * workflow is "synchronize IntelliJ metadata, then refresh the generated Fabric development launch".
+ * <p>This service keeps fresh-clone setup and day-to-day maintenance behind one obvious command:
+ * synchronize IntelliJ metadata, then refresh the generated Fabric development launches.
  */
-public final class PswgDevelopmentService
+public final class DevelopmentService
 {
 	/**
 	 * The combined result of the supported IntelliJ setup workflow.
 	 *
-	 * @param clientLaunch the prepared Fabric client launch
-	 * @param serverLaunch the prepared Fabric server launch
+	 * @param launches the prepared client and server launches
+	 * @param datagenConfigurations the prepared datagen configurations
 	 */
 	public record SetupResult(
 		Map<LaunchEnvironment, VanillaLaunchConfig> launches,
@@ -58,31 +57,32 @@ public final class PswgDevelopmentService
 	 *
 	 * @param refresh whether external metadata and cached artifacts should be refreshed
 	 * @param moduleId the optional requested injected module id
-	 * @param identity the launch identity to embed in the generated run configuration
-	 * @return the prepared client and server launch configurations
+	 * @param identity the launch identity to embed in the generated run configurations
+	 * @return the prepared launch and datagen configurations
 	 * @throws IOException if setup fails
 	 */
-	public SetupResult setupSupportedIntelliJDevelopment(
+	public SetupResult setupIntelliJDevelopment(
 		boolean refresh,
 		String moduleId,
 		LaunchIdentity identity
 	) throws IOException
 	{
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
-		return setupSupportedIntelliJDevelopment(repository, refresh, moduleId, identity);
+		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
+		return setupIntelliJDevelopment(repository, refresh, moduleId, identity);
 	}
 
 	/**
 	 * Runs the supported IntelliJ-first setup workflow for the requested injected module.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param refresh whether external metadata and cached artifacts should be refreshed
 	 * @param moduleId the optional requested injected module id
-	 * @return the prepared client and server launch configurations
+	 * @param identity the launch identity to embed in the generated run configurations
+	 * @return the prepared launch and datagen configurations
 	 * @throws IOException if setup fails
 	 */
-	private SetupResult setupSupportedIntelliJDevelopment(
-		PswgRepositoryContext repository,
+	private SetupResult setupIntelliJDevelopment(
+		RepositoryContext repository,
 		boolean refresh,
 		String moduleId,
 		LaunchIdentity identity
@@ -90,7 +90,7 @@ public final class PswgDevelopmentService
 	{
 		String effectiveModuleId = effectiveDevelopmentModuleId(repository.buildGraph(), moduleId);
 		ToolchainLog.info("dev", "Synchronizing IntelliJ metadata for " + repository.projectName());
-		new IntelliJProjectSyncService().syncPswgProject(refresh);
+		new IntelliJProjectSyncService().syncProject(refresh);
 		FabricDevLaunchService launchService = new FabricDevLaunchService();
 		FabricDataGenerationService datagenService = new FabricDataGenerationService();
 		Map<LaunchEnvironment, VanillaLaunchConfig> launches = new EnumMap<>(LaunchEnvironment.class);

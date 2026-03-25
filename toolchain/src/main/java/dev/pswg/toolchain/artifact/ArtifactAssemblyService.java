@@ -4,8 +4,8 @@ import dev.pswg.toolchain.build.CompilationOutputLayout;
 import dev.pswg.toolchain.model.ModuleAggregationResolver;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
-import dev.pswg.toolchain.pswg.PswgRepositoryContext;
-import dev.pswg.toolchain.pswg.PswgVersionResolver;
+import dev.pswg.toolchain.project.RepositoryContext;
+import dev.pswg.toolchain.project.VersionResolver;
 import dev.pswg.toolchain.util.ToolchainLog;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,7 +30,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 /**
- * Assembles PSWG release-oriented artifact jars from IntelliJ-owned outputs.
+ * Assembles release-oriented artifact jars from IntelliJ-owned outputs.
  */
 public final class ArtifactAssemblyService
 {
@@ -50,9 +50,9 @@ public final class ArtifactAssemblyService
 	private final ObjectMapper _mapper;
 
 	/**
-	 * Resolves the current PSWG artifact version.
+	 * Resolves the current project artifact version.
 	 */
-	private final PswgVersionResolver _versionResolver;
+	private final VersionResolver _versionResolver;
 
 	/**
 	 * Creates the artifact assembly service.
@@ -60,7 +60,7 @@ public final class ArtifactAssemblyService
 	public ArtifactAssemblyService()
 	{
 		_mapper = new ObjectMapper();
-		_versionResolver = new PswgVersionResolver();
+		_versionResolver = new VersionResolver();
 	}
 
 	/**
@@ -102,7 +102,7 @@ public final class ArtifactAssemblyService
 	 */
 	public List<AssembledArtifact> assemble(String requestedModuleId, Path compiledOutputRoot) throws IOException
 	{
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
 		String rootModuleId = requestedModuleId == null || requestedModuleId.isBlank()
 			? repository.buildGraph().developmentModuleId()
 			: requestedModuleId;
@@ -138,12 +138,12 @@ public final class ArtifactAssemblyService
 	/**
 	 * Collects the packaged aggregate members for one bundle root.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param rootModuleId the aggregate root module identifier
 	 * @return the packaged aggregate members
 	 */
 	private List<ModuleSpec> aggregatedArtifactMembers(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		String rootModuleId
 	)
 	{
@@ -163,16 +163,16 @@ public final class ArtifactAssemblyService
 	/**
 	 * Assembles one ordinary module artifact.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param module the packaged module
-	 * @param version the resolved PSWG version
+	 * @param version the resolved project version
 	 * @param outputDirectory the target artifact directory
 	 * @param nested whether the artifact will be nested into another jar
 	 * @return the assembled artifact
 	 * @throws IOException if assembly fails
 	 */
 	private AssembledArtifact assembleStandaloneArtifact(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		Path compiledOutputRoot,
 		ModuleSpec module,
 		String version,
@@ -203,16 +203,16 @@ public final class ArtifactAssemblyService
 	/**
 	 * Assembles one aggregate bundle artifact with nested module jars.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param rootModule the aggregate root module
-	 * @param version the resolved PSWG version
+	 * @param version the resolved project version
 	 * @param outputDirectory the target artifact directory
 	 * @param nestedJars the already assembled nested module jars
 	 * @return the assembled aggregate artifact
 	 * @throws IOException if assembly fails
 	 */
 	private AssembledArtifact assembleAggregateArtifact(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		Path compiledOutputRoot,
 		ModuleSpec rootModule,
 		String version,
@@ -302,7 +302,7 @@ public final class ArtifactAssemblyService
 	 *
 	 * @param entries the accumulated jar entries
 	 * @param outputRoot the IntelliJ output directory
-	 * @param version the resolved PSWG version
+	 * @param version the resolved project version
 	 * @throws IOException if output files cannot be read
 	 */
 	private void addOutputDirectory(
@@ -337,7 +337,7 @@ public final class ArtifactAssemblyService
 	 * Adds the tracked LICENSE file to one assembled artifact.
 	 *
 	 * @param entries the accumulated jar entries
-	 * @param projectRoot the tracked PSWG repository root
+	 * @param projectRoot the tracked repository root
 	 * @param artifactId the artifact identifier
 	 * @throws IOException if the LICENSE file cannot be read
 	 */
@@ -361,7 +361,7 @@ public final class ArtifactAssemblyService
 	 * Expands the `fabric.mod.json` version placeholder for one packaged artifact.
 	 *
 	 * @param path the descriptor path
-	 * @param version the resolved PSWG version
+	 * @param version the resolved project version
 	 * @return the expanded descriptor bytes
 	 * @throws IOException if the descriptor cannot be read
 	 */
@@ -406,13 +406,13 @@ public final class ArtifactAssemblyService
 	/**
 	 * Resolves the IntelliJ output root for one module source set.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param module the module
 	 * @param sourceSetName the source-set name
 	 * @return the IntelliJ output root
 	 */
 	private Path outputRoot(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		Path compiledOutputRoot,
 		ModuleSpec module,
 		String sourceSetName

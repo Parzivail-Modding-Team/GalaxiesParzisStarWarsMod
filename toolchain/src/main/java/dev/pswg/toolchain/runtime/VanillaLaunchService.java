@@ -40,7 +40,7 @@ public final class VanillaLaunchService
 	/**
 	 * The launcher brand exposed to Minecraft.
 	 */
-	public static final String DEFAULT_LAUNCHER_NAME = "PSWG Toolchain";
+	public static final String DEFAULT_LAUNCHER_NAME = "Toolchain";
 
 	/**
 	 * The launcher version exposed to Minecraft.

@@ -1,4 +1,4 @@
-package dev.pswg.toolchain.pswg;
+package dev.pswg.toolchain.project;
 
 import dev.pswg.toolchain.config.ToolchainProjectConfig;
 import dev.pswg.toolchain.config.ToolchainProjectConfigLoader;
@@ -11,13 +11,12 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 /**
- * Discovers and caches the tracked host-project metadata that the standalone toolchain
- * consumes while version and dependency properties remain repo-owned.
+ * Discovers and caches the tracked host-project metadata that the standalone toolchain consumes.
  *
- * <p>This keeps the relationship between the standalone toolchain project and the tracked host
- * repo explicit while some version and dependency properties remain repo-owned.
+ * <p>The reusable toolchain lives under `toolchain/`, while the host project lives in the parent
+ * directory and owns `toolchain.toml`, `gradle.properties`, `.idea`, and source roots.
  */
-public final class PswgRepositoryContext
+public final class RepositoryContext
 {
 	/**
 	 * The shared Gradle properties file name.
@@ -57,7 +56,7 @@ public final class PswgRepositoryContext
 	/**
 	 * Creates a repository context from resolved paths and metadata.
 	 */
-	private PswgRepositoryContext(
+	private RepositoryContext(
 		Path toolchainRoot,
 		Path projectRoot,
 		String projectName,
@@ -79,30 +78,28 @@ public final class PswgRepositoryContext
 	 * @return the discovered repository context
 	 * @throws IOException if tracked metadata cannot be read
 	 */
-	public static PswgRepositoryContext discoverFromToolchainWorkingDirectory() throws IOException
+	public static RepositoryContext discoverFromWorkingDirectory() throws IOException
 	{
 		Path workingDirectory = Path.of("").toAbsolutePath().normalize();
 		Path projectRoot = discoverProjectRoot(workingDirectory);
 		Path toolchainRoot = projectRoot.resolve(TOOLCHAIN_DIRECTORY);
 		ToolchainProjectConfig projectConfig = new ToolchainProjectConfigLoader().load(projectRoot);
 		Properties gradleProperties = loadGradleProperties(projectRoot);
-		String projectName = projectConfig.projectName();
-		BuildGraph buildGraph = projectConfig.toBuildGraph();
 
-		return new PswgRepositoryContext(
+		return new RepositoryContext(
 			toolchainRoot,
 			projectRoot,
-			projectName,
+			projectConfig.projectName(),
 			gradleProperties,
-			buildGraph
+			projectConfig.toBuildGraph()
 		);
 	}
 
 	/**
 	 * Discovers the tracked host-project repository root from the current working directory.
 	 *
-	 * <p>The standalone toolchain runs both from its own project root and from the tracked root
-	 * IntelliJ project. Walking upward keeps repository discovery stable in both modes.
+	 * <p>The standalone toolchain runs both from its own project root and from the tracked host
+	 * project. Walking upward keeps repository discovery stable in both modes.
 	 *
 	 * @param workingDirectory the current working directory
 	 * @return the discovered repository root

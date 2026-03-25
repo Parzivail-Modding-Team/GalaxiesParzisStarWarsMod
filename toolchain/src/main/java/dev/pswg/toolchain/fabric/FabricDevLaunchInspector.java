@@ -48,7 +48,7 @@ public final class FabricDevLaunchInspector
 	private final Path _toolchainRoot;
 
 	/**
-	 * The tracked PSWG repository root.
+	 * The tracked repository root.
 	 */
 	private final Path _projectRoot;
 

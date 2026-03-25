@@ -1,4 +1,4 @@
-package dev.pswg.toolchain.pswg;
+package dev.pswg.toolchain.project;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,32 +8,32 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Resolves the current PSWG artifact version from repository state.
+ * Resolves the current host-project artifact version from repository state.
  */
-public final class PswgVersionResolver
+public final class VersionResolver
 {
 	/**
-	 * Matches the historical git-describe based release format used by the Gradle build.
+	 * Matches the git-describe based release format used by the current host-project build.
 	 */
 	private static final Pattern DESCRIBE_PATTERN = Pattern.compile(
 		"^(0|[1-9][0-9]+)(?:\\.(0|[1-9][0-9]+)(?:\\.(0|[1-9][0-9]+))?)?\\+[0-9.]+((?:-[0-9]+-g[0-9a-f]+)?(?:-dirty)?)?$"
 	);
 
 	/**
-	 * Resolves the current PSWG version string.
+	 * Resolves the current artifact version string.
 	 *
-	 * @param repository the discovered PSWG repository context
-	 * @return the resolved PSWG version string
+	 * @param repository the discovered repository context
+	 * @return the resolved version string
 	 * @throws IOException if git metadata cannot be read or does not match the expected format
 	 */
-	public String resolveVersion(PswgRepositoryContext repository) throws IOException
+	public String resolveVersion(RepositoryContext repository) throws IOException
 	{
 		String describe = gitDescribe(repository.projectRoot());
 		Matcher matcher = DESCRIBE_PATTERN.matcher(describe);
 
 		if (!matcher.matches())
 		{
-			throw new IOException("Unsupported PSWG git describe format: " + describe);
+			throw new IOException("Unsupported git describe format: " + describe);
 		}
 
 		int major = parseVersionComponent(matcher.group(1));
@@ -95,7 +95,7 @@ public final class PswgVersionResolver
 		catch (InterruptedException exception)
 		{
 			Thread.currentThread().interrupt();
-			throw new IOException("Interrupted while resolving PSWG version from git", exception);
+			throw new IOException("Interrupted while resolving the repository version from git", exception);
 		}
 	}
 
@@ -116,10 +116,10 @@ public final class PswgVersionResolver
 	}
 
 	/**
-	 * Resolves the development suffix used by the historical Gradle version contract.
+	 * Resolves the development suffix used by the current git-describe version contract.
 	 *
 	 * @param gitSuffix the raw suffix from git-describe
-	 * @return the normalized PSWG development suffix
+	 * @return the normalized development suffix
 	 */
 	private String developmentSuffix(String gitSuffix)
 	{

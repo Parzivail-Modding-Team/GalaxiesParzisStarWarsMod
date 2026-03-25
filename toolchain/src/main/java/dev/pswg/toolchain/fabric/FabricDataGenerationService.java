@@ -10,7 +10,7 @@ import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleAggregationResolver;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
-import dev.pswg.toolchain.pswg.PswgRepositoryContext;
+import dev.pswg.toolchain.project.RepositoryContext;
 import dev.pswg.toolchain.source.SourceAttachmentResolver;
 import dev.pswg.toolchain.runtime.LaunchEnvironment;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
@@ -134,7 +134,7 @@ public final class FabricDataGenerationService
 		LaunchIdentity identity
 	) throws IOException
 	{
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
 		List<ModuleSpec> targets = datagenTargets(repository.buildGraph(), requestedModuleId);
 		String aggregateModuleId = repository.buildGraph().developmentModuleId();
 		LaunchIdentity effectiveIdentity = LaunchEnvironment.CLIENT.effectiveIdentity(identity);
@@ -194,14 +194,14 @@ public final class FabricDataGenerationService
 	 * is enforced by the generated run configuration's `fabric-api.datagen.modid` and output-dir
 	 * properties, not by shrinking the runtime classpath to one module.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleId the aggregate module identifier used for datagen launches
 	 * @param refresh whether to revalidate cached external runtime artifacts
 	 * @return the resolved module injection contract
 	 * @throws IOException if supporting external runtime dependencies cannot be resolved
 	 */
 	private FabricModuleInjection resolveModuleInjection(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		String moduleId,
 		boolean refresh
 	) throws IOException
@@ -238,7 +238,7 @@ public final class FabricDataGenerationService
 	 * Creates the standard path layout for the aggregate Fabric datagen launch bundle.
 	 *
 	 * @param toolchainRoot the toolchain project root
-	 * @param repoRoot the tracked PSWG repository root
+	 * @param repoRoot the tracked repository root
 	 * @param projectName the IntelliJ project name
 	 * @param versionId the Minecraft version identifier
 	 * @return the derived launch paths
@@ -840,14 +840,14 @@ public final class FabricDataGenerationService
 	/**
 	 * Writes the generated IntelliJ launch module that owns the datagen runtime classpath.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleInjection the resolved injected module contract
 	 * @param datagenLaunch the prepared datagen launch configuration
 	 * @param launchPaths the generated launch path layout
 	 * @throws IOException if the launch module metadata cannot be written
 	 */
 	private void writeIdeaLaunchModule(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricModuleInjection moduleInjection,
 		VanillaLaunchConfig datagenLaunch,
 		FabricDatagenPaths launchPaths,
@@ -865,14 +865,14 @@ public final class FabricDataGenerationService
 	/**
 	 * Creates the IntelliJ launch module document used for aggregate datagen launches.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleInjection the resolved injected module contract
 	 * @param datagenLaunch the prepared datagen launch configuration
 	 * @param launchPaths the generated launch path layout
 	 * @return the generated launch module document
 	 */
 	private Document createIdeaLaunchModuleDocument(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricModuleInjection moduleInjection,
 		VanillaLaunchConfig datagenLaunch,
 		FabricDatagenPaths launchPaths
@@ -917,13 +917,13 @@ public final class FabricDataGenerationService
 	/**
 	 * Writes the dedicated IntelliJ project libraries used only by the aggregate datagen launch module.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param platformId the target platform identifier
 	 * @param classpathEntries the prepared runtime classpath entries
 	 * @throws IOException if the generated library metadata cannot be written
 	 */
 	private void writeIdeaLaunchLibraries(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		String platformId,
 		List<Path> classpathEntries,
 		boolean refresh
@@ -949,7 +949,7 @@ public final class FabricDataGenerationService
 	/**
 	 * Creates a generated project library document for a prepared runtime classpath entry.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param platformId the target platform identifier
 	 * @param classpathEntry the prepared runtime classpath entry
 	 * @return the launch library document
@@ -1081,12 +1081,12 @@ public final class FabricDataGenerationService
 	/**
 	 * Resolves the IntelliJ module dependencies that should be built before the datagen launch runs.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleInjection the resolved injected module contract
 	 * @return the ordered module dependency names
 	 */
 	private List<String> launchDependencyModuleNames(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricModuleInjection moduleInjection
 	)
 	{
@@ -1169,12 +1169,12 @@ public final class FabricDataGenerationService
 	/**
 	 * Ensures the generated datagen launch module is registered in the root IntelliJ project.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param launchPaths the generated launch path layout
 	 * @throws IOException if the project registration cannot be updated
 	 */
 	private void registerIdeaLaunchModule(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricDatagenPaths launchPaths
 	) throws IOException
 	{
@@ -1197,7 +1197,7 @@ public final class FabricDataGenerationService
 	/**
 	 * Writes one IntelliJ Application run configuration per datagen-capable module.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param datagenLaunch the prepared aggregate datagen launch configuration
 	 * @param launchPaths the generated launch path layout
 	 * @param targets the datagen targets to emit
@@ -1205,7 +1205,7 @@ public final class FabricDataGenerationService
 	 * @throws IOException if the run configurations cannot be written
 	 */
 	private List<DatagenConfiguration> writeIdeaRunConfigurations(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		VanillaLaunchConfig datagenLaunch,
 		FabricDatagenPaths launchPaths,
 		List<ModuleSpec> targets
@@ -1280,7 +1280,7 @@ public final class FabricDataGenerationService
 	/**
 	 * Writes the IntelliJ Application run configuration for one datagen target.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param outputPath the IntelliJ run configuration path
 	 * @param datagenLaunch the prepared aggregate datagen launch configuration
 	 * @param launchPaths the generated launch path layout
@@ -1289,7 +1289,7 @@ public final class FabricDataGenerationService
 	 * @throws IOException if the run configuration cannot be written
 	 */
 	private void writeIdeaRunConfiguration(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		Path outputPath,
 		VanillaLaunchConfig datagenLaunch,
 		FabricDatagenPaths launchPaths,

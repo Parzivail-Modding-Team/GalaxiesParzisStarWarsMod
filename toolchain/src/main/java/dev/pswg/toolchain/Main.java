@@ -11,8 +11,8 @@ import dev.pswg.toolchain.mojang.MojangMetadataClient;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifest;
 import dev.pswg.toolchain.mojang.model.MojangVersionManifestEntry;
 import dev.pswg.toolchain.mojang.model.MojangVersionMetadata;
-import dev.pswg.toolchain.pswg.PswgDevelopmentService;
-import dev.pswg.toolchain.pswg.PswgRepositoryContext;
+import dev.pswg.toolchain.project.DevelopmentService;
+import dev.pswg.toolchain.project.RepositoryContext;
 import dev.pswg.toolchain.runtime.LaunchEnvironment;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Entrypoint for the standalone PSWG toolchain.
+ * Entrypoint for the standalone toolchain.
  */
 public final class Main
 {
@@ -63,8 +63,8 @@ public final class Main
 	 */
 	private static void printOverview() throws IOException
 	{
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
-		System.out.println("PSWG Toolchain");
+		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
+		System.out.println("Toolchain");
 		System.out.println("Project: " + repository.projectName());
 		System.out.println("Minecraft: " + repository.minecraftVersion());
 		System.out.println("Supported workflow:");
@@ -124,7 +124,7 @@ public final class Main
 	}
 
 	/**
-	 * Executes the supported PSWG development workflow commands.
+	 * Executes the supported development workflow commands.
 	 *
 	 * @param args command line arguments
 	 * @throws IOException if setup fails
@@ -133,15 +133,15 @@ public final class Main
 	{
 		if (args.length >= 2 && "setup-intellij".equals(args[1]))
 		{
-			PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+			RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
 			boolean refresh = hasFlag(args, "--refresh");
 			String requestedModuleId = flagValue(args, "--module");
 			LaunchIdentity identity = resolveLaunchIdentity(args);
-			String effectiveModuleId = PswgDevelopmentService.effectiveDevelopmentModuleId(
+			String effectiveModuleId = DevelopmentService.effectiveDevelopmentModuleId(
 				repository.buildGraph(),
 				requestedModuleId
 			);
-			PswgDevelopmentService.SetupResult setup = new PswgDevelopmentService().setupSupportedIntelliJDevelopment(
+			DevelopmentService.SetupResult setup = new DevelopmentService().setupIntelliJDevelopment(
 				refresh,
 				requestedModuleId,
 				identity
@@ -173,7 +173,7 @@ public final class Main
 	 */
 	private static void runMojangCommand(String[] args) throws IOException
 	{
-		String defaultVersion = PswgRepositoryContext.discoverFromToolchainWorkingDirectory().minecraftVersion();
+		String defaultVersion = RepositoryContext.discoverFromWorkingDirectory().minecraftVersion();
 		MojangMetadataClient client = new MojangMetadataClient();
 		boolean refresh = hasFlag(args, "--refresh");
 
@@ -269,7 +269,7 @@ public final class Main
 
 		if (args.length >= 2 && "prepare-dev".equals(args[1]))
 		{
-			String defaultVersion = PswgRepositoryContext.discoverFromToolchainWorkingDirectory().minecraftVersion();
+			String defaultVersion = RepositoryContext.discoverFromWorkingDirectory().minecraftVersion();
 			String versionId = positionalVersionArg(args, 2, defaultVersion);
 			boolean refresh = hasFlag(args, "--refresh");
 			LaunchEnvironment environment = resolveLaunchEnvironment(args);
@@ -303,7 +303,7 @@ public final class Main
 
 		if (args.length >= 2 && "prepare-datagen".equals(args[1]))
 		{
-			String defaultVersion = PswgRepositoryContext.discoverFromToolchainWorkingDirectory().minecraftVersion();
+			String defaultVersion = RepositoryContext.discoverFromWorkingDirectory().minecraftVersion();
 			String versionId = positionalVersionArg(args, 2, defaultVersion);
 			boolean refresh = hasFlag(args, "--refresh");
 			String moduleId = flagValue(args, "--module");
@@ -344,7 +344,7 @@ public final class Main
 		if (args.length >= 2 && "sync-pswg".equals(args[1]))
 		{
 			boolean refresh = hasFlag(args, "--refresh");
-			new IntelliJProjectSyncService().syncPswgProject(refresh);
+			new IntelliJProjectSyncService().syncProject(refresh);
 			System.out.println("Synchronized IntelliJ compiler metadata into the PSWG repo.");
 			return;
 		}

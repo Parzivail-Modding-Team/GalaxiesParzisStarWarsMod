@@ -6,7 +6,7 @@ import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetDependencyResolver;
 import dev.pswg.toolchain.model.SourceSetLayout;
 import dev.pswg.toolchain.model.SourceSetNames;
-import dev.pswg.toolchain.pswg.PswgRepositoryContext;
+import dev.pswg.toolchain.project.RepositoryContext;
 import dev.pswg.toolchain.util.ToolchainLog;
 
 import javax.tools.Diagnostic;
@@ -67,7 +67,7 @@ public final class CiCompilationService
 	 */
 	public Path compileArtifactInputs(String requestedModuleId, boolean refresh) throws IOException
 	{
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
 		String rootModuleId = requestedModuleId == null || requestedModuleId.isBlank()
 			? repository.buildGraph().developmentModuleId()
 			: requestedModuleId;
@@ -154,7 +154,7 @@ public final class CiCompilationService
 	 * @throws IOException if compilation fails
 	 */
 	private void compileSourceSet(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		boolean refresh,
 		Path outputRoot,
 		ModuleSpec module,
@@ -212,7 +212,7 @@ public final class CiCompilationService
 	 * @throws IOException if source discovery fails
 	 */
 	private List<Path> collectSourceFiles(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		ModuleSpec module,
 		String sourceSetName
 	) throws IOException
@@ -266,7 +266,7 @@ public final class CiCompilationService
 	 * @throws IOException if resource copying fails
 	 */
 	private void copyResources(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		ModuleSpec module,
 		String sourceSetName,
 		Path classOutput
@@ -308,7 +308,7 @@ public final class CiCompilationService
 	 * @throws IOException if compilation fails
 	 */
 	private void invokeCompiler(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		boolean refresh,
 		Path outputRoot,
 		ModuleSpec module,
@@ -420,7 +420,7 @@ public final class CiCompilationService
 	 * @throws IOException if dependency resolution fails
 	 */
 	private List<Path> compileClasspath(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		boolean refresh,
 		Path outputRoot,
 		ModuleSpec module,
@@ -538,7 +538,7 @@ public final class CiCompilationService
 	 * @throws IOException if dependency resolution fails
 	 */
 	private List<Path> processorPath(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		boolean refresh,
 		Path outputRoot,
 		ModuleSpec module

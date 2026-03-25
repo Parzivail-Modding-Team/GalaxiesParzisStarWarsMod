@@ -22,7 +22,7 @@ public final class IntelliJPathMacros
 	/**
 	 * Converts a resolved path into a `$PROJECT_DIR$` macro path when possible.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param path the resolved path
 	 * @return the macro path
 	 */
@@ -42,7 +42,7 @@ public final class IntelliJPathMacros
 	/**
 	 * Builds a `jar://...!/` URL for a resolved artifact.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param artifact the resolved artifact path
 	 * @return the jar URL
 	 */
@@ -54,7 +54,7 @@ public final class IntelliJPathMacros
 	/**
 	 * Builds a `file://...` URL for a project-relative path.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param path the target path
 	 * @return the file URL
 	 */

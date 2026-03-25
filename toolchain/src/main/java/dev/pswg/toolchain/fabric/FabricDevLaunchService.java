@@ -10,7 +10,7 @@ import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleAggregationResolver;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
-import dev.pswg.toolchain.pswg.PswgRepositoryContext;
+import dev.pswg.toolchain.project.RepositoryContext;
 import dev.pswg.toolchain.source.SourceAttachmentResolver;
 import dev.pswg.toolchain.runtime.LaunchEnvironment;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
@@ -123,7 +123,7 @@ public final class FabricDevLaunchService
 		LaunchIdentity identity
 	) throws IOException
 	{
-		PswgRepositoryContext repository = PswgRepositoryContext.discoverFromToolchainWorkingDirectory();
+		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
 		Path toolchainRoot = repository.toolchainRoot();
 		Path repoRoot = repository.projectRoot();
 		VanillaLaunchConfig vanillaLaunch = prepareVanillaLaunch(versionId, refresh, environment, identity);
@@ -210,7 +210,7 @@ public final class FabricDevLaunchService
 	/**
 	 * Resolves the optional module injection contract for a generated Fabric launch.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleId the optional module identifier
 	 * @param refresh whether to revalidate cached external runtime artifacts
 	 * @param environment the launch environment
@@ -218,7 +218,7 @@ public final class FabricDevLaunchService
 	 * @throws IOException if supporting external runtime dependencies cannot be resolved
 	 */
 	private FabricModuleInjection resolveModuleInjection(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		String moduleId,
 		boolean refresh,
 		LaunchEnvironment environment
@@ -266,7 +266,7 @@ public final class FabricDevLaunchService
 	 * Creates the standard path layout for a generated Fabric launch bundle.
 	 *
 	 * @param toolchainRoot the toolchain project root
-	 * @param repoRoot the tracked PSWG repository root
+	 * @param repoRoot the tracked repository root
 	 * @param versionId the Minecraft version identifier
 	 * @return the derived launch paths
 	 */
@@ -858,14 +858,14 @@ public final class FabricDevLaunchService
 	/**
 	 * Writes the generated IntelliJ launch module that owns the direct DLI runtime classpath.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleInjection the resolved injected module contract
 	 * @param fabricLaunch the prepared Fabric launch configuration
 	 * @param launchPaths the generated launch path layout
 	 * @throws IOException if the launch module metadata cannot be written
 	 */
 	private void writeIdeaLaunchModule(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricModuleInjection moduleInjection,
 		VanillaLaunchConfig fabricLaunch,
 		FabricLaunchPaths launchPaths,
@@ -883,14 +883,14 @@ public final class FabricDevLaunchService
 	/**
 	 * Creates the IntelliJ launch module document used for direct Fabric DLI launches.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleInjection the resolved injected module contract
 	 * @param fabricLaunch the prepared Fabric launch configuration
 	 * @param launchPaths the generated launch path layout
 	 * @return the generated launch module document
 	 */
 	private Document createIdeaLaunchModuleDocument(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricModuleInjection moduleInjection,
 		VanillaLaunchConfig fabricLaunch,
 		FabricLaunchPaths launchPaths
@@ -939,13 +939,13 @@ public final class FabricDevLaunchService
 	 * launch must resolve the exact prepared runtime classpath, while the compile graph is free to
 	 * point at transformed jars and exploded mod containers that would be invalid at runtime.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param platformId the target platform identifier
 	 * @param classpathEntries the prepared runtime classpath entries
 	 * @throws IOException if the generated library metadata cannot be written
 	 */
 	private void writeIdeaLaunchLibraries(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		LaunchEnvironment environment,
 		String platformId,
 		List<Path> classpathEntries,
@@ -972,7 +972,7 @@ public final class FabricDevLaunchService
 	/**
 	 * Creates a generated project library document for a prepared runtime classpath entry.
 	 *
-	 * @param projectRoot the PSWG project root
+	 * @param projectRoot the host-project root
 	 * @param platformId the target platform identifier
 	 * @param classpathEntry the prepared runtime classpath entry
 	 * @return the launch library document
@@ -1123,12 +1123,12 @@ public final class FabricDevLaunchService
 	 * `Make` step rebuilds PSWG outputs before launch, without letting those modules leak their
 	 * compile-only classpaths into the actual direct-DLI runtime.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleInjection the resolved injected module contract
 	 * @return the ordered module dependency names
 	 */
 	private List<String> launchDependencyModuleNames(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricModuleInjection moduleInjection,
 		LaunchEnvironment environment
 	)
@@ -1212,12 +1212,12 @@ public final class FabricDevLaunchService
 	/**
 	 * Ensures the generated Fabric launch module is registered in the root IntelliJ project.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param launchPaths the generated launch path layout
 	 * @throws IOException if the project registration cannot be updated
 	 */
 	private void registerIdeaLaunchModule(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricLaunchPaths launchPaths
 	) throws IOException
 	{
@@ -1249,7 +1249,7 @@ public final class FabricDevLaunchService
 	/**
 	 * Writes the IntelliJ Application run configuration for the Fabric launch bundle.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param outputPath the IntelliJ run configuration path
 	 * @param fabricLaunch the prepared Fabric launch configuration
 	 * @param launchPaths the generated launch path layout
@@ -1257,7 +1257,7 @@ public final class FabricDevLaunchService
 	 * @throws IOException if the run configuration cannot be written
 	 */
 	private void writeIdeaRunConfiguration(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		Path outputPath,
 		VanillaLaunchConfig fabricLaunch,
 		FabricModuleInjection moduleInjection,
@@ -1353,7 +1353,7 @@ public final class FabricDevLaunchService
 	 * Application runtime classpath, so this exclusion list trims the run config back down to the
 	 * exact prepared Fabric runtime classpath.
 	 *
-	 * @param repository the discovered PSWG repository context
+	 * @param repository the discovered repository context
 	 * @param moduleInjection the resolved injected module contract
 	 * @param fabricLaunch the prepared Fabric launch configuration
 	 * @param refresh whether dependency resolution should refresh cached artifacts
@@ -1361,7 +1361,7 @@ public final class FabricDevLaunchService
 	 * @throws IOException if dependency resolution fails
 	 */
 	private List<Path> launchClasspathExclusions(
-		PswgRepositoryContext repository,
+		RepositoryContext repository,
 		FabricModuleInjection moduleInjection,
 		VanillaLaunchConfig fabricLaunch,
 		LaunchEnvironment environment,
