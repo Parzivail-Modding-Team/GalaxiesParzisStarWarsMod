@@ -4,7 +4,6 @@ import dev.pswg.toolchain.intellij.IntelliJDependencyResolver;
 import dev.pswg.toolchain.intellij.IntelliJModuleNames;
 import dev.pswg.toolchain.intellij.IntelliJRunConfigurationSupport;
 import dev.pswg.toolchain.intellij.IntelliJXmlWriter;
-import dev.pswg.toolchain.mojang.MojangPaths;
 import dev.pswg.toolchain.model.BuildGraph;
 import dev.pswg.toolchain.model.MavenDependencySpec;
 import dev.pswg.toolchain.model.ModuleAggregationResolver;
@@ -18,14 +17,12 @@ import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
 import dev.pswg.toolchain.runtime.VanillaLaunchService;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.util.HostPlatform;
-import dev.pswg.toolchain.util.ToolchainLog;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -59,11 +56,6 @@ public final class FabricDataGenerationService
 	 * The Fabric API system property prefix for datagen mod selection.
 	 */
 	private static final String FABRIC_DATAGEN_MOD_ID_PROPERTY = "-Dfabric-api.datagen.modid=";
-
-	/**
-	 * The IntelliJ output directory segment used for compiled module outputs.
-	 */
-	private static final String INTELLIJ_OUTPUT_DIRECTORY = "out/production";
 
 	/**
 	 * The shared JSON serializer.
@@ -160,7 +152,7 @@ public final class FabricDataGenerationService
 			effectiveIdentity
 		);
 
-		writeLaunchJson(launchPaths.serializedLaunchPath(), datagenLaunch);
+		FabricLaunchSupport.writeLaunchJson(_mapper, launchPaths.serializedLaunchPath(), datagenLaunch);
 		writeIdeaLaunchModule(repository, moduleInjection, datagenLaunch, launchPaths, refresh);
 		return writeIdeaRunConfigurations(repository, datagenLaunch, launchPaths, targets);
 	}
@@ -290,8 +282,8 @@ public final class FabricDataGenerationService
 		Files.createDirectories(launchPaths.configDirectory());
 		Files.createDirectories(launchPaths.instanceRoot());
 		Files.createDirectories(launchPaths.instanceRoot().resolve("game"));
-		writeLoggingConfig(vanillaLaunch, launchPaths.loggingConfigPath());
-		prepareFabricAssetIndex(versionId, vanillaLaunch.assetIndexId());
+		FabricLaunchSupport.writeLoggingConfig(vanillaLaunch, launchPaths.loggingConfigPath());
+		FabricLaunchSupport.prepareFabricAssetIndex(versionId, vanillaLaunch.assetIndexId());
 		writeDevLaunchConfig(
 			versionId,
 			vanillaLaunch,
@@ -318,46 +310,22 @@ public final class FabricDataGenerationService
 	)
 	{
 		List<String> jvmArgs = new ArrayList<>(vanillaLaunch.jvmArgs());
-		List<Path> prependedClasspath = buildPrependedClasspath(moduleInjection, runtimeArtifacts);
-		replaceClasspath(jvmArgs, prependedClasspath);
-		replaceLoggingConfiguration(jvmArgs, launchPaths.loggingConfigPath());
+		List<Path> prependedClasspath = FabricLaunchSupport.buildPrependedClasspath(
+			moduleInjection.moduleRoots(),
+			moduleInjection.dependencyRoots(),
+			moduleInjection.externalRuntimeArtifacts(),
+			runtimeArtifacts.classpath()
+		);
+		FabricLaunchSupport.replaceClasspath(jvmArgs, prependedClasspath);
+		FabricLaunchSupport.replaceLoggingConfiguration(
+			jvmArgs,
+			launchPaths.loggingConfigPath(),
+			FabricDevLaunchService.DEFAULT_ANSI_LOGGING_ENABLED
+		);
 		addFabricRuntimeProperties(jvmArgs, runtimeArtifacts, launchPaths);
-		addHostCompatibilityFlags(jvmArgs);
-		addMixinJavaAgent(jvmArgs, runtimeArtifacts);
+		FabricLaunchSupport.addHostCompatibilityFlags(jvmArgs);
+		FabricLaunchSupport.addMixinJavaAgent(jvmArgs, runtimeArtifacts);
 		return jvmArgs;
-	}
-
-	/**
-	 * Builds the classpath entries that must appear ahead of the vanilla runtime.
-	 *
-	 * @param moduleInjection the resolved module injection contract
-	 * @param runtimeArtifacts the resolved Fabric runtime artifacts
-	 * @return the ordered prepended classpath entries
-	 */
-	private List<Path> buildPrependedClasspath(
-		FabricModuleInjection moduleInjection,
-		FabricRuntimeArtifacts runtimeArtifacts
-	)
-	{
-		List<Path> prependedClasspath = new ArrayList<>(moduleInjection.moduleRoots());
-		prependedClasspath.addAll(moduleInjection.dependencyRoots());
-		prependedClasspath.addAll(moduleInjection.externalRuntimeArtifacts());
-		prependedClasspath.addAll(runtimeArtifacts.classpath());
-		return prependedClasspath;
-	}
-
-	/**
-	 * Replaces the logging configuration path inherited from the vanilla baseline.
-	 *
-	 * @param jvmArgs the JVM argument list
-	 * @param loggingConfigPath the generated Fabric logging configuration path
-	 */
-	private void replaceLoggingConfiguration(List<String> jvmArgs, Path loggingConfigPath)
-	{
-		jvmArgs.removeIf(argument -> argument.startsWith("-Dlog4j.configurationFile="));
-		jvmArgs.add("-Dlog4j.configurationFile=" + loggingConfigPath.toAbsolutePath());
-		jvmArgs.add("-Dlog4j2.formatMsgNoLookups=true");
-		jvmArgs.add("-Dfabric.log.disableAnsi=" + !FabricDevLaunchService.DEFAULT_ANSI_LOGGING_ENABLED);
 	}
 
 	/**
@@ -377,31 +345,6 @@ public final class FabricDataGenerationService
 		jvmArgs.add("-Dfabric.dli.env=" + LaunchEnvironment.CLIENT.id());
 		jvmArgs.add("-Dfabric.dli.main=" + runtimeArtifacts.runtimeMainClass());
 		jvmArgs.add("-Dfabric.development=true");
-	}
-
-	/**
-	 * Adds conservative JVM compatibility flags used by modern Minecraft launches.
-	 *
-	 * @param jvmArgs the JVM argument list
-	 */
-	private void addHostCompatibilityFlags(List<String> jvmArgs)
-	{
-		addIfMissing(jvmArgs, "--sun-misc-unsafe-memory-access=allow");
-		addIfMissing(jvmArgs, "--enable-native-access=ALL-UNNAMED");
-	}
-
-	/**
-	 * Adds the optional Mixin javaagent when the resolved runtime requires it.
-	 *
-	 * @param jvmArgs the JVM argument list
-	 * @param runtimeArtifacts the resolved Fabric runtime artifacts
-	 */
-	private void addMixinJavaAgent(List<String> jvmArgs, FabricRuntimeArtifacts runtimeArtifacts)
-	{
-		if (runtimeArtifacts.mixinJavaAgentJar() != null)
-		{
-			addIfMissing(jvmArgs, "-javaagent:" + runtimeArtifacts.mixinJavaAgentJar().toAbsolutePath());
-		}
 	}
 
 	/**
@@ -443,72 +386,6 @@ public final class FabricDataGenerationService
 	}
 
 	/**
-	 * Creates the Fabric-style asset index alias expected by the dev launcher.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param assetIndexId the Mojang asset index identifier
-	 * @throws IOException if the alias cannot be created
-	 */
-	private void prepareFabricAssetIndex(String versionId, String assetIndexId) throws IOException
-	{
-		MojangPaths paths = new MojangPaths();
-		Path source = paths.assetIndexFile(assetIndexId);
-		Path target = paths.assetIndexFile(versionId + "-" + assetIndexId);
-
-		Files.createDirectories(target.getParent());
-		Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-	}
-
-	/**
-	 * Replaces the existing launch classpath with a Fabric-prepended classpath.
-	 *
-	 * @param jvmArgs the JVM argument list to update
-	 * @param prependedClasspath the classpath entries to prepend
-	 */
-	private void replaceClasspath(List<String> jvmArgs, List<Path> prependedClasspath)
-	{
-		String separator = System.getProperty("path.separator");
-		String prependedValue = prependedClasspath.stream()
-		                                         .map(path -> path.toAbsolutePath().toString())
-		                                         .reduce((left, right) -> left + separator + right)
-		                                         .orElse("");
-
-		for (int i = 0; i < jvmArgs.size() - 1; i++)
-		{
-			String arg = jvmArgs.get(i);
-
-			if (!"-cp".equals(arg) && !"-classpath".equals(arg))
-			{
-				continue;
-			}
-
-			String existingClasspath = jvmArgs.get(i + 1);
-			jvmArgs.set(i + 1, prependedValue + separator + existingClasspath);
-			return;
-		}
-
-		if (!prependedValue.isBlank())
-		{
-			jvmArgs.add("-cp");
-			jvmArgs.add(prependedValue);
-		}
-	}
-
-	/**
-	 * Adds a JVM argument if it is not already present.
-	 *
-	 * @param arguments the JVM argument list
-	 * @param argument the argument to add
-	 */
-	private void addIfMissing(List<String> arguments, String argument)
-	{
-		if (!arguments.contains(argument))
-		{
-			arguments.add(argument);
-		}
-	}
-
-	/**
 	 * Writes the Fabric-style development launcher configuration file.
 	 *
 	 * @param versionId the Minecraft version identifier
@@ -530,10 +407,10 @@ public final class FabricDataGenerationService
 		values.put("LOG4J_CONFIGURATION_FILE", loggingConfigPath.toAbsolutePath().toString());
 		values.put("FABRIC_DEFAULT_MOD_DISTRIBUTION_NAMESPACE", FabricDevLaunchService.DEFAULT_MOD_DISTRIBUTION_NAMESPACE);
 		values.put("FABRIC_DEFAULT_MIXIN_REMAP_TYPE", FabricDevLaunchService.DEFAULT_MIXIN_REMAP_TYPE);
-		values.put("OPTIONAL_COMMON_PROPERTIES", optionalCommonProperties(moduleRoots));
-		values.put("OPTIONAL_ENVIRONMENT_COMMON_PROPERTIES", environmentCommonProperties(versionId));
-		values.put("OPTIONAL_ENVIRONMENT_PROPERTIES_SECTION", environmentPropertiesSection(versionId));
-		values.put("ENVIRONMENT_ARGS_SECTION", environmentArgsSection(versionId, vanillaLaunch));
+		values.put("OPTIONAL_COMMON_PROPERTIES", FabricLaunchSupport.optionalCommonProperties(moduleRoots));
+		values.put("OPTIONAL_ENVIRONMENT_COMMON_PROPERTIES", FabricLaunchSupport.environmentCommonProperties(versionId));
+		values.put("OPTIONAL_ENVIRONMENT_PROPERTIES_SECTION", FabricLaunchSupport.clientPropertiesSection(versionId));
+		values.put("ENVIRONMENT_ARGS_SECTION", FabricLaunchSupport.clientArgsSection(versionId, vanillaLaunch));
 		String rendered = FileTemplateRenderer.render(
 			"dev/pswg/toolchain/templates/fabric-dev-launch.cfg",
 			values
@@ -543,85 +420,6 @@ public final class FabricDataGenerationService
 		Files.writeString(outputPath, rendered);
 	}
 
-	/**
-	 * Renders optional shared Fabric launcher properties for injected grouped module roots.
-	 *
-	 * @param moduleRoots the injected module classpath roots
-	 * @return the rendered optional property lines, each ending in a newline
-	 */
-	private String optionalCommonProperties(List<Path> moduleRoots)
-	{
-		if (moduleRoots.size() < 2)
-		{
-			return "";
-		}
-
-		String joinedRoots = moduleRoots.stream()
-		                               .map(path -> path.toAbsolutePath().toString())
-		                               .reduce((left, right) -> left + System.getProperty("path.separator") + right)
-		                               .orElse("");
-
-		if (joinedRoots.isBlank())
-		{
-			return "";
-		}
-
-		return "\tfabric.classPathGroups=" + joinedRoots + "\n";
-	}
-
-	/**
-	 * Renders Loom-style common game-jar properties for split source-set launches.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @return the rendered common property lines, each ending in a newline
-	 */
-	private String environmentCommonProperties(String versionId)
-	{
-		MojangPaths paths = new MojangPaths();
-		Path commonGameJar = paths.extractedServerJarFile(versionId);
-		return "\tfabric.gameJarPath=" + commonGameJar.toAbsolutePath() + "\n";
-	}
-
-	/**
-	 * Renders client-specific Fabric dev-launch property sections.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @return the rendered section text
-	 */
-	private String environmentPropertiesSection(String versionId)
-	{
-		MojangPaths paths = new MojangPaths();
-		Path clientGameJar = paths.clientJarFile(versionId);
-		return "clientProperties\n"
-			+ "\tfabric.gameJarPath.client=" + clientGameJar.toAbsolutePath() + "\n";
-	}
-
-	/**
-	 * Renders client-specific Fabric dev-launch config sections.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param vanillaLaunch the prepared vanilla launch baseline
-	 * @return the rendered client section text
-	 */
-	private String environmentArgsSection(
-		String versionId,
-		VanillaLaunchConfig vanillaLaunch
-	)
-	{
-		return "clientArgs\n"
-			+ "\t--assetIndex\n"
-			+ "\t" + versionId + "-" + vanillaLaunch.assetIndexId() + "\n"
-			+ "\t--assetsDir\n"
-			+ "\t" + vanillaLaunch.assetsRoot().toAbsolutePath() + "\n";
-	}
-
-	/**
-	 * Resolves a module from the authoritative PSWG graph.
-	 *
-	 * @param graph the authoritative build graph
-	 * @param moduleId the module identifier
-	 * @return the resolved module specification
-	 */
 	/**
 	 * Resolves the module targets that should receive datagen run configurations.
 	 *
@@ -683,19 +481,7 @@ public final class FabricDataGenerationService
 		boolean refresh
 	) throws IOException
 	{
-		List<Path> artifacts = new ArrayList<>();
-
-		for (MavenDependencySpec runtimeDependency : runtimeDependencies)
-		{
-			Path artifact = _runtimeResolver.resolveRuntimeDependency(runtimeDependency, gradleProperties, refresh);
-
-			if (!artifacts.contains(artifact))
-			{
-				artifacts.add(artifact);
-			}
-		}
-
-		return artifacts;
+		return FabricLaunchSupport.resolveRuntimeDependencies(_runtimeResolver, runtimeDependencies, gradleProperties, refresh);
 	}
 
 	/**
@@ -762,75 +548,14 @@ public final class FabricDataGenerationService
 		ModuleSpec module
 	)
 	{
-		List<Path> roots = new ArrayList<>();
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, projectName, module, SourceSetNames.MAIN));
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, projectName, module, SourceSetNames.CLIENT));
-		return roots.stream()
-		            .distinct()
-		            .toList();
-	}
-
-	/**
-	 * Resolves the IntelliJ output root for a single module source set.
-	 *
-	 * @param projectRoot the tracked repository root
-	 * @param module the module specification
-	 * @param sourceSetName the source set name
-	 * @return the ordered output roots
-	 */
-	private List<Path> resolveSourceSetOutputRoots(
-		Path projectRoot,
-		String projectName,
-		ModuleSpec module,
-		String sourceSetName
-	)
-	{
-		String moduleName = IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName);
-		Path intellijOutput = projectRoot.resolve(INTELLIJ_OUTPUT_DIRECTORY).resolve(moduleName);
-
-		if (Files.isDirectory(intellijOutput))
-		{
-			ToolchainLog.info("datagen", "Using IntelliJ output for " + module.id() + "." + sourceSetName + ": " + intellijOutput);
-			return List.of(intellijOutput);
-		}
-
-		return List.of();
-	}
-
-	/**
-	 * Writes the Loom-style IntelliJ log4j configuration for the datagen launch bundle.
-	 *
-	 * @param vanillaLaunch the prepared vanilla launch configuration
-	 * @param outputPath the target configuration path
-	 * @throws IOException if the file cannot be written
-	 */
-	private void writeLoggingConfig(VanillaLaunchConfig vanillaLaunch, Path outputPath) throws IOException
-	{
-		Map<String, String> values = new LinkedHashMap<>();
-		values.put("LATEST_LOG", IntelliJRunConfigurationSupport.xmlPath(vanillaLaunch.gameDirectory().resolve("logs").resolve("latest.log")));
-		values.put("ARCHIVED_LOGS", IntelliJRunConfigurationSupport.xmlPath(vanillaLaunch.gameDirectory().resolve("logs").resolve("%d{yyyy-MM-dd}-%i.log.gz")));
-		values.put("DEBUG_LOG", IntelliJRunConfigurationSupport.xmlPath(vanillaLaunch.gameDirectory().resolve("logs").resolve("debug.log")));
-		values.put("DEBUG_ARCHIVED_LOGS", IntelliJRunConfigurationSupport.xmlPath(vanillaLaunch.gameDirectory().resolve("logs").resolve("debug-%i.log.gz")));
-		String rendered = FileTemplateRenderer.render(
-			"dev/pswg/toolchain/templates/log4j2-intellij.xml",
-			values
+		return FabricModuleOutputResolver.resolveOutputRoots(
+			projectRoot,
+			projectName,
+			module,
+			true,
+			"datagen",
+			false
 		);
-
-		Files.createDirectories(outputPath.getParent());
-		Files.writeString(outputPath, rendered);
-	}
-
-	/**
-	 * Writes the serialized bootstrap launch JSON.
-	 *
-	 * @param outputPath the target launch JSON path
-	 * @param config the launch configuration
-	 * @throws IOException if the file cannot be written
-	 */
-	private void writeLaunchJson(Path outputPath, VanillaLaunchConfig config) throws IOException
-	{
-		Files.createDirectories(outputPath.getParent());
-		_mapper.writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile(), config);
 	}
 
 	/**
