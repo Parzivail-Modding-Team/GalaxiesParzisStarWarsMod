@@ -11,6 +11,7 @@ import dev.pswg.toolchain.model.ModuleAggregationResolver;
 import dev.pswg.toolchain.model.ModuleSpec;
 import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.pswg.PswgRepositoryContext;
+import dev.pswg.toolchain.source.SourceAttachmentResolver;
 import dev.pswg.toolchain.runtime.LaunchEnvironment;
 import dev.pswg.toolchain.runtime.LaunchIdentity;
 import dev.pswg.toolchain.runtime.VanillaLaunchConfig;
@@ -88,6 +89,11 @@ public final class FabricDevLaunchService
 	private final IntelliJDependencyResolver _ideaDependencyResolver;
 
 	/**
+	 * Resolves optional source archives for generated launch libraries.
+	 */
+	private final SourceAttachmentResolver _sourceAttachmentResolver;
+
+	/**
 	 * Creates a new Fabric dev launch service.
 	 */
 	public FabricDevLaunchService()
@@ -95,6 +101,7 @@ public final class FabricDevLaunchService
 		_mapper = new ObjectMapper();
 		_runtimeResolver = new FabricRuntimeResolver();
 		_ideaDependencyResolver = new IntelliJDependencyResolver();
+		_sourceAttachmentResolver = new SourceAttachmentResolver();
 	}
 
 	/**
@@ -146,7 +153,8 @@ public final class FabricDevLaunchService
 			repository,
 			moduleInjection,
 			fabricLaunch,
-			launchPaths
+			launchPaths,
+			refresh
 		);
 		writeIdeaRunConfiguration(
 			repository,
@@ -860,10 +868,11 @@ public final class FabricDevLaunchService
 		PswgRepositoryContext repository,
 		FabricModuleInjection moduleInjection,
 		VanillaLaunchConfig fabricLaunch,
-		FabricLaunchPaths launchPaths
+		FabricLaunchPaths launchPaths,
+		boolean refresh
 	) throws IOException
 	{
-		writeIdeaLaunchLibraries(repository, launchPaths.environment(), launchPaths.platformId(), effectiveRuntimeClasspath(fabricLaunch));
+		writeIdeaLaunchLibraries(repository, launchPaths.environment(), launchPaths.platformId(), effectiveRuntimeClasspath(fabricLaunch), refresh);
 		IntelliJXmlWriter.write(
 			launchPaths.ideaLaunchModulePath(),
 			createIdeaLaunchModuleDocument(repository, moduleInjection, fabricLaunch, launchPaths)
@@ -939,7 +948,8 @@ public final class FabricDevLaunchService
 		PswgRepositoryContext repository,
 		LaunchEnvironment environment,
 		String platformId,
-		List<Path> classpathEntries
+		List<Path> classpathEntries,
+		boolean refresh
 	) throws IOException
 	{
 		Path librariesDirectory = repository.projectRoot().resolve(".idea").resolve("libraries");
@@ -949,9 +959,10 @@ public final class FabricDevLaunchService
 		{
 			String fileName = launchProjectLibraryFileName(environment, platformId, classpathEntry);
 			expectedFileNames.add(fileName);
+			Path sourceArchive = _sourceAttachmentResolver.resolveSourceArchive(classpathEntry, refresh);
 			IntelliJXmlWriter.write(
 				librariesDirectory.resolve(fileName),
-				createIdeaLaunchLibraryDocument(repository.projectRoot(), environment, platformId, classpathEntry)
+				createIdeaLaunchLibraryDocument(repository.projectRoot(), environment, platformId, classpathEntry, sourceArchive)
 			);
 		}
 
@@ -970,7 +981,8 @@ public final class FabricDevLaunchService
 		Path projectRoot,
 		LaunchEnvironment environment,
 		String platformId,
-		Path classpathEntry
+		Path classpathEntry,
+		Path sourceArchive
 	)
 	{
 		Document document = DocumentHelper.createDocument();
@@ -984,7 +996,18 @@ public final class FabricDevLaunchService
 			: IntelliJPathMacros.jarUrl(projectRoot, classpathEntry);
 		classes.addElement("root").addAttribute("url", url);
 		library.addElement("JAVADOC");
-		library.addElement("SOURCES");
+		Element sources = library.addElement("SOURCES");
+
+		if (sourceArchive != null)
+		{
+			sources.addElement("root").addAttribute(
+				"url",
+				Files.isDirectory(sourceArchive)
+					? IntelliJPathMacros.fileUrl(projectRoot, sourceArchive)
+					: IntelliJPathMacros.jarUrl(projectRoot, sourceArchive)
+			);
+		}
+
 		return document;
 	}
 

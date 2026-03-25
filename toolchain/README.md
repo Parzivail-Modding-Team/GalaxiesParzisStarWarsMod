@@ -44,6 +44,7 @@ That command:
 
 - synchronizes the PSWG root IntelliJ metadata
 - refreshes the generated Fabric client, server, and datagen development launch bundles
+- resolves IntelliJ source attachments for Minecraft and published library jars when sources are available
 - defaults the injected development module from the authoritative build graph
 - accepts optional launch identity overrides through `--username` and `--uuid`
 
@@ -83,6 +84,7 @@ Normal iteration after that is just IntelliJ:
 
 - run or debug `Fabric Client (platform)` or `Fabric Server (platform)`
 - run the generated `Fabric Datagen <module> (platform)` configuration for the module whose checked-in `src/main/generated` output you want to refresh
+- inspect Minecraft, Fabric, and other attached libraries directly from the IDE when their source jars are available
 
 ## Artifact Assembly
 

@@ -14,6 +14,7 @@ dependencies {
 	implementation("org.dom4j:dom4j:2.2.0")
 	implementation("net.fabricmc:class-tweaker:0.1.1")
 	implementation("org.ow2.asm:asm:9.9")
+	implementation("org.vineflower:vineflower:1.11.2")
 }
 
 java {

@@ -1,5 +1,7 @@
 package dev.pswg.toolchain.fabric;
 
+import java.nio.file.Path;
+
 /**
  * A Maven coordinate in {@code group:artifact:version} form.
  *
@@ -32,11 +34,64 @@ public record MavenCoordinate(
 	}
 
 	/**
+	 * Parses a Maven-style repository-relative jar path.
+	 *
+	 * @param repositoryPath the repository-relative jar path
+	 * @return the parsed coordinate, or {@code null} when the path is not a standard Maven artifact
+	 */
+	public static MavenCoordinate parseRepositoryPath(Path repositoryPath)
+	{
+		if (repositoryPath == null || repositoryPath.getNameCount() < 4)
+		{
+			return null;
+		}
+
+		String fileName = repositoryPath.getFileName().toString();
+		String version = repositoryPath.getName(repositoryPath.getNameCount() - 2).toString();
+		String artifactId = repositoryPath.getName(repositoryPath.getNameCount() - 3).toString();
+
+		if (!fileName.startsWith(artifactId + "-" + version) || !fileName.endsWith(".jar"))
+		{
+			return null;
+		}
+
+		StringBuilder groupId = new StringBuilder();
+
+		for (int i = 0; i < repositoryPath.getNameCount() - 3; i++)
+		{
+			if (!groupId.isEmpty())
+			{
+				groupId.append('.');
+			}
+
+			groupId.append(repositoryPath.getName(i));
+		}
+
+		if (groupId.isEmpty())
+		{
+			return null;
+		}
+
+		return new MavenCoordinate(groupId.toString(), artifactId, version);
+	}
+
+	/**
 	 * Returns the artifact path relative to a Maven repository root.
 	 *
 	 * @return the repository-relative artifact path
 	 */
 	public String repositoryPath()
+	{
+		return repositoryPath(null);
+	}
+
+	/**
+	 * Returns the artifact path relative to a Maven repository root for one classifier variant.
+	 *
+	 * @param classifier the optional classifier
+	 * @return the repository-relative artifact path
+	 */
+	public String repositoryPath(String classifier)
 	{
 		return groupId.replace('.', '/')
 			+ "/"
@@ -44,9 +99,21 @@ public record MavenCoordinate(
 			+ "/"
 			+ version
 			+ "/"
-			+ artifactId
+			+ artifactFileName(classifier);
+	}
+
+	/**
+	 * Returns the standard jar filename for this coordinate and an optional classifier.
+	 *
+	 * @param classifier the optional classifier
+	 * @return the artifact filename
+	 */
+	public String artifactFileName(String classifier)
+	{
+		return artifactId
 			+ "-"
 			+ version
+			+ (classifier == null || classifier.isBlank() ? "" : "-" + classifier)
 			+ ".jar";
 	}
 }

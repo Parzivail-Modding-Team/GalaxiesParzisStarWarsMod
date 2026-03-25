@@ -9,6 +9,7 @@ import dev.pswg.toolchain.model.SourceSetNames;
 import dev.pswg.toolchain.model.SourceSetDependencyResolver;
 import dev.pswg.toolchain.model.SourceSetLayout;
 import dev.pswg.toolchain.pswg.PswgRepositoryContext;
+import dev.pswg.toolchain.source.SourceAttachmentResolver;
 import dev.pswg.toolchain.template.FileTemplateRenderer;
 import dev.pswg.toolchain.template.XmlEscaper;
 import dev.pswg.toolchain.util.ToolchainLog;
@@ -63,6 +64,7 @@ public final class IntelliJProjectSyncService
 		new MavenDependencySpec("org.dom4j:dom4j:2.2.0", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("net.fabricmc:class-tweaker:0.1.1", URI.create("https://maven.fabricmc.net/")),
 		new MavenDependencySpec("net.fabricmc:tiny-remapper:0.11.2", URI.create("https://maven.fabricmc.net/")),
+		new MavenDependencySpec("org.vineflower:vineflower:1.11.2", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("org.ow2.asm:asm:9.9", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("org.ow2.asm:asm-commons:9.8", URI.create("https://repo1.maven.org/maven2")),
 		new MavenDependencySpec("org.ow2.asm:asm-tree:9.8", URI.create("https://repo1.maven.org/maven2"))
@@ -74,11 +76,17 @@ public final class IntelliJProjectSyncService
 	private final IntelliJDependencyResolver _dependencyResolver;
 
 	/**
+	 * Resolves optional source archives for IntelliJ project libraries.
+	 */
+	private final SourceAttachmentResolver _sourceAttachmentResolver;
+
+	/**
 	 * Creates a new IntelliJ metadata sync service.
 	 */
 	public IntelliJProjectSyncService()
 	{
 		_dependencyResolver = new IntelliJDependencyResolver();
+		_sourceAttachmentResolver = new SourceAttachmentResolver();
 	}
 
 	/**
@@ -211,9 +219,10 @@ public final class IntelliJProjectSyncService
 		{
 			String fileName = sanitizeLibraryFileName(projectLibraryName(artifact)) + ".xml";
 			expectedFileNames.add(fileName);
+			Path sourceArchive = _sourceAttachmentResolver.resolveSourceArchive(artifact, refresh);
 			IntelliJXmlWriter.write(
 				librariesDirectory.resolve(fileName),
-				createProjectLibraryDocument(projectRoot, artifact)
+				createProjectLibraryDocument(projectRoot, artifact, sourceArchive)
 			);
 		}
 
@@ -634,7 +643,7 @@ public final class IntelliJProjectSyncService
 	 * @param artifact the resolved artifact path
 	 * @return the library document
 	 */
-	private Document createProjectLibraryDocument(Path projectRoot, Path artifact)
+	private Document createProjectLibraryDocument(Path projectRoot, Path artifact, Path sourceArchive)
 	{
 		Document document = DocumentHelper.createDocument();
 		Element component = document.addElement("component");
@@ -644,7 +653,13 @@ public final class IntelliJProjectSyncService
 		Element classes = library.addElement("CLASSES");
 		classes.addElement("root").addAttribute("url", IntelliJPathMacros.jarUrl(projectRoot, artifact));
 		library.addElement("JAVADOC");
-		library.addElement("SOURCES");
+		Element sources = library.addElement("SOURCES");
+
+		if (sourceArchive != null)
+		{
+			sources.addElement("root").addAttribute("url", IntelliJPathMacros.jarUrl(projectRoot, sourceArchive));
+		}
+
 		return document;
 	}
 

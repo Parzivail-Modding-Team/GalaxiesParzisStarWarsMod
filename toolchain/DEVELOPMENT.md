@@ -187,6 +187,40 @@ Recommended update loop:
 4. verify one rebuild and one debug launch for both client and server before changing unrelated
    metadata generation
 
+## Updating IntelliJ Source Attachments
+
+IntelliJ library metadata also owns source attachments for generated and downloaded libraries.
+
+- Contract owners:
+  `toolchain/src/main/java/dev/pswg/toolchain/source/MinecraftSourcesGenerator.java`,
+  `toolchain/src/main/java/dev/pswg/toolchain/source/SourceAttachmentResolver.java`,
+  `toolchain/src/main/java/dev/pswg/toolchain/intellij/IntelliJProjectSyncService.java`,
+  `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDevLaunchService.java`,
+  and `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDataGenerationService.java`.
+- Sensitive areas:
+  Vineflower API compatibility, optional Parchment metadata availability, Maven `sources`
+  classifier resolution, and the current-platform launch-library generation path under
+  `.idea/libraries/...`.
+- What to compare:
+  use `vendor/vinediff` for the general Minecraft decompile-plus-Parchment approach and the
+  vendored Loom sources for how Fabric expects Minecraft sources to line up with transformed jars.
+
+Common failure signals:
+
+- IntelliJ can navigate into a library jar but shows decompiled bytecode instead of source
+  usually means the generated `.idea/libraries/*.xml` entry lost its `SOURCES` root.
+- Minecraft compile jars attach cleanly but Fabric or Mojang dependency jars do not
+  usually mean Maven `sources` classifier resolution drifted for cached library paths.
+- source attachments work for one platform's generated launch libraries but not another's
+  usually means only the current host platform's launch-library XML was regenerated.
+
+Recommended update loop:
+
+1. regenerate with `dev setup-intellij`
+2. inspect a transformed Minecraft library XML and one Fabric launch-library XML under `.idea/libraries`
+3. confirm cached `*-sources.jar` files exist under `toolchain/work/cache/...`
+4. verify IntelliJ opens attached source for one Minecraft class and one Fabric class
+
 ## Updating Mojang Metadata And Runtime Resolution
 
 The vanilla runtime bundle depends on Mojang's version manifest, version metadata, asset index, and
