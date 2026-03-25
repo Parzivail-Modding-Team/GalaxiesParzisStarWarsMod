@@ -32,14 +32,14 @@ public final class FabricRuntimeResolver
 	/**
 	 * Loom's current development launch injector version.
 	 *
-	 * <p>This currently mirrors the vendored Loom runtime catalog.
+	 * <p>This mirrors the vendored Loom runtime catalog.
 	 */
 	public static final String DEV_LAUNCH_INJECTOR_VERSION = "0.2.1+build.8";
 
 	/**
 	 * Loom's current Fabric log4j utility version.
 	 *
-	 * <p>This currently mirrors the vendored Loom runtime catalog.
+	 * <p>This mirrors the vendored Loom runtime catalog.
 	 */
 	public static final String FABRIC_LOG4J_UTIL_VERSION = "1.0.2";
 

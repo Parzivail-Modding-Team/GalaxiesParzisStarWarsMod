@@ -25,13 +25,13 @@ The toolchain writes and maintains a few key outputs in the tracked repository:
 
 It also writes the generated runtime bundle under `toolchain/work/instances/...`.
 
-The tracked host repo now supplies most PSWG-specific structure through `toolchain.toml` at the
+The tracked host repo supplies its project structure through `toolchain.toml` at the
 repo root. That file is the intended boundary between the reusable toolchain engine and one host
 project's module graph.
 
 Keep `toolchain.toml` ergonomic. Prefer the shortest clear form:
 
-- `fabric_split_sources` over the legacy `fabric_common_client` token
+- `fabric_split_sources` for normal split-source Fabric modules
 - singular keys like `dependency` or `annotation_processor` when only one item is present
 - resource-relative `main_mixins` / `client_mixins` instead of full `src/...` paths
 - `generated_sources = true`, `generated_client_sources = true`, and `datagen = true` when using standard roots
@@ -55,14 +55,14 @@ These are useful when debugging the toolchain itself.
 
 ## Updating Fabric DLI
 
-The supported PSWG development workflow launches both Fabric client and Fabric server through
-`net.fabricmc.devlaunchinjector.Main` instead of through Loom's older bootstrap path. When Fabric
+The PSWG development workflow launches Fabric client and Fabric server through
+`net.fabricmc.devlaunchinjector.Main`. When Fabric
 Loader, Loom, or the dev-launch-injector changes, treat the update as a contract check across a
 few focused surfaces:
 
 - Version pins:
   `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricRuntimeResolver.java`
-  currently owns the pinned `DEV_LAUNCH_INJECTOR_VERSION` and related Fabric runtime helper versions.
+  owns the pinned `DEV_LAUNCH_INJECTOR_VERSION` and related Fabric runtime helper versions.
   Compare these against the vendored Loom runtime catalog before changing them.
 - Contract inspection:
   `./gradlew run --args="fabric inspect-dev --environment <client|server>"` reports the current
@@ -78,7 +78,7 @@ few focused surfaces:
   `toolchain/src/main/resources/dev/pswg/toolchain/templates/fabric-dev-launch.cfg`,
   `toolchain/src/main/resources/dev/pswg/toolchain/templates/intellij-run-config.xml`,
   `.idea/modules/launch/fabric/...`, and `.idea/runConfigurations/Fabric_Client_*.xml`.
-  The supported workflow now also generates `.idea/runConfigurations/Fabric_Server_*.xml`.
+  The generated outputs include `.idea/runConfigurations/Fabric_Server_*.xml`.
   Keep those generated outputs aligned with the runtime contract after any DLI update.
 - Runtime classpath shaping:
   the generated IntelliJ launch module intentionally mirrors the prepared runtime classpath exactly.

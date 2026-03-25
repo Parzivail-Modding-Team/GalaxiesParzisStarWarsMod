@@ -1273,7 +1273,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Deletes obsolete generated IntelliJ project-library metadata files.
 	 *
-	 * <p>The toolchain owns the contents of `.idea/libraries`, so stale files from old transformed
+	 * <p>The toolchain owns the contents of `.idea/libraries`, so stale files from replaced transformed
 	 * jars or dependency graph changes should be removed as part of each sync.
 	 *
 	 * @param directory the IntelliJ libraries directory

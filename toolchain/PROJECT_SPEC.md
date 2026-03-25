@@ -48,7 +48,7 @@ kind = "fabric_split_sources"
 
 ## Project Fields
 
-These fields are currently expected under `[project]`.
+These fields are expected under `[project]`.
 
 `id`
 - Logical project identifier used by the build graph.
@@ -385,7 +385,7 @@ Only override roots like `main_sources`, `client_sources`, `main_resources`, or 
 when:
 
 - the module genuinely has a non-standard layout
-- you are gradually migrating an older repo structure
+- you are fitting the toolchain to a repo that already uses a different layout
 - a generated or vendored source root must be modeled explicitly
 
 If the module uses the standard Fabric layout, keep the TOML short and let the defaults do the

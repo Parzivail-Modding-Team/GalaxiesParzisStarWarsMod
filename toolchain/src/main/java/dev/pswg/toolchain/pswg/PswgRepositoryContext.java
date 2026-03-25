@@ -11,12 +11,11 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 /**
- * Discovers and caches the tracked host-project metadata that the standalone toolchain still
+ * Discovers and caches the tracked host-project metadata that the standalone toolchain
  * consumes while version and dependency properties remain repo-owned.
  *
- * <p>This is the main bridge between the standalone toolchain project and the tracked host repo.
- * Keeping that relationship explicit makes it easier to replace the remaining `gradle.properties`
- * reads later without hunting through launch and IntelliJ generation code.
+ * <p>This keeps the relationship between the standalone toolchain project and the tracked host
+ * repo explicit while some version and dependency properties remain repo-owned.
  */
 public final class PswgRepositoryContext
 {
@@ -102,7 +101,7 @@ public final class PswgRepositoryContext
 	/**
 	 * Discovers the tracked host-project repository root from the current working directory.
 	 *
-	 * <p>The standalone toolchain now runs both from its own project root and from the tracked root
+	 * <p>The standalone toolchain runs both from its own project root and from the tracked root
 	 * IntelliJ project. Walking upward keeps repository discovery stable in both modes.
 	 *
 	 * @param workingDirectory the current working directory

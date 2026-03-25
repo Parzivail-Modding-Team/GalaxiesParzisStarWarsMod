@@ -506,7 +506,7 @@ public final class Main
 		System.out.println("  fabric prepare-datagen [id] [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
 		System.out.println("    Generate module-scoped Fabric datagen run configurations.");
 		System.out.println("  fabric inspect-dev [--environment <client|server>]");
-		System.out.println("    Inspect the currently generated Fabric launch contract.");
+		System.out.println("    Inspect the generated Fabric launch contract.");
 		System.out.println("  artifacts assemble [--module <id>] [--ci-build] [--refresh]");
 		System.out.println("    Assemble local PSWG artifact jars from IntelliJ outputs, or compile into a toolchain-owned output tree first with --ci-build.");
 		System.out.println("  mojang manifest [--refresh]");

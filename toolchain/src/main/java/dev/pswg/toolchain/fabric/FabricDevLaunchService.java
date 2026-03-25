@@ -1011,12 +1011,6 @@ public final class FabricDevLaunchService
 		List<String> prefixes = new ArrayList<>();
 		prefixes.add(launchProjectLibraryPrefix(environment, platformId));
 
-		// Clean up the pre-environment-split client launch libraries after the first regeneration.
-		if (environment.isClient())
-		{
-			prefixes.add(launchProjectLibraryPrefix(platformId));
-		}
-
 		try (var entries = Files.list(librariesDirectory))
 		{
 			for (Path entry : entries.toList())
@@ -1161,17 +1155,6 @@ public final class FabricDevLaunchService
 	private String launchProjectLibraryPrefix(LaunchEnvironment environment, String platformId)
 	{
 		return "fabric-launch-" + environment.id() + "-" + platformId + "-";
-	}
-
-	/**
-	 * Builds the legacy shared prefix used before launch environments were modeled explicitly.
-	 *
-	 * @param platformId the target platform identifier
-	 * @return the legacy library prefix
-	 */
-	private String launchProjectLibraryPrefix(String platformId)
-	{
-		return "fabric-launch-" + platformId + "-";
 	}
 
 	/**

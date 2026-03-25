@@ -10,7 +10,7 @@ Its job is to:
 - generate IntelliJ project metadata for the modules
 - prepare the Fabric development runtime bundles and generated run configurations
 
-`toolchain.toml` is now the authoritative PSWG-specific configuration boundary. It captures the
+`toolchain.toml` is the authoritative project configuration boundary. It captures the
 project id/name, tracked Minecraft version, default development module, and the per-module roots,
 dependencies, aggregate members, artifact ids, Fabric mod ids, mixins, and datagen outputs that
 the reusable toolchain engine consumes.
@@ -47,12 +47,11 @@ That command:
 - defaults the injected development module from the authoritative build graph
 - accepts optional launch identity overrides through `--username` and `--uuid`
 
-The current graph default is `pswg_entrypoint`, which pulls the modeled bundle modules into the
+The graph default is `pswg_entrypoint`, which pulls the modeled bundle modules into the
 generated launch closure.
 
-That aggregation is now owned by the authoritative toolchain graph itself. `pswg_entrypoint`
-declares aggregate members for development-time launch and datagen workflows instead of relying on
-Gradle-era `include(...)` wiring to describe the bundle shape.
+That aggregation is owned by the authoritative toolchain graph itself. `pswg_entrypoint`
+declares aggregate members for development-time launch and datagen workflows.
 
 If you need a different injected module:
 
@@ -87,7 +86,7 @@ Normal iteration after that is just IntelliJ:
 
 ## Artifact Assembly
 
-The toolchain can now assemble local release-style jars from IntelliJ-owned outputs:
+The toolchain can assemble local release-style jars from IntelliJ-owned outputs:
 
 ```bash
 ./gradlew run --args="artifacts assemble --module pswg_entrypoint"
@@ -110,7 +109,7 @@ With `--ci-build`, the toolchain first compiles the required module closure into
 `toolchain/work/ci-build/out/production/...` using the JDK compiler and the same authoritative
 module graph used by IntelliJ metadata generation.
 
-The current artifact workflow is local assembly only. It does not yet publish to Maven Central,
+The artifact workflow is local assembly only. It does not publish to Maven Central,
 Modrinth, or CurseForge, and it expects the relevant modules to have already been compiled by
 IntelliJ before packaging unless `--ci-build` is used.
 

@@ -31,7 +31,7 @@ public enum ConfiguredModuleKind
 		return switch (value)
 		{
 			case "java" -> JAVA;
-			case "fabric_split_sources", "fabric_common_client" -> FABRIC_SPLIT_SOURCES;
+			case "fabric_split_sources" -> FABRIC_SPLIT_SOURCES;
 			case "fabric_resource_only" -> FABRIC_RESOURCE_ONLY;
 			default -> throw new IllegalArgumentException("Unsupported module kind: " + value);
 		};
