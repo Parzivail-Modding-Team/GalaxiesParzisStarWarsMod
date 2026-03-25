@@ -31,7 +31,7 @@ java {
 }
 
 application {
-	mainClass = "dev.pswg.toolchain.Main"
+	mainClass = "com.parzivail.toolchain.Main"
 }
 
 tasks.withType<JavaCompile> {
