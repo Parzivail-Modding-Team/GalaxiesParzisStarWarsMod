@@ -3,6 +3,10 @@ plugins {
 	java
 }
 
+val toolchainVersion = providers.gradleProperty("toolchainVersion").orElse("local").get()
+
+version = toolchainVersion
+
 repositories {
 	mavenCentral()
 	maven(url = "https://maven.fabricmc.net/")
@@ -33,4 +37,34 @@ application {
 tasks.withType<JavaCompile> {
 	options.release = 25
 	options.encoding = "UTF-8"
+}
+
+val toolchainJar by tasks.registering(Jar::class) {
+	group = "distribution"
+	description = "Builds the standalone toolchain jar used by the wrapper scripts."
+	archiveBaseName.set("toolchain")
+	archiveVersion.set(toolchainVersion)
+	destinationDirectory.set(layout.projectDirectory.dir("bin"))
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	manifest {
+		attributes["Main-Class"] = application.mainClass.get()
+	}
+
+	from(sourceSets.main.get().output)
+	from({
+		configurations.runtimeClasspath.get()
+			.filter { it.isFile && it.extension == "jar" }
+			.map { zipTree(it) }
+	})
+
+	exclude(
+		"META-INF/*.SF",
+		"META-INF/*.DSA",
+		"META-INF/*.RSA",
+		"META-INF/INDEX.LIST"
+	)
+}
+
+tasks.assemble {
+	dependsOn(toolchainJar)
 }

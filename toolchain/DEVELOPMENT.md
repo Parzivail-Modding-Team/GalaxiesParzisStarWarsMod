@@ -42,13 +42,13 @@ Keep `toolchain.toml` ergonomic. Prefer the shortest clear form:
 Low-level commands still exist for inspection and diagnosis:
 
 ```bash
-./gradlew run --args="idea sync-pswg"
-./gradlew run --args="fabric prepare-dev --environment client --module pswg_entrypoint"
-./gradlew run --args="fabric prepare-dev --environment server --module pswg_entrypoint"
-./gradlew run --args="fabric prepare-datagen --module pswg_core"
-./gradlew run --args="fabric inspect-dev --environment client"
-./gradlew run --args="fabric inspect-dev --environment server"
-./gradlew run --args="mojang manifest"
+./toolchain.sh idea sync-pswg
+./toolchain.sh fabric prepare-dev --environment client --module pswg_entrypoint
+./toolchain.sh fabric prepare-dev --environment server --module pswg_entrypoint
+./toolchain.sh fabric prepare-datagen --module pswg_core
+./toolchain.sh fabric inspect-dev --environment client
+./toolchain.sh fabric inspect-dev --environment server
+./toolchain.sh mojang manifest
 ```
 
 These are useful when debugging the toolchain itself.
@@ -65,7 +65,7 @@ few focused surfaces:
   owns the pinned `DEV_LAUNCH_INJECTOR_VERSION` and related Fabric runtime helper versions.
   Compare these against the vendored Loom runtime catalog before changing them.
 - Contract inspection:
-  `./gradlew run --args="fabric inspect-dev --environment <client|server>"` reports the current
+  `./toolchain.sh fabric inspect-dev --environment <client|server>` reports the current
   Loom-side defaults for one environment, including the DLI main class, `fabric.dli.main`,
   `fabric.dli.env`, and the generated launch config path. Run this for both environments first when
   upgrading.
@@ -108,7 +108,7 @@ Recommended update loop:
 1. inspect the current Loom contract with `fabric inspect-dev`
 2. update runtime version pins in `FabricRuntimeResolver`
 3. adjust `FabricDevLaunchService` and the launch templates to match the new DLI contract
-4. run `./gradlew run --args="dev setup-intellij"` and compare the generated client and server run
+4. run `./toolchain.sh dev setup-intellij` and compare the generated client and server run
    configs against the inspected Loom contract
 5. verify one real IntelliJ debug launch for both environments before changing unrelated toolchain
    code

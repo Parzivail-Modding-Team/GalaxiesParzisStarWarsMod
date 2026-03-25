@@ -27,17 +27,18 @@ The preferred TOML shape is intentionally compact:
 
 ## Workflow
 
-The supported day-to-day workflow is IntelliJ-first:
+The supported day-to-day workflow is wrapper-first:
 
 1. the toolchain generates the root-project IntelliJ metadata and Fabric run configurations
 2. IntelliJ builds PSWG module outputs into `out/production/...`
 3. the generated `Fabric Client (platform)`, `Fabric Server (platform)`, or `Fabric Datagen <module> (platform)` run configuration launches `net.fabricmc.devlaunchinjector.Main`
+4. `toolchain.sh` or `toolchain.bat` runs the packaged toolchain jar from `toolchain/bin/`
 
 The primary command is:
 
 ```bash
 cd toolchain
-./gradlew run --args="dev setup-intellij --username Dev --uuid 00000000-0000-0000-0000-000000000000"
+./toolchain.sh dev setup-intellij --username Dev --uuid 00000000-0000-0000-0000-000000000000
 ```
 
 That command:
@@ -57,14 +58,14 @@ declares aggregate members for development-time launch and datagen workflows.
 If you need a different injected module:
 
 ```bash
-./gradlew run --args="dev setup-intellij --module <id>"
+./toolchain.sh dev setup-intellij --module <id>
 ```
 
 ## Getting Started
 
 From a fresh clone:
 
-1. run `./gradlew run --args="dev setup-intellij"` from `toolchain/`
+1. run `./toolchain.sh dev setup-intellij` from `toolchain/`
 2. open the tracked repository root in IntelliJ
 3. let IntelliJ reload the generated project metadata
 4. run the generated `Fabric Client (...)`, `Fabric Server (...)`, or module-scoped `Fabric Datagen ...` configuration
@@ -91,14 +92,14 @@ Normal iteration after that is just IntelliJ:
 The toolchain can assemble local release-style jars from IntelliJ-owned outputs:
 
 ```bash
-./gradlew run --args="artifacts assemble --module pswg_entrypoint"
+./toolchain.sh artifacts assemble --module pswg_entrypoint
 ```
 
 For CI or other environments without IntelliJ-managed compilation, use the toolchain-owned compile
 path first:
 
 ```bash
-./gradlew run --args="artifacts assemble --module pswg_entrypoint --ci-build"
+./toolchain.sh artifacts assemble --module pswg_entrypoint --ci-build
 ```
 
 That command:
@@ -114,6 +115,15 @@ module graph used by IntelliJ metadata generation.
 The artifact workflow is local assembly only. It does not publish to Maven Central,
 Modrinth, or CurseForge, and it expects the relevant modules to have already been compiled by
 IntelliJ before packaging unless `--ci-build` is used.
+
+To build the standalone toolchain jar that the wrapper launches:
+
+```bash
+./gradlew toolchainJar
+```
+
+That writes `toolchain/bin/toolchain-<version>.jar`, which `toolchain.sh` and `toolchain.bat`
+pick up automatically.
 
 Datagen is always client-derived in the bespoke toolchain. Each generated datagen configuration is
 scoped to one module by:
@@ -141,8 +151,8 @@ Most routine version bumps start in the tracked repository's `gradle.properties`
 
 After any version change:
 
-1. run `./gradlew run --args="dev setup-intellij"`
-2. run `./gradlew run --args="fabric inspect-dev --environment <client|server>"` if the launch contract might have changed
+1. run `./toolchain.sh dev setup-intellij`
+2. run `./toolchain.sh fabric inspect-dev --environment <client|server>` if the launch contract might have changed
 3. verify the generated `Fabric Client (platform)` or `Fabric Server (platform)` configuration still launches and debugs cleanly
 
 If the update involves dev-launch-injector behavior, Fabric bootstrap changes, or launch-property
