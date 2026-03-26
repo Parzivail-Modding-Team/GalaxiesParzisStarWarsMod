@@ -3,6 +3,7 @@ package com.parzivail.toolchain.fabric;
 import com.parzivail.toolchain.intellij.IntelliJModuleNames;
 import com.parzivail.toolchain.model.ModuleSpec;
 import com.parzivail.toolchain.model.SourceSetNames;
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.util.ToolchainLog;
 
 import java.nio.file.Files;
@@ -16,11 +17,6 @@ import java.util.List;
 public final class FabricModuleOutputResolver
 {
 	/**
-	 * The IntelliJ output directory segment used for compiled module outputs.
-	 */
-	public static final String INTELLIJ_OUTPUT_DIRECTORY = "out/production";
-
-	/**
 	 * Prevents construction.
 	 */
 	private FabricModuleOutputResolver()
@@ -30,7 +26,6 @@ public final class FabricModuleOutputResolver
 	/**
 	 * Resolves the IntelliJ output roots for one module.
 	 *
-	 * @param projectRoot the tracked repository root
 	 * @param projectName the IntelliJ project name
 	 * @param module the module specification
 	 * @param includeClient whether client outputs should be included
@@ -39,7 +34,6 @@ public final class FabricModuleOutputResolver
 	 * @return the ordered output roots
 	 */
 	public static List<Path> resolveOutputRoots(
-		Path projectRoot,
 		String projectName,
 		ModuleSpec module,
 		boolean includeClient,
@@ -48,11 +42,11 @@ public final class FabricModuleOutputResolver
 	)
 	{
 		List<Path> roots = new ArrayList<>();
-		roots.addAll(resolveSourceSetOutputRoots(projectRoot, projectName, module, SourceSetNames.MAIN, logCategory, logMissing));
+		roots.addAll(resolveSourceSetOutputRoots(projectName, module, SourceSetNames.MAIN, logCategory, logMissing));
 
 		if (includeClient)
 		{
-			roots.addAll(resolveSourceSetOutputRoots(projectRoot, projectName, module, SourceSetNames.CLIENT, logCategory, logMissing));
+			roots.addAll(resolveSourceSetOutputRoots(projectName, module, SourceSetNames.CLIENT, logCategory, logMissing));
 		}
 
 		return roots.stream().distinct().toList();
@@ -61,7 +55,6 @@ public final class FabricModuleOutputResolver
 	/**
 	 * Resolves the IntelliJ output root for one module source set.
 	 *
-	 * @param projectRoot the tracked repository root
 	 * @param projectName the IntelliJ project name
 	 * @param module the module specification
 	 * @param sourceSetName the source set name
@@ -70,7 +63,6 @@ public final class FabricModuleOutputResolver
 	 * @return the ordered output roots
 	 */
 	public static List<Path> resolveSourceSetOutputRoots(
-		Path projectRoot,
 		String projectName,
 		ModuleSpec module,
 		String sourceSetName,
@@ -79,7 +71,7 @@ public final class FabricModuleOutputResolver
 	)
 	{
 		String moduleName = IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName);
-		Path intellijOutput = projectRoot.resolve(INTELLIJ_OUTPUT_DIRECTORY).resolve(moduleName);
+		Path intellijOutput = ToolchainPaths.INTELLIJ_OUTPUT_DIRECTORY.resolve(moduleName);
 
 		if (Files.isDirectory(intellijOutput))
 		{

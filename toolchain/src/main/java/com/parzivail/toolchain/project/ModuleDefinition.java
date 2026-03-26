@@ -1,4 +1,4 @@
-package com.parzivail.toolchain.definition;
+package com.parzivail.toolchain.project;
 
 import com.parzivail.toolchain.model.ModuleSpec;
 import com.parzivail.toolchain.path.ModulePaths;
@@ -35,6 +35,7 @@ public abstract class ModuleDefinition
 	 */
 	protected ModulePaths createPaths()
 	{
+		// TODO: make configurable
 		return new ModulePaths("projects/" + getId());
 	}
 

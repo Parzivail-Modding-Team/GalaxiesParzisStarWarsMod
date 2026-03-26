@@ -1,5 +1,7 @@
 package com.parzivail.toolchain.intellij;
 
+import com.parzivail.toolchain.path.ToolchainPaths;
+
 import java.nio.file.Path;
 
 /**
@@ -22,13 +24,12 @@ public final class IntelliJPathMacros
 	/**
 	 * Converts a resolved path into a `$PROJECT_DIR$` macro path when possible.
 	 *
-	 * @param projectRoot the host-project root
 	 * @param path the resolved path
 	 * @return the macro path
 	 */
-	public static String projectRelativeMacro(Path projectRoot, Path path)
+	public static String projectRelativeMacro(Path path)
 	{
-		Path normalizedProjectRoot = projectRoot.toAbsolutePath().normalize();
+		Path normalizedProjectRoot = ToolchainPaths.PROJECT_ROOT.toAbsolutePath().normalize();
 		Path normalized = path.toAbsolutePath().normalize();
 
 		if (normalized.startsWith(normalizedProjectRoot))
@@ -42,25 +43,23 @@ public final class IntelliJPathMacros
 	/**
 	 * Builds a `jar://...!/` URL for a resolved artifact.
 	 *
-	 * @param projectRoot the host-project root
 	 * @param artifact the resolved artifact path
 	 * @return the jar URL
 	 */
-	public static String jarUrl(Path projectRoot, Path artifact)
+	public static String jarUrl(Path artifact)
 	{
-		return "jar://" + projectRelativeMacro(projectRoot, artifact) + "!/";
+		return "jar://" + projectRelativeMacro(artifact) + "!/";
 	}
 
 	/**
 	 * Builds a `file://...` URL for a project-relative path.
 	 *
-	 * @param projectRoot the host-project root
 	 * @param path the target path
 	 * @return the file URL
 	 */
-	public static String fileUrl(Path projectRoot, Path path)
+	public static String fileUrl(Path path)
 	{
-		return "file://" + projectRelativeMacro(projectRoot, path);
+		return "file://" + projectRelativeMacro(path);
 	}
 
 	/**

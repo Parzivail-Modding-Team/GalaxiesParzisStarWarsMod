@@ -1,8 +1,8 @@
 package com.parzivail.toolchain.source;
 
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
-import com.parzivail.toolchain.mojang.MojangPaths;
 import com.parzivail.toolchain.mojang.model.MojangVersionManifest;
+import com.parzivail.toolchain.path.ToolchainPaths;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,7 +57,7 @@ public final class ParchmentMappingsResolver
 	 */
 	public ParchmentMappingsResolver()
 	{
-		this(new ParchmentMetaClient(), new MojangMetadataClient(), new MojangPaths().mojangRoot().resolve("parchment"));
+		this(new ParchmentMetaClient(), new MojangMetadataClient(), ToolchainPaths.PARCHMENT_CACHE_ROOT);
 	}
 
 	/**

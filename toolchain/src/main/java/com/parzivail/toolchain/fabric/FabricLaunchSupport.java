@@ -2,7 +2,7 @@ package com.parzivail.toolchain.fabric;
 
 import com.parzivail.toolchain.intellij.IntelliJRunConfigurationSupport;
 import com.parzivail.toolchain.model.MavenDependencySpec;
-import com.parzivail.toolchain.mojang.MojangPaths;
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.runtime.VanillaLaunchConfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,13 +70,11 @@ public final class FabricLaunchSupport
 		{
 			String argument = jvmArgs.get(index);
 
-			if (!"-cp".equals(argument) && !"-classpath".equals(argument))
+			if ("-cp".equals(argument) || "-classpath".equals(argument))
 			{
-				continue;
+				jvmArgs.set(index + 1, prependedValue + separator + jvmArgs.get(index + 1));
+				return;
 			}
-
-			jvmArgs.set(index + 1, prependedValue + separator + jvmArgs.get(index + 1));
-			return;
 		}
 
 		if (!prependedValue.isBlank())
@@ -145,9 +143,8 @@ public final class FabricLaunchSupport
 		String assetIndexId
 	) throws IOException
 	{
-		MojangPaths paths = new MojangPaths();
-		Path source = paths.assetIndexFile(assetIndexId);
-		Path target = paths.assetIndexFile(versionId + "-" + assetIndexId);
+		Path source = ToolchainPaths.mojangAssetIndexFile(assetIndexId);
+		Path target = ToolchainPaths.mojangAssetIndexFile(versionId + "-" + assetIndexId);
 
 		Files.createDirectories(target.getParent());
 		Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
@@ -166,12 +163,15 @@ public final class FabricLaunchSupport
 	) throws IOException
 	{
 		Map<String, String> values = new LinkedHashMap<>();
-		values.put("LATEST_LOG", IntelliJRunConfigurationSupport.xmlPath(vanillaLaunch.gameDirectory().resolve("logs").resolve("latest.log")));
-		values.put("ARCHIVED_LOGS", IntelliJRunConfigurationSupport.xmlPath(vanillaLaunch.gameDirectory().resolve("logs").resolve("%d{yyyy-MM-dd}-%i.log.gz")));
-		values.put("DEBUG_LOG", IntelliJRunConfigurationSupport.xmlPath(vanillaLaunch.gameDirectory().resolve("logs").resolve("debug.log")));
-		values.put("DEBUG_ARCHIVED_LOGS", IntelliJRunConfigurationSupport.xmlPath(vanillaLaunch.gameDirectory().resolve("logs").resolve("debug-%i.log.gz")));
+
+		var logsPath = vanillaLaunch.gameDirectory().resolve("logs");
+
+		values.put("LATEST_LOG", IntelliJRunConfigurationSupport.xmlPath(logsPath.resolve("latest.log")));
+		values.put("ARCHIVED_LOGS", IntelliJRunConfigurationSupport.xmlPath(logsPath.resolve("%d{yyyy-MM-dd}-%i.log.gz")));
+		values.put("DEBUG_LOG", IntelliJRunConfigurationSupport.xmlPath(logsPath.resolve("debug.log")));
+		values.put("DEBUG_ARCHIVED_LOGS", IntelliJRunConfigurationSupport.xmlPath(logsPath.resolve("debug-%i.log.gz")));
 		String rendered = com.parzivail.toolchain.template.FileTemplateRenderer.render(
-			"dev/pswg/toolchain/templates/log4j2-intellij.xml",
+			"com/parzivail/toolchain/templates/log4j2-intellij.xml",
 			values
 		);
 
@@ -231,7 +231,7 @@ public final class FabricLaunchSupport
 	 */
 	public static String environmentCommonProperties(String versionId)
 	{
-		return "\tfabric.gameJarPath=" + new MojangPaths().extractedServerJarFile(versionId).toAbsolutePath() + "\n";
+		return "\tfabric.gameJarPath=" + ToolchainPaths.mojangExtractedServerJarFile(versionId).toAbsolutePath() + "\n";
 	}
 
 	/**
@@ -243,7 +243,7 @@ public final class FabricLaunchSupport
 	public static String clientPropertiesSection(String versionId)
 	{
 		return "clientProperties\n"
-			+ "\tfabric.gameJarPath.client=" + new MojangPaths().clientJarFile(versionId).toAbsolutePath() + "\n";
+			+ "\tfabric.gameJarPath.client=" + ToolchainPaths.mojangClientJarFile(versionId).toAbsolutePath() + "\n";
 	}
 
 	/**

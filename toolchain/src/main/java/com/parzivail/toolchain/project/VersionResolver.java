@@ -1,9 +1,10 @@
 package com.parzivail.toolchain.project;
 
+import com.parzivail.toolchain.path.ToolchainPaths;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +29,7 @@ public final class VersionResolver
 	 */
 	public String resolveVersion(RepositoryContext repository) throws IOException
 	{
-		String describe = gitDescribe(repository.projectRoot());
+		String describe = gitDescribe();
 		Matcher matcher = DESCRIBE_PATTERN.matcher(describe);
 
 		if (!matcher.matches())
@@ -52,24 +53,23 @@ public final class VersionResolver
 	/**
 	 * Reads the repository version marker from git.
 	 *
-	 * @param projectRoot the tracked repository root
 	 * @return the raw git-describe output
 	 * @throws IOException if git cannot be executed or returns no version marker
 	 */
-	private String gitDescribe(Path projectRoot) throws IOException
+	private String gitDescribe() throws IOException
 	{
 		Process process;
 
 		try
 		{
 			process = new ProcessBuilder("git", "describe", "--tags", "--dirty")
-				.directory(projectRoot.toFile())
+				.directory(ToolchainPaths.PROJECT_ROOT.toFile())
 				.redirectErrorStream(true)
 				.start();
 		}
 		catch (IOException exception)
 		{
-			throw new IOException("Failed to execute git describe in " + projectRoot, exception);
+			throw new IOException("Failed to execute git describe in " + ToolchainPaths.PROJECT_ROOT, exception);
 		}
 
 		byte[] outputBytes;

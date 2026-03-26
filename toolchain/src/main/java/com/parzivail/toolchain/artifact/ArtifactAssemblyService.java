@@ -4,6 +4,7 @@ import com.parzivail.toolchain.build.CompilationOutputLayout;
 import com.parzivail.toolchain.model.ModuleAggregationResolver;
 import com.parzivail.toolchain.model.ModuleSpec;
 import com.parzivail.toolchain.model.SourceSetNames;
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.project.RepositoryContext;
 import com.parzivail.toolchain.project.VersionResolver;
 import com.parzivail.toolchain.util.ToolchainLog;
@@ -20,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -34,11 +34,6 @@ import java.util.jar.JarOutputStream;
  */
 public final class ArtifactAssemblyService
 {
-	/**
-	 * The IntelliJ output root relative to the tracked repository.
-	 */
-	private static final String INTELLIJ_OUTPUT_DIRECTORY = "out/production";
-
 	/**
 	 * The tracked LICENSE file name.
 	 */
@@ -108,7 +103,7 @@ public final class ArtifactAssemblyService
 			: requestedModuleId;
 		String version = _versionResolver.resolveVersion(repository);
 		ModuleSpec rootModule = ModuleAggregationResolver.requireModule(repository.buildGraph(), rootModuleId);
-		Path outputDirectory = createOutputDirectory(repository.toolchainRoot(), version);
+		Path outputDirectory = createOutputDirectory(version);
 		List<AssembledArtifact> artifacts = new ArrayList<>();
 
 		if (!rootModule.aggregateMembers().isEmpty())
@@ -188,7 +183,7 @@ public final class ArtifactAssemblyService
 
 		addOutputDirectory(entries, mainOutput, version);
 		addOutputDirectory(entries, clientOutput, version);
-		addLicense(entries, repository.projectRoot(), artifactId);
+		addLicense(entries, artifactId);
 		writeJar(outputJar, entries);
 		ToolchainLog.info("artifacts", "Assembled " + outputJar.getFileName());
 
@@ -228,7 +223,7 @@ public final class ArtifactAssemblyService
 
 		addOutputDirectory(entries, mainOutput, version);
 		addOutputDirectory(entries, clientOutput, version);
-		addLicense(entries, repository.projectRoot(), artifactId);
+		addLicense(entries, artifactId);
 
 		for (Path nestedJar : nestedJars)
 		{
@@ -337,17 +332,15 @@ public final class ArtifactAssemblyService
 	 * Adds the tracked LICENSE file to one assembled artifact.
 	 *
 	 * @param entries the accumulated jar entries
-	 * @param projectRoot the tracked repository root
 	 * @param artifactId the artifact identifier
 	 * @throws IOException if the LICENSE file cannot be read
 	 */
 	private void addLicense(
 		Map<String, byte[]> entries,
-		Path projectRoot,
 		String artifactId
 	) throws IOException
 	{
-		Path licensePath = projectRoot.resolve(LICENSE_FILE_NAME);
+		Path licensePath = ToolchainPaths.PROJECT_ROOT.resolve(LICENSE_FILE_NAME);
 
 		if (!Files.isRegularFile(licensePath))
 		{
@@ -420,7 +413,7 @@ public final class ArtifactAssemblyService
 	{
 		Path baseOutputRoot = compiledOutputRoot != null
 			? compiledOutputRoot
-			: repository.projectRoot().resolve(INTELLIJ_OUTPUT_DIRECTORY);
+			: ToolchainPaths.INTELLIJ_OUTPUT_DIRECTORY;
 		return CompilationOutputLayout.sourceSetOutputRoot(
 			baseOutputRoot,
 			repository.projectName(),
@@ -432,14 +425,13 @@ public final class ArtifactAssemblyService
 	/**
 	 * Creates the artifact output directory for one resolved version.
 	 *
-	 * @param toolchainRoot the standalone toolchain root
 	 * @param version the resolved version
 	 * @return the created output directory
 	 * @throws IOException if the directory cannot be created
 	 */
-	private Path createOutputDirectory(Path toolchainRoot, String version) throws IOException
+	private Path createOutputDirectory(String version) throws IOException
 	{
-		Path outputDirectory = toolchainRoot.resolve("work").resolve("artifacts").resolve(version);
+		Path outputDirectory = ToolchainPaths.ARTIFACTS_ROOT.resolve(version);
 		Files.createDirectories(outputDirectory);
 		return outputDirectory;
 	}

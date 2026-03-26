@@ -3,7 +3,7 @@ package com.parzivail.toolchain.source;
 import com.parzivail.toolchain.fabric.MavenArtifactResolver;
 import com.parzivail.toolchain.fabric.MavenCoordinate;
 import com.parzivail.toolchain.maven.ToolchainMavenRepositories;
-import com.parzivail.toolchain.mojang.MojangPaths;
+import com.parzivail.toolchain.path.ToolchainPaths;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,11 +34,6 @@ public final class SourceAttachmentResolver
 	private final MavenArtifactResolver _mavenArtifactResolver;
 
 	/**
-	 * The standard Mojang cache paths.
-	 */
-	private final MojangPaths _mojangPaths;
-
-	/**
 	 * Per-run source attachment cache keyed by the binary artifact path.
 	 */
 	private final Map<Path, Path> _sourceArchiveCache;
@@ -50,7 +45,6 @@ public final class SourceAttachmentResolver
 	{
 		_minecraftSourcesGenerator = new MinecraftSourcesGenerator();
 		_mavenArtifactResolver = new MavenArtifactResolver();
-		_mojangPaths = new MojangPaths();
 		_sourceArchiveCache = new LinkedHashMap<>();
 	}
 
@@ -120,15 +114,15 @@ public final class SourceAttachmentResolver
 		MavenCoordinate coordinate = null;
 		List<URI> repositories = null;
 
-		if (artifact.startsWith(_mojangPaths.workRoot().resolve("cache").resolve("maven")))
+		if (artifact.startsWith(ToolchainPaths.MAVEN_CACHE_ROOT))
 		{
-			Path repositoryRelativePath = _mojangPaths.workRoot().resolve("cache").resolve("maven").relativize(artifact);
+			Path repositoryRelativePath = ToolchainPaths.MAVEN_CACHE_ROOT.relativize(artifact);
 			coordinate = MavenCoordinate.parseRepositoryPath(repositoryRelativePath);
 			repositories = inferredRepositories(coordinate, false);
 		}
-		else if (artifact.startsWith(_mojangPaths.librariesRoot()))
+		else if (artifact.startsWith(ToolchainPaths.MOJANG_LIBRARIES_ROOT))
 		{
-			Path repositoryRelativePath = _mojangPaths.librariesRoot().relativize(artifact);
+			Path repositoryRelativePath = ToolchainPaths.MOJANG_LIBRARIES_ROOT.relativize(artifact);
 			coordinate = MavenCoordinate.parseRepositoryPath(repositoryRelativePath);
 			repositories = inferredRepositories(coordinate, true);
 		}

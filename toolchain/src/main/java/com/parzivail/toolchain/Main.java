@@ -11,6 +11,7 @@ import com.parzivail.toolchain.mojang.MojangMetadataClient;
 import com.parzivail.toolchain.mojang.model.MojangVersionManifest;
 import com.parzivail.toolchain.mojang.model.MojangVersionManifestEntry;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.project.DevelopmentService;
 import com.parzivail.toolchain.project.RepositoryContext;
 import com.parzivail.toolchain.runtime.LaunchEnvironment;
@@ -180,7 +181,7 @@ public final class Main
 		if (args.length >= 2 && "manifest".equals(args[1]))
 		{
 			MojangVersionManifest manifest = client.getVersionManifest(refresh);
-			System.out.println("Manifest cached at: " + client.paths().versionManifestFile());
+			System.out.println("Manifest cached at: " + ToolchainPaths.MOJANG_VERSION_MANIFEST_FILE);
 			System.out.println("Latest release: " + manifest.latest().release());
 			System.out.println("Latest snapshot: " + manifest.latest().snapshot());
 			System.out.println("Version count: " + manifest.versions().size());
@@ -196,7 +197,7 @@ public final class Main
 			System.out.println("Version: " + entry.id());
 			System.out.println("Type: " + entry.type());
 			System.out.println("Metadata URL: " + entry.url());
-			System.out.println("Metadata cached at: " + client.paths().versionMetadataFile(versionId));
+			System.out.println("Metadata cached at: " + ToolchainPaths.mojangVersionMetadataFile(versionId));
 			System.out.println("Main class: " + metadata.mainClass());
 			System.out.println("Assets: " + metadata.assetIndex().id());
 			System.out.println("Libraries: " + metadata.libraries().size());

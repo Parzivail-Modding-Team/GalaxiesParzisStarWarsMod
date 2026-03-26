@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
-import com.parzivail.toolchain.mojang.MojangPaths;
 import com.parzivail.toolchain.mojang.model.MojangRule;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadataLibrary;
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.template.FileTemplateRenderer;
 import com.parzivail.toolchain.template.XmlEscaper;
 import com.parzivail.toolchain.util.HostPlatform;
@@ -121,11 +121,12 @@ public final class VanillaLaunchService
 
 		return new VanillaLaunchConfig(
 			versionId,
+			// TODO: can the server main be part of the metadata instead of having a special case?
 			environment.isClient() ? metadata.mainClass() : "net.minecraft.server.Main",
 			findJavaExecutable(),
 			launchPaths.gameDirectory(),
 			launchPaths.gameDirectory(),
-			_mojangClient.paths().mojangRoot().resolve("assets"),
+			ToolchainPaths.MOJANG_ASSETS_ROOT,
 			metadata.assetIndex().id(),
 			launchPaths.nativesDirectory(),
 			loggingConfiguration,
@@ -171,13 +172,7 @@ public final class VanillaLaunchService
 	 */
 	private VanillaLaunchPaths createLaunchPaths(String versionId, LaunchEnvironment environment)
 	{
-		MojangPaths paths = _mojangClient.paths();
-		String platformId = HostPlatform.current().id();
-		Path instanceRoot = paths.workRoot()
-		                        .resolve("instances")
-		                        .resolve(environment.runtimeInstanceDirectoryName())
-		                        .resolve(platformId)
-		                        .resolve(versionId);
+		Path instanceRoot = ToolchainPaths.getInstanceRoot(versionId, environment, HostPlatform.current());
 
 		return new VanillaLaunchPaths(
 			instanceRoot,
@@ -219,7 +214,7 @@ public final class VanillaLaunchService
 				continue;
 			}
 
-			Path target = _mojangClient.paths().libraryFile(library.downloads().artifact().path());
+			Path target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
 			_mojangClient.download(
 				URI.create(library.downloads().artifact().url()),
 				target,
@@ -343,7 +338,7 @@ public final class VanillaLaunchService
 				continue;
 			}
 
-			classpath.add(_mojangClient.paths().libraryFile(library.downloads().artifact().path()));
+			classpath.add(ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path()));
 		}
 
 		if (environment.isServer())
@@ -353,8 +348,8 @@ public final class VanillaLaunchService
 
 		classpath.add(
 			environment.isClient()
-				? _mojangClient.paths().clientJarFile(versionId)
-				: _mojangClient.paths().extractedServerJarFile(versionId)
+				? ToolchainPaths.mojangClientJarFile(versionId)
+				: ToolchainPaths.mojangExtractedServerJarFile(versionId)
 		);
 		return new ArrayList<>(classpath);
 	}
@@ -388,7 +383,7 @@ public final class VanillaLaunchService
 				continue;
 			}
 
-			nativeJars.add(_mojangClient.paths().libraryFile(library.downloads().artifact().path()));
+			nativeJars.add(ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path()));
 		}
 
 		for (Path nativeJar : nativeJars)
@@ -455,14 +450,14 @@ public final class VanillaLaunchService
 		templateValues.put("DEBUG_LOG", debugLog);
 		templateValues.put("DEBUG_ARCHIVED_LOGS", debugArchivedLogs);
 		String xml = FileTemplateRenderer.render(
-			"dev/pswg/toolchain/templates/log4j2-intellij.xml",
+			"com/parzivail/toolchain/templates/log4j2-intellij.xml",
 			templateValues
 		);
 		Files.writeString(generatedConfiguration, xml);
 
 		if (metadata.logging() != null && metadata.logging().client() != null && metadata.logging().client().file() != null)
 		{
-			Path target = _mojangClient.paths().mojangRoot().resolve("logging").resolve(metadata.logging().client().file().id());
+			Path target = ToolchainPaths.MOJANG_LOGGING_ROOT.resolve(metadata.logging().client().file().id());
 			_mojangClient.download(URI.create(metadata.logging().client().file().url()), target, refresh);
 		}
 
@@ -496,7 +491,7 @@ public final class VanillaLaunchService
 		variables.put("auth_player_name", identity.username());
 		variables.put("version_name", versionId);
 		variables.put("game_directory", gameDirectory.toAbsolutePath().toString());
-		variables.put("assets_root", _mojangClient.paths().mojangRoot().resolve("assets").toAbsolutePath().toString());
+		variables.put("assets_root", ToolchainPaths.MOJANG_ASSETS_ROOT.toAbsolutePath().toString());
 		variables.put("assets_index_name", metadata.assetIndex().id());
 		variables.put("auth_uuid", identity.uuid());
 		variables.put("auth_access_token", "0");

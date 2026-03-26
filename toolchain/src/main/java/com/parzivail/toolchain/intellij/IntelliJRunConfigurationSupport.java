@@ -1,7 +1,9 @@
 package com.parzivail.toolchain.intellij;
 
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.runtime.VanillaLaunchConfig;
 import com.parzivail.toolchain.source.SourceAttachmentResolver;
+import com.parzivail.toolchain.template.TemplateXmlWriter;
 import com.parzivail.toolchain.template.XmlEscaper;
 
 import org.dom4j.Document;
@@ -37,7 +39,6 @@ public final class IntelliJRunConfigurationSupport
 	 * Creates a generated IntelliJ launch module document with project-library and module
 	 * dependencies.
 	 *
-	 * @param projectRoot the host-project root
 	 * @param instanceRoot the generated launch instance root
 	 * @param dependencyModuleNames the IntelliJ modules that should be built before launch
 	 * @param classpathEntries the prepared runtime classpath entries
@@ -45,7 +46,6 @@ public final class IntelliJRunConfigurationSupport
 	 * @return the launch module document
 	 */
 	public static Document createLaunchModuleDocument(
-		Path projectRoot,
 		Path instanceRoot,
 		List<String> dependencyModuleNames,
 		List<Path> classpathEntries,
@@ -62,9 +62,9 @@ public final class IntelliJRunConfigurationSupport
 		rootManager.addElement("exclude-output");
 
 		Element content = rootManager.addElement("content");
-		content.addAttribute("url", IntelliJPathMacros.fileUrl(projectRoot, instanceRoot));
+		content.addAttribute("url", IntelliJPathMacros.fileUrl(instanceRoot));
 		content.addElement("excludeFolder")
-		       .addAttribute("url", IntelliJPathMacros.fileUrl(projectRoot, instanceRoot));
+		       .addAttribute("url", IntelliJPathMacros.fileUrl(instanceRoot));
 
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
@@ -91,7 +91,6 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Writes the generated IntelliJ project libraries for one prepared runtime classpath.
 	 *
-	 * @param projectRoot the host-project root
 	 * @param generatedPrefix the prefix identifying generated launch-library metadata files
 	 * @param classpathEntries the prepared runtime classpath entries
 	 * @param sourceAttachmentResolver resolves optional source attachments
@@ -101,7 +100,6 @@ public final class IntelliJRunConfigurationSupport
 	 * @throws IOException if library metadata generation fails
 	 */
 	public static void writeLaunchLibraries(
-		Path projectRoot,
 		String generatedPrefix,
 		List<Path> classpathEntries,
 		SourceAttachmentResolver sourceAttachmentResolver,
@@ -110,7 +108,6 @@ public final class IntelliJRunConfigurationSupport
 		Function<Path, String> fileNameResolver
 	) throws IOException
 	{
-		Path librariesDirectory = projectRoot.resolve(".idea").resolve("libraries");
 		Set<String> expectedFileNames = new LinkedHashSet<>();
 
 		for (Path classpathEntry : classpathEntries)
@@ -118,46 +115,36 @@ public final class IntelliJRunConfigurationSupport
 			String fileName = fileNameResolver.apply(classpathEntry);
 			expectedFileNames.add(fileName);
 			Path sourceArchive = sourceAttachmentResolver.resolveSourceArchive(classpathEntry, refresh);
-			IntelliJXmlWriter.write(
-				librariesDirectory.resolve(fileName),
-				createLaunchLibraryDocument(projectRoot, libraryNameResolver.apply(classpathEntry), classpathEntry, sourceArchive)
+			TemplateXmlWriter.write(
+					ToolchainPaths.INTELLIJ_META_LIBRARIES_DIRECTORY.resolve(fileName),
+					createLaunchLibraryDocument(libraryNameResolver.apply(classpathEntry), classpathEntry, sourceArchive)
 			);
 		}
 
-		deleteObsoleteLaunchLibraries(librariesDirectory, generatedPrefix, expectedFileNames);
+		deleteObsoleteLaunchLibraries(generatedPrefix, expectedFileNames);
 	}
 
 	/**
 	 * Registers one generated launch module in `.idea/modules.xml`.
 	 *
-	 * @param projectRoot the host-project root
 	 * @param filePath the `$PROJECT_DIR$`-relative module file path
-	 * @param legacyFilePaths obsolete historical paths to remove during registration
 	 * @throws IOException if the project registration cannot be updated
 	 */
 	public static void registerModule(
-		Path projectRoot,
-		String filePath,
-		List<String> legacyFilePaths
+		String filePath
 	) throws IOException
 	{
-		Path modulesXmlPath = projectRoot.resolve(".idea").resolve("modules.xml");
-		Document document = readOrCreateProjectDocument(modulesXmlPath);
+		Document document = readOrCreateProjectDocument();
 		Element project = document.getRootElement();
 		Element component = firstOrCreate(project, "component", "name", "ProjectModuleManager");
 		Element modules = firstOrCreate(component, "modules");
 
 		removeRegisteredModule(modules, filePath);
 
-		for (String legacyFilePath : legacyFilePaths)
-		{
-			removeRegisteredModule(modules, legacyFilePath);
-		}
-
 		modules.addElement("module")
 		       .addAttribute("fileurl", "file://" + filePath)
 		       .addAttribute("filepath", filePath);
-		IntelliJXmlWriter.write(modulesXmlPath, document);
+		TemplateXmlWriter.write(ToolchainPaths.INTELLIJ_META_MODULES_FILE, document);
 	}
 
 	/**
@@ -296,14 +283,12 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Creates a generated project-library document for one prepared runtime classpath entry.
 	 *
-	 * @param projectRoot the host-project root
 	 * @param libraryName the generated project-library name
 	 * @param classpathEntry the prepared runtime classpath entry
 	 * @param sourceArchive the optional attached source archive
 	 * @return the generated project-library document
 	 */
 	private static Document createLaunchLibraryDocument(
-		Path projectRoot,
 		String libraryName,
 		Path classpathEntry,
 		Path sourceArchive
@@ -316,8 +301,8 @@ public final class IntelliJRunConfigurationSupport
 		library.addAttribute("name", libraryName);
 		Element classes = library.addElement("CLASSES");
 		String url = Files.isDirectory(classpathEntry)
-			? IntelliJPathMacros.fileUrl(projectRoot, classpathEntry)
-			: IntelliJPathMacros.jarUrl(projectRoot, classpathEntry);
+			? IntelliJPathMacros.fileUrl(classpathEntry)
+			: IntelliJPathMacros.jarUrl(classpathEntry);
 		classes.addElement("root").addAttribute("url", url);
 		library.addElement("JAVADOC");
 		Element sources = library.addElement("SOURCES");
@@ -327,8 +312,8 @@ public final class IntelliJRunConfigurationSupport
 			sources.addElement("root").addAttribute(
 				"url",
 				Files.isDirectory(sourceArchive)
-					? IntelliJPathMacros.fileUrl(projectRoot, sourceArchive)
-					: IntelliJPathMacros.jarUrl(projectRoot, sourceArchive)
+					? IntelliJPathMacros.fileUrl(sourceArchive)
+					: IntelliJPathMacros.jarUrl(sourceArchive)
 			);
 		}
 
@@ -338,23 +323,21 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Deletes stale generated launch-library metadata files after regeneration.
 	 *
-	 * @param librariesDirectory the IntelliJ libraries directory
 	 * @param generatedPrefix the generated launch-library prefix
 	 * @param expectedFileNames the expected generated file names
 	 * @throws IOException if stale files cannot be removed
 	 */
 	private static void deleteObsoleteLaunchLibraries(
-		Path librariesDirectory,
 		String generatedPrefix,
 		Set<String> expectedFileNames
 	) throws IOException
 	{
-		if (!Files.isDirectory(librariesDirectory))
+		if (!Files.isDirectory(ToolchainPaths.INTELLIJ_META_LIBRARIES_DIRECTORY))
 		{
 			return;
 		}
 
-		try (var entries = Files.list(librariesDirectory))
+		try (var entries = Files.list(ToolchainPaths.INTELLIJ_META_LIBRARIES_DIRECTORY))
 		{
 			for (Path entry : entries.toList())
 			{
@@ -379,13 +362,12 @@ public final class IntelliJRunConfigurationSupport
 	 * Reads an IntelliJ project XML document or creates a new empty project document if the file is
 	 * absent.
 	 *
-	 * @param path the IntelliJ project file path
 	 * @return the existing or new document
 	 * @throws IOException if the file cannot be read
 	 */
-	private static Document readOrCreateProjectDocument(Path path) throws IOException
+	private static Document readOrCreateProjectDocument() throws IOException
 	{
-		if (!Files.exists(path))
+		if (!Files.exists(ToolchainPaths.INTELLIJ_META_MODULES_FILE))
 		{
 			Document document = DocumentHelper.createDocument();
 			document.addElement("project").addAttribute("version", "4");
@@ -394,11 +376,11 @@ public final class IntelliJRunConfigurationSupport
 
 		try
 		{
-			return DocumentHelper.parseText(Files.readString(path));
+			return DocumentHelper.parseText(Files.readString(ToolchainPaths.INTELLIJ_META_MODULES_FILE));
 		}
 		catch (DocumentException exception)
 		{
-			throw new IOException("Failed to parse IntelliJ project document: " + path, exception);
+			throw new IOException("Failed to parse IntelliJ project document: " + ToolchainPaths.INTELLIJ_META_MODULES_FILE, exception);
 		}
 	}
 

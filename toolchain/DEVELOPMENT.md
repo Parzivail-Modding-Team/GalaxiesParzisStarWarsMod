@@ -61,7 +61,7 @@ Loader, Loom, or the dev-launch-injector changes, treat the update as a contract
 few focused surfaces:
 
 - Version pins:
-  `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricRuntimeResolver.java`
+  `toolchain/src/main/java/com/parzivail/toolchain/fabric/FabricRuntimeResolver.java`
   owns the pinned `DEV_LAUNCH_INJECTOR_VERSION` and related Fabric runtime helper versions.
   Compare these against the vendored Loom runtime catalog before changing them.
 - Contract inspection:
@@ -70,13 +70,13 @@ few focused surfaces:
   `fabric.dli.env`, and the generated launch config path. Run this for both environments first when
   upgrading.
 - Launch assembly:
-  `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDevLaunchService.java` is the authoritative
+  `toolchain/src/main/java/com/parzivail/toolchain/fabric/FabricDevLaunchService.java` is the authoritative
   implementation of PSWG's direct-DLI workflow. If DLI changes required JVM properties, launch-config
   section names, or runtime main-class behavior, update this service first.
 - Generated launch artifacts:
   the DLI contract is serialized into
-  `toolchain/src/main/resources/dev/pswg/toolchain/templates/fabric-dev-launch.cfg`,
-  `toolchain/src/main/resources/dev/pswg/toolchain/templates/intellij-run-config.xml`,
+  `toolchain/src/main/resources/com/parzivail/toolchain/templates/fabric-dev-launch.cfg`,
+  `toolchain/src/main/resources/com/parzivail/toolchain/templates/intellij-run-config.xml`,
   `.idea/modules/launch/fabric/...`, and `.idea/runConfigurations/Fabric_Client_*.xml`.
   The generated outputs include `.idea/runConfigurations/Fabric_Server_*.xml`.
   Keep those generated outputs aligned with the runtime contract after any DLI update.
@@ -125,8 +125,8 @@ PSWG datagen is intentionally simpler than Loom's general-purpose model:
 
 Contract owners:
 
-- `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDataGenerationService.java`
-- `toolchain/src/main/java/dev/pswg/toolchain/model/ModuleSpec.java`
+- `toolchain/src/main/java/com/parzivail/toolchain/fabric/FabricDataGenerationService.java`
+- `toolchain/src/main/java/com/parzivail/toolchain/model/ModuleSpec.java`
 - `toolchain.toml`
 
 Sensitive areas:
@@ -159,8 +159,8 @@ The toolchain writes IntelliJ project files directly instead of relying on Gradl
 the workflow predictable, but it also means the toolchain depends on IntelliJ's current XML contract.
 
 - Contract owners:
-  `toolchain/src/main/java/dev/pswg/toolchain/intellij/IntelliJProjectSyncService.java`,
-  `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDevLaunchService.java`,
+  `toolchain/src/main/java/com/parzivail/toolchain/intellij/IntelliJProjectSyncService.java`,
+  `toolchain/src/main/java/com/parzivail/toolchain/fabric/FabricDevLaunchService.java`,
   and the run-config / launch-config templates under `toolchain/src/main/resources/...`.
 - Sensitive areas:
   `modules.xml`, `.iml` root-manager structure, `compiler.xml` annotation-processor profiles,
@@ -192,11 +192,11 @@ Recommended update loop:
 IntelliJ library metadata also owns source attachments for generated and downloaded libraries.
 
 - Contract owners:
-  `toolchain/src/main/java/dev/pswg/toolchain/source/MinecraftSourcesGenerator.java`,
-  `toolchain/src/main/java/dev/pswg/toolchain/source/SourceAttachmentResolver.java`,
-  `toolchain/src/main/java/dev/pswg/toolchain/intellij/IntelliJProjectSyncService.java`,
-  `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDevLaunchService.java`,
-  and `toolchain/src/main/java/dev/pswg/toolchain/fabric/FabricDataGenerationService.java`.
+  `toolchain/src/main/java/com/parzivail/toolchain/source/MinecraftSourcesGenerator.java`,
+  `toolchain/src/main/java/com/parzivail/toolchain/source/SourceAttachmentResolver.java`,
+  `toolchain/src/main/java/com/parzivail/toolchain/intellij/IntelliJProjectSyncService.java`,
+  `toolchain/src/main/java/com/parzivail/toolchain/fabric/FabricDevLaunchService.java`,
+  and `toolchain/src/main/java/com/parzivail/toolchain/fabric/FabricDataGenerationService.java`.
 - Sensitive areas:
   Vineflower API compatibility, optional Parchment metadata availability, Maven `sources`
   classifier resolution, and the current-platform launch-library generation path under
@@ -227,9 +227,9 @@ The vanilla runtime bundle depends on Mojang's version manifest, version metadat
 library download schema remaining compatible with the toolchain models.
 
 - Contract owners:
-  `toolchain/src/main/java/dev/pswg/toolchain/mojang/MojangMetadataClient.java`,
-  the `toolchain/src/main/java/dev/pswg/toolchain/mojang/model/...` records,
-  and `toolchain/src/main/java/dev/pswg/toolchain/runtime/VanillaLaunchService.java`.
+  `toolchain/src/main/java/com/parzivail/toolchain/mojang/MojangMetadataClient.java`,
+  the `toolchain/src/main/java/com/parzivail/toolchain/mojang/model/...` records,
+  and `toolchain/src/main/java/com/parzivail/toolchain/runtime/VanillaLaunchService.java`.
 - Sensitive areas:
   version-manifest fields, `downloads.client/server`, library artifact paths, rule evaluation,
   asset index aliases, the client logging config descriptor, and bundled dedicated-server metadata
@@ -263,8 +263,8 @@ compile-time parity layer depends on Fabric/Loom class-tweaker behavior and loca
 `loom:injected_interfaces` metadata staying compatible.
 
 - Contract owners:
-  `toolchain/src/main/java/dev/pswg/toolchain/intellij/IntelliJMinecraftJarTransformer.java` and
-  `toolchain/src/main/java/dev/pswg/toolchain/intellij/IntelliJDependencyResolver.java`.
+  `toolchain/src/main/java/com/parzivail/toolchain/intellij/IntelliJMinecraftJarTransformer.java` and
+  `toolchain/src/main/java/com/parzivail/toolchain/intellij/IntelliJDependencyResolver.java`.
 - Sensitive areas:
   class-tweaker discovery from dependency jars, local `fabric.mod.json` custom metadata,
   transformed-jar cache keys, and the split between common/server and client compile jars.

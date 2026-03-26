@@ -1,4 +1,4 @@
-package com.parzivail.toolchain.intellij;
+package com.parzivail.toolchain.template;
 
 import org.dom4j.Document;
 import org.dom4j.io.OutputFormat;
@@ -11,14 +11,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Writes IntelliJ XML documents using a consistent pretty-print format.
+ * Writes XML documents using a consistent pretty-print format.
  */
-public final class IntelliJXmlWriter
+public final class TemplateXmlWriter
 {
 	/**
 	 * Prevents construction.
 	 */
-	private IntelliJXmlWriter()
+	private TemplateXmlWriter()
 	{
 	}
 

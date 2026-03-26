@@ -1,6 +1,8 @@
 package com.parzivail.toolchain.fabric;
 
 import com.parzivail.toolchain.intellij.IntelliJModuleNames;
+import com.parzivail.toolchain.path.ToolchainPaths;
+import com.parzivail.toolchain.project.RepositoryContext;
 import com.parzivail.toolchain.runtime.LaunchEnvironment;
 import com.parzivail.toolchain.util.HostPlatform;
 
@@ -28,11 +30,6 @@ import java.util.regex.Pattern;
 public final class FabricDevLaunchInspector
 {
 	/**
-	 * Loom's default development launcher entrypoint.
-	 */
-	public static final String DEFAULT_DEV_LAUNCH_MAIN_CLASS = "net.fabricmc.devlaunchinjector.Main";
-
-	/**
 	 * Loom's fallback client main class when installer metadata does not override it.
 	 */
 	public static final String DEFAULT_CLIENT_MAIN_CLASS = "net.fabricmc.loader.launch.knot.KnotClient";
@@ -43,25 +40,6 @@ public final class FabricDevLaunchInspector
 	public static final String DEFAULT_SERVER_MAIN_CLASS = "net.fabricmc.loader.launch.knot.KnotServer";
 
 	/**
-	 * The toolchain project root.
-	 */
-	private final Path _toolchainRoot;
-
-	/**
-	 * The tracked repository root.
-	 */
-	private final Path _projectRoot;
-
-	/**
-	 * Creates an inspector rooted at the standalone toolchain project.
-	 */
-	public FabricDevLaunchInspector()
-	{
-		_toolchainRoot = Path.of("").toAbsolutePath().normalize();
-		_projectRoot = _toolchainRoot.getParent();
-	}
-
-	/**
 	 * Inspects the current dev-launch contract for one environment.
 	 *
 	 * @param environment the target environment
@@ -70,7 +48,7 @@ public final class FabricDevLaunchInspector
 	 */
 	public FabricDevLaunchSummary inspect(LaunchEnvironment environment) throws IOException
 	{
-		Properties properties = loadGradleProperties();
+		Properties properties = RepositoryContext.loadGradleProperties();
 		Path runConfigPath = generatedRunConfigurationPath(environment);
 		IdeaRunConfiguration runConfiguration = parseIdeaRunConfiguration(runConfigPath);
 		String runtimeMainClass = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.main");
@@ -83,7 +61,7 @@ public final class FabricDevLaunchInspector
 			properties.getProperty("loader_version"),
 			properties.getProperty("fabric_version"),
 			properties.getProperty("loom_version"),
-			DEFAULT_DEV_LAUNCH_MAIN_CLASS,
+			FabricDevLaunchService.DEV_LAUNCH_MAIN_CLASS,
 			defaultRuntimeMainClass(environment),
 			runConfiguration.mainClass(),
 			runtimeMainClass,
@@ -91,25 +69,6 @@ public final class FabricDevLaunchInspector
 			dliConfigPath,
 			launchConfig
 		);
-	}
-
-	/**
-	 * Loads the repository Gradle properties file.
-	 *
-	 * @return the parsed Gradle properties
-	 * @throws IOException if the file cannot be read
-	 */
-	private Properties loadGradleProperties() throws IOException
-	{
-		Properties properties = new Properties();
-		Path path = _projectRoot.resolve("gradle.properties");
-
-		try (InputStream inputStream = Files.newInputStream(path))
-		{
-			properties.load(inputStream);
-		}
-
-		return properties;
 	}
 
 	/**
@@ -228,9 +187,7 @@ public final class FabricDevLaunchInspector
 	 */
 	private Path generatedRunConfigurationPath(LaunchEnvironment environment) throws IOException
 	{
-		Path path = _projectRoot.resolve(".idea")
-		                        .resolve("runConfigurations")
-		                        .resolve(IntelliJModuleNames.fabricRunConfigurationFileName(environment.id(), HostPlatform.current().id()));
+		Path path = ToolchainPaths.INTELLIJ_RUN_CONFIGS_DIRECTORY.resolve(IntelliJModuleNames.fabricRunConfigurationFileName(environment.id(), HostPlatform.current().id()));
 
 		if (!Files.isRegularFile(path))
 		{

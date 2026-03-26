@@ -1,9 +1,9 @@
 package com.parzivail.toolchain.fabric;
 
-import com.parzivail.toolchain.intellij.IntelliJDependencyResolver;
 import com.parzivail.toolchain.intellij.IntelliJModuleNames;
 import com.parzivail.toolchain.intellij.IntelliJRunConfigurationSupport;
-import com.parzivail.toolchain.intellij.IntelliJXmlWriter;
+import com.parzivail.toolchain.path.ToolchainPaths;
+import com.parzivail.toolchain.template.TemplateXmlWriter;
 import com.parzivail.toolchain.model.BuildGraph;
 import com.parzivail.toolchain.model.MavenDependencySpec;
 import com.parzivail.toolchain.model.ModuleAggregationResolver;
@@ -34,11 +34,12 @@ import java.util.Set;
 /**
  * Generates module-scoped Fabric API datagen run configurations.
  *
- * <p>PSWG only uses client-side datagen. This service therefore prepares one client-derived Fabric
- * launch bundle that contains the full modeled PSWG runtime surface, then emits one IntelliJ run
- * configuration per datagen-capable module. Each generated run configuration pins both the Fabric
- * mod id and the checked-in output directory for that module so developers cannot accidentally run
- * `pswg_core` datagen against `pswg_gadgets` output roots.
+ * <p>This service prepares one client-derived Fabric launch bundle that
+ * contains the full modeled runtime surface, then emits one IntelliJ run
+ * configuration per datagen-capable module. Each generated run configuration
+ * pins both the Fabric mod id and the checked-in output directory for that
+ * module so developers cannot accidentally run one module's datagen against
+ * another's output roots.
  */
 public final class FabricDataGenerationService
 {
@@ -68,11 +69,6 @@ public final class FabricDataGenerationService
 	private final FabricRuntimeResolver _runtimeResolver;
 
 	/**
-	 * Resolves IntelliJ compile classpaths so generated launches can exclude non-runtime entries.
-	 */
-	private final IntelliJDependencyResolver _ideaDependencyResolver;
-
-	/**
 	 * Resolves optional source archives for generated datagen launch libraries.
 	 */
 	private final SourceAttachmentResolver _sourceAttachmentResolver;
@@ -84,7 +80,6 @@ public final class FabricDataGenerationService
 	{
 		_mapper = new ObjectMapper();
 		_runtimeResolver = new FabricRuntimeResolver();
-		_ideaDependencyResolver = new IntelliJDependencyResolver();
 		_sourceAttachmentResolver = new SourceAttachmentResolver();
 	}
 
@@ -135,8 +130,6 @@ public final class FabricDataGenerationService
 		FabricRuntimeArtifacts runtimeArtifacts = resolveFabricRuntimeArtifacts(repository.gradleProperties(), refresh);
 		FabricModuleInjection moduleInjection = resolveModuleInjection(repository, aggregateModuleId, refresh);
 		FabricDatagenPaths launchPaths = createLaunchPaths(
-			repository.toolchainRoot(),
-			repository.projectRoot(),
 			repository.projectName(),
 			versionId
 		);
@@ -195,16 +188,15 @@ public final class FabricDataGenerationService
 	) throws IOException
 	{
 		BuildGraph graph = repository.buildGraph();
-		Path repoRoot = repository.projectRoot();
 		String projectName = repository.projectName();
 		ModuleSpec rootModule = ModuleAggregationResolver.requireModule(graph, moduleId);
-		List<Path> moduleRoots = resolveOutputRoots(repoRoot, projectName, rootModule);
+		List<Path> moduleRoots = resolveOutputRoots(projectName, rootModule);
 		List<Path> dependencyRoots = new ArrayList<>();
 		List<MavenDependencySpec> runtimeDependencies = new ArrayList<>(rootModule.runtimeDependencies());
 
 		for (ModuleSpec dependencyModule : ModuleAggregationResolver.aggregatedDependencies(graph, moduleId))
 		{
-			dependencyRoots.addAll(resolveOutputRoots(repoRoot, projectName, dependencyModule));
+			dependencyRoots.addAll(resolveOutputRoots(projectName, dependencyModule));
 			runtimeDependencies.addAll(dependencyModule.runtimeDependencies());
 		}
 
@@ -225,27 +217,19 @@ public final class FabricDataGenerationService
 	/**
 	 * Creates the standard path layout for the aggregate Fabric datagen launch bundle.
 	 *
-	 * @param toolchainRoot the toolchain project root
-	 * @param repoRoot the tracked repository root
 	 * @param projectName the IntelliJ project name
 	 * @param versionId the Minecraft version identifier
 	 * @return the derived launch paths
 	 */
 	private FabricDatagenPaths createLaunchPaths(
-		Path toolchainRoot,
-		Path repoRoot,
 		String projectName,
 		String versionId
 	)
 	{
 		HostPlatform platform = HostPlatform.current();
 		String platformId = platform.id();
-		Path instanceRoot = toolchainRoot.resolve("work")
-		                               .resolve("instances")
-		                               .resolve("fabric-datagen")
-		                               .resolve(platformId)
-		                               .resolve(versionId);
-		Path configDirectory = instanceRoot.resolve("config");
+		Path instanceRoot = ToolchainPaths.getDatagenInstanceRoot(versionId, platform);
+		Path configDirectory = instanceRoot.resolve(ToolchainPaths.INSTANCE_CONFIG_ROOT_NAME);
 
 		return new FabricDatagenPaths(
 			platformId,
@@ -254,12 +238,8 @@ public final class FabricDataGenerationService
 			configDirectory.resolve("launch.cfg"),
 			configDirectory.resolve("log4j2-intellij.xml"),
 			instanceRoot.resolve("launch.json"),
-			repoRoot.resolve(".idea")
-			        .resolve("modules")
-			        .resolve("launch")
-			        .resolve("fabric")
-			        .resolve(IntelliJModuleNames.fabricDatagenLaunchModuleFileName(projectName, platformId)),
-			repoRoot.resolve(".idea").resolve("runConfigurations")
+			ToolchainPaths.INTELLIJ_FABRIC_LAUNCH_MODULE_DIRECTORY
+			        .resolve(IntelliJModuleNames.fabricDatagenLaunchModuleFileName(projectName, platformId))
 		);
 	}
 
@@ -281,7 +261,7 @@ public final class FabricDataGenerationService
 	{
 		Files.createDirectories(launchPaths.configDirectory());
 		Files.createDirectories(launchPaths.instanceRoot());
-		Files.createDirectories(launchPaths.instanceRoot().resolve("game"));
+		Files.createDirectories(launchPaths.instanceRoot().resolve(ToolchainPaths.INSTANCE_GAME_ROOT_NAME));
 		FabricLaunchSupport.writeLoggingConfig(vanillaLaunch, launchPaths.loggingConfigPath());
 		FabricLaunchSupport.prepareFabricAssetIndex(versionId, vanillaLaunch.assetIndexId());
 		writeDevLaunchConfig(
@@ -367,7 +347,7 @@ public final class FabricDataGenerationService
 		LaunchIdentity identity
 	)
 	{
-		Path datagenWorkingDirectory = launchPaths.instanceRoot().resolve("game");
+		Path datagenWorkingDirectory = launchPaths.instanceRoot().resolve(ToolchainPaths.INSTANCE_GAME_ROOT_NAME);
 
 		return new VanillaLaunchConfig(
 			versionId,
@@ -412,7 +392,7 @@ public final class FabricDataGenerationService
 		values.put("OPTIONAL_ENVIRONMENT_PROPERTIES_SECTION", FabricLaunchSupport.clientPropertiesSection(versionId));
 		values.put("ENVIRONMENT_ARGS_SECTION", FabricLaunchSupport.clientArgsSection(versionId, vanillaLaunch));
 		String rendered = FileTemplateRenderer.render(
-			"dev/pswg/toolchain/templates/fabric-dev-launch.cfg",
+			"com/parzivail/toolchain/templates/fabric-dev-launch.cfg",
 			values
 		);
 
@@ -494,7 +474,6 @@ public final class FabricDataGenerationService
 	 * @param loggingConfigPath the generated log4j configuration path
 	 * @param serializedLaunchPath the serialized launch JSON path
 	 * @param ideaLaunchModulePath the generated IntelliJ launch module path
-	 * @param ideaRunConfigurationsDirectory the generated IntelliJ run-configuration directory
 	 */
 	private record FabricDatagenPaths(
 		String platformId,
@@ -503,8 +482,7 @@ public final class FabricDataGenerationService
 		Path launchConfigPath,
 		Path loggingConfigPath,
 		Path serializedLaunchPath,
-		Path ideaLaunchModulePath,
-		Path ideaRunConfigurationsDirectory
+		Path ideaLaunchModulePath
 	)
 	{
 		/**
@@ -538,18 +516,15 @@ public final class FabricDataGenerationService
 	/**
 	 * Resolves the IntelliJ output roots for an injected module.
 	 *
-	 * @param projectRoot the tracked repository root
 	 * @param module the module specification
 	 * @return the ordered output roots
 	 */
 	private List<Path> resolveOutputRoots(
-		Path projectRoot,
 		String projectName,
 		ModuleSpec module
 	)
 	{
 		return FabricModuleOutputResolver.resolveOutputRoots(
-			projectRoot,
 			projectName,
 			module,
 			true,
@@ -578,7 +553,6 @@ public final class FabricDataGenerationService
 		List<Path> runtimeClasspath = IntelliJRunConfigurationSupport.effectiveRuntimeClasspath(datagenLaunch);
 		String generatedPrefix = "fabric-datagen-" + launchPaths.platformId() + "-";
 		IntelliJRunConfigurationSupport.writeLaunchLibraries(
-			repository.projectRoot(),
 			generatedPrefix,
 			runtimeClasspath,
 			_sourceAttachmentResolver,
@@ -586,10 +560,9 @@ public final class FabricDataGenerationService
 			entry -> generatedPrefix + entry.getFileName(),
 			entry -> IntelliJRunConfigurationSupport.libraryMetadataFileName(generatedPrefix + entry.getFileName())
 		);
-		IntelliJXmlWriter.write(
+		TemplateXmlWriter.write(
 			launchPaths.ideaLaunchModulePath(),
 			IntelliJRunConfigurationSupport.createLaunchModuleDocument(
-				repository.projectRoot(),
 				launchPaths.instanceRoot(),
 				launchDependencyModuleNames(repository, moduleInjection),
 				runtimeClasspath,
@@ -597,13 +570,11 @@ public final class FabricDataGenerationService
 			)
 		);
 		IntelliJRunConfigurationSupport.registerModule(
-			repository.projectRoot(),
 			"$PROJECT_DIR$/.idea/modules/launch/fabric/"
 				+ IntelliJModuleNames.fabricDatagenLaunchModuleFileName(
 					repository.projectName(),
 					launchPaths.platformId()
-				),
-			List.of()
+				)
 		);
 	}
 
@@ -661,9 +632,8 @@ public final class FabricDataGenerationService
 
 		for (ModuleSpec target : targets)
 		{
-			Path outputDirectory = repository.projectRoot().resolve(target.datagenOutput());
-			Path runConfigurationPath = launchPaths.ideaRunConfigurationsDirectory()
-			                                 .resolve(IntelliJModuleNames.fabricDatagenRunConfigurationFileName(target.id(), launchPaths.platformId()));
+			Path outputDirectory = ToolchainPaths.PROJECT_ROOT.resolve(target.datagenOutput());
+			Path runConfigurationPath = ToolchainPaths.INTELLIJ_RUN_CONFIGS_DIRECTORY.resolve(IntelliJModuleNames.fabricDatagenRunConfigurationFileName(target.id(), launchPaths.platformId()));
 			expectedFileNames.add(runConfigurationPath.getFileName().toString());
 			writeIdeaRunConfiguration(repository, runConfigurationPath, datagenLaunch, launchPaths, target, outputDirectory);
 			generated.add(
@@ -676,32 +646,30 @@ public final class FabricDataGenerationService
 			);
 		}
 
-		deleteObsoleteRunConfigurations(launchPaths.ideaRunConfigurationsDirectory(), launchPaths.platformId(), expectedFileNames);
+		deleteObsoleteRunConfigurations(launchPaths.platformId(), expectedFileNames);
 		return List.copyOf(generated);
 	}
 
 	/**
 	 * Deletes obsolete generated datagen run configurations after regeneration.
 	 *
-	 * @param runConfigurationsDirectory the IntelliJ run-configuration directory
 	 * @param platformId the target platform identifier
 	 * @param expectedFileNames the expected generated run-configuration file names
 	 * @throws IOException if stale run-configuration files cannot be removed
 	 */
 	private void deleteObsoleteRunConfigurations(
-		Path runConfigurationsDirectory,
 		String platformId,
 		Set<String> expectedFileNames
 	) throws IOException
 	{
-		if (!Files.isDirectory(runConfigurationsDirectory))
+		if (!Files.isDirectory(ToolchainPaths.INTELLIJ_RUN_CONFIGS_DIRECTORY))
 		{
 			return;
 		}
 
 		String suffix = "_" + platformId.toUpperCase() + ".xml";
 
-		try (var entries = Files.list(runConfigurationsDirectory))
+		try (var entries = Files.list(ToolchainPaths.INTELLIJ_RUN_CONFIGS_DIRECTORY))
 		{
 			for (Path entry : entries.toList())
 			{
@@ -751,7 +719,7 @@ public final class FabricDataGenerationService
 		values.put("WORKING_DIRECTORY", IntelliJRunConfigurationSupport.xmlPath(datagenLaunch.workingDirectory()));
 		values.put("CLASSPATH_MODIFICATIONS", "<classpathModifications/>");
 		String rendered = FileTemplateRenderer.render(
-			"dev/pswg/toolchain/templates/intellij-run-config.xml",
+			"com/parzivail/toolchain/templates/intellij-run-config.xml",
 			values
 		);
 

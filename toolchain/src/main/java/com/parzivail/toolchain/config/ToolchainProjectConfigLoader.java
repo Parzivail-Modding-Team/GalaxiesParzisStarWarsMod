@@ -5,6 +5,7 @@ import com.parzivail.toolchain.maven.ToolchainMavenRepositories;
 import com.parzivail.toolchain.model.ModuleSpec;
 import com.parzivail.toolchain.path.ModulePaths;
 
+import com.parzivail.toolchain.path.ToolchainPaths;
 import io.github.wasabithumb.jtoml.JToml;
 import io.github.wasabithumb.jtoml.document.TomlDocument;
 import io.github.wasabithumb.jtoml.key.TomlKey;
@@ -26,11 +27,6 @@ import java.util.List;
 public final class ToolchainProjectConfigLoader
 {
 	/**
-	 * The tracked configuration file name.
-	 */
-	public static final String CONFIG_FILE_NAME = "toolchain.toml";
-
-	/**
 	 * The shared TOML reader.
 	 */
 	private final JToml _toml;
@@ -46,13 +42,12 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Loads the tracked toolchain configuration from one project root.
 	 *
-	 * @param projectRoot the tracked host project root
 	 * @return the loaded project configuration
 	 * @throws IOException if the configuration cannot be read
 	 */
-	public ToolchainProjectConfig load(Path projectRoot) throws IOException
+	public ToolchainProjectConfig load() throws IOException
 	{
-		Path configPath = projectRoot.resolve(CONFIG_FILE_NAME);
+		Path configPath = ToolchainPaths.CONFIG_FILE;
 
 		if (!Files.isRegularFile(configPath))
 		{

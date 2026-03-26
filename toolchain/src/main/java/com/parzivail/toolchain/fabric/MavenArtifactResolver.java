@@ -1,7 +1,7 @@
 package com.parzivail.toolchain.fabric;
 
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
-import com.parzivail.toolchain.mojang.MojangPaths;
+import com.parzivail.toolchain.path.ToolchainPaths;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,17 +19,11 @@ public final class MavenArtifactResolver
 	private final MojangMetadataClient _downloadClient;
 
 	/**
-	 * The local Maven-style cache root.
-	 */
-	private final Path _cacheRoot;
-
-	/**
 	 * Creates a new resolver rooted at the toolchain work cache.
 	 */
 	public MavenArtifactResolver()
 	{
 		_downloadClient = new MojangMetadataClient();
-		_cacheRoot = new MojangPaths().workRoot().resolve("cache").resolve("maven");
 	}
 
 	/**
@@ -64,7 +58,7 @@ public final class MavenArtifactResolver
 	) throws IOException
 	{
 		String repositoryPath = coordinate.repositoryPath(classifier);
-		Path target = _cacheRoot.resolve(repositoryPath);
+		Path target = ToolchainPaths.MAVEN_CACHE_ROOT.resolve(repositoryPath);
 		_downloadClient.download(artifactUri(repositoryUri, repositoryPath), target, refresh);
 		return target;
 	}

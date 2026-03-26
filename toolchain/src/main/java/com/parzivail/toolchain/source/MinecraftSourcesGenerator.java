@@ -3,6 +3,7 @@ package com.parzivail.toolchain.source;
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadataLibrary;
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.util.ToolchainLog;
 
 import net.fabricmc.fernflower.api.IFabricJavadocProvider;
@@ -157,7 +158,7 @@ public final class MinecraftSourcesGenerator
 				continue;
 			}
 
-			Path target = _mojangClient.paths().libraryFile(library.downloads().artifact().path());
+			Path target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
 			_mojangClient.download(java.net.URI.create(library.downloads().artifact().url()), target, refresh);
 			libraries.add(target);
 		}

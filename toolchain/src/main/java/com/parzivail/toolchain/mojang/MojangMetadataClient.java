@@ -3,6 +3,7 @@ package com.parzivail.toolchain.mojang;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.util.HostArchitecture;
 import com.parzivail.toolchain.util.HostPlatform;
 import com.parzivail.toolchain.mojang.model.MojangVersionManifest;
@@ -79,11 +80,6 @@ public final class MojangMetadataClient
 	private final HttpClient _httpClient;
 
 	/**
-	 * The local toolchain cache paths.
-	 */
-	private final MojangPaths _paths;
-
-	/**
 	 * Creates a metadata client with default runtime services.
 	 */
 	public MojangMetadataClient()
@@ -92,17 +88,6 @@ public final class MojangMetadataClient
 		_httpClient = HttpClient.newBuilder()
 		                        .connectTimeout(REQUEST_TIMEOUT)
 		                        .build();
-		_paths = new MojangPaths();
-	}
-
-	/**
-	 * Gets the cache path helper used by the metadata client.
-	 *
-	 * @return the cache path helper
-	 */
-	public MojangPaths paths()
-	{
-		return _paths;
 	}
 
 	/**
@@ -115,11 +100,11 @@ public final class MojangMetadataClient
 	public MojangVersionManifest getVersionManifest(boolean refresh) throws IOException
 	{
 		return readCachedJson(
-			VERSION_MANIFEST_URI,
-			_paths.versionManifestFile(),
-			null,
-			MojangVersionManifest.class,
-			refresh
+				VERSION_MANIFEST_URI,
+				ToolchainPaths.MOJANG_VERSION_MANIFEST_FILE,
+				null,
+				MojangVersionManifest.class,
+				refresh
 		);
 	}
 
@@ -155,11 +140,11 @@ public final class MojangMetadataClient
 		MojangVersionManifestEntry version = getVersion(versionId, refresh);
 
 		return readCachedJson(
-			URI.create(version.url()),
-			_paths.versionMetadataFile(versionId),
-			version.sha1(),
-			MojangVersionMetadata.class,
-			refresh
+				URI.create(version.url()),
+				ToolchainPaths.mojangVersionMetadataFile(versionId),
+				version.sha1(),
+				MojangVersionMetadata.class,
+				refresh
 		);
 	}
 
@@ -174,7 +159,7 @@ public final class MojangMetadataClient
 	public Path downloadClientJar(String versionId, boolean refresh) throws IOException
 	{
 		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
-		Path target = _paths.clientJarFile(versionId);
+		Path target = ToolchainPaths.mojangClientJarFile(versionId);
 		ensureCached(
 			URI.create(metadata.downloads().client().url()),
 			target,
@@ -206,7 +191,7 @@ public final class MojangMetadataClient
 			throw new IOException("Minecraft " + versionId + " does not expose a server download");
 		}
 
-		Path target = _paths.serverJarFile(versionId);
+		Path target = ToolchainPaths.mojangServerJarFile(versionId);
 		ensureCached(
 			URI.create(metadata.downloads().server().url()),
 			target,
@@ -232,7 +217,7 @@ public final class MojangMetadataClient
 	 */
 	public List<Path> extractBundledServerLibraries(String versionId, boolean refresh) throws IOException
 	{
-		Path bundledServerJar = _paths.serverJarFile(versionId);
+		Path bundledServerJar = ToolchainPaths.mojangServerJarFile(versionId);
 		List<BundledServerLibrary> libraries = bundledServerLibraries(bundledServerJar);
 
 		if (libraries.isEmpty())
@@ -246,7 +231,7 @@ public final class MojangMetadataClient
 		{
 			for (BundledServerLibrary library : libraries)
 			{
-				Path target = _paths.libraryFile(library.artifactPath());
+				Path target = ToolchainPaths.mojangLibraryFile(library.artifactPath());
 
 				if (refresh || !Files.isRegularFile(target))
 				{
@@ -282,7 +267,7 @@ public final class MojangMetadataClient
 	public Path downloadAssetIndex(String versionId, boolean refresh) throws IOException
 	{
 		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
-		Path target = _paths.assetIndexFile(metadata.assetIndex().id());
+		Path target = ToolchainPaths.mojangAssetIndexFile(metadata.assetIndex().id());
 		ensureCached(
 			URI.create(metadata.assetIndex().url()),
 			target,
@@ -327,7 +312,7 @@ public final class MojangMetadataClient
 			return bundledServerJar;
 		}
 
-		Path extractedServerJar = _paths.extractedServerJarFile(versionId);
+		Path extractedServerJar = ToolchainPaths.mojangExtractedServerJarFile(versionId);
 
 		if (!refresh
 			&& Files.isRegularFile(extractedServerJar)
@@ -460,7 +445,7 @@ public final class MojangMetadataClient
 				continue;
 			}
 
-			Path target = _paths.libraryFile(library.downloads().artifact().path());
+			Path target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
 			ensureCached(
 				URI.create(library.downloads().artifact().url()),
 				target,
@@ -475,8 +460,8 @@ public final class MojangMetadataClient
 		return new RuntimeDownloadResult(
 			libraryCount,
 			assetObjectCount,
-			_paths.librariesRoot(),
-			_paths.assetObjectsRoot()
+			ToolchainPaths.MOJANG_LIBRARIES_ROOT,
+			ToolchainPaths.MOJANG_ASSET_OBJECTS_ROOT
 		);
 	}
 
@@ -619,7 +604,7 @@ public final class MojangMetadataClient
 		for (Map.Entry<String, MojangAssetObject> entry : assetIndex.objects().entrySet())
 		{
 			MojangAssetObject object = entry.getValue();
-			Path target = _paths.assetObjectFile(object.hash());
+			Path target = ToolchainPaths.mojangAssetObjectFile(object.hash());
 
 			if (Files.exists(target) && (!refresh || hasMatchingSha1(target, object.hash())))
 			{

@@ -3,7 +3,8 @@ package com.parzivail.toolchain.fabric;
 import com.parzivail.toolchain.intellij.IntelliJDependencyResolver;
 import com.parzivail.toolchain.intellij.IntelliJModuleNames;
 import com.parzivail.toolchain.intellij.IntelliJRunConfigurationSupport;
-import com.parzivail.toolchain.intellij.IntelliJXmlWriter;
+import com.parzivail.toolchain.path.ToolchainPaths;
+import com.parzivail.toolchain.template.TemplateXmlWriter;
 import com.parzivail.toolchain.model.BuildGraph;
 import com.parzivail.toolchain.model.MavenDependencySpec;
 import com.parzivail.toolchain.model.ModuleAggregationResolver;
@@ -113,12 +114,10 @@ public final class FabricDevLaunchService
 	) throws IOException
 	{
 		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
-		Path toolchainRoot = repository.toolchainRoot();
-		Path repoRoot = repository.projectRoot();
 		VanillaLaunchConfig vanillaLaunch = prepareVanillaLaunch(versionId, refresh, environment, identity);
 		FabricRuntimeArtifacts runtimeArtifacts = resolveFabricRuntimeArtifacts(repository.gradleProperties(), refresh, environment);
 		FabricModuleInjection moduleInjection = resolveModuleInjection(repository, moduleId, refresh, environment);
-		FabricLaunchPaths launchPaths = createLaunchPaths(toolchainRoot, repoRoot, repository.projectName(), versionId, environment);
+		FabricLaunchPaths launchPaths = createLaunchPaths(repository.projectName(), versionId, environment);
 
 		prepareLaunchFiles(versionId, vanillaLaunch, moduleInjection.moduleRoots(), launchPaths, environment);
 		List<String> jvmArgs = buildFabricJvmArgs(
@@ -224,16 +223,15 @@ public final class FabricDevLaunchService
 		}
 
 		BuildGraph graph = repository.buildGraph();
-		Path repoRoot = repository.projectRoot();
 		String projectName = repository.projectName();
 		ModuleSpec rootModule = ModuleAggregationResolver.requireModule(graph, moduleId);
-		List<Path> moduleRoots = resolveOutputRoots(repoRoot, projectName, rootModule, environment);
+		List<Path> moduleRoots = resolveOutputRoots(projectName, rootModule, environment);
 		List<Path> dependencyRoots = new ArrayList<>();
 		List<MavenDependencySpec> runtimeDependencies = new ArrayList<>(rootModule.runtimeDependencies());
 
 		for (ModuleSpec dependencyModule : ModuleAggregationResolver.aggregatedDependencies(graph, moduleId))
 		{
-			dependencyRoots.addAll(resolveOutputRoots(repoRoot, projectName, dependencyModule, environment));
+			dependencyRoots.addAll(resolveOutputRoots(projectName, dependencyModule, environment));
 			runtimeDependencies.addAll(dependencyModule.runtimeDependencies());
 		}
 
@@ -254,14 +252,10 @@ public final class FabricDevLaunchService
 	/**
 	 * Creates the standard path layout for a generated Fabric launch bundle.
 	 *
-	 * @param toolchainRoot the toolchain project root
-	 * @param repoRoot the tracked repository root
 	 * @param versionId the Minecraft version identifier
 	 * @return the derived launch paths
 	 */
 	private FabricLaunchPaths createLaunchPaths(
-		Path toolchainRoot,
-		Path repoRoot,
 		String projectName,
 		String versionId,
 		LaunchEnvironment environment
@@ -269,12 +263,8 @@ public final class FabricDevLaunchService
 	{
 		HostPlatform platform = HostPlatform.current();
 		String platformId = platform.id();
-		Path instanceRoot = toolchainRoot.resolve("work")
-		                               .resolve("instances")
-		                               .resolve(environment.fabricInstanceDirectoryName())
-		                               .resolve(platformId)
-		                               .resolve(versionId);
-		Path configDirectory = instanceRoot.resolve("config");
+		Path instanceRoot = ToolchainPaths.getInstanceRoot(versionId, environment, platform);
+		Path configDirectory = instanceRoot.resolve(ToolchainPaths.INSTANCE_CONFIG_ROOT_NAME);
 
 		return new FabricLaunchPaths(
 			environment,
@@ -284,13 +274,9 @@ public final class FabricDevLaunchService
 			configDirectory.resolve("launch.cfg"),
 			configDirectory.resolve("log4j2-intellij.xml"),
 			instanceRoot.resolve("launch.json"),
-			repoRoot.resolve(".idea")
-			        .resolve("modules")
-			        .resolve("launch")
-			        .resolve("fabric")
+			ToolchainPaths.INTELLIJ_FABRIC_LAUNCH_MODULE_DIRECTORY
 			        .resolve(IntelliJModuleNames.fabricLaunchModuleFileName(projectName, environment.id(), platformId)),
-			repoRoot.resolve(".idea")
-			        .resolve("runConfigurations")
+			ToolchainPaths.INTELLIJ_RUN_CONFIGS_DIRECTORY
 			        .resolve(IntelliJModuleNames.fabricRunConfigurationFileName(environment.id(), platformId))
 		);
 	}
@@ -444,7 +430,7 @@ public final class FabricDevLaunchService
 		values.put("OPTIONAL_ENVIRONMENT_PROPERTIES_SECTION", environmentPropertiesSection(versionId, environment));
 		values.put("ENVIRONMENT_ARGS_SECTION", environmentArgsSection(versionId, vanillaLaunch, environment));
 		String rendered = FileTemplateRenderer.render(
-			"dev/pswg/toolchain/templates/fabric-dev-launch.cfg",
+			"com/parzivail/toolchain/templates/fabric-dev-launch.cfg",
 			values
 		);
 
@@ -570,19 +556,16 @@ public final class FabricDevLaunchService
 	/**
 	 * Resolves the IntelliJ output roots for an injected module.
 	 *
-	 * @param projectRoot the tracked repository root
 	 * @param module the module specification
 	 * @return the ordered output roots
 	 */
 	private List<Path> resolveOutputRoots(
-		Path projectRoot,
 		String projectName,
 		ModuleSpec module,
 		LaunchEnvironment environment
 	)
 	{
 		return FabricModuleOutputResolver.resolveOutputRoots(
-			projectRoot,
 			projectName,
 			module,
 			environment.isClient(),
@@ -611,7 +594,6 @@ public final class FabricDevLaunchService
 		List<Path> runtimeClasspath = IntelliJRunConfigurationSupport.effectiveRuntimeClasspath(fabricLaunch);
 		String generatedPrefix = "fabric-launch-" + launchPaths.environment().id() + "-" + launchPaths.platformId() + "-";
 		IntelliJRunConfigurationSupport.writeLaunchLibraries(
-			repository.projectRoot(),
 			generatedPrefix,
 			runtimeClasspath,
 			_sourceAttachmentResolver,
@@ -619,10 +601,9 @@ public final class FabricDevLaunchService
 			entry -> generatedPrefix + entry.getFileName(),
 			entry -> IntelliJRunConfigurationSupport.libraryMetadataFileName(generatedPrefix + entry.getFileName())
 		);
-		IntelliJXmlWriter.write(
+		TemplateXmlWriter.write(
 			launchPaths.ideaLaunchModulePath(),
 			IntelliJRunConfigurationSupport.createLaunchModuleDocument(
-				repository.projectRoot(),
 				launchPaths.instanceRoot(),
 				launchDependencyModuleNames(repository, moduleInjection, launchPaths.environment()),
 				runtimeClasspath,
@@ -630,22 +611,12 @@ public final class FabricDevLaunchService
 			)
 		);
 		IntelliJRunConfigurationSupport.registerModule(
-			repository.projectRoot(),
 			"$PROJECT_DIR$/.idea/modules/launch/fabric/"
 				+ IntelliJModuleNames.fabricLaunchModuleFileName(
 					repository.projectName(),
 					launchPaths.environment().id(),
 					launchPaths.platformId()
-				),
-			launchPaths.environment().isClient()
-				? List.of(
-					"$PROJECT_DIR$/.idea/modules/launch/fabric/"
-						+ IntelliJModuleNames.fabricLaunchModuleFileName(
-							repository.projectName(),
-							launchPaths.platformId()
-						)
 				)
-				: List.of()
 		);
 	}
 
@@ -720,7 +691,7 @@ public final class FabricDevLaunchService
 			)
 		);
 		String rendered = FileTemplateRenderer.render(
-			"dev/pswg/toolchain/templates/intellij-run-config.xml",
+			"com/parzivail/toolchain/templates/intellij-run-config.xml",
 			values
 		);
 
@@ -770,7 +741,6 @@ public final class FabricDevLaunchService
 		{
 			for (Path dependency : _ideaDependencyResolver.resolveModuleLibraries(
 				graph,
-				repository.projectRoot(),
 				repository.gradleProperties(),
 				refresh,
 				module,

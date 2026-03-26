@@ -11,6 +11,7 @@ import com.parzivail.toolchain.model.SourceSetNames;
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadataLibrary;
+import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.runtime.LaunchEnvironment;
 import com.parzivail.toolchain.util.ToolchainLog;
 
@@ -92,7 +93,6 @@ public final class IntelliJDependencyResolver
 	/**
 	 * Resolves the processor path for module-backed annotation processors.
 	 *
-	 * @param projectRoot the host-project root
 	 * @param projectName the IntelliJ project name
 	 * @param graph the authoritative build graph
 	 * @param module the target module
@@ -102,7 +102,6 @@ public final class IntelliJDependencyResolver
 	 * @throws IOException if external artifacts cannot be resolved
 	 */
 	public List<Path> resolveAnnotationProcessorModulePath(
-		Path projectRoot,
 		String projectName,
 		BuildGraph graph,
 		ModuleSpec module,
@@ -115,15 +114,11 @@ public final class IntelliJDependencyResolver
 		for (String processorId : module.annotationProcessors())
 		{
 			ModuleSpec processorModule = requireModule(graph, processorId);
-			entries.add(projectRoot.resolve("out")
-			                      .resolve("production")
-			                      .resolve(IntelliJModuleNames.sourceSetModuleName(projectName, processorId, SourceSetNames.MAIN)));
+			entries.add(ToolchainPaths.INTELLIJ_OUTPUT_DIRECTORY.resolve(IntelliJModuleNames.sourceSetModuleName(projectName, processorId, SourceSetNames.MAIN)));
 
 			for (String dependencyId : processorModule.dependencies())
 			{
-				entries.add(projectRoot.resolve("out")
-				                      .resolve("production")
-				                      .resolve(IntelliJModuleNames.sourceSetModuleName(projectName, dependencyId, SourceSetNames.MAIN)));
+				entries.add(ToolchainPaths.INTELLIJ_OUTPUT_DIRECTORY.resolve(IntelliJModuleNames.sourceSetModuleName(projectName, dependencyId, SourceSetNames.MAIN)));
 			}
 
 			entries.addAll(resolveExternalDependencies(processorModule.compileDependencies(), gradleProperties, refresh));
@@ -180,7 +175,6 @@ public final class IntelliJDependencyResolver
 	 */
 	public Set<Path> resolveModuleLibraries(
 		BuildGraph graph,
-		Path projectRoot,
 		Properties gradleProperties,
 		boolean refresh,
 		ModuleSpec module,
@@ -195,7 +189,6 @@ public final class IntelliJDependencyResolver
 		dependencies.addAll(expandIntelliJLibraryArtifacts(
 			resolveImplicitCompileDependencies(
 				graph,
-				projectRoot,
 				gradleProperties,
 				refresh,
 				module,
@@ -226,7 +219,6 @@ public final class IntelliJDependencyResolver
 	 */
 	public Set<Path> resolveProjectLibraries(
 		BuildGraph graph,
-		Path projectRoot,
 		Properties gradleProperties,
 		boolean refresh
 	) throws IOException
@@ -236,8 +228,8 @@ public final class IntelliJDependencyResolver
 		for (ModuleSpec module : graph.modules())
 		{
 			ToolchainLog.info("idea", "Resolving libraries for module " + module.id());
-			resolvedArtifacts.addAll(resolveModuleLibraries(graph, projectRoot, gradleProperties, refresh, module, false));
-			resolvedArtifacts.addAll(resolveModuleLibraries(graph, projectRoot, gradleProperties, refresh, module, true));
+			resolvedArtifacts.addAll(resolveModuleLibraries(graph, gradleProperties, refresh, module, false));
+			resolvedArtifacts.addAll(resolveModuleLibraries(graph, gradleProperties, refresh, module, true));
 		}
 
 		return resolvedArtifacts;
@@ -274,7 +266,6 @@ public final class IntelliJDependencyResolver
 	 */
 	private Set<Path> resolveImplicitCompileDependencies(
 		BuildGraph graph,
-		Path projectRoot,
 		Properties gradleProperties,
 		boolean refresh,
 		ModuleSpec module,
@@ -292,7 +283,7 @@ public final class IntelliJDependencyResolver
 		Set<Path> fabricDependencies = resolveFabricCompileDependencies(gradleProperties.getProperty("loader_version"), refresh);
 		Set<Path> modArtifacts = new LinkedHashSet<>(declaredCompileDependencies);
 		modArtifacts.addAll(fabricDependencies);
-		Set<Path> localFabricModJsons = collectLocalFabricModJsons(graph, projectRoot, module);
+		Set<Path> localFabricModJsons = collectLocalFabricModJsons(graph, module);
 		Set<Path> minecraftDependencies = resolveMinecraftCompileDependencies(
 			graph.minecraftVersion(),
 			refresh,
@@ -365,7 +356,7 @@ public final class IntelliJDependencyResolver
 				continue;
 			}
 
-			Path target = _mojangClient.paths().libraryFile(library.downloads().artifact().path());
+			Path target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
 			_mojangClient.download(
 				java.net.URI.create(library.downloads().artifact().url()),
 				target,
@@ -384,18 +375,16 @@ public final class IntelliJDependencyResolver
 	 * module-specific Minecraft compile jar.
 	 *
 	 * @param graph the authoritative build graph
-	 * @param projectRoot the tracked repository root
 	 * @param module the module currently being compiled
 	 * @return the local Fabric mod metadata files
 	 */
 	private Set<Path> collectLocalFabricModJsons(
 		BuildGraph graph,
-		Path projectRoot,
 		ModuleSpec module
 	)
 	{
 		Set<Path> paths = new LinkedHashSet<>();
-		collectLocalFabricModJsons(graph, projectRoot, module.id(), paths, new LinkedHashSet<>());
+		collectLocalFabricModJsons(graph, module.id(), paths, new LinkedHashSet<>());
 		return paths;
 	}
 
@@ -403,14 +392,12 @@ public final class IntelliJDependencyResolver
 	 * Recursively collects local Fabric mod metadata files from a module dependency chain.
 	 *
 	 * @param graph the authoritative build graph
-	 * @param projectRoot the tracked repository root
 	 * @param moduleId the module identifier to inspect
 	 * @param paths the accumulated metadata paths
 	 * @param visited the visited module identifiers
 	 */
 	private void collectLocalFabricModJsons(
 		BuildGraph graph,
-		Path projectRoot,
 		String moduleId,
 		Set<Path> paths,
 		Set<String> visited
@@ -425,12 +412,12 @@ public final class IntelliJDependencyResolver
 
 		if (candidate.fabricModJson() != null)
 		{
-			paths.add(projectRoot.resolve(candidate.fabricModJson()));
+			paths.add(ToolchainPaths.PROJECT_ROOT.resolve(candidate.fabricModJson()));
 		}
 
 		for (String dependencyId : candidate.dependencies())
 		{
-			collectLocalFabricModJsons(graph, projectRoot, dependencyId, paths, visited);
+			collectLocalFabricModJsons(graph, dependencyId, paths, visited);
 		}
 	}
 
