@@ -49,24 +49,15 @@ public enum HostArchitecture
 	 */
 	public static HostArchitecture current()
 	{
-		String osArch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
+		var osArch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
 
-		if ("amd64".equals(osArch) || "x86_64".equals(osArch))
+		return switch (osArch)
 		{
-			return X86_64;
-		}
-
-		if ("x86".equals(osArch) || "i386".equals(osArch))
-		{
-			return X86;
-		}
-
-		if ("aarch64".equals(osArch) || "arm64".equals(osArch))
-		{
-			return ARM64;
-		}
-
-		return UNKNOWN;
+			case "amd64", "x86_64" -> X86_64;
+			case "x86", "i386" -> X86;
+			case "aarch64", "arm64" -> ARM64;
+			default -> UNKNOWN;
+		};
 	}
 
 	/**

@@ -6,7 +6,7 @@ package com.parzivail.toolchain.mojang.model;
  * @param artifact the standard artifact download
  */
 public record MojangVersionMetadataLibraryDownloads(
-	MojangVersionMetadataDownload artifact
+		MojangVersionMetadataDownload artifact
 )
 {
 }

@@ -1,34 +1,24 @@
 package com.parzivail.toolchain.runtime;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.JsonNode;
-
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
 import com.parzivail.toolchain.mojang.model.MojangRule;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
-import com.parzivail.toolchain.mojang.model.MojangVersionMetadataLibrary;
 import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.template.FileTemplateRenderer;
 import com.parzivail.toolchain.template.XmlEscaper;
 import com.parzivail.toolchain.util.HostPlatform;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -69,70 +59,72 @@ public final class VanillaLaunchService
 	/**
 	 * Prepares the shared Mojang runtime baseline for one environment.
 	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force fresh runtime downloads
+	 * @param versionId   the Minecraft version identifier
+	 * @param refresh     whether to force fresh runtime downloads
 	 * @param environment the launch environment
-	 * @param identity the requested client identity
+	 * @param identity    the requested client identity
+	 *
 	 * @return the prepared launch configuration
+	 *
 	 * @throws IOException if preparation fails
 	 */
 	public VanillaLaunchConfig prepareRuntime(
-		String versionId,
-		boolean refresh,
-		LaunchEnvironment environment,
-		LaunchIdentity identity
+			String versionId,
+			boolean refresh,
+			LaunchEnvironment environment,
+			LaunchIdentity identity
 	) throws IOException
 	{
-		MojangVersionMetadata metadata = prepareVanillaRuntime(versionId, refresh, environment);
-		VanillaLaunchPaths launchPaths = createLaunchPaths(versionId, environment);
+		var metadata = prepareVanillaRuntime(versionId, refresh, environment);
+		var launchPaths = createLaunchPaths(versionId, environment);
 		prepareLaunchDirectories(launchPaths);
 		List<Path> bundledServerLibraries = environment.isServer()
-			? _mojangClient.extractBundledServerLibraries(versionId, refresh)
-			: List.of();
-		List<Path> classpath = buildClasspath(versionId, metadata, environment, bundledServerLibraries);
+		                                    ? _mojangClient.extractBundledServerLibraries(versionId, refresh)
+		                                    : List.of();
+		var classpath = buildClasspath(versionId, metadata, environment, bundledServerLibraries);
 
 		if (environment.isClient())
 		{
 			extractNativeLibraries(metadata, launchPaths.nativesDirectory());
 		}
 
-		Path loggingConfiguration = prepareLoggingConfiguration(
-			launchPaths.instanceRoot(),
-			launchPaths.gameDirectory(),
-			metadata,
-			refresh
+		var loggingConfiguration = prepareLoggingConfiguration(
+				launchPaths.instanceRoot(),
+				launchPaths.gameDirectory(),
+				metadata,
+				refresh
 		);
-		LaunchIdentity effectiveIdentity = environment.effectiveIdentity(identity);
-		Map<String, String> variables = buildLaunchVariables(
-			versionId,
-			metadata,
-			launchPaths.gameDirectory(),
-			launchPaths.nativesDirectory(),
-			classpath,
-			loggingConfiguration,
-			effectiveIdentity
+		var effectiveIdentity = environment.effectiveIdentity(identity);
+		var variables = buildLaunchVariables(
+				versionId,
+				metadata,
+				launchPaths.gameDirectory(),
+				launchPaths.nativesDirectory(),
+				classpath,
+				loggingConfiguration,
+				effectiveIdentity
 		);
-		List<String> jvmArgs = environment.isClient()
-			? buildJvmArgs(metadata, variables, loggingConfiguration)
-			: buildServerJvmArgs(metadata, variables);
+		var jvmArgs = environment.isClient()
+		              ? buildJvmArgs(metadata, variables, loggingConfiguration)
+		              : buildServerJvmArgs(metadata, variables);
 		List<String> gameArgs = environment.isClient()
-			? buildGameArgs(metadata, variables)
-			: List.of();
+		                        ? buildGameArgs(metadata, variables)
+		                        : List.of();
 
 		return new VanillaLaunchConfig(
-			versionId,
-			// TODO: can the server main be part of the metadata instead of having a special case?
-			environment.isClient() ? metadata.mainClass() : "net.minecraft.server.Main",
-			findJavaExecutable(),
-			launchPaths.gameDirectory(),
-			launchPaths.gameDirectory(),
-			ToolchainPaths.MOJANG_ASSETS_ROOT,
-			metadata.assetIndex().id(),
-			launchPaths.nativesDirectory(),
-			loggingConfiguration,
-			classpath,
-			jvmArgs,
-			gameArgs
+				versionId,
+				// TODO: can the server main be part of the metadata instead of having a special case?
+				environment.isClient() ? metadata.mainClass() : "net.minecraft.server.Main",
+				findJavaExecutable(),
+				launchPaths.gameDirectory(),
+				launchPaths.gameDirectory(),
+				ToolchainPaths.MOJANG_ASSETS_ROOT,
+				metadata.assetIndex().id(),
+				launchPaths.nativesDirectory(),
+				loggingConfiguration,
+				classpath,
+				jvmArgs,
+				gameArgs
 		);
 	}
 
@@ -140,17 +132,19 @@ public final class VanillaLaunchService
 	 * Resolves the vanilla runtime inputs required before launch config assembly.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force fresh downloads
+	 * @param refresh   whether to force fresh downloads
+	 *
 	 * @return the resolved Mojang version metadata
+	 *
 	 * @throws IOException if the runtime cannot be prepared
 	 */
 	private MojangVersionMetadata prepareVanillaRuntime(
-		String versionId,
-		boolean refresh,
-		LaunchEnvironment environment
+			String versionId,
+			boolean refresh,
+			LaunchEnvironment environment
 	) throws IOException
 	{
-		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(versionId, refresh);
+		var metadata = _mojangClient.getVersionMetadata(versionId, refresh);
 
 		if (environment.isClient())
 		{
@@ -168,16 +162,17 @@ public final class VanillaLaunchService
 	 * Creates the standard path layout for the shared Mojang runtime baseline.
 	 *
 	 * @param versionId the Minecraft version identifier
+	 *
 	 * @return the derived launch paths
 	 */
 	private VanillaLaunchPaths createLaunchPaths(String versionId, LaunchEnvironment environment)
 	{
-		Path instanceRoot = ToolchainPaths.getInstanceRoot(versionId, environment, HostPlatform.current());
+		var instanceRoot = ToolchainPaths.getInstanceRoot(versionId, environment, HostPlatform.current());
 
 		return new VanillaLaunchPaths(
-			instanceRoot,
-			instanceRoot.resolve("game"),
-			instanceRoot.resolve("natives")
+				instanceRoot,
+				instanceRoot.resolve("game"),
+				instanceRoot.resolve("natives")
 		);
 	}
 
@@ -185,6 +180,7 @@ public final class VanillaLaunchService
 	 * Creates the directories needed by a generated vanilla launch bundle.
 	 *
 	 * @param launchPaths the generated path layout
+	 *
 	 * @throws IOException if any directory cannot be created
 	 */
 	private void prepareLaunchDirectories(VanillaLaunchPaths launchPaths) throws IOException
@@ -197,12 +193,13 @@ public final class VanillaLaunchService
 	 * Downloads the runtime libraries declared by version metadata.
 	 *
 	 * @param metadata the resolved version metadata
-	 * @param refresh whether to revalidate cached artifacts
+	 * @param refresh  whether to revalidate cached artifacts
+	 *
 	 * @throws IOException if any declared library cannot be downloaded
 	 */
 	private void downloadLibraries(MojangVersionMetadata metadata, boolean refresh) throws IOException
 	{
-		for (MojangVersionMetadataLibrary library : metadata.libraries())
+		for (var library : metadata.libraries())
 		{
 			if (!_mojangClient.isLibraryAllowed(library))
 			{
@@ -214,57 +211,28 @@ public final class VanillaLaunchService
 				continue;
 			}
 
-			Path target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
+			var target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
 			_mojangClient.download(
-				URI.create(library.downloads().artifact().url()),
-				target,
-				refresh
+					URI.create(library.downloads().artifact().url()),
+					target,
+					refresh
 			);
 		}
 	}
 
 	/**
-	 * Builds the variable map used by Mojang argument templates.
-	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param loggingConfiguration the optional logging configuration path
-	 * @param classpath the resolved runtime classpath
-	 * @param launchPaths the generated path layout
-	 * @param metadata the resolved Mojang version metadata
-	 * @return the resolved variable map
-	 */
-	private Map<String, String> buildLaunchVariables(
-		String versionId,
-		Path loggingConfiguration,
-		List<Path> classpath,
-		VanillaLaunchPaths launchPaths,
-		MojangVersionMetadata metadata,
-		LaunchIdentity identity
-	)
-	{
-		return buildLaunchVariables(
-			versionId,
-			metadata,
-			launchPaths.gameDirectory(),
-			launchPaths.nativesDirectory(),
-			classpath,
-			loggingConfiguration,
-			identity
-		);
-	}
-
-	/**
 	 * Builds the JVM argument list from Mojang version metadata.
 	 *
-	 * @param metadata the resolved Mojang version metadata
-	 * @param variables the argument substitution variables
+	 * @param metadata             the resolved Mojang version metadata
+	 * @param variables            the argument substitution variables
 	 * @param loggingConfiguration the optional logging configuration path
+	 *
 	 * @return the resolved JVM arguments
 	 */
 	private List<String> buildJvmArgs(
-		MojangVersionMetadata metadata,
-		Map<String, String> variables,
-		Path loggingConfiguration
+			MojangVersionMetadata metadata,
+			Map<String, String> variables,
+			Path loggingConfiguration
 	)
 	{
 		List<String> jvmArgs = new ArrayList<>();
@@ -282,8 +250,9 @@ public final class VanillaLaunchService
 	/**
 	 * Builds the game argument list from Mojang version metadata.
 	 *
-	 * @param metadata the resolved Mojang version metadata
+	 * @param metadata  the resolved Mojang version metadata
 	 * @param variables the argument substitution variables
+	 *
 	 * @return the resolved game arguments
 	 */
 	private List<String> buildGameArgs(MojangVersionMetadata metadata, Map<String, String> variables)
@@ -298,15 +267,16 @@ public final class VanillaLaunchService
 	 * baseline therefore keeps the shared `default-user-jvm` arguments and lets the Fabric wrapper
 	 * add the dedicated-server bootstrap properties separately.
 	 *
-	 * @param metadata the resolved Mojang version metadata
+	 * @param metadata  the resolved Mojang version metadata
 	 * @param variables the argument substitution variables
+	 *
 	 * @return the resolved JVM arguments
 	 */
 	private List<String> buildServerJvmArgs(MojangVersionMetadata metadata, Map<String, String> variables)
 	{
 		return evaluateArguments(
-			metadata.arguments() == null ? null : metadata.arguments().path("default-user-jvm"),
-			variables
+				metadata.arguments() == null ? null : metadata.arguments().path("default-user-jvm"),
+				variables
 		);
 	}
 
@@ -314,19 +284,20 @@ public final class VanillaLaunchService
 	 * Builds the full runtime classpath for a selected Mojang version.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param metadata the resolved version metadata
+	 * @param metadata  the resolved version metadata
+	 *
 	 * @return the ordered runtime classpath
 	 */
 	private List<Path> buildClasspath(
-		String versionId,
-		MojangVersionMetadata metadata,
-		LaunchEnvironment environment,
-		List<Path> bundledServerLibraries
+			String versionId,
+			MojangVersionMetadata metadata,
+			LaunchEnvironment environment,
+			List<Path> bundledServerLibraries
 	)
 	{
 		Set<Path> classpath = new LinkedHashSet<>();
 
-		for (MojangVersionMetadataLibrary library : metadata.libraries())
+		for (var library : metadata.libraries())
 		{
 			if (!_mojangClient.isLibraryAllowed(library))
 			{
@@ -347,7 +318,7 @@ public final class VanillaLaunchService
 		}
 
 		classpath.add(
-			environment.isClient()
+				environment.isClient()
 				? ToolchainPaths.mojangClientJarFile(versionId)
 				: ToolchainPaths.mojangExtractedServerJarFile(versionId)
 		);
@@ -357,8 +328,9 @@ public final class VanillaLaunchService
 	/**
 	 * Extracts native libraries from downloaded native jars into the chosen natives directory.
 	 *
-	 * @param metadata the resolved version metadata
+	 * @param metadata         the resolved version metadata
 	 * @param nativesDirectory the target natives directory
+	 *
 	 * @throws IOException if extraction fails
 	 */
 	private void extractNativeLibraries(MojangVersionMetadata metadata, Path nativesDirectory) throws IOException
@@ -366,7 +338,7 @@ public final class VanillaLaunchService
 		Files.createDirectories(nativesDirectory);
 		Set<Path> nativeJars = new LinkedHashSet<>();
 
-		for (MojangVersionMetadataLibrary library : metadata.libraries())
+		for (var library : metadata.libraries())
 		{
 			if (!_mojangClient.isLibraryAllowed(library))
 			{
@@ -386,10 +358,10 @@ public final class VanillaLaunchService
 			nativeJars.add(ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path()));
 		}
 
-		for (Path nativeJar : nativeJars)
+		for (var nativeJar : nativeJars)
 		{
-			try (InputStream inputStream = Files.newInputStream(nativeJar);
-			     ZipInputStream zipInputStream = new ZipInputStream(inputStream))
+			try (var inputStream = Files.newInputStream(nativeJar);
+			     var zipInputStream = new ZipInputStream(inputStream))
 			{
 				ZipEntry entry;
 
@@ -400,20 +372,20 @@ public final class VanillaLaunchService
 						continue;
 					}
 
-					String fileName = Path.of(entry.getName()).getFileName().toString();
+					var fileName = Path.of(entry.getName()).getFileName().toString();
 
 					if (!isNativeLibrary(fileName))
 					{
 						continue;
 					}
 
-					Path target = nativesDirectory.resolve(fileName);
+					var target = nativesDirectory.resolve(fileName);
 
-					try (OutputStream outputStream = Files.newOutputStream(
-						target,
-						StandardOpenOption.CREATE,
-						StandardOpenOption.TRUNCATE_EXISTING,
-						StandardOpenOption.WRITE
+					try (var outputStream = Files.newOutputStream(
+							target,
+							StandardOpenOption.CREATE,
+							StandardOpenOption.TRUNCATE_EXISTING,
+							StandardOpenOption.WRITE
 					))
 					{
 						zipInputStream.transferTo(outputStream);
@@ -427,37 +399,39 @@ public final class VanillaLaunchService
 	 * Downloads the optional logging configuration file for a version.
 	 *
 	 * @param metadata the resolved version metadata
-	 * @param refresh whether to force a fresh download
+	 * @param refresh  whether to force a fresh download
+	 *
 	 * @return the cached logging configuration path, or {@code null}
+	 *
 	 * @throws IOException if the logging configuration cannot be downloaded
 	 */
 	private Path prepareLoggingConfiguration(
-		Path instanceRoot,
-		Path gameDirectory,
-		MojangVersionMetadata metadata,
-		boolean refresh
+			Path instanceRoot,
+			Path gameDirectory,
+			MojangVersionMetadata metadata,
+			boolean refresh
 	) throws IOException
 	{
-		Path generatedConfiguration = instanceRoot.resolve("config").resolve("log4j2-intellij.xml");
+		var generatedConfiguration = instanceRoot.resolve("config").resolve("log4j2-intellij.xml");
 		Files.createDirectories(generatedConfiguration.getParent());
-		String latestLog = xmlPath(gameDirectory.resolve("logs").resolve("latest.log"));
-		String archivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("%d{yyyy-MM-dd}-%i.log.gz"));
-		String debugLog = xmlPath(gameDirectory.resolve("logs").resolve("debug.log"));
-		String debugArchivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("debug-%i.log.gz"));
+		var latestLog = xmlPath(gameDirectory.resolve("logs").resolve("latest.log"));
+		var archivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("%d{yyyy-MM-dd}-%i.log.gz"));
+		var debugLog = xmlPath(gameDirectory.resolve("logs").resolve("debug.log"));
+		var debugArchivedLogs = xmlPath(gameDirectory.resolve("logs").resolve("debug-%i.log.gz"));
 		Map<String, String> templateValues = new LinkedHashMap<>();
 		templateValues.put("LATEST_LOG", latestLog);
 		templateValues.put("ARCHIVED_LOGS", archivedLogs);
 		templateValues.put("DEBUG_LOG", debugLog);
 		templateValues.put("DEBUG_ARCHIVED_LOGS", debugArchivedLogs);
-		String xml = FileTemplateRenderer.render(
-			"com/parzivail/toolchain/templates/log4j2-intellij.xml",
-			templateValues
+		var xml = FileTemplateRenderer.render(
+				"com/parzivail/toolchain/templates/log4j2-intellij.xml",
+				templateValues
 		);
 		Files.writeString(generatedConfiguration, xml);
 
 		if (metadata.logging() != null && metadata.logging().client() != null && metadata.logging().client().file() != null)
 		{
-			Path target = ToolchainPaths.MOJANG_LOGGING_ROOT.resolve(metadata.logging().client().file().id());
+			var target = ToolchainPaths.MOJANG_LOGGING_ROOT.resolve(metadata.logging().client().file().id());
 			_mojangClient.download(URI.create(metadata.logging().client().file().url()), target, refresh);
 		}
 
@@ -467,26 +441,27 @@ public final class VanillaLaunchService
 	/**
 	 * Builds the substitution variables used by Mojang argument templates.
 	 *
-	 * @param versionId the Minecraft version identifier
-	 * @param metadata the resolved version metadata
-	 * @param gameDirectory the game directory
-	 * @param nativesDirectory the natives directory
-	 * @param classpath the resolved classpath
+	 * @param versionId            the Minecraft version identifier
+	 * @param metadata             the resolved version metadata
+	 * @param gameDirectory        the game directory
+	 * @param nativesDirectory     the natives directory
+	 * @param classpath            the resolved classpath
 	 * @param loggingConfiguration the optional logging configuration path
+	 *
 	 * @return the resolved variable map
 	 */
 	private Map<String, String> buildLaunchVariables(
-		String versionId,
-		MojangVersionMetadata metadata,
-		Path gameDirectory,
-		Path nativesDirectory,
-		List<Path> classpath,
-		Path loggingConfiguration,
-		LaunchIdentity identity
+			String versionId,
+			MojangVersionMetadata metadata,
+			Path gameDirectory,
+			Path nativesDirectory,
+			List<Path> classpath,
+			Path loggingConfiguration,
+			LaunchIdentity identity
 	)
 	{
 		Map<String, String> variables = new HashMap<>();
-		String classpathSeparator = System.getProperty("path.separator");
+		var classpathSeparator = File.pathSeparator;
 
 		variables.put("auth_player_name", identity.username());
 		variables.put("version_name", versionId);
@@ -515,7 +490,8 @@ public final class VanillaLaunchService
 	 * Evaluates a Mojang arguments array against the default launch context.
 	 *
 	 * @param argumentsNode the raw arguments node
-	 * @param variables the substitution variables
+	 * @param variables     the substitution variables
+	 *
 	 * @return the resolved argument list
 	 */
 	private List<String> evaluateArguments(JsonNode argumentsNode, Map<String, String> variables)
@@ -527,9 +503,9 @@ public final class VanillaLaunchService
 			return resolved;
 		}
 
-		ArrayNode arrayNode = (ArrayNode) argumentsNode;
+		var arrayNode = (ArrayNode)argumentsNode;
 
-		for (JsonNode entry : arrayNode)
+		for (var entry : arrayNode)
 		{
 			if (entry.isTextual())
 			{
@@ -547,7 +523,7 @@ public final class VanillaLaunchService
 				continue;
 			}
 
-			JsonNode valueNode = entry.path("value");
+			var valueNode = entry.path("value");
 
 			if (valueNode.isTextual())
 			{
@@ -557,7 +533,7 @@ public final class VanillaLaunchService
 
 			if (valueNode.isArray())
 			{
-				for (JsonNode valueEntry : valueNode)
+				for (var valueEntry : valueNode)
 				{
 					if (valueEntry.isTextual())
 					{
@@ -574,6 +550,7 @@ public final class VanillaLaunchService
 	 * Checks whether a Mojang raw argument rule set is allowed for the current runtime.
 	 *
 	 * @param rulesNode the raw rules node
+	 *
 	 * @return {@code true} if the entry should be included
 	 */
 	private boolean isAllowed(JsonNode rulesNode)
@@ -583,9 +560,9 @@ public final class VanillaLaunchService
 			return true;
 		}
 
-		boolean allowed = false;
+		var allowed = false;
 
-		for (JsonNode ruleNode : rulesNode)
+		for (var ruleNode : rulesNode)
 		{
 			if (!ruleNode.isObject())
 			{
@@ -597,7 +574,7 @@ public final class VanillaLaunchService
 				continue;
 			}
 
-			MojangRule rule = _mapper.convertValue(ruleNode, MojangRule.class);
+			var rule = _mapper.convertValue(ruleNode, MojangRule.class);
 
 			if (_mojangClient.matchesRule(rule))
 			{
@@ -618,15 +595,16 @@ public final class VanillaLaunchService
 	/**
 	 * Applies variable substitution to a Mojang argument template string.
 	 *
-	 * @param value the raw template string
+	 * @param value     the raw template string
 	 * @param variables the variable map
+	 *
 	 * @return the substituted value
 	 */
 	private String substitute(String value, Map<String, String> variables)
 	{
-		String substituted = value;
+		var substituted = value;
 
-		for (Map.Entry<String, String> entry : variables.entrySet())
+		for (var entry : variables.entrySet())
 		{
 			substituted = substituted.replace("${" + entry.getKey() + "}", entry.getValue());
 		}
@@ -637,14 +615,14 @@ public final class VanillaLaunchService
 	/**
 	 * Derived path layout for a shared Mojang client runtime baseline.
 	 *
-	 * @param instanceRoot the shared runtime instance root
-	 * @param gameDirectory the game directory
+	 * @param instanceRoot     the shared runtime instance root
+	 * @param gameDirectory    the game directory
 	 * @param nativesDirectory the natives extraction directory
 	 */
 	private record VanillaLaunchPaths(
-		Path instanceRoot,
-		Path gameDirectory,
-		Path nativesDirectory
+			Path instanceRoot,
+			Path gameDirectory,
+			Path nativesDirectory
 	)
 	{
 	}
@@ -663,6 +641,7 @@ public final class VanillaLaunchService
 	 * Escapes a filesystem path for safe use in XML attributes.
 	 *
 	 * @param path the path to escape
+	 *
 	 * @return the escaped path string
 	 */
 	private String xmlPath(Path path)
@@ -674,12 +653,12 @@ public final class VanillaLaunchService
 	 * Checks whether a file is a native library candidate.
 	 *
 	 * @param fileName the file name to inspect
+	 *
 	 * @return {@code true} if the file should be extracted as a native library
 	 */
 	private boolean isNativeLibrary(String fileName)
 	{
-		String lower = fileName.toLowerCase(Locale.ROOT);
+		var lower = fileName.toLowerCase(Locale.ROOT);
 		return lower.endsWith(".dll") || lower.endsWith(".so") || lower.endsWith(".dylib") || lower.endsWith(".jnilib");
 	}
-
 }

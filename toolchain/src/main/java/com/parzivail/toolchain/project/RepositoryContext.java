@@ -3,13 +3,8 @@ package com.parzivail.toolchain.project;
 import com.parzivail.toolchain.config.ToolchainProjectConfig;
 import com.parzivail.toolchain.config.ToolchainProjectConfigLoader;
 import com.parzivail.toolchain.model.BuildGraph;
-import com.parzivail.toolchain.path.ToolchainPaths;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Properties;
 
 /**
  * Discovers and caches the tracked host-project metadata that the standalone toolchain consumes.
@@ -25,9 +20,9 @@ public final class RepositoryContext
 	private final String _projectName;
 
 	/**
-	 * The tracked repository Gradle properties.
+	 * The Fabric Loader version.
 	 */
-	private final Properties _gradleProperties;
+	private final String _fabricLoaderVersion;
 
 	/**
 	 * The authoritative configured build graph.
@@ -37,15 +32,11 @@ public final class RepositoryContext
 	/**
 	 * Creates a repository context from resolved paths and metadata.
 	 */
-	private RepositoryContext(
-		String projectName,
-		Properties gradleProperties,
-		BuildGraph buildGraph
-	)
+	private RepositoryContext(ToolchainProjectConfig config)
 	{
-		_projectName = projectName;
-		_gradleProperties = gradleProperties;
-		_buildGraph = buildGraph;
+		_projectName = config.projectName();
+		_fabricLoaderVersion = config.fabricLoaderVersion();
+		_buildGraph = config.toBuildGraph();
 	}
 
 	/**
@@ -53,18 +44,12 @@ public final class RepositoryContext
 	 * tracked host-project root.
 	 *
 	 * @return the discovered repository context
+	 *
 	 * @throws IOException if tracked metadata cannot be read
 	 */
-	public static RepositoryContext discoverFromWorkingDirectory() throws IOException
+	public static RepositoryContext load() throws IOException
 	{
-		ToolchainProjectConfig projectConfig = new ToolchainProjectConfigLoader().load();
-		Properties gradleProperties = loadGradleProperties();
-
-		return new RepositoryContext(
-			projectConfig.projectName(),
-			gradleProperties,
-			projectConfig.toBuildGraph()
-		);
+		return new RepositoryContext(new ToolchainProjectConfigLoader().load());
 	}
 
 	/**
@@ -75,16 +60,6 @@ public final class RepositoryContext
 	public String projectName()
 	{
 		return _projectName;
-	}
-
-	/**
-	 * Gets the tracked repository Gradle properties.
-	 *
-	 * @return the Gradle properties
-	 */
-	public Properties gradleProperties()
-	{
-		return _gradleProperties;
 	}
 
 	/**
@@ -108,20 +83,12 @@ public final class RepositoryContext
 	}
 
 	/**
-	 * Loads the tracked repository Gradle properties.
+	 * Gets the tracked Fabric Loader version from the authoritative graph.
 	 *
-	 * @return the parsed Gradle properties
-	 * @throws IOException if the properties file cannot be read
+	 * @return the tracked Fabric Loader version
 	 */
-	public static Properties loadGradleProperties() throws IOException
+	public String loaderVersion()
 	{
-		Properties properties = new Properties();
-
-		try (InputStream inputStream = Files.newInputStream(ToolchainPaths.GRADLE_PROPERTIES_FILE))
-		{
-			properties.load(inputStream);
-		}
-
-		return properties;
+		return _fabricLoaderVersion;
 	}
 }

@@ -8,29 +8,22 @@ import java.util.List;
 /**
  * Text-backed project configuration loaded from the tracked host repository.
  *
- * @param projectId the logical project identifier
- * @param projectName the IntelliJ-facing project name
- * @param minecraftVersion the tracked Minecraft version
+ * @param projectId                  the logical project identifier
+ * @param projectName                the IntelliJ-facing project name
+ * @param minecraftVersion           the tracked Minecraft version
+ * @param fabricLoaderVersion        the tracked Fabric loader version
  * @param defaultDevelopmentModuleId the default injected development module
- * @param modules the configured modules
+ * @param modules                    the configured modules
  */
 public record ToolchainProjectConfig(
-	String projectId,
-	String projectName,
-	String minecraftVersion,
-	String defaultDevelopmentModuleId,
-	List<ModuleSpec> modules
+		String projectId,
+		String projectName,
+		String minecraftVersion,
+		String fabricLoaderVersion,
+		String defaultDevelopmentModuleId,
+		List<ModuleSpec> modules
 )
 {
-	/**
-	 * Creates a configuration record with defensive copies.
-	 *
-	 * @param projectId the logical project identifier
-	 * @param projectName the IntelliJ-facing project name
-	 * @param minecraftVersion the tracked Minecraft version
-	 * @param defaultDevelopmentModuleId the default injected development module
-	 * @param modules the configured modules
-	 */
 	public ToolchainProjectConfig
 	{
 		modules = List.copyOf(modules);
@@ -44,10 +37,11 @@ public record ToolchainProjectConfig(
 	public BuildGraph toBuildGraph()
 	{
 		return new BuildGraph(
-			projectId,
-			minecraftVersion,
-			defaultDevelopmentModuleId,
-			modules
+				projectId,
+				minecraftVersion,
+				fabricLoaderVersion,
+				defaultDevelopmentModuleId,
+				modules
 		);
 	}
 }

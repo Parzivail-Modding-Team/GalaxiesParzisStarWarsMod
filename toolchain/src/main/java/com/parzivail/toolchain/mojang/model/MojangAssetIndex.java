@@ -8,7 +8,7 @@ import java.util.Map;
  * @param objects the addressable asset objects by logical asset path
  */
 public record MojangAssetIndex(
-	Map<String, MojangAssetObject> objects
+		Map<String, MojangAssetObject> objects
 )
 {
 }

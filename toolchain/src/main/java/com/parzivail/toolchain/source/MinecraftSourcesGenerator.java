@@ -2,12 +2,9 @@ package com.parzivail.toolchain.source;
 
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
 import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
-import com.parzivail.toolchain.mojang.model.MojangVersionMetadataLibrary;
 import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.util.ToolchainLog;
-
 import net.fabricmc.fernflower.api.IFabricJavadocProvider;
-
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 
@@ -48,24 +45,26 @@ public final class MinecraftSourcesGenerator
 	 * Generates or reuses the source archive for one Minecraft jar.
 	 *
 	 * @param minecraftJar the Minecraft jar to document
-	 * @param refresh whether cache refresh was requested
+	 * @param refresh      whether cache refresh was requested
+	 *
 	 * @return the generated source archive, or {@code null} when the jar is not a Minecraft jar
+	 *
 	 * @throws IOException if source generation fails
 	 */
 	public Path generateSources(Path minecraftJar, boolean refresh) throws IOException
 	{
-		MinecraftJarIdentity identity = identify(minecraftJar);
+		var identity = identify(minecraftJar);
 
 		if (identity == null)
 		{
 			return null;
 		}
 
-		Path output = identity.sourcesArchive();
+		var output = identity.sourcesArchive();
 
 		if (!refresh
-			&& Files.isRegularFile(output)
-			&& Files.getLastModifiedTime(output).compareTo(Files.getLastModifiedTime(minecraftJar)) >= 0)
+		    && Files.isRegularFile(output)
+		    && Files.getLastModifiedTime(output).compareTo(Files.getLastModifiedTime(minecraftJar)) >= 0)
 		{
 			return output;
 		}
@@ -73,15 +72,15 @@ public final class MinecraftSourcesGenerator
 		Files.createDirectories(output.getParent());
 		ToolchainLog.info("sources", "Generating Minecraft sources " + output.getFileName());
 
-		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(identity.version(), refresh);
-		List<Path> libraries = resolveLibraries(metadata, refresh);
-		ResolvedParchmentMappings parchmentMappings = _parchmentMappingsResolver.resolveMappings(identity.version(), refresh);
+		var metadata = _mojangClient.getVersionMetadata(identity.version(), refresh);
+		var libraries = resolveLibraries(_mojangClient, metadata, refresh);
+		var parchmentMappings = _parchmentMappingsResolver.resolveMappings(identity.version(), refresh);
 		Map<String, Object> options = new LinkedHashMap<>();
 		populateOptions(options, parchmentMappings);
-		MinecraftSourceArchiveSaver saver = new MinecraftSourceArchiveSaver(output);
-		Fernflower fernflower = new Fernflower(saver, options, new MinecraftFernflowerLogger());
+		var saver = new MinecraftSourceArchiveSaver(output);
+		var fernflower = new Fernflower(saver, options, new MinecraftFernflowerLogger());
 
-		for (Path library : libraries)
+		for (var library : libraries)
 		{
 			fernflower.addLibrary(library.toFile());
 		}
@@ -103,12 +102,12 @@ public final class MinecraftSourcesGenerator
 	/**
 	 * Populates the Vineflower option map, including optional Parchment javadoc support.
 	 *
-	 * @param options the mutable options map
+	 * @param options           the mutable options map
 	 * @param parchmentMappings the resolved Parchment mapping inputs, or {@code null}
 	 */
 	private static void populateOptions(
-		Map<String, Object> options,
-		ResolvedParchmentMappings parchmentMappings
+			Map<String, Object> options,
+			ResolvedParchmentMappings parchmentMappings
 	)
 	{
 		options.put(IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES, "1");
@@ -123,8 +122,8 @@ public final class MinecraftSourcesGenerator
 		if (parchmentMappings != null)
 		{
 			options.put(
-				IFabricJavadocProvider.PROPERTY_NAME,
-				new ParchmentJavadocProvider(parchmentMappings.parchmentJsonFile().toFile())
+					IFabricJavadocProvider.PROPERTY_NAME,
+					new ParchmentJavadocProvider(parchmentMappings.parchmentJsonFile().toFile())
 			);
 		}
 	}
@@ -132,18 +131,21 @@ public final class MinecraftSourcesGenerator
 	/**
 	 * Resolves the non-native Minecraft libraries needed for decompilation.
 	 *
+	 * @param client   the Mojang metadata client
 	 * @param metadata the Minecraft version metadata
-	 * @param refresh whether cache refresh was requested
+	 * @param refresh  whether cache refresh was requested
+	 *
 	 * @return the decompiler classpath libraries
+	 *
 	 * @throws IOException if a library cannot be downloaded
 	 */
-	private List<Path> resolveLibraries(MojangVersionMetadata metadata, boolean refresh) throws IOException
+	public static List<Path> resolveLibraries(MojangMetadataClient client, MojangVersionMetadata metadata, boolean refresh) throws IOException
 	{
 		List<Path> libraries = new ArrayList<>();
 
-		for (MojangVersionMetadataLibrary library : metadata.libraries())
+		for (var library : metadata.libraries())
 		{
-			if (!_mojangClient.isLibraryAllowed(library))
+			if (!client.isLibraryAllowed(library))
 			{
 				continue;
 			}
@@ -158,8 +160,8 @@ public final class MinecraftSourcesGenerator
 				continue;
 			}
 
-			Path target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
-			_mojangClient.download(java.net.URI.create(library.downloads().artifact().url()), target, refresh);
+			var target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
+			client.download(java.net.URI.create(library.downloads().artifact().url()), target, refresh);
 			libraries.add(target);
 		}
 
@@ -170,6 +172,7 @@ public final class MinecraftSourcesGenerator
 	 * Identifies whether one jar path is a Minecraft jar that should have generated sources.
 	 *
 	 * @param minecraftJar the candidate jar path
+	 *
 	 * @return the identified jar metadata, or {@code null}
 	 */
 	private MinecraftJarIdentity identify(Path minecraftJar)
@@ -179,31 +182,31 @@ public final class MinecraftSourcesGenerator
 			return null;
 		}
 
-		Path parent = minecraftJar.getParent();
+		var parent = minecraftJar.getParent();
 
 		if (parent == null)
 		{
 			return null;
 		}
 
-		String fileName = minecraftJar.getFileName().toString();
-		String stem = fileName.substring(0, fileName.length() - 4);
+		var fileName = minecraftJar.getFileName().toString();
+		var stem = fileName.substring(0, fileName.length() - 4);
 
 		if (".intellij-transformed".equals(parent.getParent() == null ? null : parent.getParent().getFileName().toString()))
 		{
-			String version = parent.getFileName().toString();
+			var version = parent.getFileName().toString();
 			return new MinecraftJarIdentity(version, minecraftJar, parent.resolve(stem + "-sources.jar"));
 		}
 
-		Path versionDirectory = parent;
-		Path versionsRoot = versionDirectory.getParent();
+		var versionDirectory = parent;
+		var versionsRoot = versionDirectory.getParent();
 
 		if (versionsRoot == null || !"versions".equals(versionsRoot.getFileName().toString()))
 		{
 			return null;
 		}
 
-		String version = versionDirectory.getFileName().toString();
+		var version = versionDirectory.getFileName().toString();
 
 		if ("client.jar".equals(fileName) || "server-extracted.jar".equals(fileName) || "server.jar".equals(fileName))
 		{
@@ -216,14 +219,14 @@ public final class MinecraftSourcesGenerator
 	/**
 	 * Identified Minecraft jar metadata.
 	 *
-	 * @param version the Minecraft version
-	 * @param inputJar the input jar
+	 * @param version        the Minecraft version
+	 * @param inputJar       the input jar
 	 * @param sourcesArchive the generated sources archive path
 	 */
 	private record MinecraftJarIdentity(
-		String version,
-		Path inputJar,
-		Path sourcesArchive
+			String version,
+			Path inputJar,
+			Path sourcesArchive
 	)
 	{
 	}

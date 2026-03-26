@@ -2,6 +2,7 @@
 id = "pswg"
 name = "GalaxiesParzisStarWarsMod"
 minecraft_version = "26.1-rc-1"
+loader_version = "0.18.4"
 default_development_module = "pswg_entrypoint"
 
 [modules.framework]
@@ -40,6 +41,12 @@ annotation_processor = "framework-generator"
 main_mixins = ["pswg.mixins.json", "errorman.mixins.json"]
 client_mixins = ["pswg.client.mixins.json"]
 datagen = true
+compile_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.143.14+26.1 @ fabric"
+]
+runtime_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.143.14+26.1 @ fabric"
+]
 
 [modules.pswg_blasters]
 kind = "fabric_split_sources"
@@ -48,6 +55,12 @@ annotation_processor = "framework-generator"
 main_mixins = ["pswg_blasters.mixins.json"]
 client_mixins = ["pswg_blasters.client.mixins.json"]
 datagen = true
+compile_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.143.14+26.1 @ fabric"
+]
+runtime_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.143.14+26.1 @ fabric"
+]
 
 [modules.pswg_gadgets]
 kind = "fabric_split_sources"
@@ -56,6 +69,12 @@ annotation_processor = "framework-generator"
 main_mixins = ["pswg_gadgets.mixins.json"]
 client_mixins = ["pswg_gadgets.client.mixins.json"]
 datagen = true
+compile_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.143.14+26.1 @ fabric"
+]
+runtime_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.143.14+26.1 @ fabric"
+]
 
 [modules.pswg_entrypoint]
 kind = "fabric_resource_only"

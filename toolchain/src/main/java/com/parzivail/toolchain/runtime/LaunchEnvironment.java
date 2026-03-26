@@ -31,7 +31,7 @@ public enum LaunchEnvironment
 	/**
 	 * Creates a launch environment.
 	 *
-	 * @param id the stable environment identifier
+	 * @param id          the stable environment identifier
 	 * @param displayName the human-readable display name
 	 */
 	LaunchEnvironment(String id, String displayName)
@@ -81,16 +81,6 @@ public enum LaunchEnvironment
 	}
 
 	/**
-	 * Gets the standard instance-directory name for the shared vanilla runtime baseline.
-	 *
-	 * @return the vanilla runtime instance-directory name
-	 */
-	public String runtimeInstanceDirectoryName()
-	{
-		return isClient() ? "client-runtime" : "server-runtime";
-	}
-
-	/**
 	 * Gets the standard instance-directory name for the generated Fabric launch bundle.
 	 *
 	 * @return the Fabric launch instance-directory name
@@ -104,6 +94,7 @@ public enum LaunchEnvironment
 	 * Resolves the launch identity that should be embedded for this environment.
 	 *
 	 * @param clientIdentity the requested client identity
+	 *
 	 * @return the effective launch identity
 	 */
 	public LaunchIdentity effectiveIdentity(LaunchIdentity clientIdentity)
@@ -115,19 +106,21 @@ public enum LaunchEnvironment
 	 * Resolves the generated program arguments for this environment.
 	 *
 	 * @param identity the effective launch identity
+	 *
 	 * @return the generated program arguments
 	 */
 	public List<String> programArguments(LaunchIdentity identity)
 	{
 		return isClient()
-			? List.of("--username", identity.username(), "--uuid", identity.uuid())
-			: List.of("nogui");
+		       ? List.of("--username", identity.username(), "--uuid", identity.uuid())
+		       : List.of("nogui");
 	}
 
 	/**
 	 * Resolves the environment from a CLI or metadata token.
 	 *
 	 * @param value the raw token
+	 *
 	 * @return the resolved environment
 	 */
 	public static LaunchEnvironment fromId(String value)
@@ -137,9 +130,9 @@ public enum LaunchEnvironment
 			return CLIENT;
 		}
 
-		String normalized = value.trim().toLowerCase(Locale.ROOT);
+		var normalized = value.trim().toLowerCase(Locale.ROOT);
 
-		for (LaunchEnvironment candidate : values())
+		for (var candidate : values())
 		{
 			if (candidate.id().equals(normalized))
 			{

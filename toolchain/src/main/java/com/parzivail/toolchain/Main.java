@@ -5,22 +5,16 @@ import com.parzivail.toolchain.build.CiCompilationService;
 import com.parzivail.toolchain.fabric.FabricDataGenerationService;
 import com.parzivail.toolchain.fabric.FabricDevLaunchInspector;
 import com.parzivail.toolchain.fabric.FabricDevLaunchService;
-import com.parzivail.toolchain.fabric.FabricDevLaunchSummary;
 import com.parzivail.toolchain.intellij.IntelliJProjectSyncService;
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
-import com.parzivail.toolchain.mojang.model.MojangVersionManifest;
-import com.parzivail.toolchain.mojang.model.MojangVersionManifestEntry;
-import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
 import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.project.DevelopmentService;
 import com.parzivail.toolchain.project.RepositoryContext;
 import com.parzivail.toolchain.runtime.LaunchEnvironment;
 import com.parzivail.toolchain.runtime.LaunchIdentity;
-import com.parzivail.toolchain.runtime.VanillaLaunchConfig;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * Entrypoint for the standalone toolchain.
@@ -39,7 +33,7 @@ public final class Main
 	 *
 	 * @param args command line arguments
 	 */
-	public static void main(String[] args)
+	static void main(String[] args)
 	{
 		try
 		{
@@ -64,7 +58,7 @@ public final class Main
 	 */
 	private static void printOverview() throws IOException
 	{
-		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
+		var repository = RepositoryContext.load();
 		System.out.println("Toolchain");
 		System.out.println("Project: " + repository.projectName());
 		System.out.println("Minecraft: " + repository.minecraftVersion());
@@ -80,42 +74,18 @@ public final class Main
 	 * Executes a command-oriented toolchain entrypoint.
 	 *
 	 * @param args command line arguments
+	 *
 	 * @throws IOException if command execution fails
 	 */
 	private static void runCommand(String[] args) throws IOException
 	{
 		switch (args[0])
 		{
-			case "dev" ->
-			{
-				runDevelopmentCommand(args);
-				return;
-			}
-
-			case "mojang" ->
-			{
-				runMojangCommand(args);
-				return;
-			}
-
-			case "fabric" ->
-			{
-				runFabricCommand(args);
-				return;
-			}
-
-			case "idea" ->
-			{
-				runIdeaCommand(args);
-				return;
-			}
-
-			case "artifacts" ->
-			{
-				runArtifactCommand(args);
-				return;
-			}
-
+			case "dev" -> runDevelopmentCommand(args);
+			case "mojang" -> runMojangCommand(args);
+			case "fabric" -> runFabricCommand(args);
+			case "idea" -> runIdeaCommand(args);
+			case "artifacts" -> runArtifactCommand(args);
 			default ->
 			{
 				printUsage();
@@ -128,27 +98,28 @@ public final class Main
 	 * Executes the supported development workflow commands.
 	 *
 	 * @param args command line arguments
+	 *
 	 * @throws IOException if setup fails
 	 */
 	private static void runDevelopmentCommand(String[] args) throws IOException
 	{
 		if (args.length >= 2 && "setup-intellij".equals(args[1]))
 		{
-			RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
-			boolean refresh = hasFlag(args, "--refresh");
-			String requestedModuleId = flagValue(args, "--module");
-			LaunchIdentity identity = resolveLaunchIdentity(args);
-			String effectiveModuleId = DevelopmentService.effectiveDevelopmentModuleId(
-				repository.buildGraph(),
-				requestedModuleId
+			var repository = RepositoryContext.load();
+			var refresh = hasFlag(args, "--refresh");
+			var requestedModuleId = flagValue(args, "--module");
+			var identity = resolveLaunchIdentity(args);
+			var effectiveModuleId = DevelopmentService.effectiveDevelopmentModuleId(
+					repository.buildGraph(),
+					requestedModuleId
 			);
-			DevelopmentService.SetupResult setup = new DevelopmentService().setupIntelliJDevelopment(
-				refresh,
-				requestedModuleId,
-				identity
+			var setup = new DevelopmentService().setupIntelliJDevelopment(
+					refresh,
+					requestedModuleId,
+					identity
 			);
-			VanillaLaunchConfig clientLaunch = setup.launch(LaunchEnvironment.CLIENT);
-			VanillaLaunchConfig serverLaunch = setup.launch(LaunchEnvironment.SERVER);
+			var clientLaunch = setup.launch(LaunchEnvironment.CLIENT);
+			var serverLaunch = setup.launch(LaunchEnvironment.SERVER);
 
 			System.out.println("Supported IntelliJ development workflow is ready.");
 			System.out.println("Minecraft: " + clientLaunch.versionId());
@@ -170,17 +141,18 @@ public final class Main
 	 * Executes Mojang metadata commands.
 	 *
 	 * @param args command line arguments
+	 *
 	 * @throws IOException if metadata resolution fails
 	 */
 	private static void runMojangCommand(String[] args) throws IOException
 	{
-		String defaultVersion = RepositoryContext.discoverFromWorkingDirectory().minecraftVersion();
-		MojangMetadataClient client = new MojangMetadataClient();
-		boolean refresh = hasFlag(args, "--refresh");
+		var defaultVersion = RepositoryContext.load().minecraftVersion();
+		var client = new MojangMetadataClient();
+		var refresh = hasFlag(args, "--refresh");
 
 		if (args.length >= 2 && "manifest".equals(args[1]))
 		{
-			MojangVersionManifest manifest = client.getVersionManifest(refresh);
+			var manifest = client.getVersionManifest(refresh);
 			System.out.println("Manifest cached at: " + ToolchainPaths.MOJANG_VERSION_MANIFEST_FILE);
 			System.out.println("Latest release: " + manifest.latest().release());
 			System.out.println("Latest snapshot: " + manifest.latest().snapshot());
@@ -190,9 +162,9 @@ public final class Main
 
 		if (args.length >= 2 && "version".equals(args[1]))
 		{
-			String versionId = positionalVersionArg(args, 2, defaultVersion);
-			MojangVersionManifestEntry entry = client.getVersion(versionId, refresh);
-			MojangVersionMetadata metadata = client.getVersionMetadata(versionId, refresh);
+			var versionId = positionalVersionArg(args, 2, defaultVersion);
+			var entry = client.getVersion(versionId, refresh);
+			var metadata = client.getVersionMetadata(versionId, refresh);
 
 			System.out.println("Version: " + entry.id());
 			System.out.println("Type: " + entry.type());
@@ -207,8 +179,8 @@ public final class Main
 
 		if (args.length >= 2 && "download".equals(args[1]))
 		{
-			String versionId = positionalVersionArg(args, 2, defaultVersion);
-			MojangVersionMetadata metadata = client.getVersionMetadata(versionId, refresh);
+			var versionId = positionalVersionArg(args, 2, defaultVersion);
+			var metadata = client.getVersionMetadata(versionId, refresh);
 
 			System.out.println("Version: " + versionId);
 			System.out.println("Client jar: " + client.downloadClientJar(versionId, refresh));
@@ -219,8 +191,8 @@ public final class Main
 
 		if (args.length >= 2 && "runtime".equals(args[1]))
 		{
-			String versionId = positionalVersionArg(args, 2, defaultVersion);
-			MojangMetadataClient.RuntimeDownloadResult result = client.downloadRuntime(versionId, refresh);
+			var versionId = positionalVersionArg(args, 2, defaultVersion);
+			var result = client.downloadRuntime(versionId, refresh);
 
 			System.out.println("Version: " + versionId);
 			System.out.println("Libraries downloaded: " + result.libraryCount());
@@ -238,19 +210,18 @@ public final class Main
 	 * Executes Fabric inspection and launch-preparation commands.
 	 *
 	 * @param args command line arguments
+	 *
 	 * @throws IOException if inspection fails
 	 */
 	private static void runFabricCommand(String[] args) throws IOException
 	{
 		if (args.length >= 2 && "inspect-dev".equals(args[1]))
 		{
-			LaunchEnvironment environment = resolveLaunchEnvironment(args);
-			FabricDevLaunchSummary summary = new FabricDevLaunchInspector().inspect(environment);
+			var environment = resolveLaunchEnvironment(args);
+			var summary = new FabricDevLaunchInspector().inspect(environment);
 
 			System.out.println("Minecraft: " + summary.minecraftVersion());
 			System.out.println("Fabric Loader: " + summary.loaderVersion());
-			System.out.println("Fabric API: " + summary.fabricApiVersion());
-			System.out.println("Loom: " + summary.loomVersion());
 			System.out.println("Environment: " + environment.id());
 			System.out.println("Default DLI main: " + summary.defaultDevLaunchMainClass());
 			System.out.println("Default runtime main fallback: " + summary.defaultRuntimeMainClass());
@@ -270,18 +241,18 @@ public final class Main
 
 		if (args.length >= 2 && "prepare-dev".equals(args[1]))
 		{
-			String defaultVersion = RepositoryContext.discoverFromWorkingDirectory().minecraftVersion();
-			String versionId = positionalVersionArg(args, 2, defaultVersion);
-			boolean refresh = hasFlag(args, "--refresh");
-			LaunchEnvironment environment = resolveLaunchEnvironment(args);
-			String moduleId = flagValue(args, "--module");
-			LaunchIdentity identity = resolveLaunchIdentity(args);
-			VanillaLaunchConfig config = new FabricDevLaunchService().prepareLaunch(
-				versionId,
-				refresh,
-				moduleId,
-				environment,
-				identity
+			var defaultVersion = RepositoryContext.load().minecraftVersion();
+			var versionId = positionalVersionArg(args, 2, defaultVersion);
+			var refresh = hasFlag(args, "--refresh");
+			var environment = resolveLaunchEnvironment(args);
+			var moduleId = flagValue(args, "--module");
+			var identity = resolveLaunchIdentity(args);
+			var config = new FabricDevLaunchService().prepareLaunch(
+					versionId,
+					refresh,
+					moduleId,
+					environment,
+					identity
 			);
 
 			System.out.println("Version: " + config.versionId());
@@ -304,23 +275,23 @@ public final class Main
 
 		if (args.length >= 2 && "prepare-datagen".equals(args[1]))
 		{
-			String defaultVersion = RepositoryContext.discoverFromWorkingDirectory().minecraftVersion();
-			String versionId = positionalVersionArg(args, 2, defaultVersion);
-			boolean refresh = hasFlag(args, "--refresh");
-			String moduleId = flagValue(args, "--module");
-			LaunchIdentity identity = resolveLaunchIdentity(args);
-			List<FabricDataGenerationService.DatagenConfiguration> configurations = new FabricDataGenerationService()
-				.prepareRunConfigurations(
-					versionId,
-					refresh,
-					moduleId,
-					identity
-				);
+			var defaultVersion = RepositoryContext.load().minecraftVersion();
+			var versionId = positionalVersionArg(args, 2, defaultVersion);
+			var refresh = hasFlag(args, "--refresh");
+			var moduleId = flagValue(args, "--module");
+			var identity = resolveLaunchIdentity(args);
+			var configurations = new FabricDataGenerationService()
+					.prepareRunConfigurations(
+							versionId,
+							refresh,
+							moduleId,
+							identity
+					);
 
 			System.out.println("Version: " + versionId);
 			System.out.println("Datagen configs generated: " + configurations.size());
 
-			for (FabricDataGenerationService.DatagenConfiguration configuration : configurations)
+			for (var configuration : configurations)
 			{
 				System.out.println(" - " + configuration.moduleId() + " -> " + configuration.outputDirectory().toAbsolutePath());
 			}
@@ -338,13 +309,14 @@ public final class Main
 	 * Executes IntelliJ metadata generation commands.
 	 *
 	 * @param args command line arguments
+	 *
 	 * @throws IOException if metadata generation fails
 	 */
 	private static void runIdeaCommand(String[] args) throws IOException
 	{
 		if (args.length >= 2 && "sync-pswg".equals(args[1]))
 		{
-			boolean refresh = hasFlag(args, "--refresh");
+			var refresh = hasFlag(args, "--refresh");
 			new IntelliJProjectSyncService().syncProject(refresh);
 			System.out.println("Synchronized IntelliJ compiler metadata into the PSWG repo.");
 			return;
@@ -358,14 +330,15 @@ public final class Main
 	 * Executes artifact assembly commands.
 	 *
 	 * @param args command line arguments
+	 *
 	 * @throws IOException if artifact assembly fails
 	 */
 	private static void runArtifactCommand(String[] args) throws IOException
 	{
 		if (args.length >= 2 && "assemble".equals(args[1]))
 		{
-			String moduleId = flagValue(args, "--module");
-			boolean ciBuild = hasFlag(args, "--ci-build");
+			var moduleId = flagValue(args, "--module");
+			var ciBuild = hasFlag(args, "--ci-build");
 			Path compiledOutputRoot = null;
 
 			if (ciBuild)
@@ -411,11 +384,12 @@ public final class Main
 	 *
 	 * @param args the command line arguments
 	 * @param flag the flag to search for
+	 *
 	 * @return {@code true} if the flag is present
 	 */
 	private static boolean hasFlag(String[] args, String flag)
 	{
-		for (String arg : args)
+		for (var arg : args)
 		{
 			if (flag.equals(arg))
 			{
@@ -431,11 +405,12 @@ public final class Main
 	 *
 	 * @param args the command line arguments
 	 * @param flag the flag to search for
+	 *
 	 * @return the following value, or {@code null}
 	 */
 	private static String flagValue(String[] args, String flag)
 	{
-		for (int i = 0; i < args.length - 1; i++)
+		for (var i = 0; i < args.length - 1; i++)
 		{
 			if (flag.equals(args[i]))
 			{
@@ -450,16 +425,17 @@ public final class Main
 	 * Resolves the launch identity from CLI flags, falling back to the default development identity.
 	 *
 	 * @param args the command line arguments
+	 *
 	 * @return the resolved launch identity
 	 */
 	private static LaunchIdentity resolveLaunchIdentity(String[] args)
 	{
-		String username = flagValue(args, "--username");
-		String uuid = flagValue(args, "--uuid");
+		var username = flagValue(args, "--username");
+		var uuid = flagValue(args, "--uuid");
 
 		return new LaunchIdentity(
-			username == null || username.isBlank() ? LaunchIdentity.DEFAULT_USERNAME : username,
-			uuid == null || uuid.isBlank() ? LaunchIdentity.DEFAULT_UUID : uuid
+				username == null || username.isBlank() ? LaunchIdentity.DEFAULT_USERNAME : username,
+				uuid == null || uuid.isBlank() ? LaunchIdentity.DEFAULT_UUID : uuid
 		);
 	}
 
@@ -467,6 +443,7 @@ public final class Main
 	 * Resolves the requested launch environment from CLI flags.
 	 *
 	 * @param args the command line arguments
+	 *
 	 * @return the resolved launch environment
 	 */
 	private static LaunchEnvironment resolveLaunchEnvironment(String[] args)
@@ -477,9 +454,10 @@ public final class Main
 	/**
 	 * Resolves an optional positional version argument, falling back to the PSWG default version.
 	 *
-	 * @param args the command line arguments
-	 * @param index the version argument index
+	 * @param args           the command line arguments
+	 * @param index          the version argument index
 	 * @param defaultVersion the default PSWG Minecraft version
+	 *
 	 * @return the resolved version identifier
 	 */
 	private static String positionalVersionArg(String[] args, int index, String defaultVersion)

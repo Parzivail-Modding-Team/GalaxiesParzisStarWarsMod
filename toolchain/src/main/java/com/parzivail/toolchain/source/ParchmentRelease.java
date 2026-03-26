@@ -7,8 +7,8 @@ package com.parzivail.toolchain.source;
  * @param parchmentVersion the published Parchment export version
  */
 public record ParchmentRelease(
-	String minecraftVersion,
-	String parchmentVersion
+		String minecraftVersion,
+		String parchmentVersion
 )
 {
 }

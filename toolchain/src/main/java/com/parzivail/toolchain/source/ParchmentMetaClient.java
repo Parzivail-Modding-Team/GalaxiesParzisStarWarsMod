@@ -1,8 +1,5 @@
 package com.parzivail.toolchain.source;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,9 +34,9 @@ public final class ParchmentMetaClient
 	public ParchmentMetaClient()
 	{
 		this(
-			HttpClient.newBuilder()
-			          .followRedirects(HttpClient.Redirect.NORMAL)
-			          .build()
+				HttpClient.newBuilder()
+				          .followRedirects(HttpClient.Redirect.NORMAL)
+				          .build()
 		);
 	}
 
@@ -57,12 +54,14 @@ public final class ParchmentMetaClient
 	 * Fetches the latest published release version for a Minecraft-targeted Parchment artifact.
 	 *
 	 * @param minecraftVersion the Minecraft version to resolve
+	 *
 	 * @return the latest published release version, or {@code null} when none exists
+	 *
 	 * @throws IOException if the request or XML parsing fails
 	 */
 	public String fetchLatestReleaseVersion(String minecraftVersion) throws IOException
 	{
-		byte[] body = fetchOptionalBytes(createMetadataUri(minecraftVersion));
+		var body = fetchOptionalBytes(createMetadataUri(minecraftVersion));
 
 		if (body == null)
 		{
@@ -75,16 +74,17 @@ public final class ParchmentMetaClient
 	/**
 	 * Downloads a remote file directly to disk.
 	 *
-	 * @param uri the remote file URI
+	 * @param uri    the remote file URI
 	 * @param target the local output path
+	 *
 	 * @throws IOException if the request or file write fails
 	 */
 	public void downloadToFile(URI uri, Path target) throws IOException
 	{
-		HttpRequest request = HttpRequest.newBuilder()
-		                                 .uri(uri)
-		                                 .GET()
-		                                 .build();
+		var request = HttpRequest.newBuilder()
+		                         .uri(uri)
+		                         .GET()
+		                         .build();
 		HttpResponse<InputStream> response;
 
 		try
@@ -104,7 +104,7 @@ public final class ParchmentMetaClient
 
 		Files.createDirectories(target.getParent());
 
-		try (InputStream body = response.body())
+		try (var body = response.body())
 		{
 			Files.copy(body, target, StandardCopyOption.REPLACE_EXISTING);
 		}
@@ -114,12 +114,14 @@ public final class ParchmentMetaClient
 	 * Fetches a remote text resource as a trimmed string.
 	 *
 	 * @param uri the text resource URI
+	 *
 	 * @return the trimmed body text
+	 *
 	 * @throws IOException if the request fails
 	 */
 	public String fetchTrimmedString(URI uri) throws IOException
 	{
-		byte[] body = fetchRequiredBytes(uri);
+		var body = fetchRequiredBytes(uri);
 		return new String(body, StandardCharsets.UTF_8).trim();
 	}
 
@@ -127,6 +129,7 @@ public final class ParchmentMetaClient
 	 * Builds the metadata URI for a Minecraft-targeted Parchment artifact.
 	 *
 	 * @param minecraftVersion the target Minecraft version
+	 *
 	 * @return the metadata URI
 	 */
 	public static URI createMetadataUri(String minecraftVersion)
@@ -138,12 +141,13 @@ public final class ParchmentMetaClient
 	 * Builds the export artifact URI for a published Parchment release.
 	 *
 	 * @param release the published Parchment release
+	 *
 	 * @return the zip artifact URI
 	 */
 	public static URI createArtifactUri(ParchmentRelease release)
 	{
 		return URI.create(
-			PARCHMENT_MAVEN_BASE
+				PARCHMENT_MAVEN_BASE
 				+ "parchment-"
 				+ release.minecraftVersion()
 				+ "/"
@@ -160,6 +164,7 @@ public final class ParchmentMetaClient
 	 * Builds the SHA-1 URI for a published Parchment release artifact.
 	 *
 	 * @param release the published Parchment release
+	 *
 	 * @return the SHA-1 URI
 	 */
 	public static URI createArtifactSha1Uri(ParchmentRelease release)
@@ -171,25 +176,27 @@ public final class ParchmentMetaClient
 	 * Parses the release field from a Maven metadata document.
 	 *
 	 * @param body the raw metadata document
+	 *
 	 * @return the release version, or {@code null} when absent
+	 *
 	 * @throws IOException if XML parsing fails
 	 */
 	private static String parseReleaseVersion(byte[] body) throws IOException
 	{
 		try
 		{
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			var factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(false);
 			factory.setExpandEntityReferences(false);
-			Document document = factory.newDocumentBuilder().parse(new ByteArrayInputStream(body));
-			NodeList releaseNodes = document.getElementsByTagName("release");
+			var document = factory.newDocumentBuilder().parse(new ByteArrayInputStream(body));
+			var releaseNodes = document.getElementsByTagName("release");
 
 			if (releaseNodes.getLength() == 0)
 			{
 				return null;
 			}
 
-			String releaseVersion = releaseNodes.item(0).getTextContent();
+			var releaseVersion = releaseNodes.item(0).getTextContent();
 			return releaseVersion != null && !releaseVersion.isBlank() ? releaseVersion.trim() : null;
 		}
 		catch (Exception exception)
@@ -202,26 +209,14 @@ public final class ParchmentMetaClient
 	 * Fetches a required remote resource as bytes.
 	 *
 	 * @param uri the request URI
+	 *
 	 * @return the response body bytes
+	 *
 	 * @throws IOException if the request fails
 	 */
 	private byte[] fetchRequiredBytes(URI uri) throws IOException
 	{
-		HttpRequest request = HttpRequest.newBuilder()
-		                                 .uri(uri)
-		                                 .GET()
-		                                 .build();
-		HttpResponse<byte[]> response;
-
-		try
-		{
-			response = _httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
-		}
-		catch (InterruptedException exception)
-		{
-			Thread.currentThread().interrupt();
-			throw new IOException("Interrupted while requesting " + uri, exception);
-		}
+		HttpResponse<byte[]> response = fetch(uri);
 
 		if (response.statusCode() != 200)
 		{
@@ -235,26 +230,14 @@ public final class ParchmentMetaClient
 	 * Fetches an optional remote resource as bytes.
 	 *
 	 * @param uri the request URI
+	 *
 	 * @return the response body bytes, or {@code null} when absent
+	 *
 	 * @throws IOException if the request fails
 	 */
 	private byte[] fetchOptionalBytes(URI uri) throws IOException
 	{
-		HttpRequest request = HttpRequest.newBuilder()
-		                                 .uri(uri)
-		                                 .GET()
-		                                 .build();
-		HttpResponse<byte[]> response;
-
-		try
-		{
-			response = _httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
-		}
-		catch (InterruptedException exception)
-		{
-			Thread.currentThread().interrupt();
-			throw new IOException("Interrupted while requesting " + uri, exception);
-		}
+		var response = fetch(uri);
 
 		if (response.statusCode() == 404)
 		{
@@ -267,5 +250,27 @@ public final class ParchmentMetaClient
 		}
 
 		return response.body();
+	}
+
+	private HttpResponse<byte[]> fetch(URI uri) throws IOException
+	{
+		var request = HttpRequest.newBuilder()
+		                         .uri(uri)
+		                         .GET()
+		                         .build();
+
+		HttpResponse<byte[]> response;
+
+		try
+		{
+			response = _httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+		}
+		catch (InterruptedException exception)
+		{
+			Thread.currentThread().interrupt();
+			throw new IOException("Interrupted while requesting " + uri, exception);
+		}
+
+		return response;
 	}
 }

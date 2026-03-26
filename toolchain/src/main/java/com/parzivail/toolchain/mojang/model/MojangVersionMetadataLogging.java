@@ -6,7 +6,7 @@ package com.parzivail.toolchain.mojang.model;
  * @param client the client logging configuration
  */
 public record MojangVersionMetadataLogging(
-	MojangVersionMetadataLoggingClient client
+		MojangVersionMetadataLoggingClient client
 )
 {
 }

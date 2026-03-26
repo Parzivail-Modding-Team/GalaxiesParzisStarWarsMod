@@ -5,7 +5,6 @@ import com.parzivail.toolchain.path.ToolchainPaths;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -17,30 +16,32 @@ public final class VersionResolver
 	 * Matches the git-describe based release format used by the current host-project build.
 	 */
 	private static final Pattern DESCRIBE_PATTERN = Pattern.compile(
-		"^(0|[1-9][0-9]+)(?:\\.(0|[1-9][0-9]+)(?:\\.(0|[1-9][0-9]+))?)?\\+[0-9.]+((?:-[0-9]+-g[0-9a-f]+)?(?:-dirty)?)?$"
+			"^(0|[1-9][0-9]+)(?:\\.(0|[1-9][0-9]+)(?:\\.(0|[1-9][0-9]+))?)?\\+[0-9.]+((?:-[0-9]+-g[0-9a-f]+)?(?:-dirty)?)?$"
 	);
 
 	/**
 	 * Resolves the current artifact version string.
 	 *
 	 * @param repository the discovered repository context
+	 *
 	 * @return the resolved version string
+	 *
 	 * @throws IOException if git metadata cannot be read or does not match the expected format
 	 */
 	public String resolveVersion(RepositoryContext repository) throws IOException
 	{
-		String describe = gitDescribe();
-		Matcher matcher = DESCRIBE_PATTERN.matcher(describe);
+		var describe = gitDescribe();
+		var matcher = DESCRIBE_PATTERN.matcher(describe);
 
 		if (!matcher.matches())
 		{
 			throw new IOException("Unsupported git describe format: " + describe);
 		}
 
-		int major = parseVersionComponent(matcher.group(1));
-		int minor = parseVersionComponent(matcher.group(2));
-		int patch = parseVersionComponent(matcher.group(3));
-		String suffix = matcher.group(4);
+		var major = parseVersionComponent(matcher.group(1));
+		var minor = parseVersionComponent(matcher.group(2));
+		var patch = parseVersionComponent(matcher.group(3));
+		var suffix = matcher.group(4);
 
 		if (suffix != null && !suffix.isEmpty())
 		{
@@ -54,6 +55,7 @@ public final class VersionResolver
 	 * Reads the repository version marker from git.
 	 *
 	 * @return the raw git-describe output
+	 *
 	 * @throws IOException if git cannot be executed or returns no version marker
 	 */
 	private String gitDescribe() throws IOException
@@ -63,9 +65,9 @@ public final class VersionResolver
 		try
 		{
 			process = new ProcessBuilder("git", "describe", "--tags", "--dirty")
-				.directory(ToolchainPaths.PROJECT_ROOT.toFile())
-				.redirectErrorStream(true)
-				.start();
+					.directory(ToolchainPaths.PROJECT_ROOT.toFile())
+					.redirectErrorStream(true)
+					.start();
 		}
 		catch (IOException exception)
 		{
@@ -74,7 +76,7 @@ public final class VersionResolver
 
 		byte[] outputBytes;
 
-		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
+		try (var outputStream = new ByteArrayOutputStream())
 		{
 			process.getInputStream().transferTo(outputStream);
 			outputBytes = outputStream.toByteArray();
@@ -82,8 +84,8 @@ public final class VersionResolver
 
 		try
 		{
-			int exitCode = process.waitFor();
-			String output = new String(outputBytes, StandardCharsets.UTF_8).trim();
+			var exitCode = process.waitFor();
+			var output = new String(outputBytes, StandardCharsets.UTF_8).trim();
 
 			if (exitCode != 0 || output.isBlank())
 			{
@@ -103,6 +105,7 @@ public final class VersionResolver
 	 * Parses one semantic version component, defaulting missing groups to zero.
 	 *
 	 * @param value the regex capture group value
+	 *
 	 * @return the parsed integer component
 	 */
 	private int parseVersionComponent(String value)
@@ -119,6 +122,7 @@ public final class VersionResolver
 	 * Resolves the development suffix used by the current git-describe version contract.
 	 *
 	 * @param gitSuffix the raw suffix from git-describe
+	 *
 	 * @return the normalized development suffix
 	 */
 	private String developmentSuffix(String gitSuffix)

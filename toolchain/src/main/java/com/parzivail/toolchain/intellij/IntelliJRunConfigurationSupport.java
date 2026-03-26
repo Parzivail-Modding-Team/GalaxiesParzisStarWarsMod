@@ -5,12 +5,12 @@ import com.parzivail.toolchain.runtime.VanillaLaunchConfig;
 import com.parzivail.toolchain.source.SourceAttachmentResolver;
 import com.parzivail.toolchain.template.TemplateXmlWriter;
 import com.parzivail.toolchain.template.XmlEscaper;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,29 +39,30 @@ public final class IntelliJRunConfigurationSupport
 	 * Creates a generated IntelliJ launch module document with project-library and module
 	 * dependencies.
 	 *
-	 * @param instanceRoot the generated launch instance root
+	 * @param instanceRoot          the generated launch instance root
 	 * @param dependencyModuleNames the IntelliJ modules that should be built before launch
-	 * @param classpathEntries the prepared runtime classpath entries
-	 * @param libraryNameResolver resolves the generated project-library name for one classpath entry
+	 * @param classpathEntries      the prepared runtime classpath entries
+	 * @param libraryNameResolver   resolves the generated project-library name for one classpath entry
+	 *
 	 * @return the launch module document
 	 */
 	public static Document createLaunchModuleDocument(
-		Path instanceRoot,
-		List<String> dependencyModuleNames,
-		List<Path> classpathEntries,
-		Function<Path, String> libraryNameResolver
+			Path instanceRoot,
+			List<String> dependencyModuleNames,
+			List<Path> classpathEntries,
+			Function<Path, String> libraryNameResolver
 	)
 	{
-		Document document = DocumentHelper.createDocument();
-		Element module = document.addElement("module");
+		var document = DocumentHelper.createDocument();
+		var module = document.addElement("module");
 		module.addAttribute("version", "4");
 
-		Element rootManager = module.addElement("component");
+		var rootManager = module.addElement("component");
 		rootManager.addAttribute("name", "NewModuleRootManager");
 		rootManager.addAttribute("inherit-compiler-output", "true");
 		rootManager.addElement("exclude-output");
 
-		Element content = rootManager.addElement("content");
+		var content = rootManager.addElement("content");
 		content.addAttribute("url", IntelliJPathMacros.fileUrl(instanceRoot));
 		content.addElement("excludeFolder")
 		       .addAttribute("url", IntelliJPathMacros.fileUrl(instanceRoot));
@@ -69,7 +70,7 @@ public final class IntelliJRunConfigurationSupport
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
 
-		for (String moduleName : dependencyModuleNames)
+		for (var moduleName : dependencyModuleNames)
 		{
 			rootManager.addElement("orderEntry")
 			           .addAttribute("type", "module")
@@ -77,7 +78,7 @@ public final class IntelliJRunConfigurationSupport
 			           .addAttribute("scope", "PROVIDED");
 		}
 
-		for (Path classpathEntry : classpathEntries)
+		for (var classpathEntry : classpathEntries)
 		{
 			rootManager.addElement("orderEntry")
 			           .addAttribute("type", "library")
@@ -91,30 +92,31 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Writes the generated IntelliJ project libraries for one prepared runtime classpath.
 	 *
-	 * @param generatedPrefix the prefix identifying generated launch-library metadata files
-	 * @param classpathEntries the prepared runtime classpath entries
+	 * @param generatedPrefix          the prefix identifying generated launch-library metadata files
+	 * @param classpathEntries         the prepared runtime classpath entries
 	 * @param sourceAttachmentResolver resolves optional source attachments
-	 * @param refresh whether to refresh external source attachments
-	 * @param libraryNameResolver resolves the generated project-library name for one classpath entry
-	 * @param fileNameResolver resolves the generated metadata file name for one classpath entry
+	 * @param refresh                  whether to refresh external source attachments
+	 * @param libraryNameResolver      resolves the generated project-library name for one classpath entry
+	 * @param fileNameResolver         resolves the generated metadata file name for one classpath entry
+	 *
 	 * @throws IOException if library metadata generation fails
 	 */
 	public static void writeLaunchLibraries(
-		String generatedPrefix,
-		List<Path> classpathEntries,
-		SourceAttachmentResolver sourceAttachmentResolver,
-		boolean refresh,
-		Function<Path, String> libraryNameResolver,
-		Function<Path, String> fileNameResolver
+			String generatedPrefix,
+			List<Path> classpathEntries,
+			SourceAttachmentResolver sourceAttachmentResolver,
+			boolean refresh,
+			Function<Path, String> libraryNameResolver,
+			Function<Path, String> fileNameResolver
 	) throws IOException
 	{
 		Set<String> expectedFileNames = new LinkedHashSet<>();
 
-		for (Path classpathEntry : classpathEntries)
+		for (var classpathEntry : classpathEntries)
 		{
-			String fileName = fileNameResolver.apply(classpathEntry);
+			var fileName = fileNameResolver.apply(classpathEntry);
 			expectedFileNames.add(fileName);
-			Path sourceArchive = sourceAttachmentResolver.resolveSourceArchive(classpathEntry, refresh);
+			var sourceArchive = sourceAttachmentResolver.resolveSourceArchive(classpathEntry, refresh);
 			TemplateXmlWriter.write(
 					ToolchainPaths.INTELLIJ_META_LIBRARIES_DIRECTORY.resolve(fileName),
 					createLaunchLibraryDocument(libraryNameResolver.apply(classpathEntry), classpathEntry, sourceArchive)
@@ -128,16 +130,17 @@ public final class IntelliJRunConfigurationSupport
 	 * Registers one generated launch module in `.idea/modules.xml`.
 	 *
 	 * @param filePath the `$PROJECT_DIR$`-relative module file path
+	 *
 	 * @throws IOException if the project registration cannot be updated
 	 */
 	public static void registerModule(
-		String filePath
+			String filePath
 	) throws IOException
 	{
-		Document document = readOrCreateProjectDocument();
-		Element project = document.getRootElement();
-		Element component = firstOrCreate(project, "component", "name", "ProjectModuleManager");
-		Element modules = firstOrCreate(component, "modules");
+		var document = readOrCreateProjectDocument();
+		var project = document.getRootElement();
+		var component = firstOrCreate(project, "component", "name", "ProjectModuleManager");
+		var modules = firstOrCreate(component, "modules");
 
 		removeRegisteredModule(modules, filePath);
 
@@ -151,32 +154,33 @@ public final class IntelliJRunConfigurationSupport
 	 * Extracts the effective runtime classpath that the prepared launch would pass to Java.
 	 *
 	 * @param launch the prepared launch configuration
+	 *
 	 * @return the ordered runtime classpath entries
 	 */
 	public static List<Path> effectiveRuntimeClasspath(VanillaLaunchConfig launch)
 	{
 		List<Path> entries = new ArrayList<>();
-		String separator = System.getProperty("path.separator");
+		var separator = File.pathSeparator;
 
-		for (int index = 0; index < launch.jvmArgs().size() - 1; index++)
+		for (var index = 0; index < launch.jvmArgs().size() - 1; index++)
 		{
-			String argument = launch.jvmArgs().get(index);
+			var argument = launch.jvmArgs().get(index);
 
 			if (!"-cp".equals(argument) && !"-classpath".equals(argument))
 			{
 				continue;
 			}
 
-			String classpath = launch.jvmArgs().get(index + 1);
+			var classpath = launch.jvmArgs().get(index + 1);
 
-			for (String rawEntry : classpath.split(Pattern.quote(separator)))
+			for (var rawEntry : classpath.split(Pattern.quote(separator)))
 			{
 				if (rawEntry.isBlank())
 				{
 					continue;
 				}
 
-				Path entry = Path.of(rawEntry);
+				var entry = Path.of(rawEntry);
 
 				if (!entries.contains(entry))
 				{
@@ -185,7 +189,7 @@ public final class IntelliJRunConfigurationSupport
 			}
 		}
 
-		for (Path entry : launch.classpath())
+		for (var entry : launch.classpath())
 		{
 			if (!entries.contains(entry))
 			{
@@ -201,15 +205,16 @@ public final class IntelliJRunConfigurationSupport
 	 * launches the main class itself.
 	 *
 	 * @param jvmArgs the prepared launch JVM arguments
+	 *
 	 * @return the IntelliJ VM arguments
 	 */
 	public static List<String> ideaVmArguments(List<String> jvmArgs)
 	{
 		List<String> arguments = new ArrayList<>();
 
-		for (int index = 0; index < jvmArgs.size(); index++)
+		for (var index = 0; index < jvmArgs.size(); index++)
 		{
-			String argument = jvmArgs.get(index);
+			var argument = jvmArgs.get(index);
 
 			if ("-cp".equals(argument) || "-classpath".equals(argument))
 			{
@@ -232,6 +237,7 @@ public final class IntelliJRunConfigurationSupport
 	 * Renders IntelliJ command-line arguments for XML serialization.
 	 *
 	 * @param arguments the command-line arguments
+	 *
 	 * @return the XML-safe argument string
 	 */
 	public static String renderIdeaArguments(List<String> arguments)
@@ -245,6 +251,7 @@ public final class IntelliJRunConfigurationSupport
 	 * Converts a filesystem path to the slash-delimited form used in generated XML.
 	 *
 	 * @param path the filesystem path
+	 *
 	 * @return the XML-safe path string
 	 */
 	public static String xmlPath(Path path)
@@ -257,22 +264,24 @@ public final class IntelliJRunConfigurationSupport
 	 * classpath entry.
 	 *
 	 * @param libraryName the logical project-library name
+	 *
 	 * @return the generated metadata file name
 	 */
 	public static String libraryMetadataFileName(String libraryName)
 	{
 		return libraryName
-			.replace(':', '_')
-			.replace('/', '_')
-			.replace('\\', '_')
-			.replace(' ', '_')
-			+ ".xml";
+				       .replace(':', '_')
+				       .replace('/', '_')
+				       .replace('\\', '_')
+				       .replace(' ', '_')
+		       + ".xml";
 	}
 
 	/**
 	 * Quotes one IntelliJ command-line argument for XML serialization.
 	 *
 	 * @param argument the argument to quote
+	 *
 	 * @return the quoted argument
 	 */
 	private static String quoteIdeaArgument(String argument)
@@ -283,35 +292,36 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Creates a generated project-library document for one prepared runtime classpath entry.
 	 *
-	 * @param libraryName the generated project-library name
+	 * @param libraryName    the generated project-library name
 	 * @param classpathEntry the prepared runtime classpath entry
-	 * @param sourceArchive the optional attached source archive
+	 * @param sourceArchive  the optional attached source archive
+	 *
 	 * @return the generated project-library document
 	 */
 	private static Document createLaunchLibraryDocument(
-		String libraryName,
-		Path classpathEntry,
-		Path sourceArchive
+			String libraryName,
+			Path classpathEntry,
+			Path sourceArchive
 	)
 	{
-		Document document = DocumentHelper.createDocument();
-		Element component = document.addElement("component");
+		var document = DocumentHelper.createDocument();
+		var component = document.addElement("component");
 		component.addAttribute("name", "libraryTable");
-		Element library = component.addElement("library");
+		var library = component.addElement("library");
 		library.addAttribute("name", libraryName);
-		Element classes = library.addElement("CLASSES");
-		String url = Files.isDirectory(classpathEntry)
-			? IntelliJPathMacros.fileUrl(classpathEntry)
-			: IntelliJPathMacros.jarUrl(classpathEntry);
+		var classes = library.addElement("CLASSES");
+		var url = Files.isDirectory(classpathEntry)
+		          ? IntelliJPathMacros.fileUrl(classpathEntry)
+		          : IntelliJPathMacros.jarUrl(classpathEntry);
 		classes.addElement("root").addAttribute("url", url);
 		library.addElement("JAVADOC");
-		Element sources = library.addElement("SOURCES");
+		var sources = library.addElement("SOURCES");
 
 		if (sourceArchive != null)
 		{
 			sources.addElement("root").addAttribute(
-				"url",
-				Files.isDirectory(sourceArchive)
+					"url",
+					Files.isDirectory(sourceArchive)
 					? IntelliJPathMacros.fileUrl(sourceArchive)
 					: IntelliJPathMacros.jarUrl(sourceArchive)
 			);
@@ -323,13 +333,14 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Deletes stale generated launch-library metadata files after regeneration.
 	 *
-	 * @param generatedPrefix the generated launch-library prefix
+	 * @param generatedPrefix   the generated launch-library prefix
 	 * @param expectedFileNames the expected generated file names
+	 *
 	 * @throws IOException if stale files cannot be removed
 	 */
 	private static void deleteObsoleteLaunchLibraries(
-		String generatedPrefix,
-		Set<String> expectedFileNames
+			String generatedPrefix,
+			Set<String> expectedFileNames
 	) throws IOException
 	{
 		if (!Files.isDirectory(ToolchainPaths.INTELLIJ_META_LIBRARIES_DIRECTORY))
@@ -339,14 +350,14 @@ public final class IntelliJRunConfigurationSupport
 
 		try (var entries = Files.list(ToolchainPaths.INTELLIJ_META_LIBRARIES_DIRECTORY))
 		{
-			for (Path entry : entries.toList())
+			for (var entry : entries.toList())
 			{
 				if (!Files.isRegularFile(entry))
 				{
 					continue;
 				}
 
-				String fileName = entry.getFileName().toString();
+				var fileName = entry.getFileName().toString();
 
 				if (!fileName.startsWith(generatedPrefix) || expectedFileNames.contains(fileName))
 				{
@@ -363,13 +374,14 @@ public final class IntelliJRunConfigurationSupport
 	 * absent.
 	 *
 	 * @return the existing or new document
+	 *
 	 * @throws IOException if the file cannot be read
 	 */
 	private static Document readOrCreateProjectDocument() throws IOException
 	{
 		if (!Files.exists(ToolchainPaths.INTELLIJ_META_MODULES_FILE))
 		{
-			Document document = DocumentHelper.createDocument();
+			var document = DocumentHelper.createDocument();
 			document.addElement("project").addAttribute("version", "4");
 			return document;
 		}
@@ -387,20 +399,21 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Returns the first matching child element, creating it if needed.
 	 *
-	 * @param parent the parent element
-	 * @param elementName the child element name
-	 * @param attributeName the identifying attribute name
+	 * @param parent         the parent element
+	 * @param elementName    the child element name
+	 * @param attributeName  the identifying attribute name
 	 * @param attributeValue the identifying attribute value
+	 *
 	 * @return the existing or new child element
 	 */
 	private static Element firstOrCreate(
-		Element parent,
-		String elementName,
-		String attributeName,
-		String attributeValue
+			Element parent,
+			String elementName,
+			String attributeName,
+			String attributeValue
 	)
 	{
-		for (Element child : parent.elements(elementName))
+		for (var child : parent.elements(elementName))
 		{
 			if (attributeValue.equals(child.attributeValue(attributeName)))
 			{
@@ -408,7 +421,7 @@ public final class IntelliJRunConfigurationSupport
 			}
 		}
 
-		Element created = parent.addElement(elementName);
+		var created = parent.addElement(elementName);
 		created.addAttribute(attributeName, attributeValue);
 		return created;
 	}
@@ -416,13 +429,14 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Returns the first matching child element, creating it if needed.
 	 *
-	 * @param parent the parent element
+	 * @param parent      the parent element
 	 * @param elementName the child element name
+	 *
 	 * @return the existing or new child element
 	 */
 	private static Element firstOrCreate(Element parent, String elementName)
 	{
-		Element existing = parent.element(elementName);
+		var existing = parent.element(elementName);
 
 		if (existing != null)
 		{
@@ -435,17 +449,17 @@ public final class IntelliJRunConfigurationSupport
 	/**
 	 * Removes any registered IntelliJ module entry whose path matches the provided file path.
 	 *
-	 * @param modules the IntelliJ modules element
+	 * @param modules  the IntelliJ modules element
 	 * @param filePath the `$PROJECT_DIR$`-relative module file path
 	 */
 	private static void removeRegisteredModule(Element modules, String filePath)
 	{
 		List<Element> matches = new ArrayList<>();
 
-		for (Element module : modules.elements("module"))
+		for (var module : modules.elements("module"))
 		{
-			String existingFilePath = module.attributeValue("filepath");
-			String existingFileUrl = module.attributeValue("fileurl");
+			var existingFilePath = module.attributeValue("filepath");
+			var existingFileUrl = module.attributeValue("fileurl");
 
 			if (filePath.equals(existingFilePath) || ("file://" + filePath).equals(existingFileUrl))
 			{
@@ -453,7 +467,7 @@ public final class IntelliJRunConfigurationSupport
 			}
 		}
 
-		for (Element match : matches)
+		for (var match : matches)
 		{
 			modules.remove(match);
 		}

@@ -2,20 +2,13 @@ package com.parzivail.toolchain.mojang;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.parzivail.toolchain.mojang.model.*;
 import com.parzivail.toolchain.path.ToolchainPaths;
+import com.parzivail.toolchain.util.DigestUtilities;
 import com.parzivail.toolchain.util.HostArchitecture;
 import com.parzivail.toolchain.util.HostPlatform;
-import com.parzivail.toolchain.mojang.model.MojangVersionManifest;
-import com.parzivail.toolchain.mojang.model.MojangVersionManifestEntry;
-import com.parzivail.toolchain.mojang.model.MojangAssetIndex;
-import com.parzivail.toolchain.mojang.model.MojangAssetObject;
-import com.parzivail.toolchain.mojang.model.MojangRule;
-import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
-import com.parzivail.toolchain.mojang.model.MojangVersionMetadataLibrary;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -28,15 +21,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.jar.JarEntry;
+import java.util.concurrent.*;
 import java.util.jar.JarFile;
 
 /**
@@ -94,7 +79,9 @@ public final class MojangMetadataClient
 	 * Resolves the version manifest from cache or Mojang.
 	 *
 	 * @param refresh whether to revalidate the cached manifest before reuse
+	 *
 	 * @return the resolved version manifest
+	 *
 	 * @throws IOException if resolution fails
 	 */
 	public MojangVersionManifest getVersionManifest(boolean refresh) throws IOException
@@ -112,13 +99,15 @@ public final class MojangMetadataClient
 	 * Resolves a specific version entry from the version manifest.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate the cached manifest before reuse
+	 * @param refresh   whether to revalidate the cached manifest before reuse
+	 *
 	 * @return the resolved version entry
+	 *
 	 * @throws IOException if the version is missing or the manifest fails to resolve
 	 */
 	public MojangVersionManifestEntry getVersion(String versionId, boolean refresh) throws IOException
 	{
-		MojangVersionManifest manifest = getVersionManifest(refresh);
+		var manifest = getVersionManifest(refresh);
 
 		return manifest.versions()
 		               .stream()
@@ -131,13 +120,15 @@ public final class MojangMetadataClient
 	 * Resolves a specific version metadata document from cache or Mojang.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate the cached metadata before reuse
+	 * @param refresh   whether to revalidate the cached metadata before reuse
+	 *
 	 * @return the resolved version metadata
+	 *
 	 * @throws IOException if resolution fails
 	 */
 	public MojangVersionMetadata getVersionMetadata(String versionId, boolean refresh) throws IOException
 	{
-		MojangVersionManifestEntry version = getVersion(versionId, refresh);
+		var version = getVersion(versionId, refresh);
 
 		return readCachedJson(
 				URI.create(version.url()),
@@ -152,19 +143,21 @@ public final class MojangMetadataClient
 	 * Downloads the vanilla client jar for a resolved Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate the cached client jar before reuse
+	 * @param refresh   whether to revalidate the cached client jar before reuse
+	 *
 	 * @return the cached client jar path
+	 *
 	 * @throws IOException if the jar cannot be downloaded
 	 */
 	public Path downloadClientJar(String versionId, boolean refresh) throws IOException
 	{
-		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
-		Path target = ToolchainPaths.mojangClientJarFile(versionId);
+		var metadata = getVersionMetadata(versionId, refresh);
+		var target = ToolchainPaths.mojangClientJarFile(versionId);
 		ensureCached(
-			URI.create(metadata.downloads().client().url()),
-			target,
-			metadata.downloads().client().sha1(),
-			refresh
+				URI.create(metadata.downloads().client().url()),
+				target,
+				metadata.downloads().client().sha1(),
+				refresh
 		);
 		return target;
 	}
@@ -178,25 +171,27 @@ public final class MojangMetadataClient
 	 * instead of the bootstrap launcher wrapper.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate the cached server jar before reuse
+	 * @param refresh   whether to revalidate the cached server jar before reuse
+	 *
 	 * @return the cached extracted server jar path when bundled, otherwise the cached raw server jar
+	 *
 	 * @throws IOException if the jar cannot be downloaded or extracted
 	 */
 	public Path downloadServerJar(String versionId, boolean refresh) throws IOException
 	{
-		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
+		var metadata = getVersionMetadata(versionId, refresh);
 
 		if (metadata.downloads().server() == null)
 		{
 			throw new IOException("Minecraft " + versionId + " does not expose a server download");
 		}
 
-		Path target = ToolchainPaths.mojangServerJarFile(versionId);
+		var target = ToolchainPaths.mojangServerJarFile(versionId);
 		ensureCached(
-			URI.create(metadata.downloads().server().url()),
-			target,
-			metadata.downloads().server().sha1(),
-			refresh
+				URI.create(metadata.downloads().server().url()),
+				target,
+				metadata.downloads().server().sha1(),
+				refresh
 		);
 		return extractBundledServerJar(versionId, target, refresh);
 	}
@@ -211,14 +206,16 @@ public final class MojangMetadataClient
 	 * behavior for the standalone toolchain.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to force cache refresh
+	 * @param refresh   whether to force cache refresh
+	 *
 	 * @return the extracted bundled library paths in declared order
+	 *
 	 * @throws IOException if extraction fails
 	 */
 	public List<Path> extractBundledServerLibraries(String versionId, boolean refresh) throws IOException
 	{
-		Path bundledServerJar = ToolchainPaths.mojangServerJarFile(versionId);
-		List<BundledServerLibrary> libraries = bundledServerLibraries(bundledServerJar);
+		var bundledServerJar = ToolchainPaths.mojangServerJarFile(versionId);
+		var libraries = bundledServerLibraries(bundledServerJar);
 
 		if (libraries.isEmpty())
 		{
@@ -227,23 +224,23 @@ public final class MojangMetadataClient
 
 		List<Path> extractedLibraries = new ArrayList<>();
 
-		try (JarFile jarFile = new JarFile(bundledServerJar.toFile()))
+		try (var jarFile = new JarFile(bundledServerJar.toFile()))
 		{
-			for (BundledServerLibrary library : libraries)
+			for (var library : libraries)
 			{
-				Path target = ToolchainPaths.mojangLibraryFile(library.artifactPath());
+				var target = ToolchainPaths.mojangLibraryFile(library.artifactPath());
 
 				if (refresh || !Files.isRegularFile(target))
 				{
 					Files.createDirectories(target.getParent());
-					JarEntry entry = jarFile.getJarEntry(library.jarEntryPath());
+					var entry = jarFile.getJarEntry(library.jarEntryPath());
 
 					if (entry == null)
 					{
 						throw new IOException("Bundled server jar is missing " + library.jarEntryPath() + " in " + bundledServerJar);
 					}
 
-					try (InputStream inputStream = jarFile.getInputStream(entry))
+					try (var inputStream = jarFile.getInputStream(entry))
 					{
 						Files.copy(inputStream, target, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 					}
@@ -260,19 +257,21 @@ public final class MojangMetadataClient
 	 * Downloads the asset index JSON for a resolved Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate the cached asset index before reuse
+	 * @param refresh   whether to revalidate the cached asset index before reuse
+	 *
 	 * @return the cached asset index path
+	 *
 	 * @throws IOException if the asset index cannot be downloaded
 	 */
 	public Path downloadAssetIndex(String versionId, boolean refresh) throws IOException
 	{
-		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
-		Path target = ToolchainPaths.mojangAssetIndexFile(metadata.assetIndex().id());
+		var metadata = getVersionMetadata(versionId, refresh);
+		var target = ToolchainPaths.mojangAssetIndexFile(metadata.assetIndex().id());
 		ensureCached(
-			URI.create(metadata.assetIndex().url()),
-			target,
-			metadata.assetIndex().sha1(),
-			refresh
+				URI.create(metadata.assetIndex().url()),
+				target,
+				metadata.assetIndex().sha1(),
+				refresh
 		);
 		return target;
 	}
@@ -280,9 +279,10 @@ public final class MojangMetadataClient
 	/**
 	 * Downloads a single file into the toolchain cache.
 	 *
-	 * @param sourceUri the source URI
+	 * @param sourceUri  the source URI
 	 * @param targetFile the target cache file
-	 * @param refresh whether to revalidate the cached file before reuse
+	 * @param refresh    whether to revalidate the cached file before reuse
+	 *
 	 * @throws IOException if the file cannot be downloaded
 	 */
 	public void download(URI sourceUri, Path targetFile, boolean refresh) throws IOException
@@ -293,46 +293,48 @@ public final class MojangMetadataClient
 	/**
 	 * Extracts the real dedicated-server jar from a bootstrap bundle when present.
 	 *
-	 * @param versionId the Minecraft version identifier
+	 * @param versionId        the Minecraft version identifier
 	 * @param bundledServerJar the downloaded server bootstrap jar
-	 * @param refresh whether cache refresh was requested
+	 * @param refresh          whether cache refresh was requested
+	 *
 	 * @return the extracted jar when bundled metadata is present, otherwise the original jar
+	 *
 	 * @throws IOException if extraction fails
 	 */
 	private Path extractBundledServerJar(
-		String versionId,
-		Path bundledServerJar,
-		boolean refresh
+			String versionId,
+			Path bundledServerJar,
+			boolean refresh
 	) throws IOException
 	{
-		String bundledEntryPath = bundledServerEntryPath(bundledServerJar);
+		var bundledEntryPath = bundledServerEntryPath(bundledServerJar);
 
 		if (bundledEntryPath == null)
 		{
 			return bundledServerJar;
 		}
 
-		Path extractedServerJar = ToolchainPaths.mojangExtractedServerJarFile(versionId);
+		var extractedServerJar = ToolchainPaths.mojangExtractedServerJarFile(versionId);
 
 		if (!refresh
-			&& Files.isRegularFile(extractedServerJar)
-			&& Files.getLastModifiedTime(extractedServerJar).compareTo(Files.getLastModifiedTime(bundledServerJar)) >= 0)
+		    && Files.isRegularFile(extractedServerJar)
+		    && Files.getLastModifiedTime(extractedServerJar).compareTo(Files.getLastModifiedTime(bundledServerJar)) >= 0)
 		{
 			return extractedServerJar;
 		}
 
 		Files.createDirectories(extractedServerJar.getParent());
 
-		try (JarFile jarFile = new JarFile(bundledServerJar.toFile()))
+		try (var jarFile = new JarFile(bundledServerJar.toFile()))
 		{
-			JarEntry entry = jarFile.getJarEntry(bundledEntryPath);
+			var entry = jarFile.getJarEntry(bundledEntryPath);
 
 			if (entry == null)
 			{
 				throw new IOException("Bundled server jar is missing " + bundledEntryPath + " in " + bundledServerJar);
 			}
 
-			try (InputStream inputStream = jarFile.getInputStream(entry))
+			try (var inputStream = jarFile.getInputStream(entry))
 			{
 				Files.copy(inputStream, extractedServerJar, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 			}
@@ -345,33 +347,35 @@ public final class MojangMetadataClient
 	 * Locates the nested server jar entry inside a bundled server bootstrap jar.
 	 *
 	 * @param bundledServerJar the downloaded server bootstrap jar
+	 *
 	 * @return the bundled server jar entry path, or {@code null} when the server jar is already
-	 *         directly usable
+	 * 		directly usable
+	 *
 	 * @throws IOException if the bundle metadata cannot be read
 	 */
 	private String bundledServerEntryPath(Path bundledServerJar) throws IOException
 	{
-		try (JarFile jarFile = new JarFile(bundledServerJar.toFile()))
+		try (var jarFile = new JarFile(bundledServerJar.toFile()))
 		{
-			JarEntry versionsList = jarFile.getJarEntry("META-INF/versions.list");
+			var versionsList = jarFile.getJarEntry("META-INF/versions.list");
 
 			if (versionsList == null)
 			{
 				return null;
 			}
 
-			try (InputStream inputStream = jarFile.getInputStream(versionsList))
+			try (var inputStream = jarFile.getInputStream(versionsList))
 			{
-				for (String line : new String(inputStream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n"))
+				for (var line : new String(inputStream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n"))
 				{
-					String trimmed = line.trim();
+					var trimmed = line.trim();
 
 					if (trimmed.isEmpty())
 					{
 						continue;
 					}
 
-					String[] parts = trimmed.split("\t");
+					var parts = trimmed.split("\t");
 
 					if (parts.length == 3)
 					{
@@ -388,6 +392,7 @@ public final class MojangMetadataClient
 	 * Checks whether a runtime library should be included for the current host platform.
 	 *
 	 * @param library the library to evaluate
+	 *
 	 * @return {@code true} if the library should be included
 	 */
 	public boolean isLibraryAllowed(MojangVersionMetadataLibrary library)
@@ -404,6 +409,7 @@ public final class MojangMetadataClient
 	 * Checks whether a Mojang rule matches the current host platform.
 	 *
 	 * @param rule the rule to evaluate
+	 *
 	 * @return {@code true} if the rule matches
 	 */
 	public boolean matchesRule(MojangRule rule)
@@ -415,25 +421,27 @@ public final class MojangMetadataClient
 	 * Downloads the runtime libraries and asset objects required by a selected version.
 	 *
 	 * @param versionId the Minecraft version identifier
-	 * @param refresh whether to revalidate cached runtime artifacts before reuse
+	 * @param refresh   whether to revalidate cached runtime artifacts before reuse
+	 *
 	 * @return the runtime download summary
+	 *
 	 * @throws IOException if runtime files cannot be downloaded
 	 */
 	public RuntimeDownloadResult downloadRuntime(String versionId, boolean refresh) throws IOException
 	{
-		MojangVersionMetadata metadata = getVersionMetadata(versionId, refresh);
-		Path assetIndexPath = downloadAssetIndex(versionId, refresh);
-		MojangAssetIndex assetIndex = readCachedJson(
-			URI.create(metadata.assetIndex().url()),
-			assetIndexPath,
-			metadata.assetIndex().sha1(),
-			MojangAssetIndex.class,
-			false
+		var metadata = getVersionMetadata(versionId, refresh);
+		var assetIndexPath = downloadAssetIndex(versionId, refresh);
+		var assetIndex = readCachedJson(
+				URI.create(metadata.assetIndex().url()),
+				assetIndexPath,
+				metadata.assetIndex().sha1(),
+				MojangAssetIndex.class,
+				false
 		);
 
-		int libraryCount = 0;
+		var libraryCount = 0;
 
-		for (MojangVersionMetadataLibrary library : metadata.libraries())
+		for (var library : metadata.libraries())
 		{
 			if (!isLibraryAllowed(library))
 			{
@@ -445,48 +453,50 @@ public final class MojangMetadataClient
 				continue;
 			}
 
-			Path target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
+			var target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
 			ensureCached(
-				URI.create(library.downloads().artifact().url()),
-				target,
-				library.downloads().artifact().sha1(),
-				refresh
+					URI.create(library.downloads().artifact().url()),
+					target,
+					library.downloads().artifact().sha1(),
+					refresh
 			);
 			libraryCount++;
 		}
 
-		int assetObjectCount = downloadAssetObjects(assetIndex, refresh);
+		var assetObjectCount = downloadAssetObjects(assetIndex, refresh);
 
 		return new RuntimeDownloadResult(
-			libraryCount,
-			assetObjectCount,
-			ToolchainPaths.MOJANG_LIBRARIES_ROOT,
-			ToolchainPaths.MOJANG_ASSET_OBJECTS_ROOT
+				libraryCount,
+				assetObjectCount,
+				ToolchainPaths.MOJANG_LIBRARIES_ROOT,
+				ToolchainPaths.MOJANG_ASSET_OBJECTS_ROOT
 		);
 	}
 
 	/**
 	 * Reads a JSON object from cache or downloads it into the cache first.
 	 *
-	 * @param sourceUri the source URI to fetch
-	 * @param cacheFile the local cache file
+	 * @param sourceUri    the source URI to fetch
+	 * @param cacheFile    the local cache file
 	 * @param expectedSha1 the authoritative SHA-1 when one is available
-	 * @param type the JSON payload type
-	 * @param refresh whether to revalidate the cached JSON before reuse
+	 * @param type         the JSON payload type
+	 * @param refresh      whether to revalidate the cached JSON before reuse
+	 *
 	 * @return the parsed JSON object
+	 *
 	 * @throws IOException if the file cannot be read or downloaded
 	 */
 	private <T> T readCachedJson(
-		URI sourceUri,
-		Path cacheFile,
-		String expectedSha1,
-		Class<T> type,
-		boolean refresh
+			URI sourceUri,
+			Path cacheFile,
+			String expectedSha1,
+			Class<T> type,
+			boolean refresh
 	) throws IOException
 	{
 		ensureCached(sourceUri, cacheFile, expectedSha1, refresh);
 
-		try (InputStream inputStream = Files.newInputStream(cacheFile))
+		try (var inputStream = Files.newInputStream(cacheFile))
 		{
 			return _mapper.readValue(inputStream, type);
 		}
@@ -496,14 +506,16 @@ public final class MojangMetadataClient
 	 * Reads bundled dedicated-server library entries from a bootstrap server jar.
 	 *
 	 * @param bundledServerJar the downloaded server bootstrap jar
+	 *
 	 * @return the bundled server library entries, or an empty list for legacy non-bundled jars
+	 *
 	 * @throws IOException if the bundle metadata cannot be read
 	 */
 	private List<BundledServerLibrary> bundledServerLibraries(Path bundledServerJar) throws IOException
 	{
-		try (JarFile jarFile = new JarFile(bundledServerJar.toFile()))
+		try (var jarFile = new JarFile(bundledServerJar.toFile()))
 		{
-			JarEntry librariesList = jarFile.getJarEntry("META-INF/libraries.list");
+			var librariesList = jarFile.getJarEntry("META-INF/libraries.list");
 
 			if (librariesList == null)
 			{
@@ -512,18 +524,18 @@ public final class MojangMetadataClient
 
 			List<BundledServerLibrary> libraries = new ArrayList<>();
 
-			try (InputStream inputStream = jarFile.getInputStream(librariesList))
+			try (var inputStream = jarFile.getInputStream(librariesList))
 			{
-				for (String line : new String(inputStream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n"))
+				for (var line : new String(inputStream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n"))
 				{
-					String trimmed = line.trim();
+					var trimmed = line.trim();
 
 					if (trimmed.isEmpty())
 					{
 						continue;
 					}
 
-					String[] parts = trimmed.split("\t");
+					var parts = trimmed.split("\t");
 
 					if (parts.length != 3)
 					{
@@ -531,9 +543,9 @@ public final class MojangMetadataClient
 					}
 
 					libraries.add(new BundledServerLibrary(
-						parts[1],
-						parts[2],
-						"META-INF/libraries/" + parts[2]
+							parts[1],
+							parts[2],
+							"META-INF/libraries/" + parts[2]
 					));
 				}
 			}
@@ -545,14 +557,14 @@ public final class MojangMetadataClient
 	/**
 	 * One bundled dedicated-server library entry from {@code META-INF/libraries.list}.
 	 *
-	 * @param notation the Maven-like coordinate string
+	 * @param notation     the Maven-like coordinate string
 	 * @param artifactPath the relative library artifact path
 	 * @param jarEntryPath the entry path inside the bundled server jar
 	 */
 	private record BundledServerLibrary(
-		String notation,
-		String artifactPath,
-		String jarEntryPath
+			String notation,
+			String artifactPath,
+			String jarEntryPath
 	)
 	{
 	}
@@ -560,10 +572,11 @@ public final class MojangMetadataClient
 	/**
 	 * Ensures a cache file exists and matches the authoritative content when one is known.
 	 *
-	 * @param sourceUri the source URI to fetch
-	 * @param cacheFile the local cache file
+	 * @param sourceUri    the source URI to fetch
+	 * @param cacheFile    the local cache file
 	 * @param expectedSha1 the authoritative SHA-1 when one is available
-	 * @param refresh whether to revalidate the cached file before reuse
+	 * @param refresh      whether to revalidate the cached file before reuse
+	 *
 	 * @throws IOException if the document cannot be downloaded
 	 */
 	private void ensureCached(URI sourceUri, Path cacheFile, String expectedSha1, boolean refresh) throws IOException
@@ -593,26 +606,28 @@ public final class MojangMetadataClient
 	 * Downloads asset objects concurrently with bounded parallelism, retries, and progress reporting.
 	 *
 	 * @param assetIndex the resolved asset index
-	 * @param refresh whether to revalidate cached asset objects before reuse
+	 * @param refresh    whether to revalidate cached asset objects before reuse
+	 *
 	 * @return the number of processed asset objects
+	 *
 	 * @throws IOException if one or more downloads fail
 	 */
 	private int downloadAssetObjects(MojangAssetIndex assetIndex, boolean refresh) throws IOException
 	{
 		List<AssetDownload> downloads = new ArrayList<>();
 
-		for (Map.Entry<String, MojangAssetObject> entry : assetIndex.objects().entrySet())
+		for (var entry : assetIndex.objects().entrySet())
 		{
-			MojangAssetObject object = entry.getValue();
-			Path target = ToolchainPaths.mojangAssetObjectFile(object.hash());
+			var object = entry.getValue();
+			var target = ToolchainPaths.mojangAssetObjectFile(object.hash());
 
 			if (Files.exists(target) && (!refresh || hasMatchingSha1(target, object.hash())))
 			{
 				continue;
 			}
 
-			String prefix = object.hash().substring(0, 2);
-			URI source = URI.create("https://resources.download.minecraft.net/" + prefix + "/" + object.hash());
+			var prefix = object.hash().substring(0, 2);
+			var source = URI.create("https://resources.download.minecraft.net/" + prefix + "/" + object.hash());
 			downloads.add(new AssetDownload(entry.getKey(), source, target));
 		}
 
@@ -621,33 +636,33 @@ public final class MojangMetadataClient
 			return assetIndex.objects().size();
 		}
 
-		int workerCount = Math.max(1, Math.min(ASSET_DOWNLOAD_CONCURRENCY, downloads.size()));
-		ExecutorService executor = Executors.newFixedThreadPool(workerCount);
-		ExecutorCompletionService<AssetDownloadResult> completionService = new ExecutorCompletionService<>(executor);
+		var workerCount = Math.max(1, Math.min(ASSET_DOWNLOAD_CONCURRENCY, downloads.size()));
+		var executor = Executors.newFixedThreadPool(workerCount);
+		var completionService = new ExecutorCompletionService<AssetDownloadResult>(executor);
 		List<AssetDownload> failures = new ArrayList<>();
 
 		try
 		{
-			for (AssetDownload download : downloads)
+			for (var download : downloads)
 			{
 				completionService.submit(new AssetDownloadTask(download));
 			}
 
-			int completed = 0;
+			var completed = 0;
 
 			while (completed < downloads.size())
 			{
-				Future<AssetDownloadResult> future = completionService.take();
+				var future = completionService.take();
 				completed++;
 
 				try
 				{
-					AssetDownloadResult result = future.get();
+					var result = future.get();
 
 					if (completed == downloads.size() || completed % 250 == 0)
 					{
 						System.out.println(
-							"Asset objects: " + completed + "/" + downloads.size() + " downloaded"
+								"Asset objects: " + completed + "/" + downloads.size() + " downloaded"
 						);
 					}
 
@@ -658,7 +673,7 @@ public final class MojangMetadataClient
 				}
 				catch (ExecutionException exception)
 				{
-					Throwable cause = exception.getCause();
+					var cause = exception.getCause();
 
 					if (cause instanceof AssetDownloadException assetDownloadException)
 					{
@@ -692,17 +707,17 @@ public final class MojangMetadataClient
 
 		if (!failures.isEmpty())
 		{
-			List<String> remainingFailures = retryFailedAssetDownloads(failures);
+			var remainingFailures = retryFailedAssetDownloads(failures);
 
 			if (remainingFailures.isEmpty())
 			{
 				return assetIndex.objects().size();
 			}
 
-			StringBuilder message = new StringBuilder("Failed asset object downloads: ").append(remainingFailures.size());
-			int sampleCount = Math.min(5, remainingFailures.size());
+			var message = new StringBuilder("Failed asset object downloads: ").append(remainingFailures.size());
+			var sampleCount = Math.min(5, remainingFailures.size());
 
-			for (int i = 0; i < sampleCount; i++)
+			for (var i = 0; i < sampleCount; i++)
 			{
 				message.append(System.lineSeparator()).append(" - ").append(remainingFailures.get(i));
 			}
@@ -716,29 +731,19 @@ public final class MojangMetadataClient
 	/**
 	 * Checks whether a local file already matches an expected SHA-1 hash.
 	 *
-	 * @param path the local file path
+	 * @param path         the local file path
 	 * @param expectedSha1 the expected SHA-1 string
+	 *
 	 * @return {@code true} if the local file already matches the expected hash
+	 *
 	 * @throws IOException if the file cannot be hashed
 	 */
 	private boolean hasMatchingSha1(Path path, String expectedSha1) throws IOException
 	{
 		try
 		{
-			MessageDigest digest = MessageDigest.getInstance("SHA-1");
-
-			try (InputStream inputStream = Files.newInputStream(path))
-			{
-				byte[] buffer = new byte[8192];
-				int read;
-
-				while ((read = inputStream.read(buffer)) >= 0)
-				{
-					digest.update(buffer, 0, read);
-				}
-			}
-
-			return expectedSha1.equalsIgnoreCase(hex(digest.digest()));
+			MessageDigest digest = DigestUtilities.computeSha1Digest(path);
+			return expectedSha1.equalsIgnoreCase(DigestUtilities.formatHex(digest.digest()));
 		}
 		catch (NoSuchAlgorithmException exception)
 		{
@@ -747,35 +752,17 @@ public final class MojangMetadataClient
 	}
 
 	/**
-	 * Encodes bytes as a lowercase hexadecimal string.
-	 *
-	 * @param bytes the bytes to encode
-	 * @return the lowercase hexadecimal string
-	 */
-	private String hex(byte[] bytes)
-	{
-		StringBuilder builder = new StringBuilder(bytes.length * 2);
-
-		for (byte value : bytes)
-		{
-			builder.append(Character.forDigit((value >> 4) & 0xF, 16));
-			builder.append(Character.forDigit(value & 0xF, 16));
-		}
-
-		return builder.toString();
-	}
-
-	/**
 	 * Retries failed asset downloads serially to smooth over transient network issues.
 	 *
 	 * @param failedDownloads the failed asset downloads from the concurrent pass
+	 *
 	 * @return the remaining failure messages after retry
 	 */
 	private List<String> retryFailedAssetDownloads(List<AssetDownload> failedDownloads)
 	{
 		List<String> remainingFailures = new ArrayList<>();
 
-		for (AssetDownload download : failedDownloads)
+		for (var download : failedDownloads)
 		{
 			try
 			{
@@ -793,28 +780,29 @@ public final class MojangMetadataClient
 	/**
 	 * Downloads a single file with retries and atomic replacement.
 	 *
-	 * @param sourceUri the source URI
+	 * @param sourceUri  the source URI
 	 * @param targetFile the target cache file
+	 *
 	 * @throws IOException if the download fails after all retries
 	 */
 	private void downloadToFile(URI sourceUri, Path targetFile) throws IOException
 	{
 		Files.createDirectories(targetFile.getParent());
-		Path temporaryFile = targetFile.resolveSibling(targetFile.getFileName() + ".part");
+		var temporaryFile = targetFile.resolveSibling(targetFile.getFileName() + ".part");
 		IOException lastFailure = null;
 
-		for (int attempt = 1; attempt <= MAX_DOWNLOAD_ATTEMPTS; attempt++)
+		for (var attempt = 1; attempt <= MAX_DOWNLOAD_ATTEMPTS; attempt++)
 		{
-			HttpRequest request = HttpRequest.newBuilder(sourceUri)
-			                                 .timeout(REQUEST_TIMEOUT)
-			                                 .GET()
-			                                 .build();
+			var request = HttpRequest.newBuilder(sourceUri)
+			                         .timeout(REQUEST_TIMEOUT)
+			                         .GET()
+			                         .build();
 
 			try
 			{
-				HttpResponse<Path> response = _httpClient.send(
-					request,
-					HttpResponse.BodyHandlers.ofFile(temporaryFile)
+				var response = _httpClient.send(
+						request,
+						HttpResponse.BodyHandlers.ofFile(temporaryFile)
 				);
 
 				if (response.statusCode() / 100 != 2)
@@ -824,10 +812,10 @@ public final class MojangMetadataClient
 				}
 
 				Files.move(
-					temporaryFile,
-					targetFile,
-					java.nio.file.StandardCopyOption.REPLACE_EXISTING,
-					java.nio.file.StandardCopyOption.ATOMIC_MOVE
+						temporaryFile,
+						targetFile,
+						java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+						java.nio.file.StandardCopyOption.ATOMIC_MOVE
 				);
 				return;
 			}
@@ -863,6 +851,7 @@ public final class MojangMetadataClient
 	 * Evaluates Mojang library rules for the current runtime environment.
 	 *
 	 * @param rules the optional rule list
+	 *
 	 * @return {@code true} if the library should be included
 	 */
 	private boolean isAllowed(java.util.List<MojangRule> rules)
@@ -872,9 +861,9 @@ public final class MojangMetadataClient
 			return true;
 		}
 
-		boolean allowed = false;
+		var allowed = false;
 
-		for (MojangRule rule : rules)
+		for (var rule : rules)
 		{
 			if (!matches(rule))
 			{
@@ -898,6 +887,7 @@ public final class MojangMetadataClient
 	 * Checks whether a rule matches the current runtime environment.
 	 *
 	 * @param rule the rule to evaluate
+	 *
 	 * @return {@code true} if the rule matches
 	 */
 	private boolean matches(MojangRule rule)
@@ -907,12 +897,12 @@ public final class MojangMetadataClient
 			return true;
 		}
 
-		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
-		String osArch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
+		var osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+		var osArch = System.getProperty("os.arch", "").toLowerCase(Locale.ROOT);
 
 		if (rule.os().name() != null)
 		{
-			String expectedOs = HostPlatform.expectedOsNameToken(rule.os().name());
+			var expectedOs = HostPlatform.expectedOsNameToken(rule.os().name());
 
 			if (!osName.contains(expectedOs))
 			{
@@ -922,7 +912,7 @@ public final class MojangMetadataClient
 
 		if (rule.os().arch() != null)
 		{
-			String expectedArch = rule.os().arch().toLowerCase(Locale.ROOT);
+			var expectedArch = rule.os().arch().toLowerCase(Locale.ROOT);
 
 			if (!osArch.equals(expectedArch))
 			{
@@ -932,19 +922,16 @@ public final class MojangMetadataClient
 
 		if (rule.os().versionRange() != null)
 		{
-			String osVersion = System.getProperty("os.version", "");
-			String minVersion = rule.os().versionRange().min();
-			String maxVersion = rule.os().versionRange().max();
+			var osVersion = System.getProperty("os.version", "");
+			var minVersion = rule.os().versionRange().min();
+			var maxVersion = rule.os().versionRange().max();
 
 			if (minVersion != null && compareVersions(osVersion, minVersion) < 0)
 			{
 				return false;
 			}
 
-			if (maxVersion != null && compareVersions(osVersion, maxVersion) > 0)
-			{
-				return false;
-			}
+			return maxVersion == null || compareVersions(osVersion, maxVersion) <= 0;
 		}
 
 		return true;
@@ -953,20 +940,21 @@ public final class MojangMetadataClient
 	/**
 	 * Compares dotted numeric version strings such as Windows build versions.
 	 *
-	 * @param left the first version
+	 * @param left  the first version
 	 * @param right the second version
+	 *
 	 * @return a negative number if {@code left < right}, zero if equal, otherwise positive
 	 */
 	private int compareVersions(String left, String right)
 	{
-		String[] leftParts = left.split("[^0-9]+");
-		String[] rightParts = right.split("[^0-9]+");
-		int partCount = Math.max(leftParts.length, rightParts.length);
+		var leftParts = left.split("[^0-9]+");
+		var rightParts = right.split("[^0-9]+");
+		var partCount = Math.max(leftParts.length, rightParts.length);
 
-		for (int i = 0; i < partCount; i++)
+		for (var i = 0; i < partCount; i++)
 		{
-			int leftValue = i < leftParts.length ? parseVersionPart(leftParts[i]) : 0;
-			int rightValue = i < rightParts.length ? parseVersionPart(rightParts[i]) : 0;
+			var leftValue = i < leftParts.length ? parseVersionPart(leftParts[i]) : 0;
+			var rightValue = i < rightParts.length ? parseVersionPart(rightParts[i]) : 0;
 
 			if (leftValue != rightValue)
 			{
@@ -981,6 +969,7 @@ public final class MojangMetadataClient
 	 * Parses a numeric version segment, treating blanks as zero.
 	 *
 	 * @param value the version segment
+	 *
 	 * @return the parsed numeric value
 	 */
 	private int parseVersionPart(String value)
@@ -997,6 +986,7 @@ public final class MojangMetadataClient
 	 * Checks whether a library classifier matches the current host platform.
 	 *
 	 * @param library the library to inspect
+	 *
 	 * @return {@code true} if the library matches the current host platform
 	 */
 	private boolean matchesLibraryPlatform(MojangVersionMetadataLibrary library)
@@ -1006,16 +996,16 @@ public final class MojangMetadataClient
 			return true;
 		}
 
-		String[] parts = library.name().split(":");
+		var parts = library.name().split(":");
 
 		if (parts.length < 4)
 		{
 			return true;
 		}
 
-		String classifier = parts[3].toLowerCase(Locale.ROOT);
-		String currentOs = HostPlatform.current().mojangOsName();
-		HostArchitecture currentArch = HostArchitecture.current();
+		var classifier = parts[3].toLowerCase(Locale.ROOT);
+		var currentOs = HostPlatform.current().mojangOsName();
+		var currentArch = HostArchitecture.current();
 
 		if (classifier.contains("windows"))
 		{
@@ -1078,16 +1068,16 @@ public final class MojangMetadataClient
 	/**
 	 * Summary of downloaded runtime inputs.
 	 *
-	 * @param libraryCount the number of downloaded runtime libraries
-	 * @param assetObjectCount the number of downloaded asset objects
-	 * @param librariesRoot the cached libraries root
+	 * @param libraryCount      the number of downloaded runtime libraries
+	 * @param assetObjectCount  the number of downloaded asset objects
+	 * @param librariesRoot     the cached libraries root
 	 * @param assetsObjectsRoot the cached asset objects root
 	 */
 	public record RuntimeDownloadResult(
-		int libraryCount,
-		int assetObjectCount,
-		Path librariesRoot,
-		Path assetsObjectsRoot
+			int libraryCount,
+			int assetObjectCount,
+			Path librariesRoot,
+			Path assetsObjectsRoot
 	)
 	{
 	}
@@ -1095,14 +1085,14 @@ public final class MojangMetadataClient
 	/**
 	 * Immutable description of an asset object download.
 	 *
-	 * @param assetName the logical asset path
-	 * @param sourceUri the source URI
+	 * @param assetName  the logical asset path
+	 * @param sourceUri  the source URI
 	 * @param targetFile the cache target file
 	 */
 	private record AssetDownload(
-		String assetName,
-		URI sourceUri,
-		Path targetFile
+			String assetName,
+			URI sourceUri,
+			Path targetFile
 	)
 	{
 	}
@@ -1111,14 +1101,14 @@ public final class MojangMetadataClient
 	 * Immutable result for a completed asset download.
 	 *
 	 * @param assetName the logical asset path
-	 * @param success whether the download succeeded
-	 * @param message the failure message when unsuccessful
+	 * @param success   whether the download succeeded
+	 * @param message   the failure message when unsuccessful
 	 */
 	private record AssetDownloadResult(
-		AssetDownload download,
-		String assetName,
-		boolean success,
-		String message
+			AssetDownload download,
+			String assetName,
+			boolean success,
+			String message
 	)
 	{
 	}
@@ -1177,7 +1167,7 @@ public final class MojangMetadataClient
 		 * Creates a new wrapped asset download failure.
 		 *
 		 * @param download the failed download
-		 * @param cause the failure cause
+		 * @param cause    the failure cause
 		 */
 		private AssetDownloadException(AssetDownload download, Throwable cause)
 		{

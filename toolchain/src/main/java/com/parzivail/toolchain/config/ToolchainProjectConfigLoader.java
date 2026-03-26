@@ -4,14 +4,10 @@ import com.parzivail.toolchain.maven.ToolchainMavenCoordinates;
 import com.parzivail.toolchain.maven.ToolchainMavenRepositories;
 import com.parzivail.toolchain.model.ModuleSpec;
 import com.parzivail.toolchain.path.ModulePaths;
-
 import com.parzivail.toolchain.path.ToolchainPaths;
 import io.github.wasabithumb.jtoml.JToml;
-import io.github.wasabithumb.jtoml.document.TomlDocument;
-import io.github.wasabithumb.jtoml.key.TomlKey;
 import io.github.wasabithumb.jtoml.value.TomlValue;
 import io.github.wasabithumb.jtoml.value.array.TomlArray;
-import io.github.wasabithumb.jtoml.value.primitive.TomlPrimitive;
 import io.github.wasabithumb.jtoml.value.table.TomlTable;
 
 import java.io.IOException;
@@ -43,11 +39,12 @@ public final class ToolchainProjectConfigLoader
 	 * Loads the tracked toolchain configuration from one project root.
 	 *
 	 * @return the loaded project configuration
+	 *
 	 * @throws IOException if the configuration cannot be read
 	 */
 	public ToolchainProjectConfig load() throws IOException
 	{
-		Path configPath = ToolchainPaths.CONFIG_FILE;
+		var configPath = ToolchainPaths.CONFIG_FILE;
 
 		if (!Files.isRegularFile(configPath))
 		{
@@ -56,20 +53,21 @@ public final class ToolchainProjectConfigLoader
 
 		try
 		{
-			TomlDocument document = _toml.read(configPath);
-			TomlTable project = requireTable(document, "project", "root");
-			TomlTable modulesTable = requireTable(document, "modules", "root");
-			List<ModuleSpec> modules = loadModules(modulesTable);
-			String defaultDevelopmentModule = requireString(project, "default_development_module", "project");
+			var document = _toml.read(configPath);
+			var project = requireTable(document, "project", "root");
+			var modulesTable = requireTable(document, "modules", "root");
+			var modules = loadModules(modulesTable);
+			var defaultDevelopmentModule = requireString(project, "default_development_module", "project");
 
 			validateProjectConfiguration(defaultDevelopmentModule, modules);
 
 			return new ToolchainProjectConfig(
-				requireString(project, "id", "project"),
-				requireString(project, "name", "project"),
-				requireString(project, "minecraft_version", "project"),
-				defaultDevelopmentModule,
-				modules
+					requireString(project, "id", "project"),
+					requireString(project, "name", "project"),
+					requireString(project, "minecraft_version", "project"),
+					requireString(project, "loader_version", "project"),
+					defaultDevelopmentModule,
+					modules
 			);
 		}
 		catch (RuntimeException exception)
@@ -82,7 +80,7 @@ public final class ToolchainProjectConfigLoader
 	 * Validates the project-level configuration against the loaded module graph.
 	 *
 	 * @param defaultDevelopmentModule the configured default development module id
-	 * @param modules the loaded modules
+	 * @param modules                  the loaded modules
 	 */
 	private void validateProjectConfiguration(String defaultDevelopmentModule, List<ModuleSpec> modules)
 	{
@@ -91,14 +89,14 @@ public final class ToolchainProjectConfigLoader
 			throw new IllegalArgumentException("toolchain.toml must define at least one module");
 		}
 
-		boolean foundDefault = modules.stream()
-			.map(ModuleSpec::id)
-			.anyMatch(defaultDevelopmentModule::equals);
+		var foundDefault = modules.stream()
+		                          .map(ModuleSpec::id)
+		                          .anyMatch(defaultDevelopmentModule::equals);
 
 		if (!foundDefault)
 		{
 			throw new IllegalArgumentException(
-				"Default development module '" + defaultDevelopmentModule + "' is not declared under [modules]"
+					"Default development module '" + defaultDevelopmentModule + "' is not declared under [modules]"
 			);
 		}
 	}
@@ -107,16 +105,17 @@ public final class ToolchainProjectConfigLoader
 	 * Loads all configured modules from the `modules` table.
 	 *
 	 * @param modulesTable the configured module table
+	 *
 	 * @return the loaded module specs
 	 */
 	private List<ModuleSpec> loadModules(TomlTable modulesTable)
 	{
 		List<ModuleSpec> modules = new ArrayList<>();
 
-		for (TomlKey key : modulesTable.keys(false))
+		for (var key : modulesTable.keys(false))
 		{
-			String moduleId = key.toString();
-			TomlTable moduleTable = requireTable(modulesTable, moduleId, "modules");
+			var moduleId = key.toString();
+			var moduleTable = requireTable(modulesTable, moduleId, "modules");
 			modules.add(loadModule(moduleId, moduleTable));
 		}
 
@@ -128,23 +127,24 @@ public final class ToolchainProjectConfigLoader
 	 * Loads one configured module into a mutable module specification.
 	 *
 	 * @param moduleId the configured module identifier
-	 * @param table the configured module table
+	 * @param table    the configured module table
+	 *
 	 * @return the loaded module specification
 	 */
 	private ModuleSpec loadModule(String moduleId, TomlTable table)
 	{
-		String root = optionalString(table, "root");
+		var root = optionalString(table, "root");
 
 		if (root == null || root.isBlank())
 		{
 			root = "projects/" + moduleId;
 		}
 
-		ModuleSpec spec = new ModuleSpec(moduleId, new ModulePaths(root));
-		ConfiguredModuleKind kind = ConfiguredModuleKind.parse(requireString(table, "kind", "modules." + moduleId));
+		var spec = new ModuleSpec(moduleId, new ModulePaths(root));
+		var kind = ConfiguredModuleKind.parse(requireString(table, "kind", "modules." + moduleId));
 		applyDefaults(spec, kind);
 
-		Integer javaVersion = optionalInteger(table, "java_version");
+		var javaVersion = optionalInteger(table, "java_version");
 
 		if (javaVersion != null)
 		{
@@ -173,21 +173,21 @@ public final class ToolchainProjectConfigLoader
 		applyOptionalDependencyList(table, "annotation_processor_dependencies", spec::annotationProcessorDependency);
 		applyOptionalDependencyList(table, "runtime_dependencies", spec::runtimeDependency);
 
-		String artifactId = optionalString(table, "artifact_id");
+		var artifactId = optionalString(table, "artifact_id");
 
 		if (artifactId != null && !artifactId.isBlank())
 		{
 			spec.artifactId(artifactId);
 		}
 
-		String fabricModId = optionalString(table, "fabric_mod_id");
+		var fabricModId = optionalString(table, "fabric_mod_id");
 
 		if (fabricModId != null && !fabricModId.isBlank())
 		{
 			spec.fabricModId(fabricModId);
 		}
 
-		String fabricModJson = optionalString(table, "fabric_mod_json");
+		var fabricModJson = optionalString(table, "fabric_mod_json");
 
 		if (fabricModJson != null && !fabricModJson.isBlank())
 		{
@@ -202,8 +202,8 @@ public final class ToolchainProjectConfigLoader
 		}
 
 		if (kind == ConfiguredModuleKind.FABRIC_SPLIT_SOURCES
-			&& !spec.annotationProcessors().isEmpty()
-			&& spec.generatedClientSources().isEmpty())
+		    && !spec.annotationProcessors().isEmpty()
+		    && spec.generatedClientSources().isEmpty())
 		{
 			spec.generatedClientSources(spec.paths().generatedAnnotationProcessorClient());
 		}
@@ -237,8 +237,6 @@ public final class ToolchainProjectConfigLoader
 				spec.clientResources(spec.paths().clientResources());
 				spec.fabricModJson(spec.paths().mainResource("fabric.mod.json"));
 				spec.fabricModId(spec.id());
-				spec.compileDependency(ToolchainMavenCoordinates.FABRIC_API, ToolchainMavenRepositories.FABRIC);
-				spec.runtimeDependency(ToolchainMavenCoordinates.FABRIC_API, ToolchainMavenRepositories.FABRIC);
 				spec.compileDependency(ToolchainMavenCoordinates.JETBRAINS_ANNOTATIONS, ToolchainMavenRepositories.MAVEN_CENTRAL);
 			}
 
@@ -247,8 +245,6 @@ public final class ToolchainProjectConfigLoader
 				spec.mainResources(spec.paths().mainResources());
 				spec.fabricModJson(spec.paths().mainResource("fabric.mod.json"));
 				spec.fabricModId(spec.id());
-				spec.compileDependency(ToolchainMavenCoordinates.FABRIC_API, ToolchainMavenRepositories.FABRIC);
-				spec.runtimeDependency(ToolchainMavenCoordinates.FABRIC_API, ToolchainMavenRepositories.FABRIC);
 			}
 		}
 	}
@@ -260,9 +256,9 @@ public final class ToolchainProjectConfigLoader
 	 */
 	private void validateModules(List<ModuleSpec> modules)
 	{
-		List<String> moduleIds = modules.stream().map(ModuleSpec::id).toList();
+		var moduleIds = modules.stream().map(ModuleSpec::id).toList();
 
-		for (ModuleSpec module : modules)
+		for (var module : modules)
 		{
 			validateModuleReferences(module, "dependency", module.dependencies(), moduleIds);
 			validateModuleReferences(module, "aggregate member", module.aggregateMembers(), moduleIds);
@@ -278,24 +274,24 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Validates one logical module-reference list.
 	 *
-	 * @param module the owning module
+	 * @param module           the owning module
 	 * @param relationshipName the human-readable relationship name
-	 * @param referencedIds the referenced identifiers
-	 * @param knownModuleIds the loaded module identifiers
+	 * @param referencedIds    the referenced identifiers
+	 * @param knownModuleIds   the loaded module identifiers
 	 */
 	private void validateModuleReferences(
-		ModuleSpec module,
-		String relationshipName,
-		List<String> referencedIds,
-		List<String> knownModuleIds
+			ModuleSpec module,
+			String relationshipName,
+			List<String> referencedIds,
+			List<String> knownModuleIds
 	)
 	{
-		for (String referencedId : referencedIds)
+		for (var referencedId : referencedIds)
 		{
 			if (!knownModuleIds.contains(referencedId))
 			{
 				throw new IllegalArgumentException(
-					"Module '" + module.id() + "' references unknown " + relationshipName + " module '" + referencedId + "'"
+						"Module '" + module.id() + "' references unknown " + relationshipName + " module '" + referencedId + "'"
 				);
 			}
 		}
@@ -304,13 +300,13 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Applies an optional string list to one module mutator.
 	 *
-	 * @param table the owning table
-	 * @param key the list key
+	 * @param table    the owning table
+	 * @param key      the list key
 	 * @param consumer the target mutator
 	 */
 	private void applyOptionalStringList(TomlTable table, String key, java.util.function.Consumer<String> consumer)
 	{
-		for (String value : optionalStringList(table, key))
+		for (var value : optionalStringList(table, key))
 		{
 			consumer.accept(value);
 		}
@@ -319,13 +315,13 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Applies one optional singular string to one module mutator.
 	 *
-	 * @param table the owning table
-	 * @param key the singular key
+	 * @param table    the owning table
+	 * @param key      the singular key
 	 * @param consumer the target mutator
 	 */
 	private void applyOptionalString(TomlTable table, String key, java.util.function.Consumer<String> consumer)
 	{
-		String value = optionalString(table, key);
+		var value = optionalString(table, key);
 
 		if (value != null && !value.isBlank())
 		{
@@ -336,13 +332,13 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Applies an optional path list to one module mutator.
 	 *
-	 * @param table the owning table
-	 * @param key the list key
+	 * @param table    the owning table
+	 * @param key      the list key
 	 * @param consumer the target mutator
 	 */
 	private void applyOptionalPathList(TomlTable table, String key, java.util.function.Consumer<Path> consumer)
 	{
-		for (String value : optionalStringList(table, key))
+		for (var value : optionalStringList(table, key))
 		{
 			consumer.accept(Path.of(value.replace('\\', '/')));
 		}
@@ -351,19 +347,19 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Applies one optional path list where `true` means "use the default generated root".
 	 *
-	 * @param table the owning table
-	 * @param key the list key
+	 * @param table       the owning table
+	 * @param key         the list key
 	 * @param defaultPath the default generated path
-	 * @param consumer the target mutator
+	 * @param consumer    the target mutator
 	 */
 	private void applyOptionalDefaultablePathList(
-		TomlTable table,
-		String key,
-		Path defaultPath,
-		java.util.function.Consumer<Path> consumer
+			TomlTable table,
+			String key,
+			Path defaultPath,
+			java.util.function.Consumer<Path> consumer
 	)
 	{
-		TomlValue value = table.get(key);
+		var value = table.get(key);
 
 		if (value == null)
 		{
@@ -376,7 +372,7 @@ public final class ToolchainProjectConfigLoader
 			return;
 		}
 
-		for (String path : stringList(value, key))
+		for (var path : stringList(value))
 		{
 			consumer.accept(Path.of(path.replace('\\', '/')));
 		}
@@ -385,19 +381,19 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Applies one optional resource-relative list using one base resolver.
 	 *
-	 * @param table the owning table
-	 * @param key the list key
+	 * @param table    the owning table
+	 * @param key      the list key
 	 * @param resolver the relative-path resolver
 	 * @param consumer the target mutator
 	 */
 	private void applyOptionalRelativeResourceList(
-		TomlTable table,
-		String key,
-		java.util.function.Function<String, Path> resolver,
-		java.util.function.Consumer<Path> consumer
+			TomlTable table,
+			String key,
+			java.util.function.Function<String, Path> resolver,
+			java.util.function.Consumer<Path> consumer
 	)
 	{
-		for (String value : optionalStringList(table, key))
+		for (var value : optionalStringList(table, key))
 		{
 			consumer.accept(resolver.apply(value));
 		}
@@ -407,11 +403,11 @@ public final class ToolchainProjectConfigLoader
 	 * Applies the optional datagen output shorthand.
 	 *
 	 * @param table the owning module table
-	 * @param spec the mutable module specification
+	 * @param spec  the mutable module specification
 	 */
 	private void applyOptionalDatagenOutput(TomlTable table, ModuleSpec spec)
 	{
-		TomlValue datagen = table.get("datagen");
+		var datagen = table.get("datagen");
 
 		if (datagen != null)
 		{
@@ -425,7 +421,7 @@ public final class ToolchainProjectConfigLoader
 			return;
 		}
 
-		String datagenOutput = optionalString(table, "datagen_output");
+		var datagenOutput = optionalString(table, "datagen_output");
 
 		if (datagenOutput != null && !datagenOutput.isBlank())
 		{
@@ -436,26 +432,26 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Applies an optional dependency list to one module mutator.
 	 *
-	 * @param table the owning table
-	 * @param key the dependency-list key
+	 * @param table    the owning table
+	 * @param key      the dependency-list key
 	 * @param consumer the target mutator
 	 */
 	private void applyOptionalDependencyList(
-		TomlTable table,
-		String key,
-		java.util.function.BiConsumer<String, URI> consumer
+			TomlTable table,
+			String key,
+			java.util.function.BiConsumer<String, URI> consumer
 	)
 	{
-		TomlArray array = optionalArray(table, key);
+		var array = optionalArray(table, key);
 
 		if (array == null)
 		{
 			return;
 		}
 
-		for (TomlValue value : array)
+		for (var value : array)
 		{
-			ParsedDependency dependency = parseDependency(value, key);
+			var dependency = parseDependency(value, key);
 			consumer.accept(dependency.notation(), dependency.repository());
 		}
 	}
@@ -463,36 +459,37 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Parses one dependency entry from either table or string shorthand form.
 	 *
-	 * @param value the raw TOML value
+	 * @param value   the raw TOML value
 	 * @param context the human-readable config key
+	 *
 	 * @return the parsed dependency entry
 	 */
 	private ParsedDependency parseDependency(TomlValue value, String context)
 	{
 		try
 		{
-			TomlTable dependency = value.asTable();
+			var dependency = value.asTable();
 			return new ParsedDependency(
-				requireString(dependency, "notation", context),
-				parseRepository(requireString(dependency, "repository", context))
+					requireString(dependency, "notation", context),
+					parseRepository(requireString(dependency, "repository", context))
 			);
 		}
 		catch (RuntimeException ignored)
 		{
 		}
 
-		String shorthand = value.asPrimitive().asString();
-		int separator = shorthand.lastIndexOf('@');
+		var shorthand = value.asPrimitive().asString();
+		var separator = shorthand.lastIndexOf('@');
 
 		if (separator < 0)
 		{
 			throw new IllegalArgumentException(
-				"Dependency '" + shorthand + "' in " + context + " must use '<notation> @ <repository>' string shorthand"
+					"Dependency '" + shorthand + "' in " + context + " must use '<notation> @ <repository>' string shorthand"
 			);
 		}
 
-		String notation = shorthand.substring(0, separator).trim();
-		String repository = shorthand.substring(separator + 1).trim();
+		var notation = shorthand.substring(0, separator).trim();
+		var repository = shorthand.substring(separator + 1).trim();
 
 		if (notation.isBlank() || repository.isBlank())
 		{
@@ -506,29 +503,30 @@ public final class ToolchainProjectConfigLoader
 	 * Gets an optional string list from one table.
 	 *
 	 * @param table the owning table
-	 * @param key the list key
+	 * @param key   the list key
+	 *
 	 * @return the parsed string list
 	 */
 	private List<String> optionalStringList(TomlTable table, String key)
 	{
-		TomlValue value = table.get(key);
+		var value = table.get(key);
 
 		if (value == null)
 		{
 			return List.of();
 		}
 
-		return stringList(value, key);
+		return stringList(value);
 	}
 
 	/**
 	 * Converts one TOML value into a string list, accepting either one string or an array.
 	 *
 	 * @param value the raw TOML value
-	 * @param context the human-readable config key
+	 *
 	 * @return the parsed string list
 	 */
-	private List<String> stringList(TomlValue value, String context)
+	private List<String> stringList(TomlValue value)
 	{
 		try
 		{
@@ -538,10 +536,10 @@ public final class ToolchainProjectConfigLoader
 		{
 		}
 
-		TomlArray array = value.asArray();
+		var array = value.asArray();
 		List<String> values = new ArrayList<>();
 
-		for (TomlValue entry : array)
+		for (var entry : array)
 		{
 			values.add(entry.asPrimitive().asString());
 		}
@@ -553,26 +551,28 @@ public final class ToolchainProjectConfigLoader
 	 * Gets an optional array from one table.
 	 *
 	 * @param table the owning table
-	 * @param key the array key
+	 * @param key   the array key
+	 *
 	 * @return the array, or {@code null}
 	 */
 	private TomlArray optionalArray(TomlTable table, String key)
 	{
-		TomlValue value = table.get(key);
+		var value = table.get(key);
 		return value == null ? null : value.asArray();
 	}
 
 	/**
 	 * Gets one required child table.
 	 *
-	 * @param table the owning table
-	 * @param key the table key
+	 * @param table   the owning table
+	 * @param key     the table key
 	 * @param context the human-readable context
+	 *
 	 * @return the child table
 	 */
 	private TomlTable requireTable(TomlTable table, String key, String context)
 	{
-		TomlValue value = table.get(key);
+		var value = table.get(key);
 
 		if (value == null)
 		{
@@ -585,14 +585,15 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Gets one required string.
 	 *
-	 * @param table the owning table
-	 * @param key the string key
+	 * @param table   the owning table
+	 * @param key     the string key
 	 * @param context the human-readable context
+	 *
 	 * @return the parsed string
 	 */
 	private String requireString(TomlTable table, String key, String context)
 	{
-		String value = optionalString(table, key);
+		var value = optionalString(table, key);
 
 		if (value == null || value.isBlank())
 		{
@@ -606,12 +607,13 @@ public final class ToolchainProjectConfigLoader
 	 * Gets one optional string.
 	 *
 	 * @param table the owning table
-	 * @param key the string key
+	 * @param key   the string key
+	 *
 	 * @return the parsed string, or {@code null}
 	 */
 	private String optionalString(TomlTable table, String key)
 	{
-		TomlValue value = table.get(key);
+		var value = table.get(key);
 
 		if (value == null)
 		{
@@ -625,19 +627,20 @@ public final class ToolchainProjectConfigLoader
 	 * Gets one optional integer.
 	 *
 	 * @param table the owning table
-	 * @param key the integer key
+	 * @param key   the integer key
+	 *
 	 * @return the parsed integer, or {@code null}
 	 */
 	private Integer optionalInteger(TomlTable table, String key)
 	{
-		TomlValue value = table.get(key);
+		var value = table.get(key);
 
 		if (value == null)
 		{
 			return null;
 		}
 
-		TomlPrimitive primitive = value.asPrimitive();
+		var primitive = value.asPrimitive();
 		return Math.toIntExact(primitive.asLong());
 	}
 
@@ -645,6 +648,7 @@ public final class ToolchainProjectConfigLoader
 	 * Checks whether one TOML value is the boolean literal `true`.
 	 *
 	 * @param value the raw TOML value
+	 *
 	 * @return {@code true} when the value is boolean true
 	 */
 	private boolean isBooleanTrue(TomlValue value)
@@ -663,6 +667,7 @@ public final class ToolchainProjectConfigLoader
 	 * Parses one configured repository token.
 	 *
 	 * @param value the configured repository token
+	 *
 	 * @return the resolved repository URI
 	 */
 	private URI parseRepository(String value)
@@ -678,12 +683,12 @@ public final class ToolchainProjectConfigLoader
 	/**
 	 * Parsed external dependency entry.
 	 *
-	 * @param notation the Maven coordinate notation
+	 * @param notation   the Maven coordinate notation
 	 * @param repository the owning repository URI
 	 */
 	private record ParsedDependency(
-		String notation,
-		URI repository
+			String notation,
+			URI repository
 	)
 	{
 	}

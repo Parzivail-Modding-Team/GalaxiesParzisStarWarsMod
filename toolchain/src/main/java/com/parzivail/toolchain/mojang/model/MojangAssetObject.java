@@ -7,8 +7,8 @@ package com.parzivail.toolchain.mojang.model;
  * @param size the asset object size
  */
 public record MojangAssetObject(
-	String hash,
-	Long size
+		String hash,
+		Long size
 )
 {
 }

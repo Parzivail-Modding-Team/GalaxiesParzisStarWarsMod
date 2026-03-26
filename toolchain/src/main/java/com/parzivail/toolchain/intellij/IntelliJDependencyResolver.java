@@ -1,6 +1,5 @@
 package com.parzivail.toolchain.intellij;
 
-import com.parzivail.toolchain.fabric.FabricRuntimeArtifacts;
 import com.parzivail.toolchain.fabric.FabricRuntimeResolver;
 import com.parzivail.toolchain.fabric.MavenArtifactResolver;
 import com.parzivail.toolchain.fabric.MavenCoordinate;
@@ -9,26 +8,16 @@ import com.parzivail.toolchain.model.MavenDependencySpec;
 import com.parzivail.toolchain.model.ModuleSpec;
 import com.parzivail.toolchain.model.SourceSetNames;
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
-import com.parzivail.toolchain.mojang.model.MojangVersionMetadata;
-import com.parzivail.toolchain.mojang.model.MojangVersionMetadataLibrary;
 import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.runtime.LaunchEnvironment;
+import com.parzivail.toolchain.source.MinecraftSourcesGenerator;
 import com.parzivail.toolchain.util.ToolchainLog;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -94,35 +83,35 @@ public final class IntelliJDependencyResolver
 	 * Resolves the processor path for module-backed annotation processors.
 	 *
 	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param module the target module
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
+	 * @param graph       the authoritative build graph
+	 * @param module      the target module
+	 * @param refresh     whether to refresh external artifact resolution
+	 *
 	 * @return the ordered processor path entries
+	 *
 	 * @throws IOException if external artifacts cannot be resolved
 	 */
 	public List<Path> resolveAnnotationProcessorModulePath(
-		String projectName,
-		BuildGraph graph,
-		ModuleSpec module,
-		Properties gradleProperties,
-		boolean refresh
+			String projectName,
+			BuildGraph graph,
+			ModuleSpec module,
+			boolean refresh
 	) throws IOException
 	{
 		Set<Path> entries = new LinkedHashSet<>();
 
-		for (String processorId : module.annotationProcessors())
+		for (var processorId : module.annotationProcessors())
 		{
-			ModuleSpec processorModule = requireModule(graph, processorId);
+			var processorModule = requireModule(graph, processorId);
 			entries.add(ToolchainPaths.INTELLIJ_OUTPUT_DIRECTORY.resolve(IntelliJModuleNames.sourceSetModuleName(projectName, processorId, SourceSetNames.MAIN)));
 
-			for (String dependencyId : processorModule.dependencies())
+			for (var dependencyId : processorModule.dependencies())
 			{
 				entries.add(ToolchainPaths.INTELLIJ_OUTPUT_DIRECTORY.resolve(IntelliJModuleNames.sourceSetModuleName(projectName, dependencyId, SourceSetNames.MAIN)));
 			}
 
-			entries.addAll(resolveExternalDependencies(processorModule.compileDependencies(), gradleProperties, refresh));
-			entries.addAll(resolveExternalDependencies(processorModule.annotationProcessorDependencies(), gradleProperties, refresh));
+			entries.addAll(resolveExternalDependencies(processorModule.compileDependencies(), refresh));
+			entries.addAll(resolveExternalDependencies(processorModule.annotationProcessorDependencies(), refresh));
 		}
 
 		return List.copyOf(entries);
@@ -132,25 +121,25 @@ public final class IntelliJDependencyResolver
 	 * Resolves external Maven dependencies into cached artifact paths.
 	 *
 	 * @param dependencies the declared dependencies
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
+	 * @param refresh      whether to refresh external artifact resolution
+	 *
 	 * @return the resolved artifact paths
+	 *
 	 * @throws IOException if an artifact cannot be resolved
 	 */
 	public List<Path> resolveExternalDependencies(
-		List<MavenDependencySpec> dependencies,
-		Properties gradleProperties,
-		boolean refresh
+			List<MavenDependencySpec> dependencies,
+			boolean refresh
 	) throws IOException
 	{
 		List<Path> paths = new ArrayList<>();
 
-		for (MavenDependencySpec dependency : dependencies)
+		for (var dependency : dependencies)
 		{
-			Path artifact = _artifactResolver.resolve(
-				MavenCoordinate.parse(substituteProperties(dependency.notation(), gradleProperties)),
-				dependency.repository(),
-				refresh
+			var artifact = _artifactResolver.resolve(
+					MavenCoordinate.parse(dependency.notation()),
+					dependency.repository(),
+					refresh
 			);
 
 			if (!paths.contains(artifact))
@@ -165,43 +154,45 @@ public final class IntelliJDependencyResolver
 	/**
 	 * Resolves the full IntelliJ-visible library set for a module source set.
 	 *
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
-	 * @param module the module specification
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh external artifact resolution
+	 * @param module        the module specification
 	 * @param includeClient whether client-only declared dependencies should be included
+	 *
 	 * @return the ordered IntelliJ-visible library artifacts
+	 *
 	 * @throws IOException if dependency resolution fails
 	 */
 	public Set<Path> resolveModuleLibraries(
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh,
-		ModuleSpec module,
-		boolean includeClient
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh,
+			ModuleSpec module,
+			boolean includeClient
 	) throws IOException
 	{
 		Set<Path> dependencies = new LinkedHashSet<>();
 		Set<Path> declaredCompileDependencies = new LinkedHashSet<>(expandIntelliJLibraryArtifacts(
-			resolveExternalDependencies(module.compileDependencies(), gradleProperties, refresh)
+				resolveExternalDependencies(module.compileDependencies(), refresh)
 		));
 
 		dependencies.addAll(expandIntelliJLibraryArtifacts(
-			resolveImplicitCompileDependencies(
-				graph,
-				gradleProperties,
-				refresh,
-				module,
-				declaredCompileDependencies,
-				includeClient
-			)
+				resolveImplicitCompileDependencies(
+						graph,
+						loaderVersion,
+						refresh,
+						module,
+						declaredCompileDependencies,
+						includeClient
+				)
 		));
 		dependencies.addAll(declaredCompileDependencies);
 
 		if (includeClient)
 		{
 			dependencies.addAll(expandIntelliJLibraryArtifacts(
-				resolveExternalDependencies(module.clientDependencies(), gradleProperties, refresh)
+					resolveExternalDependencies(module.clientDependencies(), refresh)
 			));
 		}
 
@@ -211,66 +202,51 @@ public final class IntelliJDependencyResolver
 	/**
 	 * Resolves all project library artifacts implied by the current graph.
 	 *
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh external artifact resolution
+	 *
 	 * @return the unique IntelliJ-visible library artifacts
+	 *
 	 * @throws IOException if dependency resolution fails
 	 */
 	public Set<Path> resolveProjectLibraries(
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh
 	) throws IOException
 	{
 		Set<Path> resolvedArtifacts = new LinkedHashSet<>();
 
-		for (ModuleSpec module : graph.modules())
+		for (var module : graph.modules())
 		{
 			ToolchainLog.info("idea", "Resolving libraries for module " + module.id());
-			resolvedArtifacts.addAll(resolveModuleLibraries(graph, gradleProperties, refresh, module, false));
-			resolvedArtifacts.addAll(resolveModuleLibraries(graph, gradleProperties, refresh, module, true));
+			resolvedArtifacts.addAll(resolveModuleLibraries(graph, loaderVersion, refresh, module, false));
+			resolvedArtifacts.addAll(resolveModuleLibraries(graph, loaderVersion, refresh, module, true));
 		}
 
 		return resolvedArtifacts;
 	}
 
 	/**
-	 * Applies simple Gradle-style property substitution to a notation string.
-	 *
-	 * @param value the raw notation value
-	 * @param properties the available properties
-	 * @return the substituted notation value
-	 */
-	public String substituteProperties(String value, Properties properties)
-	{
-		String substituted = value;
-
-		for (String propertyName : properties.stringPropertyNames())
-		{
-			substituted = substituted.replace("${" + propertyName + "}", properties.getProperty(propertyName));
-		}
-
-		return substituted;
-	}
-
-	/**
 	 * Resolves the implicit platform compile dependencies for a module.
 	 *
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh downloaded artifacts
-	 * @param module the module specification
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh downloaded artifacts
+	 * @param module        the module specification
+	 *
 	 * @return the implicit compile artifacts
+	 *
 	 * @throws IOException if dependency resolution fails
 	 */
 	private Set<Path> resolveImplicitCompileDependencies(
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh,
-		ModuleSpec module,
-		Collection<Path> declaredCompileDependencies,
-		boolean includeClient
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh,
+			ModuleSpec module,
+			Collection<Path> declaredCompileDependencies,
+			boolean includeClient
 	) throws IOException
 	{
 		Set<Path> dependencies = new LinkedHashSet<>();
@@ -280,16 +256,16 @@ public final class IntelliJDependencyResolver
 			return dependencies;
 		}
 
-		Set<Path> fabricDependencies = resolveFabricCompileDependencies(gradleProperties.getProperty("loader_version"), refresh);
+		var fabricDependencies = resolveFabricCompileDependencies(loaderVersion, refresh);
 		Set<Path> modArtifacts = new LinkedHashSet<>(declaredCompileDependencies);
 		modArtifacts.addAll(fabricDependencies);
-		Set<Path> localFabricModJsons = collectLocalFabricModJsons(graph, module);
-		Set<Path> minecraftDependencies = resolveMinecraftCompileDependencies(
-			graph.minecraftVersion(),
-			refresh,
-			modArtifacts,
-			localFabricModJsons,
-			includeClient
+		var localFabricModJsons = collectLocalFabricModJsons(graph, module);
+		var minecraftDependencies = resolveMinecraftCompileDependencies(
+				graph.minecraftVersion(),
+				refresh,
+				modArtifacts,
+				localFabricModJsons,
+				includeClient
 		);
 
 		dependencies.addAll(minecraftDependencies);
@@ -301,20 +277,22 @@ public final class IntelliJDependencyResolver
 	 * Resolves the compile-time Minecraft jars needed for official-namespace PSWG modules.
 	 *
 	 * @param minecraftVersion the tracked Minecraft version
-	 * @param refresh whether to refresh downloaded artifacts
+	 * @param refresh          whether to refresh downloaded artifacts
+	 *
 	 * @return the compile-time Minecraft jars
+	 *
 	 * @throws IOException if resolution fails
 	 */
 	private Set<Path> resolveMinecraftCompileDependencies(
-		String minecraftVersion,
-		boolean refresh,
-		Collection<Path> modArtifacts,
-		Collection<Path> localFabricModJsons,
-		boolean includeClient
+			String minecraftVersion,
+			boolean refresh,
+			Collection<Path> modArtifacts,
+			Collection<Path> localFabricModJsons,
+			boolean includeClient
 	) throws IOException
 	{
-		String cacheKey = minecraftVersion + "|" + includeClient + "|" + refresh + "|" + modArtifacts.hashCode() + "|" + localFabricModJsons.hashCode();
-		Set<Path> cached = _minecraftCompileDependenciesCache.get(cacheKey);
+		var cacheKey = minecraftVersion + "|" + includeClient + "|" + refresh + "|" + modArtifacts.hashCode() + "|" + localFabricModJsons.hashCode();
+		var cached = _minecraftCompileDependenciesCache.get(cacheKey);
 
 		if (cached != null)
 		{
@@ -322,50 +300,27 @@ public final class IntelliJDependencyResolver
 		}
 
 		Set<Path> dependencies = new LinkedHashSet<>();
-		MojangVersionMetadata metadata = _mojangClient.getVersionMetadata(minecraftVersion, refresh);
-		Path minecraftCompileJar = includeClient
-			? _mojangClient.downloadClientJar(minecraftVersion, refresh)
-			: _mojangClient.downloadServerJar(minecraftVersion, refresh);
+		var metadata = _mojangClient.getVersionMetadata(minecraftVersion, refresh);
+		var minecraftCompileJar = includeClient
+		                          ? _mojangClient.downloadClientJar(minecraftVersion, refresh)
+		                          : _mojangClient.downloadServerJar(minecraftVersion, refresh);
 		ToolchainLog.info(
-			"transform",
-			"Preparing transformed " + (includeClient ? "client" : "common/server") + " Minecraft compile jar for " + minecraftVersion
+				"transform",
+				"Preparing transformed " + (includeClient ? "client" : "common/server") + " Minecraft compile jar for " + minecraftVersion
 		);
 		dependencies.add(
-			_minecraftJarTransformer.transformMinecraftJar(
-				minecraftVersion,
-				minecraftCompileJar,
-				modArtifacts,
-				localFabricModJsons
-			)
+				_minecraftJarTransformer.transformMinecraftJar(
+						minecraftVersion,
+						minecraftCompileJar,
+						modArtifacts,
+						localFabricModJsons
+				)
 		);
 
-		for (MojangVersionMetadataLibrary library : metadata.libraries())
-		{
-			if (!_mojangClient.isLibraryAllowed(library))
-			{
-				continue;
-			}
+		var mcDeps = MinecraftSourcesGenerator.resolveLibraries(_mojangClient, metadata, refresh);
+		dependencies.addAll(mcDeps);
 
-			if (library.name() != null && library.name().contains(":natives-"))
-			{
-				continue;
-			}
-
-			if (library.downloads() == null || library.downloads().artifact() == null || library.downloads().artifact().path() == null)
-			{
-				continue;
-			}
-
-			Path target = ToolchainPaths.mojangLibraryFile(library.downloads().artifact().path());
-			_mojangClient.download(
-				java.net.URI.create(library.downloads().artifact().url()),
-				target,
-				refresh
-			);
-			dependencies.add(target);
-		}
-
-		Set<Path> resolved = Set.copyOf(dependencies);
+		var resolved = Set.copyOf(dependencies);
 		_minecraftCompileDependenciesCache.put(cacheKey, resolved);
 		return resolved;
 	}
@@ -374,13 +329,14 @@ public final class IntelliJDependencyResolver
 	 * Collects local Fabric mod metadata files whose interface injections should be reflected in the
 	 * module-specific Minecraft compile jar.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph  the authoritative build graph
 	 * @param module the module currently being compiled
+	 *
 	 * @return the local Fabric mod metadata files
 	 */
 	private Set<Path> collectLocalFabricModJsons(
-		BuildGraph graph,
-		ModuleSpec module
+			BuildGraph graph,
+			ModuleSpec module
 	)
 	{
 		Set<Path> paths = new LinkedHashSet<>();
@@ -391,16 +347,16 @@ public final class IntelliJDependencyResolver
 	/**
 	 * Recursively collects local Fabric mod metadata files from a module dependency chain.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph    the authoritative build graph
 	 * @param moduleId the module identifier to inspect
-	 * @param paths the accumulated metadata paths
-	 * @param visited the visited module identifiers
+	 * @param paths    the accumulated metadata paths
+	 * @param visited  the visited module identifiers
 	 */
 	private void collectLocalFabricModJsons(
-		BuildGraph graph,
-		String moduleId,
-		Set<Path> paths,
-		Set<String> visited
+			BuildGraph graph,
+			String moduleId,
+			Set<Path> paths,
+			Set<String> visited
 	)
 	{
 		if (!visited.add(moduleId))
@@ -408,14 +364,14 @@ public final class IntelliJDependencyResolver
 			return;
 		}
 
-		ModuleSpec candidate = requireModule(graph, moduleId);
+		var candidate = requireModule(graph, moduleId);
 
 		if (candidate.fabricModJson() != null)
 		{
 			paths.add(ToolchainPaths.PROJECT_ROOT.resolve(candidate.fabricModJson()));
 		}
 
-		for (String dependencyId : candidate.dependencies())
+		for (var dependencyId : candidate.dependencies())
 		{
 			collectLocalFabricModJsons(graph, dependencyId, paths, visited);
 		}
@@ -425,14 +381,16 @@ public final class IntelliJDependencyResolver
 	 * Resolves the compile-time Fabric jars needed for Fabric-backed PSWG modules.
 	 *
 	 * @param loaderVersion the tracked Fabric Loader version
-	 * @param refresh whether to refresh downloaded artifacts
+	 * @param refresh       whether to refresh downloaded artifacts
+	 *
 	 * @return the compile-time Fabric jars
+	 *
 	 * @throws IOException if resolution fails
 	 */
 	private Set<Path> resolveFabricCompileDependencies(String loaderVersion, boolean refresh) throws IOException
 	{
-		String cacheKey = String.valueOf(loaderVersion) + "|" + refresh;
-		Set<Path> cached = _fabricCompileDependenciesCache.get(cacheKey);
+		var cacheKey = loaderVersion + "|" + refresh;
+		var cached = _fabricCompileDependenciesCache.get(cacheKey);
 
 		if (cached != null)
 		{
@@ -446,13 +404,13 @@ public final class IntelliJDependencyResolver
 			return dependencies;
 		}
 
-		FabricRuntimeArtifacts runtimeArtifacts = _fabricRuntimeResolver.resolveRuntime(
-			loaderVersion,
-			refresh,
-			LaunchEnvironment.CLIENT
+		var runtimeArtifacts = _fabricRuntimeResolver.resolveRuntime(
+				loaderVersion,
+				refresh,
+				LaunchEnvironment.CLIENT
 		);
 		dependencies.addAll(runtimeArtifacts.classpath());
-		Set<Path> resolved = Set.copyOf(dependencies);
+		var resolved = Set.copyOf(dependencies);
 		_fabricCompileDependenciesCache.put(cacheKey, resolved);
 		return resolved;
 	}
@@ -464,18 +422,20 @@ public final class IntelliJDependencyResolver
 	 * their own public API classes in addition to nested helper jars.
 	 *
 	 * @param artifacts the resolved artifacts
+	 *
 	 * @return the IntelliJ-visible classpath artifacts
+	 *
 	 * @throws IOException if nested jars cannot be extracted
 	 */
 	private Set<Path> expandIntelliJLibraryArtifacts(Collection<Path> artifacts) throws IOException
 	{
 		Set<Path> expandedArtifacts = new LinkedHashSet<>();
 
-		for (Path artifact : artifacts)
+		for (var artifact : artifacts)
 		{
 			// Keep the container jar itself on IntelliJ's classpath. Some Fabric jars expose API classes
 			// directly from the outer archive while also nesting implementation shards under META-INF/jars.
-			Set<Path> nestedArtifacts = _expandedLibraryArtifactsCache.get(artifact);
+			var nestedArtifacts = _expandedLibraryArtifactsCache.get(artifact);
 
 			if (nestedArtifacts == null)
 			{
@@ -494,7 +454,9 @@ public final class IntelliJDependencyResolver
 	 * Extracts nested `META-INF/jars/*.jar` classpath entries from a container jar when present.
 	 *
 	 * @param artifact the candidate artifact
+	 *
 	 * @return the extracted nested jars, or an empty list if the artifact is a normal jar
+	 *
 	 * @throws IOException if extraction fails
 	 */
 	private List<Path> extractNestedClasspathJars(Path artifact) throws IOException
@@ -510,10 +472,10 @@ public final class IntelliJDependencyResolver
 		}
 
 		List<Path> nestedArtifacts = new ArrayList<>();
-		Path extractionRoot = artifact.getParent().resolve(".intellij-exploded").resolve(projectLibraryName(artifact));
+		var extractionRoot = artifact.getParent().resolve(".intellij-exploded").resolve(projectLibraryName(artifact));
 
-		try (InputStream inputStream = Files.newInputStream(artifact);
-		     ZipInputStream zipInputStream = new ZipInputStream(inputStream))
+		try (var inputStream = Files.newInputStream(artifact);
+		     var zipInputStream = new ZipInputStream(inputStream))
 		{
 			ZipEntry entry;
 
@@ -524,14 +486,14 @@ public final class IntelliJDependencyResolver
 					continue;
 				}
 
-				Path target = extractionRoot.resolve(Path.of(entry.getName()).getFileName().toString());
+				var target = extractionRoot.resolve(Path.of(entry.getName()).getFileName().toString());
 				Files.createDirectories(target.getParent());
 
-				try (OutputStream outputStream = Files.newOutputStream(
-					target,
-					StandardOpenOption.CREATE,
-					StandardOpenOption.TRUNCATE_EXISTING,
-					StandardOpenOption.WRITE
+				try (var outputStream = Files.newOutputStream(
+						target,
+						StandardOpenOption.CREATE,
+						StandardOpenOption.TRUNCATE_EXISTING,
+						StandardOpenOption.WRITE
 				))
 				{
 					zipInputStream.transferTo(outputStream);
@@ -551,19 +513,21 @@ public final class IntelliJDependencyResolver
 	 * nested-jar expansion.
 	 *
 	 * @param artifact the candidate artifact
+	 *
 	 * @return whether the artifact is a Minecraft compile jar
 	 */
 	private boolean isMinecraftCompileJar(Path artifact)
 	{
-		String fileName = artifact.getFileName().toString();
+		var fileName = artifact.getFileName().toString();
 		return fileName.startsWith("minecraft-client-") || fileName.startsWith("minecraft-server-") || fileName.startsWith("server-extracted-");
 	}
 
 	/**
 	 * Resolves a module from the authoritative graph.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph    the authoritative build graph
 	 * @param moduleId the module identifier
+	 *
 	 * @return the resolved module
 	 */
 	private ModuleSpec requireModule(BuildGraph graph, String moduleId)
@@ -579,11 +543,12 @@ public final class IntelliJDependencyResolver
 	 * Builds a stable project-library name for a resolved artifact.
 	 *
 	 * @param artifact the resolved artifact path
+	 *
 	 * @return the library name
 	 */
 	private String projectLibraryName(Path artifact)
 	{
-		String fileName = artifact.getFileName().toString();
+		var fileName = artifact.getFileName().toString();
 		return fileName.endsWith(".jar") ? fileName.substring(0, fileName.length() - 4) : fileName;
 	}
 }

@@ -22,7 +22,8 @@ The preferred TOML shape is intentionally compact:
 - use `kind = "fabric_split_sources"` for normal Fabric modules with shared `src/main` and `src/client`
 - use `dependency = "..."` and `annotation_processor = "..."` when only one entry is needed
 - use `main_mixins = ["..."]` and `client_mixins = ["..."]` with resource-relative file names
-- use `generated_sources = true`, `generated_client_sources = true`, or `datagen = true` when the default roots are correct
+- use `generated_sources = true`, `generated_client_sources = true`, or `datagen = true` when the default roots are
+  correct
 - use external dependency shorthand like `"group:artifact:version @ maven_central"` when table syntax is unnecessary
 
 ## Workflow
@@ -31,7 +32,8 @@ The supported day-to-day workflow is wrapper-first:
 
 1. the toolchain generates the root-project IntelliJ metadata and Fabric run configurations
 2. IntelliJ builds PSWG module outputs into `out/production/...`
-3. the generated `Fabric Client (platform)`, `Fabric Server (platform)`, or `Fabric Datagen <module> (platform)` run configuration launches `net.fabricmc.devlaunchinjector.Main`
+3. the generated `Fabric Client (platform)`, `Fabric Server (platform)`, or `Fabric Datagen <module> (platform)` run
+   configuration launches `net.fabricmc.devlaunchinjector.Main`
 4. `toolchain.sh` or `toolchain.bat` runs the packaged toolchain jar from `toolchain/bin/`
 
 The primary command is:
@@ -84,7 +86,8 @@ Use the same setup command whenever one of these changes:
 Normal iteration after that is just IntelliJ:
 
 - run or debug `Fabric Client (platform)` or `Fabric Server (platform)`
-- run the generated `Fabric Datagen <module> (platform)` configuration for the module whose checked-in `src/main/generated` output you want to refresh
+- run the generated `Fabric Datagen <module> (platform)` configuration for the module whose checked-in
+  `src/main/generated` output you want to refresh
 - inspect Minecraft, Fabric, and other attached libraries directly from the IDE when their source jars are available
 
 ## Artifact Assembly
@@ -153,7 +156,8 @@ After any version change:
 
 1. run `./toolchain.sh dev setup-intellij`
 2. run `./toolchain.sh fabric inspect-dev --environment <client|server>` if the launch contract might have changed
-3. verify the generated `Fabric Client (platform)` or `Fabric Server (platform)` configuration still launches and debugs cleanly
+3. verify the generated `Fabric Client (platform)` or `Fabric Server (platform)` configuration still launches and debugs
+   cleanly
 
 If the update involves dev-launch-injector behavior, Fabric bootstrap changes, or launch-property
 changes, see `toolchain/DEVELOPMENT.md` before changing the launch workflow code.

@@ -5,14 +5,10 @@ import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.project.RepositoryContext;
 import com.parzivail.toolchain.runtime.LaunchEnvironment;
 import com.parzivail.toolchain.util.HostPlatform;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,8 +16,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -43,31 +37,31 @@ public final class FabricDevLaunchInspector
 	 * Inspects the current dev-launch contract for one environment.
 	 *
 	 * @param environment the target environment
+	 *
 	 * @return the collected inspection summary
+	 *
 	 * @throws IOException if inspection fails
 	 */
 	public FabricDevLaunchSummary inspect(LaunchEnvironment environment) throws IOException
 	{
-		Properties properties = RepositoryContext.loadGradleProperties();
-		Path runConfigPath = generatedRunConfigurationPath(environment);
-		IdeaRunConfiguration runConfiguration = parseIdeaRunConfiguration(runConfigPath);
-		String runtimeMainClass = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.main");
-		String dliConfigPath = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.config");
-		String dliEnvironment = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.env");
-		FabricDevLaunchConfig launchConfig = parseLaunchConfig(resolveLaunchConfigPath(dliConfigPath));
+		var repoContext = RepositoryContext.load();
+		var runConfigPath = generatedRunConfigurationPath(environment);
+		var runConfiguration = parseIdeaRunConfiguration(runConfigPath);
+		var runtimeMainClass = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.main");
+		var dliConfigPath = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.config");
+		var dliEnvironment = extractVmProperty(runConfiguration.vmParameters(), "fabric.dli.env");
+		var launchConfig = parseLaunchConfig(resolveLaunchConfigPath(dliConfigPath));
 
 		return new FabricDevLaunchSummary(
-			properties.getProperty("minecraft_version"),
-			properties.getProperty("loader_version"),
-			properties.getProperty("fabric_version"),
-			properties.getProperty("loom_version"),
-			FabricDevLaunchService.DEV_LAUNCH_MAIN_CLASS,
-			defaultRuntimeMainClass(environment),
-			runConfiguration.mainClass(),
-			runtimeMainClass,
-			dliEnvironment,
-			dliConfigPath,
-			launchConfig
+				repoContext.minecraftVersion(),
+				repoContext.loaderVersion(),
+				FabricDevLaunchService.DEV_LAUNCH_MAIN_CLASS,
+				defaultRuntimeMainClass(environment),
+				runConfiguration.mainClass(),
+				runtimeMainClass,
+				dliEnvironment,
+				dliConfigPath,
+				launchConfig
 		);
 	}
 
@@ -75,7 +69,9 @@ public final class FabricDevLaunchInspector
 	 * Parses a Loom-style development launch configuration file.
 	 *
 	 * @param path the configuration file path
+	 *
 	 * @return the parsed configuration
+	 *
 	 * @throws IOException if the file cannot be read
 	 */
 	private FabricDevLaunchConfig parseLaunchConfig(Path path) throws IOException
@@ -83,7 +79,7 @@ public final class FabricDevLaunchInspector
 		Map<String, List<String>> sections = new LinkedHashMap<>();
 		String currentSection = null;
 
-		for (String line : Files.readAllLines(path))
+		for (var line : Files.readAllLines(path))
 		{
 			if (line.isBlank())
 			{
@@ -110,17 +106,19 @@ public final class FabricDevLaunchInspector
 	 * Parses a generated IntelliJ Application run configuration.
 	 *
 	 * @param path the run configuration file path
+	 *
 	 * @return the parsed run configuration values
+	 *
 	 * @throws IOException if the file cannot be read
 	 */
 	private IdeaRunConfiguration parseIdeaRunConfiguration(Path path) throws IOException
 	{
 		try
 		{
-			Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile());
-			Element configuration = (Element) document.getElementsByTagName("configuration").item(0);
-			String mainClass = optionValue(configuration, "MAIN_CLASS_NAME");
-			String vmParameters = optionValue(configuration, "VM_PARAMETERS");
+			var document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile());
+			var configuration = (Element)document.getElementsByTagName("configuration").item(0);
+			var mainClass = optionValue(configuration, "MAIN_CLASS_NAME");
+			var vmParameters = optionValue(configuration, "VM_PARAMETERS");
 			return new IdeaRunConfiguration(path, mainClass, vmParameters);
 		}
 		catch (Exception exception)
@@ -133,16 +131,17 @@ public final class FabricDevLaunchInspector
 	 * Reads a named option value from a generated IntelliJ run configuration.
 	 *
 	 * @param configuration the configuration element
-	 * @param optionName the option name
+	 * @param optionName    the option name
+	 *
 	 * @return the option value, or {@code null}
 	 */
 	private String optionValue(Element configuration, String optionName)
 	{
-		NodeList optionNodes = configuration.getElementsByTagName("option");
+		var optionNodes = configuration.getElementsByTagName("option");
 
-		for (int i = 0; i < optionNodes.getLength(); i++)
+		for (var i = 0; i < optionNodes.getLength(); i++)
 		{
-			Element option = (Element) optionNodes.item(i);
+			var option = (Element)optionNodes.item(i);
 
 			if (optionName.equals(option.getAttribute("name")))
 			{
@@ -157,7 +156,8 @@ public final class FabricDevLaunchInspector
 	 * Extracts a JVM system property value from an IntelliJ VM parameter string.
 	 *
 	 * @param vmParameters the raw VM parameter string
-	 * @param key the property key
+	 * @param key          the property key
+	 *
 	 * @return the extracted property value, or {@code null}
 	 */
 	private String extractVmProperty(String vmParameters, String key)
@@ -167,8 +167,8 @@ public final class FabricDevLaunchInspector
 			return null;
 		}
 
-		Matcher matcher = Pattern.compile(
-			"(?:^|\\s|\")-D" + Pattern.quote(key) + "=([^\"\\s]+(?:\\s[^\"\\s]+)*)"
+		var matcher = Pattern.compile(
+				"(?:^|\\s|\")-D" + Pattern.quote(key) + "=([^\"\\s]+(?:\\s[^\"\\s]+)*)"
 		).matcher(vmParameters);
 
 		if (matcher.find())
@@ -183,11 +183,12 @@ public final class FabricDevLaunchInspector
 	 * Resolves the generated IntelliJ run configuration path for the current host platform.
 	 *
 	 * @return the run configuration path
+	 *
 	 * @throws IOException if the generated file does not exist
 	 */
 	private Path generatedRunConfigurationPath(LaunchEnvironment environment) throws IOException
 	{
-		Path path = ToolchainPaths.INTELLIJ_RUN_CONFIGS_DIRECTORY.resolve(IntelliJModuleNames.fabricRunConfigurationFileName(environment.id(), HostPlatform.current().id()));
+		var path = ToolchainPaths.INTELLIJ_RUN_CONFIGS_DIRECTORY.resolve(IntelliJModuleNames.fabricRunConfigurationFileName(environment.id(), HostPlatform.current().id()));
 
 		if (!Files.isRegularFile(path))
 		{
@@ -201,6 +202,7 @@ public final class FabricDevLaunchInspector
 	 * Gets the fallback runtime main class for one environment.
 	 *
 	 * @param environment the inspected environment
+	 *
 	 * @return the fallback runtime main class
 	 */
 	private String defaultRuntimeMainClass(LaunchEnvironment environment)
@@ -212,7 +214,9 @@ public final class FabricDevLaunchInspector
 	 * Resolves the generated DLI launch config path from the IntelliJ VM properties.
 	 *
 	 * @param dliConfigPath the configured `fabric.dli.config` path
+	 *
 	 * @return the launch config path
+	 *
 	 * @throws IOException if the property is missing or the file does not exist
 	 */
 	private Path resolveLaunchConfigPath(String dliConfigPath) throws IOException
@@ -222,7 +226,7 @@ public final class FabricDevLaunchInspector
 			throw new IOException("Generated run configuration is missing -Dfabric.dli.config");
 		}
 
-		Path path = Paths.get(dliConfigPath);
+		var path = Paths.get(dliConfigPath);
 
 		if (!Files.isRegularFile(path))
 		{
@@ -235,14 +239,14 @@ public final class FabricDevLaunchInspector
 	/**
 	 * Parsed IntelliJ run configuration data.
 	 *
-	 * @param path the run configuration file path
-	 * @param mainClass the configured entrypoint
+	 * @param path         the run configuration file path
+	 * @param mainClass    the configured entrypoint
 	 * @param vmParameters the raw VM parameter string
 	 */
 	private record IdeaRunConfiguration(
-		Path path,
-		String mainClass,
-		String vmParameters
+			Path path,
+			String mainClass,
+			String vmParameters
 	)
 	{
 	}

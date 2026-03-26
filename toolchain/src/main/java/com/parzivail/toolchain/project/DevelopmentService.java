@@ -25,23 +25,24 @@ public final class DevelopmentService
 	/**
 	 * The combined result of the supported IntelliJ setup workflow.
 	 *
-	 * @param launches the prepared client and server launches
+	 * @param launches              the prepared client and server launches
 	 * @param datagenConfigurations the prepared datagen configurations
 	 */
 	public record SetupResult(
-		Map<LaunchEnvironment, VanillaLaunchConfig> launches,
-		List<FabricDataGenerationService.DatagenConfiguration> datagenConfigurations
+			Map<LaunchEnvironment, VanillaLaunchConfig> launches,
+			List<FabricDataGenerationService.DatagenConfiguration> datagenConfigurations
 	)
 	{
 		/**
 		 * Gets the prepared launch for one environment.
 		 *
 		 * @param environment the launch environment
+		 *
 		 * @return the prepared launch
 		 */
 		public VanillaLaunchConfig launch(LaunchEnvironment environment)
 		{
-			VanillaLaunchConfig launch = launches.get(environment);
+			var launch = launches.get(environment);
 
 			if (launch == null)
 			{
@@ -55,19 +56,21 @@ public final class DevelopmentService
 	/**
 	 * Runs the supported IntelliJ-first setup workflow for the requested injected module.
 	 *
-	 * @param refresh whether external metadata and cached artifacts should be refreshed
+	 * @param refresh  whether external metadata and cached artifacts should be refreshed
 	 * @param moduleId the optional requested injected module id
 	 * @param identity the launch identity to embed in the generated run configurations
+	 *
 	 * @return the prepared launch and datagen configurations
+	 *
 	 * @throws IOException if setup fails
 	 */
 	public SetupResult setupIntelliJDevelopment(
-		boolean refresh,
-		String moduleId,
-		LaunchIdentity identity
+			boolean refresh,
+			String moduleId,
+			LaunchIdentity identity
 	) throws IOException
 	{
-		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
+		var repository = RepositoryContext.load();
 		return setupIntelliJDevelopment(repository, refresh, moduleId, identity);
 	}
 
@@ -75,50 +78,52 @@ public final class DevelopmentService
 	 * Runs the supported IntelliJ-first setup workflow for the requested injected module.
 	 *
 	 * @param repository the discovered repository context
-	 * @param refresh whether external metadata and cached artifacts should be refreshed
-	 * @param moduleId the optional requested injected module id
-	 * @param identity the launch identity to embed in the generated run configurations
+	 * @param refresh    whether external metadata and cached artifacts should be refreshed
+	 * @param moduleId   the optional requested injected module id
+	 * @param identity   the launch identity to embed in the generated run configurations
+	 *
 	 * @return the prepared launch and datagen configurations
+	 *
 	 * @throws IOException if setup fails
 	 */
 	private SetupResult setupIntelliJDevelopment(
-		RepositoryContext repository,
-		boolean refresh,
-		String moduleId,
-		LaunchIdentity identity
+			RepositoryContext repository,
+			boolean refresh,
+			String moduleId,
+			LaunchIdentity identity
 	) throws IOException
 	{
-		String effectiveModuleId = effectiveDevelopmentModuleId(repository.buildGraph(), moduleId);
+		var effectiveModuleId = effectiveDevelopmentModuleId(repository.buildGraph(), moduleId);
 		ToolchainLog.info("dev", "Synchronizing IntelliJ metadata for " + repository.projectName());
 		new IntelliJProjectSyncService().syncProject(refresh);
-		FabricDevLaunchService launchService = new FabricDevLaunchService();
-		FabricDataGenerationService datagenService = new FabricDataGenerationService();
+		var launchService = new FabricDevLaunchService();
+		var datagenService = new FabricDataGenerationService();
 		Map<LaunchEnvironment, VanillaLaunchConfig> launches = new EnumMap<>(LaunchEnvironment.class);
 
-		for (LaunchEnvironment environment : LaunchEnvironment.values())
+		for (var environment : LaunchEnvironment.values())
 		{
 			ToolchainLog.info(
-				"dev",
-				"Preparing Fabric " + environment.displayName().toLowerCase() + " launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
+					"dev",
+					"Preparing Fabric " + environment.displayName().toLowerCase() + " launch for " + effectiveModuleId + " on Minecraft " + repository.minecraftVersion()
 			);
 			launches.put(
-				environment,
-				launchService.prepareLaunch(
-					repository.minecraftVersion(),
-					refresh,
-					effectiveModuleId,
 					environment,
-					environment.effectiveIdentity(identity)
-				)
+					launchService.prepareLaunch(
+							repository.minecraftVersion(),
+							refresh,
+							effectiveModuleId,
+							environment,
+							environment.effectiveIdentity(identity)
+					)
 			);
 		}
 
 		ToolchainLog.info("dev", "Preparing Fabric datagen launches");
-		List<FabricDataGenerationService.DatagenConfiguration> datagenConfigurations = datagenService.prepareRunConfigurations(
-			repository.minecraftVersion(),
-			refresh,
-			null,
-			identity
+		var datagenConfigurations = datagenService.prepareRunConfigurations(
+				repository.minecraftVersion(),
+				refresh,
+				null,
+				identity
 		);
 
 		return new SetupResult(Map.copyOf(launches), List.copyOf(datagenConfigurations));
@@ -127,13 +132,14 @@ public final class DevelopmentService
 	/**
 	 * Resolves the effective module id for the supported development workflow.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph    the authoritative build graph
 	 * @param moduleId the optional requested module id
+	 *
 	 * @return the effective module id
 	 */
 	public static String effectiveDevelopmentModuleId(
-		BuildGraph graph,
-		String moduleId
+			BuildGraph graph,
+			String moduleId
 	)
 	{
 		if (moduleId == null || moduleId.isBlank())

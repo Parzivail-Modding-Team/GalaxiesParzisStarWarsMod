@@ -52,20 +52,22 @@ public final class SourceAttachmentResolver
 	 * Resolves a source archive for one binary artifact when available.
 	 *
 	 * @param artifact the binary artifact path
-	 * @param refresh whether refresh was requested
+	 * @param refresh  whether refresh was requested
+	 *
 	 * @return the source archive, or {@code null} when none can be resolved
+	 *
 	 * @throws IOException if source generation or resolution fails
 	 */
 	public Path resolveSourceArchive(Path artifact, boolean refresh) throws IOException
 	{
-		Path cached = _sourceArchiveCache.get(artifact);
+		var cached = _sourceArchiveCache.get(artifact);
 
 		if (cached != null)
 		{
 			return Files.exists(cached) ? cached : null;
 		}
 
-		Path sourceArchive = resolveSourceArchiveUncached(artifact, refresh);
+		var sourceArchive = resolveSourceArchiveUncached(artifact, refresh);
 		_sourceArchiveCache.put(artifact, sourceArchive);
 		return sourceArchive;
 	}
@@ -74,8 +76,10 @@ public final class SourceAttachmentResolver
 	 * Resolves a source archive without consulting the per-run cache.
 	 *
 	 * @param artifact the binary artifact path
-	 * @param refresh whether refresh was requested
+	 * @param refresh  whether refresh was requested
+	 *
 	 * @return the source archive, or {@code null}
+	 *
 	 * @throws IOException if source generation or resolution fails
 	 */
 	private Path resolveSourceArchiveUncached(Path artifact, boolean refresh) throws IOException
@@ -90,7 +94,7 @@ public final class SourceAttachmentResolver
 			return artifact;
 		}
 
-		Path minecraftSources = _minecraftSourcesGenerator.generateSources(artifact, refresh);
+		var minecraftSources = _minecraftSourcesGenerator.generateSources(artifact, refresh);
 
 		if (minecraftSources != null)
 		{
@@ -105,8 +109,10 @@ public final class SourceAttachmentResolver
 	 * a repository layout.
 	 *
 	 * @param artifact the binary artifact path
-	 * @param refresh whether refresh was requested
+	 * @param refresh  whether refresh was requested
+	 *
 	 * @return the resolved source archive, or {@code null}
+	 *
 	 * @throws IOException if optional source resolution fails unexpectedly
 	 */
 	private Path resolveMavenSources(Path artifact, boolean refresh) throws IOException
@@ -116,13 +122,13 @@ public final class SourceAttachmentResolver
 
 		if (artifact.startsWith(ToolchainPaths.MAVEN_CACHE_ROOT))
 		{
-			Path repositoryRelativePath = ToolchainPaths.MAVEN_CACHE_ROOT.relativize(artifact);
+			var repositoryRelativePath = ToolchainPaths.MAVEN_CACHE_ROOT.relativize(artifact);
 			coordinate = MavenCoordinate.parseRepositoryPath(repositoryRelativePath);
 			repositories = inferredRepositories(coordinate, false);
 		}
 		else if (artifact.startsWith(ToolchainPaths.MOJANG_LIBRARIES_ROOT))
 		{
-			Path repositoryRelativePath = ToolchainPaths.MOJANG_LIBRARIES_ROOT.relativize(artifact);
+			var repositoryRelativePath = ToolchainPaths.MOJANG_LIBRARIES_ROOT.relativize(artifact);
 			coordinate = MavenCoordinate.parseRepositoryPath(repositoryRelativePath);
 			repositories = inferredRepositories(coordinate, true);
 		}
@@ -138,8 +144,9 @@ public final class SourceAttachmentResolver
 	/**
 	 * Infers the likely repository order for a binary artifact based on its group and source cache.
 	 *
-	 * @param coordinate the artifact coordinate
+	 * @param coordinate          the artifact coordinate
 	 * @param fromMojangLibraries whether the binary was resolved from Mojang's library cache
+	 *
 	 * @return the candidate repository list in preferred order
 	 */
 	private static List<URI> inferredRepositories(MavenCoordinate coordinate, boolean fromMojangLibraries)

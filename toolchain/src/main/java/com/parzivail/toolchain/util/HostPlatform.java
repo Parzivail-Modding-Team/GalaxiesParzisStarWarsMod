@@ -45,8 +45,8 @@ public enum HostPlatform
 	/**
 	 * Creates one host-platform value.
 	 *
-	 * @param id the toolchain platform identifier
-	 * @param displayName the user-facing display name
+	 * @param id           the toolchain platform identifier
+	 * @param displayName  the user-facing display name
 	 * @param mojangOsName Mojang's canonical operating-system name
 	 */
 	HostPlatform(String id, String displayName, String mojangOsName)
@@ -63,7 +63,7 @@ public enum HostPlatform
 	 */
 	public static HostPlatform current()
 	{
-		String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+		var osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
 
 		if (osName.contains("win"))
 		{
@@ -127,6 +127,7 @@ public enum HostPlatform
 	 * Resolves a Mojang rule OS name to the substring expected inside Java's `os.name` property.
 	 *
 	 * @param mojangRuleOsName the Mojang rule OS name
+	 *
 	 * @return the expected `os.name` token
 	 */
 	public static String expectedOsNameToken(String mojangRuleOsName)

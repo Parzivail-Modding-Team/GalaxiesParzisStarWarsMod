@@ -7,8 +7,8 @@ package com.parzivail.toolchain.mojang.model;
  * @param server the vanilla server jar download
  */
 public record MojangVersionMetadataDownloads(
-	MojangVersionMetadataDownload client,
-	MojangVersionMetadataDownload server
+		MojangVersionMetadataDownload client,
+		MojangVersionMetadataDownload server
 )
 {
 }

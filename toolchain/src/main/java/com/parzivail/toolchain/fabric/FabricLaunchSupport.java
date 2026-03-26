@@ -1,12 +1,12 @@
 package com.parzivail.toolchain.fabric;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parzivail.toolchain.intellij.IntelliJRunConfigurationSupport;
 import com.parzivail.toolchain.model.MavenDependencySpec;
 import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.runtime.VanillaLaunchConfig;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Shared helpers for Fabric launch-bundle preparation across development and datagen workflows.
@@ -32,17 +31,18 @@ public final class FabricLaunchSupport
 	/**
 	 * Builds the classpath entries that must appear ahead of the vanilla runtime.
 	 *
-	 * @param moduleRoots the injected module roots
-	 * @param dependencyRoots the modeled dependency roots
+	 * @param moduleRoots              the injected module roots
+	 * @param dependencyRoots          the modeled dependency roots
 	 * @param externalRuntimeArtifacts the resolved external runtime artifacts
-	 * @param runtimeClasspath the resolved Fabric runtime classpath
+	 * @param runtimeClasspath         the resolved Fabric runtime classpath
+	 *
 	 * @return the ordered prepended classpath entries
 	 */
 	public static List<Path> buildPrependedClasspath(
-		List<Path> moduleRoots,
-		List<Path> dependencyRoots,
-		List<Path> externalRuntimeArtifacts,
-		List<Path> runtimeClasspath
+			List<Path> moduleRoots,
+			List<Path> dependencyRoots,
+			List<Path> externalRuntimeArtifacts,
+			List<Path> runtimeClasspath
 	)
 	{
 		List<Path> prependedClasspath = new ArrayList<>(moduleRoots);
@@ -55,20 +55,20 @@ public final class FabricLaunchSupport
 	/**
 	 * Replaces the existing launch classpath with a Fabric-prepended classpath.
 	 *
-	 * @param jvmArgs the JVM argument list to update
+	 * @param jvmArgs            the JVM argument list to update
 	 * @param prependedClasspath the classpath entries to prepend
 	 */
 	public static void replaceClasspath(List<String> jvmArgs, List<Path> prependedClasspath)
 	{
-		String separator = System.getProperty("path.separator");
-		String prependedValue = prependedClasspath.stream()
-		                                         .map(path -> path.toAbsolutePath().toString())
-		                                         .reduce((left, right) -> left + separator + right)
-		                                         .orElse("");
+		var separator = File.pathSeparator;
+		var prependedValue = prependedClasspath.stream()
+		                                       .map(path -> path.toAbsolutePath().toString())
+		                                       .reduce((left, right) -> left + separator + right)
+		                                       .orElse("");
 
-		for (int index = 0; index < jvmArgs.size() - 1; index++)
+		for (var index = 0; index < jvmArgs.size() - 1; index++)
 		{
-			String argument = jvmArgs.get(index);
+			var argument = jvmArgs.get(index);
 
 			if ("-cp".equals(argument) || "-classpath".equals(argument))
 			{
@@ -87,14 +87,14 @@ public final class FabricLaunchSupport
 	/**
 	 * Replaces the logging configuration path inherited from the vanilla baseline.
 	 *
-	 * @param jvmArgs the JVM argument list
-	 * @param loggingConfigPath the generated Fabric logging configuration path
+	 * @param jvmArgs            the JVM argument list
+	 * @param loggingConfigPath  the generated Fabric logging configuration path
 	 * @param ansiLoggingEnabled whether ANSI logging should remain enabled
 	 */
 	public static void replaceLoggingConfiguration(
-		List<String> jvmArgs,
-		Path loggingConfigPath,
-		boolean ansiLoggingEnabled
+			List<String> jvmArgs,
+			Path loggingConfigPath,
+			boolean ansiLoggingEnabled
 	)
 	{
 		jvmArgs.removeIf(argument -> argument.startsWith("-Dlog4j.configurationFile="));
@@ -117,12 +117,12 @@ public final class FabricLaunchSupport
 	/**
 	 * Adds the optional Mixin javaagent when the resolved runtime requires it.
 	 *
-	 * @param jvmArgs the JVM argument list
+	 * @param jvmArgs          the JVM argument list
 	 * @param runtimeArtifacts the resolved Fabric runtime artifacts
 	 */
 	public static void addMixinJavaAgent(
-		List<String> jvmArgs,
-		FabricRuntimeArtifacts runtimeArtifacts
+			List<String> jvmArgs,
+			FabricRuntimeArtifacts runtimeArtifacts
 	)
 	{
 		if (runtimeArtifacts.mixinJavaAgentJar() != null)
@@ -134,17 +134,18 @@ public final class FabricLaunchSupport
 	/**
 	 * Creates the Fabric-style asset index alias expected by the dev launcher.
 	 *
-	 * @param versionId the Minecraft version identifier
+	 * @param versionId    the Minecraft version identifier
 	 * @param assetIndexId the Mojang asset index identifier
+	 *
 	 * @throws IOException if the alias cannot be created
 	 */
 	public static void prepareFabricAssetIndex(
-		String versionId,
-		String assetIndexId
+			String versionId,
+			String assetIndexId
 	) throws IOException
 	{
-		Path source = ToolchainPaths.mojangAssetIndexFile(assetIndexId);
-		Path target = ToolchainPaths.mojangAssetIndexFile(versionId + "-" + assetIndexId);
+		var source = ToolchainPaths.mojangAssetIndexFile(assetIndexId);
+		var target = ToolchainPaths.mojangAssetIndexFile(versionId + "-" + assetIndexId);
 
 		Files.createDirectories(target.getParent());
 		Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
@@ -154,12 +155,13 @@ public final class FabricLaunchSupport
 	 * Writes the Loom-style IntelliJ log4j configuration for one Fabric launch bundle.
 	 *
 	 * @param vanillaLaunch the prepared vanilla launch configuration
-	 * @param outputPath the target configuration path
+	 * @param outputPath    the target configuration path
+	 *
 	 * @throws IOException if the file cannot be written
 	 */
 	public static void writeLoggingConfig(
-		VanillaLaunchConfig vanillaLaunch,
-		Path outputPath
+			VanillaLaunchConfig vanillaLaunch,
+			Path outputPath
 	) throws IOException
 	{
 		Map<String, String> values = new LinkedHashMap<>();
@@ -170,9 +172,9 @@ public final class FabricLaunchSupport
 		values.put("ARCHIVED_LOGS", IntelliJRunConfigurationSupport.xmlPath(logsPath.resolve("%d{yyyy-MM-dd}-%i.log.gz")));
 		values.put("DEBUG_LOG", IntelliJRunConfigurationSupport.xmlPath(logsPath.resolve("debug.log")));
 		values.put("DEBUG_ARCHIVED_LOGS", IntelliJRunConfigurationSupport.xmlPath(logsPath.resolve("debug-%i.log.gz")));
-		String rendered = com.parzivail.toolchain.template.FileTemplateRenderer.render(
-			"com/parzivail/toolchain/templates/log4j2-intellij.xml",
-			values
+		var rendered = com.parzivail.toolchain.template.FileTemplateRenderer.render(
+				"com/parzivail/toolchain/templates/log4j2-intellij.xml",
+				values
 		);
 
 		Files.createDirectories(outputPath.getParent());
@@ -182,15 +184,16 @@ public final class FabricLaunchSupport
 	/**
 	 * Writes the serialized bootstrap launch JSON.
 	 *
-	 * @param mapper the shared JSON serializer
+	 * @param mapper     the shared JSON serializer
 	 * @param outputPath the target launch JSON path
-	 * @param config the launch configuration
+	 * @param config     the launch configuration
+	 *
 	 * @throws IOException if the file cannot be written
 	 */
 	public static void writeLaunchJson(
-		ObjectMapper mapper,
-		Path outputPath,
-		VanillaLaunchConfig config
+			ObjectMapper mapper,
+			Path outputPath,
+			VanillaLaunchConfig config
 	) throws IOException
 	{
 		Files.createDirectories(outputPath.getParent());
@@ -201,6 +204,7 @@ public final class FabricLaunchSupport
 	 * Renders optional shared Fabric launcher properties for injected grouped module roots.
 	 *
 	 * @param moduleRoots the injected module classpath roots
+	 *
 	 * @return the rendered optional property lines, each ending in a newline
 	 */
 	public static String optionalCommonProperties(List<Path> moduleRoots)
@@ -210,10 +214,10 @@ public final class FabricLaunchSupport
 			return "";
 		}
 
-		String joinedRoots = moduleRoots.stream()
-		                               .map(path -> path.toAbsolutePath().toString())
-		                               .reduce((left, right) -> left + System.getProperty("path.separator") + right)
-		                               .orElse("");
+		var joinedRoots = moduleRoots.stream()
+		                             .map(path -> path.toAbsolutePath().toString())
+		                             .reduce((left, right) -> left + File.pathSeparator + right)
+		                             .orElse("");
 
 		if (joinedRoots.isBlank())
 		{
@@ -227,6 +231,7 @@ public final class FabricLaunchSupport
 	 * Renders Loom-style common game-jar properties for split source-set launches.
 	 *
 	 * @param versionId the Minecraft version identifier
+	 *
 	 * @return the rendered common property lines, each ending in a newline
 	 */
 	public static String environmentCommonProperties(String versionId)
@@ -238,55 +243,57 @@ public final class FabricLaunchSupport
 	 * Renders the client-specific Fabric dev-launch property section.
 	 *
 	 * @param versionId the Minecraft version identifier
+	 *
 	 * @return the rendered section text
 	 */
 	public static String clientPropertiesSection(String versionId)
 	{
 		return "clientProperties\n"
-			+ "\tfabric.gameJarPath.client=" + ToolchainPaths.mojangClientJarFile(versionId).toAbsolutePath() + "\n";
+		       + "\tfabric.gameJarPath.client=" + ToolchainPaths.mojangClientJarFile(versionId).toAbsolutePath() + "\n";
 	}
 
 	/**
 	 * Renders the client-specific Fabric dev-launch argument section.
 	 *
-	 * @param versionId the Minecraft version identifier
+	 * @param versionId     the Minecraft version identifier
 	 * @param vanillaLaunch the prepared vanilla launch baseline
+	 *
 	 * @return the rendered client section text
 	 */
 	public static String clientArgsSection(
-		String versionId,
-		VanillaLaunchConfig vanillaLaunch
+			String versionId,
+			VanillaLaunchConfig vanillaLaunch
 	)
 	{
 		return "clientArgs\n"
-			+ "\t--assetIndex\n"
-			+ "\t" + versionId + "-" + vanillaLaunch.assetIndexId() + "\n"
-			+ "\t--assetsDir\n"
-			+ "\t" + vanillaLaunch.assetsRoot().toAbsolutePath() + "\n";
+		       + "\t--assetIndex\n"
+		       + "\t" + versionId + "-" + vanillaLaunch.assetIndexId() + "\n"
+		       + "\t--assetsDir\n"
+		       + "\t" + vanillaLaunch.assetsRoot().toAbsolutePath() + "\n";
 	}
 
 	/**
 	 * Resolves declared module runtime Maven dependencies into concrete jars.
 	 *
-	 * @param runtimeResolver the Fabric runtime resolver
+	 * @param runtimeResolver     the Fabric runtime resolver
 	 * @param runtimeDependencies the declared runtime dependencies
-	 * @param gradleProperties the tracked repository Gradle properties
-	 * @param refresh whether to revalidate cached dependency downloads
+	 * @param refresh             whether to revalidate cached dependency downloads
+	 *
 	 * @return the resolved runtime dependency jars
+	 *
 	 * @throws IOException if any dependency cannot be resolved
 	 */
 	public static List<Path> resolveRuntimeDependencies(
-		FabricRuntimeResolver runtimeResolver,
-		List<MavenDependencySpec> runtimeDependencies,
-		Properties gradleProperties,
-		boolean refresh
+			FabricRuntimeResolver runtimeResolver,
+			List<MavenDependencySpec> runtimeDependencies,
+			boolean refresh
 	) throws IOException
 	{
 		List<Path> artifacts = new ArrayList<>();
 
-		for (MavenDependencySpec runtimeDependency : runtimeDependencies)
+		for (var runtimeDependency : runtimeDependencies)
 		{
-			Path artifact = runtimeResolver.resolveRuntimeDependency(runtimeDependency, gradleProperties, refresh);
+			var artifact = runtimeResolver.resolveRuntimeDependency(runtimeDependency, refresh);
 
 			if (!artifacts.contains(artifact))
 			{
@@ -301,11 +308,11 @@ public final class FabricLaunchSupport
 	 * Adds one JVM argument only when it is not already present.
 	 *
 	 * @param arguments the JVM argument list
-	 * @param argument the argument to add
+	 * @param argument  the argument to add
 	 */
 	private static void addIfMissing(
-		List<String> arguments,
-		String argument
+			List<String> arguments,
+			String argument
 	)
 	{
 		if (!arguments.contains(argument))

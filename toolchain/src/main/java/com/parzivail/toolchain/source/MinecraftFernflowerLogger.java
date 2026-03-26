@@ -15,13 +15,15 @@ public final class MinecraftFernflowerLogger extends IFernflowerLogger
 			return;
 		}
 
+		String format = "[vineflower] " + severity.name().toLowerCase() + ": " + message;
+
 		if (severity.ordinal() >= Severity.WARN.ordinal())
 		{
-			System.err.println("[vineflower] " + severity.name().toLowerCase() + ": " + message);
+			System.err.println(format);
 			return;
 		}
 
-		System.out.println("[vineflower] " + severity.name().toLowerCase() + ": " + message);
+		System.out.println(format);
 	}
 
 	@Override

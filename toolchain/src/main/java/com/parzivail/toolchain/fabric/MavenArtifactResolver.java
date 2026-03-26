@@ -29,10 +29,12 @@ public final class MavenArtifactResolver
 	/**
 	 * Resolves a Maven artifact into the local cache.
 	 *
-	 * @param coordinate the artifact coordinate
+	 * @param coordinate    the artifact coordinate
 	 * @param repositoryUri the Maven repository base URI
-	 * @param refresh whether to force a fresh download
+	 * @param refresh       whether to force a fresh download
+	 *
 	 * @return the cached artifact path
+	 *
 	 * @throws IOException if the artifact cannot be downloaded
 	 */
 	public Path resolve(MavenCoordinate coordinate, URI repositoryUri, boolean refresh) throws IOException
@@ -43,22 +45,24 @@ public final class MavenArtifactResolver
 	/**
 	 * Resolves a specific classifier variant of a Maven artifact into the local cache.
 	 *
-	 * @param coordinate the artifact coordinate
+	 * @param coordinate    the artifact coordinate
 	 * @param repositoryUri the Maven repository base URI
-	 * @param classifier the optional classifier
-	 * @param refresh whether to force a fresh download
+	 * @param classifier    the optional classifier
+	 * @param refresh       whether to force a fresh download
+	 *
 	 * @return the cached artifact path
+	 *
 	 * @throws IOException if the artifact cannot be downloaded
 	 */
 	public Path resolve(
-		MavenCoordinate coordinate,
-		URI repositoryUri,
-		String classifier,
-		boolean refresh
+			MavenCoordinate coordinate,
+			URI repositoryUri,
+			String classifier,
+			boolean refresh
 	) throws IOException
 	{
-		String repositoryPath = coordinate.repositoryPath(classifier);
-		Path target = ToolchainPaths.MAVEN_CACHE_ROOT.resolve(repositoryPath);
+		var repositoryPath = coordinate.repositoryPath(classifier);
+		var target = ToolchainPaths.MAVEN_CACHE_ROOT.resolve(repositoryPath);
 		_downloadClient.download(artifactUri(repositoryUri, repositoryPath), target, refresh);
 		return target;
 	}
@@ -66,23 +70,25 @@ public final class MavenArtifactResolver
 	/**
 	 * Resolves an optional classifier artifact from a list of candidate repositories.
 	 *
-	 * @param coordinate the artifact coordinate
+	 * @param coordinate     the artifact coordinate
 	 * @param repositoryUris the candidate repositories
-	 * @param classifier the optional classifier
-	 * @param refresh whether to force a fresh download
+	 * @param classifier     the optional classifier
+	 * @param refresh        whether to force a fresh download
+	 *
 	 * @return the cached artifact path, or {@code null} when no repository serves it
+	 *
 	 * @throws IOException if all resolution attempts fail for non-404 reasons
 	 */
 	public Path resolveOptional(
-		MavenCoordinate coordinate,
-		List<URI> repositoryUris,
-		String classifier,
-		boolean refresh
+			MavenCoordinate coordinate,
+			List<URI> repositoryUris,
+			String classifier,
+			boolean refresh
 	) throws IOException
 	{
 		IOException lastFailure = null;
 
-		for (URI repositoryUri : repositoryUris)
+		for (var repositoryUri : repositoryUris)
 		{
 			try
 			{
@@ -110,13 +116,14 @@ public final class MavenArtifactResolver
 	/**
 	 * Builds an artifact URI below a Maven repository root.
 	 *
-	 * @param repositoryUri the repository base URI
+	 * @param repositoryUri  the repository base URI
 	 * @param repositoryPath the artifact path
+	 *
 	 * @return the artifact URI
 	 */
 	private static URI artifactUri(URI repositoryUri, String repositoryPath)
 	{
-		String repositoryRoot = repositoryUri.toString();
+		var repositoryRoot = repositoryUri.toString();
 
 		if (!repositoryRoot.endsWith("/"))
 		{
@@ -130,13 +137,14 @@ public final class MavenArtifactResolver
 	 * Returns whether an exception chain represents a missing optional artifact.
 	 *
 	 * @param exception the resolution failure
+	 *
 	 * @return {@code true} when the artifact is absent from the repository
 	 */
 	private static boolean isMissingArtifact(IOException exception)
 	{
 		for (Throwable cause = exception; cause != null; cause = cause.getCause())
 		{
-			String message = cause.getMessage();
+			var message = cause.getMessage();
 
 			if (message != null && (message.contains("HTTP 404") || message.contains("HTTP 403")))
 			{

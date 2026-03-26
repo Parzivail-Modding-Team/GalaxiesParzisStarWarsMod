@@ -60,8 +60,8 @@ public final class MinecraftSourceArchiveSaver implements IResultSaver
 		{
 			Files.createDirectories(_sourcesArchive.getParent());
 			_outputStream = manifest == null
-				? new ZipOutputStream(Files.newOutputStream(_sourcesArchive))
-				: new JarOutputStream(Files.newOutputStream(_sourcesArchive), manifest);
+			                ? new ZipOutputStream(Files.newOutputStream(_sourcesArchive))
+			                : new JarOutputStream(Files.newOutputStream(_sourcesArchive), manifest);
 		}
 		catch (IOException exception)
 		{
@@ -77,26 +77,26 @@ public final class MinecraftSourceArchiveSaver implements IResultSaver
 
 	@Override
 	public void saveClassEntry(
-		String path,
-		String archiveName,
-		String qualifiedName,
-		String entryName,
-		String content,
-		int[] mapping
+			String path,
+			String archiveName,
+			String qualifiedName,
+			String entryName,
+			String content,
+			int[] mapping
 	)
 	{
 		if (!_entries.add(entryName))
 		{
 			DecompilerContext.getLogger().writeMessage(
-				"Zip entry " + entryName + " already exists in " + _sourcesArchive,
-				IFernflowerLogger.Severity.WARN
+					"Zip entry " + entryName + " already exists in " + _sourcesArchive,
+					IFernflowerLogger.Severity.WARN
 			);
 			return;
 		}
 
 		try
 		{
-			ZipEntry zipEntry = new ZipEntry(entryName);
+			var zipEntry = new ZipEntry(entryName);
 
 			if (mapping != null && DecompilerContext.getOption(IFernflowerPreferences.DUMP_CODE_LINES))
 			{
@@ -165,5 +165,4 @@ public final class MinecraftSourceArchiveSaver implements IResultSaver
 	public void copyEntry(String source, String path, String archiveName, String entry)
 	{
 	}
-
 }

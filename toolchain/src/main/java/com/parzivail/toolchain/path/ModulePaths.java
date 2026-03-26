@@ -106,6 +106,7 @@ public final class ModulePaths
 	 * Resolves a file under the main resources root.
 	 *
 	 * @param fileName the file name
+	 *
 	 * @return the resolved file path
 	 */
 	public Path mainResource(String fileName)
@@ -117,6 +118,7 @@ public final class ModulePaths
 	 * Resolves a file under the client resources root.
 	 *
 	 * @param fileName the file name
+	 *
 	 * @return the resolved file path
 	 */
 	public Path clientResource(String fileName)
@@ -128,6 +130,7 @@ public final class ModulePaths
 	 * Resolves a relative path under the module root.
 	 *
 	 * @param relativePath the relative path
+	 *
 	 * @return the resolved path
 	 */
 	public Path resolve(String relativePath)

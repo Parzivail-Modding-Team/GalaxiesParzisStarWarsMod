@@ -19,8 +19,9 @@ public final class SourceSetLayout
 	/**
 	 * Gets the Java source roots for one module source set.
 	 *
-	 * @param module the module specification
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @return the Java source roots
 	 */
 	public static List<Path> sourceRoots(ModuleSpec module, String sourceSetName)
@@ -36,8 +37,9 @@ public final class SourceSetLayout
 	/**
 	 * Gets the resource roots for one module source set.
 	 *
-	 * @param module the module specification
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @return the resource roots
 	 */
 	public static List<Path> resourceRoots(ModuleSpec module, String sourceSetName)
@@ -60,8 +62,9 @@ public final class SourceSetLayout
 	/**
 	 * Gets the generated Java roots for one module source set.
 	 *
-	 * @param module the module specification
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @return the generated source roots
 	 */
 	public static List<Path> generatedRoots(ModuleSpec module, String sourceSetName)
@@ -78,12 +81,13 @@ public final class SourceSetLayout
 	 * Checks whether one module materially has a client source set.
 	 *
 	 * @param module the module specification
+	 *
 	 * @return whether the module has client sources, resources, or generated client roots
 	 */
 	public static boolean hasClientSourceSet(ModuleSpec module)
 	{
 		return !module.clientSources().isEmpty()
-			|| !module.clientResources().isEmpty()
-			|| !module.generatedClientSources().isEmpty();
+		       || !module.clientResources().isEmpty()
+		       || !module.generatedClientSources().isEmpty();
 	}
 }

@@ -1,19 +1,15 @@
 package com.parzivail.toolchain.source;
 
 import com.parzivail.toolchain.mojang.MojangMetadataClient;
-import com.parzivail.toolchain.mojang.model.MojangVersionManifest;
 import com.parzivail.toolchain.path.ToolchainPaths;
+import com.parzivail.toolchain.util.DigestUtilities;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.HexFormat;
 import java.util.Map;
 import java.util.jar.JarFile;
 
@@ -22,11 +18,6 @@ import java.util.jar.JarFile;
  */
 public final class ParchmentMappingsResolver
 {
-	/**
-	 * The hex encoder used for SHA-1 comparisons.
-	 */
-	private static final HexFormat HEX_FORMAT = HexFormat.of();
-
 	/**
 	 * The Parchment JSON entry embedded in the published zip artifact.
 	 */
@@ -64,13 +55,13 @@ public final class ParchmentMappingsResolver
 	 * Creates a resolver with explicit collaborators.
 	 *
 	 * @param parchmentMetaClient the Parchment metadata client
-	 * @param mojangClient the Mojang metadata client
-	 * @param cacheRoot the local mappings cache root
+	 * @param mojangClient        the Mojang metadata client
+	 * @param cacheRoot           the local mappings cache root
 	 */
 	public ParchmentMappingsResolver(
-		ParchmentMetaClient parchmentMetaClient,
-		MojangMetadataClient mojangClient,
-		Path cacheRoot
+			ParchmentMetaClient parchmentMetaClient,
+			MojangMetadataClient mojangClient,
+			Path cacheRoot
 	)
 	{
 		_parchmentMetaClient = parchmentMetaClient;
@@ -83,41 +74,43 @@ public final class ParchmentMappingsResolver
 	 * Resolves a local Parchment JSON file for one Minecraft version.
 	 *
 	 * @param requestedVersion the Minecraft version being documented
-	 * @param refresh whether cache refresh was requested
+	 * @param refresh          whether cache refresh was requested
+	 *
 	 * @return the resolved Parchment mappings, or {@code null} when none can be found
+	 *
 	 * @throws IOException if metadata retrieval, downloading, or extraction fails
 	 */
 	public ResolvedParchmentMappings resolveMappings(String requestedVersion, boolean refresh) throws IOException
 	{
-		ParchmentRelease release = resolveBestRelease(requestedVersion, refresh);
+		var release = resolveBestRelease(requestedVersion, refresh);
 
 		if (release == null)
 		{
 			return null;
 		}
 
-		Path mappingsDirectory = _cacheRoot.resolve(requestedVersion);
-		Path parchmentJsonFile = mappingsDirectory.resolve(
-			"parchment-" + release.minecraftVersion() + "-" + release.parchmentVersion() + ".json"
+		var mappingsDirectory = _cacheRoot.resolve(requestedVersion);
+		var parchmentJsonFile = mappingsDirectory.resolve(
+				"parchment-" + release.minecraftVersion() + "-" + release.parchmentVersion() + ".json"
 		);
 
 		if (!refresh && Files.exists(parchmentJsonFile))
 		{
 			return new ResolvedParchmentMappings(
-				requestedVersion,
-				release.minecraftVersion(),
-				release.parchmentVersion(),
-				parchmentJsonFile
+					requestedVersion,
+					release.minecraftVersion(),
+					release.parchmentVersion(),
+					parchmentJsonFile
 			);
 		}
 
 		Files.createDirectories(mappingsDirectory);
 
-		Path parchmentZip = mappingsDirectory.resolve(
-			"parchment-" + release.minecraftVersion() + "-" + release.parchmentVersion() + ".zip"
+		var parchmentZip = mappingsDirectory.resolve(
+				"parchment-" + release.minecraftVersion() + "-" + release.parchmentVersion() + ".zip"
 		);
-		URI artifactUri = ParchmentMetaClient.createArtifactUri(release);
-		String expectedSha1 = _parchmentMetaClient.fetchTrimmedString(ParchmentMetaClient.createArtifactSha1Uri(release));
+		var artifactUri = ParchmentMetaClient.createArtifactUri(release);
+		var expectedSha1 = _parchmentMetaClient.fetchTrimmedString(ParchmentMetaClient.createArtifactSha1Uri(release));
 
 		if (Files.notExists(parchmentZip) || !hasMatchingSha1(parchmentZip, expectedSha1))
 		{
@@ -132,10 +125,10 @@ public final class ParchmentMappingsResolver
 
 		extractParchmentJson(parchmentZip, parchmentJsonFile);
 		return new ResolvedParchmentMappings(
-			requestedVersion,
-			release.minecraftVersion(),
-			release.parchmentVersion(),
-			parchmentJsonFile
+				requestedVersion,
+				release.minecraftVersion(),
+				release.parchmentVersion(),
+				parchmentJsonFile
 		);
 	}
 
@@ -143,23 +136,25 @@ public final class ParchmentMappingsResolver
 	 * Resolves the best available Parchment export for a requested Minecraft version.
 	 *
 	 * @param requestedVersion the Minecraft version being documented
-	 * @param refresh whether cache refresh was requested
+	 * @param refresh          whether cache refresh was requested
+	 *
 	 * @return the selected Parchment release, or {@code null} when none exists
+	 *
 	 * @throws IOException if metadata retrieval fails
 	 */
 	private ParchmentRelease resolveBestRelease(String requestedVersion, boolean refresh) throws IOException
 	{
-		String exactReleaseVersion = fetchLatestReleaseVersion(requestedVersion);
+		var exactReleaseVersion = fetchLatestReleaseVersion(requestedVersion);
 
 		if (exactReleaseVersion != null)
 		{
 			return new ParchmentRelease(requestedVersion, exactReleaseVersion);
 		}
 
-		MojangVersionManifest manifest = _mojangClient.getVersionManifest(refresh);
-		int targetIndex = -1;
+		var manifest = _mojangClient.getVersionManifest(refresh);
+		var targetIndex = -1;
 
-		for (int i = 0; i < manifest.versions().size(); i++)
+		for (var i = 0; i < manifest.versions().size(); i++)
 		{
 			if (manifest.versions().get(i).id().equals(requestedVersion))
 			{
@@ -173,10 +168,10 @@ public final class ParchmentMappingsResolver
 			return null;
 		}
 
-		for (int i = targetIndex + 1; i < manifest.versions().size(); i++)
+		for (var i = targetIndex + 1; i < manifest.versions().size(); i++)
 		{
 			var candidate = manifest.versions().get(i);
-			String releaseVersion = fetchLatestReleaseVersion(candidate.id());
+			var releaseVersion = fetchLatestReleaseVersion(candidate.id());
 
 			if (releaseVersion != null)
 			{
@@ -191,7 +186,9 @@ public final class ParchmentMappingsResolver
 	 * Fetches the latest published Parchment release version for a Minecraft version with memoization.
 	 *
 	 * @param minecraftVersion the target Minecraft version
+	 *
 	 * @return the published release version, or {@code null} when unavailable
+	 *
 	 * @throws IOException if metadata retrieval fails
 	 */
 	private String fetchLatestReleaseVersion(String minecraftVersion) throws IOException
@@ -201,7 +198,7 @@ public final class ParchmentMappingsResolver
 			return _releaseVersionCache.get(minecraftVersion);
 		}
 
-		String releaseVersion = _parchmentMetaClient.fetchLatestReleaseVersion(minecraftVersion);
+		var releaseVersion = _parchmentMetaClient.fetchLatestReleaseVersion(minecraftVersion);
 		_releaseVersionCache.put(minecraftVersion, releaseVersion);
 		return releaseVersion;
 	}
@@ -209,13 +206,14 @@ public final class ParchmentMappingsResolver
 	/**
 	 * Extracts the Parchment JSON payload from a published zip artifact.
 	 *
-	 * @param parchmentZip the downloaded Parchment zip file
+	 * @param parchmentZip      the downloaded Parchment zip file
 	 * @param parchmentJsonFile the extracted JSON destination
+	 *
 	 * @throws IOException if the zip cannot be read or the entry is missing
 	 */
 	private static void extractParchmentJson(Path parchmentZip, Path parchmentJsonFile) throws IOException
 	{
-		try (JarFile jarFile = new JarFile(parchmentZip.toFile()))
+		try (var jarFile = new JarFile(parchmentZip.toFile()))
 		{
 			var jarEntry = jarFile.getJarEntry(PARCHMENT_JSON_ENTRY);
 
@@ -224,7 +222,7 @@ public final class ParchmentMappingsResolver
 				throw new IOException("Missing " + PARCHMENT_JSON_ENTRY + " in " + parchmentZip);
 			}
 
-			try (InputStream inputStream = jarFile.getInputStream(jarEntry))
+			try (var inputStream = jarFile.getInputStream(jarEntry))
 			{
 				Files.copy(inputStream, parchmentJsonFile, StandardCopyOption.REPLACE_EXISTING);
 			}
@@ -234,34 +232,23 @@ public final class ParchmentMappingsResolver
 	/**
 	 * Checks whether a local file already matches an expected SHA-1 hash.
 	 *
-	 * @param path the local file path
+	 * @param path         the local file path
 	 * @param expectedSha1 the expected SHA-1 string
+	 *
 	 * @return {@code true} if the local file already matches the expected hash
+	 *
 	 * @throws IOException if the file cannot be hashed
 	 */
 	private static boolean hasMatchingSha1(Path path, String expectedSha1) throws IOException
 	{
 		try
 		{
-			MessageDigest digest = MessageDigest.getInstance("SHA-1");
-
-			try (InputStream inputStream = Files.newInputStream(path))
-			{
-				byte[] buffer = new byte[8192];
-				int read;
-
-				while ((read = inputStream.read(buffer)) >= 0)
-				{
-					digest.update(buffer, 0, read);
-				}
-			}
-
-			return expectedSha1.equalsIgnoreCase(HEX_FORMAT.formatHex(digest.digest()));
+			var digest = DigestUtilities.computeSha1Digest(path);
+			return expectedSha1.equalsIgnoreCase(DigestUtilities.formatHex(digest.digest()));
 		}
 		catch (NoSuchAlgorithmException exception)
 		{
 			throw new IOException("SHA-1 hashing is not available", exception);
 		}
 	}
-
 }

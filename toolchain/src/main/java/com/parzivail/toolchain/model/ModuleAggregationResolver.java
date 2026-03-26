@@ -18,8 +18,9 @@ public final class ModuleAggregationResolver
 	/**
 	 * Resolves a module by identifier.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph    the authoritative build graph
 	 * @param moduleId the module identifier
+	 *
 	 * @return the resolved module
 	 */
 	public static ModuleSpec requireModule(BuildGraph graph, String moduleId)
@@ -34,8 +35,9 @@ public final class ModuleAggregationResolver
 	/**
 	 * Resolves the full ordered aggregation closure for a root module.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph        the authoritative build graph
 	 * @param rootModuleId the root module identifier
+	 *
 	 * @return the root module followed by its aggregated module closure
 	 */
 	public static List<ModuleSpec> aggregatedModules(BuildGraph graph, String rootModuleId)
@@ -50,13 +52,14 @@ public final class ModuleAggregationResolver
 	 * Resolves the ordered aggregated module closure excluding the root module
 	 * itself.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph        the authoritative build graph
 	 * @param rootModuleId the root module identifier
+	 *
 	 * @return the aggregated dependency modules
 	 */
 	public static List<ModuleSpec> aggregatedDependencies(BuildGraph graph, String rootModuleId)
 	{
-		List<ModuleSpec> modules = aggregatedModules(graph, rootModuleId);
+		var modules = aggregatedModules(graph, rootModuleId);
 
 		if (!modules.isEmpty())
 		{
@@ -69,16 +72,16 @@ public final class ModuleAggregationResolver
 	/**
 	 * Collects the aggregation closure for one module.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph    the authoritative build graph
 	 * @param moduleId the module identifier to collect
-	 * @param visited the visited module ids
-	 * @param modules the accumulated ordered modules
+	 * @param visited  the visited module ids
+	 * @param modules  the accumulated ordered modules
 	 */
 	private static void collect(
-		BuildGraph graph,
-		String moduleId,
-		Set<String> visited,
-		List<ModuleSpec> modules
+			BuildGraph graph,
+			String moduleId,
+			Set<String> visited,
+			List<ModuleSpec> modules
 	)
 	{
 		if (!visited.add(moduleId))
@@ -86,15 +89,15 @@ public final class ModuleAggregationResolver
 			return;
 		}
 
-		ModuleSpec module = requireModule(graph, moduleId);
+		var module = requireModule(graph, moduleId);
 		modules.add(module);
 
-		for (String dependencyId : module.dependencies())
+		for (var dependencyId : module.dependencies())
 		{
 			collect(graph, dependencyId, visited, modules);
 		}
 
-		for (String memberId : module.aggregateMembers())
+		for (var memberId : module.aggregateMembers())
 		{
 			collect(graph, memberId, visited, modules);
 		}

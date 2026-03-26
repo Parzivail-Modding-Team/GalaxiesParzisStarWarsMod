@@ -23,7 +23,7 @@ public class ToolchainPaths
 	private static Path discoverProjectRoot()
 	{
 		var workingDirectory = ToolchainPaths.getWorkingDirectory();
-		for (Path candidate = workingDirectory; candidate != null; candidate = candidate.getParent())
+		for (var candidate = workingDirectory; candidate != null; candidate = candidate.getParent())
 		{
 			// If we don't see a toolchain file, keep moving up
 			if (!Files.isRegularFile(candidate.resolve(CONFIG_FILE_NAME)))
@@ -77,12 +77,6 @@ public class ToolchainPaths
 	 * The tracked configuration file.
 	 */
 	public static final Path CONFIG_FILE = ToolchainPaths.PROJECT_ROOT.resolve(CONFIG_FILE_NAME);
-
-	/**
-	 * The shared Gradle properties file name.
-	 * TODO: remove gradle properties requirement
-	 */
-	public static final Path GRADLE_PROPERTIES_FILE = ToolchainPaths.PROJECT_ROOT.resolve("gradle.properties");
 
 	/**
 	 * The work root.
@@ -237,8 +231,8 @@ public class ToolchainPaths
 	/**
 	 * Gets the instance root for the given environment and platform.
 	 *
-	 * @param versionId     the Minecraft version identifier
-	 * @param environment   the launch environment
+	 * @param versionId   the Minecraft version identifier
+	 * @param environment the launch environment
 	 * @param platform    the target platform identifier
 	 *
 	 * @return the instance root
@@ -253,8 +247,8 @@ public class ToolchainPaths
 	/**
 	 * Gets the datagen instance root for the given environment and platform.
 	 *
-	 * @param versionId     the Minecraft version identifier
-	 * @param platform    the target platform identifier
+	 * @param versionId the Minecraft version identifier
+	 * @param platform  the target platform identifier
 	 *
 	 * @return the instance root
 	 */
@@ -278,6 +272,7 @@ public class ToolchainPaths
 	 * Gets the cached version metadata file path for a specific Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
+	 *
 	 * @return the cached version metadata file path
 	 */
 	public static Path mojangVersionMetadataFile(String versionId)
@@ -289,6 +284,7 @@ public class ToolchainPaths
 	 * Gets the cached vanilla client jar path for a specific Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
+	 *
 	 * @return the cached client jar path
 	 */
 	public static Path mojangClientJarFile(String versionId)
@@ -300,6 +296,7 @@ public class ToolchainPaths
 	 * Gets the cached vanilla server bootstrap jar path for a specific Minecraft version.
 	 *
 	 * @param versionId the Minecraft version identifier
+	 *
 	 * @return the cached server bootstrap jar path
 	 */
 	public static Path mojangServerJarFile(String versionId)
@@ -315,6 +312,7 @@ public class ToolchainPaths
 	 * sets can compile against the real dedicated-server classes.
 	 *
 	 * @param versionId the Minecraft version identifier
+	 *
 	 * @return the cached extracted server jar path
 	 */
 	public static Path mojangExtractedServerJarFile(String versionId)
@@ -326,6 +324,7 @@ public class ToolchainPaths
 	 * Gets the cached asset index path for a specific asset index identifier.
 	 *
 	 * @param assetIndexId the asset index identifier
+	 *
 	 * @return the cached asset index path
 	 */
 	public static Path mojangAssetIndexFile(String assetIndexId)
@@ -334,19 +333,10 @@ public class ToolchainPaths
 	}
 
 	/**
-	 * Gets the cached asset objects root.
-	 *
-	 * @return the asset objects root
-	 */
-	public static Path mojangAssetObjectsRoot()
-	{
-		return ToolchainPaths.MOJANG_ASSET_OBJECTS_ROOT;
-	}
-
-	/**
 	 * Gets the cached path for a Mojang library artifact.
 	 *
 	 * @param artifactPath the relative library artifact path
+	 *
 	 * @return the cached library file path
 	 */
 	public static Path mojangLibraryFile(String artifactPath)
@@ -358,11 +348,12 @@ public class ToolchainPaths
 	 * Gets the cached asset object path for a specific object hash.
 	 *
 	 * @param hash the asset object hash
+	 *
 	 * @return the cached asset object path
 	 */
 	public static Path mojangAssetObjectFile(String hash)
 	{
-		String prefix = hash.substring(0, 2);
+		var prefix = hash.substring(0, 2);
 		return ToolchainPaths.MOJANG_ASSET_OBJECTS_ROOT.resolve(prefix).resolve(hash);
 	}
 }

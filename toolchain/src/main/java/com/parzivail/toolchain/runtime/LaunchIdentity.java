@@ -4,11 +4,11 @@ package com.parzivail.toolchain.runtime;
  * Launch-time player identity used for generated development launch configs.
  *
  * @param username the development username
- * @param uuid the development UUID
+ * @param uuid     the development UUID
  */
 public record LaunchIdentity(
-	String username,
-	String uuid
+		String username,
+		String uuid
 )
 {
 	/**

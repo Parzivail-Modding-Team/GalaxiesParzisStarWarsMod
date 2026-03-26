@@ -23,7 +23,7 @@ public final class ToolchainLog
 	/**
 	 * Writes an informational progress line.
 	 *
-	 * @param scope the subsystem currently doing work
+	 * @param scope   the subsystem currently doing work
 	 * @param message the progress message
 	 */
 	public static void info(String scope, String message)

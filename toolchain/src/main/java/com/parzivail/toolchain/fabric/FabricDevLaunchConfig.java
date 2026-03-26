@@ -7,12 +7,12 @@ import java.util.Map;
 /**
  * Parsed representation of a Loom-style dev launch configuration file.
  *
- * @param path the source configuration file path
+ * @param path     the source configuration file path
  * @param sections the ordered launch configuration sections and values
  */
 public record FabricDevLaunchConfig(
-	Path path,
-	Map<String, List<String>> sections
+		Path path,
+		Map<String, List<String>> sections
 )
 {
 }

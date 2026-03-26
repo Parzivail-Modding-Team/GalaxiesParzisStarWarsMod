@@ -9,7 +9,8 @@
 - IntelliJ:
   Owns compilation of PSWG modules for normal development runs.
 
-The toolchain still reads a small amount of repo-owned version metadata from `gradle.properties`, but Gradle no longer owns the development runtime shape.
+The toolchain still reads a small amount of repo-owned version metadata from `gradle.properties`, but Gradle no longer
+owns the development runtime shape.
 
 The toolchain writes and maintains a few key outputs in the tracked repository:
 

@@ -17,15 +17,16 @@ public final class SourceSetDependencyResolver
 	 *
 	 * <p>Client source sets must see client-only API from their dependencies, not just common code.
 	 *
-	 * @param graph the authoritative build graph
-	 * @param dependencyId the dependency module identifier
+	 * @param graph                 the authoritative build graph
+	 * @param dependencyId          the dependency module identifier
 	 * @param consumerSourceSetName the consuming source-set name
+	 *
 	 * @return the source-set name to depend on
 	 */
 	public static String dependencySourceSetName(
-		BuildGraph graph,
-		String dependencyId,
-		String consumerSourceSetName
+			BuildGraph graph,
+			String dependencyId,
+			String consumerSourceSetName
 	)
 	{
 		if (!SourceSetNames.CLIENT.equals(consumerSourceSetName))
@@ -33,11 +34,11 @@ public final class SourceSetDependencyResolver
 			return SourceSetNames.MAIN;
 		}
 
-		ModuleSpec dependency = graph.modules()
-		                             .stream()
-		                             .filter(candidate -> dependencyId.equals(candidate.id()))
-		                             .findFirst()
-		                             .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + dependencyId));
+		var dependency = graph.modules()
+		                      .stream()
+		                      .filter(candidate -> dependencyId.equals(candidate.id()))
+		                      .findFirst()
+		                      .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + dependencyId));
 
 		return SourceSetLayout.hasClientSourceSet(dependency) ? SourceSetNames.CLIENT : SourceSetNames.MAIN;
 	}

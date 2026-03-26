@@ -24,6 +24,7 @@ public enum ConfiguredModuleKind
 	 * Parses one configured module kind token.
 	 *
 	 * @param value the configured token
+	 *
 	 * @return the parsed kind
 	 */
 	public static ConfiguredModuleKind parse(String value)

@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record MojangVersionRange(
-	String min,
-	String max
+		String min,
+		String max
 )
 {
 }

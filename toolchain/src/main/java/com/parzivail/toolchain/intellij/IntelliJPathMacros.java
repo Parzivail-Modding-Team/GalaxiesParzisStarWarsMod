@@ -25,12 +25,13 @@ public final class IntelliJPathMacros
 	 * Converts a resolved path into a `$PROJECT_DIR$` macro path when possible.
 	 *
 	 * @param path the resolved path
+	 *
 	 * @return the macro path
 	 */
 	public static String projectRelativeMacro(Path path)
 	{
-		Path normalizedProjectRoot = ToolchainPaths.PROJECT_ROOT.toAbsolutePath().normalize();
-		Path normalized = path.toAbsolutePath().normalize();
+		var normalizedProjectRoot = ToolchainPaths.PROJECT_ROOT.toAbsolutePath().normalize();
+		var normalized = path.toAbsolutePath().normalize();
 
 		if (normalized.startsWith(normalizedProjectRoot))
 		{
@@ -44,6 +45,7 @@ public final class IntelliJPathMacros
 	 * Builds a `jar://...!/` URL for a resolved artifact.
 	 *
 	 * @param artifact the resolved artifact path
+	 *
 	 * @return the jar URL
 	 */
 	public static String jarUrl(Path artifact)
@@ -55,6 +57,7 @@ public final class IntelliJPathMacros
 	 * Builds a `file://...` URL for a project-relative path.
 	 *
 	 * @param path the target path
+	 *
 	 * @return the file URL
 	 */
 	public static String fileUrl(Path path)
@@ -66,17 +69,18 @@ public final class IntelliJPathMacros
 	 * Builds a module-local `file://...` URL for a path rooted under the module directory.
 	 *
 	 * @param moduleRoot the module root path
-	 * @param path the target path
+	 * @param path       the target path
+	 *
 	 * @return the file URL
 	 */
 	public static String moduleFileUrl(Path moduleRoot, Path path)
 	{
-		Path normalizedModuleRoot = moduleRoot.toAbsolutePath().normalize();
-		Path normalizedPath = path.toAbsolutePath().normalize();
+		var normalizedModuleRoot = moduleRoot.toAbsolutePath().normalize();
+		var normalizedPath = path.toAbsolutePath().normalize();
 
 		if (normalizedPath.startsWith(normalizedModuleRoot))
 		{
-			Path relativePath = normalizedModuleRoot.relativize(normalizedPath);
+			var relativePath = normalizedModuleRoot.relativize(normalizedPath);
 
 			if (relativePath.toString().isEmpty())
 			{
@@ -84,9 +88,9 @@ public final class IntelliJPathMacros
 			}
 
 			return "file://$MODULE_DIR$/../../../../projects/"
-				+ normalizedModuleRoot.getFileName()
-				+ "/"
-				+ relativePath.toString().replace('\\', '/');
+			       + normalizedModuleRoot.getFileName()
+			       + "/"
+			       + relativePath.toString().replace('\\', '/');
 		}
 
 		return "file://" + normalizedPath.toString().replace('\\', '/');
@@ -97,17 +101,18 @@ public final class IntelliJPathMacros
 	 * PSWG root project.
 	 *
 	 * @param toolchainRoot the standalone toolchain root
-	 * @param path the target path
+	 * @param path          the target path
+	 *
 	 * @return the file URL
 	 */
 	public static String toolchainModuleFileUrl(Path toolchainRoot, Path path)
 	{
-		Path normalizedToolchainRoot = toolchainRoot.toAbsolutePath().normalize();
-		Path normalizedPath = path.toAbsolutePath().normalize();
+		var normalizedToolchainRoot = toolchainRoot.toAbsolutePath().normalize();
+		var normalizedPath = path.toAbsolutePath().normalize();
 
 		if (normalizedPath.startsWith(normalizedToolchainRoot))
 		{
-			Path relativePath = normalizedToolchainRoot.relativize(normalizedPath);
+			var relativePath = normalizedToolchainRoot.relativize(normalizedPath);
 
 			if (relativePath.toString().isEmpty())
 			{
@@ -115,7 +120,7 @@ public final class IntelliJPathMacros
 			}
 
 			return "file://$MODULE_DIR$/../../../../toolchain/"
-				+ relativePath.toString().replace('\\', '/');
+			       + relativePath.toString().replace('\\', '/');
 		}
 
 		return "file://" + normalizedPath.toString().replace('\\', '/');
@@ -126,6 +131,7 @@ public final class IntelliJPathMacros
 	 * `.idea/modules/projects/...`.
 	 *
 	 * @param outputName the IntelliJ output directory name
+	 *
 	 * @return the file URL
 	 */
 	public static String generatedModuleOutputUrl(String outputName)

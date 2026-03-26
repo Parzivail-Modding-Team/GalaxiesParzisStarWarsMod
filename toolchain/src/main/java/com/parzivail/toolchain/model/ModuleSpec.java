@@ -126,7 +126,7 @@ public final class ModuleSpec
 	/**
 	 * Creates a new mutable module declaration.
 	 *
-	 * @param id the logical module identifier
+	 * @param id    the logical module identifier
 	 * @param paths the rooted module path helper
 	 */
 	public ModuleSpec(String id, ModulePaths paths)
@@ -379,6 +379,7 @@ public final class ModuleSpec
 	 * Declares the Java language version.
 	 *
 	 * @param javaVersion the Java language version
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec javaVersion(int javaVersion)
@@ -391,6 +392,7 @@ public final class ModuleSpec
 	 * Adds a main Java source root.
 	 *
 	 * @param path the source root
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec mainSources(Path path)
@@ -403,6 +405,7 @@ public final class ModuleSpec
 	 * Adds a client Java source root.
 	 *
 	 * @param path the source root
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec clientSources(Path path)
@@ -415,6 +418,7 @@ public final class ModuleSpec
 	 * Adds a main resource root.
 	 *
 	 * @param path the resource root
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec mainResources(Path path)
@@ -427,6 +431,7 @@ public final class ModuleSpec
 	 * Adds a client resource root.
 	 *
 	 * @param path the resource root
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec clientResources(Path path)
@@ -439,6 +444,7 @@ public final class ModuleSpec
 	 * Adds a logical dependency.
 	 *
 	 * @param dependencyId the dependency module identifier
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec dependency(String dependencyId)
@@ -455,6 +461,7 @@ public final class ModuleSpec
 	 * edges in the module graph.
 	 *
 	 * @param memberId the aggregate member identifier
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec aggregateMember(String memberId)
@@ -467,6 +474,7 @@ public final class ModuleSpec
 	 * Adds an annotation processor dependency.
 	 *
 	 * @param processorId the processor module identifier
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec annotationProcessor(String processorId)
@@ -479,6 +487,7 @@ public final class ModuleSpec
 	 * Declares an annotation processor class provided by this module.
 	 *
 	 * @param className the processor class name
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec providedAnnotationProcessorClass(String className)
@@ -491,6 +500,7 @@ public final class ModuleSpec
 	 * Adds a generated source root.
 	 *
 	 * @param path the generated source root
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec generatedSources(Path path)
@@ -503,6 +513,7 @@ public final class ModuleSpec
 	 * Adds a generated client source root.
 	 *
 	 * @param path the generated client source root
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec generatedClientSources(Path path)
@@ -515,6 +526,7 @@ public final class ModuleSpec
 	 * Declares a mixin configuration file.
 	 *
 	 * @param path the mixin configuration file
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec mixin(Path path)
@@ -526,8 +538,9 @@ public final class ModuleSpec
 	/**
 	 * Declares an external compile Maven dependency.
 	 *
-	 * @param notation the dependency coordinate notation
+	 * @param notation   the dependency coordinate notation
 	 * @param repository the repository that serves the dependency
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec compileDependency(String notation, URI repository)
@@ -539,8 +552,9 @@ public final class ModuleSpec
 	/**
 	 * Declares an external client-only compile Maven dependency.
 	 *
-	 * @param notation the dependency coordinate notation
+	 * @param notation   the dependency coordinate notation
 	 * @param repository the repository that serves the dependency
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec clientDependency(String notation, URI repository)
@@ -552,8 +566,9 @@ public final class ModuleSpec
 	/**
 	 * Declares an external annotation processor Maven dependency.
 	 *
-	 * @param notation the dependency coordinate notation
+	 * @param notation   the dependency coordinate notation
 	 * @param repository the repository that serves the dependency
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec annotationProcessorDependency(String notation, URI repository)
@@ -565,8 +580,9 @@ public final class ModuleSpec
 	/**
 	 * Declares an external runtime Maven dependency.
 	 *
-	 * @param notation the dependency coordinate notation
+	 * @param notation   the dependency coordinate notation
 	 * @param repository the repository that serves the dependency
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec runtimeDependency(String notation, URI repository)
@@ -579,6 +595,7 @@ public final class ModuleSpec
 	 * Declares the Fabric mod descriptor path.
 	 *
 	 * @param path the descriptor path
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec fabricModJson(Path path)
@@ -591,6 +608,7 @@ public final class ModuleSpec
 	 * Declares the Fabric mod identifier.
 	 *
 	 * @param id the Fabric mod identifier
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec fabricModId(String id)
@@ -603,6 +621,7 @@ public final class ModuleSpec
 	 * Declares the packaged artifact identifier.
 	 *
 	 * @param id the packaged artifact identifier
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec artifactId(String id)
@@ -615,6 +634,7 @@ public final class ModuleSpec
 	 * Declares the checked-in datagen output path.
 	 *
 	 * @param path the datagen output path
+	 *
 	 * @return this module specification
 	 */
 	public ModuleSpec datagenOutput(Path path)

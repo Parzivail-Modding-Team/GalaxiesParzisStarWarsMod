@@ -1,12 +1,7 @@
 package com.parzivail.toolchain.intellij;
 
 import com.parzivail.toolchain.maven.ToolchainMavenRepositories;
-import com.parzivail.toolchain.model.BuildGraph;
-import com.parzivail.toolchain.model.MavenDependencySpec;
-import com.parzivail.toolchain.model.ModuleSpec;
-import com.parzivail.toolchain.model.SourceSetNames;
-import com.parzivail.toolchain.model.SourceSetDependencyResolver;
-import com.parzivail.toolchain.model.SourceSetLayout;
+import com.parzivail.toolchain.model.*;
 import com.parzivail.toolchain.path.ToolchainPaths;
 import com.parzivail.toolchain.project.RepositoryContext;
 import com.parzivail.toolchain.source.SourceAttachmentResolver;
@@ -14,7 +9,6 @@ import com.parzivail.toolchain.template.FileTemplateRenderer;
 import com.parzivail.toolchain.template.TemplateXmlWriter;
 import com.parzivail.toolchain.template.XmlEscaper;
 import com.parzivail.toolchain.util.ToolchainLog;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -23,12 +17,7 @@ import org.dom4j.Element;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Generates the IntelliJ project metadata that lets the host project compile from the authoritative toolchain
@@ -45,19 +34,19 @@ public final class IntelliJProjectSyncService
 	 * root IntelliJ project.
 	 */
 	static final List<MavenDependencySpec> TOOLCHAIN_DEPENDENCIES = List.of(
-		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-databind:2.21.1", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-annotations:2.21", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("com.fasterxml.jackson.core:jackson-core:2.21.1", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("io.github.wasabithumb:jtoml:1.5.0", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("io.github.wasabithumb:jtoml-api:1.5.0", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("io.github.wasabithumb:jtoml-internals:1.5.0", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("org.dom4j:dom4j:2.2.0", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("net.fabricmc:class-tweaker:0.1.1", ToolchainMavenRepositories.FABRIC),
-		new MavenDependencySpec("net.fabricmc:tiny-remapper:0.11.2", ToolchainMavenRepositories.FABRIC),
-		new MavenDependencySpec("org.vineflower:vineflower:1.11.2", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("org.ow2.asm:asm:9.9", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("org.ow2.asm:asm-commons:9.8", ToolchainMavenRepositories.MAVEN_CENTRAL),
-		new MavenDependencySpec("org.ow2.asm:asm-tree:9.8", ToolchainMavenRepositories.MAVEN_CENTRAL)
+			new MavenDependencySpec("com.fasterxml.jackson.core:jackson-databind:2.21.1", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("com.fasterxml.jackson.core:jackson-annotations:2.21", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("com.fasterxml.jackson.core:jackson-core:2.21.1", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("io.github.wasabithumb:jtoml:1.5.0", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("io.github.wasabithumb:jtoml-api:1.5.0", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("io.github.wasabithumb:jtoml-internals:1.5.0", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("org.dom4j:dom4j:2.2.0", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("net.fabricmc:class-tweaker:0.1.1", ToolchainMavenRepositories.FABRIC),
+			new MavenDependencySpec("net.fabricmc:tiny-remapper:0.11.2", ToolchainMavenRepositories.FABRIC),
+			new MavenDependencySpec("org.vineflower:vineflower:1.11.2", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("org.ow2.asm:asm:9.9", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("org.ow2.asm:asm-commons:9.8", ToolchainMavenRepositories.MAVEN_CENTRAL),
+			new MavenDependencySpec("org.ow2.asm:asm-tree:9.8", ToolchainMavenRepositories.MAVEN_CENTRAL)
 	);
 
 	/**
@@ -83,15 +72,16 @@ public final class IntelliJProjectSyncService
 	 * Synchronizes compiler and generated-source metadata into the IntelliJ project.
 	 *
 	 * @param refresh whether to refresh externally resolved Maven artifacts
+	 *
 	 * @throws IOException if metadata generation fails
 	 */
 	public void syncProject(boolean refresh) throws IOException
 	{
 		ToolchainLog.info("idea", "Discovering repository context");
-		RepositoryContext repository = RepositoryContext.discoverFromWorkingDirectory();
-		BuildGraph graph = repository.buildGraph();
-		Properties gradleProperties = repository.gradleProperties();
-		String projectName = repository.projectName();
+		var repository = RepositoryContext.load();
+		var graph = repository.buildGraph();
+		String loaderVersion = repository.loaderVersion();
+		var projectName = repository.projectName();
 
 		// Keep the sync phases explicit so future maintainers can line them up with IntelliJ files on disk.
 		ToolchainLog.info("idea", "Writing project registration");
@@ -99,11 +89,11 @@ public final class IntelliJProjectSyncService
 		ToolchainLog.info("idea", "Writing project settings");
 		writeProjectSettings();
 		ToolchainLog.info("idea", "Writing compiler configuration");
-		writeCompilerConfiguration(projectName, graph, gradleProperties, refresh);
+		writeCompilerConfiguration(projectName, graph, refresh);
 		ToolchainLog.info("idea", "Writing project libraries");
-		writeProjectLibraries(graph, gradleProperties, refresh);
+		writeProjectLibraries(graph, loaderVersion, refresh);
 		ToolchainLog.info("idea", "Writing module metadata");
-		writeModuleMetadata(projectName, graph, gradleProperties, refresh);
+		writeModuleMetadata(projectName, graph, loaderVersion, refresh);
 		ToolchainLog.info("idea", "IntelliJ sync complete");
 	}
 
@@ -111,12 +101,13 @@ public final class IntelliJProjectSyncService
 	 * Writes the active IntelliJ project registration files so the generated modules are actually loaded.
 	 *
 	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
+	 * @param graph       the authoritative build graph
+	 *
 	 * @throws IOException if the registration files cannot be written
 	 */
 	private void writeProjectRegistration(
-		String projectName,
-		BuildGraph graph
+			String projectName,
+			BuildGraph graph
 	) throws IOException
 	{
 		TemplateXmlWriter.write(ToolchainPaths.INTELLIJ_META_DIRECTORY.resolve(projectName + ".iml"), createRootModuleDocument());
@@ -127,21 +118,20 @@ public final class IntelliJProjectSyncService
 	 * Writes the root IntelliJ compiler configuration file.
 	 *
 	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
+	 * @param graph       the authoritative build graph
+	 * @param refresh     whether to refresh external artifact resolution
+	 *
 	 * @throws IOException if the file cannot be written
 	 */
 	private void writeCompilerConfiguration(
-		String projectName,
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh
+			String projectName,
+			BuildGraph graph,
+			boolean refresh
 	) throws IOException
 	{
 		TemplateXmlWriter.write(
 				ToolchainPaths.INTELLIJ_META_COMPILER_FILE,
-				createCompilerConfigurationDocument(projectName, graph, gradleProperties, refresh)
+				createCompilerConfigurationDocument(projectName, graph, refresh)
 		);
 	}
 
@@ -156,10 +146,10 @@ public final class IntelliJProjectSyncService
 	 */
 	private void writeProjectSettings() throws IOException
 	{
-		Document document = readExistingProjectDocument();
-		Element project = document.getRootElement();
-		Element projectRootManager = findOrCreateComponent(project, "ProjectRootManager");
-		Element output = projectRootManager.element("output");
+		var document = readExistingProjectDocument();
+		var project = document.getRootElement();
+		var projectRootManager = findOrCreateComponent(project, "ProjectRootManager");
+		var output = projectRootManager.element("output");
 
 		if (output == null)
 		{
@@ -173,35 +163,36 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes project library metadata for external compile and client dependencies.
 	 *
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh external artifact resolution
+	 *
 	 * @throws IOException if metadata generation fails
 	 */
 	private void writeProjectLibraries(
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh
 	) throws IOException
 	{
 		Set<Path> resolvedArtifacts = new LinkedHashSet<>(
-			_dependencyResolver.resolveProjectLibraries(graph, gradleProperties, refresh)
+				_dependencyResolver.resolveProjectLibraries(graph, loaderVersion, refresh)
 		);
-		resolvedArtifacts.addAll(_dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, gradleProperties, refresh));
+		resolvedArtifacts.addAll(_dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, refresh));
 		ToolchainLog.info("idea", "Resolved " + resolvedArtifacts.size() + " project libraries");
 
-		Path librariesDirectory = ToolchainPaths.INTELLIJ_META_LIBRARIES_DIRECTORY;
+		var librariesDirectory = ToolchainPaths.INTELLIJ_META_LIBRARIES_DIRECTORY;
 		Files.createDirectories(librariesDirectory);
 		Set<String> expectedFileNames = new LinkedHashSet<>();
 
-		for (Path artifact : resolvedArtifacts)
+		for (var artifact : resolvedArtifacts)
 		{
-			String fileName = sanitizeLibraryFileName(projectLibraryName(artifact)) + ".xml";
+			var fileName = sanitizeLibraryFileName(projectLibraryName(artifact)) + ".xml";
 			expectedFileNames.add(fileName);
-			Path sourceArchive = _sourceAttachmentResolver.resolveSourceArchive(artifact, refresh);
+			var sourceArchive = _sourceAttachmentResolver.resolveSourceArchive(artifact, refresh);
 			TemplateXmlWriter.write(
-				librariesDirectory.resolve(fileName),
-				createProjectLibraryDocument(artifact, sourceArchive)
+					librariesDirectory.resolve(fileName),
+					createProjectLibraryDocument(artifact, sourceArchive)
 			);
 		}
 
@@ -212,36 +203,37 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes IntelliJ module metadata for modeled PSWG source sets.
 	 *
-	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
+	 * @param projectName   the IntelliJ project name
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh external artifact resolution
+	 *
 	 * @throws IOException if metadata generation fails
 	 */
 	private void writeModuleMetadata(
-		String projectName,
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh
+			String projectName,
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh
 	) throws IOException
 	{
 		ToolchainLog.info("idea", "Generating metadata for " + graph.modules().size() + " modeled modules");
 		Set<String> expectedModuleFiles = new LinkedHashSet<>();
 		ToolchainLog.info("idea", "Writing module metadata for toolchain");
 		expectedModuleFiles.add("toolchain/" + IntelliJModuleNames.toolchainModuleFileName(projectName));
-		writeToolchainModuleMetadata(projectName, gradleProperties, refresh);
+		writeToolchainModuleMetadata(projectName, refresh);
 
-		for (ModuleSpec module : graph.modules())
+		for (var module : graph.modules())
 		{
 			ToolchainLog.info("idea", "Writing module metadata for " + module.id());
 			expectedModuleFiles.add(module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.MAIN));
-			writeSourceSetModuleMetadata(projectName, graph, gradleProperties, refresh, module, SourceSetNames.MAIN);
+			writeSourceSetModuleMetadata(projectName, graph, loaderVersion, refresh, module, SourceSetNames.MAIN);
 
 			if (hasClientSourceSet(module))
 			{
 				ToolchainLog.info("idea", "Writing client source set metadata for " + module.id());
 				expectedModuleFiles.add(module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.CLIENT));
-				writeSourceSetModuleMetadata(projectName, graph, gradleProperties, refresh, module, SourceSetNames.CLIENT);
+				writeSourceSetModuleMetadata(projectName, graph, loaderVersion, refresh, module, SourceSetNames.CLIENT);
 			}
 		}
 
@@ -252,29 +244,30 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Writes a single source-set module `.iml`.
 	 *
-	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
-	 * @param module the module specification
+	 * @param projectName   the IntelliJ project name
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh external artifact resolution
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @throws IOException if metadata generation fails
 	 */
 	private void writeSourceSetModuleMetadata(
-		String projectName,
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh,
-		ModuleSpec module,
-		String sourceSetName
+			String projectName,
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh,
+			ModuleSpec module,
+			String sourceSetName
 	) throws IOException
 	{
-		Path outputPath = ToolchainPaths.INTELLIJ_META_PROJECTS_MODULE_DIRECTORY
-		                             .resolve(module.id())
-		                             .resolve(IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), sourceSetName));
+		var outputPath = ToolchainPaths.INTELLIJ_META_PROJECTS_MODULE_DIRECTORY
+				.resolve(module.id())
+				.resolve(IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), sourceSetName));
 		TemplateXmlWriter.write(
-			outputPath,
-			createModuleDocument(projectName, graph, gradleProperties, refresh, module, sourceSetName)
+				outputPath,
+				createModuleDocument(projectName, graph, loaderVersion, refresh, module, sourceSetName)
 		);
 	}
 
@@ -282,91 +275,91 @@ public final class IntelliJProjectSyncService
 	 * Writes the PSWG-root IntelliJ module metadata for the standalone toolchain sources.
 	 *
 	 * @param projectName the IntelliJ project name
+	 *
 	 * @throws IOException if the metadata cannot be written
 	 */
 	private void writeToolchainModuleMetadata(
-		String projectName,
-		Properties gradleProperties,
-		boolean refresh
+			String projectName,
+			boolean refresh
 	) throws IOException
 	{
-		Path outputPath = ToolchainPaths.INTELLIJ_META_TOOLCHAIN_PROJECT_MODULE_DIRECTORY.resolve(IntelliJModuleNames.toolchainModuleFileName(projectName));
-		TemplateXmlWriter.write(outputPath, createToolchainModuleDocument(projectName, gradleProperties, refresh));
+		var outputPath = ToolchainPaths.INTELLIJ_META_TOOLCHAIN_PROJECT_MODULE_DIRECTORY.resolve(IntelliJModuleNames.toolchainModuleFileName(projectName));
+		TemplateXmlWriter.write(outputPath, createToolchainModuleDocument(projectName, refresh));
 	}
 
 	/**
 	 * Creates the IntelliJ compiler configuration XML document.
 	 *
 	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
+	 * @param graph       the authoritative build graph
+	 * @param refresh     whether to refresh external artifact resolution
+	 *
 	 * @return the compiler configuration document
+	 *
 	 * @throws IOException if external artifacts cannot be resolved
 	 */
 	private Document createCompilerConfigurationDocument(
-		String projectName,
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh
+			String projectName,
+			BuildGraph graph,
+			boolean refresh
 	) throws IOException
 	{
-		Document document = DocumentHelper.createDocument();
-		Element project = document.addElement("project");
+		var document = DocumentHelper.createDocument();
+		var project = document.addElement("project");
 		project.addAttribute("version", "4");
-		Element compilerProjectExtension = project.addElement("component");
+		var compilerProjectExtension = project.addElement("component");
 		compilerProjectExtension.addAttribute("name", "CompilerProjectExtension");
 		compilerProjectExtension.addElement("output")
 		                        .addAttribute("url", "file://$PROJECT_DIR$/out");
-		Element compilerConfiguration = project.addElement("component");
+		var compilerConfiguration = project.addElement("component");
 		compilerConfiguration.addAttribute("name", "CompilerConfiguration");
-		Element annotationProcessing = compilerConfiguration.addElement("annotationProcessing");
-		Element defaultProfile = annotationProcessing.addElement("profile");
+		var annotationProcessing = compilerConfiguration.addElement("annotationProcessing");
+		var defaultProfile = annotationProcessing.addElement("profile");
 		defaultProfile.addAttribute("default", "true");
 		defaultProfile.addAttribute("name", "Default");
 		defaultProfile.addAttribute("enabled", "true");
 		addDisabledAnnotationProfile(
-			annotationProcessing,
-			IntelliJModuleNames.toolchainModuleName(projectName)
+				annotationProcessing,
+				IntelliJModuleNames.toolchainModuleName(projectName)
 		);
 
-		for (ModuleSpec module : graph.modules())
+		for (var module : graph.modules())
 		{
 			if (!module.annotationProcessorDependencies().isEmpty())
 			{
 				addAnnotationProfile(
-					annotationProcessing,
-					projectName,
-					graph,
-					module,
-					SourceSetNames.MAIN,
-					generatedRoots(module, SourceSetNames.MAIN),
-					_dependencyResolver.resolveExternalDependencies(module.annotationProcessorDependencies(), gradleProperties, refresh)
-				);
-			}
-
-			if (!module.annotationProcessors().isEmpty())
-			{
-					addAnnotationProfile(
 						annotationProcessing,
 						projectName,
 						graph,
 						module,
 						SourceSetNames.MAIN,
 						generatedRoots(module, SourceSetNames.MAIN),
-						_dependencyResolver.resolveAnnotationProcessorModulePath(projectName, graph, module, gradleProperties, refresh)
-					);
+						_dependencyResolver.resolveExternalDependencies(module.annotationProcessorDependencies(), refresh)
+				);
+			}
 
-				if (!module.clientSources().isEmpty() || !module.clientResources().isEmpty())
-				{
-					addAnnotationProfile(
+			if (!module.annotationProcessors().isEmpty())
+			{
+				addAnnotationProfile(
 						annotationProcessing,
 						projectName,
 						graph,
 						module,
-						SourceSetNames.CLIENT,
-						generatedRoots(module, SourceSetNames.CLIENT),
-						_dependencyResolver.resolveAnnotationProcessorModulePath(projectName, graph, module, gradleProperties, refresh)
+						SourceSetNames.MAIN,
+						generatedRoots(module, SourceSetNames.MAIN),
+						_dependencyResolver.resolveAnnotationProcessorModulePath(projectName, graph, module, refresh)
+				);
+
+				if (!module.clientSources().isEmpty() || !module.clientResources().isEmpty())
+				{
+					addAnnotationProfile(
+							annotationProcessing,
+							projectName,
+							graph,
+							module,
+							SourceSetNames.CLIENT,
+							generatedRoots(module, SourceSetNames.CLIENT),
+							_dependencyResolver.resolveAnnotationProcessorModulePath(projectName, graph, module, refresh)
 					);
 				}
 			}
@@ -374,9 +367,9 @@ public final class IntelliJProjectSyncService
 
 		compilerConfiguration.addElement("bytecodeTargetLevel")
 		                     .addAttribute("target", Integer.toString(graph.modules().stream().mapToInt(ModuleSpec::javaVersion).max().orElse(25)));
-		Element javacSettings = project.addElement("component");
+		var javacSettings = project.addElement("component");
 		javacSettings.addAttribute("name", "JavacSettings");
-		Element additionalOptions = javacSettings.addElement("option");
+		var additionalOptions = javacSettings.addElement("option");
 		additionalOptions.addAttribute("name", "ADDITIONAL_OPTIONS_OVERRIDE");
 		addJavacOptions(additionalOptions, projectName, graph);
 		return document;
@@ -386,41 +379,41 @@ public final class IntelliJProjectSyncService
 	 * Adds a single IntelliJ annotation processing profile.
 	 *
 	 * @param annotationProcessing the annotation processing element
-	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param module the module specification
-	 * @param sourceSetName the source-set name
-	 * @param generatedRoots the generated roots for this source set
+	 * @param projectName          the IntelliJ project name
+	 * @param graph                the authoritative build graph
+	 * @param module               the module specification
+	 * @param sourceSetName        the source-set name
+	 * @param generatedRoots       the generated roots for this source set
 	 * @param processorPathEntries the resolved processor path entries
 	 */
 	private void addAnnotationProfile(
-		Element annotationProcessing,
-		String projectName,
-		BuildGraph graph,
-		ModuleSpec module,
-		String sourceSetName,
-		List<Path> generatedRoots,
-		List<Path> processorPathEntries
+			Element annotationProcessing,
+			String projectName,
+			BuildGraph graph,
+			ModuleSpec module,
+			String sourceSetName,
+			List<Path> generatedRoots,
+			List<Path> processorPathEntries
 	)
 	{
-		Element profile = annotationProcessing.addElement("profile");
+		var profile = annotationProcessing.addElement("profile");
 		profile.addAttribute("name", "Toolchain: " + IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
 		profile.addAttribute("enabled", "true");
 		profile.addElement("outputRelativeToContentRoot").addAttribute("value", "true");
 
 		if (!generatedRoots.isEmpty())
 		{
-			Path moduleRoot = ToolchainPaths.PROJECT_ROOT.resolve(module.paths().root()).toAbsolutePath().normalize();
-			Path generatedRoot = ToolchainPaths.PROJECT_ROOT.resolve(generatedRoots.getFirst()).toAbsolutePath().normalize();
+			var moduleRoot = ToolchainPaths.PROJECT_ROOT.resolve(module.paths().root()).toAbsolutePath().normalize();
+			var generatedRoot = ToolchainPaths.PROJECT_ROOT.resolve(generatedRoots.getFirst()).toAbsolutePath().normalize();
 			profile.addElement("sourceOutputDir")
 			       .addAttribute("name", moduleRoot.relativize(generatedRoot).toString().replace('\\', '/'));
 		}
 
-		Element processorPath = profile.addElement("processorPath");
-		boolean useClasspath = !module.annotationProcessors().isEmpty();
+		var processorPath = profile.addElement("processorPath");
+		var useClasspath = !module.annotationProcessors().isEmpty();
 		processorPath.addAttribute("useClasspath", Boolean.toString(useClasspath));
 
-		for (Path entry : processorPathEntries)
+		for (var entry : processorPathEntries)
 		{
 			if (useClasspath)
 			{
@@ -431,7 +424,7 @@ public final class IntelliJProjectSyncService
 			             .addAttribute("name", IntelliJPathMacros.projectRelativeMacro(entry));
 		}
 
-		for (String processorClassName : annotationProcessorClassNames(graph, module))
+		for (var processorClassName : annotationProcessorClassNames(graph, module))
 		{
 			profile.addElement("processor").addAttribute("name", processorClassName);
 		}
@@ -443,23 +436,24 @@ public final class IntelliJProjectSyncService
 	 * Collects the explicit annotation processor classes contributed by module-backed processor
 	 * dependencies.
 	 *
-	 * @param graph the authoritative build graph
+	 * @param graph  the authoritative build graph
 	 * @param module the consumer module specification
+	 *
 	 * @return the ordered processor class names
 	 */
 	private List<String> annotationProcessorClassNames(BuildGraph graph, ModuleSpec module)
 	{
 		List<String> processorClassNames = new ArrayList<>();
 
-		for (String processorId : module.annotationProcessors())
+		for (var processorId : module.annotationProcessors())
 		{
-			ModuleSpec processorModule = graph.modules()
-			                                .stream()
-			                                .filter(candidate -> processorId.equals(candidate.id()))
-			                                .findFirst()
-			                                .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + processorId));
+			var processorModule = graph.modules()
+			                           .stream()
+			                           .filter(candidate -> processorId.equals(candidate.id()))
+			                           .findFirst()
+			                           .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + processorId));
 
-			for (String className : processorModule.providedAnnotationProcessorClasses())
+			for (var className : processorModule.providedAnnotationProcessorClasses())
 			{
 				if (!processorClassNames.contains(className))
 				{
@@ -476,11 +470,11 @@ public final class IntelliJProjectSyncService
 	 * from its classpath.
 	 *
 	 * @param annotationProcessing the annotation processing component
-	 * @param moduleName the IntelliJ module name
+	 * @param moduleName           the IntelliJ module name
 	 */
 	private void addDisabledAnnotationProfile(Element annotationProcessing, String moduleName)
 	{
-		Element profile = annotationProcessing.addElement("profile");
+		var profile = annotationProcessing.addElement("profile");
 		profile.addAttribute("name", "Toolchain: Disabled AP for " + moduleName);
 		profile.addAttribute("enabled", "false");
 		profile.addElement("module").addAttribute("name", moduleName);
@@ -490,8 +484,8 @@ public final class IntelliJProjectSyncService
 	 * Adds IntelliJ Javac option override entries for modeled modules and source sets.
 	 *
 	 * @param additionalOptions the `ADDITIONAL_OPTIONS_OVERRIDE` option element
-	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
+	 * @param projectName       the IntelliJ project name
+	 * @param graph             the authoritative build graph
 	 */
 	private void addJavacOptions(Element additionalOptions, String projectName, BuildGraph graph)
 	{
@@ -505,7 +499,7 @@ public final class IntelliJProjectSyncService
 		                 .addAttribute("name", IntelliJModuleNames.toolchainModuleName(projectName))
 		                 .addAttribute("options", "-Xmaxerrs 1000 -Xdiags:verbose");
 
-		for (ModuleSpec module : graph.modules())
+		for (var module : graph.modules())
 		{
 			additionalOptions.addElement("module")
 			                 .addAttribute("name", IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.MAIN))
@@ -523,12 +517,13 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Renders the optional Fabric facet block for a modeled module.
 	 *
-	 * @param module the module specification
+	 * @param module           the module specification
 	 * @param minecraftVersion the tracked Minecraft version
+	 *
 	 * @return the rendered facet block, or an empty string
 	 */
 	private String renderOptionalFabricFacet(ModuleSpec module, String minecraftVersion)
-		throws IOException
+			throws IOException
 	{
 		if (module.fabricModJson() == null)
 		{
@@ -536,26 +531,27 @@ public final class IntelliJProjectSyncService
 		}
 
 		return FileTemplateRenderer.render(
-			"com/parzivail/toolchain/templates/intellij-fabric-facet.xml",
-			Map.of("MINECRAFT_VERSION", XmlEscaper.escapeAttribute(minecraftVersion))
+				"com/parzivail/toolchain/templates/intellij-fabric-facet.xml",
+				Map.of("MINECRAFT_VERSION", XmlEscaper.escapeAttribute(minecraftVersion))
 		);
 	}
 
 	/**
 	 * Adds Fabric facet components to a module document when the module is Fabric-backed.
 	 *
-	 * @param moduleElement the module element
-	 * @param module the module specification
+	 * @param moduleElement    the module element
+	 * @param module           the module specification
 	 * @param minecraftVersion the tracked Minecraft version
+	 *
 	 * @throws IOException if facet rendering fails
 	 */
 	private void addFabricFacetComponents(
-		Element moduleElement,
-		ModuleSpec module,
-		String minecraftVersion
+			Element moduleElement,
+			ModuleSpec module,
+			String minecraftVersion
 	) throws IOException
 	{
-		String rendered = renderOptionalFabricFacet(module, minecraftVersion);
+		var rendered = renderOptionalFabricFacet(module, minecraftVersion);
 
 		if (rendered.isBlank())
 		{
@@ -564,15 +560,15 @@ public final class IntelliJProjectSyncService
 
 		try
 		{
-			Document fragment = DocumentHelper.parseText("<module>" + rendered + "</module>");
+			var fragment = DocumentHelper.parseText("<module>" + rendered + "</module>");
 			List<Element> copiedChildren = new ArrayList<>();
 
 			for (Object child : fragment.getRootElement().elements())
 			{
-				copiedChildren.add(((Element) child).createCopy());
+				copiedChildren.add(((Element)child).createCopy());
 			}
 
-			for (Element copiedChild : copiedChildren)
+			for (var copiedChild : copiedChildren)
 			{
 				moduleElement.add(copiedChild);
 			}
@@ -586,8 +582,9 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Gets the generated roots for a selected source set.
 	 *
-	 * @param module the module specification
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @return the generated roots for that source set
 	 */
 	private List<Path> generatedRoots(ModuleSpec module, String sourceSetName)
@@ -599,19 +596,20 @@ public final class IntelliJProjectSyncService
 	 * Creates a project library XML document for a resolved external artifact.
 	 *
 	 * @param artifact the resolved artifact path
+	 *
 	 * @return the library document
 	 */
 	private Document createProjectLibraryDocument(Path artifact, Path sourceArchive)
 	{
-		Document document = DocumentHelper.createDocument();
-		Element component = document.addElement("component");
+		var document = DocumentHelper.createDocument();
+		var component = document.addElement("component");
 		component.addAttribute("name", "libraryTable");
-		Element library = component.addElement("library");
+		var library = component.addElement("library");
 		library.addAttribute("name", projectLibraryName(artifact));
-		Element classes = library.addElement("CLASSES");
+		var classes = library.addElement("CLASSES");
 		classes.addElement("root").addAttribute("url", IntelliJPathMacros.jarUrl(artifact));
 		library.addElement("JAVADOC");
-		Element sources = library.addElement("SOURCES");
+		var sources = library.addElement("SOURCES");
 
 		if (sourceArchive != null)
 		{
@@ -628,11 +626,11 @@ public final class IntelliJProjectSyncService
 	 */
 	private Document createRootModuleDocument()
 	{
-		Document document = DocumentHelper.createDocument();
-		Element module = document.addElement("module");
+		var document = DocumentHelper.createDocument();
+		var module = document.addElement("module");
 		module.addAttribute("type", "JAVA_MODULE");
 		module.addAttribute("version", "4");
-		Element rootManager = module.addElement("component");
+		var rootManager = module.addElement("component");
 		rootManager.addAttribute("name", "NewModuleRootManager");
 		rootManager.addAttribute("inherit-compiler-output", "true");
 		rootManager.addElement("exclude-output");
@@ -646,38 +644,39 @@ public final class IntelliJProjectSyncService
 	 * Creates the IntelliJ `modules.xml` project registration document.
 	 *
 	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
+	 * @param graph       the authoritative build graph
+	 *
 	 * @return the modules registration document
 	 */
 	private Document createModulesDocument(String projectName, BuildGraph graph) throws IOException
 	{
-		Document document = DocumentHelper.createDocument();
-		Element project = document.addElement("project");
+		var document = DocumentHelper.createDocument();
+		var project = document.addElement("project");
 		project.addAttribute("version", "4");
-		Element component = project.addElement("component");
+		var component = project.addElement("component");
 		component.addAttribute("name", "ProjectModuleManager");
-		Element modules = component.addElement("modules");
+		var modules = component.addElement("modules");
 
 		addRegisteredModule(modules, "$PROJECT_DIR$/.idea/" + projectName + ".iml");
 		addRegisteredModule(modules, "$PROJECT_DIR$/.idea/modules/projects/toolchain/" + IntelliJModuleNames.toolchainModuleFileName(projectName));
 
-		for (ModuleSpec module : graph.modules())
+		for (var module : graph.modules())
 		{
 			addRegisteredModule(
-				modules,
-				"$PROJECT_DIR$/.idea/modules/projects/" + module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.MAIN)
+					modules,
+					"$PROJECT_DIR$/.idea/modules/projects/" + module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.MAIN)
 			);
 
 			if (hasClientSourceSet(module))
 			{
 				addRegisteredModule(
-					modules,
-					"$PROJECT_DIR$/.idea/modules/projects/" + module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.CLIENT)
+						modules,
+						"$PROJECT_DIR$/.idea/modules/projects/" + module.id() + "/" + IntelliJModuleNames.sourceSetModuleFileName(projectName, module.id(), SourceSetNames.CLIENT)
 				);
 			}
 		}
 
-		for (String preservedModulePath : preservedGeneratedLaunchModules())
+		for (var preservedModulePath : preservedGeneratedLaunchModules())
 		{
 			addRegisteredModule(modules, preservedModulePath);
 		}
@@ -690,47 +689,50 @@ public final class IntelliJProjectSyncService
 	 * project.
 	 *
 	 * @param projectName the IntelliJ project name
+	 *
 	 * @return the toolchain module document
+	 *
 	 * @throws IOException if external toolchain dependencies cannot be resolved
 	 */
 	private Document createToolchainModuleDocument(
-		String projectName,
-		Properties gradleProperties,
-		boolean refresh
+			String projectName,
+			boolean refresh
 	) throws IOException
 	{
-		Document document = DocumentHelper.createDocument();
-		Element moduleElement = document.addElement("module");
+		var document = DocumentHelper.createDocument();
+		var moduleElement = document.addElement("module");
 		moduleElement.addAttribute("version", "4");
-		addToolchainRootManager(moduleElement, projectName, gradleProperties, refresh);
+		addToolchainRootManager(moduleElement, projectName, refresh);
 		return document;
 	}
 
 	/**
 	 * Creates a fully modeled IntelliJ module document for a selected source set.
 	 *
-	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
-	 * @param module the module specification
+	 * @param projectName   the IntelliJ project name
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh external artifact resolution
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @return the module document
+	 *
 	 * @throws IOException if dependency resolution fails
 	 */
 	private Document createModuleDocument(
-		String projectName,
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh,
-		ModuleSpec module,
-		String sourceSetName
+			String projectName,
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh,
+			ModuleSpec module,
+			String sourceSetName
 	) throws IOException
 	{
-		Document document = DocumentHelper.createDocument();
-		Element moduleElement = document.addElement("module");
+		var document = DocumentHelper.createDocument();
+		var moduleElement = document.addElement("module");
 		moduleElement.addAttribute("version", "4");
-		addRootManager(moduleElement, projectName, graph, gradleProperties, refresh, module, sourceSetName);
+		addRootManager(moduleElement, projectName, graph, loaderVersion, refresh, module, sourceSetName);
 		addGeneratedSourcesComponent(moduleElement, module, generatedRoots(module, sourceSetName));
 
 		addFabricFacetComponents(moduleElement, module, graph.minecraftVersion());
@@ -742,33 +744,34 @@ public final class IntelliJProjectSyncService
 	 * Adds the IntelliJ root manager and classpath model to a module document.
 	 *
 	 * @param moduleElement the module element
-	 * @param projectName the IntelliJ project name
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
-	 * @param module the module specification
+	 * @param projectName   the IntelliJ project name
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh external artifact resolution
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @throws IOException if dependency resolution fails
 	 */
 	private void addRootManager(
-		Element moduleElement,
-		String projectName,
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh,
-		ModuleSpec module,
-		String sourceSetName
+			Element moduleElement,
+			String projectName,
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh,
+			ModuleSpec module,
+			String sourceSetName
 	) throws IOException
 	{
-		Path moduleRoot = ToolchainPaths.PROJECT_ROOT.resolve(module.paths().root());
-		Element rootManager = moduleElement.addElement("component");
+		var moduleRoot = ToolchainPaths.PROJECT_ROOT.resolve(module.paths().root());
+		var rootManager = moduleElement.addElement("component");
 		rootManager.addAttribute("name", "NewModuleRootManager");
 		rootManager.addAttribute("inherit-compiler-output", "false");
 		rootManager.addElement("output")
 		           .addAttribute("url", IntelliJPathMacros.generatedModuleOutputUrl(IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName)));
 		rootManager.addElement("exclude-output");
 
-		Element content = rootManager.addElement("content");
+		var content = rootManager.addElement("content");
 		content.addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, moduleRoot));
 		addSourceFolders(content, module, sourceSetName);
 		addExcludedFolder(content, moduleRoot.resolve("build"), moduleRoot);
@@ -776,32 +779,32 @@ public final class IntelliJProjectSyncService
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
 		addModuleDependencyEntries(rootManager, projectName, graph, module, sourceSetName);
-		addLibraryDependencyEntries(rootManager, graph, gradleProperties, refresh, module, sourceSetName);
+		addLibraryDependencyEntries(rootManager, graph, loaderVersion, refresh, module, sourceSetName);
 	}
 
 	/**
 	 * Adds the root manager and classpath model for the toolchain module.
 	 *
 	 * @param moduleElement the module element
-	 * @param projectName the IntelliJ project name
+	 * @param projectName   the IntelliJ project name
+	 *
 	 * @throws IOException if external toolchain dependencies cannot be resolved
 	 */
 	private void addToolchainRootManager(
-		Element moduleElement,
-		String projectName,
-		Properties gradleProperties,
-		boolean refresh
+			Element moduleElement,
+			String projectName,
+			boolean refresh
 	) throws IOException
 	{
-		Path toolchainRoot = ToolchainPaths.TOOLCHAIN_ROOT;
-		Element rootManager = moduleElement.addElement("component");
+		var toolchainRoot = ToolchainPaths.TOOLCHAIN_ROOT;
+		var rootManager = moduleElement.addElement("component");
 		rootManager.addAttribute("name", "NewModuleRootManager");
 		rootManager.addAttribute("inherit-compiler-output", "false");
 		rootManager.addElement("output")
 		           .addAttribute("url", IntelliJPathMacros.generatedModuleOutputUrl(IntelliJModuleNames.toolchainModuleName(projectName)));
 		rootManager.addElement("exclude-output");
 
-		Element content = rootManager.addElement("content");
+		var content = rootManager.addElement("content");
 		content.addAttribute("url", IntelliJPathMacros.toolchainModuleFileUrl(toolchainRoot, toolchainRoot));
 		content.addElement("sourceFolder")
 		       .addAttribute("url", IntelliJPathMacros.toolchainModuleFileUrl(toolchainRoot, ToolchainPaths.TOOLCHAIN_MAIN_SOURCES))
@@ -816,7 +819,7 @@ public final class IntelliJProjectSyncService
 		rootManager.addElement("orderEntry").addAttribute("type", "inheritedJdk");
 		rootManager.addElement("orderEntry").addAttribute("type", "sourceFolder").addAttribute("forTests", "false");
 
-		for (Path dependency : _dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, gradleProperties, refresh))
+		for (var dependency : _dependencyResolver.resolveExternalDependencies(TOOLCHAIN_DEPENDENCIES, refresh))
 		{
 			rootManager.addElement("orderEntry")
 			           .addAttribute("type", "library")
@@ -833,6 +836,7 @@ public final class IntelliJProjectSyncService
 	 * dropping the launch module registration every time the project metadata is resynced.
 	 *
 	 * @return the generated launch module file paths already present on disk
+	 *
 	 * @throws IOException if the launch module directory cannot be scanned
 	 */
 	private List<String> preservedGeneratedLaunchModules() throws IOException
@@ -849,7 +853,7 @@ public final class IntelliJProjectSyncService
 			paths.filter(path -> Files.isRegularFile(path) && path.getFileName().toString().endsWith(".iml"))
 			     .sorted()
 			     .forEach(path -> modulePaths.add(
-			     	"$PROJECT_DIR$/.idea/modules/launch/" + ToolchainPaths.INTELLIJ_LAUNCH_MODULE_DIRECTORY.relativize(path).toString().replace('\\', '/')
+					     "$PROJECT_DIR$/.idea/modules/launch/" + ToolchainPaths.INTELLIJ_LAUNCH_MODULE_DIRECTORY.relativize(path).toString().replace('\\', '/')
 			     ));
 		}
 
@@ -859,22 +863,22 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Adds IntelliJ source and resource folder declarations for a source set.
 	 *
-	 * @param content the module content element
-	 * @param module the module specification
+	 * @param content       the module content element
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
 	 */
 	private void addSourceFolders(Element content, ModuleSpec module, String sourceSetName)
 	{
-		Path moduleRoot = ToolchainPaths.PROJECT_ROOT.resolve(module.paths().root());
+		var moduleRoot = ToolchainPaths.PROJECT_ROOT.resolve(module.paths().root());
 
-		for (Path sourceRoot : sourceRoots(module, sourceSetName))
+		for (var sourceRoot : sourceRoots(module, sourceSetName))
 		{
 			content.addElement("sourceFolder")
 			       .addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, ToolchainPaths.PROJECT_ROOT.resolve(sourceRoot)))
 			       .addAttribute("isTestSource", "false");
 		}
 
-		for (Path resourceRoot : resourceRoots(module, sourceSetName))
+		for (var resourceRoot : resourceRoots(module, sourceSetName))
 		{
 			content.addElement("sourceFolder")
 			       .addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, ToolchainPaths.PROJECT_ROOT.resolve(resourceRoot)))
@@ -882,7 +886,7 @@ public final class IntelliJProjectSyncService
 			       .addAttribute("isTestSource", "false");
 		}
 
-		for (Path generatedRoot : generatedRoots(module, sourceSetName))
+		for (var generatedRoot : generatedRoots(module, sourceSetName))
 		{
 			content.addElement("sourceFolder")
 			       .addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, ToolchainPaths.PROJECT_ROOT.resolve(generatedRoot)))
@@ -894,8 +898,8 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Adds an excluded folder entry to the module content root.
 	 *
-	 * @param content the module content element
-	 * @param path the excluded path
+	 * @param content    the module content element
+	 * @param path       the excluded path
 	 * @param moduleRoot the module root used to derive a stable module-relative URL
 	 */
 	private void addExcludedFolder(Element content, Path path, Path moduleRoot)
@@ -906,29 +910,29 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Adds module dependency order entries for a modeled source set.
 	 *
-	 * @param rootManager the root manager element
-	 * @param projectName the IntelliJ project name
-	 * @param module the module specification
+	 * @param rootManager   the root manager element
+	 * @param projectName   the IntelliJ project name
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
 	 */
 	private void addModuleDependencyEntries(
-		Element rootManager,
-		String projectName,
-		BuildGraph graph,
-		ModuleSpec module,
-		String sourceSetName
+			Element rootManager,
+			String projectName,
+			BuildGraph graph,
+			ModuleSpec module,
+			String sourceSetName
 	)
 	{
 		Set<String> dependencyModuleNames = new LinkedHashSet<>();
 
-		for (String dependencyId : module.dependencies())
+		for (var dependencyId : module.dependencies())
 		{
 			dependencyModuleNames.add(
-				IntelliJModuleNames.sourceSetModuleName(
-					projectName,
-					dependencyId,
-					SourceSetDependencyResolver.dependencySourceSetName(graph, dependencyId, sourceSetName)
-				)
+					IntelliJModuleNames.sourceSetModuleName(
+							projectName,
+							dependencyId,
+							SourceSetDependencyResolver.dependencySourceSetName(graph, dependencyId, sourceSetName)
+					)
 			);
 		}
 
@@ -937,7 +941,7 @@ public final class IntelliJProjectSyncService
 			dependencyModuleNames.add(IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), SourceSetNames.MAIN));
 		}
 
-		for (String dependencyModuleName : dependencyModuleNames)
+		for (var dependencyModuleName : dependencyModuleNames)
 		{
 			rootManager.addElement("orderEntry")
 			           .addAttribute("type", "module")
@@ -945,7 +949,7 @@ public final class IntelliJProjectSyncService
 			           .addAttribute("exported", "");
 		}
 
-		for (String processorId : module.annotationProcessors())
+		for (var processorId : module.annotationProcessors())
 		{
 			rootManager.addElement("orderEntry")
 			           .addAttribute("type", "module")
@@ -957,32 +961,33 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Adds project library dependency entries for a modeled source set.
 	 *
-	 * @param rootManager the root manager element
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
-	 * @param refresh whether to refresh external artifact resolution
-	 * @param module the module specification
+	 * @param rootManager   the root manager element
+	 * @param graph         the authoritative build graph
+	 * @param loaderVersion the Fabric loader version
+	 * @param refresh       whether to refresh external artifact resolution
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @throws IOException if dependency resolution fails
 	 */
 	private void addLibraryDependencyEntries(
-		Element rootManager,
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh,
-		ModuleSpec module,
-		String sourceSetName
+			Element rootManager,
+			BuildGraph graph,
+			String loaderVersion,
+			boolean refresh,
+			ModuleSpec module,
+			String sourceSetName
 	) throws IOException
 	{
-		Set<Path> dependencies = _dependencyResolver.resolveModuleLibraries(
-			graph,
-			gradleProperties,
-			refresh,
-			module,
-			SourceSetNames.CLIENT.equals(sourceSetName)
+		var dependencies = _dependencyResolver.resolveModuleLibraries(
+				graph,
+				loaderVersion,
+				refresh,
+				module,
+				SourceSetNames.CLIENT.equals(sourceSetName)
 		);
 
-		for (Path dependency : dependencies)
+		for (var dependency : dependencies)
 		{
 			rootManager.addElement("orderEntry")
 			           .addAttribute("type", "library")
@@ -990,7 +995,7 @@ public final class IntelliJProjectSyncService
 			           .addAttribute("level", "project");
 		}
 
-		for (Path dependency : resolveAnnotationProcessorSupportLibraries(graph, gradleProperties, refresh, module))
+		for (var dependency : resolveAnnotationProcessorSupportLibraries(graph, refresh, module))
 		{
 			rootManager.addElement("orderEntry")
 			           .addAttribute("type", "library")
@@ -1003,18 +1008,18 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Resolves the external support libraries needed by module-backed annotation processors.
 	 *
-	 * @param graph the authoritative build graph
-	 * @param gradleProperties the tracked Gradle properties
+	 * @param graph   the authoritative build graph
 	 * @param refresh whether to refresh external artifact resolution
-	 * @param module the consumer module
+	 * @param module  the consumer module
+	 *
 	 * @return the ordered external support libraries
+	 *
 	 * @throws IOException if dependency resolution fails
 	 */
 	private List<Path> resolveAnnotationProcessorSupportLibraries(
-		BuildGraph graph,
-		Properties gradleProperties,
-		boolean refresh,
-		ModuleSpec module
+			BuildGraph graph,
+			boolean refresh,
+			ModuleSpec module
 	) throws IOException
 	{
 		if (module.annotationProcessors().isEmpty())
@@ -1024,16 +1029,16 @@ public final class IntelliJProjectSyncService
 
 		List<Path> libraries = new ArrayList<>();
 
-		for (String processorId : module.annotationProcessors())
+		for (var processorId : module.annotationProcessors())
 		{
-			ModuleSpec processorModule = graph.modules()
-			                                .stream()
-			                                .filter(candidate -> processorId.equals(candidate.id()))
-			                                .findFirst()
-			                                .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + processorId));
+			var processorModule = graph.modules()
+			                           .stream()
+			                           .filter(candidate -> processorId.equals(candidate.id()))
+			                           .findFirst()
+			                           .orElseThrow(() -> new IllegalArgumentException("Unknown module id: " + processorId));
 
-			addDistinctPaths(libraries, _dependencyResolver.resolveExternalDependencies(processorModule.compileDependencies(), gradleProperties, refresh));
-			addDistinctPaths(libraries, _dependencyResolver.resolveExternalDependencies(processorModule.annotationProcessorDependencies(), gradleProperties, refresh));
+			addDistinctPaths(libraries, _dependencyResolver.resolveExternalDependencies(processorModule.compileDependencies(), refresh));
+			addDistinctPaths(libraries, _dependencyResolver.resolveExternalDependencies(processorModule.annotationProcessorDependencies(), refresh));
 		}
 
 		return libraries;
@@ -1042,8 +1047,8 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Adds the generated-sources component used by IntelliJ to mark AP outputs.
 	 *
-	 * @param moduleElement the module element
-	 * @param module the module specification
+	 * @param moduleElement  the module element
+	 * @param module         the module specification
 	 * @param generatedRoots the generated roots for the source set
 	 */
 	private void addGeneratedSourcesComponent(Element moduleElement, ModuleSpec module, List<Path> generatedRoots)
@@ -1053,34 +1058,21 @@ public final class IntelliJProjectSyncService
 			return;
 		}
 
-		Path moduleRoot = ToolchainPaths.PROJECT_ROOT.resolve(module.paths().root());
-		Element additional = moduleElement.addElement("component");
+		var moduleRoot = ToolchainPaths.PROJECT_ROOT.resolve(module.paths().root());
+		var additional = moduleElement.addElement("component");
 		additional.addAttribute("name", "AdditionalModuleElements");
 
-		for (Path generatedRoot : generatedRoots)
+		for (var generatedRoot : generatedRoots)
 		{
 			// IntelliJ does not reliably preserve generated-root markers when they only exist under the
 			// main content root, so we mirror them into AdditionalModuleElements the same way Gradle/JPS does.
-			Element content = additional.addElement("content");
+			var content = additional.addElement("content");
 			content.addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, ToolchainPaths.PROJECT_ROOT.resolve(generatedRoot)));
 			content.addElement("sourceFolder")
 			       .addAttribute("url", IntelliJPathMacros.moduleFileUrl(moduleRoot, ToolchainPaths.PROJECT_ROOT.resolve(generatedRoot)))
 			       .addAttribute("isTestSource", "false")
 			       .addAttribute("generated", "true");
 		}
-	}
-
-	/**
-	 * Gets the compile output directory for a modeled source set.
-	 *
-	 * @param projectName the IntelliJ project name
-	 * @param module the module specification
-	 * @param sourceSetName the source-set name
-	 * @return the compile output directory
-	 */
-	private Path compileOutputDirectory(String projectName, ModuleSpec module, String sourceSetName)
-	{
-		return ToolchainPaths.INTELLIJ_OUTPUT_DIRECTORY.resolve(IntelliJModuleNames.sourceSetModuleName(projectName, module.id(), sourceSetName));
 	}
 
 	/**
@@ -1091,7 +1083,7 @@ public final class IntelliJProjectSyncService
 	 */
 	private void addDistinctPaths(List<Path> output, List<Path> values)
 	{
-		for (Path value : values)
+		for (var value : values)
 		{
 			if (!output.contains(value))
 			{
@@ -1103,8 +1095,9 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Gets the source roots for a selected source set.
 	 *
-	 * @param module the module specification
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @return the source roots
 	 */
 	private List<Path> sourceRoots(ModuleSpec module, String sourceSetName)
@@ -1115,8 +1108,9 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Gets the resource roots for a selected source set.
 	 *
-	 * @param module the module specification
+	 * @param module        the module specification
 	 * @param sourceSetName the source-set name
+	 *
 	 * @return the resource roots
 	 */
 	private List<Path> resourceRoots(ModuleSpec module, String sourceSetName)
@@ -1128,6 +1122,7 @@ public final class IntelliJProjectSyncService
 	 * Checks whether a module has a client source set worth modeling.
 	 *
 	 * @param module the module specification
+	 *
 	 * @return {@code true} if the client source set exists
 	 */
 	private boolean hasClientSourceSet(ModuleSpec module)
@@ -1139,11 +1134,12 @@ public final class IntelliJProjectSyncService
 	 * Builds a stable project-library name for a resolved artifact.
 	 *
 	 * @param artifact the resolved artifact path
+	 *
 	 * @return the library name
 	 */
 	private String projectLibraryName(Path artifact)
 	{
-		String fileName = artifact.getFileName().toString();
+		var fileName = artifact.getFileName().toString();
 		return fileName.endsWith(".jar") ? fileName.substring(0, fileName.length() - 4) : fileName;
 	}
 
@@ -1151,6 +1147,7 @@ public final class IntelliJProjectSyncService
 	 * Sanitizes a project-library name for use as a metadata file name.
 	 *
 	 * @param name the raw library name
+	 *
 	 * @return the sanitized file name
 	 */
 	private String sanitizeLibraryFileName(String name)
@@ -1161,7 +1158,7 @@ public final class IntelliJProjectSyncService
 	/**
 	 * Adds a registered module entry to the IntelliJ `modules.xml` document.
 	 *
-	 * @param modules the `modules` element
+	 * @param modules  the `modules` element
 	 * @param filePath the IntelliJ macro file path
 	 */
 	private void addRegisteredModule(Element modules, String filePath)
@@ -1176,13 +1173,14 @@ public final class IntelliJProjectSyncService
 	 * document otherwise.
 	 *
 	 * @return the parsed or synthesized project document
+	 *
 	 * @throws IOException if the existing document cannot be parsed
 	 */
 	private Document readExistingProjectDocument() throws IOException
 	{
 		if (!Files.exists(ToolchainPaths.INTELLIJ_META_MISC_FILE))
 		{
-			Document document = DocumentHelper.createDocument();
+			var document = DocumentHelper.createDocument();
 			document.addElement("project").addAttribute("version", "4");
 			return document;
 		}
@@ -1201,14 +1199,15 @@ public final class IntelliJProjectSyncService
 	 * Finds an IntelliJ `<component>` by name, creating it when missing.
 	 *
 	 * @param project the root `project` element
-	 * @param name the component name
+	 * @param name    the component name
+	 *
 	 * @return the existing or newly created component
 	 */
 	private Element findOrCreateComponent(Element project, String name)
 	{
 		for (Object child : project.elements("component"))
 		{
-			Element component = (Element) child;
+			var component = (Element)child;
 
 			if (name.equals(component.attributeValue("name")))
 			{
@@ -1216,7 +1215,7 @@ public final class IntelliJProjectSyncService
 			}
 		}
 
-		Element component = project.addElement("component");
+		var component = project.addElement("component");
 		component.addAttribute("name", name);
 		return component;
 	}
@@ -1227,13 +1226,14 @@ public final class IntelliJProjectSyncService
 	 * <p>The toolchain owns the contents of `.idea/libraries`, so stale files from replaced transformed
 	 * jars or dependency graph changes should be removed as part of each sync.
 	 *
-	 * @param directory the IntelliJ libraries directory
+	 * @param directory         the IntelliJ libraries directory
 	 * @param expectedFileNames the generated library metadata files expected after this sync
+	 *
 	 * @throws IOException if stale files cannot be removed
 	 */
 	private void deleteObsoleteGeneratedFiles(
-		Path directory,
-		Set<String> expectedFileNames
+			Path directory,
+			Set<String> expectedFileNames
 	) throws IOException
 	{
 		if (!Files.isDirectory(directory))
@@ -1243,14 +1243,14 @@ public final class IntelliJProjectSyncService
 
 		try (var entries = Files.list(directory))
 		{
-			for (Path entry : entries.toList())
+			for (var entry : entries.toList())
 			{
 				if (!Files.isRegularFile(entry))
 				{
 					continue;
 				}
 
-				String fileName = entry.getFileName().toString();
+				var fileName = entry.getFileName().toString();
 
 				if (!fileName.endsWith(".xml")
 				    || expectedFileNames.contains(fileName)
@@ -1268,6 +1268,7 @@ public final class IntelliJProjectSyncService
 	 * Deletes obsolete generated source-set module metadata from `.idea/modules/projects`.
 	 *
 	 * @param expectedModuleFiles the module-relative `.iml` files expected after this sync
+	 *
 	 * @throws IOException if stale files cannot be removed
 	 */
 	private void deleteObsoleteGeneratedProjectModuleFiles(Set<String> expectedModuleFiles) throws IOException
@@ -1279,10 +1280,10 @@ public final class IntelliJProjectSyncService
 
 		try (var entries = Files.walk(ToolchainPaths.INTELLIJ_META_PROJECTS_MODULE_DIRECTORY))
 		{
-			for (Path entry : entries.filter(Files::isRegularFile).toList())
+			for (var entry : entries.filter(Files::isRegularFile).toList())
 			{
-				Path relativePath = ToolchainPaths.INTELLIJ_META_PROJECTS_MODULE_DIRECTORY.relativize(entry);
-				String normalizedPath = relativePath.toString().replace('\\', '/');
+				var relativePath = ToolchainPaths.INTELLIJ_META_PROJECTS_MODULE_DIRECTORY.relativize(entry);
+				var normalizedPath = relativePath.toString().replace('\\', '/');
 
 				if (!normalizedPath.endsWith(".iml") || expectedModuleFiles.contains(normalizedPath))
 				{
@@ -1293,5 +1294,4 @@ public final class IntelliJProjectSyncService
 			}
 		}
 	}
-
 }

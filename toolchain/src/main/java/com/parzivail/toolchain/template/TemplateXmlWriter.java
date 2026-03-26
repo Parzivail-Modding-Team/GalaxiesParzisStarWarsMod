@@ -25,22 +25,23 @@ public final class TemplateXmlWriter
 	/**
 	 * Writes an IntelliJ XML document to disk.
 	 *
-	 * @param path the output path
+	 * @param path     the output path
 	 * @param document the XML document
+	 *
 	 * @throws IOException if the document cannot be written
 	 */
 	public static void write(Path path, Document document) throws IOException
 	{
-		OutputFormat format = OutputFormat.createPrettyPrint();
+		var format = OutputFormat.createPrettyPrint();
 		format.setIndent("  ");
 		format.setNewLineAfterDeclaration(false);
 		format.setEncoding(StandardCharsets.UTF_8.name());
 		format.setLineSeparator("\n");
 
 		Files.createDirectories(path.getParent());
-		try (OutputStreamWriter writer = new OutputStreamWriter(Files.newOutputStream(path), StandardCharsets.UTF_8))
+		try (var writer = new OutputStreamWriter(Files.newOutputStream(path), StandardCharsets.UTF_8))
 		{
-			XMLWriter xmlWriter = new XMLWriter(writer, format);
+			var xmlWriter = new XMLWriter(writer, format);
 			xmlWriter.write(document);
 			xmlWriter.flush();
 		}

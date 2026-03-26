@@ -51,20 +51,24 @@ kind = "fabric_split_sources"
 These fields are expected under `[project]`.
 
 `id`
+
 - Logical project identifier used by the build graph.
 - This does not need to be the same as the Mod ID.
 
 `name`
+
 - IntelliJ-facing project name.
 - Usually the repository name.
 
 `minecraft_version`
+
 - Minecraft version used by the authoritative graph.
 - Example: `26.1-rc-1`
 
 `default_development_module`
+
 - The module injected by default when you run `dev setup-intellij` without `--module`.
-- For single-module projects, this is the only module. 
+- For single-module projects, this is the only module.
 - For multi-module projects, this is usually the bundle or entrypoint module.
 
 ## Module Kinds
@@ -72,19 +76,22 @@ These fields are expected under `[project]`.
 The built-in module conventions are:
 
 `java`
+
 - A plain Java module with:
-  - `src/main/java`
-  - `src/main/resources`
+    - `src/main/java`
+    - `src/main/resources`
 
 `fabric_split_sources`
+
 - A normal Fabric module with:
-  - `src/main/java`
-  - `src/main/resources`
-  - `src/client/java`
-  - `src/client/resources`
+    - `src/main/java`
+    - `src/main/resources`
+    - `src/client/java`
+    - `src/client/resources`
 - This is the preferred kind for most gameplay modules.
 
 `fabric_resource_only`
+
 - A Fabric module that only contributes resources and metadata.
 - Useful for aggregate entrypoint or bundle modules.
 
@@ -93,55 +100,69 @@ The built-in module conventions are:
 These are the fields you will use most often.
 
 `root`
+
 - Optional.
 - Overrides the default module root.
 - Default: `projects/<module-id>`
 
 `dependency`
+
 - Optional singular shorthand for one logical module dependency.
 
 `dependencies`
+
 - Optional list form for multiple logical module dependencies.
 
 `annotation_processor`
+
 - Optional singular shorthand for one annotation-processor module dependency.
 
 `annotation_processors`
+
 - Optional list form for multiple annotation-processor module dependencies.
 
 `fabric_mod_id`
+
 - Optional override for the module's Fabric mod id.
 - If omitted for Fabric modules, the module id is used.
 
 `artifact_id`
+
 - Optional override for the packaged artifact name.
 - Useful when the logical module id and shipped jar name differ.
 
 `aggregate_member`
+
 - Optional singular shorthand for one aggregate member.
 
 `aggregate_members`
+
 - Optional list form for multiple aggregate members.
 - Used by bundle/entrypoint modules.
 
 `main_mixins`
+
 - Optional list of mixin config file names relative to `src/main/resources`.
 
 `client_mixins`
+
 - Optional list of mixin config file names relative to `src/client/resources`.
 
 `datagen`
+
 - Optional.
 - `true` means use the default checked-in datagen root: `src/main/generated`
 - A string means use a custom path relative to the module root.
 
 `generated_sources`
+
 - Optional.
 - `true` means use the standard main annotation-processor output:
   `build/generated/sources/annotationProcessor/java/main`
 - A string or list overrides that path.
 
 `generated_client_sources`
+
 - Optional.
 - `true` means use the standard client annotation-processor output:
   `build/generated/sources/annotationProcessor/java/client`
