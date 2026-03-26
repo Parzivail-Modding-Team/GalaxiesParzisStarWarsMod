@@ -1,0 +1,15 @@
+<component name="FacetManager">
+    <facet type="minecraft" name="Minecraft">
+        <configuration>
+            <autoDetectTypes>
+                <platformType>FABRIC</platformType>
+                <platformType>MIXIN</platformType>
+                <platformType>MCP</platformType>
+            </autoDetectTypes>
+            <projectReimportVersion>1</projectReimportVersion>
+        </configuration>
+    </facet>
+</component>
+<component name="McpModuleSettings">
+<option name="minecraftVersion" value="{{MINECRAFT_VERSION}}"/>
+</component>

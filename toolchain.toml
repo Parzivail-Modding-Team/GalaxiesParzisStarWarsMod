@@ -1,0 +1,89 @@
+[project]
+id = "pswg"
+name = "GalaxiesParzisStarWarsMod"
+minecraft_version = "26.1"
+loader_version = "0.18.4"
+default_development_module = "pswg_entrypoint"
+
+[modules.framework]
+kind = "java"
+
+[modules."framework-generator"]
+kind = "java"
+dependency = "framework"
+provided_annotation_processor_classes = [
+	"dev.pswg.codecgenerator.CodecGenerationProcessor",
+	"dev.pswg.mutablerecord.MutableRecordProcessor",
+]
+generated_sources = true
+compile_dependencies = [
+	"com.palantir.javapoet:javapoet:0.5.0 @ maven_central",
+	"com.google.auto.service:auto-service-annotations:1.1.1 @ maven_central",
+]
+annotation_processor_dependencies = [
+	"com.google.auto.service:auto-service:1.1.1 @ maven_central",
+	"com.google.auto.service:auto-service-annotations:1.1.1 @ maven_central",
+	"com.google.auto:auto-common:1.2.1 @ maven_central",
+	"com.google.guava:guava:32.0.1-jre @ maven_central",
+	"com.google.guava:failureaccess:1.0.1 @ maven_central",
+	"com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava @ maven_central",
+	"com.google.code.findbugs:jsr305:3.0.2 @ maven_central",
+	"org.checkerframework:checker-qual:3.33.0 @ maven_central",
+	"com.google.errorprone:error_prone_annotations:2.18.0 @ maven_central",
+	"com.google.j2objc:j2objc-annotations:2.8 @ maven_central",
+]
+
+[modules.pswg_core]
+kind = "fabric_split_sources"
+fabric_mod_id = "pswg"
+dependency = "framework"
+annotation_processor = "framework-generator"
+main_mixins = ["pswg.mixins.json", "errorman.mixins.json"]
+client_mixins = ["pswg.client.mixins.json"]
+datagen = true
+compile_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+]
+runtime_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+]
+
+[modules.pswg_blasters]
+kind = "fabric_split_sources"
+dependency = "pswg_core"
+annotation_processor = "framework-generator"
+main_mixins = ["pswg_blasters.mixins.json"]
+client_mixins = ["pswg_blasters.client.mixins.json"]
+datagen = true
+compile_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+]
+runtime_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+]
+
+[modules.pswg_gadgets]
+kind = "fabric_split_sources"
+dependency = "pswg_core"
+annotation_processor = "framework-generator"
+main_mixins = ["pswg_gadgets.mixins.json"]
+client_mixins = ["pswg_gadgets.client.mixins.json"]
+datagen = true
+compile_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+]
+runtime_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+]
+
+[modules.pswg_entrypoint]
+kind = "fabric_resource_only"
+artifact_id = "pswg"
+fabric_mod_id = "pswg_bundle"
+aggregate_members = ["pswg_blasters", "pswg_gadgets"]
+compile_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+]
+runtime_dependencies = [
+	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+]

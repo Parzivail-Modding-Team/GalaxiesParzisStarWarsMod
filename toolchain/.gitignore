@@ -1,0 +1,10 @@
+# Gradle
+.gradle/
+build/
+
+# IDEA
+out/
+
+# Workflow
+work/
+bin/

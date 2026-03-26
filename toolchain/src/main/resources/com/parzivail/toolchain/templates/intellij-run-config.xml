@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" factoryName="Application" name="{{CONFIG_NAME}}" type="Application">
+        <option name="MAIN_CLASS_NAME" value="{{MAIN_CLASS_NAME}}"/>
+        <module name="{{MODULE_NAME}}"/>
+        <option name="PROGRAM_PARAMETERS" value="{{PROGRAM_PARAMETERS}}"/>
+        <option name="VM_PARAMETERS" value="{{VM_PARAMETERS}}"/>
+        <shortenClasspath name="ARGS_FILE"/>
+        <option name="WORKING_DIRECTORY" value="{{WORKING_DIRECTORY}}"/>
+        <method v="2">
+            <option enabled="true" name="Make"/>
+        </method>
+        {{CLASSPATH_MODIFICATIONS}}
+    </configuration>
+</component>
