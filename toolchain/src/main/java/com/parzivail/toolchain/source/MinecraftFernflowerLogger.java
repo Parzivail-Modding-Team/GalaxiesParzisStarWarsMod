@@ -1,5 +1,6 @@
 package com.parzivail.toolchain.source;
 
+import com.parzivail.toolchain.util.ToolchainLog;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 
 /**
@@ -15,15 +16,7 @@ public final class MinecraftFernflowerLogger extends IFernflowerLogger
 			return;
 		}
 
-		String format = "[vineflower] " + severity.name().toLowerCase() + ": " + message;
-
-		if (severity.ordinal() >= Severity.WARN.ordinal())
-		{
-			System.err.println(format);
-			return;
-		}
-
-		System.out.println(format);
+		ToolchainLog.info("vineflower/" + severity.name().toLowerCase(), message);
 	}
 
 	@Override
