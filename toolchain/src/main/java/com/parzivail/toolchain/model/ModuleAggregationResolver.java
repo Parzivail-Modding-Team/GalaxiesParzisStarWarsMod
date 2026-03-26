@@ -7,7 +7,7 @@ import java.util.Set;
 
 /**
  * Resolves the modeled module closure used by aggregated development-time
- * workflows such as `pswg_entrypoint`.
+ * workflows.
  */
 public final class ModuleAggregationResolver
 {

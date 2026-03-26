@@ -5,6 +5,6 @@ build/
 # IDEA
 out/
 
-# PSWG Toolchain
+# Workflow
 work/
 bin/

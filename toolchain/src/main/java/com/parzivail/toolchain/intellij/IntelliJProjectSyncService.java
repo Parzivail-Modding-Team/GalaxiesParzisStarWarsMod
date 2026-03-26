@@ -30,7 +30,7 @@ import java.util.*;
 public final class IntelliJProjectSyncService
 {
 	/**
-	 * The external libraries needed to compile and run the standalone toolchain module from the PSWG
+	 * The external libraries needed to compile and run the standalone toolchain module from the
 	 * root IntelliJ project.
 	 */
 	static final List<MavenDependencySpec> TOOLCHAIN_DEPENDENCIES = List.of(
@@ -140,7 +140,7 @@ public final class IntelliJProjectSyncService
 	 *
 	 * <p>Without an explicit project output root in `misc.xml`, IntelliJ may fall back to its
 	 * compile-server cache even when module `.iml` files declare per-module output paths. The root
-	 * output entry keeps PSWG-root builds and launches anchored in the tracked repo.
+	 * output entry keeps root builds and launches anchored in the tracked repo.
 	 *
 	 * @throws IOException if the project settings cannot be written
 	 */
@@ -201,7 +201,7 @@ public final class IntelliJProjectSyncService
 	}
 
 	/**
-	 * Writes IntelliJ module metadata for modeled PSWG source sets.
+	 * Writes IntelliJ module metadata for modeled source sets.
 	 *
 	 * @param projectName   the IntelliJ project name
 	 * @param graph         the authoritative build graph
@@ -272,7 +272,7 @@ public final class IntelliJProjectSyncService
 	}
 
 	/**
-	 * Writes the PSWG-root IntelliJ module metadata for the standalone toolchain sources.
+	 * Writes the project-root IntelliJ module metadata for the standalone toolchain sources.
 	 *
 	 * @param projectName the IntelliJ project name
 	 *
@@ -685,7 +685,7 @@ public final class IntelliJProjectSyncService
 	}
 
 	/**
-	 * Creates the IntelliJ module document for the standalone toolchain sources inside the PSWG root
+	 * Creates the IntelliJ module document for the standalone toolchain sources inside the root
 	 * project.
 	 *
 	 * @param projectName the IntelliJ project name
@@ -829,9 +829,9 @@ public final class IntelliJProjectSyncService
 	}
 
 	/**
-	 * Preserves previously generated launch modules that live outside the static PSWG source-set graph.
+	 * Preserves previously generated launch modules that live outside the static source-set graph.
 	 *
-	 * <p>`idea sync-pswg` owns the bulk of `modules.xml`, but version/platform-specific launch modules
+	 * <p>`idea sync-project` owns the bulk of `modules.xml`, but version/platform-specific launch modules
 	 * are generated later by Fabric launch preparation. Preserving those entries keeps IntelliJ from
 	 * dropping the launch module registration every time the project metadata is resynced.
 	 *

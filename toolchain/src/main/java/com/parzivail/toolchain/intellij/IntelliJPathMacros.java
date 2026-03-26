@@ -98,7 +98,7 @@ public final class IntelliJPathMacros
 
 	/**
 	 * Builds a module-local `file://...` URL for the standalone toolchain module registered under the
-	 * PSWG root project.
+	 * root project.
 	 *
 	 * @param toolchainRoot the standalone toolchain root
 	 * @param path          the target path

@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Compiles PSWG modules into a toolchain-owned output tree without relying on IntelliJ.
+ * Compiles modules into a toolchain-owned output tree using javac.
  */
 public final class CiCompilationService
 {

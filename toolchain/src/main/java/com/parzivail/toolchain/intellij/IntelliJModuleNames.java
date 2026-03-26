@@ -15,10 +15,10 @@ public final class IntelliJModuleNames
 	}
 
 	/**
-	 * Builds the IntelliJ source-set module name for a PSWG module.
+	 * Builds the IntelliJ source-set module name for a module.
 	 *
 	 * @param projectName   the IntelliJ project name
-	 * @param moduleId      the logical PSWG module identifier
+	 * @param moduleId      the logical module identifier
 	 * @param sourceSetName the source-set name
 	 *
 	 * @return the IntelliJ module name
@@ -29,10 +29,10 @@ public final class IntelliJModuleNames
 	}
 
 	/**
-	 * Builds the IntelliJ module file name for a PSWG source-set module.
+	 * Builds the IntelliJ module file name for a source-set module.
 	 *
 	 * @param projectName   the IntelliJ project name
-	 * @param moduleId      the logical PSWG module identifier
+	 * @param moduleId      the logical module identifier
 	 * @param sourceSetName the source-set name
 	 *
 	 * @return the `.iml` file name
@@ -44,7 +44,7 @@ public final class IntelliJModuleNames
 
 	/**
 	 * Builds the IntelliJ module name for the standalone toolchain sources when they are registered
-	 * into the PSWG root project.
+	 * into the root project.
 	 *
 	 * @param projectName the IntelliJ project name
 	 *
@@ -57,7 +57,7 @@ public final class IntelliJModuleNames
 
 	/**
 	 * Builds the IntelliJ module file name for the standalone toolchain sources when they are
-	 * registered into the PSWG root project.
+	 * registered into the root project.
 	 *
 	 * @param projectName the IntelliJ project name
 	 *
@@ -141,7 +141,7 @@ public final class IntelliJModuleNames
 	/**
 	 * Builds the generated IntelliJ Fabric datagen run-configuration file name for one module and platform.
 	 *
-	 * @param moduleId   the logical PSWG module identifier
+	 * @param moduleId   the logical module identifier
 	 * @param platformId the target platform identifier
 	 *
 	 * @return the datagen run-configuration file name

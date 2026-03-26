@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Inspects the current repository's Fabric dev-launch contract using the generated PSWG artifacts.
+ * Inspects the current repository's Fabric dev-launch contract using the generated artifacts.
  */
 public final class FabricDevLaunchInspector
 {

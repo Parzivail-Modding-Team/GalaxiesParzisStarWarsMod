@@ -91,7 +91,7 @@ public final class FabricDevLaunchService
 	 *
 	 * @param versionId   the Minecraft version identifier
 	 * @param refresh     whether to revalidate cached runtime artifacts before launch preparation
-	 * @param moduleId    the optional PSWG module identifier to inject
+	 * @param moduleId    the optional module identifier to inject
 	 * @param environment the launch environment
 	 * @param identity    the launch-time player identity for client launches
 	 *
@@ -174,7 +174,7 @@ public final class FabricDevLaunchService
 	}
 
 	/**
-	 * Resolves the Fabric-side runtime artifacts implied by the tracked PSWG properties.
+	 * Resolves the Fabric-side runtime artifacts implied by the tracked properties.
 	 *
 	 * @param loaderVersion the Fabric loader version
 	 * @param refresh       whether to revalidate cached runtime artifacts
@@ -631,7 +631,7 @@ public final class FabricDevLaunchService
 	 * Resolves the IntelliJ module dependencies that should be built before the generated launch module runs.
 	 *
 	 * <p>These are intentionally `PROVIDED` module edges in the launch module metadata so IntelliJ's
-	 * `Make` step rebuilds PSWG outputs before launch, without letting those modules leak their
+	 * `Make` step rebuilds outputs before launch, without letting those modules leak their
 	 * compile-only classpaths into the actual direct-DLI runtime.
 	 *
 	 * @param repository      the discovered repository context
@@ -713,7 +713,7 @@ public final class FabricDevLaunchService
 	 * Resolves the compile-time classpath entries IntelliJ should exclude from a generated launch.
 	 *
 	 * <p>The launch module intentionally keeps `PROVIDED` module edges so IntelliJ will rebuild the
-	 * requested PSWG modules before launch. IntelliJ also threads those compile libraries into the
+	 * requested modules before launch. IntelliJ also threads those compile libraries into the
 	 * Application runtime classpath, so this exclusion list trims the run config back down to the
 	 * exact prepared Fabric runtime classpath.
 	 *

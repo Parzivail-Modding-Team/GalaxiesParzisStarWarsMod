@@ -296,7 +296,7 @@ public final class IntelliJMinecraftJarTransformer
 	) throws IOException
 	{
 		Files.createDirectories(outputJar.getParent());
-		var temporaryOutput = Files.createTempFile("pswg-minecraft-transform-", ".jar.part");
+		var temporaryOutput = Files.createTempFile("minecraft-transform-", ".jar.part");
 		var targets = classTweaker.getTargets();
 
 		try

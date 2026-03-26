@@ -314,11 +314,11 @@ public final class Main
 	 */
 	private static void runIdeaCommand(String[] args) throws IOException
 	{
-		if (args.length >= 2 && "sync-pswg".equals(args[1]))
+		if (args.length >= 2 && "sync-project".equals(args[1]))
 		{
 			var refresh = hasFlag(args, "--refresh");
 			new IntelliJProjectSyncService().syncProject(refresh);
-			System.out.println("Synchronized IntelliJ compiler metadata into the PSWG repo.");
+			System.out.println("Synchronized IntelliJ compiler metadata into the project repo.");
 			return;
 		}
 
@@ -452,11 +452,11 @@ public final class Main
 	}
 
 	/**
-	 * Resolves an optional positional version argument, falling back to the PSWG default version.
+	 * Resolves an optional positional version argument, falling back to the default version.
 	 *
 	 * @param args           the command line arguments
 	 * @param index          the version argument index
-	 * @param defaultVersion the default PSWG Minecraft version
+	 * @param defaultVersion the default Minecraft version
 	 *
 	 * @return the resolved version identifier
 	 */
@@ -478,7 +478,7 @@ public final class Main
 		System.out.println("Commands:");
 		System.out.println("  dev setup-intellij [--refresh] [--module <id>] [--username <name>] [--uuid <uuid>]");
 		System.out.println("    Supported workflow. Synchronizes IntelliJ metadata and refreshes the generated Fabric client, server, and datagen launches.");
-		System.out.println("  idea sync-pswg [--refresh]");
+		System.out.println("  idea sync-project [--refresh]");
 		System.out.println("    Low-level IntelliJ metadata generation.");
 		System.out.println("  fabric prepare-dev [id] [--refresh] [--environment <client|server>] [--module <id>] [--username <name>] [--uuid <uuid>]");
 		System.out.println("    Low-level Fabric launch generation.");
@@ -487,7 +487,7 @@ public final class Main
 		System.out.println("  fabric inspect-dev [--environment <client|server>]");
 		System.out.println("    Inspect the generated Fabric launch contract.");
 		System.out.println("  artifacts assemble [--module <id>] [--ci-build] [--refresh]");
-		System.out.println("    Assemble local PSWG artifact jars from IntelliJ outputs, or compile into a toolchain-owned output tree first with --ci-build.");
+		System.out.println("    Assemble local project artifact jars from IntelliJ outputs, or compile into a toolchain-owned output tree first with --ci-build.");
 		System.out.println("  mojang manifest [--refresh]");
 		System.out.println("  mojang version [id] [--refresh]");
 		System.out.println("  mojang download [id] [--refresh]");

@@ -43,7 +43,7 @@ Keep `toolchain.toml` ergonomic. Prefer the shortest clear form:
 Low-level commands still exist for inspection and diagnosis:
 
 ```bash
-./toolchain.sh idea sync-pswg
+./toolchain.sh idea sync-project
 ./toolchain.sh fabric prepare-dev --environment client --module pswg_entrypoint
 ./toolchain.sh fabric prepare-dev --environment server --module pswg_entrypoint
 ./toolchain.sh fabric prepare-datagen --module pswg_core

@@ -3,7 +3,7 @@ package com.parzivail.toolchain.model;
 import java.util.List;
 
 /**
- * Passive representation of a PSWG build graph.
+ * Passive representation of a build graph.
  *
  * @param projectId           the logical project identifier
  * @param minecraftVersion    the selected Minecraft version

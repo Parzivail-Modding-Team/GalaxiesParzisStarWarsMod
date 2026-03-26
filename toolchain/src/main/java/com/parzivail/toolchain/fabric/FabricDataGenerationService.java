@@ -75,7 +75,7 @@ public final class FabricDataGenerationService
 	/**
 	 * The generated datagen configuration metadata for one module.
 	 *
-	 * @param moduleId             the logical PSWG module identifier
+	 * @param moduleId             the logical module identifier
 	 * @param fabricModId          the Fabric mod identifier selected for datagen
 	 * @param outputDirectory      the checked-in datagen output directory
 	 * @param runConfigurationPath the generated IntelliJ run-configuration path
@@ -142,7 +142,7 @@ public final class FabricDataGenerationService
 	}
 
 	/**
-	 * Resolves the Fabric-side runtime artifacts implied by the tracked PSWG properties.
+	 * Resolves the Fabric-side runtime artifacts implied by the tracked properties.
 	 *
 	 * @param loaderVersion the Fabric loader version
 	 * @param refresh       whether to revalidate cached runtime artifacts
@@ -160,7 +160,7 @@ public final class FabricDataGenerationService
 	}
 
 	/**
-	 * Resolves the aggregate PSWG module injection contract used by datagen launches.
+	 * Resolves the aggregate module injection contract used by datagen launches.
 	 *
 	 * <p>Datagen needs the full modeled module surface so downstream generators can read the
 	 * checked-in resources and generated output of upstream modules. The per-module output boundary

@@ -274,7 +274,7 @@ public final class IntelliJDependencyResolver
 	}
 
 	/**
-	 * Resolves the compile-time Minecraft jars needed for official-namespace PSWG modules.
+	 * Resolves the compile-time Minecraft jars needed for official-namespace modules.
 	 *
 	 * @param minecraftVersion the tracked Minecraft version
 	 * @param refresh          whether to refresh downloaded artifacts
@@ -378,7 +378,7 @@ public final class IntelliJDependencyResolver
 	}
 
 	/**
-	 * Resolves the compile-time Fabric jars needed for Fabric-backed PSWG modules.
+	 * Resolves the compile-time Fabric jars needed for Fabric-backed modules.
 	 *
 	 * @param loaderVersion the tracked Fabric Loader version
 	 * @param refresh       whether to refresh downloaded artifacts
