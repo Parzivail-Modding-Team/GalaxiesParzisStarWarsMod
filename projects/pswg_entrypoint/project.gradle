@@ -1,7 +1,7 @@
 dependencies {
 	// For running in the IDE
-	api(project(path: ":projects:pswg_blasters", configuration: "namedElements"))
-	api(project(path: ":projects:pswg_gadgets", configuration: "namedElements"))
+	api(project(":projects:pswg_blasters"))
+	api(project(":projects:pswg_gadgets"))
 
 	// For building a jar
 	include(project(path: ":projects:pswg_core"))

@@ -1,6 +1,6 @@
 package dev.pswg.data;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * A set of utilities for working with identifiers
@@ -15,7 +15,7 @@ public final class IdentifierUtil
 	 *
 	 * @return true if the identifier's path ends with the specified extension, false otherwise.
 	 */
-	public static boolean hasExtension(ResourceLocation identifier, String extension)
+	public static boolean hasExtension(Identifier identifier, String extension)
 	{
 		return identifier.getPath().endsWith("." + extension);
 	}
@@ -27,7 +27,7 @@ public final class IdentifierUtil
 	 *
 	 * @return true if the identifier's path ends with '.json', false otherwise
 	 */
-	public static boolean isJsonFile(ResourceLocation identifier)
+	public static boolean isJsonFile(Identifier identifier)
 	{
 		return hasExtension(identifier, "json");
 	}

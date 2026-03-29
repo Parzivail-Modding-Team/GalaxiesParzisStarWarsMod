@@ -6,13 +6,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 
 public record MixerSyncS2CPayload(ArrayList<MobEffectInstance> drinkEffects, ArrayList<Integer> drinkColors, ArrayList<ItemStack> drinkFoods) implements CustomPacketPayload
 {
-	public static final ResourceLocation MIXER_SYNC_PAYLOAD_ID = Gadgets.id("mixer_sync");
+	public static final Identifier MIXER_SYNC_PAYLOAD_ID = Gadgets.id("mixer_sync");
 	public static final CustomPacketPayload.Type<MixerSyncS2CPayload> ID = new CustomPacketPayload.Type<>(MIXER_SYNC_PAYLOAD_ID);
 	public static final StreamCodec<RegistryFriendlyByteBuf, MixerSyncS2CPayload> CODEC = StreamCodec.ofMember(MixerSyncS2CPayload::toPacket, MixerSyncS2CPayload::fromPacket);
 

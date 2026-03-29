@@ -16,7 +16,7 @@ public class ShortFlameParticle extends RisingParticle
 	ShortFlameParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i, TextureAtlasSprite sprite)
 	{
 		super(clientWorld, d, e, f, g, h, i, sprite);
-		this.lifetime = clientWorld.random.nextIntBetweenInclusive(2, 5);
+		this.lifetime = clientWorld.getRandom().nextIntBetweenInclusive(2, 5);
 	}
 
 	@Override
@@ -40,11 +40,11 @@ public class ShortFlameParticle extends RisingParticle
 	}
 
 	@Override
-	public int getLightColor(float tint)
+	public int getLightCoords(float tint)
 	{
 		float f = ((float)this.age + tint) / (float)this.lifetime;
 		f = Mth.clamp(f, 0.0F, 1.0F);
-		int i = super.getLightColor(tint);
+		int i = super.getLightCoords(tint);
 		int j = i & 0xFF;
 		int k = i >> 16 & 0xFF;
 		j += (int)(f * 15.0F * 16.0F);

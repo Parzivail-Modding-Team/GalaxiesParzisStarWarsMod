@@ -8,19 +8,19 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public record HasAttachmentProperty(ResourceLocation attachmentSlot, ResourceLocation attachmentId) implements ConditionalItemModelProperty
+public record HasAttachmentProperty(Identifier attachmentSlot, Identifier attachmentId) implements ConditionalItemModelProperty
 {
 	public static final MapCodec<HasAttachmentProperty> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
-					ResourceLocation.CODEC.fieldOf("attachmentSlot").forGetter(HasAttachmentProperty::attachmentSlot),
-					ResourceLocation.CODEC.fieldOf("attachmentId").forGetter(HasAttachmentProperty::attachmentId)
+					Identifier.CODEC.fieldOf("attachmentSlot").forGetter(HasAttachmentProperty::attachmentSlot),
+					Identifier.CODEC.fieldOf("attachmentId").forGetter(HasAttachmentProperty::attachmentId)
 			).apply(instance, HasAttachmentProperty::new)
 	);
 

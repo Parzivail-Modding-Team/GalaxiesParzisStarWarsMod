@@ -8,9 +8,9 @@ import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
 import dev.pswg.autoreg.AutoGenerateUtil;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -24,7 +24,7 @@ public class GadgetsItemGroups
 {
 
 	public static final ResourceKey<CreativeModeTab> DEMOLITIONS_ITEMS_GROUP_KEY = registerGroup("demolitions_items");
-	public static final CreativeModeTab DEMOLITIONS_ITEMS_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(GadgetsItems.THERMAL_DETONATOR_ITEM)).title(Component.translatable("pswg_gadgets.demolitions_items_group")).build();
+	public static final CreativeModeTab DEMOLITIONS_ITEMS_GROUP = FabricCreativeModeTab.builder().icon(() -> new ItemStack(GadgetsItems.THERMAL_DETONATOR_ITEM)).title(Component.translatable("pswg_gadgets.demolitions_items_group")).build();
 
 	private static ResourceKey<CreativeModeTab> registerGroup(String id)
 	{
@@ -35,10 +35,10 @@ public class GadgetsItemGroups
 	{
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DEMOLITIONS_ITEMS_GROUP_KEY, DEMOLITIONS_ITEMS_GROUP);
 
-		ItemGroupEvents.modifyEntriesEvent(DEMOLITIONS_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.DEMOLITIONS_GADGETS));
+		CreativeModeTabEvents.modifyOutputEvent(DEMOLITIONS_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.DEMOLITIONS_GADGETS));
 	}
 
-	public static void addItems(FabricItemGroupEntries itemGroup, DataGenItemGroup group)
+	public static void addItems(FabricCreativeModeTabOutput itemGroup, DataGenItemGroup group)
 	{
 
 		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> {
@@ -66,7 +66,7 @@ public class GadgetsItemGroups
 		});
 	}
 
-	public static void addBlocks(FabricItemGroupEntries itemGroup, DataGenItemGroup group)
+	public static void addBlocks(FabricCreativeModeTabOutput itemGroup, DataGenItemGroup group)
 	{
 		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 			if(dataGenBlock.itemGroup() == group)

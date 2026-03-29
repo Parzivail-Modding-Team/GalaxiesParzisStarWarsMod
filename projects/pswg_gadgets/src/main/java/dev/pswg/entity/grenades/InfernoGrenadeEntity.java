@@ -76,12 +76,12 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 	{
 		for (int i = 0; i < 8; i++)
 		{
-			double x = pos.getX() + serverWorld.random.nextGaussian() * 0.1f;
-			double y = pos.getY() + serverWorld.random.nextGaussian() * 0.1f;
-			double z = pos.getZ() + serverWorld.random.nextGaussian() * 0.1f;
-			double vX = serverWorld.random.nextGaussian() * 0.05f;
-			double vY = serverWorld.random.nextGaussian() * 0.05f;
-			double vZ = serverWorld.random.nextGaussian() * 0.05f;
+			double x = pos.getX() + serverWorld.getRandom().nextGaussian() * 0.1f;
+			double y = pos.getY() + serverWorld.getRandom().nextGaussian() * 0.1f;
+			double z = pos.getZ() + serverWorld.getRandom().nextGaussian() * 0.1f;
+			double vX = serverWorld.getRandom().nextGaussian() * 0.05f;
+			double vY = serverWorld.getRandom().nextGaussian() * 0.05f;
+			double vZ = serverWorld.getRandom().nextGaussian() * 0.05f;
 			var payload = new PreciseVelocityParticleS2CPayload(ParticleTypes.SMOKE, new Vec3(x, y, z), new Vec3(vX, vY, vZ));
 			for (ServerPlayer player : serverWorld.players())
 				ServerPlayNetworking.send(player, payload);

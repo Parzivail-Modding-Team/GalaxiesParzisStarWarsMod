@@ -5,7 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
@@ -39,7 +39,7 @@ public final class Registrar
 	 *
 	 * @return A constructed item with the provided settings, given the corresponding registry key
 	 */
-	public static <TItem extends Item, TSettings extends Item.Properties> TItem item(ResourceLocation registryKey, Function<TSettings, TItem> constructor, TSettings settings)
+	public static <TItem extends Item, TSettings extends Item.Properties> TItem item(Identifier registryKey, Function<TSettings, TItem> constructor, TSettings settings)
 	{
 		// this cast to TSettings is legal since `registryKey` returns `this`
 		//noinspection unchecked
@@ -58,7 +58,7 @@ public final class Registrar
 	 *
 	 * @return A constructed block with the provided settings, given the corresponding registry key
 	 */
-	public static <TBlock extends Block, TSettings extends BlockBehaviour.Properties> TBlock blockWithoutItem(ResourceLocation registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
+	public static <TBlock extends Block, TSettings extends BlockBehaviour.Properties> TBlock blockWithoutItem(Identifier registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
 	{
 		// this cast to TSettings is legal since `registryKey` returns `this`
 		//noinspection unchecked
@@ -77,7 +77,7 @@ public final class Registrar
 	 *
 	 * @return A constructed block with the provided settings, given the corresponding registry key
 	 */
-	public static <TBlock extends Block, TSettings extends BlockBehaviour.Properties> TBlock block(ResourceLocation registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
+	public static <TBlock extends Block, TSettings extends BlockBehaviour.Properties> TBlock block(Identifier registryKey, Function<TSettings, TBlock> constructor, TSettings settings)
 	{
 		// this cast to TSettings is legal since `registryKey` returns `this`
 		// noinspection unchecked
@@ -95,7 +95,7 @@ public final class Registrar
 	 *
 	 * @return A constructed item with the provided settings, given the corresponding registry key
 	 */
-	public static <TItem extends Item> TItem item(ResourceLocation registryKey, Function<Item.Properties, TItem> constructor)
+	public static <TItem extends Item> TItem item(Identifier registryKey, Function<Item.Properties, TItem> constructor)
 	{
 		return item(registryKey, constructor, new Item.Properties());
 	}
@@ -109,7 +109,7 @@ public final class Registrar
 	 *
 	 * @return A built entity type, given the corresponding registry key
 	 */
-	public static <T extends Entity> EntityType<T> entityType(ResourceLocation registryKey, EntityType.Builder<T> builder)
+	public static <T extends Entity> EntityType<T> entityType(Identifier registryKey, EntityType.Builder<T> builder)
 	{
 		return Registry.register(
 				BuiltInRegistries.ENTITY_TYPE,
@@ -128,7 +128,7 @@ public final class Registrar
 	 * @return A built block entity type, given the corresponding registry key
 	 */
 
-	public static <T extends BlockEntity> BlockEntityType<T> blockEntity(ResourceLocation registryKey, FabricBlockEntityTypeBuilder.Factory<? extends T> factory, Block... blocks)
+	public static <T extends BlockEntity> BlockEntityType<T> blockEntity(Identifier registryKey, FabricBlockEntityTypeBuilder.Factory<? extends T> factory, Block... blocks)
 	{
 		return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, registryKey, FabricBlockEntityTypeBuilder.<T>create(factory, blocks).build());
 	}
@@ -141,7 +141,7 @@ public final class Registrar
 	 *
 	 * @return A built recipe type, given the corresponding registry key
 	 */
-	public static <T extends Recipe<?>> RecipeType<T> recipeType(ResourceLocation registryKey)
+	public static <T extends Recipe<?>> RecipeType<T> recipeType(Identifier registryKey)
 	{
 		return Registry.register(BuiltInRegistries.RECIPE_TYPE, registryKey, new RecipeType<T>()
 		{
@@ -153,12 +153,12 @@ public final class Registrar
 		});
 	}
 
-	public static <T extends AbstractContainerMenu> MenuType<T> screenHandlerType(ResourceLocation registryKey, MenuType.MenuSupplier<T> factory)
+	public static <T extends AbstractContainerMenu> MenuType<T> screenHandlerType(Identifier registryKey, MenuType.MenuSupplier<T> factory)
 	{
 		return Registry.register(BuiltInRegistries.MENU, registryKey, new MenuType<>(factory, FeatureFlags.DEFAULT_FLAGS));
 	}
 
-	public static <S extends RecipeSerializer<T>, T extends Recipe<?>> S recipeSerializer(ResourceLocation id, S serializer)
+	public static <S extends RecipeSerializer<T>, T extends Recipe<?>> S recipeSerializer(Identifier id, S serializer)
 	{
 		return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, serializer);
 	}

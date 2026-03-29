@@ -35,7 +35,7 @@ public final class TerrainGenerator
 	{
 		ChunkPos pos = chunk.getChunkPos();
 		double[][] noises = new double[25][49];
-		sampleNoises(noises, pos.x << 2, pos.z << 2);
+		sampleNoises(noises, pos.x() << 2, pos.z() << 2);
 
 		if (chunk instanceof MinecraftChunkView mc)
 		{
@@ -202,8 +202,8 @@ public final class TerrainGenerator
 	public void buildSurface(ChunkView chunk)
 	{
 		Random random = new Random();
-		int cx = chunk.getChunkPos().x;
-		int cz = chunk.getChunkPos().z;
+		int cx = chunk.getChunkPos().x();
+		int cz = chunk.getChunkPos().z();
 		for (int x = 0; x < 16; x++)
 		{
 			for (int z = 0; z < 16; z++)
@@ -219,10 +219,10 @@ public final class TerrainGenerator
 
 	public void generateDecorations(WorldGenView world, ChunkView chunk)
 	{
-		TerrainBiome biome = biomes.getBiome(chunk.getChunkPos().x * 4 + 2, chunk.getChunkPos().z * 4 + 2);
+		TerrainBiome biome = biomes.getBiome(chunk.getChunkPos().x() * 4 + 2, chunk.getChunkPos().z() * 4 + 2);
 
 		Random random = new Random();
-		long popSeed = setPopulationSeed(random, world.getSeed(), chunk.getChunkPos().x, chunk.getChunkPos().z);
+		long popSeed = setPopulationSeed(random, world.getSeed(), chunk.getChunkPos().x(), chunk.getChunkPos().z());
 		int i = 0;
 		for (ConfiguredDecoration decoration : biome.decorations())
 		{

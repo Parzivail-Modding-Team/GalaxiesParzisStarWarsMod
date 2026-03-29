@@ -5,9 +5,9 @@ import com.mojang.serialization.Codec;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.networking.MixerSyncS2CPayload;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
-public class MixerBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider
+public class MixerBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider, ExtendedMenuProvider<MixerSyncS2CPayload>
 {
 	protected static final int FUEL_SLOT_INDEX = 0;
 	protected static final int INPUT_SLOT_INDEX = 1;
@@ -296,7 +296,7 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 			}
 			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.getItem() instanceof DyeItem dyeItem && mixer.drinkColors.size() < 3)
 			{
-				mixer.drinkColors.add(dyeItem.getDyeColor().getTextureDiffuseColor());
+				mixer.drinkColors.add(inputStack.getOrDefault(DataComponents.DYE, net.minecraft.world.item.DyeColor.WHITE).getTextureDiffuseColor());
 				inputStack.shrink(1);
 				sendSyncPacket(mixer);
 			}
@@ -432,30 +432,13 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 	@Override
 	protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory)
 	{
-		MixerBlockEntity mixer = this;
-		var factory = new ExtendedScreenHandlerFactory<>()
-		{
-			@Override
-			public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player)
-			{
-				return new MixerScreenHandler(syncId, playerInventory, mixer, propertyDelegate, worldPosition, drinkEffects, drinkColors, drinkFoods);
-			}
+		return new MixerScreenHandler(syncId, playerInventory, this, propertyDelegate, worldPosition, drinkEffects, drinkColors, drinkFoods);
+	}
 
-			@Override
-			public Component getDisplayName()
-			{
-				return Component.nullToEmpty("Mixer");
-			}
-
-			@Override
-			public Object getScreenOpeningData(ServerPlayer player)
-			{
-				return new MixerSyncS2CPayload(drinkEffects, drinkColors, drinkFoods);
-			}
-		};
-		if (playerInventory.player instanceof ServerPlayer serverPlayer)
-			serverPlayer.openMenu(factory);
-		return null;
+	@Override
+	public MixerSyncS2CPayload getScreenOpeningData(ServerPlayer player)
+	{
+		return new MixerSyncS2CPayload(drinkEffects, drinkColors, drinkFoods);
 	}
 
 	@Override

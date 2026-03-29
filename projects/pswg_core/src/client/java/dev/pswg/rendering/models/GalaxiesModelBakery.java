@@ -1,5 +1,6 @@
 package dev.pswg.rendering.models;
 
+import com.mojang.blaze3d.platform.Transparency;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -8,18 +9,19 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.pswg.GalaxiesClient;
 import dev.pswg.networking.GalaxiesPacketCodecs;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.TextureSlots;
+import net.minecraft.client.model.geom.builders.UVPair;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelDebugName;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.client.resources.model.ResolvedModel;
-import net.minecraft.client.resources.model.UnbakedGeometry;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.QuadCollection;
+import net.minecraft.client.resources.model.geometry.UnbakedGeometry;
+import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.core.Direction;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2f;
 
@@ -64,20 +66,24 @@ public final class GalaxiesModelBakery
 			{
 				for (var quad : quads())
 				{
-					var sprite = baker.sprites().resolveSlot(textures, quad.textureRef(), model);
+					var material = baker.materials().resolveSlot(textures, quad.textureRef(), model);
+					var sprite = material.sprite();
 					var minUv = new Vector2f(sprite.getU0(), sprite.getV0());
 					var maxUv = new Vector2f(sprite.getU1(), sprite.getV1());
+					var packedUvs = new long[4];
 
 					var uvExtent = maxUv.sub(minUv, new Vector2f());
 
 					var bufferBuilder = new BufferBuilder(bufferAllocator, VertexFormat.Mode.QUADS, format);
 
 					var vertices = List.of(quad.a(), quad.b(), quad.c(), quad.d());
-					for (var vertex : vertices)
+					for (int index = 0; index < vertices.size(); index++)
 					{
+						var vertex = vertices.get(index);
 						var translatedTexCoords = new Vector2f(vertex.texCoords());
 						translatedTexCoords.mul(uvExtent);
 						translatedTexCoords.add(minUv);
+						packedUvs[index] = UVPair.pack(translatedTexCoords.x, translatedTexCoords.y);
 
 						bufferBuilder.addVertex(
 								vertex.position().x,
@@ -106,17 +112,18 @@ public final class GalaxiesModelBakery
 
 					try (MeshData builtBuffer = bufferBuilder.buildOrThrow())
 					{
-						var intBuffer = builtBuffer.vertexBuffer().asIntBuffer();
-						var ints = new int[intBuffer.capacity()];
-						intBuffer.get(ints);
-
+						var materialInfo = baker.interner().materialInfo(BakedQuad.MaterialInfo.of(material, Transparency.TRANSLUCENT, -1, true, 0));
 						geometryBuilder.addUnculledFace(new BakedQuad(
-								ints,
-								0,
+								baker.interner().vector(vertices.get(0).position()),
+								baker.interner().vector(vertices.get(1).position()),
+								baker.interner().vector(vertices.get(2).position()),
+								baker.interner().vector(vertices.get(3).position()),
+								packedUvs[0],
+								packedUvs[1],
+								packedUvs[2],
+								packedUvs[3],
 								Direction.getApproximateNearest(faceNormal),
-								sprite,
-								true,
-								0
+								materialInfo
 						));
 					}
 				}
@@ -124,6 +131,18 @@ public final class GalaxiesModelBakery
 
 			return geometryBuilder.build();
 		}
+	}
+
+	/**
+	 * Attempts to load GQB geometry for the given model id.
+	 *
+	 * @param modelId The model identifier that might have GQB geometry.
+	 *
+	 * @return The GQB geometry if it exists, or an empty optional otherwise.
+	 */
+	public static Optional<UnbakedGeometry> getGeometry(Identifier modelId)
+	{
+		return Optional.ofNullable(GalaxiesClient.GQB_LOADER.getDefinitions().get(modelId));
 	}
 
 	/**
@@ -135,9 +154,6 @@ public final class GalaxiesModelBakery
 	 */
 	public static Optional<UnbakedGeometry> getGeometry(ResolvedModel model)
 	{
-		// Test to see if a GQB model exists for the MC model
-		var result = GalaxiesClient.GQB_LOADER.getDefinitions().getOrDefault(ResourceLocation.parse(model.debugName()), null);
-
-		return Optional.ofNullable(result);
+		return getGeometry(Identifier.parse(model.debugName()));
 	}
 }

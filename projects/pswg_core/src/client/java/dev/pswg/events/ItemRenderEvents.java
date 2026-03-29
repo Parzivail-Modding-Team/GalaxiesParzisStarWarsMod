@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -17,7 +17,7 @@ public final class ItemRenderEvents
 	@Environment(EnvType.CLIENT)
 	public interface StackRenderedCallback
 	{
-		void render(GuiGraphics context, Font textRenderer, ItemStack stack, int x, int y);
+		void render(GuiGraphicsExtractor context, Font textRenderer, ItemStack stack, int x, int y);
 	}
 
 	/**

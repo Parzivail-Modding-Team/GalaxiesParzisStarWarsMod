@@ -234,7 +234,7 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 			{
 				if (level() instanceof ServerLevel serverWorld)
 				{
-					serverWorld.sendParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX() + getLookAngle().scale(f).x, getY() + getLookAngle().scale(f).y, getZ() + getLookAngle().scale(f).z, 1, level().random.nextIntBetweenInclusive(1, 100) / 30000f, 0, level().random.nextIntBetweenInclusive(1, 100) / 30000f, 0);
+					serverWorld.sendParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX() + getLookAngle().scale(f).x, getY() + getLookAngle().scale(f).y, getZ() + getLookAngle().scale(f).z, 1, level().getRandom().nextIntBetweenInclusive(1, 100) / 30000f, 0, level().getRandom().nextIntBetweenInclusive(1, 100) / 30000f, 0);
 					//serverWorld.spawnParticles(GadgetsParticleTypes.TRIPWIRE_LASER_PARTICLE, getX(), getY() + f, getZ(), 1, getWorld().random.nextBetween(1, 100) / 30000f, 0, getWorld().random.nextBetween(1, 100) / 30000f, 0);
 				}
 			}

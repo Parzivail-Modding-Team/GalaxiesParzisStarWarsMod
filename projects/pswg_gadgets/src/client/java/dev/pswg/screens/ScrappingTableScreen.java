@@ -4,31 +4,30 @@ import dev.pswg.Gadgets;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GalaxiesItems;
 import dev.pswg.feature.scrapping.table.ScrappingTableScreenHandler;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ScrappingTableScreen extends AbstractContainerScreen<ScrappingTableScreenHandler>
 {
-	private static final ResourceLocation TEXTURE = Gadgets.id("textures/gui/container/scrapping_table.png");
+	private static final Identifier TEXTURE = Gadgets.id("textures/gui/container/scrapping_table.png");
 
 
 	public ScrappingTableScreen(ScrappingTableScreenHandler handler, Inventory inventory, Component title)
 	{
-		super(handler, inventory, title);
-		this.imageHeight = 213;
-		this.imageWidth = 175;
+		super(handler, inventory, title, 175, 213);
 		this.inventoryLabelX = 8;
 		this.inventoryLabelY = 112;
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY)
+	public void extractBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta)
 	{
+		super.extractBackground(context, mouseX, mouseY, delta);
 		var backgroundX = (this.width - this.imageWidth) / 2;
 		var backgroundY = (this.height - this.imageHeight) / 2;
 		context.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, backgroundX, backgroundY, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
@@ -122,8 +121,8 @@ public class ScrappingTableScreen extends AbstractContainerScreen<ScrappingTable
 	}
 
 	@Override
-	public void render(GuiGraphics context, int mouseX, int mouseY, float delta)
+	public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta)
 	{
-		super.render(context, mouseX, mouseY, delta);
+		super.extractRenderState(context, mouseX, mouseY, delta);
 	}
 }

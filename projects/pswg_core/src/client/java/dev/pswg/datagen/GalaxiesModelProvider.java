@@ -5,7 +5,7 @@ import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.item.SwgDrinkTintSource;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.color.item.Constant;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -20,12 +20,13 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
-import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
@@ -41,7 +42,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 {
 	static String namespace;
 
-	public GalaxiesModelProvider(FabricDataOutput output, String namespace)
+	public GalaxiesModelProvider(FabricPackOutput output, String namespace)
 	{
 		super(output);
 		GalaxiesModelProvider.namespace = namespace;
@@ -56,7 +57,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	 * @param texture            The texture to assign to the item
 	 * @param model              The model that will be uploaded with the given texture
 	 */
-	protected static void register(ItemModelGenerators itemModelGenerator, Item item, ResourceLocation texture, ModelTemplate model)
+	protected static void register(ItemModelGenerators itemModelGenerator, Item item, Identifier texture, ModelTemplate model)
 	{
 		register(itemModelGenerator, item, ItemModelUtils.plainModel(registerDisjointModel(itemModelGenerator, item, texture, model)));
 	}
@@ -72,9 +73,9 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	 *
 	 * @return The identifier of the registered item model
 	 */
-	protected static ResourceLocation registerDisjointModel(ItemModelGenerators itemModelGenerator, Item item, ResourceLocation texture, ModelTemplate model)
+	protected static Identifier registerDisjointModel(ItemModelGenerators itemModelGenerator, Item item, Identifier texture, ModelTemplate model)
 	{
-		return model.create(ModelLocationUtils.getModelLocation(item), TextureMapping.layer0(texture), itemModelGenerator.modelOutput);
+		return model.create(ModelLocationUtils.getModelLocation(item), TextureMapping.layer0(new Material(texture)), itemModelGenerator.modelOutput);
 	}
 
 	/**
@@ -89,7 +90,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		itemModelGenerator.itemModelOutput.accept(item, model);
 	}
 
-	public static MultiVariant createWeightedVariant(ResourceLocation id)
+	public static MultiVariant createWeightedVariant(Identifier id)
 	{
 		return new MultiVariant(WeightedList.of(new Variant(id)));
 	}
@@ -137,11 +138,11 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 
 	protected static void registerAccumulatingBlock(Block block, BlockModelGenerators generator)
 	{
-		var id = TextureMapping.getBlockTexture(block);
+		var texture = TextureMapping.getBlockTexture(block);
 
 		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.LAYERS).generate(
 				height -> {
-					ResourceLocation modelId = TexturedModel.createDefault(block1 -> TextureMapping.cube(id).put(TextureSlot.PARTICLE, id), blockModel("template_accumulating_height" + height * 2, TextureSlot.ALL, TextureSlot.PARTICLE)).createWithSuffix(block, "_height" + height * 2, generator.modelOutput);
+					Identifier modelId = TexturedModel.createDefault(block1 -> TextureMapping.cube(texture).put(TextureSlot.PARTICLE, texture), blockModel("template_accumulating_height" + height * 2, TextureSlot.ALL, TextureSlot.PARTICLE)).createWithSuffix(block, "_height" + height * 2, generator.modelOutput);
 					return createWeightedVariant(modelId);
 				}))
 		);
@@ -170,7 +171,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 
 	protected static void registerJaporLeaves(Block block, BlockModelGenerators generator)
 	{
-		ModelTemplate model = new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(namespace, ("block/template_japor_leaves"))), Optional.empty(), TextureSlot.TEXTURE);
+		ModelTemplate model = new ModelTemplate(Optional.of(Identifier.fromNamespaceAndPath(namespace, ("block/template_japor_leaves"))), Optional.empty(), TextureSlot.TEXTURE);
 		TexturedModel texturedModel = TexturedModel.createDefault(TextureMapping::defaultTexture, model).get(block);
 		MultiVariant weightedVariant = createWeightedVariant(texturedModel.create(block, generator.modelOutput));
 		generator.blockStateOutput.accept(
@@ -191,7 +192,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		if (dataGenBlock.model() == DataGenBlockModel.LOG_WITH_WOOD)
 		{
 			String woodKey = logKey.substring(0, logKey.indexOf("_log")) + "_wood";
-			Block woodBlock = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(woodKey));
+			Block woodBlock = BuiltInRegistries.BLOCK.getValue(Identifier.parse(woodKey));
 			texturePool.wood(woodBlock);
 		}
 	}
@@ -203,7 +204,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 			case DEFAULT -> generator.createTrivialBlock(block, modelFactory);
 			case RANDOM_ROTATION_X ->
 			{
-				ResourceLocation id = modelFactory.create(block, generator.modelOutput);
+				Identifier id = modelFactory.create(block, generator.modelOutput);
 				var blockStateSupplier = MultiPartGenerator.multiPart(block).with(new MultiVariant(WeightedList.of(
 						new Weighted<>(new Variant(id).withXRot(Quadrant.R0), 1),
 						new Weighted<>(new Variant(id).withXRot(Quadrant.R90), 1),
@@ -214,7 +215,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 			}
 			case AXIS_ROTATED ->
 			{
-				ResourceLocation id = modelFactory.create(block, generator.modelOutput);
+				Identifier id = modelFactory.create(block, generator.modelOutput);
 				var blockStateSupplier = MultiVariantGenerator.dispatch(block, createWeightedVariant(id)).with(PropertyDispatch.modify(BlockStateProperties.AXIS)
 				                                                                                                                            .select(Direction.Axis.Y, VariantMutator.MODEL.withValue(id))
 				                                                                                                                            .select(Direction.Axis.Z, VariantMutator.MODEL.withValue(id)
@@ -231,9 +232,9 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 
 	protected static void registerStairs(Block stairs, BlockModelGenerators generator)
 	{
-		ResourceLocation stairsId = ModelTemplates.STAIRS_STRAIGHT.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
-		ResourceLocation stairsOuterId = ModelTemplates.STAIRS_OUTER.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
-		ResourceLocation stairsInnerId = ModelTemplates.STAIRS_INNER.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
+		Identifier stairsId = ModelTemplates.STAIRS_STRAIGHT.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
+		Identifier stairsOuterId = ModelTemplates.STAIRS_OUTER.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
+		Identifier stairsInnerId = ModelTemplates.STAIRS_INNER.create(stairs, TextureMapping.cube(stairs), generator.modelOutput);
 
 		generator.blockStateOutput.accept(BlockModelGenerators.createStairs(stairs, createWeightedVariant(stairsInnerId), createWeightedVariant(stairsId), createWeightedVariant(stairsOuterId)));
 		generator.registerSimpleFlatItemModel(stairs);
@@ -246,11 +247,11 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 
 	protected static void registerVerticalSlabAllTextures(Block textureBase, Block slab, BlockModelGenerators generator)
 	{
-		var textureId = TextureMapping.getBlockTexture(textureBase);
-		var textureMap = new TextureMapping().put(TextureSlot.SIDE, textureId).put(TextureSlot.TOP, textureId).put(TextureSlot.END, textureId);
-		ResourceLocation bottomId = ModelTemplates.SLAB_BOTTOM.create(slab, textureMap, generator.modelOutput);
-		ResourceLocation topId = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "_top", textureMap, generator.modelOutput);
-		ResourceLocation doubleId = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double", textureMap, generator.modelOutput);
+		var texture = TextureMapping.getBlockTexture(textureBase);
+		var textureMap = new TextureMapping().put(TextureSlot.SIDE, texture).put(TextureSlot.TOP, texture).put(TextureSlot.END, texture);
+		Identifier bottomId = ModelTemplates.SLAB_BOTTOM.create(slab, textureMap, generator.modelOutput);
+		Identifier topId = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "_top", textureMap, generator.modelOutput);
+		Identifier doubleId = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double", textureMap, generator.modelOutput);
 
 		var blockState = MultiVariantGenerator.dispatch(slab, createWeightedVariant(bottomId)).
 		                                                    with(PropertyDispatch.modify(BlockStateProperties.AXIS)
@@ -272,13 +273,13 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		var slab = GalaxiesBlocks.GRAY_IMPERIAL_LIGHTING_SLAB;
 		var textureIdSide = TextureMapping.getBlockTexture(GalaxiesBlocks.GRAY_IMPERIAL_LIGHTING_SLAB);
 		var textureMap = new TextureMapping().put(TextureSlot.SIDE, textureIdSide).put(TextureSlot.TOP, textureIdTopBottom).put(TextureSlot.END, textureIdTopBottom);
-		var textureMapOn = new TextureMapping().put(TextureSlot.SIDE, textureIdSide.withSuffix("_on")).put(TextureSlot.TOP, textureIdTopBottom).put(TextureSlot.END, textureIdTopBottom);
-		ResourceLocation bottomId = ModelTemplates.SLAB_BOTTOM.create(slab, textureMap, generator.modelOutput);
-		ResourceLocation bottomIdOn = ModelTemplates.SLAB_BOTTOM.createWithSuffix(slab, "_on", textureMapOn, generator.modelOutput);
-		ResourceLocation topId = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "", textureMap, generator.modelOutput);
-		ResourceLocation topIdOn = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "_on", textureMapOn, generator.modelOutput);
-		ResourceLocation doubleId = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double", textureMap, generator.modelOutput);
-		ResourceLocation doubleIdOn = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double_on", textureMapOn, generator.modelOutput);
+		var textureMapOn = new TextureMapping().put(TextureSlot.SIDE, new Material(textureIdSide.sprite().withSuffix("_on"), textureIdSide.forceTranslucent())).put(TextureSlot.TOP, textureIdTopBottom).put(TextureSlot.END, textureIdTopBottom);
+		Identifier bottomId = ModelTemplates.SLAB_BOTTOM.create(slab, textureMap, generator.modelOutput);
+		Identifier bottomIdOn = ModelTemplates.SLAB_BOTTOM.createWithSuffix(slab, "_on", textureMapOn, generator.modelOutput);
+		Identifier topId = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "", textureMap, generator.modelOutput);
+		Identifier topIdOn = ModelTemplates.SLAB_TOP.createWithSuffix(slab, "_on", textureMapOn, generator.modelOutput);
+		Identifier doubleId = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double", textureMap, generator.modelOutput);
+		Identifier doubleIdOn = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double_on", textureMapOn, generator.modelOutput);
 
 		var blockState = MultiVariantGenerator.dispatch(slab, createWeightedVariant(bottomId)).
 		                                                    with(PropertyDispatch.modify(BlockStateProperties.AXIS)
@@ -298,8 +299,8 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 
 	protected static void registerLightingPanel(Block block, BlockModelGenerators generator)
 	{
-		ResourceLocation identifier = lightingPanelFactory().create(block, generator.modelOutput);
-		ResourceLocation identifier2 = generator.createSuffixedVariant(block, "_on", ModelTemplates.CUBE_COLUMN, GalaxiesModelProvider::createLightingPanelTextureMap);
+		Identifier identifier = lightingPanelFactory().create(block, generator.modelOutput);
+		Identifier identifier2 = generator.createSuffixedVariant(block, "_on", ModelTemplates.CUBE_COLUMN, texture -> createLightingPanelTextureMap(texture.sprite()));
 
 		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, createWeightedVariant(identifier2), createWeightedVariant(identifier))));
 	}
@@ -311,42 +312,44 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 
 	public static TextureMapping createLightingPanelTextureMap(Block block)
 	{
-		return createLightingPanelTextureMap(TextureMapping.getBlockTexture(block));
+		return createLightingPanelTextureMap(TextureMapping.getBlockTexture(block).sprite());
 	}
 
-	public static TextureMapping createLightingPanelTextureMap(ResourceLocation identifier)
+	public static TextureMapping createLightingPanelTextureMap(Identifier identifier)
 	{
-		return new TextureMapping().put(TextureSlot.SIDE, identifier).put(TextureSlot.END, TextureMapping.getBlockTexture(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
+		return new TextureMapping().put(TextureSlot.SIDE, new Material(identifier)).put(TextureSlot.END, TextureMapping.getBlockTexture(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
 	}
 
 	public static final void registerCorrugatedCrate(BlockModelGenerators generator, Block block)
 	{
 		var crateKey = getCorrugatedCrateKey(block).withPrefix("block/model/corrugated_crate/");
-		TexturedModel.createDefault(block1 -> TextureMapping.cube(crateKey).put(TextureSlot.PARTICLE, crateKey.withSuffix("_particle")), blockModel("template_corrugated_crate", TextureSlot.ALL, TextureSlot.PARTICLE)).create(block, generator.modelOutput);
+		TexturedModel.createDefault(block1 -> TextureMapping.cube(new Material(crateKey)).put(TextureSlot.PARTICLE, new Material(crateKey.withSuffix("_particle"))), blockModel("template_corrugated_crate", TextureSlot.ALL, TextureSlot.PARTICLE)).create(block, generator.modelOutput);
 		generator.createNonTemplateModelBlock(block);
 	}
 
 	protected static ModelTemplate blockModel(String parent, TextureSlot... requiredTextureKeys)
 	{
-		return new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(namespace, ("block/" + parent))), Optional.empty(), requiredTextureKeys);
+		return new ModelTemplate(Optional.of(Identifier.fromNamespaceAndPath(namespace, ("block/" + parent))), Optional.empty(), requiredTextureKeys);
 	}
 
-	public static ResourceLocation getBlockKey(Block block)
+	public static Identifier getBlockKey(Block block)
 	{
-		return block.builtInRegistryHolder().unwrapKey().get().location();
+		return block.builtInRegistryHolder().key().identifier();
 	}
 
-	public static ResourceLocation getCorrugatedCrateKey(Block block)
+	public static Identifier getCorrugatedCrateKey(Block block)
 	{
-		String string = block.builtInRegistryHolder().unwrapKey().get().location().toString();
-		return ResourceLocation.parse(string.substring(0, string.indexOf("_corrugated_crate")));
+		String string = block.builtInRegistryHolder().key().identifier().toString();
+		return Identifier.parse(string.substring(0, string.indexOf("_corrugated_crate")));
 	}
 
 	public void registerDrink(ItemModelGenerators generator, Item item, DataGenItem dataGenItem)
 	{
-		ResourceLocation modelId;
-		ResourceLocation overlay = (dataGenItem.overlayTextureOverride().equals("")) ? ResourceLocation.parse(createItemKey(item, dataGenItem).withSuffix("_overlay").toString().replace("_filled", "")) : ResourceLocation.fromNamespaceAndPath(namespace, dataGenItem.overlayTextureOverride()).withPrefix("item/");
-		ResourceLocation base = ResourceLocation.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", ""));
+		Identifier modelId;
+		Material overlay = dataGenItem.overlayTextureOverride().equals("")
+				? new Material(Identifier.parse(createItemKey(item, dataGenItem).withSuffix("_overlay").toString().replace("_filled", "")))
+				: new Material(Identifier.fromNamespaceAndPath(namespace, dataGenItem.overlayTextureOverride()).withPrefix("item/"));
+		Material base = new Material(Identifier.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", "")));
 
 		if (dataGenItem.invertLayer())
 		{
@@ -360,10 +363,10 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		}
 	}
 
-	public static ResourceLocation createItemKey(Item item, DataGenItem dataGenItem)
+	public static Identifier createItemKey(Item item, DataGenItem dataGenItem)
 	{
 		if (dataGenItem.textureOverride().equals(""))
-			return item.builtInRegistryHolder().unwrapKey().get().location().withPrefix("item/");
-		return ResourceLocation.fromNamespaceAndPath(namespace, dataGenItem.textureOverride()).withPrefix("item/");
+			return item.builtInRegistryHolder().key().identifier().withPrefix("item/");
+		return Identifier.fromNamespaceAndPath(namespace, dataGenItem.textureOverride()).withPrefix("item/");
 	}
 }

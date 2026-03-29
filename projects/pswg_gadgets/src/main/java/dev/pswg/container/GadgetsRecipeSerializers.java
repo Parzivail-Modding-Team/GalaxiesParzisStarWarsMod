@@ -8,8 +8,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 
 public class GadgetsRecipeSerializers
 {
-	public static final RecipeSerializer<ScrappingTableRecipe> SCRAPPING_SERIALIZER = Registrar.recipeSerializer(Gadgets.id("scrapping"), new ScrappingTableRecipe.Serializer<>(ScrappingTableRecipe::new));
-	public static final RecipeSerializer<LaserCuttingRecipe> LASER_CUTTING_SERIALIZER = Registrar.recipeSerializer(Gadgets.id("laser_cutting"), new LaserCuttingRecipe.Serializer<>(LaserCuttingRecipe::new));
+	public static final RecipeSerializer<ScrappingTableRecipe> SCRAPPING_SERIALIZER = Registrar.recipeSerializer(Gadgets.id("scrapping"), ScrappingTableRecipe.createSerializer(ScrappingTableRecipe::new));
+	public static final RecipeSerializer<LaserCuttingRecipe> LASER_CUTTING_SERIALIZER = Registrar.recipeSerializer(Gadgets.id("laser_cutting"), LaserCuttingRecipe.createSerializer(LaserCuttingRecipe::new));
 
 	public static void register()
 	{

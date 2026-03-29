@@ -7,7 +7,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 
 /**
@@ -16,14 +16,14 @@ import net.minecraft.util.ExtraCodecs;
 public final class GalaxiesCodecs
 {
 	/**
-	 * A codec for serializing and deserializing a list of {@link ResourceLocation}s.
+	 * A codec for serializing and deserializing a list of {@link Identifier}s.
 	 */
-	public static final Codec<List<ResourceLocation>> IDENTIFIER_LIST = ExtraCodecs.compactListCodec(ResourceLocation.CODEC);
+	public static final Codec<List<Identifier>> IDENTIFIER_LIST = ExtraCodecs.compactListCodec(Identifier.CODEC);
 
 	/**
-	 * A codec for serializing and deserializing a map between {@link ResourceLocation}s.
+	 * A codec for serializing and deserializing a map between {@link Identifier}s.
 	 */
-	public static final Codec<Map<ResourceLocation, ResourceLocation>> IDENTIFIER_MAP = Codec.unboundedMap(ResourceLocation.CODEC, ResourceLocation.CODEC);
+	public static final Codec<Map<Identifier, Identifier>> IDENTIFIER_MAP = Codec.unboundedMap(Identifier.CODEC, Identifier.CODEC);
 
 	/**
 	 * A codec for serializing and deserializing a {@link Vector3f} with named components.

@@ -113,14 +113,14 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 		{
 			for (int i = 0; i < RandomSource.create().nextIntBetweenInclusive(70, 100); i++)
 			{
-				double vx = level().random.nextGaussian() * 0.5;
-				double vz = level().random.nextGaussian() * 0.5;
+				double vx = level().getRandom().nextGaussian() * 0.5;
+				double vz = level().getRandom().nextGaussian() * 0.5;
 				double vy;
 
 				if (COLLISION_BELOW)
-					vy = Math.abs(level().random.nextGaussian() * 0.8);
+					vy = Math.abs(level().getRandom().nextGaussian() * 0.8);
 				else
-					vy = level().random.nextGaussian() * 0.4;
+					vy = level().getRandom().nextGaussian() * 0.4;
 				if (level() instanceof ServerLevel serverWorld)
 					createSparkParticle(serverWorld, getX(), getY(), getZ(), vx, vy, vz);
 			}

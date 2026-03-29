@@ -1,9 +1,9 @@
 package dev.pswg.utility.math;
 
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Rotations;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec2;
@@ -126,14 +126,14 @@ public class MathUtil
 
 	public static int lerpLight(float delta, int packedA, int packedB)
 	{
-		return LightTexture.pack(
+		return LightCoordsUtil.pack(
 				Mth.lerpInt(delta,
-				                LightTexture.block(packedA),
-				                LightTexture.block(packedB)
+				                LightCoordsUtil.block(packedA),
+				                LightCoordsUtil.block(packedB)
 				),
 				Mth.lerpInt(delta,
-				                LightTexture.sky(packedA),
-				                LightTexture.sky(packedB)
+				                LightCoordsUtil.sky(packedA),
+				                LightCoordsUtil.sky(packedB)
 				)
 		);
 	}

@@ -124,7 +124,7 @@ public class GasEntity extends Entity
 
 		for (Player player : world.players())
 		{
-			player.displayClientMessage(Component.nullToEmpty("block count: " + massMap.size() + " minC: " + minConcentration + " maxC: " + maxConcentration + " totalC: " + totalVolume), false);
+			player.sendSystemMessage(Component.nullToEmpty("block count: " + massMap.size() + " minC: " + minConcentration + " maxC: " + maxConcentration + " totalC: " + totalVolume));
 		}
 	}
 
@@ -231,9 +231,9 @@ public class GasEntity extends Entity
 							world.addParticle(new GasParticleEffect(PARTICLE_TYPE, this.getStringUUID(), particleId),
 							                        true,
 							                        true,
-							                        pos.getX() + 0.5 + (world.random.nextIntBetweenInclusive(-475, 475) / 1000f),
-							                        pos.getY() + 0.5 + (world.random.nextIntBetweenInclusive(-475, 475) / 1000f),
-							                        pos.getZ() + 0.5 + (world.random.nextIntBetweenInclusive(-475, 475) / 1000f),
+							                        pos.getX() + 0.5 + (world.getRandom().nextIntBetweenInclusive(-475, 475) / 1000f),
+							                        pos.getY() + 0.5 + (world.getRandom().nextIntBetweenInclusive(-475, 475) / 1000f),
+							                        pos.getZ() + 0.5 + (world.getRandom().nextIntBetweenInclusive(-475, 475) / 1000f),
 							                        0,
 							                        0,
 							                        0);

@@ -13,11 +13,11 @@ import dev.pswg.feature.brewing.MixerBrewingPaths;
 import dev.pswg.feature.brewing.MixerFoodColors;
 import dev.pswg.networking.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resources.ResourceLocation;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import org.slf4j.Logger;
 
 import java.io.InputStream;
@@ -33,16 +33,16 @@ public final class Gadgets implements GalaxiesAddon
 	public static final String MODID = "pswg_gadgets";
 
 	/**
-	 * Creates a scoped {@link ResourceLocation} whose domain is this
+	 * Creates a scoped {@link Identifier} whose domain is this
 	 * mod's MODID
 	 *
-	 * @param path The path for the {@link ResourceLocation}
+	 * @param path The path for the {@link Identifier}
 	 *
-	 * @return A scoped {@link ResourceLocation}
+	 * @return A scoped {@link Identifier}
 	 */
-	public static ResourceLocation id(String path)
+	public static Identifier id(String path)
 	{
-		return ResourceLocation.fromNamespaceAndPath(MODID, path);
+		return Identifier.fromNamespaceAndPath(MODID, path);
 	}
 
 	/**
@@ -69,29 +69,19 @@ public final class Gadgets implements GalaxiesAddon
 		MixerFoodColors.init();
 		MixerBrewingPaths.init();
 
-		PayloadTypeRegistry.playS2C().register(MixerSyncS2CPayload.ID, MixerSyncS2CPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(MixerSyncS2CPayload.ID, MixerSyncS2CPayload.CODEC);
 
-		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener()
+		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(Gadgets.id("brewing_maps"), (ResourceManagerReloadListener)manager ->
 		{
-			@Override
-			public ResourceLocation getFabricId()
+			for (Identifier id : manager.listResources("brewing_map", path -> true).keySet())
 			{
-				return Gadgets.id("brewing_maps");
-			}
-
-			@Override
-			public void onResourceManagerReload(ResourceManager manager)
-			{
-				for (ResourceLocation id : manager.listResources("brewing_map", path -> true).keySet())
+				try (InputStream stream = manager.getResource(id).get().open())
 				{
-					try (InputStream stream = manager.getResource(id).get().open())
-					{
-						BrewingMap.init(stream);
-					}
-					catch (Exception e)
-					{
-						Gadgets.LOGGER.error("Error occurred while loading brewing map " + id.toString(), e);
-					}
+					BrewingMap.init(stream);
+				}
+				catch (Exception e)
+				{
+					Gadgets.LOGGER.error("Error occurred while loading brewing map " + id.toString(), e);
 				}
 			}
 		});

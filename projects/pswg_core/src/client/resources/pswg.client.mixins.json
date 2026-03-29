@@ -11,7 +11,7 @@
 		"events.InGameHudMixin",
 		"handbobbing.HeldItemRendererMixin",
 		"leftuse.MinecraftClientMixin",
-		"models.BakedSimpleModelMixin",
+		"models.CuboidItemModelWrapperMixin",
 		"recoil.ClientPlayerEntityMixin",
 		"recoil.HeldItemRendererMixin"
 	],

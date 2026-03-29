@@ -15,10 +15,10 @@ import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.util.GadgetsGenUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.data.*;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -31,13 +31,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -73,7 +73,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class ModelGenerator extends GalaxiesModelProvider
 	{
-		public ModelGenerator(FabricDataOutput output)
+		public ModelGenerator(FabricPackOutput output)
 		{
 			super(output, Gadgets.MODID);
 		}
@@ -116,10 +116,10 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
 		}
 
-		public static ResourceLocation createItemKey(Item item, DataGenItem dataGenItem)
+		public static Identifier createItemKey(Item item, DataGenItem dataGenItem)
 		{
 			if (dataGenItem.textureOverride().equals(""))
-				return item.builtInRegistryHolder().unwrapKey().get().location().withPrefix("item/");
+				return item.builtInRegistryHolder().key().identifier().withPrefix("item/");
 			return Gadgets.id(dataGenItem.textureOverride()).withPrefix("item/");
 		}
 
@@ -146,7 +146,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class LangGenerator extends FabricLanguageProvider
 	{
-		protected LangGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
+		protected LangGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup)
 		{
 			super(dataOutput, "en_us", registryLookup);
 		}
@@ -194,7 +194,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void addDatagenItem(TranslationBuilder translationBuilder, Item item, DataGenItem dataGenItem)
 		{
 			if (dataGenItem.langOverride().isEmpty())
-				translationBuilder.add(item, generateDefaultLang(item.builtInRegistryHolder().key().location()));
+				translationBuilder.add(item, generateDefaultLang(item.builtInRegistryHolder().key().identifier()));
 			else
 				translationBuilder.add(item, dataGenItem.langOverride());
 		}
@@ -207,8 +207,8 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				translationBuilder.add(block.asItem(), dataGenBlock.langOverride());
 			}else
 			{
-				translationBuilder.add(block, generateDefaultLang(block.builtInRegistryHolder().key().location()));
-				translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().location()));
+				translationBuilder.add(block, generateDefaultLang(block.builtInRegistryHolder().key().identifier()));
+				translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().identifier()));
 			}
 		}
 	}
@@ -217,9 +217,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	 * The gadget item tag generator. All item tags should be added
 	 * through this generator.
 	 */
-	private static class ItemTagGenerator extends FabricTagProvider.ItemTagProvider
+	private static class ItemTagGenerator extends FabricTagsProvider.ItemTagsProvider
 	{
-		public ItemTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
+		public ItemTagGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
@@ -262,9 +262,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 	 * The gadget block tag generator. All block tags should be added
 	 * through this generator.
 	 */
-	private static class BlockTagGenerator extends FabricTagProvider.BlockTagProvider
+	private static class BlockTagGenerator extends FabricTagsProvider.BlockTagsProvider
 	{
-		public BlockTagGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
+		public BlockTagGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture)
 		{
 			super(output, completableFuture);
 		}
@@ -371,7 +371,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 	private static class RecipesGenerator extends FabricRecipeProvider
 	{
-		public RecipesGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture)
+		public RecipesGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture)
 		{
 			super(output, registriesFuture);
 		}
@@ -466,25 +466,25 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					createPanelCuttingRecipe(GalaxiesBlocks.IMPERIAL_FLOORING_PATTERN_2);
 					createPanelCuttingRecipe(GalaxiesBlocks.LAB_WALL);
 
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_ROD, new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.PLASTEEL_ROD, new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BALL_BEARING, new ItemStack(GalaxiesItems.DURASTEEL_INGOT), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_CUP, new ItemStack(GalaxiesItems.DESH_NUGGET, 6), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_CUP, new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 6), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_WIRE, new ItemStack(GalaxiesItems.DESH_NUGGET, 6), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_COIL, new ItemStack(GalaxiesItems.DESH_INGOT, 2), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DESH_WIRE, new ItemStack(GalaxiesItems.DESH_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 6), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.DESH_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, new ItemStack(GalaxiesItems.IONITE_INGOT), new ItemStack(GalaxiesItems.IONITE_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.PLASTEEL_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.CHROMIUM_INGOT), new ItemStack(GalaxiesItems.CHROMIUM_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DISPLAY_PANEL, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.ELECTRIC_MOTOR, new ItemStack(GalaxiesItems.TURBINE), new ItemStack(GalaxiesItems.DURASTEEL_ROD, 2), 0.25f);
-					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.ELECTRIC_MOTOR, new ItemStack(GalaxiesItems.DESH_COIL), new ItemStack(GalaxiesItems.DESH_WIRE, 3), 0.25f);
-					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.LIGHT_PANEL, new ItemStack(GalaxiesItems.PLASTEEL_INGOT), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.LIGHT_PANEL, new ItemStack(GalaxiesItems.DESH_WIRE), new ItemStack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
-					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.TURBINE, new ItemStack(GalaxiesItems.DURASTEEL_INGOT, 2), new ItemStack(GalaxiesItems.DURASTEEL_INGOT), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_ROD, stack(GalaxiesItems.DURASTEEL_NUGGET, 6), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.PLASTEEL_ROD, stack(GalaxiesItems.PLASTEEL_NUGGET, 6), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BALL_BEARING, stack(GalaxiesItems.DURASTEEL_INGOT), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_CUP, stack(GalaxiesItems.DESH_NUGGET, 6), stack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DURASTEEL_CUP, stack(GalaxiesItems.DURASTEEL_NUGGET, 6), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_WIRE, stack(GalaxiesItems.DESH_NUGGET, 6), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DESH_COIL, stack(GalaxiesItems.DESH_INGOT, 2), stack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DESH_WIRE, stack(GalaxiesItems.DESH_INGOT), stack(GalaxiesItems.PLASTEEL_NUGGET, 6), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, stack(GalaxiesItems.DESH_INGOT), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, stack(GalaxiesItems.DESH_WIRE), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.BROKEN_SMALL_POWER_PACK_ITEM, stack(GalaxiesItems.IONITE_INGOT), stack(GalaxiesItems.IONITE_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.DISPLAY_PANEL, stack(GalaxiesItems.PLASTEEL_INGOT), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.DISPLAY_PANEL, stack(GalaxiesItems.CHROMIUM_INGOT), stack(GalaxiesItems.CHROMIUM_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.DISPLAY_PANEL, stack(GalaxiesItems.DESH_WIRE), stack(GalaxiesItems.DESH_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.ELECTRIC_MOTOR, stack(GalaxiesItems.TURBINE), stack(GalaxiesItems.DURASTEEL_ROD, 2), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Calibrator, GalaxiesItems.ELECTRIC_MOTOR, stack(GalaxiesItems.DESH_COIL), stack(GalaxiesItems.DESH_WIRE, 3), 0.25f);
+					createScrappingRecipe(ScrappingToolType.Cutter, GalaxiesItems.LIGHT_PANEL, stack(GalaxiesItems.PLASTEEL_INGOT), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.LIGHT_PANEL, stack(GalaxiesItems.DESH_WIRE), stack(GalaxiesItems.PLASTEEL_NUGGET, 3), 0.35f);
+					createScrappingRecipe(ScrappingToolType.Spanner, GalaxiesItems.TURBINE, stack(GalaxiesItems.DURASTEEL_INGOT, 2), stack(GalaxiesItems.DURASTEEL_INGOT), 0.25f);
 
 				}
 
@@ -504,16 +504,26 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 				public void createPanelCuttingRecipe(ItemLike panel)
 				{
-					createLaserCuttingRecipe(panel, new ItemStack(GalaxiesItems.DURASTEEL_INGOT), new ItemStack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
+					createLaserCuttingRecipe(panel, stack(GalaxiesItems.DURASTEEL_INGOT), stack(GalaxiesItems.DURASTEEL_NUGGET, 3), 0.35f);
 				}
 
-				public void createLaserCuttingRecipe(ItemLike input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+				private ItemStackTemplate stack(ItemLike item)
+				{
+					return new ItemStackTemplate(item.asItem());
+				}
+
+				private ItemStackTemplate stack(ItemLike item, int count)
+				{
+					return new ItemStackTemplate(item.asItem(), count);
+				}
+
+				public void createLaserCuttingRecipe(ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
 				{
 					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
-					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(input.asItem().toString() + "_cutting")));
+					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_cutting")));
 				}
 
-				public void createScrappingRecipe(ScrappingToolType tool, ItemLike input, ItemStack primaryOutput, ItemStack secondaryOutput, float secondaryChance)
+				public void createScrappingRecipe(ScrappingToolType tool, ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
 				{
 					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
 					Ingredient toolIngredient = null;
@@ -536,7 +546,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 							suffix = "_calibrator";
 						}
 					}
-					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(input.asItem().toString() + "_scrapping" + suffix)));
+					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_scrapping" + suffix)));
 				}
 			};
 		}
@@ -548,7 +558,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 	}
 
-	private static String generateDefaultLang(ResourceLocation reg)
+	private static String generateDefaultLang(Identifier reg)
 	{
 		var path = reg.getPath();
 		return Arrays.stream(path.split("_"))

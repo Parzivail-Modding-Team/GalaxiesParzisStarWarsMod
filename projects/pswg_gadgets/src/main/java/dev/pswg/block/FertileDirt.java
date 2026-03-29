@@ -21,7 +21,7 @@ public class FertileDirt extends Block
 		var plantState = world.getBlockState(pos.above());
 		if (world instanceof ServerLevel serverWorld)
 			if (plantState.getBlock() instanceof BonemealableBlock fertilizableBlock)
-				if (fertilizableBlock.isBonemealSuccess(serverWorld, serverWorld.random, pos.above(), plantState))
-					fertilizableBlock.performBonemeal(serverWorld, serverWorld.random, pos.above(), plantState);
+				if (fertilizableBlock.isBonemealSuccess(serverWorld, serverWorld.getRandom(), pos.above(), plantState))
+					fertilizableBlock.performBonemeal(serverWorld, serverWorld.getRandom(), pos.above(), plantState);
 	}
 }

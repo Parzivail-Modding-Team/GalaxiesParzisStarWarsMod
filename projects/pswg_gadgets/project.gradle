@@ -17,7 +17,7 @@ fabricApi {
 }
 
 dependencies {
-	api(project(path: ":projects:pswg_core", configuration: "namedElements"))
+	api(project(":projects:pswg_core"))
 	compileOnly(project(path: ":projects:framework"))
 	annotationProcessor(project(path: ":projects:framework-generator"))
 }

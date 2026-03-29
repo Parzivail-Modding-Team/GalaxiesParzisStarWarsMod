@@ -24,7 +24,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import org.slf4j.Logger;
@@ -44,16 +44,16 @@ public final class Galaxies implements ModInitializer
 	public static final String MODID = "pswg";
 
 	/**
-	 * Creates a scoped {@link ResourceLocation} whose domain is this
+	 * Creates a scoped {@link Identifier} whose domain is this
 	 * mod's MODID
 	 *
-	 * @param path The path for the {@link ResourceLocation}
+	 * @param path The path for the {@link Identifier}
 	 *
-	 * @return A scoped {@link ResourceLocation}
+	 * @return A scoped {@link Identifier}
 	 */
-	public static ResourceLocation id(String path)
+	public static Identifier id(String path)
 	{
-		return ResourceLocation.fromNamespaceAndPath(MODID, path);
+		return Identifier.fromNamespaceAndPath(MODID, path);
 	}
 
 	/**
@@ -118,14 +118,14 @@ public final class Galaxies implements ModInitializer
 			REMOTE_VERSION = UpdateChecker.getRemoteVersion(MODID, "Parzivail-Modding-Team/GalaxiesParzisStarWarsMod").orElse(null);
 		}
 
-		PayloadTypeRegistry.playC2S().register(PlayerInteractItemLeftC2SPacket.ID, PlayerInteractItemLeftC2SPacket.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(PlayerInteractItemLeftC2SPacket.ID, PlayerInteractItemLeftC2SPacket.CODEC);
 
-		PayloadTypeRegistry.playC2S().register(GalaxiesPlayerActionC2SPacket.ID, GalaxiesPlayerActionC2SPacket.CODEC);
-		PayloadTypeRegistry.playS2C().register(GalaxiesPlayerActionS2CPacket.ID, GalaxiesPlayerActionS2CPacket.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(GalaxiesPlayerActionC2SPacket.ID, GalaxiesPlayerActionC2SPacket.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(GalaxiesPlayerActionS2CPacket.ID, GalaxiesPlayerActionS2CPacket.CODEC);
 
-		PayloadTypeRegistry.playS2C().register(GalaxiesEntitySpawnS2CPacket.ID, GalaxiesEntitySpawnS2CPacket.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(GalaxiesEntitySpawnS2CPacket.ID, GalaxiesEntitySpawnS2CPacket.CODEC);
 
-		PayloadTypeRegistry.playS2C().register(PreciseVelocityParticleS2CPayload.ID, PreciseVelocityParticleS2CPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(PreciseVelocityParticleS2CPayload.ID, PreciseVelocityParticleS2CPayload.CODEC);
 
 		GalaxiesEntityLeftClickManager.initialize();
 		GalaxiesPlayerActionManager.initialize();
@@ -152,7 +152,7 @@ public final class Galaxies implements ModInitializer
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(Commands.literal("cdim")
-			                                  .requires(source -> source.hasPermission(2) && source.getEntity() != null) // same permission level as tp
+			                                  .requires(source -> Commands.hasPermission(Commands.LEVEL_GAMEMASTERS).test(source) && source.getEntity() != null)
 			                                  .then(Commands.argument("dimension", DimensionArgument.dimension())
 			                                                      .executes(context -> {
 				                                                      var world = DimensionArgument.getDimension(context, "dimension");

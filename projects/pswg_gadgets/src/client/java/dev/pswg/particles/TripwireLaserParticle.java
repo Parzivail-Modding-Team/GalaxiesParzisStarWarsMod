@@ -22,7 +22,11 @@ public class TripwireLaserParticle extends CrossPointingParticle
 		this.setAlpha(0.1F);
 		this.lifetime = 3;
 		this.scale(0.0625f);
-		this.setColor(0.05f + (float)clientWorld.random.nextIntBetweenInclusive(0, 100) / 1000f, 0.65f + (float)clientWorld.random.nextIntBetweenInclusive(0, 100) / 1000f, 0.9f + (float)clientWorld.random.nextIntBetweenInclusive(0, 100) / 1000f);
+		this.setColor(
+				0.05f + (float)this.random.nextIntBetweenInclusive(0, 100) / 1000f,
+				0.65f + (float)this.random.nextIntBetweenInclusive(0, 100) / 1000f,
+				0.9f + (float)this.random.nextIntBetweenInclusive(0, 100) / 1000f
+		);
 		this.setSpriteFromAge(spriteProvider);
 	}
 

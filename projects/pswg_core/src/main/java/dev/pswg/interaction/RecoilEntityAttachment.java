@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.world.entity.LivingEntity;
+import org.joml.Vector3fc;
 import org.joml.Vector3f;
 
 /**
@@ -24,6 +25,11 @@ import org.joml.Vector3f;
 @GenerateCodec
 public record RecoilEntityAttachment(Vector3f recoilVelocity) implements IRecoilEntityAttachmentBuilder, IRecoilEntityAttachmentCodec
 {
+	public RecoilEntityAttachment(Vector3fc recoilVelocity)
+	{
+		this(new Vector3f(recoilVelocity));
+	}
+
 	@SuppressWarnings("UnstableApiUsage")
 	public static final AttachmentType<RecoilEntityAttachment> ATTACHMENT = AttachmentRegistry.create(
 			Galaxies.id("recoil_entity"),

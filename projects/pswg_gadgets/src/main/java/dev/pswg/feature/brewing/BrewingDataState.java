@@ -1,6 +1,7 @@
 package dev.pswg.feature.brewing;
 
 import com.mojang.serialization.Codec;
+import dev.pswg.Gadgets;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
@@ -31,7 +32,7 @@ public class BrewingDataState extends SavedData
 	);
 
 	private static final SavedDataType<BrewingDataState> TYPE = new SavedDataType<>(
-			"player_brewing_data",
+			Gadgets.id("player_brewing_data"),
 			BrewingDataState::new,
 			CODEC,
 			null

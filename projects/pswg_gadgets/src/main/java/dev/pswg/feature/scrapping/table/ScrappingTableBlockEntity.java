@@ -135,8 +135,8 @@ public class ScrappingTableBlockEntity extends BaseContainerBlockEntity implemen
 					boolean canOutput = false;
 					if (recipeEntry != null)
 					{
-						outputStack = recipeEntry.value().getPrimaryResult();
-						secondaryOutputStack = recipeEntry.value().getSecondaryResult();
+						outputStack = recipeEntry.value().getPrimaryResult().create();
+						secondaryOutputStack = recipeEntry.value().getSecondaryResult().create();
 						canOutput = scrappingBlockEntity.areOutputSlotsAvailable(outputStack, secondaryOutputStack, toolIndex);
 					}
 
@@ -151,7 +151,7 @@ public class ScrappingTableBlockEntity extends BaseContainerBlockEntity implemen
 							else
 								scrappingBlockEntity.inventory.set(toolIndex * 2 + 4, outputStack);
 
-							if (secondaryChance <= Math.abs(world.random.nextFloat()))
+							if (secondaryChance <= Math.abs(world.getRandom().nextFloat()))
 							{
 								if (scrappingBlockEntity.inventory.get(toolIndex * 2 + 5).getItem() == secondaryOutputStack.getItem())
 									scrappingBlockEntity.inventory.get(toolIndex * 2 + 5).grow(secondaryOutputStack.getCount());
@@ -259,7 +259,7 @@ public class ScrappingTableBlockEntity extends BaseContainerBlockEntity implemen
 	{
 		if (!inventory.get(INPUT_SLOT_INDEX).isEmpty() && recipe != null)
 		{
-			ItemStack itemStack = recipe.value().assemble(input, dynamicRegistryManager);
+			ItemStack itemStack = recipe.value().assemble(input);
 			if (itemStack.isEmpty())
 			{
 				return false;

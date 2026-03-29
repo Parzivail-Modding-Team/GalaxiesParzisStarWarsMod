@@ -34,7 +34,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -148,28 +148,28 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	@GenerateCodec
 	public record AvailableAttachmentsComponent(
-			ResourceLocation hud,
+			Identifier hud,
 			@UseCodec(
 					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
 					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
 			)
-			Map<ResourceLocation, ResourceLocation> defaults,
+			Map<Identifier, Identifier> defaults,
 			@UseCodec(
 					customCodec = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_CODEC"),
 					customPacket = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_PACKET_CODEC")
 			)
-			Map<ResourceLocation, AttachmentDefinition> options
+			Map<Identifier, AttachmentDefinition> options
 	) implements IAvailableAttachmentsComponentCodec
 	{
 		/**
 		 * The codec for the `options` field
 		 */
-		public static final UnboundedMapCodec<ResourceLocation, AttachmentDefinition> OPTIONS_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, AttachmentDefinition.CODEC);
+		public static final UnboundedMapCodec<Identifier, AttachmentDefinition> OPTIONS_CODEC = Codec.unboundedMap(Identifier.CODEC, AttachmentDefinition.CODEC);
 
 		/**
 		 * The packet codec for the `options` field
 		 */
-		public static final StreamCodec<RegistryFriendlyByteBuf, Map<ResourceLocation, AttachmentDefinition>> OPTIONS_PACKET_CODEC = ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, AttachmentDefinition.PACKET_CODEC);
+		public static final StreamCodec<RegistryFriendlyByteBuf, Map<Identifier, AttachmentDefinition>> OPTIONS_PACKET_CODEC = ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, AttachmentDefinition.PACKET_CODEC);
 	}
 
 	/**
@@ -180,12 +180,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	@GenerateCodec
 	public record AttachmentsComponent(
-			ResourceLocation hud,
+			Identifier hud,
 			@UseCodec(
 					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
 					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
 			)
-			Map<ResourceLocation, ResourceLocation> applied
+			Map<Identifier, Identifier> applied
 	) implements IAttachmentsComponentCodec
 	{
 		public static final AttachmentsComponent DEFAULT = new AttachmentsComponent(
@@ -200,10 +200,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 *
 		 * @return An optional attachment definition if one is applied, empty otherwise
 		 */
-		public Optional<AttachmentDefinition> getAttachmentInSlot(Map<ResourceLocation, AttachmentDefinition> options, ResourceLocation slot)
+		public Optional<AttachmentDefinition> getAttachmentInSlot(Map<Identifier, AttachmentDefinition> options, Identifier slot)
 		{
 			// Find the ID of the attachment in the given slot
-			ResourceLocation appliedEntryId = applied().getOrDefault(slot, null);
+			Identifier appliedEntryId = applied().getOrDefault(slot, null);
 
 			if (appliedEntryId == null)
 				return Optional.empty();
@@ -222,7 +222,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 *
 		 * @return The evaluated attachment combinator
 		 */
-		public float getAttachmentsValue(Map<ResourceLocation, AttachmentDefinition> options, AttachmentFunction function)
+		public float getAttachmentsValue(Map<Identifier, AttachmentDefinition> options, AttachmentFunction function)
 		{
 			float identity = function.getCombinator().getIdentity();
 
@@ -247,9 +247,9 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_LIST"),
 					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_LIST")
 			)
-			List<ResourceLocation> slots,
-			ResourceLocation function,
-			ResourceLocation category,
+			List<Identifier> slots,
+			Identifier function,
+			Identifier category,
 			@CodecDefault("0f") float value
 	) implements IAttachmentDefinitionCodec
 	{
@@ -324,7 +324,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			float damage,
 			int range,
 			int automaticRepeatDelay,
-			ResourceLocation fireSound,
+			Identifier fireSound,
 			@SelfCodec Heat heat,
 			@SelfCodec Cooling cooling
 	) implements IStatsComponentCodec
@@ -333,7 +333,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				8,
 				48,
 				4,
-				ResourceLocation.withDefaultNamespace("entity.snowball.throw"),
+				Identifier.withDefaultNamespace("entity.snowball.throw"),
 				Heat.DEFAULT,
 				Cooling.DEFAULT
 		);
@@ -409,10 +409,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		COOLING_MULTIPLIER(Blasters.id("cooling_multiplier"), Combinator.GEOMETRIC),
 		FIRE_RATE_MULTIPLIER(Blasters.id("fire_rate_multiplier"), Combinator.GEOMETRIC);
 
-		private final ResourceLocation id;
+		private final Identifier id;
 		private final Combinator combinator;
 
-		AttachmentFunction(ResourceLocation id, Combinator combinator)
+		AttachmentFunction(Identifier id, Combinator combinator)
 		{
 			this.id = id;
 			this.combinator = combinator;
@@ -423,7 +423,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 *
 		 * @return the function ID
 		 */
-		public ResourceLocation getId()
+		public Identifier getId()
 		{
 			return id;
 		}
@@ -439,7 +439,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		}
 	}
 
-	public static final ResourceLocation MISSING_ID = Blasters.id("missingno");
+	public static final Identifier MISSING_ID = Blasters.id("missingno");
 
 	/**
 	 * If a blaster us "used" for longer than this time, in ticks, then
@@ -471,10 +471,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	/**
 	 * The component that contains the datapack registrar ID of the blaster
 	 */
-	public static final DataComponentType<ResourceLocation> ID = Registry.register(
+	public static final DataComponentType<Identifier> ID = Registry.register(
 			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			Blasters.id("id"),
-			DataComponentType.<ResourceLocation>builder().persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC).build()
+			DataComponentType.<Identifier>builder().persistent(Identifier.CODEC).networkSynchronized(Identifier.STREAM_CODEC).build()
 	);
 
 	/**
@@ -523,7 +523,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return A new stack configured with the given definition.
 	 */
-	public static ItemStack createStack(ResourceLocation id, BlasterDatapackDefinition definition)
+	public static ItemStack createStack(Identifier id, BlasterDatapackDefinition definition)
 	{
 		var stack = new ItemStack(Blasters.BLASTER_ITEM);
 

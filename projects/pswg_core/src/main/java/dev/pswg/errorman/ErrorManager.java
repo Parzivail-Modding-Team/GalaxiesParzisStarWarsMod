@@ -106,7 +106,7 @@ public final class ErrorManager
 
 		// Do not report errors without the user's consent
 		var message = "PSWG has crashed! Send this crash report to the developers?";
-		if (TinyFileDialogs.tinyfd_messageBox("PSWG Error", message, "yesno", "error", true))
+		if (TinyFileDialogs.tinyfd_messageBox("PSWG Error", message, "yesno", "error", 1) != 0)
 		{
 			try
 			{
