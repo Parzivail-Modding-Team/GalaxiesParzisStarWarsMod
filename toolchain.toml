@@ -55,6 +55,9 @@ annotation_processor = "framework-generator"
 main_mixins = ["pswg_blasters.mixins.json"]
 client_mixins = ["pswg_blasters.client.mixins.json"]
 datagen = true
+artifact_excludes = [
+	"**/assets/**/datagen/**"
+]
 compile_dependencies = [
 	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
 ]
