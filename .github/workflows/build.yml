@@ -37,16 +37,16 @@ jobs:
         with:
           python-version : '3.12'
           cache: pip
-      - name: cache loom-cache
+      - name: cache toolchain runtime data
         uses: actions/cache@v4
         with:
-          path: .gradle/loom-cache
-          key: loom-cache-${{ hashFiles('gradle.properties') }}
-      - name: setup gradle
-        uses: gradle/actions/setup-gradle@v4
+          path: |
+            toolchain/bin
+            toolchain/work/cache
+          key: toolchain-cache-${{ runner.os }}-${{ hashFiles('toolchain/toolchain.properties', 'toolchain.toml') }}
       - name: build
-        id: gradle
-        run: ./gradlew --stacktrace --parallel clean :projects:pswg_entrypoint:build
+        id: toolchain
+        run: ./toolchain/toolchain.sh artifacts assemble --module pswg_entrypoint --ci-build
       - name: Get Id Token
         if: github.ref == 'refs/heads/develop'
         uses: actions/github-script@v7
@@ -56,12 +56,22 @@ jobs:
             let id_token = await core.getIDToken("https://mc.pswg.dev")
             core.setOutput('id_token', id_token)
       - name: upload
-        if: always() && github.ref == 'refs/heads/develop' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
+        if: always() && github.ref == 'refs/heads/develop' && (steps.toolchain.outcome == 'success' || steps.toolchain.outcome == 'failure')
         continue-on-error: true
         run: |
           pip install -r scripts/requirements.txt
-          mkdir -p projects/pswg_entrypoint/build/libs
-          cd projects/pswg_entrypoint/build/libs
-          python ../../../../scripts/upload_dev.py --token ${{ steps.idtoken.outputs.id_token }} --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --webhook ${{ secrets.DISCORD_RCOE_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
+          ARTIFACT_DIR="$(find toolchain/work/artifacts -mindepth 1 -maxdepth 1 -type d | sort | tail -n 1)"
+          UPLOAD_DIR="toolchain/work/upload-dev"
+          rm -rf "$UPLOAD_DIR"
+          mkdir -p "$UPLOAD_DIR"
+          if [ -n "$ARTIFACT_DIR" ]; then
+            shopt -s nullglob
+            ARTIFACTS=("$ARTIFACT_DIR"/pswg-*.jar)
+            if [ ${#ARTIFACTS[@]} -gt 0 ]; then
+              cp "${ARTIFACTS[@]}" "$UPLOAD_DIR"/
+            fi
+          fi
+          cd "$UPLOAD_DIR"
+          python ../../../scripts/upload_dev.py --token ${{ steps.idtoken.outputs.id_token }} --result ${{ steps.toolchain.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --webhook ${{ secrets.DISCORD_RCOE_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
         env:
           BUILD_NUMBER: ${{ github.run_number }}
