@@ -8,9 +8,6 @@ import dev.pswg.Galaxies;
 import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingToolType;
-import dev.pswg.item.ArmorItems;
-import dev.pswg.item.DyedItems;
-import dev.pswg.item.NumberedItems;
 import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.util.GadgetsGenUtil;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -20,7 +17,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.minecraft.client.data.*;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ModelTemplates;
@@ -154,22 +150,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder)
 		{
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> addDatagenItem(translationBuilder, item, dataGenItem));
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
-				addDatagenItem(translationBuilder, armorItems.helmet, dataGenItem);
-				addDatagenItem(translationBuilder, armorItems.chestplate, dataGenItem);
-				addDatagenItem(translationBuilder, armorItems.leggings, dataGenItem);
-				addDatagenItem(translationBuilder, armorItems.boots, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
-				for (Item item : dyedItems.values())
-					addDatagenItem(translationBuilder, item, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
-				for (Item item : numberedItems.stream().toList())
-					addDatagenItem(translationBuilder, item, dataGenItem);
-			});
-
+			GadgetsGenUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> addDatagenItem(translationBuilder, item, dataGenItem));
 			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> addDataGenBlock(translationBuilder, block, dataGenBlock));
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
@@ -247,12 +228,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 		private static void addItemsToTag(TagKey<Item> tag, DGItemTag datagenTag, ItemTagGenerator generator){
 
-			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 				if(Arrays.stream(dataGenBlock.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getOrCreateRawBuilder(tag).add(itemId(block.asItem()));
 
 			});
-			AutoGenerateUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
+			GadgetsGenUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
 				if(Arrays.stream(dataGenItem.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getOrCreateRawBuilder(tag).add(itemId(item));
 			});
@@ -361,7 +342,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator){
 
-			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag)){
 					generator.getOrCreateRawBuilder(tag).add(blockId(block));
 				}

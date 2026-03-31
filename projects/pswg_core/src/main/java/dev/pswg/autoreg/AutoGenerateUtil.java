@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Block;
 
 public class AutoGenerateUtil
 {
-	public static <TA extends Annotation> void consumeAnnotatedGadgetsItems(Class<TA> annotationClazz, BiConsumer<Item, TA> consumer){
+	public static <TA extends Annotation> void consumeAnnotatedGalaxiesItems(Class<TA> annotationClazz, BiConsumer<Item, TA> consumer){
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GalaxiesItems.class, Item.class, consumer);
 		AutoGenerateUtil.consumeAnnotatedFields(annotationClazz, GalaxiesItems.class, DyedItems.class, (dyedItems, ta) ->{
 			for(Item item: dyedItems.values())

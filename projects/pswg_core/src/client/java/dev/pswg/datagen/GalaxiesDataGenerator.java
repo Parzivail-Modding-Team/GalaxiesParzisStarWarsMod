@@ -18,7 +18,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
-import net.minecraft.client.data.*;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ModelTemplates;
@@ -319,7 +318,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				if (Arrays.stream(dataGenBlock.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getOrCreateRawBuilder(tag).add(itemId(block.asItem()));
 			});
-			AutoGenerateUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
+			AutoGenerateUtil.consumeAnnotatedGalaxiesItems(DataGenItem.class, (item, dataGenItem) -> {
 				if (Arrays.stream(dataGenItem.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getOrCreateRawBuilder(tag).add(itemId(item));
 			});
