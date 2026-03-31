@@ -8,11 +8,8 @@ import dev.pswg.Galaxies;
 import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingToolType;
-import dev.pswg.item.ArmorItems;
-import dev.pswg.item.DyedItems;
-import dev.pswg.item.NumberedItems;
 import dev.pswg.autoreg.AutoGenerateUtil;
-import dev.pswg.util.GadgetsGenUtil;
+import dev.pswg.util.gen.*;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -20,7 +17,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.minecraft.client.data.*;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ModelTemplates;
@@ -34,7 +30,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -154,22 +149,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder)
 		{
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> addDatagenItem(translationBuilder, item, dataGenItem));
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
-				addDatagenItem(translationBuilder, armorItems.helmet, dataGenItem);
-				addDatagenItem(translationBuilder, armorItems.chestplate, dataGenItem);
-				addDatagenItem(translationBuilder, armorItems.leggings, dataGenItem);
-				addDatagenItem(translationBuilder, armorItems.boots, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
-				for (Item item : dyedItems.values())
-					addDatagenItem(translationBuilder, item, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
-				for (Item item : numberedItems.stream().toList())
-					addDatagenItem(translationBuilder, item, dataGenItem);
-			});
-
+			GadgetsGenUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> addDatagenItem(translationBuilder, item, dataGenItem));
 			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> addDataGenBlock(translationBuilder, block, dataGenBlock));
 
 			translationBuilder.add(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, "Fragmenetation Grenade Destroy");
@@ -178,12 +158,17 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsBlocks.Tags.INFERNO_DESTROY, "Inferno Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.GAS_PASS_THROUGH, "Gas Pass Through");
 			translationBuilder.add(GadgetsItems.Tags.GRENADES_TAG, "Grenades");
+			translationBuilder.add(GadgetsItems.Tags.MINES_TAG, "Mines");
+			translationBuilder.add(GadgetsItems.Tags.MIXER_FOOD_TAG, "Mixer food component");
 
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_throw", "Grenade thrown");
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_arm", "Grenade armed");
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_disarm", "Grenade disarmed");
-			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode", "C-25 Grenade explosion");
-			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Thermal Detonator explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode1", "Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode2", "Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode3", "Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode4", "Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Explosion");
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
@@ -232,12 +217,19 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
-			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.GRENADE, this);
-			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.MINE, this);
-			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DGItemTag.MIXABLE_FOOD, this);
-			addItemsToTag(ItemTags.LEAVES, DGItemTag.LEAVES, this);
+			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DataGenGadgetsItemTag.GRENADE, this);
+			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DataGenGadgetsItemTag.MINE, this);
+			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DataGenGadgetsItemTag.MIXABLE_FOOD, this);
 
 			getOrCreateRawBuilder(GadgetsItems.Tags.MIXER_FOOD_TAG)
+					.add(itemId(GalaxiesItems.JOGAN_FRUIT))
+					.add(itemId(GalaxiesItems.MEILOORUN))
+					.add(itemId(GalaxiesItems.BLUE_MILK))
+					.add(itemId(GalaxiesItems.BLACK_MELON))
+					.add(itemId(GalaxiesItems.DESERT_PLUMS))
+					.add(itemId(GalaxiesItems.PALLIE_FRUIT))
+					.add(itemId(GalaxiesItems.PIKA_FRUIT))
+					.add(itemId(GalaxiesItems.DEB_DEB))
 					.add(itemId(Items.APPLE))
 					.add(itemId(Items.BEETROOT))
 					.add(itemId(Items.CARROT))
@@ -245,15 +237,15 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(itemId(Items.MELON_SLICE))
 					.add(itemId(Items.SWEET_BERRIES));
 		}
-		private static void addItemsToTag(TagKey<Item> tag, DGItemTag datagenTag, ItemTagGenerator generator){
+		private static void addItemsToTag(TagKey<Item> tag, DataGenGadgetsItemTag datagenTag, ItemTagGenerator generator){
 
-			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
-				if(Arrays.stream(dataGenBlock.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(GadgetsItemTag.class, (block, gadgetsItemTag) -> {
+				if(Arrays.stream(gadgetsItemTag.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getOrCreateRawBuilder(tag).add(itemId(block.asItem()));
 
 			});
-			AutoGenerateUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
-				if(Arrays.stream(dataGenItem.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
+			GadgetsGenUtil.consumeAnnotatedGadgetsItems(GadgetsItemTag.class, (item, gadgetsItemTag) -> {
+				if(Arrays.stream(gadgetsItemTag.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getOrCreateRawBuilder(tag).add(itemId(item));
 			});
 		}
@@ -343,26 +335,34 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.LEAF_LITTER))
 			;
 
-			addBlocksToTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DGBlockTag.DETONATES_GRENADE, this);
-			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_CHAR, DGBlockTag.INFERNO_CHAR, this);
-			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.INFERNO_DESTROY, this);
-			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DGBlockTag.GAS_PASS_THROUGH, this);
-			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DGBlockTag.FRAGMENTATION_GRENADE_DESTROY, this);
-			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.LEAVES, this);
-			addBlocksToTag(BlockTags.LOGS, DGBlockTag.LOGS, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DGBlockTag.AXE_MINEABLE, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DGBlockTag.PICKAXE_MINEABLE, this);
-			addBlocksToTag(BlockTags.SAND, DGBlockTag.SAND, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DGBlockTag.SHOVEL_MINEABLE, this);
-			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LOGS_THAT_BURN, this);
-			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.STAIRS, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DataGenGadgetsBlockTag.DETONATES_GRENADE, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.INFERNO_CHAR, DataGenGadgetsBlockTag.INFERNO_CHAR, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DataGenGadgetsBlockTag.INFERNO_DESTROY, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DataGenGadgetsBlockTag.GAS_PASS_THROUGH, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DataGenGadgetsBlockTag.FRAGMENTATION_GRENADE_DESTROY, this);
+			addBlocksToTag(BlockTags.LEAVES, DataGenBlockTag.LEAVES, this);
+			addBlocksToTag(BlockTags.LOGS, DataGenBlockTag.LOGS, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DataGenBlockTag.AXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DataGenBlockTag.PICKAXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.SAND, DataGenBlockTag.SAND, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DataGenBlockTag.SHOVEL_MINEABLE, this);
+			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DataGenBlockTag.LOGS_THAT_BURN, this);
+			addBlocksToTag(BlockTags.STAIRS, DataGenBlockTag.STAIRS, this);
 
 
 		}
-		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator){
+		private static void addBlocksToTag(TagKey<Block> tag, DataGenBlockTag datagenTag, BlockTagGenerator generator){
 
-			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
-				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag)){
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dataGenBlockTag -> dataGenBlockTag == datagenTag)){
+					generator.getOrCreateRawBuilder(tag).add(blockId(block));
+				}
+			});
+		}
+		private static void addBlocksToGadgetsTag(TagKey<Block> tag, DataGenGadgetsBlockTag datagenTag, BlockTagGenerator generator){
+
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(GadgetsBlockTag.class, (block, dataGenBlock) -> {
+				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dataGenBlockTag -> dataGenBlockTag == datagenTag)){
 					generator.getOrCreateRawBuilder(tag).add(blockId(block));
 				}
 			});
@@ -520,7 +520,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				public void createLaserCuttingRecipe(ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
 				{
 					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
-					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_cutting")));
+					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString().replaceAll(Galaxies.MODID, Gadgets.MODID) + "_cutting")));
 				}
 
 				public void createScrappingRecipe(ScrappingToolType tool, ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
@@ -546,7 +546,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 							suffix = "_calibrator";
 						}
 					}
-					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_scrapping" + suffix)));
+					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString().replaceAll(Galaxies.MODID, Gadgets.MODID) + "_scrapping" + suffix)));
 				}
 			};
 		}

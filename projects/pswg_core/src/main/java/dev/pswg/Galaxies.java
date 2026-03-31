@@ -125,7 +125,7 @@ public final class Galaxies implements ModInitializer
 
 		PayloadTypeRegistry.clientboundPlay().register(GalaxiesEntitySpawnS2CPacket.ID, GalaxiesEntitySpawnS2CPacket.CODEC);
 
-		PayloadTypeRegistry.clientboundPlay().register(PreciseVelocityParticleS2CPayload.ID, PreciseVelocityParticleS2CPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(PreciseVelocityParticleS2CPayload.TYPE, PreciseVelocityParticleS2CPayload.CODEC);
 
 		GalaxiesEntityLeftClickManager.initialize();
 		GalaxiesPlayerActionManager.initialize();

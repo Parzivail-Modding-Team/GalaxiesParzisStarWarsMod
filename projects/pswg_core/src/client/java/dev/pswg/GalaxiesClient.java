@@ -123,7 +123,7 @@ public class GalaxiesClient implements ClientModInitializer
 			        });
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(PreciseVelocityParticleS2CPayload.ID, (preciseVelocityParticleS2CPayload, context) -> {
+		ClientPlayNetworking.registerGlobalReceiver(PreciseVelocityParticleS2CPayload.TYPE, (preciseVelocityParticleS2CPayload, context) -> {
 			double x = preciseVelocityParticleS2CPayload.posVector().x;
 			double y = preciseVelocityParticleS2CPayload.posVector().y;
 			double z = preciseVelocityParticleS2CPayload.posVector().z;

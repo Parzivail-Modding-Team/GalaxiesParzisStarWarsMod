@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface DataGenItem
 {
 	boolean wiz() default false;
-	DGItemTag[] itemTags() default {};
+	DataGenItemTag[] itemTags() default {};
 
 	ItemModel model() default ItemModel.GENERATED;
 

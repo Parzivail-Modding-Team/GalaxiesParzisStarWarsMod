@@ -5,6 +5,8 @@ import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import dev.pswg.container.GalaxiesItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -125,7 +127,7 @@ public class MixerScreenHandler extends AbstractContainerMenu
 	}
 
 	public boolean isDrinkContainerPresent() {
-		return !inventory.getItem(OUTPUT_SLOT_INDEX).isEmpty() && inventory.getItem(OUTPUT_SLOT_INDEX).is(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
+		return !inventory.getItem(OUTPUT_SLOT_INDEX).isEmpty() && inventory.getItem(OUTPUT_SLOT_INDEX).is(GalaxiesItems.Tags.DRINK_CONTAINER_TAG);
 	}
 
 	public boolean isOnEffectCell()

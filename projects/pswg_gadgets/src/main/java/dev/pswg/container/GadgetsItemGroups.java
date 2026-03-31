@@ -8,6 +8,7 @@ import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
 import dev.pswg.autoreg.AutoGenerateUtil;
+import dev.pswg.util.gen.GadgetsGenUtil;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput;
@@ -40,35 +41,15 @@ public class GadgetsItemGroups
 
 	public static void addItems(FabricCreativeModeTabOutput itemGroup, DataGenItemGroup group)
 	{
-
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> {
+		GadgetsGenUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
 			if (dataGenItem.itemGroup() == group)
 				itemGroup.accept(item);
-		});
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
-			for (Item item : dyedItems.values())
-				if (dataGenItem.itemGroup() == group)
-					itemGroup.accept(item);
-		});
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
-			for (Item item : numberedItems.stream().toList())
-				if (dataGenItem.itemGroup() == group)
-					itemGroup.accept(item);
-		});
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
-			if (dataGenItem.itemGroup() == group)
-			{
-				itemGroup.accept(armorItems.helmet);
-				itemGroup.accept(armorItems.chestplate);
-				itemGroup.accept(armorItems.leggings);
-				itemGroup.accept(armorItems.boots);
-			}
 		});
 	}
 
 	public static void addBlocks(FabricCreativeModeTabOutput itemGroup, DataGenItemGroup group)
 	{
-		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+		GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 			if(dataGenBlock.itemGroup() == group)
 				itemGroup.accept(block);
 		});

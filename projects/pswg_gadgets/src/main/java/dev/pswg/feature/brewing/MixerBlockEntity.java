@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
+import dev.pswg.container.GalaxiesItems;
 import dev.pswg.networking.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -265,7 +266,7 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 	{
 		if (blockEntity instanceof MixerBlockEntity mixer)
 		{
-			boolean drinkContainerPresent = !mixer.getItem(OUTPUT_SLOT_INDEX).isEmpty() && mixer.getItem(OUTPUT_SLOT_INDEX).is(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
+			boolean drinkContainerPresent = !mixer.getItem(OUTPUT_SLOT_INDEX).isEmpty() && mixer.getItem(OUTPUT_SLOT_INDEX).is(GalaxiesItems.Tags.DRINK_CONTAINER_TAG);
 			if (!drinkContainerPresent)
 				resetMixer(mixer);
 
@@ -294,7 +295,7 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 				mixer.path.addAll(MixerBrewingPaths.pathMap.get(inputStack.getItem()));
 				inputStack.shrink(1);
 			}
-			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.getItem() instanceof DyeItem dyeItem && mixer.drinkColors.size() < 3)
+			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.has(DataComponents.DYE) && mixer.drinkColors.size() < 3)
 			{
 				mixer.drinkColors.add(inputStack.getOrDefault(DataComponents.DYE, net.minecraft.world.item.DyeColor.WHITE).getTextureDiffuseColor());
 				inputStack.shrink(1);

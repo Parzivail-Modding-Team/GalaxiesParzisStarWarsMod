@@ -1,6 +1,6 @@
 package dev.pswg.datagen;
 
-public enum DGBlockRotation
+public enum DataGenBlockRotation
 {
 	DEFAULT,
 	AXIS_ROTATED,
