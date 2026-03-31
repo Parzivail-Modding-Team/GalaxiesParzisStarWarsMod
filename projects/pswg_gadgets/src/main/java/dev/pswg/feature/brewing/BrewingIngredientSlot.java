@@ -1,6 +1,7 @@
 package dev.pswg.feature.brewing;
 
 import dev.pswg.container.GadgetsItems;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeItem;
@@ -16,6 +17,6 @@ public class BrewingIngredientSlot extends Slot
 	@Override
 	public boolean mayPlace(ItemStack stack)
 	{
-		return MixerBrewingPaths.pathMap.containsKey(stack.getItem()) || stack.is(GadgetsItems.Tags.MIXER_FOOD_TAG) || stack.getItem() instanceof DyeItem;
+		return MixerBrewingPaths.pathMap.containsKey(stack.getItem()) || stack.is(GadgetsItems.Tags.MIXER_FOOD_TAG) || stack.has(DataComponents.DYE);
 	}
 }

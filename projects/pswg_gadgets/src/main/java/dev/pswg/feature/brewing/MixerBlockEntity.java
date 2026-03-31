@@ -294,7 +294,7 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 				mixer.path.addAll(MixerBrewingPaths.pathMap.get(inputStack.getItem()));
 				inputStack.shrink(1);
 			}
-			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.getItem() instanceof DyeItem dyeItem && mixer.drinkColors.size() < 3)
+			if (mixer.litTimeRemaining > 0 && drinkContainerPresent && inputStack.has(DataComponents.DYE) && mixer.drinkColors.size() < 3)
 			{
 				mixer.drinkColors.add(inputStack.getOrDefault(DataComponents.DYE, net.minecraft.world.item.DyeColor.WHITE).getTextureDiffuseColor());
 				inputStack.shrink(1);
