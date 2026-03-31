@@ -1,0 +1,10 @@
+package dev.pswg.util.gen;
+
+public enum DataGenGadgetsBlockTag
+{
+	FRAGMENTATION_GRENADE_DESTROY,
+	DETONATES_GRENADE,
+	GAS_PASS_THROUGH,
+	INFERNO_CHAR,
+	INFERNO_DESTROY
+}

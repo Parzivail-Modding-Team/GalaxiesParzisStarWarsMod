@@ -9,9 +9,7 @@ import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.autoreg.AutoGenerateUtil;
-import dev.pswg.util.gen.DataGenGadgetsItemTag;
-import dev.pswg.util.gen.GadgetsGenUtil;
-import dev.pswg.util.gen.GadgetsItemTag;
+import dev.pswg.util.gen.*;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -338,11 +336,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.LEAF_LITTER))
 			;
 
-			addBlocksToTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DataGenBlockTag.DETONATES_GRENADE, this);
-			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_CHAR, DataGenBlockTag.INFERNO_CHAR, this);
-			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DataGenBlockTag.INFERNO_DESTROY, this);
-			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DataGenBlockTag.GAS_PASS_THROUGH, this);
-			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DataGenBlockTag.FRAGMENTATION_GRENADE_DESTROY, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DataGenGadgetsBlockTag.DETONATES_GRENADE, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.INFERNO_CHAR, DataGenGadgetsBlockTag.INFERNO_CHAR, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DataGenGadgetsBlockTag.INFERNO_DESTROY, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DataGenGadgetsBlockTag.GAS_PASS_THROUGH, this);
+			addBlocksToGadgetsTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DataGenGadgetsBlockTag.FRAGMENTATION_GRENADE_DESTROY, this);
 			addBlocksToTag(BlockTags.LEAVES, DataGenBlockTag.LEAVES, this);
 			addBlocksToTag(BlockTags.LOGS, DataGenBlockTag.LOGS, this);
 			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DataGenBlockTag.AXE_MINEABLE, this);
@@ -357,6 +355,14 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		private static void addBlocksToTag(TagKey<Block> tag, DataGenBlockTag datagenTag, BlockTagGenerator generator){
 
 			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
+				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dataGenBlockTag -> dataGenBlockTag == datagenTag)){
+					generator.getOrCreateRawBuilder(tag).add(blockId(block));
+				}
+			});
+		}
+		private static void addBlocksToGadgetsTag(TagKey<Block> tag, DataGenGadgetsBlockTag datagenTag, BlockTagGenerator generator){
+
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(GadgetsBlockTag.class, (block, dataGenBlock) -> {
 				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dataGenBlockTag -> dataGenBlockTag == datagenTag)){
 					generator.getOrCreateRawBuilder(tag).add(blockId(block));
 				}
