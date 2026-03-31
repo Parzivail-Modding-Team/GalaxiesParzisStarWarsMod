@@ -159,12 +159,17 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add(GadgetsBlocks.Tags.INFERNO_DESTROY, "Inferno Grenade Destroy");
 			translationBuilder.add(GadgetsBlocks.Tags.GAS_PASS_THROUGH, "Gas Pass Through");
 			translationBuilder.add(GadgetsItems.Tags.GRENADES_TAG, "Grenades");
+			translationBuilder.add(GadgetsItems.Tags.MINES_TAG, "Mines");
+			translationBuilder.add(GadgetsItems.Tags.MIXER_FOOD_TAG, "Mixer food component");
 
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_throw", "Grenade thrown");
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_arm", "Grenade armed");
 			translationBuilder.add("subtitle.pswg_gadgets.grenade_disarm", "Grenade disarmed");
-			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode", "C-25 Grenade explosion");
-			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Thermal Detonator explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode1", "Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode2", "Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode3", "Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.fragmentationgrenade.explode4", "Explosion");
+			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Explosion");
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
