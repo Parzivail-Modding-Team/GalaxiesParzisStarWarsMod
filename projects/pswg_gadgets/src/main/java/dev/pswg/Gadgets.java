@@ -5,9 +5,6 @@ import dev.pswg.container.*;
 import dev.pswg.container.entity.GadgetsDamage;
 import dev.pswg.container.entity.GadgetsEffects;
 import dev.pswg.container.entity.GadgetsEntities;
-import dev.pswg.container.worldgen.GalaxiesStructureKeys;
-import dev.pswg.container.worldgen.GalaxiesStructurePieces;
-import dev.pswg.container.worldgen.GalaxiesStructureTypes;
 import dev.pswg.feature.brewing.BrewingMap;
 import dev.pswg.feature.brewing.MixerBrewingPaths;
 import dev.pswg.feature.brewing.MixerFoodColors;
@@ -16,7 +13,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import org.slf4j.Logger;
 
@@ -69,7 +65,7 @@ public final class Gadgets implements GalaxiesAddon
 		MixerFoodColors.init();
 		MixerBrewingPaths.init();
 
-		PayloadTypeRegistry.clientboundPlay().register(MixerSyncS2CPayload.ID, MixerSyncS2CPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(MixerSyncS2CPayload.TYPE, MixerSyncS2CPayload.CODEC);
 
 		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(Gadgets.id("brewing_maps"), (ResourceManagerReloadListener)manager ->
 		{

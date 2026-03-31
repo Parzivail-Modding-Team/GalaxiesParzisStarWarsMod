@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 public record PreciseVelocityParticleS2CPayload(ParticleOptions particleEffect, Vec3 posVector, Vec3 velocityVector) implements CustomPacketPayload
 {
 	public static final Identifier PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID = Galaxies.id("precise_velocity_particle");
-	public static final CustomPacketPayload.Type<PreciseVelocityParticleS2CPayload> ID = new CustomPacketPayload.Type<>(PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID);
+	public static final CustomPacketPayload.Type<PreciseVelocityParticleS2CPayload> TYPE = new CustomPacketPayload.Type<>(PRECISE_VELOCITY_PARTICLE_PAYLOAD_ID);
 	public static final StreamCodec<RegistryFriendlyByteBuf, PreciseVelocityParticleS2CPayload> CODEC = StreamCodec.ofMember(PreciseVelocityParticleS2CPayload::toPacket, PreciseVelocityParticleS2CPayload::fromPacket);
 
 	private void toPacket(RegistryFriendlyByteBuf buf)
@@ -34,6 +34,6 @@ public record PreciseVelocityParticleS2CPayload(ParticleOptions particleEffect, 
 	@Override
 	public CustomPacketPayload.Type<? extends CustomPacketPayload> type()
 	{
-		return ID;
+		return TYPE;
 	}
 }

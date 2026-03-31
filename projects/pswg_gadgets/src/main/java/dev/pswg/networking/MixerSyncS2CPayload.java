@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 public record MixerSyncS2CPayload(ArrayList<MobEffectInstance> drinkEffects, ArrayList<Integer> drinkColors, ArrayList<ItemStack> drinkFoods) implements CustomPacketPayload
 {
 	public static final Identifier MIXER_SYNC_PAYLOAD_ID = Gadgets.id("mixer_sync");
-	public static final CustomPacketPayload.Type<MixerSyncS2CPayload> ID = new CustomPacketPayload.Type<>(MIXER_SYNC_PAYLOAD_ID);
+	public static final CustomPacketPayload.Type<MixerSyncS2CPayload> TYPE = new CustomPacketPayload.Type<>(MIXER_SYNC_PAYLOAD_ID);
 	public static final StreamCodec<RegistryFriendlyByteBuf, MixerSyncS2CPayload> CODEC = StreamCodec.ofMember(MixerSyncS2CPayload::toPacket, MixerSyncS2CPayload::fromPacket);
 
 	private void toPacket(RegistryFriendlyByteBuf buf)
@@ -34,6 +34,6 @@ public record MixerSyncS2CPayload(ArrayList<MobEffectInstance> drinkEffects, Arr
 	@Override
 	public Type<? extends CustomPacketPayload> type()
 	{
-		return ID;
+		return TYPE;
 	}
 }

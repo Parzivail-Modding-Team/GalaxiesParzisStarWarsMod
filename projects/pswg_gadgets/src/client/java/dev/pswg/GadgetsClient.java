@@ -71,7 +71,7 @@ public class GadgetsClient implements GalaxiesClientAddon
 
 		ClientTickEvents.END_CLIENT_TICK.register(LaserCutterHandler::tick);
 
-		ClientPlayNetworking.registerGlobalReceiver(MixerSyncS2CPayload.ID, (mixerSyncS2CPayload, context) -> {
+		ClientPlayNetworking.registerGlobalReceiver(MixerSyncS2CPayload.TYPE, (mixerSyncS2CPayload, context) -> {
 			if (context.player().containerMenu instanceof MixerScreenHandler mixerScreenHandler)
 			{
 				mixerScreenHandler.drinkEffects = mixerSyncS2CPayload.drinkEffects();
