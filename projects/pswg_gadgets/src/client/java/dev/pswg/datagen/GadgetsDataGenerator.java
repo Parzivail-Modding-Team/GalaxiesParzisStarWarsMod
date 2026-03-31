@@ -30,7 +30,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -521,7 +520,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 				public void createLaserCuttingRecipe(ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
 				{
 					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
-					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_cutting")));
+					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString().replaceAll(Galaxies.MODID, Gadgets.MODID) + "_cutting")));
 				}
 
 				public void createScrappingRecipe(ScrappingToolType tool, ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
@@ -547,7 +546,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 							suffix = "_calibrator";
 						}
 					}
-					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString() + "_scrapping" + suffix)));
+					ScrappingRecipeJsonBuilder.create(itemLookup, toolIngredient, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString().replaceAll(Galaxies.MODID, Gadgets.MODID) + "_scrapping" + suffix)));
 				}
 			};
 		}
