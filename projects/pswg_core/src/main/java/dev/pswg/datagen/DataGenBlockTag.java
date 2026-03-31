@@ -1,6 +1,6 @@
 package dev.pswg.datagen;
 
-public enum DGBlockTag
+public enum DataGenBlockTag
 {
 	ARID_PLANT_PLACEABLE,
 	FRAGMENTATION_GRENADE_DESTROY,

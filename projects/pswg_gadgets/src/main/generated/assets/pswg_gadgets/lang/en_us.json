@@ -24,15 +24,20 @@
   "item.pswg_gadgets.thermal_detonator_block": "Thermal Detonator Block",
   "item.pswg_gadgets.tripwire_mine": "Tripwire Mine",
   "pswg_gadgets.demolitions_items_group": "PSWG - Demolitions Gadgets",
-  "subtitle.pswg_gadgets.fragmentationgrenade.explode": "C-25 Grenade explosion",
+  "subtitle.pswg_gadgets.fragmentationgrenade.explode1": "Explosion",
+  "subtitle.pswg_gadgets.fragmentationgrenade.explode2": "Explosion",
+  "subtitle.pswg_gadgets.fragmentationgrenade.explode3": "Explosion",
+  "subtitle.pswg_gadgets.fragmentationgrenade.explode4": "Explosion",
   "subtitle.pswg_gadgets.grenade_arm": "Grenade armed",
   "subtitle.pswg_gadgets.grenade_disarm": "Grenade disarmed",
   "subtitle.pswg_gadgets.grenade_throw": "Grenade thrown",
-  "subtitle.pswg_gadgets.thermaldetonator.explode": "Thermal Detonator explosion",
+  "subtitle.pswg_gadgets.thermaldetonator.explode": "Explosion",
   "tag.block.pswg_gadgets.detonates_grenade": "Detonates Grenade",
   "tag.block.pswg_gadgets.fragmentation_destroy": "Fragmenetation Grenade Destroy",
   "tag.block.pswg_gadgets.gas_pass_through": "Gas Pass Through",
   "tag.block.pswg_gadgets.inferno_char": "Inferno Grenade Char",
   "tag.block.pswg_gadgets.inferno_destroy": "Inferno Grenade Destroy",
-  "tag.item.pswg_gadgets.grenades": "Grenades"
+  "tag.item.pswg_gadgets.grenades": "Grenades",
+  "tag.item.pswg_gadgets.mines": "Mines",
+  "tag.item.pswg_gadgets.mixable_food": "Mixer food component"
 }

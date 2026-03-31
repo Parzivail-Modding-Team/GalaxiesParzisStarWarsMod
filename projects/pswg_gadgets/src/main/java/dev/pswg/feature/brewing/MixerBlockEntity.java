@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import dev.pswg.container.GadgetsBlockEntities;
 import dev.pswg.container.GadgetsItems;
+import dev.pswg.container.GalaxiesItems;
 import dev.pswg.networking.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -265,7 +266,7 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 	{
 		if (blockEntity instanceof MixerBlockEntity mixer)
 		{
-			boolean drinkContainerPresent = !mixer.getItem(OUTPUT_SLOT_INDEX).isEmpty() && mixer.getItem(OUTPUT_SLOT_INDEX).is(GadgetsItems.Tags.DRINK_CONTAINER_TAG);
+			boolean drinkContainerPresent = !mixer.getItem(OUTPUT_SLOT_INDEX).isEmpty() && mixer.getItem(OUTPUT_SLOT_INDEX).is(GalaxiesItems.Tags.DRINK_CONTAINER_TAG);
 			if (!drinkContainerPresent)
 				resetMixer(mixer);
 

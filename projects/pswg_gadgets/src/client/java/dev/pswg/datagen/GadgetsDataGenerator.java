@@ -9,7 +9,9 @@ import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.autoreg.AutoGenerateUtil;
-import dev.pswg.util.GadgetsGenUtil;
+import dev.pswg.util.gen.DataGenGadgetsItemTag;
+import dev.pswg.util.gen.GadgetsGenUtil;
+import dev.pswg.util.gen.GadgetsItemTag;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -218,12 +220,19 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
-			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DGItemTag.GRENADE, this);
-			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DGItemTag.MINE, this);
-			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DGItemTag.MIXABLE_FOOD, this);
-			addItemsToTag(ItemTags.LEAVES, DGItemTag.LEAVES, this);
+			addItemsToTag(GadgetsItems.Tags.GRENADES_TAG, DataGenGadgetsItemTag.GRENADE, this);
+			addItemsToTag(GadgetsItems.Tags.MINES_TAG, DataGenGadgetsItemTag.MINE, this);
+			addItemsToTag(GadgetsItems.Tags.MIXER_FOOD_TAG, DataGenGadgetsItemTag.MIXABLE_FOOD, this);
 
 			getOrCreateRawBuilder(GadgetsItems.Tags.MIXER_FOOD_TAG)
+					.add(itemId(GalaxiesItems.JOGAN_FRUIT))
+					.add(itemId(GalaxiesItems.MEILOORUN))
+					.add(itemId(GalaxiesItems.BLUE_MILK))
+					.add(itemId(GalaxiesItems.BLACK_MELON))
+					.add(itemId(GalaxiesItems.DESERT_PLUMS))
+					.add(itemId(GalaxiesItems.PALLIE_FRUIT))
+					.add(itemId(GalaxiesItems.PIKA_FRUIT))
+					.add(itemId(GalaxiesItems.DEB_DEB))
 					.add(itemId(Items.APPLE))
 					.add(itemId(Items.BEETROOT))
 					.add(itemId(Items.CARROT))
@@ -231,15 +240,15 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(itemId(Items.MELON_SLICE))
 					.add(itemId(Items.SWEET_BERRIES));
 		}
-		private static void addItemsToTag(TagKey<Item> tag, DGItemTag datagenTag, ItemTagGenerator generator){
+		private static void addItemsToTag(TagKey<Item> tag, DataGenGadgetsItemTag datagenTag, ItemTagGenerator generator){
 
-			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
-				if(Arrays.stream(dataGenBlock.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
+			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(GadgetsItemTag.class, (block, gadgetsItemTag) -> {
+				if(Arrays.stream(gadgetsItemTag.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getOrCreateRawBuilder(tag).add(itemId(block.asItem()));
 
 			});
-			GadgetsGenUtil.consumeAnnotatedGadgetsItems(DataGenItem.class, (item, dataGenItem) -> {
-				if(Arrays.stream(dataGenItem.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
+			GadgetsGenUtil.consumeAnnotatedGadgetsItems(GadgetsItemTag.class, (item, gadgetsItemTag) -> {
+				if(Arrays.stream(gadgetsItemTag.itemTags()).anyMatch(dgItemTag -> dgItemTag == datagenTag))
 					generator.getOrCreateRawBuilder(tag).add(itemId(item));
 			});
 		}
@@ -329,26 +338,26 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.LEAF_LITTER))
 			;
 
-			addBlocksToTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DGBlockTag.DETONATES_GRENADE, this);
-			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_CHAR, DGBlockTag.INFERNO_CHAR, this);
-			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DGBlockTag.INFERNO_DESTROY, this);
-			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DGBlockTag.GAS_PASS_THROUGH, this);
-			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DGBlockTag.FRAGMENTATION_GRENADE_DESTROY, this);
-			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.LEAVES, this);
-			addBlocksToTag(BlockTags.LOGS, DGBlockTag.LOGS, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DGBlockTag.AXE_MINEABLE, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DGBlockTag.PICKAXE_MINEABLE, this);
-			addBlocksToTag(BlockTags.SAND, DGBlockTag.SAND, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DGBlockTag.SHOVEL_MINEABLE, this);
-			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LOGS_THAT_BURN, this);
-			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.STAIRS, this);
+			addBlocksToTag(GadgetsBlocks.Tags.DETONATES_GRENADE, DataGenBlockTag.DETONATES_GRENADE, this);
+			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_CHAR, DataGenBlockTag.INFERNO_CHAR, this);
+			addBlocksToTag(GadgetsBlocks.Tags.INFERNO_DESTROY, DataGenBlockTag.INFERNO_DESTROY, this);
+			addBlocksToTag(GadgetsBlocks.Tags.GAS_PASS_THROUGH, DataGenBlockTag.GAS_PASS_THROUGH, this);
+			addBlocksToTag(GadgetsBlocks.Tags.FRAGMENTATION_GRENADE_DESTROY, DataGenBlockTag.FRAGMENTATION_GRENADE_DESTROY, this);
+			addBlocksToTag(BlockTags.LEAVES, DataGenBlockTag.LEAVES, this);
+			addBlocksToTag(BlockTags.LOGS, DataGenBlockTag.LOGS, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DataGenBlockTag.AXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DataGenBlockTag.PICKAXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.SAND, DataGenBlockTag.SAND, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DataGenBlockTag.SHOVEL_MINEABLE, this);
+			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DataGenBlockTag.LOGS_THAT_BURN, this);
+			addBlocksToTag(BlockTags.STAIRS, DataGenBlockTag.STAIRS, this);
 
 
 		}
-		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator){
+		private static void addBlocksToTag(TagKey<Block> tag, DataGenBlockTag datagenTag, BlockTagGenerator generator){
 
 			GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
-				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag)){
+				if(Arrays.stream(dataGenBlock.blockTags()).anyMatch(dataGenBlockTag -> dataGenBlockTag == datagenTag)){
 					generator.getOrCreateRawBuilder(tag).add(blockId(block));
 				}
 			});

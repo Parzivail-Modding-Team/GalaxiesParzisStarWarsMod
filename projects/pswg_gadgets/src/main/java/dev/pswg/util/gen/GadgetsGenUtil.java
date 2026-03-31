@@ -1,4 +1,4 @@
-package dev.pswg.util;
+package dev.pswg.util.gen;
 
 import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.block.collection.*;

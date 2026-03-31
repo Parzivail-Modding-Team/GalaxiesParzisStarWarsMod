@@ -19,8 +19,8 @@ public @interface DataGenBlock
 
 	String dataGenModelKey() default "";
 
-	DGBlockTag[] blockTags() default {};
-	DGItemTag[] itemTags() default {};
+	DataGenBlockTag[] blockTags() default {};
+	DataGenItemTag[] itemTags() default {};
 
-	DGBlockRotation rotation() default DGBlockRotation.DEFAULT;
+	DataGenBlockRotation rotation() default DataGenBlockRotation.DEFAULT;
 }

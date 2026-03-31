@@ -2,7 +2,7 @@ package dev.pswg.container;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.Gadgets;
-import dev.pswg.datagen.DGItemTag;
+import dev.pswg.datagen.DataGenItemTag;
 import dev.pswg.datagen.DataGenItem;
 import dev.pswg.datagen.DataGenItemGroup;
 import dev.pswg.datagen.ItemModel;
@@ -10,6 +10,8 @@ import dev.pswg.feature.scrapping.cutter.LaserCutterItem;
 import dev.pswg.item.*;
 import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;
+import dev.pswg.util.gen.DataGenGadgetsItemTag;
+import dev.pswg.util.gen.GadgetsItemTag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -27,7 +29,6 @@ public class GadgetsItems
 	{
 		public static final TagKey<Item> GRENADES_TAG = TagKey.create(Registries.ITEM, Gadgets.id("grenades"));
 		public static final TagKey<Item> MINES_TAG = TagKey.create(Registries.ITEM, Gadgets.id("mines"));
-		public static final TagKey<Item> DRINK_CONTAINER_TAG = TagKey.create(Registries.ITEM, Gadgets.id("drink_container"));
 		public static final TagKey<Item> MIXER_FOOD_TAG = TagKey.create(Registries.ITEM, Gadgets.id("mixable_food"));
 
 		public static void register()
@@ -71,23 +72,31 @@ public class GadgetsItems
 	}
 
 	/// GRENADE
-	@DataGenItem(langOverride = "CLS-A Thermal Detonator", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE, itemTags = DGItemTag.GRENADE)
+	/// @GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
+	@DataGenItem(langOverride = "CLS-A Thermal Detonator", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE)
 	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(Gadgets.id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Properties());
-	@DataGenItem(langOverride = "C-25 Fragmentation Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE, itemTags = DGItemTag.GRENADE)
+	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
+	@DataGenItem(langOverride = "C-25 Fragmentation Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE)
 	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(Gadgets.id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Properties());
-	@DataGenItem(wiz = true, langOverride = "FEX-M3 Nerve Gas Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.GRENADE)
+	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
+	@DataGenItem(wiz = true, langOverride = "FEX-M3 Nerve Gas Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
 	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Properties());
-	@DataGenItem(wiz = true, langOverride = "NACHT-5 Smoke Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.GRENADE)
+	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
+	@DataGenItem(wiz = true, langOverride = "NACHT-5 Smoke Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
 	public static final SmokeSignalGrenadeItem SMOKE_SIGNAL_GRENADE_ITEM = Registrar.item(Gadgets.id("smoke_grenade"), SmokeSignalGrenadeItem::new, new Item.Properties());
-	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.GRENADE)
+	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
+	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
 	public static final ImpactGrenadeItem IMPACT_GRENADE_ITEM = Registrar.item(Gadgets.id("impact_grenade"), ImpactGrenadeItem::new, new Item.Properties());
-	@DataGenItem(wiz = true, langOverride = "D-24 Inferno Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.GRENADE)
+	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
+	@DataGenItem(wiz = true, langOverride = "D-24 Inferno Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
 	public static final InfernoGrenadeItem INFERNO_GRENADE_ITEM = Registrar.item(Gadgets.id("inferno_grenade"), InfernoGrenadeItem::new, new Item.Properties());
 
 	/// MINES
-	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.MINE)
+	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.MINE)
+	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
 	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Properties());
-	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, itemTags = DGItemTag.MINE)
+	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.MINE)
+	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
 	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Properties());
 
 	///  SCRAPPING TOOLS

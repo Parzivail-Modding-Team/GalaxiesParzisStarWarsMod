@@ -301,7 +301,10 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
-			addItemsToTag(ItemTags.LEAVES, DGItemTag.LEAVES, this);
+			addItemsToTag(ItemTags.LEAVES, DataGenItemTag.LEAVES, this);
+			addItemsToTag(ItemTags.SAND, DataGenItemTag.SAND, this);
+			addItemsToTag(ItemTags.LOGS_THAT_BURN, DataGenItemTag.LOGS_THAT_BURN, this);
+			addItemsToTag(ItemTags.LOGS, DataGenItemTag.LOGS, this);
 
 			getOrCreateRawBuilder(GalaxiesItems.Tags.BESKAR_TOOL_MATERIALS_TAG)
 					.add(itemId(GalaxiesItems.BESKAR_INGOT));
@@ -309,9 +312,10 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 					.add(itemId(GalaxiesItems.PLASTEEL_INGOT));
 			getOrCreateRawBuilder(GalaxiesItems.Tags.TITANIUM_TOOL_MATERIALS_TAG)
 					.add(itemId(GalaxiesItems.TITANIUM_INGOT));
+			addItemsToTag(GalaxiesItems.Tags.DRINK_CONTAINER_TAG, DataGenItemTag.DRINK_CONTAINER, this);
 		}
 
-		private static void addItemsToTag(TagKey<Item> tag, DGItemTag datagenTag, ItemTagGenerator generator)
+		private static void addItemsToTag(TagKey<Item> tag, DataGenItemTag datagenTag, ItemTagGenerator generator)
 		{
 
 			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
@@ -344,22 +348,22 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
-			addBlocksToTag(BlockTags.LEAVES, DGBlockTag.LEAVES, this);
-			addBlocksToTag(BlockTags.LOGS, DGBlockTag.LOGS, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DGBlockTag.AXE_MINEABLE, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DGBlockTag.PICKAXE_MINEABLE, this);
-			addBlocksToTag(BlockTags.SAND, DGBlockTag.SAND, this);
-			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DGBlockTag.SHOVEL_MINEABLE, this);
-			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DGBlockTag.LOGS_THAT_BURN, this);
-			addBlocksToTag(BlockTags.STAIRS, DGBlockTag.STAIRS, this);
-			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DGBlockTag.BUSH_PLACEABLE, this);
+			addBlocksToTag(BlockTags.LEAVES, DataGenBlockTag.LEAVES, this);
+			addBlocksToTag(BlockTags.LOGS, DataGenBlockTag.LOGS, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DataGenBlockTag.AXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DataGenBlockTag.PICKAXE_MINEABLE, this);
+			addBlocksToTag(BlockTags.SAND, DataGenBlockTag.SAND, this);
+			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DataGenBlockTag.SHOVEL_MINEABLE, this);
+			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DataGenBlockTag.LOGS_THAT_BURN, this);
+			addBlocksToTag(BlockTags.STAIRS, DataGenBlockTag.STAIRS, this);
+			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DataGenBlockTag.BUSH_PLACEABLE, this);
 			getOrCreateRawBuilder(GalaxiesBlocks.Tags.BUSH_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.location())
 					.add(blockId(Blocks.GRASS_BLOCK))
 					.add(blockId(Blocks.DIRT))
 					.add(blockId(Blocks.PODZOL))
 					.add(blockId(Blocks.COARSE_DIRT));
-			addBlocksToTag(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE, DGBlockTag.ARID_PLANT_PLACEABLE, this);
+			addBlocksToTag(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE, DataGenBlockTag.ARID_PLANT_PLACEABLE, this);
 			getOrCreateRawBuilder(GalaxiesBlocks.Tags.ARID_PLANT_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.location())
 					.addOptionalTag(BlockTags.TERRACOTTA.location())
@@ -367,11 +371,11 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.DIRT))
 					.add(blockId(Blocks.PODZOL))
 					.add(blockId(Blocks.COARSE_DIRT));
-			addBlocksToTag(GalaxiesBlocks.Tags.BOUNCY, DGBlockTag.BOUNCY, this);
+			addBlocksToTag(GalaxiesBlocks.Tags.BOUNCY, DataGenBlockTag.BOUNCY, this);
 			getOrCreateRawBuilder(GalaxiesBlocks.Tags.BOUNCY)
 					.add(blockId(Blocks.HONEY_BLOCK))
 					.add(blockId(Blocks.SLIME_BLOCK));
-			addBlocksToTag(GalaxiesBlocks.Tags.SOFT, DGBlockTag.SOFT, this);
+			addBlocksToTag(GalaxiesBlocks.Tags.SOFT, DataGenBlockTag.SOFT, this);
 			getOrCreateRawBuilder(GalaxiesBlocks.Tags.SOFT)
 					.addOptionalTag(BlockTags.SNOW.location())
 					.addOptionalTag(BlockTags.BEDS.location())
@@ -384,11 +388,11 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.PALE_MOSS_CARPET));
 		}
 
-		private static void addBlocksToTag(TagKey<Block> tag, DGBlockTag datagenTag, BlockTagGenerator generator)
+		private static void addBlocksToTag(TagKey<Block> tag, DataGenBlockTag datagenTag, BlockTagGenerator generator)
 		{
 
 			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
-				if (Arrays.stream(dataGenBlock.blockTags()).anyMatch(dgBlockTag -> dgBlockTag == datagenTag))
+				if (Arrays.stream(dataGenBlock.blockTags()).anyMatch(dataGenBlockTag -> dataGenBlockTag == datagenTag))
 				{
 					generator.getOrCreateRawBuilder(tag).add(blockId(block));
 				}

@@ -1,14 +1,11 @@
 package dev.pswg.datagen;
 
-public enum DGItemTag
+public enum DataGenItemTag
 {
 	TRINKETS_CHEST_BACK,
 	LEAVES,
 	LOGS,
 	LOGS_THAT_BURN,
 	SAND,
-	GRENADE,
-	MINE,
-	DRINK_CONTAINER,
-	MIXABLE_FOOD
+	DRINK_CONTAINER
 }
