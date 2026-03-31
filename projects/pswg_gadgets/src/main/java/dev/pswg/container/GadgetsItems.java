@@ -27,7 +27,6 @@ public class GadgetsItems
 	{
 		public static final TagKey<Item> GRENADES_TAG = TagKey.create(Registries.ITEM, Gadgets.id("grenades"));
 		public static final TagKey<Item> MINES_TAG = TagKey.create(Registries.ITEM, Gadgets.id("mines"));
-		public static final TagKey<Item> SCRAP_TAG = TagKey.create(Registries.ITEM, Gadgets.id("scrap"));
 		public static final TagKey<Item> DRINK_CONTAINER_TAG = TagKey.create(Registries.ITEM, Gadgets.id("drink_container"));
 		public static final TagKey<Item> MIXER_FOOD_TAG = TagKey.create(Registries.ITEM, Gadgets.id("mixable_food"));
 
