@@ -16,9 +16,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Inventory;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 {
 	private static final Identifier TEXTURE = Gadgets.id("textures/gui/container/mixer.png");
 	private static final Identifier MAP_TEXTURE = Gadgets.id("textures/gui/misc/brewing_map.png");
-	private List<Tuple<Integer, Integer>> previousMousePosition = new ArrayList<>();
-	public static HashMap<Holder<MobEffect>, Tuple<Integer, Integer>> ICON_MAP = new HashMap<>();
+	private List<Vector2i> previousMousePosition = new ArrayList<>();
+	public static HashMap<Holder<MobEffect>, Vector2i> ICON_MAP = new HashMap<>();
 
 	public MixerScreen(MixerScreenHandler handler, Inventory inventory, Component title)
 	{
@@ -205,8 +205,8 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 
 		for (int i = 1; i < previousMousePosition.size(); i++)
 		{
-			int x = previousMousePosition.get(i).getA();
-			int y = previousMousePosition.get(i).getB();
+			int x = previousMousePosition.get(i).x();
+			int y = previousMousePosition.get(i).y();
 
 			float x1 = markerX - menu.getMapX() + x + 4;
 			float y1 = markerY - menu.getMapY() + y + 4;
@@ -218,8 +218,8 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 				Drawables.fill(context, RenderPipelines.GUI, Math.max(x1, x2), Math.max(y1, y2), Math.min(x1, x2), Math.min(y1, y2), CommonColors.WHITE);
 			}
 		}
-		var pair = new Tuple<>((int)menu.getMapX(), (int)menu.getMapY());
-		if (previousMousePosition.isEmpty() || (Math.abs(previousMousePosition.getLast().getA().intValue() - pair.getA().intValue()) + Math.abs(previousMousePosition.getLast().getB().intValue() - pair.getB().intValue()) > 3))
+		var pair = new Vector2i((int)menu.getMapX(), (int)menu.getMapY());
+		if (previousMousePosition.isEmpty() || (Math.abs(previousMousePosition.getLast().x() - pair.x()) + Math.abs(previousMousePosition.getLast().y() - pair.y()) > 3))
 			previousMousePosition.add(pair);
 
 		if (previousMousePosition.size() > 60)
