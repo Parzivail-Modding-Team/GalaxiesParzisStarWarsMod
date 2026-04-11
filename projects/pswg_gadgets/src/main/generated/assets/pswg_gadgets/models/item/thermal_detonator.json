@@ -1,0 +1,96 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "fixed": {
+      "scale": [
+        2,
+        2,
+        2
+      ],
+      "translation": [
+        1,
+        12.25,
+        0
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        4.5,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30,
+        -145,
+        0
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ],
+      "translation": [
+        -1.5,
+        11,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        14,
+        0
+      ]
+    },
+    "on_shelf": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ],
+      "translation": [
+        0,
+        0,
+        -0.5
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        -0.5,
+        6.5,
+        0.5
+      ]
+    },
+    "thirdperson_righthand": {
+      "translation": [
+        0.5,
+        6.5,
+        0.5
+      ]
+    }
+  },
+  "textures": {
+    "0": "pswg_gadgets:item/thermal_detonator_3d",
+    "particle": "pswg:block/empty"
+  }
+}
