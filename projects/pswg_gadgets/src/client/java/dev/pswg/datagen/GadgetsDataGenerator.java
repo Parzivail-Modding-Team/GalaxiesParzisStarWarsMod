@@ -313,8 +313,9 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.add(blockId(Blocks.SOUL_FIRE));
 
 			getOrCreateRawBuilder(GadgetsBlocks.Tags.GAS_PASS_THROUGH)
-					.addOptionalTag(BlockTags.LEAVES.location())
-					.add(blockId(Blocks.COPPER_GRATE));
+					.addOptionalTag(BlockTags.LEAVES.location());
+					// TODO: copper grates are a collection now, do they have a tag ID?
+					// .add(blockId(Blocks.COPPER_GRATE));
 
 			getOrCreateRawBuilder(GadgetsBlocks.Tags.INFERNO_CHAR)
 					.add(blockId(Blocks.MOSS_BLOCK))

@@ -1,8 +1,8 @@
 [project]
 id = "pswg"
 name = "GalaxiesParzisStarWarsMod"
-minecraft_version = "26.1"
-loader_version = "0.18.4"
+minecraft_version = "26.2-snapshot-2"
+loader_version = "0.19.1"
 default_development_module = "pswg_entrypoint"
 
 [modules.framework]
@@ -42,10 +42,10 @@ main_mixins = ["pswg.mixins.json", "errorman.mixins.json"]
 client_mixins = ["pswg.client.mixins.json"]
 datagen = true
 compile_dependencies = [
-	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+	"net.fabricmc.fabric-api:fabric-api:0.145.5+26.2 @ fabric"
 ]
 runtime_dependencies = [
-	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+	"net.fabricmc.fabric-api:fabric-api:0.145.5+26.2 @ fabric"
 ]
 
 [modules.pswg_blasters]
@@ -59,10 +59,10 @@ artifact_excludes = [
 	"**/assets/**/datagen/**"
 ]
 compile_dependencies = [
-	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+	"net.fabricmc.fabric-api:fabric-api:0.145.5+26.2 @ fabric"
 ]
 runtime_dependencies = [
-	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+	"net.fabricmc.fabric-api:fabric-api:0.145.5+26.2 @ fabric"
 ]
 
 [modules.pswg_gadgets]
@@ -73,10 +73,10 @@ main_mixins = ["pswg_gadgets.mixins.json"]
 client_mixins = ["pswg_gadgets.client.mixins.json"]
 datagen = true
 compile_dependencies = [
-	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+	"net.fabricmc.fabric-api:fabric-api:0.145.5+26.2 @ fabric"
 ]
 runtime_dependencies = [
-	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+	"net.fabricmc.fabric-api:fabric-api:0.145.5+26.2 @ fabric"
 ]
 
 [modules.pswg_entrypoint]
@@ -85,8 +85,8 @@ artifact_id = "pswg"
 fabric_mod_id = "pswg_bundle"
 aggregate_members = ["pswg_blasters", "pswg_gadgets"]
 compile_dependencies = [
-	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+	"net.fabricmc.fabric-api:fabric-api:0.145.5+26.2 @ fabric"
 ]
 runtime_dependencies = [
-	"net.fabricmc.fabric-api:fabric-api:0.144.3+26.1 @ fabric"
+	"net.fabricmc.fabric-api:fabric-api:0.145.5+26.2 @ fabric"
 ]

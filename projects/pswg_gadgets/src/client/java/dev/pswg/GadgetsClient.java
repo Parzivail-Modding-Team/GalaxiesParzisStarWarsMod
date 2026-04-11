@@ -22,8 +22,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.ParticleGroup;
 import net.minecraft.client.renderer.entity.NoopRenderer;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffects;
+import org.joml.Vector2i;
+
 import java.util.Map;
 
 /**
@@ -80,20 +81,20 @@ public class GadgetsClient implements GalaxiesClientAddon
 			}
 		});
 
-		MixerScreen.ICON_MAP.put(MobEffects.ABSORPTION, new Tuple<>(126, 127));
-		MixerScreen.ICON_MAP.put(MobEffects.DOLPHINS_GRACE, new Tuple<>(350, 161));
-		MixerScreen.ICON_MAP.put(MobEffects.FIRE_RESISTANCE, new Tuple<>(336, 33));
-		MixerScreen.ICON_MAP.put(MobEffects.HASTE, new Tuple<>(190, 447));
-		MixerScreen.ICON_MAP.put(MobEffects.HEALTH_BOOST, new Tuple<>(46, 225));
-		MixerScreen.ICON_MAP.put(MobEffects.INVISIBILITY, new Tuple<>(64, 384));
-		MixerScreen.ICON_MAP.put(MobEffects.INSTANT_HEALTH, new Tuple<>(127, 244));
-		MixerScreen.ICON_MAP.put(MobEffects.JUMP_BOOST, new Tuple<>(336, 400));
-		MixerScreen.ICON_MAP.put(MobEffects.LUCK, new Tuple<>(143, 384));
-		MixerScreen.ICON_MAP.put(MobEffects.NIGHT_VISION, new Tuple<>(95, 324));
-		MixerScreen.ICON_MAP.put(MobEffects.REGENERATION, new Tuple<>(31, 65));
-		MixerScreen.ICON_MAP.put(MobEffects.RESISTANCE, new Tuple<>(224, 65));
-		MixerScreen.ICON_MAP.put(MobEffects.SPEED, new Tuple<>(382, 273));
-		MixerScreen.ICON_MAP.put(MobEffects.STRENGTH, new Tuple<>(448, 448));
+		MixerScreen.ICON_MAP.put(MobEffects.ABSORPTION, new Vector2i(126, 127));
+		MixerScreen.ICON_MAP.put(MobEffects.DOLPHINS_GRACE, new Vector2i(350, 161));
+		MixerScreen.ICON_MAP.put(MobEffects.FIRE_RESISTANCE, new Vector2i(336, 33));
+		MixerScreen.ICON_MAP.put(MobEffects.HASTE, new Vector2i(190, 447));
+		MixerScreen.ICON_MAP.put(MobEffects.HEALTH_BOOST, new Vector2i(46, 225));
+		MixerScreen.ICON_MAP.put(MobEffects.INVISIBILITY, new Vector2i(64, 384));
+		MixerScreen.ICON_MAP.put(MobEffects.INSTANT_HEALTH, new Vector2i(127, 244));
+		MixerScreen.ICON_MAP.put(MobEffects.JUMP_BOOST, new Vector2i(336, 400));
+		MixerScreen.ICON_MAP.put(MobEffects.LUCK, new Vector2i(143, 384));
+		MixerScreen.ICON_MAP.put(MobEffects.NIGHT_VISION, new Vector2i(95, 324));
+		MixerScreen.ICON_MAP.put(MobEffects.REGENERATION, new Vector2i(31, 65));
+		MixerScreen.ICON_MAP.put(MobEffects.RESISTANCE, new Vector2i(224, 65));
+		MixerScreen.ICON_MAP.put(MobEffects.SPEED, new Vector2i(382, 273));
+		MixerScreen.ICON_MAP.put(MobEffects.STRENGTH, new Vector2i(448, 448));
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}
