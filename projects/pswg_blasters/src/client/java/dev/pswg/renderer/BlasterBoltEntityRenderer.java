@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.pswg.Blasters;
 import dev.pswg.entity.BlasterBoltEntity;
+import dev.pswg.rendering.ptex.PtexTextures;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -49,7 +50,7 @@ public class BlasterBoltEntityRenderer extends EntityRenderer<BlasterBoltEntity,
 		public float yaw;
 	}
 
-	public static final Identifier TEXTURE = Identifier.withDefaultNamespace("textures/entity/projectiles/arrow.png");
+	public static final Identifier TEXTURE = Identifier.parse("ptex.minecraft.sampler.tint:0xffff0000/textures/entity/projectiles/arrow.png");
 	private final Model model;
 
 	public BlasterBoltEntityRenderer(EntityRendererProvider.Context context)
@@ -68,7 +69,7 @@ public class BlasterBoltEntityRenderer extends EntityRenderer<BlasterBoltEntity,
 		matrixStack.translate(0.2f, 0, 0);
 
 		this.model.setupAnim(state);
-		queue.submitModel(this.model, state, matrixStack, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		queue.submitModel(this.model, state, matrixStack, PtexTextures.resolve(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
 
 		matrixStack.popPose();
 	}
