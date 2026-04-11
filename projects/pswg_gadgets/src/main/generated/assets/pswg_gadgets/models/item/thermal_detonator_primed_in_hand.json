@@ -75,6 +75,11 @@
       ]
     },
     "thirdperson_lefthand": {
+      "scale": [
+        0.99,
+        0.99,
+        0.99
+      ],
       "translation": [
         -0.5,
         6.5,
@@ -82,6 +87,11 @@
       ]
     },
     "thirdperson_righthand": {
+      "scale": [
+        0.99,
+        0.99,
+        0.99
+      ],
       "translation": [
         0.5,
         6.5,
@@ -90,7 +100,7 @@
     }
   },
   "textures": {
-    "0": "pswg_gadgets:item/thermal_detonator_3d",
+    "0": "pswg_gadgets:item/thermal_detonator_primed_in_hand",
     "particle": "pswg:block/empty"
   }
 }
