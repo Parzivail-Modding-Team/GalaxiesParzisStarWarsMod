@@ -1,0 +1,48 @@
+{
+	"model": {
+		"type": "minecraft:condition",
+		"on_false": {
+			"type": "minecraft:select",
+			"cases": [
+				{
+					"model": {
+						"type": "minecraft:model",
+						"model": "pswg_gadgets:item/smoke_signal_grenade"
+					},
+					"when": [
+						"gui",
+						"ground"
+					]
+				}
+			],
+			"fallback": {
+				"type": "minecraft:model",
+				"model": "pswg_gadgets:item/smoke_signal_grenade_in_hand"
+			},
+			"property": "minecraft:display_context"
+
+    },
+    "on_true": {
+		"type": "minecraft:select",
+		"cases": [
+			{
+				"model": {
+					"type": "minecraft:model",
+					"model": "pswg_gadgets:item/smoke_signal_grenade_primed"
+				},
+				"when": [
+					"gui",
+					"ground"
+				]
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "pswg_gadgets:item/smoke_signal_grenade_primed_in_hand"
+		},
+		"property": "minecraft:display_context"
+    },
+    "property": "minecraft:has_component",
+    "component": "pswg_gadgets:priming_time"
+  }
+}
