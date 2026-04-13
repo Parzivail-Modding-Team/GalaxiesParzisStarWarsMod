@@ -45,26 +45,25 @@ public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 	@Override
 	public void tick()
 	{
+		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHit);
+		Vec3 nextPos;
+
+		if (hitResult.getType() != HitResult.Type.MISS)
+			nextPos = hitResult.getLocation();
+		else
+			nextPos = this.position().add(this.getDeltaMovement());
+
+		this.setPos(nextPos);
+
 		super.tick();
-//		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHit);
-//		Vec3 nextPos;
-//
-//		if (hitResult.getType() != HitResult.Type.MISS)
-//			nextPos = hitResult.getLocation();
-//		else
-//			nextPos = this.position().add(this.getDeltaMovement());
-//
-//		this.setPos(nextPos);
-//
-//		super.tick();
-//
-//		if (hitResult.getType() != HitResult.Type.MISS && this.isAlive())
-//		{
-//			this.hitOrDeflect(hitResult);
-//		}
-//
-//		if (this.tickCount > 20)
-//			discard();
+
+		if (hitResult.getType() != HitResult.Type.MISS && this.isAlive())
+		{
+			this.hitOrDeflect(hitResult);
+		}
+
+		if (this.tickCount > 20)
+			discard();
 	}
 
 	/**
