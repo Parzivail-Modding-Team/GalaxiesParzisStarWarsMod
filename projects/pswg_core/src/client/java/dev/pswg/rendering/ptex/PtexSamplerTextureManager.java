@@ -13,17 +13,17 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
 import org.slf4j.Logger;
 
+import java.io.FileNotFoundException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Manages runtime sampler-domain {@code ptex} textures.
+ * Manages runtime sampler-domain PSWG texture graphs.
  */
 public final class PtexSamplerTextureManager implements ResourceManagerReloadListener, RegisterableResourceReloader
 {
@@ -43,15 +43,14 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	private static final Identifier RELOADER_ID = Galaxies.id("ptex_sampler_textures");
 
 	/**
-	 * The registered runtime sampler-domain services.
+	 * The active async sampler textures keyed by their immutable texture spec.
 	 */
-	private final HashMap<String, PtexSamplerTextureService> _services = new HashMap<>();
+	private final ConcurrentHashMap<PtexTextureSpec, PtexAsyncTexture> _asyncTextures = new ConcurrentHashMap<>();
 
 	/**
-	 * The active runtime texture entries keyed by their original {@code ptex}
-	 * identifier.
+	 * The active runtime texture entries keyed by their immutable texture spec.
 	 */
-	private final ConcurrentHashMap<Identifier, PendingTexture> _textures = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<PtexTextureSpec, RuntimeTexture> _textures = new ConcurrentHashMap<>();
 
 	/**
 	 * A monotonically increasing counter used to invalidate in-flight work on
@@ -77,6 +76,11 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 		return RELOADER_ID;
 	}
 
+	/**
+	 * Gets the reload listeners that must run before this manager.
+	 *
+	 * @return The reload dependencies.
+	 */
 	@Override
 	public Collection<Identifier> getDependencies()
 	{
@@ -84,70 +88,86 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	}
 
 	/**
-	 * Resolves a potential {@code ptex} sampler identifier to a stable runtime
-	 * texture identifier.
+	 * Resolves one texture spec to a stable runtime sampled texture id.
 	 *
-	 * @param identifier The identifier to resolve.
+	 * @param textureSpec The immutable texture graph.
 	 *
-	 * @return The runtime texture identifier if the request is supported, or
-	 *         the original identifier otherwise.
+	 * @return The runtime texture id if the graph can be prepared.
 	 */
-	public Identifier resolve(Identifier identifier)
+	public Optional<Identifier> resolve(PtexTextureSpec textureSpec)
 	{
-		Optional<PtexTextureReference> parsedReference = PtexTextureReference.parse(identifier);
-
-		if (parsedReference.isEmpty())
+		if (textureSpec == null)
 		{
-			return identifier;
+			return Optional.empty();
 		}
 
-		PtexTextureReference reference = parsedReference.get();
-		if (reference.getDomain() != PtexTextureDomain.SAMPLER)
+		if (textureSpec instanceof SourceTexture sourceTexture)
 		{
-			return identifier;
+			return Optional.of(sourceTexture.identifier());
 		}
 
-		if (reference.getServices().isEmpty())
+		try
 		{
-			return createSourceIdentifier(reference);
-		}
+			var generation = _reloadGeneration.get();
+			var asyncTexture = _asyncTextures.computeIfAbsent(textureSpec, ignored -> {
+				LOGGER.debug("Creating async sampler texture {} in generation {}", textureSpec.cacheKey(), generation);
+				return createAsyncTexture(textureSpec, generation);
+			});
+			var runtimeTexture = _textures.computeIfAbsent(textureSpec, ignored -> {
+				LOGGER.debug("Creating runtime sampler texture {} in generation {}", textureSpec.cacheKey(), generation);
+				return createResolvedTexture(textureSpec, asyncTexture);
+			});
+			if (!runtimeTexture._ready)
+			{
+				return Optional.empty();
+			}
 
-		if (reference.getServices().size() > 1)
+			return Optional.of(runtimeTexture._runtimeIdentifier);
+		}
+		catch (RuntimeException exception)
 		{
-			LOGGER.warn("Sampler ptex service chains are not yet supported: {}", identifier);
-			return createSourceIdentifier(reference);
+			LOGGER.error("Failed to resolve sampler texture {}", textureSpec.cacheKey(), exception);
+			return Optional.empty();
 		}
-
-		PtexSamplerTextureService service = _services.get(reference.getServices().get(0));
-		if (service == null)
-		{
-			LOGGER.warn("Unsupported sampler ptex service '{}': {}", reference.getServices().get(0), identifier);
-			return createSourceIdentifier(reference);
-		}
-
-		var pending = _textures.computeIfAbsent(identifier, ignored -> createPendingTexture(reference, service));
-		return pending._runtimeIdentifier;
 	}
 
 	/**
-	 * Registers a sampler-domain texture service.
+	 * Loads one texture spec as an async image chain.
 	 *
-	 * @param service The service to register.
+	 * @param textureSpec The immutable texture graph.
+	 *
+	 * @return The async texture if the graph can be prepared.
 	 */
-	public void registerService(PtexSamplerTextureService service)
+	public Optional<PtexAsyncTexture> load(PtexTextureSpec textureSpec)
 	{
-		if (_services.containsKey(service.getServiceName()))
+		if (textureSpec == null)
 		{
-			throw new IllegalStateException("Duplicate ptex sampler service '" + service.getServiceName() + "'");
+			return Optional.empty();
 		}
 
-		_services.put(service.getServiceName(), service);
-
+		try
+		{
+			var generation = _reloadGeneration.get();
+			return Optional.of(_asyncTextures.computeIfAbsent(textureSpec, ignored -> {
+				LOGGER.debug("Creating cached async sampler load {} in generation {}", textureSpec.cacheKey(), generation);
+				return createAsyncTexture(textureSpec, generation);
+			}));
+		}
+		catch (RuntimeException exception)
+		{
+			LOGGER.error("Failed to load sampler texture {}", textureSpec.cacheKey(), exception);
+			return Optional.empty();
+		}
 	}
 
 	@Override
 	public void onResourceManagerReload(ResourceManager resourceManager)
 	{
+		LOGGER.debug(
+				"Reloading ptex sampler manager; closing {} runtime textures and {} async textures",
+				_textures.size(),
+				_asyncTextures.size()
+		);
 		_reloadGeneration.incrementAndGet();
 
 		var textureManager = Minecraft.getInstance().getTextureManager();
@@ -157,142 +177,167 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 		}
 
 		_textures.clear();
+
+		for (var texture : _asyncTextures.values())
+		{
+			texture.close();
+		}
+
+		_asyncTextures.clear();
 	}
 
 	/**
-	 * Creates and schedules a new pending runtime texture.
+	 * Creates a resolved runtime sampler texture entry.
 	 *
-	 * @param reference The parsed {@code ptex} texture reference.
-	 * @param service   The sampler service that will generate the final image.
+	 * @param textureSpec  The immutable texture graph.
+	 * @param asyncTexture The composed async image backing the runtime texture.
 	 *
-	 * @return The new pending texture entry.
+	 * @return The new resolved runtime texture entry.
 	 */
-	private PendingTexture createPendingTexture(PtexTextureReference reference, PtexSamplerTextureService service)
+	private RuntimeTexture createResolvedTexture(PtexTextureSpec textureSpec, PtexAsyncTexture asyncTexture)
 	{
 		var minecraft = Minecraft.getInstance();
-		var runtimeIdentifier = createRuntimeIdentifier(reference);
-		var placeholderTexture = new DynamicTexture(runtimeIdentifier::toString, createPlaceholderImage());
+		var runtimeIdentifier = createRuntimeIdentifier(textureSpec);
 		var generation = _reloadGeneration.get();
+		var runtimeTexture = new RuntimeTexture(runtimeIdentifier, generation);
+		LOGGER.debug(
+				"Registering placeholder runtime sampler texture {} for {} in generation {}",
+				runtimeIdentifier,
+				textureSpec.cacheKey(),
+				generation
+		);
 
-		minecraft.getTextureManager().register(runtimeIdentifier, placeholderTexture);
+		minecraft.getTextureManager().register(runtimeIdentifier, new DynamicTexture(runtimeIdentifier::toString, createPlaceholderImage()));
 
-		CompletableFuture
-				.supplyAsync(() -> loadTexture(reference, service, generation), BACKGROUND_EXECUTOR)
-				.thenAccept(image -> minecraft.execute(() -> applyLoadedTexture(reference, runtimeIdentifier, generation, image)))
+		asyncTexture
+				.getFuture()
+				.thenAccept(image -> {
+					LOGGER.debug(
+							"Sampler texture {} completed async generation at {}x{}",
+							textureSpec.cacheKey(),
+							image.getWidth(),
+							image.getHeight()
+					);
+					minecraft.execute(() -> applyLoadedTexture(textureSpec, runtimeTexture, image));
+				})
 				.exceptionally(throwable -> {
-					LOGGER.error("Failed to generate sampler ptex texture {}", reference.getOriginalIdentifier(), throwable);
+					LOGGER.error("Failed to generate sampler texture {}", textureSpec.cacheKey(), throwable);
 					return null;
 				});
 
-		return new PendingTexture(runtimeIdentifier, generation);
-	}
-
-	/**
-	 * Produces the final texture image on a background thread.
-	 *
-	 * @param reference   The parsed texture reference.
-	 * @param service     The sampler service used to build the image.
-	 * @param generation  The reload generation the work belongs to.
-	 *
-	 * @return The generated image.
-	 */
-	private NativeImage loadTexture(PtexTextureReference reference, PtexSamplerTextureService service, int generation)
-	{
-		if (generation != _reloadGeneration.get())
-		{
-			return createPlaceholderImage();
-		}
-
-		try
-		{
-			LOGGER.debug("Sampler service {} providing texture {}", service.getServiceName(), reference.getOriginalIdentifier());
-			return service.load(reference, Minecraft.getInstance().getResourceManager());
-		}
-		catch (Exception exception)
-		{
-			LOGGER.error("Failed to load sampler ptex texture {}", reference.getOriginalIdentifier(), exception);
-			return createPlaceholderImage();
-		}
+		return runtimeTexture;
 	}
 
 	/**
 	 * Applies a generated image to the stable runtime texture entry.
 	 *
-	 * @param reference         The original parsed texture reference.
-	 * @param runtimeIdentifier The runtime texture identifier.
-	 * @param generation        The generation the completed work belongs to.
+	 * @param textureSpec       The immutable texture graph.
+	 * @param runtimeTexture    The runtime texture entry receiving the image.
 	 * @param image             The generated image to upload.
 	 */
-	private void applyLoadedTexture(PtexTextureReference reference, Identifier runtimeIdentifier, int generation, NativeImage image)
+	private void applyLoadedTexture(PtexTextureSpec textureSpec, RuntimeTexture runtimeTexture, NativeImage image)
 	{
-		try
+		var runtimeIdentifier = runtimeTexture._runtimeIdentifier;
+		var generation = runtimeTexture._generation;
+		if (generation != _reloadGeneration.get())
 		{
-			if (generation != _reloadGeneration.get())
-			{
-				return;
-			}
-
-			var current = _textures.get(reference.getOriginalIdentifier());
-			if (current == null || current._generation != generation)
-			{
-				return;
-			}
-
-			var textureManager = Minecraft.getInstance().getTextureManager();
-			var texture = textureManager.getTexture(runtimeIdentifier);
-
-			if (texture instanceof DynamicTexture dynamicTexture)
-			{
-				var existingPixels = dynamicTexture.getPixels();
-				if (existingPixels.getWidth() != image.getWidth() || existingPixels.getHeight() != image.getHeight())
-				{
-					textureManager.register(runtimeIdentifier, new DynamicTexture(runtimeIdentifier::toString, image));
-					image = null;
-					return;
-				}
-
-				dynamicTexture.setPixels(image);
-				dynamicTexture.upload();
-				image = null;
-				return;
-			}
-
-			textureManager.register(runtimeIdentifier, new DynamicTexture(runtimeIdentifier::toString, image));
-			image = null;
+			LOGGER.debug("Skipping stale sampler upload for {} from generation {}", runtimeIdentifier, generation);
+			return;
 		}
-		finally
+
+		var current = _textures.get(textureSpec);
+		if (current != null && current != runtimeTexture)
 		{
-			if (image != null && !image.isClosed())
-			{
-				image.close();
-			}
+			LOGGER.debug("Skipping sampler upload for {} because runtime texture entry was replaced", runtimeIdentifier);
+			return;
 		}
+
+		var textureManager = Minecraft.getInstance().getTextureManager();
+		var texture = textureManager.getTexture(runtimeIdentifier);
+
+		if (texture instanceof DynamicTexture dynamicTexture)
+		{
+			var existingPixels = dynamicTexture.getPixels();
+			if (existingPixels.getWidth() != image.getWidth() || existingPixels.getHeight() != image.getHeight())
+			{
+				LOGGER.debug(
+						"Replacing runtime sampler texture {} from {}x{} to {}x{}",
+						runtimeIdentifier,
+						existingPixels.getWidth(),
+						existingPixels.getHeight(),
+						image.getWidth(),
+						image.getHeight()
+				);
+				textureManager.register(runtimeIdentifier, new DynamicTexture(runtimeIdentifier::toString, copyImage(image)));
+				runtimeTexture._ready = true;
+				LOGGER.debug("Runtime sampler texture {} is now ready", runtimeIdentifier);
+				return;
+			}
+
+			dynamicTexture.setPixels(copyImage(image));
+			dynamicTexture.upload();
+			runtimeTexture._ready = true;
+			LOGGER.debug("Updated runtime sampler texture {} in place", runtimeIdentifier);
+			return;
+		}
+
+		LOGGER.debug("Replacing missing/non-dynamic runtime texture registration for {}", runtimeIdentifier);
+		textureManager.register(runtimeIdentifier, new DynamicTexture(runtimeIdentifier::toString, copyImage(image)));
+		runtimeTexture._ready = true;
+		LOGGER.debug("Runtime sampler texture {} is now ready", runtimeIdentifier);
 	}
 
 	/**
-	 * Creates the stable runtime identifier for a parsed {@code ptex} request.
+	 * Creates the stable runtime identifier for one immutable texture graph.
 	 *
-	 * @param reference The texture reference being resolved.
+	 * @param textureSpec The immutable texture graph.
 	 *
 	 * @return The runtime texture identifier used by {@link DynamicTexture}.
 	 */
-	private static Identifier createRuntimeIdentifier(PtexTextureReference reference)
+	private static Identifier createRuntimeIdentifier(PtexTextureSpec textureSpec)
 	{
-		String hash = Hashing.sha1().hashUnencodedChars(reference.getOriginalIdentifier().toString()).toString();
+		String hash = Hashing.sha1().hashUnencodedChars(textureSpec.cacheKey()).toString();
 		return Galaxies.id("runtime/ptex/sampler/" + hash);
 	}
 
 	/**
-	 * Creates the underlying source texture identifier for a parsed sampler
-	 * reference that does not require a runtime service.
+	 * Creates the root async texture that loads one source image.
 	 *
-	 * @param reference The parsed sampler reference.
+	 * @param identifier The source image identifier.
+	 * @param generation The reload generation the request belongs to.
 	 *
-	 * @return The underlying source texture identifier.
+	 * @return The async source texture.
 	 */
-	private static Identifier createSourceIdentifier(PtexTextureReference reference)
+	private PtexAsyncTexture createSourceTexture(Identifier identifier, int generation)
 	{
-		return Identifier.fromNamespaceAndPath(reference.getSourceNamespace(), reference.getRawPath());
+		LOGGER.debug("Creating source sampler texture {} in generation {}", identifier, generation);
+		return new LoadedSourceTexture(identifier, generation);
+	}
+
+	/**
+	 * Creates one async texture for one immutable texture graph.
+	 *
+	 * @param textureSpec The immutable texture graph.
+	 * @param generation  The reload generation the request belongs to.
+	 *
+	 * @return The async texture.
+	 */
+	private PtexAsyncTexture createAsyncTexture(PtexTextureSpec textureSpec, int generation)
+	{
+		LOGGER.debug("Creating async texture implementation for {} in generation {}", textureSpec.cacheKey(), generation);
+		return textureSpec.createTexture(createResolver(generation));
+	}
+
+	/**
+	 * Creates a generation-bound resolver for one resource-reload cycle.
+	 *
+	 * @param generation The reload generation the request belongs to.
+	 *
+	 * @return The generation-bound resolver.
+	 */
+	private PtexTextureResolver createResolver(int generation)
+	{
+		return new GenerationResolver(generation);
 	}
 
 	/**
@@ -315,12 +360,343 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	}
 
 	/**
-	 * The active runtime state for a resolved sampler-domain texture.
+	 * Creates a copy of a native image so the runtime texture upload path does
+	 * not take ownership of the cached async image.
 	 *
-	 * @param _runtimeIdentifier The stable runtime texture identifier.
-	 * @param _generation        The reload generation the entry belongs to.
+	 * @param image The source image.
+	 *
+	 * @return The copied image.
 	 */
-	private record PendingTexture(Identifier _runtimeIdentifier, int _generation)
+	public static NativeImage copyImage(NativeImage image)
 	{
+		var copy = new NativeImage(image.getWidth(), image.getHeight(), true);
+
+		for (int y = 0; y < image.getHeight(); y++)
+		{
+			for (int x = 0; x < image.getWidth(); x++)
+			{
+				copy.setPixel(x, y, image.getPixel(x, y));
+			}
+		}
+
+		return copy;
+	}
+
+	/**
+	 * The active runtime state for a resolved sampler texture.
+	 */
+	private static final class RuntimeTexture
+	{
+		/**
+		 * The stable runtime texture identifier.
+		 */
+		private final Identifier _runtimeIdentifier;
+
+		/**
+		 * The reload generation the entry belongs to.
+		 */
+		private final int _generation;
+
+		/**
+		 * Whether the runtime texture contains a generated image instead of the
+		 * initial unresolved placeholder.
+		 */
+		private volatile boolean _ready;
+
+		/**
+		 * Creates a new runtime texture entry.
+		 *
+		 * @param runtimeIdentifier The stable runtime texture identifier.
+		 * @param generation        The reload generation the entry belongs to.
+		 */
+		private RuntimeTexture(Identifier runtimeIdentifier, int generation)
+		{
+			_runtimeIdentifier = runtimeIdentifier;
+			_generation = generation;
+		}
+	}
+
+	/**
+	 * A root async texture that loads one image directly from the current
+	 * resource manager.
+	 */
+	private final class LoadedSourceTexture implements PtexAsyncTexture
+	{
+		/**
+		 * The source image future.
+		 */
+		private final CompletableFuture<NativeImage> _future;
+
+		/**
+		 * The loaded image if it has already completed.
+		 */
+		private volatile NativeImage _readyImage;
+
+		/**
+		 * Whether this async texture has been closed.
+		 */
+		private volatile boolean _closed;
+
+		/**
+		 * Creates a new source async texture.
+		 *
+		 * @param identifier The source image identifier.
+		 * @param generation The reload generation the request belongs to.
+		 */
+		private LoadedSourceTexture(Identifier identifier, int generation)
+		{
+			LOGGER.debug("Scheduling async source sampler load {} in generation {}", identifier, generation);
+			_future = CompletableFuture
+					.supplyAsync(() -> loadSourceImage(identifier, generation), BACKGROUND_EXECUTOR)
+					.whenComplete((image, throwable) -> {
+						if (throwable == null)
+						{
+							if (_closed)
+							{
+								if (image != null && !image.isClosed())
+								{
+									image.close();
+								}
+
+								return;
+							}
+
+							_readyImage = image;
+							LOGGER.debug("Source sampler image {} completed", identifier);
+						}
+					});
+		}
+
+		@Override
+		public Optional<NativeImage> getNow()
+		{
+			return Optional.ofNullable(_readyImage);
+		}
+
+		@Override
+		public CompletableFuture<NativeImage> getFuture()
+		{
+			return _future;
+		}
+
+		@Override
+		public void close()
+		{
+			_closed = true;
+
+			if (_readyImage != null && !_readyImage.isClosed())
+			{
+				_readyImage.close();
+				_readyImage = null;
+			}
+		}
+	}
+
+	/**
+	 * An async texture that transforms one upstream image.
+	 */
+	private final class TransformedTexture implements PtexAsyncTexture
+	{
+		/**
+		 * The upstream async texture.
+		 */
+		private final PtexAsyncTexture _upstream;
+
+		/**
+		 * The transformed image future.
+		 */
+		private final CompletableFuture<NativeImage> _future;
+
+		/**
+		 * The transformed image if it is already ready.
+		 */
+		private volatile NativeImage _readyImage;
+
+		/**
+		 * Whether this async texture has been closed.
+		 */
+		private volatile boolean _closed;
+
+		/**
+		 * Creates a transformed async texture.
+		 *
+		 * @param upstream    The upstream async texture.
+		 * @param transform   The image transform.
+		 * @param description The texture description used in error logs.
+		 */
+		private TransformedTexture(PtexAsyncTexture upstream, PtexTextureTransform transform, String description)
+		{
+			_upstream = upstream;
+			LOGGER.debug("Creating transformed sampler texture {}", description);
+
+			var currentImage = upstream.getNow();
+			if (currentImage.isPresent())
+			{
+				CompletableFuture<NativeImage> future;
+
+				try
+				{
+					_readyImage = transformImage(currentImage.get(), transform, description);
+					LOGGER.debug("Transform {} completed immediately", description);
+					future = CompletableFuture.completedFuture(_readyImage);
+				}
+				catch (RuntimeException exception)
+				{
+					future = CompletableFuture.failedFuture(exception);
+				}
+
+				_future = future;
+
+				return;
+			}
+
+			_future = upstream
+					.getFuture()
+					.thenApplyAsync(sourceImage -> transformImage(sourceImage, transform, description), BACKGROUND_EXECUTOR)
+					.whenComplete((image, throwable) -> {
+						if (throwable == null)
+						{
+							if (_closed)
+							{
+								if (image != null && !image.isClosed())
+								{
+									image.close();
+								}
+
+								return;
+							}
+
+							_readyImage = image;
+							LOGGER.debug("Transform {} completed asynchronously", description);
+						}
+					});
+		}
+
+		@Override
+		public Optional<NativeImage> getNow()
+		{
+			return Optional.ofNullable(_readyImage);
+		}
+
+		@Override
+		public CompletableFuture<NativeImage> getFuture()
+		{
+			return _future;
+		}
+
+		@Override
+		public void close()
+		{
+			_closed = true;
+
+			if (_readyImage != null && !_readyImage.isClosed())
+			{
+				_readyImage.close();
+				_readyImage = null;
+			}
+
+			_upstream.close();
+		}
+	}
+
+	private final class GenerationResolver implements PtexTextureResolver
+	{
+		/**
+		 * The reload generation the resolver belongs to.
+		 */
+		private final int _generation;
+
+		/**
+		 * Creates a generation-bound resolver.
+		 *
+		 * @param generation The reload generation.
+		 */
+		private GenerationResolver(int generation)
+		{
+			_generation = generation;
+		}
+
+		@Override
+		public PtexAsyncTexture load(PtexTextureSpec textureSpec)
+		{
+			return _asyncTextures.computeIfAbsent(textureSpec, ignored -> {
+				LOGGER.debug("Resolver loading nested texture {} in generation {}", textureSpec.cacheKey(), _generation);
+				return createAsyncTexture(textureSpec, _generation);
+			});
+		}
+
+		@Override
+		public PtexAsyncTexture loadSource(Identifier identifier)
+		{
+			LOGGER.debug("Resolver loading source {} in generation {}", identifier, _generation);
+			return createSourceTexture(identifier, _generation);
+		}
+
+		@Override
+		public PtexAsyncTexture transform(PtexTextureSpec upstream, PtexTextureTransform transform, String description)
+		{
+			LOGGER.debug("Resolver transforming {} via {}", upstream.cacheKey(), description);
+			return new TransformedTexture(load(upstream), transform, description);
+		}
+	}
+
+	/**
+	 * Loads one source image from the current resource manager.
+	 *
+	 * @param identifier The source image identifier.
+	 * @param generation The reload generation the request belongs to.
+	 *
+	 * @return The loaded image.
+	 */
+	private NativeImage loadSourceImage(Identifier identifier, int generation)
+	{
+		if (generation != _reloadGeneration.get())
+		{
+			LOGGER.debug("Returning placeholder image for stale source texture {} from generation {}", identifier, generation);
+			return createPlaceholderImage();
+		}
+
+		try
+		{
+			LOGGER.debug("Loading source sampler image {}", identifier);
+			var resource = Minecraft
+					.getInstance()
+					.getResourceManager()
+					.getResource(identifier)
+					.orElseThrow(() -> new FileNotFoundException("Missing texture resource " + identifier));
+
+			try (var stream = resource.open())
+			{
+				var image = NativeImage.read(stream);
+				LOGGER.debug("Loaded source sampler image {} at {}x{}", identifier, image.getWidth(), image.getHeight());
+				return image;
+			}
+		}
+		catch (Exception exception)
+		{
+			throw new IllegalStateException("Failed to load source sampler texture " + identifier, exception);
+		}
+	}
+
+	/**
+	 * Produces one transformed image.
+	 *
+	 * @param sourceImage The upstream image.
+	 *
+	 * @param transform   The image transform.
+	 * @param description The texture description used in error logs.
+	 *
+	 * @return The transformed image.
+	 */
+	private NativeImage transformImage(NativeImage sourceImage, PtexTextureTransform transform, String description)
+	{
+		try
+		{
+			return transform.apply(sourceImage);
+		}
+		catch (RuntimeException exception)
+		{
+			throw new IllegalStateException("Failed to transform sampler texture " + description, exception);
+		}
 	}
 }

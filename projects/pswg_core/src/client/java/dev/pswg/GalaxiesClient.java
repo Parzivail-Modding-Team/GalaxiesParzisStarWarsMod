@@ -15,7 +15,6 @@ import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particle.ShortFlameParticle;
 import dev.pswg.particle.SmallFlashParticle;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
-import dev.pswg.rendering.ptex.PtexSamplerTintService;
 import dev.pswg.rendering.ptex.PtexTextures;
 import dev.pswg.screens.CrateGenericSmallScreen;
 import net.fabricmc.api.ClientModInitializer;
@@ -143,7 +142,6 @@ public class GalaxiesClient implements ClientModInitializer
 
 		// Register runtime texture services
 		PtexTextures.LOADER.register();
-		PtexTextures.registerSamplerService(new PtexSamplerTintService("tint"));
 
 		//Register tints
 		ItemTintSources.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);

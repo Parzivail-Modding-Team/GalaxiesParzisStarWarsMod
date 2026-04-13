@@ -5,7 +5,7 @@ import net.minecraft.resources.Identifier;
 import java.util.Optional;
 
 /**
- * The public entrypoint for PSWG {@code ptex} texture handling.
+ * The public entrypoint for PSWG runtime texture composition.
  */
 public final class PtexTextures
 {
@@ -15,63 +15,26 @@ public final class PtexTextures
 	public static final PtexSamplerTextureManager LOADER = new PtexSamplerTextureManager();
 
 	/**
-	 * Attempts to parse a {@code ptex} identifier.
+	 * Resolves one texture spec to one stable runtime sampled texture id.
 	 *
-	 * @param identifier The identifier to parse.
+	 * @param textureSpec The immutable texture graph.
 	 *
-	 * @return The parsed texture reference if the identifier uses the
-	 *         {@code ptex} namespace grammar.
+	 * @return The resolved runtime texture id if the texture can be prepared.
 	 */
-	public static Optional<PtexTextureReference> parse(Identifier identifier)
+	public static Optional<Identifier> resolveSampler(PtexTextureSpec textureSpec)
 	{
-		return PtexTextureReference.parse(identifier);
+		return LOADER.resolve(textureSpec);
 	}
 
 	/**
-	 * Resolves a supported {@code ptex} identifier to the concrete texture
-	 * identifier that should be used for rendering.
+	 * Loads one texture spec as an async image chain.
 	 *
-	 * @param identifier The identifier to resolve.
+	 * @param textureSpec The immutable texture graph.
 	 *
-	 * @return The resolved texture identifier, or the original identifier if it
-	 *         does not use a currently supported {@code ptex} domain.
+	 * @return The async texture if the graph can be prepared.
 	 */
-	public static Identifier resolve(Identifier identifier)
+	public static Optional<PtexAsyncTexture> loadSampler(PtexTextureSpec textureSpec)
 	{
-		var parsedReference = parse(identifier);
-		if (parsedReference.isEmpty())
-		{
-			return identifier;
-		}
-
-		if (parsedReference.get().getDomain() == PtexTextureDomain.SAMPLER)
-		{
-			return resolveSampler(identifier);
-		}
-
-		return identifier;
-	}
-
-	/**
-	 * Resolves a sampler-domain identifier to a stable runtime texture id.
-	 *
-	 * @param identifier The identifier to resolve.
-	 *
-	 * @return The runtime identifier for supported sampler textures, or the
-	 *         original identifier if it is not handled by the framework.
-	 */
-	public static Identifier resolveSampler(Identifier identifier)
-	{
-		return LOADER.resolve(identifier);
-	}
-
-	/**
-	 * Registers a runtime sampler-domain texture service.
-	 *
-	 * @param service The service to register.
-	 */
-	public static void registerSamplerService(PtexSamplerTextureService service)
-	{
-		LOADER.registerService(service);
+		return LOADER.load(textureSpec);
 	}
 }
