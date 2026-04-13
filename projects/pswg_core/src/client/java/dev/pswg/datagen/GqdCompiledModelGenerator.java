@@ -98,6 +98,6 @@ import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
 		@Override
 		public String getName()
 		{
-			return "Gadgets GQD Compiled Models";
+			return "Galaxies GQD Compiled Models";
 		}
 	}
