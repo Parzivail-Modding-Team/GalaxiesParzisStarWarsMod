@@ -28,22 +28,13 @@ import net.minecraft.server.packs.PackType;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
+
 /**
  * The blaster data generator
  */
 public class BlasterDataGenerator implements DataGeneratorEntrypoint
 {
-	/**
-	 * A resource loader for quad buffer intermediary files
-	 */
-	private static final CodecDataLoader<GqbIntermediary> GQB_INTERMEDIARY_LOADER = new CodecDataLoader<>(
-			Galaxies.id("gqbi"),
-			"models",
-			true,
-			(i) -> IdentifierUtil.hasExtension(i, "json") && i.getPath().contains("/datagen/"),
-			GqbIntermediary.CODEC
-	);
-
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator)
 	{

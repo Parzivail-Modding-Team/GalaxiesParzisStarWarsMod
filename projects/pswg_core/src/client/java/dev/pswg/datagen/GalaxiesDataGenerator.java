@@ -48,19 +48,13 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
+
 /**
  * The base data generator
  */
 public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 {
-	private static final CodecDataLoader<GqbIntermediary> GQB_INTERMEDIARY_LOADER = new CodecDataLoader<>(
-			Galaxies.id("gqbi"),
-			"models",
-			true,
-			(i) -> IdentifierUtil.hasExtension(i, "json") && i.getPath().contains("/datagen/"),
-			GqbIntermediary.CODEC
-	);
-
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator)
 	{

@@ -4,7 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.pswg.Galaxies;
 import dev.pswg.codec.GalaxiesCodecs;
+import dev.pswg.data.CodecDataLoader;
+import dev.pswg.data.IdentifierUtil;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.LightCoordsUtil;
@@ -34,6 +37,17 @@ public record GqbIntermediary(
 			ExtraCodecs.JSON.fieldOf("textures").forGetter(GqbIntermediary::textures),
 			ExtraCodecs.JSON.fieldOf("display").forGetter(GqbIntermediary::display)
 	).apply(instance, GqbIntermediary::new));
+
+	/**
+	 * A resource loader for quad buffer intermediary files
+	 */
+	public static final CodecDataLoader<GqbIntermediary> GQB_INTERMEDIARY_LOADER = new CodecDataLoader<>(
+			Galaxies.id("gqbi"),
+			"models",
+			true,
+			(i) -> IdentifierUtil.hasExtension(i, "json") && i.getPath().contains("/datagen/"),
+			GqbIntermediary.CODEC
+	);
 
 	/**
 	 * The actual model data
