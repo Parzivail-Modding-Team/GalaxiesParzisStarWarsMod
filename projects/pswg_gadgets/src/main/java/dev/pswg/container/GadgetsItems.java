@@ -79,7 +79,7 @@ public class GadgetsItems
 	@DataGenItem(langOverride = "C-25 Fragmentation Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE)
 	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(Gadgets.id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
-	@DataGenItem(wiz = true, langOverride = "FEX-M3 Nerve Gas Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
+	@DataGenItem(wiz = true, langOverride = "FEX-M3 Nerve Gas Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE)
 	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
 	@DataGenItem(wiz = true, langOverride = "NACHT-5 Smoke Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE)
