@@ -1,0 +1,22 @@
+{
+	"model": {
+		"type": "minecraft:select",
+		"cases": [
+			{
+				"model": {
+					"type": "minecraft:model",
+					"model": "pswg_gadgets:item/impact_grenade"
+				},
+				"when": [
+					"gui",
+					"ground"
+				]
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "pswg_gadgets:item/impact_grenade_in_hand"
+		},
+		"property": "minecraft:display_context"
+	}
+}

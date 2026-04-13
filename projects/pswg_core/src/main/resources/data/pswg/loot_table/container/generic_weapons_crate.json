@@ -21,7 +21,7 @@
 				},
 				{
 					"type": "minecraft:item",
-					"name": "pswg_gadgets:smoke_grenade",
+					"name": "pswg_gadgets:smoke_signal_grenade",
 					"weight": 2,
 					"functions": [
 						{

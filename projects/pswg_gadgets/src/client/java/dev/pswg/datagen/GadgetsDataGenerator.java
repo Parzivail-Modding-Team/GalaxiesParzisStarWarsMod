@@ -5,10 +5,14 @@ import dev.pswg.block.collection.NumberedBlocks;
 import dev.pswg.block.collection.StoneProducts;
 import dev.pswg.container.*;
 import dev.pswg.Galaxies;
+import dev.pswg.data.CodecDataLoader;
+import dev.pswg.data.IdentifierUtil;
 import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.autoreg.AutoGenerateUtil;
+import dev.pswg.rendering.models.GalaxiesModelBakery;
+import dev.pswg.rendering.models.GqbIntermediary;
 import dev.pswg.util.gen.*;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -24,10 +28,14 @@ import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -38,10 +46,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import java.util.Arrays;
-import java.util.Objects;
+
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
 
 /**
  * The gadget data generator
@@ -55,11 +65,14 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		Galaxies.LOGGER.info("Running Gadgets Data Generator");
 
+		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, GQB_INTERMEDIARY_LOADER);
+
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ModelGenerator::new);
 		pack.addProvider(RecipesGenerator::new);
+		pack.addProvider((fabricPackOutput, completableFuture) -> new GqdCompiledModelGenerator(fabricPackOutput, Gadgets.MODID));
 	}
 
 	/**

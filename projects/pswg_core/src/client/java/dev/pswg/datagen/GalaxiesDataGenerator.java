@@ -8,10 +8,14 @@ import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItemGroups;
 import dev.pswg.container.GalaxiesItems;
+import dev.pswg.data.CodecDataLoader;
+import dev.pswg.data.IdentifierUtil;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
+import dev.pswg.rendering.models.GalaxiesModelBakery;
+import dev.pswg.rendering.models.GqbIntermediary;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -24,9 +28,13 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagEntry;
@@ -35,10 +43,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import java.util.Arrays;
-import java.util.Objects;
+
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
 
 /**
  * The base data generator
@@ -52,11 +62,14 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 		Galaxies.LOGGER.info("Running Galaxies Client Data Generator");
 
+		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, GQB_INTERMEDIARY_LOADER);
+
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ModelGenerator::new);
 		pack.addProvider(RecipesGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
+		pack.addProvider((fabricPackOutput, completableFuture) -> new dev.pswg.datagen.GqdCompiledModelGenerator(fabricPackOutput, Galaxies.MODID));
 	}
 
 	/**
@@ -425,4 +438,5 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			return "PSWGGalaxiesRecipeProvider";
 		}
 	}
+
 }

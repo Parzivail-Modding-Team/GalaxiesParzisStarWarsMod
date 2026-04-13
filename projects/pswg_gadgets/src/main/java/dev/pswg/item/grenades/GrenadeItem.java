@@ -101,7 +101,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 	{
 		if (entity instanceof Player player && stack.has(GadgetsItems.Components.PRIMING_TIME))
 		{
-			player.sendSystemMessage(Component.nullToEmpty("" + (stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getGameTime())));
+			player.sendOverlayMessage(Component.nullToEmpty("" + (stack.get(GadgetsItems.Components.PRIMING_TIME) + baseTicksToExplosion - world.getGameTime())));
 		}
 		if (entity.isOnFire())
 		{

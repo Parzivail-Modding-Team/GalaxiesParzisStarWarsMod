@@ -1,13 +1,46 @@
 {
-  "model": {
-    "type": "minecraft:condition",
-    "on_false": {
-      "type": "minecraft:model",
-      "model": "pswg_gadgets:item/thermal_detonator"
+	"model": {
+		"type": "minecraft:condition",
+		"on_false": {
+			"type": "minecraft:select",
+			"cases": [
+				{
+					"model": {
+						"type": "minecraft:model",
+						"model": "pswg_gadgets:item/thermal_detonator"
+					},
+					"when": [
+						"gui",
+						"ground"
+					]
+				}
+			],
+			"fallback": {
+				"type": "minecraft:model",
+				"model": "pswg_gadgets:item/thermal_detonator_in_hand"
+			},
+			"property": "minecraft:display_context"
+
     },
     "on_true": {
-      "type": "minecraft:model",
-      "model": "pswg_gadgets:item/thermal_detonator_primed"
+		"type": "minecraft:select",
+		"cases": [
+			{
+				"model": {
+					"type": "minecraft:model",
+					"model": "pswg_gadgets:item/thermal_detonator_primed"
+				},
+				"when": [
+					"gui",
+					"ground"
+				]
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "pswg_gadgets:item/thermal_detonator_primed_in_hand"
+		},
+		"property": "minecraft:display_context"
     },
     "property": "minecraft:has_component",
     "component": "pswg_gadgets:priming_time"
