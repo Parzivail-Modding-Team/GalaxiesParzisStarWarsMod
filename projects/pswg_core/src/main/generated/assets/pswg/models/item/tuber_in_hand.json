@@ -1,0 +1,63 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        0,
+        5.25,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        0,
+        5.25,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        14,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "scale": [
+        0.99,
+        0.99,
+        0.99
+      ],
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "thirdperson_righthand": {
+      "scale": [
+        0.99,
+        0.99,
+        0.99
+      ],
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    }
+  },
+  "textures": {
+    "0": "pswg:item/3d/food/tuber_in_hand",
+    "particle": "pswg:item/3d/food/tuber_in_hand"
+  }
+}
