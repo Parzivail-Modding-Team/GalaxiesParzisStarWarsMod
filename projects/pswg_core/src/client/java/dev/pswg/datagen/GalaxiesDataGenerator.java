@@ -8,10 +8,14 @@ import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItemGroups;
 import dev.pswg.container.GalaxiesItems;
+import dev.pswg.data.CodecDataLoader;
+import dev.pswg.data.IdentifierUtil;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
+import dev.pswg.rendering.models.GalaxiesModelBakery;
+import dev.pswg.rendering.models.GqbIntermediary;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -24,9 +28,13 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagEntry;
@@ -35,8 +43,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import java.util.Arrays;
-import java.util.Objects;
+
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -45,6 +53,14 @@ import java.util.stream.Collectors;
  */
 public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 {
+	private static final CodecDataLoader<GqbIntermediary> GQB_INTERMEDIARY_LOADER = new CodecDataLoader<>(
+			Galaxies.id("gqbi"),
+			"models",
+			true,
+			(i) -> IdentifierUtil.hasExtension(i, "json") && i.getPath().contains("/datagen/"),
+			GqbIntermediary.CODEC
+	);
+
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator generator)
 	{
@@ -52,11 +68,14 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 		Galaxies.LOGGER.info("Running Galaxies Client Data Generator");
 
+		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, GQB_INTERMEDIARY_LOADER);
+
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ModelGenerator::new);
 		pack.addProvider(RecipesGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
+		pack.addProvider(GqdCompiledModelGenerator::new);
 	}
 
 	/**
@@ -423,6 +442,89 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		public String getName()
 		{
 			return "PSWGGalaxiesRecipeProvider";
+		}
+	}
+	/**
+	 * The GQD compiled model generator. All models should be compiled through
+	 * this generator.
+	 */
+	private static class GqdCompiledModelGenerator implements DataProvider
+	{
+		private final PackOutput.PathProvider resolver;
+
+		public GqdCompiledModelGenerator(FabricPackOutput output)
+		{
+			this.resolver = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models");
+		}
+
+		@Override
+		public CompletableFuture<?> run(CachedOutput writer)
+		{
+			var completables = new ArrayList<CompletableFuture<?>>();
+
+			for (var entry : GQB_INTERMEDIARY_LOADER.getDefinitions().entrySet())
+			{
+				if (!entry.getKey().getNamespace().equals(Galaxies.MODID))
+					continue;
+
+				completables.add(compile(writer, entry));
+			}
+
+			return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
+		}
+
+		/**
+		 * Compile the given GQB intermediary model
+		 *
+		 * @param writer The writer to add the generated data to
+		 * @param entry  The entry to compile
+		 *
+		 * @return A future that completes when the data is written
+		 */
+		private CompletableFuture<?> compile(CachedOutput writer, Map.Entry<Identifier, GqbIntermediary> entry)
+		{
+			var completables = new ArrayList<CompletableFuture<?>>();
+
+			if (entry.getValue().files().isPresent())
+			{
+				// Split the geometry and model into multiple files
+				for (var fileEntry : entry.getValue().files().get().entrySet())
+				{
+					var nonDatagenId = entry.getKey().withPath(GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.of(fileEntry.getKey())));
+					var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
+					var jsonOutputPath = resolver.file(nonDatagenId, "json");
+
+					completables.add(DataProvider.saveStable(writer, entry.getValue().createModelDef(), jsonOutputPath));
+					completables.add(GalaxiesDataProvider.writeToPath(
+							writer,
+							quadsOutputPath,
+							GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC,
+							entry.getValue().createGeometry(Optional.of(new HashSet<>(fileEntry.getValue())))
+					));
+				}
+			}
+			else
+			{
+				var nonDatagenId = entry.getKey().withPath(GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.empty()));
+				var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
+				var jsonOutputPath = resolver.file(nonDatagenId, "json");
+
+				completables.add(DataProvider.saveStable(writer, entry.getValue().createModelDef(), jsonOutputPath));
+				completables.add(GalaxiesDataProvider.writeToPath(
+						writer,
+						quadsOutputPath,
+						GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC,
+						entry.getValue().createGeometry(Optional.empty())
+				));
+			}
+
+			return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
+		}
+
+		@Override
+		public String getName()
+		{
+			return "Gadgets GQD Compiled Models";
 		}
 	}
 }
