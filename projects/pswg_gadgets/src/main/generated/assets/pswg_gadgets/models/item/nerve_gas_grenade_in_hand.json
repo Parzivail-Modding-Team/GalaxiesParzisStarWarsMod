@@ -63,7 +63,7 @@
     }
   },
   "textures": {
-    "0": "pswg_gadgets:item/nerve_gas_grenade_in_hand",
+    "0": "pswg_gadgets:item/grenade/3d/nerve_gas_grenade_in_hand",
     "particle": "pswg:block/empty"
   }
 }

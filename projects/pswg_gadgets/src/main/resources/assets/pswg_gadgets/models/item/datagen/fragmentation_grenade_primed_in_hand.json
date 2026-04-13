@@ -961,7 +961,7 @@
 	},
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "pswg_gadgets:item/fragmentation_grenade_primed_in_hand"
+		"0": "pswg_gadgets:item/grenade/3d/fragmentation_grenade_primed_in_hand"
 	},
 	"display": {
 		"thirdperson_righthand": {

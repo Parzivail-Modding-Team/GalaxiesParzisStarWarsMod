@@ -1,1 +1,1 @@
-{"parent":"minecraft:item/generated","textures":{"layer0":"pswg_gadgets:item/fragmentation_grenade_primed"}}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg_gadgets:item/grenade/fragmentation_grenade_primed"}}

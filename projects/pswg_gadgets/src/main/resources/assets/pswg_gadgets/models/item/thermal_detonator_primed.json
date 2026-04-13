@@ -1,1 +1,1 @@
-{"parent":"minecraft:item/generated","textures":{"layer0":"pswg_gadgets:item/thermal_detonator_primed"}}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg_gadgets:item/grenade/thermal_detonator_primed"}}
