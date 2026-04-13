@@ -17,69 +17,54 @@ import java.util.concurrent.CompletableFuture;
 import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
 
 /**
-	 * The GQD compiled model generator. All models should be compiled through
-	 * this generator.
-	 */
-	public class GqdCompiledModelGenerator implements DataProvider
+ * The GQD compiled model generator. All models should be compiled through
+ * this generator.
+ */
+public class GqdCompiledModelGenerator implements DataProvider
+{
+	private final PackOutput.PathProvider resolver;
+	String modId;
+
+	public GqdCompiledModelGenerator(FabricPackOutput output, String modId)
 	{
-		private final PackOutput.PathProvider resolver;
-		String modId;
+		this.resolver = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models");
+		this.modId = modId;
+	}
 
-		public GqdCompiledModelGenerator(FabricPackOutput output, String modId)
+	@Override
+	public CompletableFuture<?> run(CachedOutput writer)
+	{
+		var completables = new ArrayList<CompletableFuture<?>>();
+
+		for (var entry : GQB_INTERMEDIARY_LOADER.getDefinitions().entrySet())
 		{
-			this.resolver = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models");
-			this.modId = modId;
+			if (!entry.getKey().getNamespace().equals(modId))
+				continue;
+
+			completables.add(compile(writer, entry));
 		}
 
-		@Override
-		public CompletableFuture<?> run(CachedOutput writer)
+		return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
+	}
+
+	/**
+	 * Compile the given GQB intermediary model
+	 *
+	 * @param writer The writer to add the generated data to
+	 * @param entry  The entry to compile
+	 *
+	 * @return A future that completes when the data is written
+	 */
+	private CompletableFuture<?> compile(CachedOutput writer, Map.Entry<Identifier, GqbIntermediary> entry)
+	{
+		var completables = new ArrayList<CompletableFuture<?>>();
+
+		if (entry.getValue().files().isPresent())
 		{
-			var completables = new ArrayList<CompletableFuture<?>>();
-
-			for (var entry : GQB_INTERMEDIARY_LOADER.getDefinitions().entrySet())
+			// Split the geometry and model into multiple files
+			for (var fileEntry : entry.getValue().files().get().entrySet())
 			{
-				if (!entry.getKey().getNamespace().equals(modId))
-					continue;
-
-				completables.add(compile(writer, entry));
-			}
-
-			return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
-		}
-
-		/**
-		 * Compile the given GQB intermediary model
-		 *
-		 * @param writer The writer to add the generated data to
-		 * @param entry  The entry to compile
-		 *
-		 * @return A future that completes when the data is written
-		 */
-		private CompletableFuture<?> compile(CachedOutput writer, Map.Entry<Identifier, GqbIntermediary> entry)
-		{
-			var completables = new ArrayList<CompletableFuture<?>>();
-
-			if (entry.getValue().files().isPresent())
-			{
-				// Split the geometry and model into multiple files
-				for (var fileEntry : entry.getValue().files().get().entrySet())
-				{
-					var nonDatagenId = entry.getKey().withPath(GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.of(fileEntry.getKey())));
-					var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
-					var jsonOutputPath = resolver.file(nonDatagenId, "json");
-
-					completables.add(DataProvider.saveStable(writer, entry.getValue().createModelDef(), jsonOutputPath));
-					completables.add(GalaxiesDataProvider.writeToPath(
-							writer,
-							quadsOutputPath,
-							GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC,
-							entry.getValue().createGeometry(Optional.of(new HashSet<>(fileEntry.getValue())))
-					));
-				}
-			}
-			else
-			{
-				var nonDatagenId = entry.getKey().withPath(GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.empty()));
+				var nonDatagenId = entry.getKey().withPath(GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.of(fileEntry.getKey())));
 				var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
 				var jsonOutputPath = resolver.file(nonDatagenId, "json");
 
@@ -88,16 +73,31 @@ import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
 						writer,
 						quadsOutputPath,
 						GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC,
-						entry.getValue().createGeometry(Optional.empty())
+						entry.getValue().createGeometry(Optional.of(new HashSet<>(fileEntry.getValue())))
 				));
 			}
+		}
+		else
+		{
+			var nonDatagenId = entry.getKey().withPath(GalaxiesDataProvider.getNonDatagenPath(entry.getKey().getPath(), Optional.empty()));
+			var quadsOutputPath = resolver.file(nonDatagenId, "gqb");
+			var jsonOutputPath = resolver.file(nonDatagenId, "json");
 
-			return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
+			completables.add(DataProvider.saveStable(writer, entry.getValue().createModelDef(), jsonOutputPath));
+			completables.add(GalaxiesDataProvider.writeToPath(
+					writer,
+					quadsOutputPath,
+					GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC,
+					entry.getValue().createGeometry(Optional.empty())
+			));
 		}
 
-		@Override
-		public String getName()
+		return CompletableFuture.allOf(completables.toArray(CompletableFuture[]::new));
+	}
+
+	@Override
+	public String getName()
 		{
 			return "Galaxies GQD Compiled Models";
 		}
-	}
+}
