@@ -88,7 +88,7 @@ public class GadgetsItems
 	@DataGenItem(wiz = true, itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
 	public static final ImpactGrenadeItem IMPACT_GRENADE_ITEM = Registrar.item(Gadgets.id("impact_grenade"), ImpactGrenadeItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
-	@DataGenItem(wiz = true, langOverride = "D-24 Inferno Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS)
+	@DataGenItem(wiz = true, langOverride = "D-24 Inferno Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE)
 	public static final InfernoGrenadeItem INFERNO_GRENADE_ITEM = Registrar.item(Gadgets.id("inferno_grenade"), InfernoGrenadeItem::new, new Item.Properties());
 
 	/// MINES
