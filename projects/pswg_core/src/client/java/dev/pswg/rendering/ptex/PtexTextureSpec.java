@@ -23,7 +23,7 @@ public interface PtexTextureSpec
 	 *
 	 * @return The async image implementation.
 	 */
-	PtexAsyncTexture createTexture(PtexTextureResolver resolver);
+	AsyncTexture createTexture(PtexTextureResolver resolver);
 
 	/**
 	 * Resolves this texture graph to one stable runtime sampled texture id.
@@ -53,7 +53,7 @@ public interface PtexTextureSpec
 	 *
 	 * @return The async image chain if the texture can be prepared.
 	 */
-	default Optional<PtexAsyncTexture> load()
+	default Optional<AsyncTexture> load()
 	{
 		return PtexTextures.loadSampler(this);
 	}

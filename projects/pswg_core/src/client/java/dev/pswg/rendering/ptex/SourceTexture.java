@@ -47,7 +47,7 @@ public record SourceTexture(Identifier identifier) implements PtexTextureSpec
 	}
 
 	@Override
-	public PtexAsyncTexture createTexture(PtexTextureResolver resolver)
+	public AsyncTexture createTexture(PtexTextureResolver resolver)
 	{
 		LOGGER.debug("Creating source texture {}", identifier);
 		return resolver.loadSource(identifier);

@@ -33,7 +33,7 @@ public final class PtexTextures
 	 *
 	 * @return The async texture if the graph can be prepared.
 	 */
-	public static Optional<PtexAsyncTexture> loadSampler(PtexTextureSpec textureSpec)
+	public static Optional<AsyncTexture> loadSampler(PtexTextureSpec textureSpec)
 	{
 		return LOADER.load(textureSpec);
 	}

@@ -65,7 +65,7 @@ public record TintedTexture(int tintColor, PtexTextureSpec upstream) implements 
 	}
 
 	@Override
-	public PtexAsyncTexture createTexture(PtexTextureResolver resolver)
+	public AsyncTexture createTexture(PtexTextureResolver resolver)
 	{
 		LOGGER.debug(
 				"Creating tinted texture {} over {}",

@@ -45,7 +45,7 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	/**
 	 * The active async sampler textures keyed by their immutable texture spec.
 	 */
-	private final ConcurrentHashMap<PtexTextureSpec, PtexAsyncTexture> _asyncTextures = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<PtexTextureSpec, AsyncTexture> _asyncTextures = new ConcurrentHashMap<>();
 
 	/**
 	 * The active runtime texture entries keyed by their immutable texture spec.
@@ -138,7 +138,7 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	 *
 	 * @return The async texture if the graph can be prepared.
 	 */
-	public Optional<PtexAsyncTexture> load(PtexTextureSpec textureSpec)
+	public Optional<AsyncTexture> load(PtexTextureSpec textureSpec)
 	{
 		if (textureSpec == null)
 		{
@@ -194,7 +194,7 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	 *
 	 * @return The new resolved runtime texture entry.
 	 */
-	private RuntimeTexture createResolvedTexture(PtexTextureSpec textureSpec, PtexAsyncTexture asyncTexture)
+	private RuntimeTexture createResolvedTexture(PtexTextureSpec textureSpec, AsyncTexture asyncTexture)
 	{
 		var minecraft = Minecraft.getInstance();
 		var runtimeIdentifier = createRuntimeIdentifier(textureSpec);
@@ -308,10 +308,16 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	 *
 	 * @return The async source texture.
 	 */
-	private PtexAsyncTexture createSourceTexture(Identifier identifier, int generation)
+	private AsyncTexture createSourceTexture(Identifier identifier, int generation)
 	{
 		LOGGER.debug("Creating source sampler texture {} in generation {}", identifier, generation);
-		return new LoadedSourceTexture(identifier, generation);
+		return new AsyncTexture(
+				CompletableFuture.supplyAsync(
+						() -> loadSourceImage(identifier, generation),
+						PtexSamplerTextureManager.BACKGROUND_EXECUTOR
+				),
+				null
+		);
 	}
 
 	/**
@@ -322,7 +328,7 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	 *
 	 * @return The async texture.
 	 */
-	private PtexAsyncTexture createAsyncTexture(PtexTextureSpec textureSpec, int generation)
+	private AsyncTexture createAsyncTexture(PtexTextureSpec textureSpec, int generation)
 	{
 		LOGGER.debug("Creating async texture implementation for {} in generation {}", textureSpec.cacheKey(), generation);
 		return textureSpec.createTexture(createResolver(generation));
@@ -416,189 +422,6 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 		}
 	}
 
-	/**
-	 * A root async texture that loads one image directly from the current
-	 * resource manager.
-	 */
-	private final class LoadedSourceTexture implements PtexAsyncTexture
-	{
-		/**
-		 * The source image future.
-		 */
-		private final CompletableFuture<NativeImage> _future;
-
-		/**
-		 * The loaded image if it has already completed.
-		 */
-		private volatile NativeImage _readyImage;
-
-		/**
-		 * Whether this async texture has been closed.
-		 */
-		private volatile boolean _closed;
-
-		/**
-		 * Creates a new source async texture.
-		 *
-		 * @param identifier The source image identifier.
-		 * @param generation The reload generation the request belongs to.
-		 */
-		private LoadedSourceTexture(Identifier identifier, int generation)
-		{
-			LOGGER.debug("Scheduling async source sampler load {} in generation {}", identifier, generation);
-			_future = CompletableFuture
-					.supplyAsync(() -> loadSourceImage(identifier, generation), BACKGROUND_EXECUTOR)
-					.whenComplete((image, throwable) -> {
-						if (throwable == null)
-						{
-							if (_closed)
-							{
-								if (image != null && !image.isClosed())
-								{
-									image.close();
-								}
-
-								return;
-							}
-
-							_readyImage = image;
-							LOGGER.debug("Source sampler image {} completed", identifier);
-						}
-					});
-		}
-
-		@Override
-		public Optional<NativeImage> getNow()
-		{
-			return Optional.ofNullable(_readyImage);
-		}
-
-		@Override
-		public CompletableFuture<NativeImage> getFuture()
-		{
-			return _future;
-		}
-
-		@Override
-		public void close()
-		{
-			_closed = true;
-
-			if (_readyImage != null && !_readyImage.isClosed())
-			{
-				_readyImage.close();
-				_readyImage = null;
-			}
-		}
-	}
-
-	/**
-	 * An async texture that transforms one upstream image.
-	 */
-	private final class TransformedTexture implements PtexAsyncTexture
-	{
-		/**
-		 * The upstream async texture.
-		 */
-		private final PtexAsyncTexture _upstream;
-
-		/**
-		 * The transformed image future.
-		 */
-		private final CompletableFuture<NativeImage> _future;
-
-		/**
-		 * The transformed image if it is already ready.
-		 */
-		private volatile NativeImage _readyImage;
-
-		/**
-		 * Whether this async texture has been closed.
-		 */
-		private volatile boolean _closed;
-
-		/**
-		 * Creates a transformed async texture.
-		 *
-		 * @param upstream    The upstream async texture.
-		 * @param transform   The image transform.
-		 * @param description The texture description used in error logs.
-		 */
-		private TransformedTexture(PtexAsyncTexture upstream, PtexTextureTransform transform, String description)
-		{
-			_upstream = upstream;
-			LOGGER.debug("Creating transformed sampler texture {}", description);
-
-			var currentImage = upstream.getNow();
-			if (currentImage.isPresent())
-			{
-				CompletableFuture<NativeImage> future;
-
-				try
-				{
-					_readyImage = transformImage(currentImage.get(), transform, description);
-					LOGGER.debug("Transform {} completed immediately", description);
-					future = CompletableFuture.completedFuture(_readyImage);
-				}
-				catch (RuntimeException exception)
-				{
-					future = CompletableFuture.failedFuture(exception);
-				}
-
-				_future = future;
-
-				return;
-			}
-
-			_future = upstream
-					.getFuture()
-					.thenApplyAsync(sourceImage -> transformImage(sourceImage, transform, description), BACKGROUND_EXECUTOR)
-					.whenComplete((image, throwable) -> {
-						if (throwable == null)
-						{
-							if (_closed)
-							{
-								if (image != null && !image.isClosed())
-								{
-									image.close();
-								}
-
-								return;
-							}
-
-							_readyImage = image;
-							LOGGER.debug("Transform {} completed asynchronously", description);
-						}
-					});
-		}
-
-		@Override
-		public Optional<NativeImage> getNow()
-		{
-			return Optional.ofNullable(_readyImage);
-		}
-
-		@Override
-		public CompletableFuture<NativeImage> getFuture()
-		{
-			return _future;
-		}
-
-		@Override
-		public void close()
-		{
-			_closed = true;
-
-			if (_readyImage != null && !_readyImage.isClosed())
-			{
-				_readyImage.close();
-				_readyImage = null;
-			}
-
-			_upstream.close();
-		}
-	}
-
 	private final class GenerationResolver implements PtexTextureResolver
 	{
 		/**
@@ -617,7 +440,7 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 		}
 
 		@Override
-		public PtexAsyncTexture load(PtexTextureSpec textureSpec)
+		public AsyncTexture load(PtexTextureSpec textureSpec)
 		{
 			return _asyncTextures.computeIfAbsent(textureSpec, ignored -> {
 				LOGGER.debug("Resolver loading nested texture {} in generation {}", textureSpec.cacheKey(), _generation);
@@ -626,17 +449,38 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 		}
 
 		@Override
-		public PtexAsyncTexture loadSource(Identifier identifier)
+		public AsyncTexture loadSource(Identifier identifier)
 		{
 			LOGGER.debug("Resolver loading source {} in generation {}", identifier, _generation);
 			return createSourceTexture(identifier, _generation);
 		}
 
 		@Override
-		public PtexAsyncTexture transform(PtexTextureSpec upstream, PtexTextureTransform transform, String description)
+		public AsyncTexture transform(PtexTextureSpec upstreamSpec, PtexTextureTransform transform, String description)
 		{
-			LOGGER.debug("Resolver transforming {} via {}", upstream.cacheKey(), description);
-			return new TransformedTexture(load(upstream), transform, description);
+			LOGGER.debug("Resolver transforming {} via {}", upstreamSpec.cacheKey(), description);
+			var upstream = load(upstreamSpec);
+
+			CompletableFuture<NativeImage> future;
+
+			var currentImage = upstream.getNow();
+			if (currentImage.isPresent())
+			{
+				try
+				{
+					LOGGER.debug("Transform {} completed immediately", description);
+					future = CompletableFuture.completedFuture(transformImage(currentImage.get(), transform, description));
+				}
+				catch (RuntimeException exception)
+				{
+					future = CompletableFuture.failedFuture(exception);
+				}
+			}
+			else
+				future = upstream.getFuture()
+						.thenApplyAsync(sourceImage -> transformImage(sourceImage, transform, description), BACKGROUND_EXECUTOR);
+
+			return new AsyncTexture(future, upstream::close);
 		}
 	}
 

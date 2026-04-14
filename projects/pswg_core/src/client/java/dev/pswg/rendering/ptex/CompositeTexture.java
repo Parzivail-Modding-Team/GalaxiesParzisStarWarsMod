@@ -94,7 +94,7 @@ public record CompositeTexture(List<PtexTextureSpec> layers) implements PtexText
 	}
 
 	@Override
-	public PtexAsyncTexture createTexture(PtexTextureResolver resolver)
+	public AsyncTexture createTexture(PtexTextureResolver resolver)
 	{
 		LOGGER.debug("Creating composite texture {} with {} layers", cacheKey(), layers.size());
 		var layerTextures = layers.stream()
@@ -102,101 +102,34 @@ public record CompositeTexture(List<PtexTextureSpec> layers) implements PtexText
 				.toList();
 
 		var immediateImages = layerTextures.stream()
-				.map(PtexAsyncTexture::getNow)
+				.map(AsyncTexture::getNow)
 				.toList();
 
-		CompletableFuture<NativeImage> nextFuture;
-		NativeImage nextReadyImage;
+		CompletableFuture<NativeImage> future;
 
 		if (immediateImages.stream().allMatch(Optional::isPresent))
 		{
 			try
 			{
-				nextReadyImage = compositeReadyImages(immediateImages);
 				LOGGER.debug("Composite texture {} was ready immediately", cacheKey());
-				nextFuture = CompletableFuture.completedFuture(nextReadyImage);
+				future = CompletableFuture.completedFuture(compositeReadyImages(immediateImages));
 			}
 			catch (RuntimeException exception)
 			{
-				nextReadyImage = null;
-				nextFuture = CompletableFuture.failedFuture(exception);
+				future = CompletableFuture.failedFuture(exception);
 			}
 		}
 		else
 		{
-			nextReadyImage = null;
 			var futures = layerTextures.stream()
-					.map(PtexAsyncTexture::getFuture)
+					.map(AsyncTexture::getFuture)
 					.toArray(CompletableFuture[]::new);
 
-			nextFuture = CompletableFuture.allOf(futures)
+			future = CompletableFuture.allOf(futures)
 			                           .thenApply(ignored -> compositeLayerFutures(layerTextures, cacheKey()));
 		}
 
-		final CompletableFuture<NativeImage> future = nextFuture;
-		final NativeImage readyImage = nextReadyImage;
-
-		return new PtexAsyncTexture()
-		{
-			/**
-			 * The composed image if it is already ready.
-			 */
-			private volatile NativeImage _readyImage = readyImage;
-
-			/**
-			 * Whether this async texture has been closed.
-			 */
-			private volatile boolean _closed;
-
-			/**
-			 * The composed image future.
-			 */
-			private final CompletableFuture<NativeImage> _future = future.whenComplete((image, throwable) -> {
-				if (throwable == null)
-				{
-					if (_closed)
-					{
-						if (image != null && !image.isClosed())
-						{
-							image.close();
-						}
-
-						return;
-					}
-
-					_readyImage = image;
-				}
-			});
-
-			@Override
-			public Optional<NativeImage> getNow()
-			{
-				return Optional.ofNullable(_readyImage);
-			}
-
-			@Override
-			public CompletableFuture<NativeImage> getFuture()
-			{
-				return _future;
-			}
-
-			@Override
-			public void close()
-			{
-				_closed = true;
-
-				if (_readyImage != null && !_readyImage.isClosed())
-				{
-					_readyImage.close();
-					_readyImage = null;
-				}
-
-				for (var layer : layerTextures)
-				{
-					layer.close();
-				}
-			}
-		};
+		return new AsyncTexture(future, () -> layerTextures.forEach(AsyncTexture::close));
 	}
 
 	/**
@@ -263,7 +196,7 @@ public record CompositeTexture(List<PtexTextureSpec> layers) implements PtexText
 	 *
 	 * @return The composited image.
 	 */
-	private static NativeImage compositeLayerFutures(List<PtexAsyncTexture> layerTextures, String description)
+	private static NativeImage compositeLayerFutures(List<AsyncTexture> layerTextures, String description)
 	{
 		LOGGER.debug("Compositing completed async image layers for {}", description);
 		try

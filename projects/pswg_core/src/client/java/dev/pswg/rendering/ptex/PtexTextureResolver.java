@@ -14,7 +14,7 @@ public interface PtexTextureResolver
 	 *
 	 * @return The async image.
 	 */
-	PtexAsyncTexture load(PtexTextureSpec textureSpec);
+	AsyncTexture load(PtexTextureSpec textureSpec);
 
 	/**
 	 * Loads one direct source texture.
@@ -23,7 +23,7 @@ public interface PtexTextureResolver
 	 *
 	 * @return The async image.
 	 */
-	PtexAsyncTexture loadSource(Identifier identifier);
+	AsyncTexture loadSource(Identifier identifier);
 
 	/**
 	 * Transforms one upstream texture graph.
@@ -34,5 +34,5 @@ public interface PtexTextureResolver
 	 *
 	 * @return The async transformed image.
 	 */
-	PtexAsyncTexture transform(PtexTextureSpec upstream, PtexTextureTransform transform, String description);
+	AsyncTexture transform(PtexTextureSpec upstream, PtexTextureTransform transform, String description);
 }
