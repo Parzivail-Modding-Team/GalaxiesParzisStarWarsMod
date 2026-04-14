@@ -1,6 +1,24 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "pswg:item/deb_deb"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "pswg:item/deb_deb"
+        },
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "on_shelf"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "pswg:item/deb_deb_in_hand"
+    },
+    "property": "minecraft:display_context"
   }
 }

@@ -646,7 +646,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"1": "pswg:item/3d/food/worrt_egg_in_hand",
-		"particle": "block/teste"
+		"particle": "pswg:item/3d/food/worrt_egg_in_hand"
 	},
 	"display": {
 		"thirdperson_righthand": {

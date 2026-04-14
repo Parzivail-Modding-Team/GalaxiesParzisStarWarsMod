@@ -1,6 +1,24 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "pswg:item/cooked_eopie_loin"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "pswg:item/cooked_eopie_loin"
+        },
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "on_shelf"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "pswg:item/cooked_eopie_loin_in_hand"
+    },
+    "property": "minecraft:display_context"
   }
 }

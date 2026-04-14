@@ -1,0 +1,53 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        14,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "scale": [
+        0.99,
+        0.99,
+        0.99
+      ],
+      "translation": [
+        0,
+        6.5,
+        0
+      ]
+    },
+    "thirdperson_righthand": {
+      "scale": [
+        0.99,
+        0.99,
+        0.99
+      ],
+      "translation": [
+        0,
+        6.5,
+        0
+      ]
+    }
+  },
+  "textures": {
+    "0": "pswg:item/3d/food/black_melon_in_hand",
+    "particle": "pswg:block/empty"
+  }
+}

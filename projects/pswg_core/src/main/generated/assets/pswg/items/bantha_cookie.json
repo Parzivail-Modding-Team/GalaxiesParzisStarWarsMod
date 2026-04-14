@@ -1,6 +1,24 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "pswg:item/bantha_cookie"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "pswg:item/bantha_cookie"
+        },
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "on_shelf"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "pswg:item/bantha_cookie_in_hand"
+    },
+    "property": "minecraft:display_context"
   }
 }

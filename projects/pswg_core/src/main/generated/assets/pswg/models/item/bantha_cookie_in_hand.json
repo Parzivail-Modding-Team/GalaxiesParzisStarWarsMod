@@ -1,0 +1,43 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        6.75,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        6.75,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        14.25,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0,
+        6.5,
+        0
+      ]
+    },
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        6.5,
+        0
+      ]
+    }
+  },
+  "textures": {
+    "0": "pswg:item/3d/food/bantha_cookie_in_hand",
+    "particle": "pswg:item/3d/food/bantha_cookie_in_hand"
+  }
+}

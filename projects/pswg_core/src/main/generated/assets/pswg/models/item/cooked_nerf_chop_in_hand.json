@@ -1,0 +1,53 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        14,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "translation": [
+        0.5,
+        7,
+        0.25
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        0
+      ],
+      "translation": [
+        -0.5,
+        7,
+        0.25
+      ]
+    }
+  },
+  "textures": {
+    "0": "pswg:item/3d/food/cooked_nerf_chop_in_hand",
+    "particle": "pswg:block/empty"
+  }
+}

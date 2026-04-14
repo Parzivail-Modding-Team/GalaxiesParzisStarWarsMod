@@ -1,0 +1,63 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ],
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ],
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        14.25,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ],
+      "translation": [
+        0,
+        7,
+        1
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ],
+      "translation": [
+        0,
+        7,
+        1
+      ]
+    }
+  },
+  "textures": {
+    "0": "pswg:item/3d/food/cooked_bantha_chop_in_hand",
+    "particle": "pswg:item/3d/food/cooked_bantha_chop_in_hand"
+  }
+}

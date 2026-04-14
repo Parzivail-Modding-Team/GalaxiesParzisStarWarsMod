@@ -1,0 +1,53 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "translation": [
+        0,
+        5,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ],
+      "translation": [
+        0,
+        5,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        14.5,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0.5,
+        4.5,
+        1
+      ]
+    },
+    "thirdperson_righthand": {
+      "translation": [
+        -0.5,
+        4.5,
+        1
+      ]
+    }
+  },
+  "textures": {
+    "0": "pswg:item/3d/food/deb_deb_in_hand",
+    "particle": "pswg:block/empty"
+  }
+}
