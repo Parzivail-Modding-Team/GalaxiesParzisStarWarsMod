@@ -169,21 +169,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerators itemModelGenerator)
 		{
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
-				registerItem(itemModelGenerator, armorItems.helmet, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.chestplate, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.leggings, dataGenItem);
-				registerItem(itemModelGenerator, armorItems.boots, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
-				for (Item item : dyedItems.values())
-					registerItem(itemModelGenerator, item, dataGenItem);
-			});
-			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
-				for (Item item : numberedItems.stream().toList())
-					registerItem(itemModelGenerator, item, dataGenItem);
-			});
+			AutoGenerateUtil.consumeAnnotatedGalaxiesItems(DataGenItem.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
 		}
 
 		public void registerItem(ItemModelGenerators generator, Item item, DataGenItem dataGenItem)
@@ -197,6 +183,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 					{
 						case GENERATED -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_ITEM);
 						case HANDHELD -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_HANDHELD_ITEM);
+						case MODEL_IN_HAND -> GalaxiesModelProvider.register3dHand(generator, item);
 						case DRINK -> registerDrink(generator, item, dataGenItem);
 					}
 			}

@@ -364,11 +364,11 @@ public class GalaxiesItems
 	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerDefaultPotionItem("plastic_bottle_" + i + "_filled", new Item.Properties().usingConvertsTo(PLASTIC_BOTTLES.get(i - 1))));
 	///  FOOD
 
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item JOGAN_FRUIT = registerSimpleItem("jogan_fruit", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item CHASUKA_LEAF = registerSimpleItem("chasuka_leaf", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item MEILOORUN = registerSimpleItem("meiloorun", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
 
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
@@ -377,20 +377,20 @@ public class GalaxiesItems
 	public static final Item FRIED_MYNOCK_WING = registerSimpleItem("cooked_mynock_wing", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.8F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item BANTHA_CHOP = registerSimpleItem("bantha_chop", new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item BANTHA_STEAK = registerSimpleItem("cooked_bantha_chop", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.8F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item NERF_CHOP = registerSimpleItem("nerf_chop", new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item NERF_STEAK = registerSimpleItem("cooked_nerf_chop", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.8F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item GIZKA_CHOP = registerSimpleItem("gizka_chop", new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item GIZKA_STEAK = registerSimpleItem("cooked_gizka_chop", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.8F).build()));
 
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item FLANGTH_TAKEOUT = registerSimpleItem("flangth_takeout", new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item FLANGTH_PLATE = registerSimpleItem("flangth_plate", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.8F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item DEATH_STICK_RED = registerSimpleItem("death_stick_red", new Item.Properties().component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK).component(DataComponents.CONSUMABLE, Components.DEATH_STICK_RED).food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).alwaysEdible().build()));
@@ -424,41 +424,41 @@ public class GalaxiesItems
 	public static final Item BLUE_MILK_GLASS = registerSimpleItem("blue_milk_glass", new Item.Properties().component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK).food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item BLUE_YOGURT = registerSimpleItem("blue_yogurt", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item BANTHA_COOKIE = registerSimpleItem("bantha_cookie", new Item.Properties().food(new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build()));
 
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item QRIKKI_BREAD = registerSimpleItem("qrikki_bread", new Item.Properties().food(new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item QRIKKI_WAFFLE = registerSimpleItem("qrikki_waffle", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.7F).build()));
 
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item AHRISA_BOWL = registerSimpleItem("ahrisa_bowl", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item BLACK_MELON = registerSimpleItem("black_melon", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item DESERT_PLUMS = registerSimpleItem("desert_plums", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item DRIED_POONTEN_GRASS = registerSimpleItem("dried_poonten_grass_bushel", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item HAROUN_BREAD = registerSimpleItem("haroun_bread", new Item.Properties().food(new FoodProperties.Builder().nutrition(5).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item HKAK_BEAN = registerSimpleItem("hkak_bean", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item PALLIE_FRUIT = registerSimpleItem("pallie_fruit", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item PIKA_FRUIT = registerSimpleItem("pika_fruit", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item TUBER = registerSimpleItem("tuber", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item COOKED_EOPIE_LOIN = registerSimpleItem("cooked_eopie_loin", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item CRISPY_GORG = registerSimpleItem("crispy_gorg", new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item DEWBACK_EGG = registerSimpleItem("dewback_egg", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item DEWBACK_OMELETTE = registerSimpleItem("dewback_omelette", new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item JERBA_RACK = registerSimpleItem("jerba_rack", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item JERBA_RIB = registerSimpleItem("jerba_rib", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.3F).build()));
@@ -466,17 +466,17 @@ public class GalaxiesItems
 	public static final Item KRAYT_MEAT = registerSimpleItem("krayt_meat", new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item RAW_SKETTO_NUGGET = registerSimpleItem("raw_sketto_nugget", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item ROAST_KRAYT = registerSimpleItem("roast_krayt", new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item RONTO_CHUCK = registerSimpleItem("ronto_chuck", new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item TUBER_MASH = registerSimpleItem("tuber_mash", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item VAPORATOR_MUSHROOM = registerSimpleItem("vaporator_mushroom", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item WORRT_EGG = registerSimpleItem("worrt_egg", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = ItemModel.MODEL_IN_HAND)
 	public static final Item DEB_DEB = registerSimpleItem("deb_deb", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build()));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD)
 	public static final Item EOPIE_LOIN = registerSimpleItem("eopie_loin", new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build()));

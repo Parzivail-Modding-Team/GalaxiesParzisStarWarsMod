@@ -1,0 +1,43 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        3.5,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        3.5,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        10.75,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0,
+        5.5,
+        0
+      ]
+    },
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        5.5,
+        0
+      ]
+    }
+  },
+  "textures": {
+    "0": "pswg:item/3d/food/flangth_takeout_in_hand",
+    "particle": "pswg:block/empty"
+  }
+}
