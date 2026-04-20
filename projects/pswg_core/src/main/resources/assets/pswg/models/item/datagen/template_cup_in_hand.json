@@ -1005,7 +1005,7 @@
 		"faces": {
 			"cube": [
 				{
-					"material": "0",
+					"material": "layer0",
 					"triplets": [
 						{
 							"p": 4,
@@ -1030,7 +1030,7 @@
 					]
 				},
 				{
-					"material": "0",
+					"material": "layer0",
 					"triplets": [
 						{
 							"p": 3,
@@ -1055,7 +1055,7 @@
 					]
 				},
 				{
-					"material": "0",
+					"material": "layer0",
 					"triplets": [
 						{
 							"p": 8,
@@ -1080,7 +1080,7 @@
 					]
 				},
 				{
-					"material": "0",
+					"material": "layer0",
 					"triplets": [
 						{
 							"p": 7,
@@ -1105,7 +1105,7 @@
 					]
 				},
 				{
-					"material": "0",
+					"material": "layer0",
 					"triplets": [
 						{
 							"p": 6,
@@ -1130,7 +1130,7 @@
 					]
 				},
 				{
-					"material": "0",
+					"material": "layer0",
 					"triplets": [
 						{
 							"p": 7,
@@ -1155,7 +1155,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 12,
@@ -1180,7 +1180,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 11,
@@ -1205,7 +1205,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 16,
@@ -1230,7 +1230,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 15,
@@ -1255,7 +1255,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 14,
@@ -1280,7 +1280,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 15,
@@ -1305,7 +1305,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 20,
@@ -1330,7 +1330,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 19,
@@ -1355,7 +1355,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 24,
@@ -1380,7 +1380,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 23,
@@ -1405,7 +1405,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 22,
@@ -1430,7 +1430,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 23,
@@ -1455,7 +1455,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 28,
@@ -1480,7 +1480,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 27,
@@ -1505,7 +1505,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 32,
@@ -1530,7 +1530,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 31,
@@ -1555,7 +1555,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 30,
@@ -1580,7 +1580,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 31,
@@ -1605,7 +1605,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 36,
@@ -1630,7 +1630,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 35,
@@ -1655,7 +1655,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 40,
@@ -1680,7 +1680,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 39,
@@ -1705,7 +1705,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 38,
@@ -1730,7 +1730,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 39,
@@ -1755,7 +1755,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 44,
@@ -1780,7 +1780,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 43,
@@ -1805,7 +1805,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 48,
@@ -1830,7 +1830,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 47,
@@ -1855,7 +1855,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 46,
@@ -1880,7 +1880,7 @@
 					]
 				},
 				{
-					"material": "1",
+					"material": "layer1",
 					"triplets": [
 						{
 							"p": 47,
@@ -1909,8 +1909,8 @@
 	},
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "block/cup",
-		"1": "durasteel_cup"
+		"layer0": "pswg:item/3d/cup_overlay_in_hand",
+		"layer1": "pswg:item/3d/desh_cup_in_hand"
 	},
 	"display": {
 		"thirdperson_righthand": {
