@@ -25,7 +25,7 @@ public class FragmentationGrenadeSparkParticle extends CrossPointingParticle
 		this.setAlpha(1F);
 		this.setColor(0, 0, 1);
 		this.lifetime = (int)(this.random.nextFloat() * 20 + 10);
-		this.scale((float)(this.random.nextFloat() * 0.25 + 0.15));
+		this.quadSize = (float)(this.random.nextFloat() * 0.25 + 0.15);
 		this.setSpriteFromAge(spriteProvider);
 		this.hasPhysics = true;
 		this.xd = vX;
