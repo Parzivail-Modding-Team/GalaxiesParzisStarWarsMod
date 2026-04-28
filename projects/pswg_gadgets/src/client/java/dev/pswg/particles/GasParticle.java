@@ -31,7 +31,8 @@ public abstract class GasParticle extends SingleQuadParticle implements CustomRe
 		this.originalScale = RandomSource.create().nextIntBetweenInclusive(75, 125) / 125f;
 		this.quadSize = originalScale;
 		setSize(0f, 0f);
-		this.setAlpha(0.1f);
+		//this.setAlpha(0.1f);
+		this.setAlpha(0f);
 		this.gasEntity = gasEntity;
 		this.particleId = particleId;
 		billowing = (float)random.nextIntBetweenInclusive(1, 10) / 2500f;
