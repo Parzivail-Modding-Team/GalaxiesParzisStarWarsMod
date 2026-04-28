@@ -2,7 +2,6 @@ package dev.pswg.particles.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.pswg.Gadgets;
 import dev.pswg.GalaxiesRenderLayers;
 import dev.pswg.particles.GasParticle;
 import net.minecraft.client.Camera;
@@ -17,9 +16,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ARGB;
 import java.util.List;
 
-public class GasParticleRenderer extends ParticleGroup<GasParticle>
+public class GasParticleGroup extends ParticleGroup<GasParticle>
 {
-	public GasParticleRenderer(ParticleEngine particleManager)
+	public GasParticleGroup(ParticleEngine particleManager)
 	{
 		super(particleManager);
 	}

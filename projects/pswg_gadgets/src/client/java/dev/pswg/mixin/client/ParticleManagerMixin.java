@@ -4,8 +4,8 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.pswg.GadgetsClient;
 import dev.pswg.particles.CustomRendererParticle;
 import dev.pswg.particles.GadgetsParticleRenderer;
-import dev.pswg.particles.renderers.FragmentationGrenadeWaveParticleRenderer;
-import dev.pswg.particles.renderers.GasParticleRenderer;
+import dev.pswg.particles.renderers.FragmentationGrenadeWaveParticleGroup;
+import dev.pswg.particles.renderers.GasParticleGroup;
 import net.minecraft.client.Camera;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
@@ -34,8 +34,8 @@ public class ParticleManagerMixin
 	{
 		return switch (particleRenderer)
 		{
-			case Gas -> new GasParticleRenderer((ParticleEngine)(Object)this);
-			case FragmentationGrenadeWave -> new FragmentationGrenadeWaveParticleRenderer((ParticleEngine)(Object)this);
+			case Gas -> new GasParticleGroup((ParticleEngine)(Object)this);
+			case FragmentationGrenadeWave -> new FragmentationGrenadeWaveParticleGroup((ParticleEngine)(Object)this);
 		};
 	}
 

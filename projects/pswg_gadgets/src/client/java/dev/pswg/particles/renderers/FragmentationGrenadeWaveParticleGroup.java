@@ -17,9 +17,9 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
 import java.util.List;
 
-public class FragmentationGrenadeWaveParticleRenderer extends ParticleGroup<FragmentationGrenadeWaveParticle>
+public class FragmentationGrenadeWaveParticleGroup extends ParticleGroup<FragmentationGrenadeWaveParticle>
 {
-	public FragmentationGrenadeWaveParticleRenderer(ParticleEngine particleManager)
+	public FragmentationGrenadeWaveParticleGroup(ParticleEngine particleManager)
 	{
 		super(particleManager);
 	}
