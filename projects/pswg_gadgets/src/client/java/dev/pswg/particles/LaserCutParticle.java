@@ -27,7 +27,7 @@ public class LaserCutParticle extends DecalParticle
 		this._spriteProvider = spriteProvider;
 
 		this.friction = 1;
-		this.scale(1 / 32f);
+		this.quadSize = 1 / 32f;
 		this.setAlpha(1F);
 		var a = Mth.lerp(Mth.clamp((this.age / (float)this.lifetime) * 2f, 0, 1), heat, 1.0f);
 		this.setColor(Mth.clamp(getRed(a), 0, 1), Mth.clamp(getGreen(a), 0, 1), Mth.clamp(getBlue(a), 0, 1));

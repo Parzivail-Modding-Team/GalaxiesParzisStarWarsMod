@@ -1,0 +1,44 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        3.25,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        3.25,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        9,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        -0.75,
+        5,
+        0.75
+      ]
+    },
+    "thirdperson_righthand": {
+      "translation": [
+        -0.75,
+        5,
+        0.75
+      ]
+    }
+  },
+  "textures": {
+    "layer0": "pswg:item/3d/cup_overlay_in_hand",
+    "layer1": "pswg:item/3d/desh_cup_in_hand",
+    "particle": "pswg:block/empty"
+  }
+}

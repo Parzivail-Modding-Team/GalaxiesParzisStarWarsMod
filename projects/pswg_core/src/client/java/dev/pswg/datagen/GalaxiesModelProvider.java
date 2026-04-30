@@ -1,6 +1,7 @@
 package dev.pswg.datagen;
 
 import com.mojang.math.Quadrant;
+import dev.pswg.Galaxies;
 import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.item.SwgDrinkTintSource;
@@ -23,7 +24,6 @@ import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.client.renderer.item.ItemModel;
-import net.minecraft.client.renderer.item.properties.select.DisplayContext;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -31,12 +31,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -157,19 +155,19 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	{
 		generator.registerSimpleFlatItemModel(block, "_stage3");
 		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block)
-		                                                                        .with(PropertyDispatch.initial(BlockStateProperties.AGE_3)
-		                                                                                                  .generate(stage -> createWeightedVariant(generator.createSuffixedVariant(block, "_stage" + stage, ModelTemplates.CROSS, TextureMapping::cross)))));
+		                                                       .with(PropertyDispatch.initial(BlockStateProperties.AGE_3)
+		                                                                             .generate(stage -> createWeightedVariant(generator.createSuffixedVariant(block, "_stage" + stage, ModelTemplates.CROSS, TextureMapping::cross)))));
 	}
 
 	protected static void registerCrossAge3Blooming(Block block, BlockModelGenerators generator)
 	{
 		generator.registerSimpleFlatItemModel(block, "_stage3_blooming");
 		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block)
-		                                                                        .with(PropertyDispatch.initial(BlockStateProperties.AGE_3, BlockStateProperties.BLOOM)
-		                                                                                                  .generate((stage, blooming) -> {
-			                                                                                                  String suffix = blooming ? ("_stage" + stage + "_blooming") : ("_stage" + stage);
-			                                                                                                  return createWeightedVariant(generator.createSuffixedVariant(block, suffix, ModelTemplates.CROSS, TextureMapping::cross));
-		                                                                                                  }))
+		                                                       .with(PropertyDispatch.initial(BlockStateProperties.AGE_3, BlockStateProperties.BLOOM)
+		                                                                             .generate((stage, blooming) -> {
+			                                                                             String suffix = blooming ? ("_stage" + stage + "_blooming") : ("_stage" + stage);
+			                                                                             return createWeightedVariant(generator.createSuffixedVariant(block, suffix, ModelTemplates.CROSS, TextureMapping::cross));
+		                                                                             }))
 		);
 	}
 
@@ -180,12 +178,12 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		MultiVariant weightedVariant = createWeightedVariant(texturedModel.create(block, generator.modelOutput));
 		generator.blockStateOutput.accept(
 				MultiVariantGenerator.dispatch(block, weightedVariant).with(PropertyDispatch.modify(BlockStateProperties.FACING)
-				                                                                                         .select(Direction.DOWN, BlockModelGenerators.X_ROT_180)
-				                                                                                         .select(Direction.UP, BlockModelGenerators.NOP)
-				                                                                                         .select(Direction.EAST, BlockModelGenerators.Y_ROT_90.then(BlockModelGenerators.X_ROT_90))
-				                                                                                         .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180.then(BlockModelGenerators.X_ROT_90))
-				                                                                                         .select(Direction.WEST, BlockModelGenerators.Y_ROT_270.then(BlockModelGenerators.X_ROT_90))
-				                                                                                         .select(Direction.NORTH, BlockModelGenerators.X_ROT_90)));
+				                                                                            .select(Direction.DOWN, BlockModelGenerators.X_ROT_180)
+				                                                                            .select(Direction.UP, BlockModelGenerators.NOP)
+				                                                                            .select(Direction.EAST, BlockModelGenerators.Y_ROT_90.then(BlockModelGenerators.X_ROT_90))
+				                                                                            .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180.then(BlockModelGenerators.X_ROT_90))
+				                                                                            .select(Direction.WEST, BlockModelGenerators.Y_ROT_270.then(BlockModelGenerators.X_ROT_90))
+				                                                                            .select(Direction.NORTH, BlockModelGenerators.X_ROT_90)));
 		generator.registerSimpleFlatItemModel(block);
 	}
 
@@ -221,13 +219,13 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 			{
 				Identifier id = modelFactory.create(block, generator.modelOutput);
 				var blockStateSupplier = MultiVariantGenerator.dispatch(block, createWeightedVariant(id)).with(PropertyDispatch.modify(BlockStateProperties.AXIS)
-				                                                                                                                            .select(Direction.Axis.Y, VariantMutator.MODEL.withValue(id))
-				                                                                                                                            .select(Direction.Axis.Z, VariantMutator.MODEL.withValue(id)
-				                                                                                                                                                                                  .then(VariantMutator.X_ROT.withValue(Quadrant.R90)))
-				                                                                                                                            .select(Direction.Axis.X, VariantMutator.MODEL.withValue(id)
-				                                                                                                                                                                                  .then(VariantMutator.X_ROT.withValue(Quadrant.R90))
-				                                                                                                                                                                                  .then(VariantMutator.Y_ROT.withValue(Quadrant.R90))
-				                                                                                                                            )
+				                                                                                                               .select(Direction.Axis.Y, VariantMutator.MODEL.withValue(id))
+				                                                                                                               .select(Direction.Axis.Z, VariantMutator.MODEL.withValue(id)
+				                                                                                                                                                             .then(VariantMutator.X_ROT.withValue(Quadrant.R90)))
+				                                                                                                               .select(Direction.Axis.X, VariantMutator.MODEL.withValue(id)
+				                                                                                                                                                             .then(VariantMutator.X_ROT.withValue(Quadrant.R90))
+				                                                                                                                                                             .then(VariantMutator.Y_ROT.withValue(Quadrant.R90))
+				                                                                                                               )
 				);
 				generator.blockStateOutput.accept(blockStateSupplier);
 			}
@@ -258,14 +256,14 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		Identifier doubleId = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double", textureMap, generator.modelOutput);
 
 		var blockState = MultiVariantGenerator.dispatch(slab, createWeightedVariant(bottomId)).
-		                                                    with(PropertyDispatch.modify(BlockStateProperties.AXIS)
-		                                                                              .select(Direction.Axis.Y, VariantMutator.X_ROT.withValue(Quadrant.R0))
-		                                                                              .select(Direction.Axis.Z, VariantMutator.X_ROT.withValue(Quadrant.R270).then(VariantMutator.UV_LOCK.withValue(true)))
-		                                                                              .select(Direction.Axis.X, VariantMutator.X_ROT.withValue(Quadrant.R90).then(VariantMutator.Y_ROT.withValue(Quadrant.R90)).then(VariantMutator.UV_LOCK.withValue(true)))
-		                                                    ).with(PropertyDispatch.modify(BlockStateProperties.SLAB_TYPE)
-		                                                                                .select(SlabType.BOTTOM, VariantMutator.MODEL.withValue(bottomId))
-		                                                                                .select(SlabType.DOUBLE, VariantMutator.MODEL.withValue(doubleId))
-		                                                                                .select(SlabType.TOP, VariantMutator.MODEL.withValue(topId))
+		                                      with(PropertyDispatch.modify(BlockStateProperties.AXIS)
+		                                                           .select(Direction.Axis.Y, VariantMutator.X_ROT.withValue(Quadrant.R0))
+		                                                           .select(Direction.Axis.Z, VariantMutator.X_ROT.withValue(Quadrant.R270).then(VariantMutator.UV_LOCK.withValue(true)))
+		                                                           .select(Direction.Axis.X, VariantMutator.X_ROT.withValue(Quadrant.R90).then(VariantMutator.Y_ROT.withValue(Quadrant.R90)).then(VariantMutator.UV_LOCK.withValue(true)))
+		                                      ).with(PropertyDispatch.modify(BlockStateProperties.SLAB_TYPE)
+		                                                             .select(SlabType.BOTTOM, VariantMutator.MODEL.withValue(bottomId))
+		                                                             .select(SlabType.DOUBLE, VariantMutator.MODEL.withValue(doubleId))
+		                                                             .select(SlabType.TOP, VariantMutator.MODEL.withValue(topId))
 				);
 		generator.blockStateOutput.accept(blockState);
 	}
@@ -286,17 +284,17 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		Identifier doubleIdOn = ModelTemplates.CUBE_COLUMN.createWithSuffix(slab, "_double_on", textureMapOn, generator.modelOutput);
 
 		var blockState = MultiVariantGenerator.dispatch(slab, createWeightedVariant(bottomId)).
-		                                                    with(PropertyDispatch.modify(BlockStateProperties.AXIS)
-		                                                                              .select(Direction.Axis.Y, VariantMutator.X_ROT.withValue(Quadrant.R0))
-		                                                                              .select(Direction.Axis.Z, VariantMutator.X_ROT.withValue(Quadrant.R270))
-		                                                                              .select(Direction.Axis.X, VariantMutator.X_ROT.withValue(Quadrant.R90).then(VariantMutator.Y_ROT.withValue(Quadrant.R90)))
-		                                                    ).with(PropertyDispatch.modify(BlockStateProperties.SLAB_TYPE, BlockStateProperties.LIT)
-		                                                                                .select(SlabType.BOTTOM, false, VariantMutator.MODEL.withValue(bottomId))
-		                                                                                .select(SlabType.BOTTOM, true, VariantMutator.MODEL.withValue(bottomIdOn))
-		                                                                                .select(SlabType.DOUBLE, false, VariantMutator.MODEL.withValue(doubleId))
-		                                                                                .select(SlabType.DOUBLE, true, VariantMutator.MODEL.withValue(doubleIdOn))
-		                                                                                .select(SlabType.TOP, false, VariantMutator.MODEL.withValue(topId))
-		                                                                                .select(SlabType.TOP, true, VariantMutator.MODEL.withValue(topIdOn))
+		                                      with(PropertyDispatch.modify(BlockStateProperties.AXIS)
+		                                                           .select(Direction.Axis.Y, VariantMutator.X_ROT.withValue(Quadrant.R0))
+		                                                           .select(Direction.Axis.Z, VariantMutator.X_ROT.withValue(Quadrant.R270))
+		                                                           .select(Direction.Axis.X, VariantMutator.X_ROT.withValue(Quadrant.R90).then(VariantMutator.Y_ROT.withValue(Quadrant.R90)))
+		                                      ).with(PropertyDispatch.modify(BlockStateProperties.SLAB_TYPE, BlockStateProperties.LIT)
+		                                                             .select(SlabType.BOTTOM, false, VariantMutator.MODEL.withValue(bottomId))
+		                                                             .select(SlabType.BOTTOM, true, VariantMutator.MODEL.withValue(bottomIdOn))
+		                                                             .select(SlabType.DOUBLE, false, VariantMutator.MODEL.withValue(doubleId))
+		                                                             .select(SlabType.DOUBLE, true, VariantMutator.MODEL.withValue(doubleIdOn))
+		                                                             .select(SlabType.TOP, false, VariantMutator.MODEL.withValue(topId))
+		                                                             .select(SlabType.TOP, true, VariantMutator.MODEL.withValue(topIdOn))
 				);
 		generator.blockStateOutput.accept(blockState);
 	}
@@ -351,8 +349,8 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	{
 		Identifier modelId;
 		Material overlay = dataGenItem.overlayTextureOverride().equals("")
-				? new Material(Identifier.parse(createItemKey(item, dataGenItem).withSuffix("_overlay").toString().replace("_filled", "")))
-				: new Material(Identifier.fromNamespaceAndPath(namespace, dataGenItem.overlayTextureOverride()).withPrefix("item/"));
+		                   ? new Material(Identifier.parse(createItemKey(item, dataGenItem).withSuffix("_overlay").toString().replace("_filled", "")))
+		                   : new Material(Identifier.fromNamespaceAndPath(namespace, dataGenItem.overlayTextureOverride()).withPrefix("item/"));
 		Material base = new Material(Identifier.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", "")));
 
 		if (dataGenItem.invertLayer())
@@ -365,6 +363,24 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 			modelId = generator.generateLayeredItem(item, overlay, base);
 			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new SwgDrinkTintSource()));
 		}
+	}
+	public void registerFilledCup(ItemModelGenerators generator, Item item, DataGenItem dataGenItem){
+		Material overlayFlat = new Material(Galaxies.id("item/cup_overlay"));
+		Material baseFlat = new Material(Identifier.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", "")));
+		Identifier flatModelId = generator.generateLayeredItem(item, baseFlat, overlayFlat);
+		ItemModel.Unbaked flatModel = ItemModelUtils.tintedModel(flatModelId, new SwgDrinkTintSource());
+
+		ModelTemplate modelTemplateInHand = createItemModelFromTemplate(Galaxies.id("item/template_cup_in_hand"), "", TextureSlot.LAYER1);
+		Material baseInHand = new Material(Identifier.parse(item.toString()).withSuffix("_in_hand").withPrefix("item/3d/"));
+		Material overlayInHand = new Material(Galaxies.id("item/3d/food/cup_overlay_in_hand"));
+
+		Identifier modelInHandId = modelTemplateInHand.create(createItemKey(item, dataGenItem).withSuffix("_in_hand"), TextureMapping.layered(baseInHand, overlayInHand), generator.modelOutput);
+		ItemModel.Unbaked inHandModel = ItemModelUtils.tintedModel(modelInHandId, new SwgDrinkTintSource());
+
+		generator.itemModelOutput.accept(item, generator.createFlatModelDispatch(flatModel, inHandModel));
+	}
+	public ModelTemplate createItemModelFromTemplate(Identifier template, String suffix, TextureSlot... slots) {
+		return new ModelTemplate(Optional.of(template), Optional.of(suffix), slots);
 	}
 	public static void register3dHand(ItemModelGenerators generator, Item item){
 		ItemModel.Unbaked flatModel = ItemModelUtils.plainModel(generator.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));

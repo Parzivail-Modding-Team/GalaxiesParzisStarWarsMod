@@ -28,10 +28,11 @@ public abstract class GasParticle extends SingleQuadParticle implements CustomRe
 	{
 		super(clientWorld, x, y, z, spriteProvider.first());
 
-		this.originalScale = RandomSource.create().nextIntBetweenInclusive(75, 125) / 15f;
-		scale(originalScale);
+		this.originalScale = RandomSource.create().nextIntBetweenInclusive(75, 125) / 125f;
+		this.quadSize = originalScale;
 		setSize(0f, 0f);
-		this.setAlpha(0.1f);
+		//this.setAlpha(0.1f);
+		this.setAlpha(0f);
 		this.gasEntity = gasEntity;
 		this.particleId = particleId;
 		billowing = (float)random.nextIntBetweenInclusive(1, 10) / 2500f;
@@ -52,6 +53,12 @@ public abstract class GasParticle extends SingleQuadParticle implements CustomRe
 	protected Layer getLayer()
 	{
 		return Layer.TRANSLUCENT;
+	}
+
+	@Override
+	public ParticleRenderType getGroup()
+	{
+		return ParticleRenderType.NO_RENDER;
 	}
 
 	@Override
