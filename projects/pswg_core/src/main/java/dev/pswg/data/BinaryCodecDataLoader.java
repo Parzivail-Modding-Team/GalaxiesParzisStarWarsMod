@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 /**
  * A datapack loader for packet-codec-backed data
  */
-public class BinaryCodecDataLoader<T> implements PreparableReloadListener
+public class BinaryCodecDataLoader<T> implements RegisterableResourceReloader
 {
 	/**
 	 * The logger used while loading data

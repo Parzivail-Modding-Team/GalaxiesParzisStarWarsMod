@@ -15,6 +15,7 @@ import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particle.ShortFlameParticle;
 import dev.pswg.particle.SmallFlashParticle;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
+import dev.pswg.rendering.ptex.PtexTextures;
 import dev.pswg.screens.CrateGenericSmallScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -30,7 +31,9 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -135,7 +138,10 @@ public class GalaxiesClient implements ClientModInitializer
 		});
 
 		// Register the quad buffer loader
-		registerClientReloader(GQB_LOADER);
+		GQB_LOADER.register();
+
+		// Register runtime texture services
+		PtexTextures.LOADER.register();
 
 		//Register tints
 		ItemTintSources.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);
@@ -155,22 +161,5 @@ public class GalaxiesClient implements ClientModInitializer
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesFinalizing);
 
 		Galaxies.LOGGER.info("Galaxies client initialized");
-	}
-
-	/**
-	 * Registers a client resource reloader against Fabric's v1 resource loader
-	 * API.
-	 *
-	 * @param reloader The reloader to register.
-	 */
-	private static void registerClientReloader(BinaryCodecDataLoader<?> reloader)
-	{
-		var resourceLoader = ResourceLoader.get(PackType.CLIENT_RESOURCES);
-		resourceLoader.registerReloadListener(reloader.getId(), reloader);
-
-		for (var dependency : reloader.getDependencies())
-		{
-			resourceLoader.addListenerOrdering(reloader.getId(), dependency);
-		}
 	}
 }
