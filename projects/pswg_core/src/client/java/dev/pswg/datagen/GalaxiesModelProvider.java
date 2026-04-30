@@ -24,7 +24,6 @@ import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.client.renderer.item.ItemModel;
-import net.minecraft.client.renderer.item.properties.select.DisplayContext;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,15 +31,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
-<<<<<<< feature/models
-=======
-import java.util.List;
->>>>>>> develop
 import java.util.Optional;
 
 /**
@@ -370,7 +364,6 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new SwgDrinkTintSource()));
 		}
 	}
-<<<<<<< feature/models
 	public void registerFilledCup(ItemModelGenerators generator, Item item, DataGenItem dataGenItem){
 		Material overlayFlat = new Material(Galaxies.id("item/cup_overlay"));
 		Material baseFlat = new Material(Identifier.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", "")));
@@ -389,8 +382,6 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	public ModelTemplate createItemModelFromTemplate(Identifier template, String suffix, TextureSlot... slots) {
 		return new ModelTemplate(Optional.of(template), Optional.of(suffix), slots);
 	}
-=======
->>>>>>> develop
 	public static void register3dHand(ItemModelGenerators generator, Item item){
 		ItemModel.Unbaked flatModel = ItemModelUtils.plainModel(generator.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
 		ItemModel.Unbaked inHandModel = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item, "_in_hand"));
