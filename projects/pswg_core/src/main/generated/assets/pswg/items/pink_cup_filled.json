@@ -1,36 +1,16 @@
 {
   "model": {
-    "type": "minecraft:select",
-    "cases": [
+    "type": "minecraft:model",
+    "model": "pswg:item/pink_cup_filled",
+    "tints": [
       {
-        "model": {
-          "type": "minecraft:model",
-          "model": "pswg:item/pink_cup_filled",
-          "tints": [
-            {
-              "type": "pswg:drink",
-              "default": -13083194
-            }
-          ]
-        },
-        "when": [
-          "gui",
-          "ground",
-          "fixed",
-          "on_shelf"
-        ]
+        "type": "minecraft:constant",
+        "value": -1
+      },
+      {
+        "type": "pswg:drink",
+        "default": -13083194
       }
-    ],
-    "fallback": {
-      "type": "minecraft:model",
-      "model": "pswg:item/pink_cup_filled_in_hand",
-      "tints": [
-        {
-          "type": "pswg:drink",
-          "default": -13083194
-        }
-      ]
-    },
-    "property": "minecraft:display_context"
+    ]
   }
 }
