@@ -8,14 +8,10 @@ import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItemGroups;
 import dev.pswg.container.GalaxiesItems;
-import dev.pswg.data.CodecDataLoader;
-import dev.pswg.data.IdentifierUtil;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
-import dev.pswg.rendering.models.GalaxiesModelBakery;
-import dev.pswg.rendering.models.GqbIntermediary;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -28,9 +24,6 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.Identifier;
@@ -69,7 +62,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		pack.addProvider(RecipesGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
-		pack.addProvider((fabricPackOutput, completableFuture) -> new dev.pswg.datagen.GqdCompiledModelGenerator(fabricPackOutput, Galaxies.MODID));
+		pack.addProvider((fabricPackOutput, completableFuture) -> new GqdCompiledModelGenerator(fabricPackOutput, Galaxies.MODID));
 	}
 
 	/**
