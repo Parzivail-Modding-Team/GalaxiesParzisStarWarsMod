@@ -1,6 +1,5 @@
-package dev.pswg.item;
+package dev.pswg.item.grenades.soundGroups;
 
-import dev.pswg.container.GadgetsSounds;
 import net.minecraft.world.entity.LivingEntity;
 
 public abstract class ExplosionSoundGroup
