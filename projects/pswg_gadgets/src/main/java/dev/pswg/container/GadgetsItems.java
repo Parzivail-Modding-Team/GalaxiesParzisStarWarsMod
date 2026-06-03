@@ -2,12 +2,14 @@ package dev.pswg.container;
 
 import com.mojang.serialization.Codec;
 import dev.pswg.Gadgets;
-import dev.pswg.datagen.DataGenItemTag;
 import dev.pswg.datagen.DataGenItem;
 import dev.pswg.datagen.DataGenItemGroup;
 import dev.pswg.datagen.ItemModel;
 import dev.pswg.feature.scrapping.cutter.LaserCutterItem;
 import dev.pswg.item.*;
+import dev.pswg.item.drill.DrillExtractionInstance;
+import dev.pswg.item.drill.DrillExtractorProperties;
+import dev.pswg.item.drill.MiningDrillItem;
 import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.gen.DataGenGadgetsItemTag;
@@ -64,6 +66,16 @@ public class GadgetsItems
 				Identifier.fromNamespaceAndPath(Gadgets.MODID, "max_pos"),
 				DataComponentType.<Vec3>builder().persistent(Vec3.CODEC).build()
 		);
+		public static final DataComponentType<DrillExtractorProperties> DRILL_EXTRACTOR_PROPERTIES = Registry.register(
+				BuiltInRegistries.DATA_COMPONENT_TYPE,
+				Identifier.fromNamespaceAndPath(Gadgets.MODID, "drill_extractor_properties"),
+				DataComponentType.<DrillExtractorProperties>builder().persistent(DrillExtractorProperties.CODEC).build()
+		);
+		public static final DataComponentType<DrillExtractionInstance> DRILL_EXTRACTION_INSTANCE = Registry.register(
+				BuiltInRegistries.DATA_COMPONENT_TYPE,
+				Identifier.fromNamespaceAndPath(Gadgets.MODID, "drill_extraction_instance"),
+				DataComponentType.<DrillExtractionInstance>builder().persistent(DrillExtractionInstance.CODEC).build()
+		);
 
 
 		public static void register()
@@ -72,7 +84,7 @@ public class GadgetsItems
 	}
 
 	/// GRENADE
-	/// @GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
+	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
 	@DataGenItem(langOverride = "CLS-A Thermal Detonator", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = ItemModel.NONE)
 	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(Gadgets.id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
@@ -106,6 +118,8 @@ public class GadgetsItems
 	public static final Item SPANNER_ITEM = registerSimpleItem("spanner", new Item.Properties().durability(100));
 	@DataGenItem(wiz = true, langOverride = "ReliaCharge Power Calibrator")
 	public static final Item CALIBRATOR_ITEM = registerSimpleItem("calibrator", new Item.Properties().durability(100));
+	@DataGenItem(wiz = true, langOverride = "Extractor")
+	public static final Item DRILL_ITEM = Registrar.item(Gadgets.id("extraction_drill"), MiningDrillItem::new, new Item.Properties().durability(100).component(Components.DRILL_EXTRACTOR_PROPERTIES, new DrillExtractorProperties(1f, 1f, 5)));
 
 	public static Item registerSimpleItem(String key)
 	{
