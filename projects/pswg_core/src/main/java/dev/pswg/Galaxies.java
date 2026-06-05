@@ -148,6 +148,8 @@ public final class Galaxies implements ModInitializer
 
 		GalaxiesScreenHandlerTypes.register();
 
+		GalaxiesSounds.register();
+
 		GalaxiesDimensions.register();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
