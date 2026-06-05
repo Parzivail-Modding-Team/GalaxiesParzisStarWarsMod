@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ModelTemplates;
@@ -351,6 +352,8 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DataGenBlockTag.LOGS_THAT_BURN, this);
 			addBlocksToTag(BlockTags.STAIRS, DataGenBlockTag.STAIRS, this);
 			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DataGenBlockTag.BUSH_PLACEABLE, this);
+			addBlocksToTag(ConventionalBlockTags.ORES, DataGenBlockTag.ORES, this);
+			addBlocksToTag(ConventionalBlockTags.ORES_IN_GROUND_STONE, DataGenBlockTag.ORES_REPLACING_STONE, this);
 			getOrCreateRawBuilder(GalaxiesBlocks.Tags.BUSH_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.location())
 					.add(blockId(Blocks.GRASS_BLOCK))
