@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.HolderLookup;
@@ -122,6 +123,11 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void generateItemModels(ItemModelGenerators itemModelGenerator)
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
+
+			// TODO: drill model
+			/*register(itemModelGenerator, GadgetsItems.DRILL_ITEM, ItemModelUtils.composite(
+					ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_in_hand")),
+					));*/
 		}
 
 		public static Identifier createItemKey(Item item, DataGenItem dataGenItem)
@@ -142,6 +148,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					{
 						case GENERATED -> register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_ITEM);
 						case HANDHELD -> register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_HANDHELD_ITEM);
+						case MODEL_IN_HAND -> GalaxiesModelProvider.register3dHand(generator, item);
 						case DRINK -> registerDrink(generator, item, dataGenItem);
 					}
 			}

@@ -25,7 +25,7 @@ import java.util.Stack;
 
 public class MiningDrillItem extends Item
 {
-	public static final int DEFAULT_EXTRACTION_TIME = 200;
+	public static final int DEFAULT_EXTRACTION_TIME = 150;
 	public MiningDrillItem(Properties properties)
 	{
 		super(properties);
@@ -43,12 +43,12 @@ public class MiningDrillItem extends Item
 		Level level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		BlockState state = level.getBlockState(pos);
-		DrillExtractorProperties properties = context.getItemInHand().get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
+		DrillProperties properties = context.getItemInHand().get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		if(state.is(ConventionalBlockTags.ORES) && properties != null)
 		{
 			List<BlockPos> markedBlocks = new ArrayList<>();
 			List<BlockPos> checkedBlocks = new ArrayList<>();
-			int count = properties.maxBlockCount();
+			int count = properties.getCapsule().maxBlockCount;
 			Stack<BlockPos> posToCheck = new Stack<>();
 			posToCheck.push(pos);
 			checkedBlocks.add(pos);
@@ -79,20 +79,20 @@ public class MiningDrillItem extends Item
 	@Override
 	public int getUseDuration(ItemStack itemStack, LivingEntity user)
 	{
-		DrillExtractorProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
+		DrillProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		DrillExtractionInstance instance = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTION_INSTANCE);
 		if(properties == null)
 			return DEFAULT_EXTRACTION_TIME;
-		int baseExtractionTime = (int)((float)DEFAULT_EXTRACTION_TIME / properties.extractionSpeed());
+		int baseExtractionTime = (int)((float)DEFAULT_EXTRACTION_TIME / properties.getExtractor().extractionSpeed);
 		if(instance != null && instance.blocksToExtract() > 0)
-			return (int)((float)baseExtractionTime * instance.blocksToExtract() / properties.maxBlockCount());
+			return (int)((float)baseExtractionTime * instance.blocksToExtract() / properties.getCapsule().maxBlockCount);
 		return baseExtractionTime;
 	}
 
 	@Override
 	public void onUseTick(Level level, LivingEntity user, ItemStack itemStack, int ticksRemaining)
 	{
-		DrillExtractorProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
+		DrillProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		DrillExtractionInstance extractionInstance = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTION_INSTANCE);
 		if(properties != null && extractionInstance != null)
 		{
@@ -111,7 +111,7 @@ public class MiningDrillItem extends Item
 		super.onUseTick(level, user, itemStack, ticksRemaining);
 	}
 	private void extractBlock(BlockPos pos, ItemStack itemStack, ServerLevel level, LivingEntity user){
-		DrillExtractorProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
+		DrillProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		BlockState blockState = level.getBlockState(pos);
 		LootParams.Builder params = new LootParams.Builder(level)
 				.withParameter(LootContextParams.TOOL, itemStack)
@@ -120,7 +120,7 @@ public class MiningDrillItem extends Item
 				;
 		List<ItemStack> drops = blockState.getDrops(params);
 		for(ItemStack stack : drops){
-			float itemCount = (float)stack.count() * properties.extractionMultiplier();
+			float itemCount = (float)stack.count() * properties.getExtractor().extractionMultiplier;
 			var newStack = stack.copyWithCount((int)itemCount);
 			if(user instanceof Player player){
 				player.addItem(newStack);

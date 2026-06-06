@@ -8,6 +8,7 @@ import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.feature.brewing.BrewingMap;
 import dev.pswg.feature.brewing.MixerBrewingPaths;
 import dev.pswg.feature.brewing.MixerFoodColors;
+import dev.pswg.item.drill.DrillComponents;
 import dev.pswg.networking.MixerSyncS2CPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
@@ -66,6 +67,8 @@ public final class Gadgets implements GalaxiesAddon
 		MixerBrewingPaths.init();
 
 		PayloadTypeRegistry.clientboundPlay().register(MixerSyncS2CPayload.TYPE, MixerSyncS2CPayload.CODEC);
+
+		DrillComponents.register();
 
 		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(Gadgets.id("brewing_maps"), (ResourceManagerReloadListener)manager ->
 		{

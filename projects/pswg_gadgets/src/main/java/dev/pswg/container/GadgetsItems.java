@@ -8,7 +8,7 @@ import dev.pswg.datagen.ItemModel;
 import dev.pswg.feature.scrapping.cutter.LaserCutterItem;
 import dev.pswg.item.*;
 import dev.pswg.item.drill.DrillExtractionInstance;
-import dev.pswg.item.drill.DrillExtractorProperties;
+import dev.pswg.item.drill.DrillProperties;
 import dev.pswg.item.drill.MiningDrillItem;
 import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;
@@ -66,10 +66,10 @@ public class GadgetsItems
 				Identifier.fromNamespaceAndPath(Gadgets.MODID, "max_pos"),
 				DataComponentType.<Vec3>builder().persistent(Vec3.CODEC).build()
 		);
-		public static final DataComponentType<DrillExtractorProperties> DRILL_EXTRACTOR_PROPERTIES = Registry.register(
+		public static final DataComponentType<DrillProperties> DRILL_EXTRACTOR_PROPERTIES = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
 				Identifier.fromNamespaceAndPath(Gadgets.MODID, "drill_extractor_properties"),
-				DataComponentType.<DrillExtractorProperties>builder().persistent(DrillExtractorProperties.CODEC).build()
+				DataComponentType.<DrillProperties>builder().persistent(DrillProperties.CODEC).build()
 		);
 		public static final DataComponentType<DrillExtractionInstance> DRILL_EXTRACTION_INSTANCE = Registry.register(
 				BuiltInRegistries.DATA_COMPONENT_TYPE,
@@ -118,8 +118,8 @@ public class GadgetsItems
 	public static final Item SPANNER_ITEM = registerSimpleItem("spanner", new Item.Properties().durability(100));
 	@DataGenItem(wiz = true, langOverride = "ReliaCharge Power Calibrator")
 	public static final Item CALIBRATOR_ITEM = registerSimpleItem("calibrator", new Item.Properties().durability(100));
-	@DataGenItem(wiz = true, langOverride = "Extractor")
-	public static final Item DRILL_ITEM = Registrar.item(Gadgets.id("extraction_drill"), MiningDrillItem::new, new Item.Properties().durability(100).component(Components.DRILL_EXTRACTOR_PROPERTIES, new DrillExtractorProperties(1f, 1f, 5)));
+	@DataGenItem(langOverride = "Extractor", model = ItemModel.NONE)
+	public static final Item DRILL_ITEM = Registrar.item(Gadgets.id("extraction_drill"), MiningDrillItem::new, new Item.Properties().durability(100).component(Components.DRILL_EXTRACTOR_PROPERTIES, new DrillProperties("baseExtractor", "baseDrill", "baseCapsule")));
 
 	public static Item registerSimpleItem(String key)
 	{
