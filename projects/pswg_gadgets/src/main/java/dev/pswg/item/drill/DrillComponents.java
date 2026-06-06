@@ -12,10 +12,15 @@ public class DrillComponents
 	public static void register(){
 		extractorMap.put("baseExtractor", new Extractor(1f, 1f, 1f));
 		extractorMap.put("laserExtractor", new Extractor(2.5f, 0.75f, 0.5f));
+		extractorMap.put("plasteelExtractor", new Extractor(1f, 1.65f, 0.35f));
 
-		drillMap.put("baseDrill", new Drill(1f, 3, 300));
+		drillMap.put("baseDrill", new Drill(1f, 3, 400));
+		drillMap.put("titaniumDrill", new Drill(1.25f, 4, 600));
+		drillMap.put("plasteelDrill", new Drill(1.75f, 3, 200));
 
-		capsuleMap.put("baseCapsule", new Capsule(4, 0));
+		capsuleMap.put("baseCapsule", new Capsule(5, 0));
+		capsuleMap.put("transparisteelCapsule", new Capsule(6, -100));
+		capsuleMap.put("reinforcedCapsule", new Capsule(4, 200));
 	}
 	public static Extractor getDefaultExtractor(){
 		return extractorMap.get("baseExtractor");
