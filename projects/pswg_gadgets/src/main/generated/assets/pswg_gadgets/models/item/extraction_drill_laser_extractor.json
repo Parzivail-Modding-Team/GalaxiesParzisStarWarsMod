@@ -1,0 +1,45 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        0,
+        -1.75
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        0,
+        -1.75
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        0,
+        -4.5
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0,
+        0,
+        -1.75
+      ]
+    },
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        0,
+        -1.75
+      ]
+    }
+  },
+  "textures": {
+    "1": "pswg_gadgets:item/drill/fluid_capsule",
+    "2": "pswg_gadgets:item/drill/extraction_drill",
+    "3": "pswg_gadgets:item/drill/laser_extractor",
+    "particle": "pswg:block/empty"
+  }
+}

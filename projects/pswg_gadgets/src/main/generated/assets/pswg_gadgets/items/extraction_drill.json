@@ -1,24 +1,59 @@
 {
   "model": {
-    "type": "minecraft:select",
-    "cases": [
+    "type": "minecraft:composite",
+    "models": [
       {
-        "model": {
-          "type": "minecraft:model",
-          "model": "pswg_gadgets:item/extraction_drill"
+        "type": "minecraft:model",
+        "model": "pswg_gadgets:item/extraction_drill_in_hand"
+      },
+      {
+        "type": "minecraft:condition",
+        "extractorId": "baseExtractor",
+        "on_false": {
+          "type": "minecraft:empty"
         },
-        "when": [
-          "gui",
-          "ground",
-          "fixed",
-          "on_shelf"
-        ]
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "pswg_gadgets:item/extraction_drill_base_extractor"
+        },
+        "property": "pswg_gadgets:has_extractor"
+      },
+      {
+        "type": "minecraft:condition",
+        "extractorId": "laserExtractor",
+        "on_false": {
+          "type": "minecraft:empty"
+        },
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "pswg_gadgets:item/extraction_drill_laser_extractor"
+        },
+        "property": "pswg_gadgets:has_extractor"
+      },
+      {
+        "type": "minecraft:condition",
+        "capsuleId": "baseCapsule",
+        "on_false": {
+          "type": "minecraft:empty"
+        },
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "pswg_gadgets:item/extraction_drill_base_capsule"
+        },
+        "property": "pswg_gadgets:has_capsule"
+      },
+      {
+        "type": "minecraft:condition",
+        "drillId": "baseDrill",
+        "on_false": {
+          "type": "minecraft:empty"
+        },
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "pswg_gadgets:item/extraction_drill_base_drill"
+        },
+        "property": "pswg_gadgets:has_drill"
       }
-    ],
-    "fallback": {
-      "type": "minecraft:model",
-      "model": "pswg_gadgets:item/extraction_drill_in_hand"
-    },
-    "property": "minecraft:display_context"
+    ]
   }
 }

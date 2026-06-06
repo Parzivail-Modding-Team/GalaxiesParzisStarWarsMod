@@ -11,6 +11,9 @@ import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.autoreg.AutoGenerateUtil;
+import dev.pswg.item.drill.HasCapsuleProperty;
+import dev.pswg.item.drill.HasDrillProperty;
+import dev.pswg.item.drill.HasExtractorProperty;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
 import dev.pswg.rendering.models.GqbIntermediary;
 import dev.pswg.util.gen.*;
@@ -26,6 +29,7 @@ import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.client.renderer.item.EmptyModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -124,10 +128,32 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
 
-			// TODO: drill model
-			/*register(itemModelGenerator, GadgetsItems.DRILL_ITEM, ItemModelUtils.composite(
+
+			register(itemModelGenerator, GadgetsItems.DRILL_ITEM, ItemModelUtils.composite(
 					ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_in_hand")),
-					));*/
+					ItemModelUtils.conditional(
+							new HasExtractorProperty("baseExtractor"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_extractor")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasExtractorProperty("laserExtractor"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_laser_extractor")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasCapsuleProperty("baseCapsule"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_capsule")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasDrillProperty("baseDrill"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_drill")),
+							new EmptyModel.Unbaked()
+					)
+			         )
+			)
+			;
 		}
 
 		public static Identifier createItemKey(Item item, DataGenItem dataGenItem)
