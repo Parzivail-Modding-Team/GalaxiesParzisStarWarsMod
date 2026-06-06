@@ -11,7 +11,7 @@ public class DrillComponents
 
 	public static void register(){
 		extractorMap.put("baseExtractor", new Extractor(1f, 1f, 1f));
-		extractorMap.put("laserExtractor", new Extractor(2f, 0.75f, 0.5f));
+		extractorMap.put("laserExtractor", new Extractor(2.5f, 0.75f, 0.5f));
 
 		drillMap.put("baseDrill", new Drill(1f, 3, 300));
 

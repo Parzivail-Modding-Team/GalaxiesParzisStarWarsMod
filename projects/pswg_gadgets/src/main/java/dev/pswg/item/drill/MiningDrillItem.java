@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -25,7 +26,7 @@ import java.util.Stack;
 
 public class MiningDrillItem extends Item
 {
-	public static final int DEFAULT_EXTRACTION_TIME = 150;
+	public static final int DEFAULT_EXTRACTION_TIME = 100;
 	public MiningDrillItem(Properties properties)
 	{
 		super(properties);
@@ -120,7 +121,9 @@ public class MiningDrillItem extends Item
 				;
 		List<ItemStack> drops = blockState.getDrops(params);
 		for(ItemStack stack : drops){
-			float itemCount = (float)stack.count() * properties.getExtractor().extractionMultiplier;
+			float mul = properties.getExtractor().extractionMultiplier;
+			RandomSource random = level.getRandom();
+			float itemCount = (float)stack.count() * random.nextIntBetweenInclusive((int)Math.floor(mul), (int)Math.ceil(2d * mul));
 			var newStack = stack.copyWithCount((int)itemCount);
 			if(user instanceof Player player){
 				player.addItem(newStack);
