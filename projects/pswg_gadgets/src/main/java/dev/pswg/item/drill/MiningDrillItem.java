@@ -83,12 +83,17 @@ public class MiningDrillItem extends Item
 	{
 		DrillProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		DrillExtractionInstance instance = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTION_INSTANCE);
+		float durabilityModifier = 1f;
+		int damage = itemStack.getOrDefault(DataComponents.DAMAGE, 0);
+		int maxDamage = itemStack.getOrDefault(DataComponents.MAX_DAMAGE, 100);
+		if((double)damage / maxDamage > 0.8d)
+			durabilityModifier = 1f + ((float)damage / maxDamage - 0.8f) * 5f;
 		if(properties == null)
-			return DEFAULT_EXTRACTION_TIME;
+			return (int)(DEFAULT_EXTRACTION_TIME * durabilityModifier);
 		int baseExtractionTime = (int)((float)DEFAULT_EXTRACTION_TIME / properties.getExtractor().extractionSpeed);
 		if(instance != null && instance.blocksToExtract() > 0)
-			return (int)((float)baseExtractionTime * instance.blocksToExtract() / properties.getCapsule().maxBlockCount);
-		return baseExtractionTime;
+			return (int)((float)baseExtractionTime * instance.blocksToExtract() / properties.getCapsule().maxBlockCount * durabilityModifier);
+		return (int)(baseExtractionTime * durabilityModifier);
 	}
 
 	@Override
