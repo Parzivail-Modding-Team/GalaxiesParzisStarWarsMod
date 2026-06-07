@@ -4,6 +4,7 @@ import dev.pswg.container.GadgetsItems;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -138,6 +139,13 @@ public class MiningDrillItem extends Item
 			level.setBlockAndUpdate(pos, Blocks.NETHERRACK.defaultBlockState());
 		else
 			level.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
+
+		if(!(user instanceof Player player && player.isCreative()))
+		{
+			itemStack.set(DataComponents.MAX_DAMAGE, properties.getDurability());
+			int damage = itemStack.getOrDefault(DataComponents.DAMAGE, 0) + 1;
+			itemStack.set(DataComponents.DAMAGE, damage);
+		}
 	}
 
 	@Override
