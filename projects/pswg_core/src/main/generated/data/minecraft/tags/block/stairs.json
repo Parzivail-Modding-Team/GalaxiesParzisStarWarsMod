@@ -1,0 +1,24 @@
+{
+  "values": [
+    "pswg:canyon_stone_stairs",
+    "pswg:canyon_cobblestone_stairs",
+    "pswg:pourstone_stairs",
+    "pswg:smooth_pourstone_stairs",
+    "pswg:cracked_pourstone_stairs",
+    "pswg:massassi_stone_stairs",
+    "pswg:massassi_stone_bricks_stairs",
+    "pswg:mossy_massassi_stone_bricks_stairs",
+    "pswg:ilum_stone_stairs",
+    "pswg:ilum_stone_bricks_stairs",
+    "pswg:desert_sandstone_stairs",
+    "pswg:black_imperial_panel_blank_stairs",
+    "pswg:gray_imperial_panel_blank_stairs",
+    "pswg:light_gray_imperial_panel_blank_stairs",
+    "pswg:white_imperial_panel_blank_stairs",
+    "pswg:smooth_massassi_stone_stairs",
+    "pswg:mossy_smooth_massassi_stone_stairs",
+    "pswg:smooth_ilum_stone_stairs",
+    "pswg:sequoia_stairs",
+    "pswg:japor_stairs"
+  ]
+}

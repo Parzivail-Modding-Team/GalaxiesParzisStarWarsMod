@@ -343,6 +343,30 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, StoneProducts.class, (stoneProducts, annotation) -> {
+				this.getOrCreateRawBuilder(BlockTags.WALLS).add(blockId(stoneProducts.wall));
+				this.getOrCreateRawBuilder(BlockTags.STAIRS).add(blockId(stoneProducts.stairs));
+				this.getOrCreateRawBuilder(BlockTags.SLABS).add(blockId(stoneProducts.slab));
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, ReducedStoneProducts.class, (stoneProducts, annotation) -> {
+				this.getOrCreateRawBuilder(BlockTags.STAIRS).add(blockId(stoneProducts.stairs));
+				this.getOrCreateRawBuilder(BlockTags.SLABS).add(blockId(stoneProducts.slab));
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, WoodProducts.class, (woodProducts, annotation) -> {
+				this.getOrCreateRawBuilder(BlockTags.FENCES).add(blockId(woodProducts.fence));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_FENCES).add(blockId(woodProducts.fence));
+				this.getOrCreateRawBuilder(BlockTags.FENCE_GATES).add(blockId(woodProducts.gate));
+				this.getOrCreateRawBuilder(ConventionalBlockTags.WOODEN_FENCE_GATES).add(blockId(woodProducts.gate));
+				this.getOrCreateRawBuilder(BlockTags.STAIRS).add(blockId(woodProducts.stairs));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_STAIRS).add(blockId(woodProducts.stairs));
+				this.getOrCreateRawBuilder(BlockTags.SLABS).add(blockId(woodProducts.slab));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_SLABS).add(blockId(woodProducts.slab));
+				this.getOrCreateRawBuilder(BlockTags.DOORS).add(blockId(woodProducts.door));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_DOORS).add(blockId(woodProducts.door));
+				this.getOrCreateRawBuilder(BlockTags.TRAPDOORS).add(blockId(woodProducts.trapdoor));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_TRAPDOORS).add(blockId(woodProducts.trapdoor));
+
+			});
 			addBlocksToTag(BlockTags.LEAVES, DataGenBlockTag.LEAVES, this);
 			addBlocksToTag(BlockTags.LOGS, DataGenBlockTag.LOGS, this);
 			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DataGenBlockTag.AXE_MINEABLE, this);
