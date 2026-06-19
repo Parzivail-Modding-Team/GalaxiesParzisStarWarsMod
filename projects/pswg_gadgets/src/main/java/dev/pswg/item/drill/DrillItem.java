@@ -1,37 +1,47 @@
 package dev.pswg.item.drill;
 
 import dev.pswg.container.GadgetsItems;
+import dev.pswg.item.IItemAddedToInventoryListener;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class MiningDrillItem extends Item
+public class DrillItem extends Item implements IItemAddedToInventoryListener
 {
 	public static final int DEFAULT_EXTRACTION_TIME = 100;
-	public MiningDrillItem(Properties properties)
+	public DrillItem(Properties properties)
 	{
 		super(properties);
 	}
+
 
 	@Override
 	public ItemUseAnimation getUseAnimation(ItemStack itemStack)
@@ -147,7 +157,6 @@ public class MiningDrillItem extends Item
 
 		if(!(user instanceof Player player && player.isCreative()))
 		{
-			itemStack.set(DataComponents.MAX_DAMAGE, properties.getDurability());
 			int damage = itemStack.getOrDefault(DataComponents.DAMAGE, 0) + 1;
 			itemStack.set(DataComponents.DAMAGE, damage);
 		}
@@ -165,5 +174,27 @@ public class MiningDrillItem extends Item
 	{
 		itemStack.remove(GadgetsItems.Components.DRILL_EXTRACTION_INSTANCE);
 		return super.releaseUsing(itemStack, level, entity, remainingTime);
+	}
+
+	@Override
+	public void onAddedToInventory(ItemStack stack)
+	{
+		syncComponents(stack);
+	}
+	public void syncComponents(ItemStack stack){
+		DrillProperties properties = stack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
+		if(properties != null)
+		{
+			stack.set(DataComponents.TOOL, new Tool(
+					List.of(
+							Tool.Rule.deniesDrops(BuiltInRegistries.BLOCK.getOrThrow(BlockTags.INCORRECT_FOR_NETHERITE_TOOL)),
+							Tool.Rule.minesAndDrops(BuiltInRegistries.BLOCK.getOrThrow(BlockTags.MINEABLE_WITH_PICKAXE), properties.getDrill().miningSpeed)
+					),
+					1.5f,
+					1,
+					true));
+			stack.set(DataComponents.MAX_DAMAGE, properties.getDurability());
+
+		}
 	}
 }

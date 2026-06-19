@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"attributes.PlayerEntityMixin",
+		"events.InventoryMixin",
 		"leftuse.LivingEntityMixin",
 		"recoil.LivingEntityMixin"
 	],

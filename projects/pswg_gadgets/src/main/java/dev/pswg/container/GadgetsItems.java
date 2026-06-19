@@ -9,7 +9,7 @@ import dev.pswg.feature.scrapping.cutter.LaserCutterItem;
 import dev.pswg.item.*;
 import dev.pswg.item.drill.DrillExtractionInstance;
 import dev.pswg.item.drill.DrillProperties;
-import dev.pswg.item.drill.MiningDrillItem;
+import dev.pswg.item.drill.DrillItem;
 import dev.pswg.item.grenades.*;
 import dev.pswg.registry.Registrar;
 import dev.pswg.util.gen.DataGenGadgetsItemTag;
@@ -17,13 +17,11 @@ import dev.pswg.util.gen.GadgetsItemTag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.Vec3;
 
@@ -121,9 +119,9 @@ public class GadgetsItems
 	@DataGenItem(wiz = true, langOverride = "ReliaCharge Power Calibrator")
 	public static final Item CALIBRATOR_ITEM = registerSimpleItem("calibrator", new Item.Properties().durability(100));
 	@DataGenItem(langOverride = "Extractor", model = ItemModel.NONE)
-	public static final Item DRILL_ITEM = Registrar.item(Gadgets.id("extraction_drill"), MiningDrillItem::new, new Item.Properties().durability(100)
-	                                                                                                                                .component(Components.DRILL_EXTRACTOR_PROPERTIES, new DrillProperties("baseExtractor", "baseDrill", "baseCapsule"))
-	                                                                                                                                .pickaxe(GalaxiesToolMaterials.TITANIUM, 1.0F, -2.8F));
+	public static final Item DRILL_ITEM = Registrar.item(Gadgets.id("extraction_drill"), DrillItem::new, new Item.Properties().durability(100)
+	                                                                                                                          .component(Components.DRILL_EXTRACTOR_PROPERTIES, new DrillProperties("baseExtractor", "baseDrill", "baseCapsule"))
+	                                                                                                                          .pickaxe(GalaxiesToolMaterials.TITANIUM, 1.0F, -2.8F));
 
 	public static Item registerSimpleItem(String key)
 	{
