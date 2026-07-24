@@ -8,29 +8,23 @@ import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItemGroups;
 import dev.pswg.container.GalaxiesItems;
-import dev.pswg.data.CodecDataLoader;
-import dev.pswg.data.IdentifierUtil;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
-import dev.pswg.rendering.models.GalaxiesModelBakery;
-import dev.pswg.rendering.models.GqbIntermediary;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.Identifier;
@@ -69,7 +63,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		pack.addProvider(RecipesGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
-		pack.addProvider((fabricPackOutput, completableFuture) -> new dev.pswg.datagen.GqdCompiledModelGenerator(fabricPackOutput, Galaxies.MODID));
+		pack.addProvider((fabricPackOutput, completableFuture) -> new GqdCompiledModelGenerator(fabricPackOutput, Galaxies.MODID));
 	}
 
 	/**
@@ -349,6 +343,30 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		protected void addTags(HolderLookup.Provider wrapperLookup)
 		{
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, StoneProducts.class, (stoneProducts, annotation) -> {
+				this.getOrCreateRawBuilder(BlockTags.WALLS).add(blockId(stoneProducts.wall));
+				this.getOrCreateRawBuilder(BlockTags.STAIRS).add(blockId(stoneProducts.stairs));
+				this.getOrCreateRawBuilder(BlockTags.SLABS).add(blockId(stoneProducts.slab));
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, ReducedStoneProducts.class, (stoneProducts, annotation) -> {
+				this.getOrCreateRawBuilder(BlockTags.STAIRS).add(blockId(stoneProducts.stairs));
+				this.getOrCreateRawBuilder(BlockTags.SLABS).add(blockId(stoneProducts.slab));
+			});
+			AutoGenerateUtil.consumeAnnotatedFields(DataGenBlock.class, GalaxiesBlocks.class, WoodProducts.class, (woodProducts, annotation) -> {
+				this.getOrCreateRawBuilder(BlockTags.FENCES).add(blockId(woodProducts.fence));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_FENCES).add(blockId(woodProducts.fence));
+				this.getOrCreateRawBuilder(BlockTags.FENCE_GATES).add(blockId(woodProducts.gate));
+				this.getOrCreateRawBuilder(ConventionalBlockTags.WOODEN_FENCE_GATES).add(blockId(woodProducts.gate));
+				this.getOrCreateRawBuilder(BlockTags.STAIRS).add(blockId(woodProducts.stairs));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_STAIRS).add(blockId(woodProducts.stairs));
+				this.getOrCreateRawBuilder(BlockTags.SLABS).add(blockId(woodProducts.slab));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_SLABS).add(blockId(woodProducts.slab));
+				this.getOrCreateRawBuilder(BlockTags.DOORS).add(blockId(woodProducts.door));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_DOORS).add(blockId(woodProducts.door));
+				this.getOrCreateRawBuilder(BlockTags.TRAPDOORS).add(blockId(woodProducts.trapdoor));
+				this.getOrCreateRawBuilder(BlockTags.WOODEN_TRAPDOORS).add(blockId(woodProducts.trapdoor));
+
+			});
 			addBlocksToTag(BlockTags.LEAVES, DataGenBlockTag.LEAVES, this);
 			addBlocksToTag(BlockTags.LOGS, DataGenBlockTag.LOGS, this);
 			addBlocksToTag(BlockTags.MINEABLE_WITH_AXE, DataGenBlockTag.AXE_MINEABLE, this);
@@ -358,6 +376,8 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DataGenBlockTag.LOGS_THAT_BURN, this);
 			addBlocksToTag(BlockTags.STAIRS, DataGenBlockTag.STAIRS, this);
 			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DataGenBlockTag.BUSH_PLACEABLE, this);
+			addBlocksToTag(ConventionalBlockTags.ORES, DataGenBlockTag.ORES, this);
+			addBlocksToTag(ConventionalBlockTags.ORES_IN_GROUND_STONE, DataGenBlockTag.ORES_REPLACING_STONE, this);
 			getOrCreateRawBuilder(GalaxiesBlocks.Tags.BUSH_PLACEABLE)
 					.addOptionalTag(BlockTags.SAND.location())
 					.add(blockId(Blocks.GRASS_BLOCK))

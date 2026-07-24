@@ -6,6 +6,9 @@ import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.feature.brewing.MixerScreenHandler;
+import dev.pswg.item.drill.HasCapsuleProperty;
+import dev.pswg.item.drill.HasDrillProperty;
+import dev.pswg.item.drill.HasExtractorProperty;
 import dev.pswg.models.*;
 import dev.pswg.networking.MixerSyncS2CPayload;
 import dev.pswg.particles.*;
@@ -22,6 +25,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.ParticleGroup;
 import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.world.effect.MobEffects;
 import org.joml.Vector2i;
 
@@ -95,6 +99,10 @@ public class GadgetsClient implements GalaxiesClientAddon
 		MixerScreen.ICON_MAP.put(MobEffects.RESISTANCE, new Vector2i(224, 65));
 		MixerScreen.ICON_MAP.put(MobEffects.SPEED, new Vector2i(382, 273));
 		MixerScreen.ICON_MAP.put(MobEffects.STRENGTH, new Vector2i(448, 448));
+
+		ConditionalItemModelProperties.ID_MAPPER.put(Gadgets.id("has_capsule"), HasCapsuleProperty.CODEC);
+		ConditionalItemModelProperties.ID_MAPPER.put(Gadgets.id("has_extractor"), HasExtractorProperty.CODEC);
+		ConditionalItemModelProperties.ID_MAPPER.put(Gadgets.id("has_drill"), HasDrillProperty.CODEC);
 
 		Gadgets.LOGGER.info("Client module initialized");
 	}

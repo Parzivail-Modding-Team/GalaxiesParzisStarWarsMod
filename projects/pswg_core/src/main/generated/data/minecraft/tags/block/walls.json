@@ -1,0 +1,19 @@
+{
+  "values": [
+    "pswg:canyon_stone_wall",
+    "pswg:canyon_cobblestone_wall",
+    "pswg:pourstone_wall",
+    "pswg:smooth_pourstone_wall",
+    "pswg:cracked_pourstone_wall",
+    "pswg:massassi_stone_wall",
+    "pswg:massassi_stone_bricks_wall",
+    "pswg:mossy_massassi_stone_bricks_wall",
+    "pswg:ilum_stone_wall",
+    "pswg:ilum_stone_bricks_wall",
+    "pswg:desert_sandstone_wall",
+    "pswg:black_imperial_panel_blank_wall",
+    "pswg:gray_imperial_panel_blank_wall",
+    "pswg:light_gray_imperial_panel_blank_wall",
+    "pswg:white_imperial_panel_blank_wall"
+  ]
+}

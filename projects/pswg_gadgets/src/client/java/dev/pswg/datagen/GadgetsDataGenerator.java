@@ -11,6 +11,9 @@ import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
 import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.autoreg.AutoGenerateUtil;
+import dev.pswg.item.drill.HasCapsuleProperty;
+import dev.pswg.item.drill.HasDrillProperty;
+import dev.pswg.item.drill.HasExtractorProperty;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
 import dev.pswg.rendering.models.GqbIntermediary;
 import dev.pswg.util.gen.*;
@@ -23,8 +26,10 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.client.renderer.item.EmptyModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -122,6 +127,58 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void generateItemModels(ItemModelGenerators itemModelGenerator)
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
+
+
+			register(itemModelGenerator, GadgetsItems.DRILL_ITEM, ItemModelUtils.composite(
+					ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_in_hand")),
+					ItemModelUtils.conditional(
+							new HasExtractorProperty("baseExtractor"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_extractor")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasExtractorProperty("laserExtractor"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_laser_extractor")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasExtractorProperty("plasteelExtractor"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_plasteel_extractor")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasCapsuleProperty("baseCapsule"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_capsule")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasCapsuleProperty("transparisteelCapsule"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_transparisteel_capsule")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasCapsuleProperty("reinforcedCapsule"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_reinforced_capsule")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasDrillProperty("baseDrill"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_drill")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasDrillProperty("titaniumDrill"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_titanium_drill")),
+							new EmptyModel.Unbaked()
+					),
+					ItemModelUtils.conditional(
+							new HasDrillProperty("plasteelDrill"),
+							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_plasteel_drill")),
+							new EmptyModel.Unbaked()
+					)
+			         )
+			)
+			;
 		}
 
 		public static Identifier createItemKey(Item item, DataGenItem dataGenItem)
@@ -142,6 +199,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					{
 						case GENERATED -> register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_ITEM);
 						case HANDHELD -> register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_HANDHELD_ITEM);
+						case MODEL_IN_HAND -> GalaxiesModelProvider.register3dHand(generator, item);
 						case DRINK -> registerDrink(generator, item, dataGenItem);
 					}
 			}

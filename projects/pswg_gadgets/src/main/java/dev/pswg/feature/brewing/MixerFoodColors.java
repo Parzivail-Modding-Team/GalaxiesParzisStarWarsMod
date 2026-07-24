@@ -1,6 +1,5 @@
 package dev.pswg.feature.brewing;
 
-import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GalaxiesItems;
 import java.util.HashMap;
 import net.minecraft.util.CommonColors;

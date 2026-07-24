@@ -1,0 +1,88 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0,
+        0,
+        -1.75
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0,
+        0,
+        -1.75
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        90,
+        0
+      ]
+    },
+    "ground": {
+      "scale": [
+        0.7,
+        0.7,
+        0.7
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30,
+        -45,
+        0
+      ],
+      "scale": [
+        0.8,
+        0.8,
+        0.8
+      ],
+      "translation": [
+        -0.75,
+        1,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        0,
+        -4.5
+      ]
+    },
+    "on_shelf": {
+      "rotation": [
+        0,
+        90,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0,
+        0,
+        -1.75
+      ]
+    },
+    "thirdperson_righthand": {
+      "translation": [
+        0,
+        0,
+        -1.75
+      ]
+    }
+  },
+  "textures": {
+    "1": "pswg_gadgets:item/drill/fluid_capsule",
+    "2": "pswg_gadgets:item/drill/extraction_drill",
+    "3": "pswg_gadgets:item/drill/laser_extractor",
+    "4": "pswg_gadgets:item/drill/transparisteel_capsule",
+    "5": "pswg_gadgets:item/drill/titanium_drill",
+    "6": "pswg_gadgets:item/drill/plasteel_drill",
+    "7": "pswg_gadgets:item/drill/plasteel_extractor",
+    "8": "pswg_gadgets:item/drill/reinforced_capsule",
+    "particle": "pswg:block/empty"
+  }
+}

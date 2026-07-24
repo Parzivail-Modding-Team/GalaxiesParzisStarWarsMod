@@ -2,7 +2,7 @@ package dev.pswg.item.grenades;
 
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.entity.grenades.GrenadeEntity;
-import dev.pswg.item.ExplosionSoundGroup;
+import dev.pswg.item.grenades.soundGroups.ExplosionSoundGroup;
 import dev.pswg.item.ILeftClickUsable;
 import dev.pswg.world.TickConstants;
 import net.minecraft.core.Direction;

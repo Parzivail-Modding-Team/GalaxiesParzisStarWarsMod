@@ -6,10 +6,7 @@ import dev.pswg.datagen.DataGenItemTag;
 import dev.pswg.datagen.DataGenItem;
 import dev.pswg.datagen.DataGenItemGroup;
 import dev.pswg.datagen.ItemModel;
-import dev.pswg.item.ArmorItems;
-import dev.pswg.item.DoorInsertItem;
-import dev.pswg.item.DyedItems;
-import dev.pswg.item.NumberedItems;
+import dev.pswg.item.*;
 import dev.pswg.registry.Registrar;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -204,7 +201,7 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item PLASTEEL_ROD = registerSimpleItem("plasteel_rod", new Item.Properties().component(Components.PLASTIC_COMPONENT, 1));
 	@DataGenItem
-	public static final Item DURASTEEL_ROD = registerSimpleItem("durasteel_rod", new Item.Properties().component(Components.METAL_COMPONENT, 1));
+	public static final Item DURASTEEL_ROD = Registrar.item(Galaxies.id("durasteel_rod"), MetalPipeItem::new, new Item.Properties().component(Components.METAL_COMPONENT, 1));
 
 	// TODO: Implement wire
 

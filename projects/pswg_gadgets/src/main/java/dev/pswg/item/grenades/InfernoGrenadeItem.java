@@ -3,8 +3,7 @@ package dev.pswg.item.grenades;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.entity.grenades.InfernoGrenadeEntity;
-import dev.pswg.entity.grenades.ThermalDetonatorEntity;
-import dev.pswg.item.ThermalDetonatorSoundGroup;
+import dev.pswg.item.grenades.soundGroups.ThermalDetonatorSoundGroup;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 

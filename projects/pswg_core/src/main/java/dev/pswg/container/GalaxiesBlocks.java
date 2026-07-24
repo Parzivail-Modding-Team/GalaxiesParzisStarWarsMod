@@ -205,48 +205,48 @@ public class GalaxiesBlocks
 
 
 	/// Ores
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block BESKAR_ORE = createBlock("beskar_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block BESKAR_BLOCK = createBlock("beskar_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block CHROMIUM_ORE = createBlock("chromium_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block CHROMIUM_BLOCK = createBlock("chromium_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(3.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block CORTOSIS_ORE = createBlock("cortosis_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block CORTOSIS_BLOCK = createBlock("cortosis_block", BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(5.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block DESH_ORE = createBlock("desh_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block DESH_BLOCK = createBlock("desh_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(3.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block DIATIUM_ORE = createBlock("diatium_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock(blockTags = DataGenBlockTag.BLASTER_REFLECT)
 	public static final Block DIATIUM_BLOCK = createBlock("diatium_block", BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(5.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block IONITE_ORE = createBlock("ionite_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block IONITE_BLOCK = createBlock("ionite_block", BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(5.0F).lightLevel(value -> 3).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block LOMMITE_ORE = createBlock("lommite_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block LOMMITE_BLOCK = createBlock("lommite_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block TITANIUM_ORE = createBlock("titanium_ore", BlockBehaviour.Properties.of().strength(4.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block TITANIUM_BLOCK = createBlock("titanium_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block ZERSIUM_ORE = createBlock("zersium_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block ZERSIUM_BLOCK = createBlock("zersium_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block THORILIDE_ORE = createBlock("thorilide_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block THORILIDE_BLOCK = createBlock("thorilide_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
+	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block HELICITE_ORE = createBlock("helicite_ore", BlockBehaviour.Properties.of().strength(3.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final Block HELICITE_BLOCK = createBlock("helicite_block", BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(5.0F).requiresCorrectToolForDrops());
