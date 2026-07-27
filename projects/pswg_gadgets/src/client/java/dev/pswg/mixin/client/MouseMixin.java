@@ -17,6 +17,9 @@ public class MouseMixin
 	@Shadow
 	private double accumulatedDY;
 
+	/**
+	 * Called when the player changes their look direction. Used for the slow-down effect in {@link LaserCutterHandler}
+	 */
 	@Inject(method = "turnPlayer", at = @At(value = "HEAD"))
 	public void applyCutterChanges(double timeDelta, CallbackInfo ci)
 	{

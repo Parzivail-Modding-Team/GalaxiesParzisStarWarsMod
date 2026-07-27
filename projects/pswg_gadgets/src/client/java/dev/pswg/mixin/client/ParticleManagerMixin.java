@@ -20,6 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ParticleEngine.class)
 public class ParticleManagerMixin
 {
+	/**
+	 * Used to add custom particle renderers for processing
+	 * */
 	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Ljava/util/Queue;poll()Ljava/lang/Object;"))
 	public Object poll(Object particle)
 	{
@@ -39,6 +42,9 @@ public class ParticleManagerMixin
 		};
 	}
 
+	/**
+	 * Ticks custom particles at the same time as vanilla ones
+	 * */
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void tick(CallbackInfo ci)
 	{
@@ -46,6 +52,9 @@ public class ParticleManagerMixin
 			particleRenderer.tickParticles();
 	}
 
+	/**
+	 * Adds custom particle render states to batch
+	* */
 	@Inject(method = "extract", at = @At("HEAD"))
 	public void addToBatch(ParticlesRenderState batch, Frustum frustum, Camera camera, float tickProgress, CallbackInfo ci)
 	{
@@ -56,6 +65,10 @@ public class ParticleManagerMixin
 			}
 	}
 
+	/**
+	 *
+	 * Clears custom particles
+	 */
 	@Inject(method = "clearParticles", at = @At("HEAD"))
 	public void clearParticles(CallbackInfo ci)
 	{
