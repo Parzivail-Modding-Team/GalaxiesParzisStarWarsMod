@@ -1,6 +1,5 @@
 package dev.pswg.feature.drill;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsItems;
@@ -9,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -17,11 +17,11 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public record HasCapsuleProperty(String capsuleId) implements ConditionalItemModelProperty
+public record HasCapsuleProperty(Identifier capsuleId) implements ConditionalItemModelProperty
 {
 	public static final MapCodec<HasCapsuleProperty> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
-					Codec.STRING.fieldOf("capsuleId").forGetter(HasCapsuleProperty::capsuleId)
+					Identifier.CODEC.fieldOf("capsule").forGetter(HasCapsuleProperty::capsuleId)
 			).apply(instance, HasCapsuleProperty::new)
 	);
 
@@ -37,6 +37,6 @@ public record HasCapsuleProperty(String capsuleId) implements ConditionalItemMod
 		DrillProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		if(properties == null)
 			return false;
-		return Objects.equals(properties.capsuleId(), capsuleId);
+		return Objects.equals(properties.capsule().id(), capsuleId);
 	}
 }
