@@ -132,47 +132,47 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			register(itemModelGenerator, GadgetsItems.DRILL_ITEM, ItemModelUtils.composite(
 					ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_in_hand")),
 					ItemModelUtils.conditional(
-							new HasExtractorProperty("baseExtractor"),
+							new HasExtractorProperty(Gadgets.id("base_extractor")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_extractor")),
 							new EmptyModel.Unbaked()
 					),
 					ItemModelUtils.conditional(
-							new HasExtractorProperty("laserExtractor"),
+							new HasExtractorProperty(Gadgets.id("laser_extractor")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_laser_extractor")),
 							new EmptyModel.Unbaked()
 					),
 					ItemModelUtils.conditional(
-							new HasExtractorProperty("plasteelExtractor"),
+							new HasExtractorProperty(Gadgets.id("plasteel_extractor")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_plasteel_extractor")),
 							new EmptyModel.Unbaked()
 					),
 					ItemModelUtils.conditional(
-							new HasCapsuleProperty("baseCapsule"),
+							new HasCapsuleProperty(Gadgets.id("base_capsule")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_capsule")),
 							new EmptyModel.Unbaked()
 					),
 					ItemModelUtils.conditional(
-							new HasCapsuleProperty("transparisteelCapsule"),
+							new HasCapsuleProperty(Gadgets.id("transparisteel_capsule")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_transparisteel_capsule")),
 							new EmptyModel.Unbaked()
 					),
 					ItemModelUtils.conditional(
-							new HasCapsuleProperty("reinforcedCapsule"),
+							new HasCapsuleProperty(Gadgets.id("reinforced_capsule")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_reinforced_capsule")),
 							new EmptyModel.Unbaked()
 					),
 					ItemModelUtils.conditional(
-							new HasDrillProperty("baseDrill"),
+							new HasDrillProperty(Gadgets.id("base_drill")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_base_drill")),
 							new EmptyModel.Unbaked()
 					),
 					ItemModelUtils.conditional(
-							new HasDrillProperty("titaniumDrill"),
+							new HasDrillProperty(Gadgets.id("titanium_drill")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_titanium_drill")),
 							new EmptyModel.Unbaked()
 					),
 					ItemModelUtils.conditional(
-							new HasDrillProperty("plasteelDrill"),
+							new HasDrillProperty(Gadgets.id("plasteel_drill")),
 							ItemModelUtils.plainModel(Gadgets.id("item/extraction_drill_plasteel_drill")),
 							new EmptyModel.Unbaked()
 					)

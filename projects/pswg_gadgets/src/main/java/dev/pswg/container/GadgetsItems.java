@@ -7,6 +7,7 @@ import dev.pswg.datagen.DataGenItemGroup;
 import dev.pswg.datagen.ItemModel;
 import dev.pswg.feature.scrapping.cutter.LaserCutterItem;
 import dev.pswg.item.*;
+import dev.pswg.item.drill.DrillComponents;
 import dev.pswg.item.drill.DrillExtractionInstance;
 import dev.pswg.item.drill.DrillProperties;
 import dev.pswg.item.drill.DrillItem;
@@ -120,7 +121,10 @@ public class GadgetsItems
 	public static final Item CALIBRATOR_ITEM = registerSimpleItem("calibrator", new Item.Properties().durability(100));
 	@DataGenItem(langOverride = "Extractor", model = ItemModel.NONE)
 	public static final Item DRILL_ITEM = Registrar.item(Gadgets.id("extraction_drill"), DrillItem::new, new Item.Properties().durability(100)
-	                                                                                                                          .component(Components.DRILL_EXTRACTOR_PROPERTIES, new DrillProperties("baseExtractor", "baseDrill", "baseCapsule"))
+	                                                                                                                          .component(Components.DRILL_EXTRACTOR_PROPERTIES, new DrillProperties(
+			                                                                                                                          DrillComponents.BASE_EXTRACTOR,
+			                                                                                                                          DrillComponents.BASE_DRILL,
+			                                                                                                                          DrillComponents.BASE_CAPSULE))
 	                                                                                                                          .pickaxe(GalaxiesToolMaterials.TITANIUM, 1.0F, -2.8F));
 
 	public static Item registerSimpleItem(String key)

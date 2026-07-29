@@ -50,6 +50,8 @@ public final class Gadgets implements GalaxiesAddon
 	@Override
 	public void onGalaxiesReady()
 	{
+		DrillComponents.register();
+
 		GadgetsItems.register();
 		GadgetsBlocks.register();
 		GadgetsEntities.register();
@@ -67,8 +69,6 @@ public final class Gadgets implements GalaxiesAddon
 		MixerBrewingPaths.init();
 
 		PayloadTypeRegistry.clientboundPlay().register(MixerSyncS2CPayload.TYPE, MixerSyncS2CPayload.CODEC);
-
-		DrillComponents.register();
 
 		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(Gadgets.id("brewing_maps"), (ResourceManagerReloadListener)manager ->
 		{
