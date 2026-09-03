@@ -131,6 +131,9 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 						registerStoneProducts(stoneProducts, blockStateModelGenerator);
 				}
 			});
+
+			//blockStateModelGenerator.createTrivialBlock(GalaxiesBlocks.BLACK_HANGAR_LIGHT, block -> TexturedModel.createAllSame(new Material(Galaxies.id("block/black_hangar_light"))));
+
 		}
 		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator)
 		{

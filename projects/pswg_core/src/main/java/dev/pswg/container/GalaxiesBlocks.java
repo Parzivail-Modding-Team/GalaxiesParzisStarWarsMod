@@ -507,6 +507,14 @@ public class GalaxiesBlocks
 	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
 	public static final DyedBlocks CORRUGATED_CRATE = new DyedBlocks(color -> createCorrugatedCrate(color.name().toLowerCase() + "_corrugated_crate"));
 
+	/// OTHER
+
+	// TODO: use the proper type
+	@DataGenBlock(model = DataGenBlockModel.NONE)
+	public static final Block BLACK_HANGAR_LIGHT = createBlock("black_hangar_light", BlockBehaviour.Properties.of().noOcclusion());
+	//public static final Block BLACK_HANGAR_LIGHT = Registrar.block(Galaxies.id("black_hangar_light"), properties -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties),  BlockBehaviour.Properties.of().sound(SoundType.METAL).noCollision().lightLevel(value -> 15).strength(0.5F));
+
+
 	private static Block createBlock(String key, BlockBehaviour.Properties settings)
 	{
 		return Registrar.block(Galaxies.id(key), Block::new, settings);

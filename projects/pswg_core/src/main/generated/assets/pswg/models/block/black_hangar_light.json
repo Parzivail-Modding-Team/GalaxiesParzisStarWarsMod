@@ -1,0 +1,7 @@
+{
+  "display": {},
+  "textures": {
+    "2": "pswg:block/hangar_light_black",
+    "particle": "pswg:block/empty"
+  }
+}
