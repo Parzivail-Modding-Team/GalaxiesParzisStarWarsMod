@@ -509,10 +509,9 @@ public class GalaxiesBlocks
 
 	/// OTHER
 
-	// TODO: use the proper type
-	@DataGenBlock(model = DataGenBlockModel.NONE)
-	public static final Block BLACK_HANGAR_LIGHT = createBlock("black_hangar_light", BlockBehaviour.Properties.of().noOcclusion());
-	//public static final Block BLACK_HANGAR_LIGHT = Registrar.block(Galaxies.id("black_hangar_light"), properties -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties),  BlockBehaviour.Properties.of().sound(SoundType.METAL).noCollision().lightLevel(value -> 15).strength(0.5F));
+
+	@DataGenBlock(model = DataGenBlockModel.ROTATING_PLAIN)
+	public static final WaterloggableRotatingBlockWithBounds BLACK_HANGAR_LIGHT = Registrar.block(Galaxies.id("black_hangar_light"), properties -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(16, 14, 8f), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties),  BlockBehaviour.Properties.of().sound(SoundType.METAL).noCollision().lightLevel(value -> 15).strength(0.5F).noOcclusion());
 
 
 	private static Block createBlock(String key, BlockBehaviour.Properties settings)

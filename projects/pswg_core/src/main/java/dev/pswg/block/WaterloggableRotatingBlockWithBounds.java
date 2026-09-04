@@ -50,20 +50,18 @@ public class WaterloggableRotatingBlockWithBounds extends WaterloggableRotatingB
 
 		var substrateDirection = getSubstrateDirection(state);
 
-		//TODO: figure this out
-		/*switch (requiresSubstrate)
+		switch (requiresSubstrate)
 		{
 			case BEHIND -> {
 				BlockPos blockPos = pos.offset(substrateDirection.getUnitVec3i());
-				return sideCoversSmallSquare(level, blockPos, substrateDirection.getOpposite());
+				return canSupportCenter(level, blockPos, substrateDirection.getOpposite());
 			}
 			case BELOW -> {
 				BlockPos blockPos = pos.below();
-				return hasTopRim(level, blockPos) || sideCoversSmallSquare(level, blockPos, Direction.UP);
+				return canSupportRigidBlock(level, blockPos) || canSupportCenter(level, blockPos, Direction.UP);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + requiresSubstrate);
-		}*/
-		return super.canSurvive(state, level, pos);
+		}
 	}
 
 

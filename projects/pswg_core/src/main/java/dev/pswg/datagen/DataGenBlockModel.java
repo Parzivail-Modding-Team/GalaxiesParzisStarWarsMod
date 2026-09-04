@@ -15,6 +15,7 @@ public enum DataGenBlockModel
 	LIGHTING_PANEL,
 	LOG,
 	LOG_WITH_WOOD,
+	ROTATING_PLAIN,
 	SLAB,
 	STAIRS,
 	NONE

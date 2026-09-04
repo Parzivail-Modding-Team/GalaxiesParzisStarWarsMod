@@ -198,6 +198,15 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 			texturePool.wood(woodBlock);
 		}
 	}
+	protected static void registerPlainWithRotation(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator) {
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(block))).with(PropertyDispatch.modify(BlockStateProperties.FACING)
+		                                                                                                                                                                            .select(Direction.DOWN, BlockModelGenerators.X_ROT_90)
+		                                                                                                                                                                            .select(Direction.UP, BlockModelGenerators.NOP)
+		                                                                                                                                                                            .select(Direction.EAST, BlockModelGenerators.Y_ROT_90)
+		                                                                                                                                                                            .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180)
+		                                                                                                                                                                            .select(Direction.WEST, BlockModelGenerators.Y_ROT_270)
+		                                                                                                                                                                            .select(Direction.NORTH, BlockModelGenerators.NOP)));
+	}
 
 	protected static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Provider modelFactory, BlockModelGenerators generator)
 	{

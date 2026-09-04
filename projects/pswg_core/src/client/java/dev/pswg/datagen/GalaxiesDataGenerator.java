@@ -132,8 +132,6 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				}
 			});
 
-			//blockStateModelGenerator.createTrivialBlock(GalaxiesBlocks.BLACK_HANGAR_LIGHT, block -> TexturedModel.createAllSame(new Material(Galaxies.id("block/black_hangar_light"))));
-
 		}
 		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator)
 		{
@@ -158,6 +156,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case JAPOR_LEAVES -> registerJaporLeaves(block, generator);
 				case LOG, LOG_WITH_WOOD -> registerLog(block, dataGenBlock, generator);
 				case LIGHTING_PANEL -> registerLightingPanel(block, generator);
+				case ROTATING_PLAIN -> registerPlainWithRotation(block, dataGenBlock, generator);
 				case SLAB -> registerVerticalSlab(block, generator);
 				case STAIRS -> registerStairs(block, generator);
 			}
