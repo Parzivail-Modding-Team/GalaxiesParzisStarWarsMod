@@ -113,7 +113,7 @@
     }
   },
   "textures": {
-    "2": "pswg:block/model/hangar_light_black",
+    "2": "pswg:block/model/hangar_light_yellow",
     "particle": "pswg:block/empty"
   }
 }

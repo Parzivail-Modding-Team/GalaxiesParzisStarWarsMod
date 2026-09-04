@@ -5387,7 +5387,7 @@
 	},
 	"credit": "Made with Blockbench",
 	"textures": {
-		"2": "pswg:block/model/hangar_light_black"
+		"2": "pswg:block/model/hangar_light_yellow"
 	},
 	"display": {
 		"thirdperson_righthand": {

@@ -5,11 +5,6 @@
         0.5,
         0.5,
         0.5
-      ],
-      "translation": [
-        0,
-        3.5,
-        0
       ]
     },
     "firstperson_righthand": {
@@ -17,35 +12,20 @@
         0.5,
         0.5,
         0.5
-      ],
-      "translation": [
-        0,
-        3.5,
-        0
       ]
     },
     "fixed": {
-      "rotation": [
-        0,
-        90,
-        0
-      ],
       "scale": [
-        0.6,
-        0.6,
-        0.6
-      ],
-      "translation": [
-        0,
-        3,
-        -3.5
+        0.5,
+        0.5,
+        0.5
       ]
     },
     "ground": {
       "scale": [
-        0.4,
-        0.4,
-        0.4
+        0.5,
+        0.5,
+        0.5
       ],
       "translation": [
         0,
@@ -56,64 +36,54 @@
     "gui": {
       "rotation": [
         30,
-        -135,
+        45,
         0
       ],
       "scale": [
-        0.6,
-        0.6,
-        0.6
+        0.5,
+        0.5,
+        0.5
       ],
       "translation": [
-        0.25,
-        0.5,
+        0,
+        -2.5,
         0
       ]
     },
-    "on_shelf": {
+    "head": {
       "rotation": [
+        -37,
         0,
-        -180,
         0
+      ],
+      "translation": [
+        0,
+        0,
+        -1.75
       ]
     },
     "thirdperson_lefthand": {
-      "rotation": [
-        30,
-        0,
-        0
-      ],
       "scale": [
-        0.4,
-        0.4,
-        0.4
+        0.3,
+        0.3,
+        0.3
       ],
       "translation": [
         0,
-        2,
-        0.75
+        2.25,
+        0
       ]
     },
     "thirdperson_righthand": {
-      "rotation": [
-        30,
-        0,
-        0
-      ],
       "scale": [
-        0.4,
-        0.4,
-        0.4
-      ],
-      "translation": [
-        0,
-        2,
-        0.75
+        0.3,
+        0.3,
+        0.3
       ]
     }
   },
   "textures": {
-    "2": "pswg:block/model/hangar_light_black",
+    "0": "pswg:block/model/tall_lamp",
     "particle": "pswg:block/empty"
   }
 }

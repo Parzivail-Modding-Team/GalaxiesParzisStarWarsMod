@@ -120,7 +120,7 @@ public class GalaxiesBlocks
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, rotation = DataGenBlockRotation.RANDOM_ROTATION_X, blockTags = { DataGenBlockTag.PICKAXE_MINEABLE, DataGenBlockTag.DEAD_BUSH_SUBSTRATE, DataGenBlockTag.BUSH_PLACEABLE, DataGenBlockTag.ARID_PLANT_PLACEABLE })
 	public static final Block DESERT_LOAM = createBlock("desert_loam", BlockBehaviour.Properties.of().sound(SoundType.GRAVEL).strength(0.5F));
 
-	/// Plants
+	/// PLANTS
 	//TODO: vaporator mushroom colony & molo shrub
 
 	@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
@@ -204,7 +204,7 @@ public class GalaxiesBlocks
 	public static final RotatedPillarBlock TATOOINE_LOG = createLogBlock("tatooine_log", MapColor.WOOD, MapColor.COLOR_BROWN);
 
 
-	/// Ores
+	/// ORES
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK, blockTags = {DataGenBlockTag.ORES, DataGenBlockTag.ORES_REPLACING_STONE, DataGenBlockTag.PICKAXE_MINEABLE})
 	public static final Block BESKAR_ORE = createBlock("beskar_ore", BlockBehaviour.Properties.of().strength(5.0F).requiresCorrectToolForDrops());
 	@DataGenBlock
@@ -507,11 +507,16 @@ public class GalaxiesBlocks
 	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
 	public static final DyedBlocks CORRUGATED_CRATE = new DyedBlocks(color -> createCorrugatedCrate(color.name().toLowerCase() + "_corrugated_crate"));
 
-	/// OTHER
-
+	/// LIGHTS
 
 	@DataGenBlock(model = DataGenBlockModel.ROTATING_PLAIN)
-	public static final WaterloggableRotatingBlockWithBounds BLACK_HANGAR_LIGHT = Registrar.block(Galaxies.id("black_hangar_light"), properties -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(16, 14, 8f), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties),  BlockBehaviour.Properties.of().sound(SoundType.METAL).noCollision().lightLevel(value -> 15).strength(0.5F).noOcclusion());
+	public static final Block BLACK_HANGAR_LIGHT = Registrar.block(Galaxies.id("black_hangar_light"), properties -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(16, 14, 8f), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties),  BlockBehaviour.Properties.of().sound(SoundType.METAL).noCollision().lightLevel(value -> 15).strength(0.5F).noOcclusion());
+	@DataGenBlock(model = DataGenBlockModel.ROTATING_PLAIN)
+	public static final Block YELLOW_HANGAR_LIGHT = Registrar.block(Galaxies.id("yellow_hangar_light"), properties -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(16, 14, 8f), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties),  BlockBehaviour.Properties.of().sound(SoundType.METAL).noCollision().lightLevel(value -> 15).strength(0.5F).noOcclusion());
+	@DataGenBlock(model = DataGenBlockModel.ROTATING_PLAIN)
+	public static final Block TALL_LAMP = Registrar.block(Galaxies.id("tall_lamp"), properties -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(6, 6, 24), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties), BlockBehaviour.Properties.of().sound(SoundType.METAL).lightLevel(value -> 15).strength(0.5F).noOcclusion());
+	@DataGenBlock(model = DataGenBlockModel.ROTATING_CLUSTER_3)
+	public static final Block CLUSTER_LIGHT = Registrar.block(Galaxies.id("wall_cluster_light"), properties -> new ClusterLightBlock(WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties), BlockBehaviour.Properties.of().sound(SoundType.METAL).noOcclusion().lightLevel(value -> 15).strength(0.5f));
 
 
 	private static Block createBlock(String key, BlockBehaviour.Properties settings)

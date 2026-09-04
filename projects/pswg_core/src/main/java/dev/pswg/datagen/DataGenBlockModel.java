@@ -16,6 +16,7 @@ public enum DataGenBlockModel
 	LOG,
 	LOG_WITH_WOOD,
 	ROTATING_PLAIN,
+	ROTATING_CLUSTER_3,
 	SLAB,
 	STAIRS,
 	NONE

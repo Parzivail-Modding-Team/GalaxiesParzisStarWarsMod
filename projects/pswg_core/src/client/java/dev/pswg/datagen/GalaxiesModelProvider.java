@@ -2,6 +2,7 @@ package dev.pswg.datagen;
 
 import com.mojang.math.Quadrant;
 import dev.pswg.Galaxies;
+import dev.pswg.block.IPicklingBlock;
 import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.item.SwgDrinkTintSource;
@@ -32,6 +33,7 @@ import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
@@ -352,6 +354,28 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	{
 		String string = block.builtInRegistryHolder().key().identifier().toString();
 		return Identifier.parse(string.substring(0, string.indexOf("_corrugated_crate")));
+	}
+	public static void registerRotatingPickling3(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator){
+		if(!(block instanceof IPicklingBlock picklingBlock))
+			throw new RuntimeException("Trying to generate pickling3 model for a block that isn't an IPicklingBlock");
+
+		String blockKey = getBlockKey(block).getPath();
+
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(
+								                     PropertyDispatch.initial(picklingBlock.getPickleProperty())
+								                                     .select(1, BlockModelGenerators.plainVariant(Galaxies.id(blockKey).withPrefix("block/")))
+								                                     .select(2, BlockModelGenerators.plainVariant(Galaxies.id(blockKey + "_2").withPrefix("block/")))
+								                                     .select(3, BlockModelGenerators.plainVariant(Galaxies.id(blockKey + "_3").withPrefix("block/")))
+						                     ).with(PropertyDispatch.modify(BlockStateProperties.FACING)
+		                                                            .select(Direction.DOWN, BlockModelGenerators.X_ROT_90.then(BlockModelGenerators.Y_ROT_90))
+		                                                            .select(Direction.UP, BlockModelGenerators.X_ROT_270.then(BlockModelGenerators.Y_ROT_90))
+		                                                            .select(Direction.EAST, BlockModelGenerators.Y_ROT_90)
+		                                                            .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180)
+		                                                            .select(Direction.WEST, BlockModelGenerators.Y_ROT_270)
+		                                                            .select(Direction.NORTH, BlockModelGenerators.NOP))
+		);
+
+
 	}
 
 	public void registerDrink(ItemModelGenerators generator, Item item, DataGenItem dataGenItem)

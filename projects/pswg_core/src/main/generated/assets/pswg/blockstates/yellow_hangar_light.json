@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "pswg:block/yellow_hangar_light",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "pswg:block/yellow_hangar_light",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "pswg:block/yellow_hangar_light"
+    },
+    "facing=south": {
+      "model": "pswg:block/yellow_hangar_light",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "pswg:block/yellow_hangar_light"
+    },
+    "facing=west": {
+      "model": "pswg:block/yellow_hangar_light",
+      "y": 270
+    }
+  }
+}

@@ -157,6 +157,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case LOG, LOG_WITH_WOOD -> registerLog(block, dataGenBlock, generator);
 				case LIGHTING_PANEL -> registerLightingPanel(block, generator);
 				case ROTATING_PLAIN -> registerPlainWithRotation(block, dataGenBlock, generator);
+				case ROTATING_CLUSTER_3 -> registerRotatingPickling3(block, dataGenBlock, generator);
 				case SLAB -> registerVerticalSlab(block, generator);
 				case STAIRS -> registerStairs(block, generator);
 			}

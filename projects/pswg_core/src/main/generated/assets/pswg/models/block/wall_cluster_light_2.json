@@ -1,0 +1,7 @@
+{
+  "display": {},
+  "textures": {
+    "0": "pswg:block/model/wall_cluster_light",
+    "particle": "pswg:block/empty"
+  }
+}
