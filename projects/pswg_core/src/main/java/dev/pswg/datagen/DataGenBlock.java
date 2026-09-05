@@ -23,4 +23,15 @@ public @interface DataGenBlock
 	DataGenItemTag[] itemTags() default {};
 
 	DataGenBlockRotation rotation() default DataGenBlockRotation.DEFAULT;
+
+	/// Data for generating a model using a template. Only used for DataGenBlockModel.TEMPLATE and DataGenBlockModel.TEMPLATE_ROTATING
+
+	TemplateModelData templateModelData() default @TemplateModelData;
+
+	@interface TemplateModelData {
+		String templateFileName() default "";
+		String textureLocation() default "block/model/";
+		boolean hasParticleTexture() default false;
+		String particleTextureSuffix() default "_particle";
+	}
 }

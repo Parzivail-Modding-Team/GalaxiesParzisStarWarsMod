@@ -19,5 +19,7 @@ public enum DataGenBlockModel
 	ROTATING_CLUSTER_3,
 	SLAB,
 	STAIRS,
+	TEMPLATE,
+	TEMPLATE_ROTATING,
 	NONE
 }

@@ -498,13 +498,33 @@ public class GalaxiesBlocks
 	public static final VoxelShape CRATE_SHAPE = VoxelShapeUtil.getCenteredCube(14, 16);
 	public static final BlockBehaviour.Properties CORRUGATED_CRATE_SETTINGS = BlockBehaviour.Properties.of().sound(SoundType.METAL).noOcclusion().strength(2.5F);
 
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
+	@DataGenBlock(model = DataGenBlockModel.TEMPLATE, templateModelData =
+	@DataGenBlock.TemplateModelData(
+			hasParticleTexture = true,
+			textureLocation = "block/model/corrugated_crate/",
+			templateFileName = "template_corrugated_crate"
+	))
 	public static final Block IMPERIAL_CORRUGATED_CRATE = createCorrugatedCrate("imperial_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
+	@DataGenBlock(model = DataGenBlockModel.TEMPLATE, templateModelData =
+	@DataGenBlock.TemplateModelData(
+			hasParticleTexture = true,
+			textureLocation = "block/model/corrugated_crate/",
+			templateFileName = "template_corrugated_crate"
+	))
 	public static final Block MEDICAL_CORRUGATED_CRATE = createCorrugatedCrate("medical_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
+	@DataGenBlock(model = DataGenBlockModel.TEMPLATE, templateModelData =
+	@DataGenBlock.TemplateModelData(
+			hasParticleTexture = true,
+			textureLocation = "block/model/corrugated_crate/",
+			templateFileName = "template_corrugated_crate"
+	))
 	public static final Block MINING_CORRUGATED_CRATE = createCorrugatedCrate("mining_corrugated_crate");
-	@DataGenBlock(dataGenModelKey = "corrugated_crate", model = DataGenBlockModel.CUSTOM)
+	@DataGenBlock(model = DataGenBlockModel.TEMPLATE, templateModelData =
+	@DataGenBlock.TemplateModelData(
+			hasParticleTexture = true,
+			textureLocation = "block/model/corrugated_crate/",
+			templateFileName = "template_corrugated_crate"
+	))
 	public static final DyedBlocks CORRUGATED_CRATE = new DyedBlocks(color -> createCorrugatedCrate(color.name().toLowerCase() + "_corrugated_crate"));
 
 	/// LIGHTS

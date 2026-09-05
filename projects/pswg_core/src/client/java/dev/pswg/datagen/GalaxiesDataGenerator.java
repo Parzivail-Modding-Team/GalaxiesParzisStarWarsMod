@@ -148,8 +148,6 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				{
 					switch (dataGenBlock.dataGenModelKey())
 					{
-						case "corrugated_crate":
-							registerCorrugatedCrate(generator, block);
 						case null, default:
 					}
 				}
@@ -158,6 +156,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case LIGHTING_PANEL -> registerLightingPanel(block, generator);
 				case ROTATING_PLAIN -> registerPlainWithRotation(block, dataGenBlock, generator);
 				case ROTATING_CLUSTER_3 -> registerRotatingPickling3(block, dataGenBlock, generator);
+				case TEMPLATE, TEMPLATE_ROTATING -> registerTemplateBlock(block, dataGenBlock, generator);
 				case SLAB -> registerVerticalSlab(block, generator);
 				case STAIRS -> registerStairs(block, generator);
 			}

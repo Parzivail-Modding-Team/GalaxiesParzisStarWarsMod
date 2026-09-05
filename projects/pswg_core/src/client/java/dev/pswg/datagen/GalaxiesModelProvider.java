@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 /**
@@ -201,13 +202,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		}
 	}
 	protected static void registerPlainWithRotation(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator) {
-		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(block))).with(PropertyDispatch.modify(BlockStateProperties.FACING)
-		                                                                                                                                                                            .select(Direction.DOWN, BlockModelGenerators.X_ROT_90)
-		                                                                                                                                                                            .select(Direction.UP, BlockModelGenerators.NOP)
-		                                                                                                                                                                            .select(Direction.EAST, BlockModelGenerators.Y_ROT_90)
-		                                                                                                                                                                            .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180)
-		                                                                                                                                                                            .select(Direction.WEST, BlockModelGenerators.Y_ROT_270)
-		                                                                                                                                                                            .select(Direction.NORTH, BlockModelGenerators.NOP)));
+		createRotatingBlockstate(block, generator);
 	}
 
 	protected static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Provider modelFactory, BlockModelGenerators generator)
@@ -333,11 +328,31 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		return new TextureMapping().put(TextureSlot.SIDE, new Material(identifier)).put(TextureSlot.END, TextureMapping.getBlockTexture(GalaxiesBlocks.GRAY_IMPERIAL_PANEL_PATTERN_3));
 	}
 
-	public static final void registerCorrugatedCrate(BlockModelGenerators generator, Block block)
+	public static void registerTemplateBlock(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator){
+		DataGenBlock.TemplateModelData template = dataGenBlock.templateModelData();
+
+		assert (!template.templateFileName().equals(""));
+
+		Identifier blockKey = getBlockKey(block).withPrefix(template.textureLocation());
+		if(template.hasParticleTexture())
+			TexturedModel.createDefault(block1 -> TextureMapping.cube(new Material(blockKey)).put(TextureSlot.PARTICLE, new Material(blockKey.withSuffix(template.particleTextureSuffix()))), blockModel(template.templateFileName(), TextureSlot.ALL, TextureSlot.PARTICLE)).create(block, generator.modelOutput);
+		else
+			TexturedModel.createDefault(block1 -> TextureMapping.cube(new Material(blockKey)), blockModel(template.templateFileName(), TextureSlot.ALL)).create(block, generator.modelOutput);
+		if(dataGenBlock.model().equals(DataGenBlockModel.TEMPLATE))
+			generator.createNonTemplateModelBlock(block);
+		else if(dataGenBlock.model().equals(DataGenBlockModel.TEMPLATE_ROTATING))
+			createRotatingBlockstate(block, generator);
+	}
+
+	private static void createRotatingBlockstate(Block block, BlockModelGenerators generator)
 	{
-		var crateKey = getCorrugatedCrateKey(block).withPrefix("block/model/corrugated_crate/");
-		TexturedModel.createDefault(block1 -> TextureMapping.cube(new Material(crateKey)).put(TextureSlot.PARTICLE, new Material(crateKey.withSuffix("_particle"))), blockModel("template_corrugated_crate", TextureSlot.ALL, TextureSlot.PARTICLE)).create(block, generator.modelOutput);
-		generator.createNonTemplateModelBlock(block);
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(block))).with(PropertyDispatch.modify(BlockStateProperties.FACING)
+		                                                                                                                                                                            .select(Direction.DOWN, BlockModelGenerators.X_ROT_90)
+		                                                                                                                                                                            .select(Direction.UP, BlockModelGenerators.NOP)
+		                                                                                                                                                                            .select(Direction.EAST, BlockModelGenerators.Y_ROT_90)
+		                                                                                                                                                                            .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180)
+		                                                                                                                                                                            .select(Direction.WEST, BlockModelGenerators.Y_ROT_270)
+		                                                                                                                                                                            .select(Direction.NORTH, BlockModelGenerators.NOP)));
 	}
 
 	protected static ModelTemplate blockModel(String parent, TextureSlot... requiredTextureKeys)
@@ -350,11 +365,6 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		return block.builtInRegistryHolder().key().identifier();
 	}
 
-	public static Identifier getCorrugatedCrateKey(Block block)
-	{
-		String string = block.builtInRegistryHolder().key().identifier().toString();
-		return Identifier.parse(string.substring(0, string.indexOf("_corrugated_crate")));
-	}
 	public static void registerRotatingPickling3(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator){
 		if(!(block instanceof IPicklingBlock picklingBlock))
 			throw new RuntimeException("Trying to generate pickling3 model for a block that isn't an IPicklingBlock");
