@@ -157,6 +157,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				case ROTATING_PLAIN -> registerPlainWithRotation(block, dataGenBlock, generator);
 				case ROTATING_CLUSTER_3 -> registerRotatingPickling3(block, dataGenBlock, generator);
 				case TEMPLATE, TEMPLATE_ROTATING -> registerTemplateBlock(block, dataGenBlock, generator);
+				case CONNECTING -> registerConnectedBlock(block, generator);
 				case SLAB -> registerVerticalSlab(block, generator);
 				case STAIRS -> registerStairs(block, generator);
 			}

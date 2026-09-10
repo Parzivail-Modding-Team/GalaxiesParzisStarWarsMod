@@ -1,0 +1,33 @@
+{
+  "ambientocclusion": true,
+  "elements": [
+    {
+      "faces": {
+        "north": {
+          "cullface": "north",
+          "texture": "#texture",
+          "uv": [
+            12.0,
+            8.0,
+            16.0,
+            12.0
+          ]
+        }
+      },
+      "from": [
+        0.0,
+        8.0,
+        0.0
+      ],
+      "to": [
+        8.0,
+        16.0,
+        0.0
+      ]
+    }
+  ],
+  "textures": {
+    "particle": "pswg:block/rusted_metal_border",
+    "texture": "pswg:block/rusted_metal_border"
+  }
+}

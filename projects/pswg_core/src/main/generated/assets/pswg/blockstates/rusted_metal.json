@@ -1,7 +1,948 @@
 {
-  "variants": {
-    "": {
-      "model": "pswg:block/rusted_metal"
+  "multipart": [
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_none"
+      },
+      "when": {
+        "up": "!true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_vertical"
+      },
+      "when": {
+        "up": "true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_horizontal"
+      },
+      "when": {
+        "up": "!true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_all"
+      },
+      "when": {
+        "up": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_none"
+      },
+      "when": {
+        "east": "!true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_vertical"
+      },
+      "when": {
+        "east": "!true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_horizontal"
+      },
+      "when": {
+        "east": "true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_all"
+      },
+      "when": {
+        "east": "true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_none"
+      },
+      "when": {
+        "down": "!true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_vertical"
+      },
+      "when": {
+        "down": "true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_horizontal"
+      },
+      "when": {
+        "down": "!true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_all"
+      },
+      "when": {
+        "down": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_none"
+      },
+      "when": {
+        "down": "!true",
+        "east": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_vertical"
+      },
+      "when": {
+        "down": "true",
+        "east": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_horizontal"
+      },
+      "when": {
+        "down": "!true",
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_all"
+      },
+      "when": {
+        "down": "true",
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_none",
+        "y": 180
+      },
+      "when": {
+        "east": "!true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_vertical",
+        "y": 180
+      },
+      "when": {
+        "east": "!true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_horizontal",
+        "y": 180
+      },
+      "when": {
+        "east": "true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_all",
+        "y": 180
+      },
+      "when": {
+        "east": "true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_none",
+        "y": 180
+      },
+      "when": {
+        "up": "!true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_vertical",
+        "y": 180
+      },
+      "when": {
+        "up": "true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_horizontal",
+        "y": 180
+      },
+      "when": {
+        "up": "!true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_all",
+        "y": 180
+      },
+      "when": {
+        "up": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_none",
+        "y": 180
+      },
+      "when": {
+        "down": "!true",
+        "east": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_vertical",
+        "y": 180
+      },
+      "when": {
+        "down": "true",
+        "east": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_horizontal",
+        "y": 180
+      },
+      "when": {
+        "down": "!true",
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_all",
+        "y": 180
+      },
+      "when": {
+        "down": "true",
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_none",
+        "y": 180
+      },
+      "when": {
+        "down": "!true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_vertical",
+        "y": 180
+      },
+      "when": {
+        "down": "true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_horizontal",
+        "y": 180
+      },
+      "when": {
+        "down": "!true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_all",
+        "y": 180
+      },
+      "when": {
+        "down": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_none",
+        "y": 270
+      },
+      "when": {
+        "south": "!true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_vertical",
+        "y": 270
+      },
+      "when": {
+        "south": "!true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_horizontal",
+        "y": 270
+      },
+      "when": {
+        "south": "true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_all",
+        "y": 270
+      },
+      "when": {
+        "south": "true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_none",
+        "y": 270
+      },
+      "when": {
+        "north": "!true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_vertical",
+        "y": 270
+      },
+      "when": {
+        "north": "!true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_horizontal",
+        "y": 270
+      },
+      "when": {
+        "north": "true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_all",
+        "y": 270
+      },
+      "when": {
+        "north": "true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_none",
+        "y": 270
+      },
+      "when": {
+        "down": "!true",
+        "south": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_vertical",
+        "y": 270
+      },
+      "when": {
+        "down": "true",
+        "south": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_horizontal",
+        "y": 270
+      },
+      "when": {
+        "down": "!true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_all",
+        "y": 270
+      },
+      "when": {
+        "down": "true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_none",
+        "y": 270
+      },
+      "when": {
+        "down": "!true",
+        "north": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_vertical",
+        "y": 270
+      },
+      "when": {
+        "down": "true",
+        "north": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_horizontal",
+        "y": 270
+      },
+      "when": {
+        "down": "!true",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_all",
+        "y": 270
+      },
+      "when": {
+        "down": "true",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_none",
+        "y": 90
+      },
+      "when": {
+        "north": "!true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_vertical",
+        "y": 90
+      },
+      "when": {
+        "north": "!true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_horizontal",
+        "y": 90
+      },
+      "when": {
+        "north": "true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_all",
+        "y": 90
+      },
+      "when": {
+        "north": "true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_none",
+        "y": 90
+      },
+      "when": {
+        "south": "!true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_vertical",
+        "y": 90
+      },
+      "when": {
+        "south": "!true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_horizontal",
+        "y": 90
+      },
+      "when": {
+        "south": "true",
+        "up": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_all",
+        "y": 90
+      },
+      "when": {
+        "south": "true",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_none",
+        "y": 90
+      },
+      "when": {
+        "down": "!true",
+        "north": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_vertical",
+        "y": 90
+      },
+      "when": {
+        "down": "true",
+        "north": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_horizontal",
+        "y": 90
+      },
+      "when": {
+        "down": "!true",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_all",
+        "y": 90
+      },
+      "when": {
+        "down": "true",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_none",
+        "y": 90
+      },
+      "when": {
+        "down": "!true",
+        "south": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_vertical",
+        "y": 90
+      },
+      "when": {
+        "down": "true",
+        "south": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_horizontal",
+        "y": 90
+      },
+      "when": {
+        "down": "!true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_all",
+        "y": 90
+      },
+      "when": {
+        "down": "true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_none",
+        "x": 90
+      },
+      "when": {
+        "north": "!true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_vertical",
+        "x": 90
+      },
+      "when": {
+        "north": "true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_horizontal",
+        "x": 90
+      },
+      "when": {
+        "north": "!true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_all",
+        "x": 90
+      },
+      "when": {
+        "north": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_none",
+        "x": 90
+      },
+      "when": {
+        "east": "!true",
+        "north": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_vertical",
+        "x": 90
+      },
+      "when": {
+        "east": "!true",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_horizontal",
+        "x": 90
+      },
+      "when": {
+        "east": "true",
+        "north": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_all",
+        "x": 90
+      },
+      "when": {
+        "east": "true",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_none",
+        "x": 90
+      },
+      "when": {
+        "south": "!true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_vertical",
+        "x": 90
+      },
+      "when": {
+        "south": "true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_horizontal",
+        "x": 90
+      },
+      "when": {
+        "south": "!true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_all",
+        "x": 90
+      },
+      "when": {
+        "south": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_none",
+        "x": 90
+      },
+      "when": {
+        "east": "!true",
+        "south": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_vertical",
+        "x": 90
+      },
+      "when": {
+        "east": "!true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_horizontal",
+        "x": 90
+      },
+      "when": {
+        "east": "true",
+        "south": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_all",
+        "x": 90
+      },
+      "when": {
+        "east": "true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_none",
+        "x": 270
+      },
+      "when": {
+        "south": "!true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_vertical",
+        "x": 270
+      },
+      "when": {
+        "south": "true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_horizontal",
+        "x": 270
+      },
+      "when": {
+        "south": "!true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_left_all",
+        "x": 270
+      },
+      "when": {
+        "south": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_none",
+        "x": 270
+      },
+      "when": {
+        "east": "!true",
+        "south": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_vertical",
+        "x": 270
+      },
+      "when": {
+        "east": "!true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_horizontal",
+        "x": 270
+      },
+      "when": {
+        "east": "true",
+        "south": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/top_right_all",
+        "x": 270
+      },
+      "when": {
+        "east": "true",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_none",
+        "x": 270
+      },
+      "when": {
+        "north": "!true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_vertical",
+        "x": 270
+      },
+      "when": {
+        "north": "true",
+        "west": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_horizontal",
+        "x": 270
+      },
+      "when": {
+        "north": "!true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_left_all",
+        "x": 270
+      },
+      "when": {
+        "north": "true",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_none",
+        "x": 270
+      },
+      "when": {
+        "east": "!true",
+        "north": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_vertical",
+        "x": 270
+      },
+      "when": {
+        "east": "!true",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_horizontal",
+        "x": 270
+      },
+      "when": {
+        "east": "true",
+        "north": "!true"
+      }
+    },
+    {
+      "apply": {
+        "model": "pswg:block/connected/rusted_metal/bottom_right_all",
+        "x": 270
+      },
+      "when": {
+        "east": "true",
+        "north": "true"
+      }
     }
-  }
+  ]
 }

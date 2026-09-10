@@ -154,6 +154,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		generator.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block, "_height2"));
 	}
 
+
 	protected static void registerCrossAge3(Block block, BlockModelGenerators generator)
 	{
 		generator.registerSimpleFlatItemModel(block, "_stage3");
@@ -203,6 +204,9 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	}
 	protected static void registerPlainWithRotation(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator) {
 		createRotatingBlockstate(block, generator);
+	}
+	protected static void registerConnectedBlock(Block block, BlockModelGenerators generator){
+		ConnectedTextureBlockGenerator.register(generator, block, getBlockKey(block).withSuffix("_border").withPrefix("block/"));
 	}
 
 	protected static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Provider modelFactory, BlockModelGenerators generator)

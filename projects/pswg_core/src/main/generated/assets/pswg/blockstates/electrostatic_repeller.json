@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "pswg:block/electrostatic_repeller",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "pswg:block/electrostatic_repeller",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "pswg:block/electrostatic_repeller"
+    },
+    "facing=south": {
+      "model": "pswg:block/electrostatic_repeller",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "pswg:block/electrostatic_repeller"
+    },
+    "facing=west": {
+      "model": "pswg:block/electrostatic_repeller",
+      "y": 270
+    }
+  }
+}

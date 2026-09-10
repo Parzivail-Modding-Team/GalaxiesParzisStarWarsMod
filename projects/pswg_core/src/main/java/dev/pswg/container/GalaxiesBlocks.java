@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.function.ToIntFunction;
 
@@ -316,7 +317,7 @@ public class GalaxiesBlocks
 	/// PANEL
 
 	private static final BlockBehaviour.Properties IMPERIAL_PANEL_SETTINGS = BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(1.5F).requiresCorrectToolForDrops();
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
 	public static final SelfConnectingBlock RUSTED_METAL = createSelfConnectingBlock("rusted_metal", BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).sound(SoundType.COPPER).strength(1.5F).requiresCorrectToolForDrops());
 	// TODO: Implement "imperial cutout" blocks
 	@DataGenBlock
@@ -537,6 +538,16 @@ public class GalaxiesBlocks
 	public static final Block TALL_LAMP = Registrar.block(Galaxies.id("tall_lamp"), properties -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(6, 6, 24), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties), BlockBehaviour.Properties.of().sound(SoundType.METAL).lightLevel(value -> 15).strength(0.5F).noOcclusion());
 	@DataGenBlock(model = DataGenBlockModel.ROTATING_CLUSTER_3)
 	public static final Block CLUSTER_LIGHT = Registrar.block(Galaxies.id("wall_cluster_light"), properties -> new ClusterLightBlock(WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties), BlockBehaviour.Properties.of().sound(SoundType.METAL).noOcclusion().lightLevel(value -> 15).strength(0.5f));
+
+	/// MACHINES
+
+	@DataGenBlock(model = DataGenBlockModel.ROTATING_PLAIN)
+	public static final Block ELECTROSTATIC_REPELLER = Registrar.block(Galaxies.id("electrostatic_repeller"), properties -> new RepellerBlock(Shapes.box(0, 3f / 16, 2.5f / 16, 1 / 16f, 14f / 16, 13.5f / 16), WaterloggableRotatingBlockWithBounds.Substrate.NONE, properties), BlockBehaviour.Properties.of().randomTicks().sound(SoundType.COPPER).strength(0.5F).noOcclusion().requiresCorrectToolForDrops());
+
+	/// TANK
+
+	@DataGenBlock(model = DataGenBlockModel.ROTATING_PLAIN)
+	public static final Block FUSION_FUEL_TANK = Registrar.block(Galaxies.id("fusion_fuel_tank"), WaterloggableRotatingBlock::new, BlockBehaviour.Properties.of().sound(SoundType.COPPER).noOcclusion().strength(3.5F).requiresCorrectToolForDrops());
 
 
 	private static Block createBlock(String key, BlockBehaviour.Properties settings)
