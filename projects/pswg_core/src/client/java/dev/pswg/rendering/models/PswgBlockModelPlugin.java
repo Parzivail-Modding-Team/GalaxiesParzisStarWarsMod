@@ -38,21 +38,36 @@ public final class PswgBlockModelPlugin
         return model;
     }
 
-    private static BlockStateModel.Unbaked transformSingle(SingleVariant.Unbaked single) {
-        Variant variant = single.variant();
-        Identifier modelId = variant.modelLocation();
-        var geometry = GalaxiesModelBakery.getGeometry(modelId);
+	private static BlockStateModel.Unbaked transformSingle(
+			SingleVariant.Unbaked single
+	)
+	{
+		Variant variant = single.variant();
+		Identifier modelId = variant.modelLocation();
 
-        if (geometry.isEmpty()) {
-            return single;
-        }
+		if (ConnectedTextureUnbaked.isConnectingModel(modelId))
+		{
+			return new ConnectedTextureUnbaked(modelId);
+		}
 
-        if (!(geometry.get() instanceof GalaxiesModelBakery.GQuadGeometry gqb)) {
-            return single;
-        }
+		var geometry = GalaxiesModelBakery.getGeometry(modelId);
 
-        return new GqbSingleVariantUnbaked(modelId, variant.modelState(), gqb);
-    }
+		if (geometry.isEmpty())
+		{
+			return single;
+		}
+
+		if (!(geometry.get() instanceof GalaxiesModelBakery.GQuadGeometry gqb))
+		{
+			return single;
+		}
+
+		return new GqbSingleVariantUnbaked(
+				modelId,
+				variant.modelState(),
+				gqb
+		);
+	}
 
     private static BlockStateModel.Unbaked transformWeighted(WeightedVariants.Unbaked weighted) {
         List<Weighted<BlockStateModel.Unbaked>> result = new ArrayList<>();

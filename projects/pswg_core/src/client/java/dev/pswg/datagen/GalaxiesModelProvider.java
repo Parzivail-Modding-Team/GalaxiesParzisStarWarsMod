@@ -33,11 +33,9 @@ import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 /**
@@ -206,7 +204,8 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		createRotatingBlockstate(block, generator);
 	}
 	protected static void registerConnectedBlock(Block block, BlockModelGenerators generator){
-		ConnectedTextureBlockGenerator.register(generator, block, getBlockKey(block).withSuffix("_border").withPrefix("block/"));
+		Identifier textureLocation = getBlockKey(block).withPrefix("block/");
+		ConnectedTextureBlockGenerator.register(generator, block, textureLocation.withSuffix("_border"), textureLocation.withSuffix("_middle"));
 	}
 
 	protected static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Provider modelFactory, BlockModelGenerators generator)
