@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "pswg:block/connected/rusted_metal/connecting_model"
+      "model": "pswg:block/connected/rusted_metal/rusted_metal_connecting_model"
     }
   }
 }

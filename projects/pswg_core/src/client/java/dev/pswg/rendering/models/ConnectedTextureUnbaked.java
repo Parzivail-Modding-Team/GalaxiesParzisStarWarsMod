@@ -29,17 +29,17 @@ public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 	{
 		String path = connectingId.getPath();
 
-		if (!path.endsWith("/connecting_model"))
+		if (!path.endsWith("connecting_model"))
 		{
-			throw new IllegalArgumentException("Connected texture model must end in /connecting_model: " + connectingId);
+			throw new IllegalArgumentException("Connected texture model must end in connecting_model: " + connectingId);
 		}
 
-		this.baseId = Identifier.fromNamespaceAndPath(connectingId.getNamespace(), path.substring(0, path.length() - "/connecting_model".length()));
+		this.baseId = Identifier.fromNamespaceAndPath(connectingId.getNamespace(), path.substring(0, path.lastIndexOf('/')));
 	}
 
 	public static boolean isConnectingModel(Identifier modelId)
 	{
-		return modelId.getNamespace().equals("pswg") && modelId.getPath().startsWith("block/connected/") && modelId.getPath().endsWith("/connecting_model");
+		return modelId.getPath().endsWith("connecting_model");
 	}
 
 	@Override
@@ -173,7 +173,8 @@ public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 			resolver.markDependency(modelId(quadrant, "center"));
 		}
 
-		resolver.markDependency(Identifier.fromNamespaceAndPath(baseId.getNamespace(), baseId.getPath() + "/connecting_model"));
+		String blockKey =  baseId.getPath().substring(baseId.getPath().lastIndexOf('/') + 1, baseId.getPath().length());
+		resolver.markDependency(Identifier.fromNamespaceAndPath(baseId.getNamespace(), baseId.getPath() + "/" + blockKey +"_connecting_model"));
 	}
 
 	private Identifier modelId(ConnectedTextureModel.TextureQuadrant quadrant, String suffix)

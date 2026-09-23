@@ -61,30 +61,28 @@ public final class ConnectedTextureBlockGenerator
 
 	private static Identifier normalModelId(Block block, TextureQuadrant quadrant, String state)
 	{
-		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
-
-		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + quadrant.name().toLowerCase() + "_" + state);
+		return getBaseIdentifier(block).withSuffix(quadrant.name().toLowerCase() + "_" + state);
 	}
 
 	private static Identifier cornerModelId(Block block, TextureQuadrant quadrant)
 	{
-		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
-
-		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + quadrant.name().toLowerCase() + "_corner");
+		return getBaseIdentifier(block).withSuffix(quadrant.name().toLowerCase() + "_corner");
 	}
 
 	private static Identifier centerModelId(Block block, TextureQuadrant quadrant)
 	{
-		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
-
-		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + quadrant.name().toLowerCase() + "_center");
+		return getBaseIdentifier(block).withSuffix(quadrant.name().toLowerCase() + "_center");
 	}
 
 	private static Identifier connectingModelId(Block block)
 	{
 		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
-
-		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/connecting_model");
+		String blockKey =  blockId.getPath().substring(blockId.getPath().lastIndexOf('/') + 1, blockId.getPath().length());
+		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + blockKey +"_connecting_model");
+	}
+	private static Identifier getBaseIdentifier(Block block){
+		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
+		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/");
 	}
 
 	private static SourceRegion sourceRegion(TextureQuadrant quadrant, int state)
