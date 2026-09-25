@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "pswg:block/rusted_large_imperial_plating"
+      "model": "pswg:block/connected/rusted_large_imperial_plating/rusted_large_imperial_plating_connecting_model"
     }
   }
 }

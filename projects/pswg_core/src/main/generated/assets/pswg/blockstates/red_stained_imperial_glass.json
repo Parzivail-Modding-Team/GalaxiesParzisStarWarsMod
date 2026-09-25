@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "pswg:block/red_stained_imperial_glass"
+      "model": "pswg:block/connected/red_stained_imperial_glass/red_stained_imperial_glass_connecting_model"
     }
   }
 }

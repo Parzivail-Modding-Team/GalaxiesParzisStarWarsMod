@@ -50,7 +50,8 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 	{
 		for (Face face : Face.values())
 		{
-			emitFace(emitter, level, pos, state, face, cullTest);
+			if(!state.getValue(propertyForDirection(faceToDirection(face))))
+				emitFace(emitter, level, pos, state, face, cullTest);
 		}
 	}
 
@@ -163,6 +164,17 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 			case WEST -> new FaceConnections(Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH);
 			case UP -> new FaceConnections(Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
 			case DOWN -> new FaceConnections(Direction.SOUTH, Direction.NORTH, Direction.WEST, Direction.EAST);
+		};
+	}
+	private static Direction faceToDirection(Face face){
+		return switch (face)
+		{
+			case NORTH -> Direction.NORTH;
+			case SOUTH -> Direction.SOUTH;
+			case EAST -> Direction.WEST;
+			case WEST -> Direction.EAST;
+			case UP -> Direction.DOWN;
+			case DOWN -> Direction.UP;
 		};
 	}
 

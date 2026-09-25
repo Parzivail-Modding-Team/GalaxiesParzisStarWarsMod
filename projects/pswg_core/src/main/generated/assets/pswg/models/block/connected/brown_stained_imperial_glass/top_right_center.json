@@ -1,0 +1,33 @@
+{
+  "ambientocclusion": true,
+  "elements": [
+    {
+      "faces": {
+        "north": {
+          "cullface": "north",
+          "texture": "#texture",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            8.0
+          ]
+        }
+      },
+      "from": [
+        8.0,
+        8.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        0.0
+      ]
+    }
+  ],
+  "textures": {
+    "particle": "pswg:block/brown_stained_imperial_glass",
+    "texture": "pswg:block/brown_stained_imperial_glass"
+  }
+}

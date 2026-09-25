@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "pswg:block/orange_stained_imperial_glass"
+      "model": "pswg:block/connected/orange_stained_imperial_glass/orange_stained_imperial_glass_connecting_model"
     }
   }
 }

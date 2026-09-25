@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "pswg:block/template_connected_block_item",
   "textures": {
-    "all": "pswg:block/rusted_large_imperial_plating"
+    "all": "pswg:block/rusted_large_imperial_plating_border"
   }
 }
