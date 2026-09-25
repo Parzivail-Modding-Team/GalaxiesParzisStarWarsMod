@@ -82,7 +82,8 @@ public final class ConnectedTextureBlockGenerator
 	}
 	private static Identifier getBaseIdentifier(Block block){
 		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
-		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/");
+		String blockKey =  blockId.getPath().substring(blockId.getPath().lastIndexOf('/') + 1, blockId.getPath().length());
+		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + blockKey + "_");
 	}
 
 	private static SourceRegion sourceRegion(TextureQuadrant quadrant, int state)

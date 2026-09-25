@@ -179,6 +179,7 @@ public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 
 	private Identifier modelId(ConnectedTextureModel.TextureQuadrant quadrant, String suffix)
 	{
-		return Identifier.fromNamespaceAndPath(baseId.getNamespace(), baseId.getPath() + "/" + quadrant.name().toLowerCase() + "_" + suffix);
+		String blockKey =  baseId.getPath().substring(baseId.getPath().lastIndexOf('/') + 1, baseId.getPath().length());
+		return Identifier.fromNamespaceAndPath(baseId.getNamespace(), baseId.getPath() + "/" + blockKey + "_" + quadrant.name().toLowerCase() + "_" + suffix);
 	}
 }
