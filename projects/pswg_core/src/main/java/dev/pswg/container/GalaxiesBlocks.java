@@ -64,8 +64,7 @@ public class GalaxiesBlocks
 	public static final StoneProducts CRACKED_POURSTONE = new StoneProducts(BlockBehaviour.Properties.of().strength(1.0F).requiresCorrectToolForDrops(), "cracked_pourstone");
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final DyedStoneProducts DYED_POURSTONE = new DyedStoneProducts(color -> new StoneProducts(BlockBehaviour.Properties.of().strength(1.25F).requiresCorrectToolForDrops(), color.name().toLowerCase() + "_pourstone"));
-	@DataGenBlock
-	// TODO: find a way implement "connecting" blocks
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
 	public static final SelfConnectingBlock DURASTEEL_CONNECTING_POURSTONE = Registrar.block(Galaxies.id("durasteel_bordered_pourstone"), SelfConnectingBlock::new, BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(1.5F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final StoneProducts MASSASSI = new StoneProducts(BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops(), "massassi_stone");
@@ -256,8 +255,7 @@ public class GalaxiesBlocks
 
 	@DataGenBlock
 	public static final Block DURASTEEL_BLOCK = createBlock("durasteel_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
-	//TODO: implement connecting for PLASTEEL_BLOCK
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
 	public static final SelfConnectingBlock PLASTEEL_BLOCK = Registrar.block(Galaxies.id("plasteel_block"), SelfConnectingBlock::new, BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 
 	/// GLASS

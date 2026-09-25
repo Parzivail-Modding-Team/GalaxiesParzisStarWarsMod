@@ -7,10 +7,10 @@
           "cullface": "north",
           "texture": "#texture",
           "uv": [
-            0.0,
+            4.0,
             0.0,
             8.0,
-            8.0
+            4.0
           ]
         }
       },
@@ -27,7 +27,7 @@
     }
   ],
   "textures": {
-    "particle": "pswg:block/rusted_metal",
-    "texture": "pswg:block/rusted_metal"
+    "particle": "pswg:block/durasteel_bordered_pourstone_border",
+    "texture": "pswg:block/durasteel_bordered_pourstone_border"
   }
 }

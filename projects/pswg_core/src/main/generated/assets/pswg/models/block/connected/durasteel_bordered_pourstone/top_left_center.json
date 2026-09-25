@@ -27,7 +27,7 @@
     }
   ],
   "textures": {
-    "particle": "pswg:block/rusted_metal",
-    "texture": "pswg:block/rusted_metal"
+    "particle": "pswg:block/durasteel_bordered_pourstone",
+    "texture": "pswg:block/durasteel_bordered_pourstone"
   }
 }

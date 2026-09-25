@@ -27,7 +27,7 @@
     }
   ],
   "textures": {
-    "particle": "pswg:block/rusted_metal_middle",
-    "texture": "pswg:block/rusted_metal_middle"
+    "particle": "pswg:block/rusted_metal",
+    "texture": "pswg:block/rusted_metal"
   }
 }

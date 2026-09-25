@@ -205,7 +205,7 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 	}
 	protected static void registerConnectedBlock(Block block, BlockModelGenerators generator){
 		Identifier textureLocation = getBlockKey(block).withPrefix("block/");
-		ConnectedTextureBlockGenerator.register(generator, block, textureLocation.withSuffix("_border"), textureLocation.withSuffix("_middle"));
+		ConnectedTextureBlockGenerator.register(generator, block, textureLocation.withSuffix("_border"), textureLocation.withSuffix(""));
 	}
 
 	protected static void registerCubeWithRotation(Block block, DataGenBlock dataGenBlock, TexturedModel.Provider modelFactory, BlockModelGenerators generator)
