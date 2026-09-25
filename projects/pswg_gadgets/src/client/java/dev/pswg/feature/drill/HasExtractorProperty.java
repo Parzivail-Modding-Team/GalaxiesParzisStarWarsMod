@@ -1,9 +1,10 @@
-package dev.pswg.item.drill;
+package dev.pswg.feature.drill;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsItems;
+import dev.pswg.item.drill.DrillProperties;
 import net.fabricmc.api.EnvType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;

@@ -1,9 +1,10 @@
-package dev.pswg.item.drill;
+package dev.pswg.feature.drill;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsItems;
+import dev.pswg.item.drill.DrillProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -16,14 +17,14 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public record HasDrillProperty(String drillId) implements ConditionalItemModelProperty
+public record HasCapsuleProperty(String capsuleId) implements ConditionalItemModelProperty
 {
-	public static final MapCodec<HasDrillProperty> CODEC = RecordCodecBuilder.mapCodec(
+	public static final MapCodec<HasCapsuleProperty> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
-					Codec.STRING.fieldOf("drillId").forGetter(HasDrillProperty::drillId)
-			).apply(instance, HasDrillProperty::new)
+					Codec.STRING.fieldOf("capsuleId").forGetter(HasCapsuleProperty::capsuleId)
+			).apply(instance, HasCapsuleProperty::new)
 	);
-	
+
 	@Override
 	public MapCodec<? extends ConditionalItemModelProperty> type()
 	{
@@ -36,6 +37,6 @@ public record HasDrillProperty(String drillId) implements ConditionalItemModelPr
 		DrillProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		if(properties == null)
 			return false;
-		return Objects.equals(properties.drillId(), drillId);
+		return Objects.equals(properties.capsuleId(), capsuleId);
 	}
 }
