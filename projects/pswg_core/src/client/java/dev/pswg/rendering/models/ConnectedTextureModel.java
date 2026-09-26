@@ -1,7 +1,9 @@
 package dev.pswg.rendering.models;
 
+import dev.pswg.utility.math.QuadTransformUtil;
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
 import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadTransform;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
@@ -12,6 +14,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.Map;
 import java.util.function.Predicate;
@@ -64,6 +68,49 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 		emitQuadrant(emitter, level, pos, state, face, TextureQuadrant.BOTTOM_LEFT, connections.bottom(), connections.left(), cullTest);
 		emitQuadrant(emitter, level, pos, state, face, TextureQuadrant.BOTTOM_RIGHT, connections.bottom(), connections.right(), cullTest);
 	}
+	private static final QuadTransform FLIP_BACKFACE = quad ->
+	{
+		Vector3f pos0 = quad.copyPos(0, null);
+		Vector3f pos1 = quad.copyPos(1, null);
+		Vector3f pos2 = quad.copyPos(2, null);
+		Vector3f pos3 = quad.copyPos(3, null);
+
+		Vector3f normal0 = quad.copyNormal(0, null);
+		Vector3f normal1 = quad.copyNormal(1, null);
+		Vector3f normal2 = quad.copyNormal(2, null);
+		Vector3f normal3 = quad.copyNormal(3, null);
+
+		quad.pos(0, pos3);
+		quad.pos(1, pos2);
+		quad.pos(2, pos1);
+		quad.pos(3, pos0);
+
+		if (normal0 != null)
+		{
+			quad.normal(0, -normal3.x, -normal3.y, -normal3.z);
+			quad.normal(1, -normal2.x, -normal2.y, -normal2.z);
+			quad.normal(2, -normal1.x, -normal1.y, -normal1.z);
+			quad.normal(3, -normal0.x, -normal0.y, -normal0.z);
+		}
+
+		quad.cullFace(null);
+
+		return true;
+	};
+	private static final QuadTransform ROTATE_UV_90 = quad ->
+	{
+		Vector2f uv0 = quad.copyUv(0, null);
+		Vector2f uv1 = quad.copyUv(1, null);
+		Vector2f uv2 = quad.copyUv(2, null);
+		Vector2f uv3 = quad.copyUv(3, null);
+
+		quad.uv(0, uv1);
+		quad.uv(1, uv2);
+		quad.uv(2, uv3);
+		quad.uv(3, uv0);
+
+		return true;
+	};
 
 	private void emitQuadrant(QuadEmitter emitter, BlockAndTintGetter level, BlockPos pos, BlockState state, Face face, TextureQuadrant quadrant, Direction verticalDirection, Direction horizontalDirection, Predicate<Direction> cullTest)
 	{
@@ -102,6 +149,22 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 		if (model != null)
 		{
 			model.emitQuads(emitter, cullTest);
+
+
+
+			emitter.pushTransform(QuadTransformUtil.flipFace());
+			emitter.pushTransform(QuadTransformUtil.rotateFaceUv180());
+			emitter.pushTransform(FLIP_BACKFACE);
+			emitter.pushTransform(QuadTransformUtil.moveTowardCenter(faceToDirection(face), 0.001f));
+			emitter.cullFace(null);
+
+			model.emitQuads(emitter, direction -> false);
+
+			emitter.popTransform();
+			emitter.popTransform();
+			emitter.popTransform();
+			emitter.popTransform();
+
 		}
 	}
 
