@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.Map;
@@ -30,13 +29,15 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 	private final Map<Face, Map<TextureQuadrant, BlockStateModelPart>> cornerModels;
 	private final Map<Face, Map<TextureQuadrant, BlockStateModelPart>> centerModels;
 
-	public ConnectedTextureModel(Block block,
-			BlockStateModel fallback,
-			Map<Face, Map<TextureQuadrant, BlockStateModelPart>> noneModels,
-			Map<Face, Map<TextureQuadrant, BlockStateModelPart>> verticalModels,
-			Map<Face, Map<TextureQuadrant, BlockStateModelPart>> horizontalModels,
-			Map<Face, Map<TextureQuadrant, BlockStateModelPart>> cornerModels,
-			Map<Face, Map<TextureQuadrant, BlockStateModelPart>> centerModels
+	boolean pillar;
+
+	public ConnectedTextureModel(Block block, BlockStateModel fallback,
+	                             Map<Face, Map<TextureQuadrant, BlockStateModelPart>> noneModels,
+	                             Map<Face, Map<TextureQuadrant, BlockStateModelPart>> verticalModels,
+	                             Map<Face, Map<TextureQuadrant, BlockStateModelPart>> horizontalModels,
+	                             Map<Face, Map<TextureQuadrant, BlockStateModelPart>> cornerModels,
+	                             Map<Face, Map<TextureQuadrant, BlockStateModelPart>> centerModels,
+			                     boolean pillar
 	)
 	{
 		super(fallback);
@@ -47,6 +48,7 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 		this.horizontalModels = horizontalModels;
 		this.cornerModels = cornerModels;
 		this.centerModels = centerModels;
+		this.pillar = pillar;
 	}
 
 	@Override
@@ -97,20 +99,6 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 
 		return true;
 	};
-	private static final QuadTransform ROTATE_UV_90 = quad ->
-	{
-		Vector2f uv0 = quad.copyUv(0, null);
-		Vector2f uv1 = quad.copyUv(1, null);
-		Vector2f uv2 = quad.copyUv(2, null);
-		Vector2f uv3 = quad.copyUv(3, null);
-
-		quad.uv(0, uv1);
-		quad.uv(1, uv2);
-		quad.uv(2, uv3);
-		quad.uv(3, uv0);
-
-		return true;
-	};
 
 	private void emitQuadrant(QuadEmitter emitter, BlockAndTintGetter level, BlockPos pos, BlockState state, Face face, TextureQuadrant quadrant, Direction verticalDirection, Direction horizontalDirection, Predicate<Direction> cullTest)
 	{
@@ -119,11 +107,13 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 		BooleanProperty horizontalProperty = propertyForDirection(horizontalDirection);
 
 		boolean vertical = state.getValue(verticalProperty);
-		boolean horizontal = state.getValue(horizontalProperty);
+		boolean horizontal = pillar ? false : state.getValue(horizontalProperty);
 
 		BlockStateModelPart model = null;
 
-		if (!vertical && !horizontal)
+		if(pillar && (face == Face.DOWN || face == Face.UP))
+			model = centerModels.get(face).get(quadrant);
+		else if (!vertical && !horizontal)
 		{
 			model = noneModels.get(face).get(quadrant);
 		}
@@ -137,7 +127,6 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 		}
 		else
 		{
-
 			BlockPos diagonal = pos.relative(verticalDirection).relative(horizontalDirection);
 
 			if (level.getBlockState(diagonal).is(block))
@@ -148,9 +137,17 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 
 		if (model != null)
 		{
+			if(pillar && (face == Face.DOWN || face == Face.UP))
+			{
+				emitter.pushTransform(QuadTransformUtil.flipFace());
+				emitter.pushTransform(QuadTransformUtil.rotateFaceUv180());
+			}
 			model.emitQuads(emitter, cullTest);
-
-
+			if(pillar && (face == Face.DOWN || face == Face.UP))
+			{
+				emitter.popTransform();
+				emitter.popTransform();
+			}
 
 			emitter.pushTransform(QuadTransformUtil.flipFace());
 			emitter.pushTransform(QuadTransformUtil.rotateFaceUv180());

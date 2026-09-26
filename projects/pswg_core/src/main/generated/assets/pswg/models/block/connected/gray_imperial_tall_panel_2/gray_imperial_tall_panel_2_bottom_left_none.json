@@ -1,0 +1,33 @@
+{
+  "ambientocclusion": true,
+  "elements": [
+    {
+      "faces": {
+        "north": {
+          "cullface": "north",
+          "texture": "#texture",
+          "uv": [
+            4.025,
+            4.025,
+            7.975,
+            7.975
+          ]
+        }
+      },
+      "from": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "to": [
+        8.0,
+        8.0,
+        0.0
+      ]
+    }
+  ],
+  "textures": {
+    "particle": "pswg:block/gray_imperial_tall_panel_2_border",
+    "texture": "pswg:block/gray_imperial_tall_panel_2_border"
+  }
+}

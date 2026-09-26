@@ -64,7 +64,7 @@ public class GalaxiesBlocks
 	public static final StoneProducts CRACKED_POURSTONE = new StoneProducts(BlockBehaviour.Properties.of().strength(1.0F).requiresCorrectToolForDrops(), "cracked_pourstone");
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final DyedStoneProducts DYED_POURSTONE = new DyedStoneProducts(color -> new StoneProducts(BlockBehaviour.Properties.of().strength(1.25F).requiresCorrectToolForDrops(), color.name().toLowerCase() + "_pourstone"));
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingBlock DURASTEEL_CONNECTING_POURSTONE = Registrar.block(Galaxies.id("durasteel_bordered_pourstone"), SelfConnectingBlock::new, BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(1.5F).requiresCorrectToolForDrops());
 	@DataGenBlock
 	public static final StoneProducts MASSASSI = new StoneProducts(BlockBehaviour.Properties.of().strength(1.5F).requiresCorrectToolForDrops(), "massassi_stone");
@@ -255,67 +255,67 @@ public class GalaxiesBlocks
 
 	@DataGenBlock
 	public static final Block DURASTEEL_BLOCK = createBlock("durasteel_block", BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingBlock PLASTEEL_BLOCK = Registrar.block(Galaxies.id("plasteel_block"), SelfConnectingBlock::new, BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(5.0F).requiresCorrectToolForDrops());
 
 	/// GLASS
 
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingGlassBlock IMPERIAL_GLASS = createSelfConnectingGlass("imperial_glass");
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock WHITE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("white_stained_imperial_glass", DyeColor.WHITE);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock ORANGE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("orange_stained_imperial_glass", DyeColor.ORANGE);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock MAGENTA_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("magenta_stained_imperial_glass", DyeColor.MAGENTA);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock LIGHT_BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_blue_stained_imperial_glass", DyeColor.LIGHT_BLUE);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock YELLOW_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("yellow_stained_imperial_glass", DyeColor.YELLOW);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock LIME_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("lime_stained_imperial_glass", DyeColor.LIME);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock PINK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("pink_stained_imperial_glass", DyeColor.PINK);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("gray_stained_imperial_glass", DyeColor.GRAY);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock LIGHT_GRAY_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("light_gray_stained_imperial_glass", DyeColor.LIGHT_GRAY);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock CYAN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("cyan_stained_imperial_glass", DyeColor.CYAN);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock PURPLE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("purple_stained_imperial_glass", DyeColor.PURPLE);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock BLUE_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("blue_stained_imperial_glass", DyeColor.BLUE);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock BROWN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("brown_stained_imperial_glass", DyeColor.BROWN);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock GREEN_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("green_stained_imperial_glass", DyeColor.GREEN);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock RED_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("red_stained_imperial_glass", DyeColor.RED);
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	@ClientBlockRegistryData(renderLayer = BlockRenderLayer.TRANSPARENT)
 	public static final SelfConnectingStainedGlassBlock BLACK_STAINED_IMPERIAL_GLASS = createSelfConnectingStainedGlass("black_stained_imperial_glass", DyeColor.BLACK);
 
 	/// PANEL
 
 	private static final BlockBehaviour.Properties IMPERIAL_PANEL_SETTINGS = BlockBehaviour.Properties.of().sound(SoundType.COPPER).strength(1.5F).requiresCorrectToolForDrops();
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingBlock RUSTED_METAL = createSelfConnectingBlock("rusted_metal", BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).sound(SoundType.COPPER).strength(1.5F).requiresCorrectToolForDrops());
 	// TODO: Implement "imperial cutout" blocks
 	@DataGenBlock
@@ -340,9 +340,9 @@ public class GalaxiesBlocks
 	public static final SelfConnectingBlock GRAY_IMPERIAL_PANEL_SECTIONAL_1 = createSelfConnectingBlock("gray_imperial_panel_sectional_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
 	public static final SelfConnectingBlock GRAY_IMPERIAL_PANEL_SECTIONAL_2 = createSelfConnectingBlock("gray_imperial_panel_sectional_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_PILLAR, pillarTopTexture = "block/gray_imperial_panel_pattern_3")
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_1 = createSelfConnectingBlock("gray_imperial_tall_panel_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
-	@DataGenBlock
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_PILLAR, pillarTopTexture = "block/gray_imperial_panel_pattern_3")
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_2 = createSelfConnectingBlock("gray_imperial_tall_panel_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	// TODO: Implement connecting lighting panels
 	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
@@ -393,15 +393,15 @@ public class GalaxiesBlocks
 	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_SPLIT = createSelfConnectingBlock("black_imperial_panel_split", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
 	@DataGenBlock
 	public static final SelfConnectingBlock BLACK_IMPERIAL_PANEL_THIN_BORDERED = createSelfConnectingBlock("black_imperial_panel_thin_bordered", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingBlock EXTERNAL_IMPERIAL_PLATING = createSelfConnectingBlock("external_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingBlock LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingBlock RUSTED_LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("rusted_large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingBlock MOSSY_LARGE_IMPERIAL_PLATING = createSelfConnectingBlock("mossy_large_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
-	@DataGenBlock(model = DataGenBlockModel.CONNECTING)
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_CUBE)
 	public static final SelfConnectingBlock LARGE_LIGHT_GRAY_IMPERIAL_PLATING = createSelfConnectingBlock("large_light_gray_imperial_plating", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock
 	public static final NumberedBlocks BLACK_IMPERIAL_PANEL_PATTERN_A = createNumberedBlocks("black_imperial_panel_pattern_a", 4, IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_BLACK));

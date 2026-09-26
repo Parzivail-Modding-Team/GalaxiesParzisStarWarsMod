@@ -33,30 +33,45 @@ public final class ConnectedTextureBlockGenerator
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 	}
 
-	public static void register(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture)
+	public static void register(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture, boolean pillar)
 	{
-		generateBlockModels(generator, block, borderTexture, centerTexture);
+		generateBlockModels(generator, block, borderTexture, centerTexture, pillar);
 
-		Identifier connectingModel = connectingModelId(block);
+		Identifier connectingModel = connectingModelId(block, pillar);
 		generator.blockStateOutput.accept(createBlockstate(block, connectingModel));
 
-		TextureMapping mapping = TextureMapping.cube(new Material(borderTexture));
-		Identifier itemModel = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_block_item")), Optional.empty(), TextureSlot.ALL).create(block, mapping, generator.modelOutput);
-		generator.registerSimpleItemModel(block, itemModel);
+		if(pillar){
+			TextureMapping mapping = TextureMapping.column(new Material(borderTexture), new Material(centerTexture));
+			ModelTemplate template = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_pillar_block_item")), Optional.empty(), TextureSlot.END, TextureSlot.SIDE);
+			Identifier itemModel = template.create(block, mapping, generator.modelOutput);
+			generator.registerSimpleItemModel(block, itemModel);
+		}else
+		{
+			TextureMapping mapping = TextureMapping.cube(new Material(borderTexture));
+			ModelTemplate template = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_block_item")), Optional.empty(), TextureSlot.ALL);
+			Identifier itemModel = template.create(block, mapping, generator.modelOutput);
+			generator.registerSimpleItemModel(block, itemModel);
+		}
 	}
 
-	private static void generateBlockModels(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture)
+	private static void generateBlockModels(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture, boolean pillar)
 	{
 		for (TextureQuadrant quadrant : TextureQuadrant.values())
 		{
 			writeModel(generator, normalModelId(block, quadrant, "none"), borderTexture, quadrant, sourceRegion(quadrant, 0));
 			writeModel(generator, normalModelId(block, quadrant, "vertical"), borderTexture, quadrant, sourceRegion(quadrant, 1));
-			writeModel(generator, normalModelId(block, quadrant, "horizontal"), borderTexture, quadrant, sourceRegion(quadrant, 2));
-			writeModel(generator, cornerModelId(block, quadrant), borderTexture, quadrant, sourceRegion(quadrant, 3));
+			if(!pillar)
+			{
+				writeModel(generator, normalModelId(block, quadrant, "horizontal"), borderTexture, quadrant, sourceRegion(quadrant, 2));
+			}
+
 			writeCenterModel(generator, centerModelId(block, quadrant), centerTexture, quadrant);
+
+			writeModel(generator, cornerModelId(block, quadrant), borderTexture, quadrant, sourceRegion(quadrant, 3));
+
 		}
 
-		writeConnectingModel(generator, connectingModelId(block), borderTexture);
+		writeConnectingModel(generator, connectingModelId(block, pillar), borderTexture);
 	}
 
 	private static Identifier normalModelId(Block block, TextureQuadrant quadrant, String state)
@@ -74,11 +89,12 @@ public final class ConnectedTextureBlockGenerator
 		return getBaseIdentifier(block).withSuffix(quadrant.name().toLowerCase() + "_center");
 	}
 
-	private static Identifier connectingModelId(Block block)
+	private static Identifier connectingModelId(Block block, boolean pillar)
 	{
 		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
 		String blockKey =  blockId.getPath().substring(blockId.getPath().lastIndexOf('/') + 1, blockId.getPath().length());
-		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + blockKey +"_connecting_model");
+		String suffix = pillar ? "_connecting_pillar_model" : "_connecting_model";
+		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + blockKey + suffix);
 	}
 	private static Identifier getBaseIdentifier(Block block){
 		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);

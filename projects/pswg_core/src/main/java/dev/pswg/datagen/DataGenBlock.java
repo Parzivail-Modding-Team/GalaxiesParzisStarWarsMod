@@ -1,5 +1,7 @@
 package dev.pswg.datagen;
 
+import net.minecraft.resources.Identifier;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,6 +20,8 @@ public @interface DataGenBlock
 	String langOverride() default "";
 
 	String dataGenModelKey() default "";
+
+	String pillarTopTexture() default  "";
 
 	DataGenBlockTag[] blockTags() default {};
 	DataGenItemTag[] itemTags() default {};

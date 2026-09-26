@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "pswg:block/gray_imperial_tall_panel_2"
+      "model": "pswg:block/connected/gray_imperial_tall_panel_2/gray_imperial_tall_panel_2_connecting_pillar_model"
     }
   }
 }

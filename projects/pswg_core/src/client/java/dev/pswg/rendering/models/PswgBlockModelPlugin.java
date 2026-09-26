@@ -45,10 +45,12 @@ public final class PswgBlockModelPlugin
 		Variant variant = single.variant();
 		Identifier modelId = variant.modelLocation();
 
-		if (ConnectedTextureUnbaked.isConnectingModel(modelId))
-		{
-			return new ConnectedTextureUnbaked(modelId);
-		}
+		if(ConnectedTextureUnbaked.isPillarConnectingModel(modelId))
+			return new ConnectedTextureUnbaked(modelId, true);
+		else if (ConnectedTextureUnbaked.isCubeConnectingModel(modelId))
+			return new ConnectedTextureUnbaked(modelId, false);
+
+
 
 		var geometry = GalaxiesModelBakery.getGeometry(modelId);
 

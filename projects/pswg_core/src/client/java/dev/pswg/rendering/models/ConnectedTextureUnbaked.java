@@ -24,22 +24,30 @@ import java.util.function.Predicate;
 public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 {
 	private final Identifier baseId;
+	boolean pillar;
 
-	public ConnectedTextureUnbaked(Identifier connectingId)
+	public ConnectedTextureUnbaked(Identifier connectingId, boolean pillar)
 	{
 		String path = connectingId.getPath();
 
-		if (!path.endsWith("connecting_model"))
+		if(pillar)
 		{
+			if (!path.endsWith("connecting_pillar_model"))
+				throw new IllegalArgumentException("Connected texture model must end in connecting_pillar_model: " + connectingId);
+		}else if(!path.endsWith("connecting_model"))
 			throw new IllegalArgumentException("Connected texture model must end in connecting_model: " + connectingId);
-		}
 
 		this.baseId = Identifier.fromNamespaceAndPath(connectingId.getNamespace(), path.substring(0, path.lastIndexOf('/')));
+		this.pillar = pillar;
 	}
 
-	public static boolean isConnectingModel(Identifier modelId)
+	public static boolean isCubeConnectingModel(Identifier modelId)
 	{
 		return modelId.getPath().endsWith("connecting_model");
+	}
+	public static boolean isPillarConnectingModel(Identifier modelId)
+	{
+		return modelId.getPath().endsWith("connecting_pillar_model");
 	}
 
 	@Override
@@ -55,7 +63,7 @@ public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 
 		BlockStateModel fallback = bakeFallback(modelBaker, noneModels);
 
-		return new ConnectedTextureModel(block, fallback, noneModels, verticalModels, horizontalModels, cornerModels, centerModels);
+		return new ConnectedTextureModel(block, fallback, noneModels, verticalModels, horizontalModels, cornerModels, centerModels, pillar);
 	}
 
 	private Map<ConnectedTextureModel.Face, Map<ConnectedTextureModel.TextureQuadrant, BlockStateModelPart>> bakeQuadrantModels(ModelBaker modelBaker, String suffix)
@@ -174,7 +182,10 @@ public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 		}
 
 		String blockKey =  baseId.getPath().substring(baseId.getPath().lastIndexOf('/') + 1, baseId.getPath().length());
-		resolver.markDependency(Identifier.fromNamespaceAndPath(baseId.getNamespace(), baseId.getPath() + "/" + blockKey +"_connecting_model"));
+		if(pillar)
+			resolver.markDependency(Identifier.fromNamespaceAndPath(baseId.getNamespace(), baseId.getPath() + "/" + blockKey +"_connecting_pillar_model"));
+		else
+			resolver.markDependency(Identifier.fromNamespaceAndPath(baseId.getNamespace(), baseId.getPath() + "/" + blockKey +"_connecting_model"));
 	}
 
 	private Identifier modelId(ConnectedTextureModel.TextureQuadrant quadrant, String suffix)
