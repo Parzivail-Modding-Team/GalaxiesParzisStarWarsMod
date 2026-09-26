@@ -253,10 +253,10 @@ public final class ConnectedTextureBlockGenerator
 
 	private static JsonArray createUv(SourceRegion source)
 	{
-		float u0 = source.x() * UV_SCALE;
-		float v0 = source.y() * UV_SCALE;
-		float u1 = (source.x() + QUADRANT_SIZE) * UV_SCALE;
-		float v1 = (source.y() + QUADRANT_SIZE) * UV_SCALE;
+		float u0 = source.x() * UV_SCALE + 0.025f;
+		float v0 = source.y() * UV_SCALE + 0.025f;
+		float u1 = (source.x() + QUADRANT_SIZE) * UV_SCALE - 0.025f;
+		float v1 = (source.y() + QUADRANT_SIZE) * UV_SCALE - 0.025f;
 
 		JsonArray uv = new JsonArray();
 
