@@ -4,13 +4,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.pswg.Galaxies;
 import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelDispatcher;
+import net.minecraft.client.renderer.block.dispatch.SingleVariant;
+import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.util.Map;
 import java.util.Optional;
@@ -33,25 +39,48 @@ public final class ConnectedTextureBlockGenerator
 		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 	}
 
-	public static void register(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture, boolean pillar)
+	public static void registerCubic(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture)
 	{
-		generateBlockModels(generator, block, borderTexture, centerTexture, pillar);
+		generateBlockModels(generator, block, borderTexture, centerTexture, false);
 
-		Identifier connectingModel = connectingModelId(block, pillar);
+		Identifier connectingModel = connectingModelId(block, false);
 		generator.blockStateOutput.accept(createBlockstate(block, connectingModel));
 
-		if(pillar){
-			TextureMapping mapping = TextureMapping.column(new Material(borderTexture), new Material(centerTexture));
-			ModelTemplate template = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_pillar_block_item")), Optional.empty(), TextureSlot.END, TextureSlot.SIDE);
-			Identifier itemModel = template.create(block, mapping, generator.modelOutput);
-			generator.registerSimpleItemModel(block, itemModel);
-		}else
-		{
-			TextureMapping mapping = TextureMapping.cube(new Material(borderTexture));
-			ModelTemplate template = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_block_item")), Optional.empty(), TextureSlot.ALL);
-			Identifier itemModel = template.create(block, mapping, generator.modelOutput);
-			generator.registerSimpleItemModel(block, itemModel);
-		}
+
+		TextureMapping mapping = TextureMapping.cube(new Material(borderTexture));
+		ModelTemplate template = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_block_item")), Optional.empty(), TextureSlot.ALL);
+		Identifier itemModel = template.create(block, mapping, generator.modelOutput);
+		generator.registerSimpleItemModel(block, itemModel);
+
+	}
+	public static void registerPillar(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture)
+	{
+		generateBlockModels(generator, block, borderTexture, centerTexture, true);
+
+		Identifier connectingModel = connectingModelId(block, true);
+		generator.blockStateOutput.accept(createBlockstate(block, connectingModel));
+
+		TextureMapping mapping = TextureMapping.column(new Material(borderTexture), new Material(centerTexture));
+		ModelTemplate template = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_pillar_block_item")), Optional.empty(), TextureSlot.END, TextureSlot.SIDE);
+		Identifier itemModel = template.create(block, mapping, generator.modelOutput);
+		generator.registerSimpleItemModel(block, itemModel);
+
+	}
+	public static void registerPillarLightingPanel(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture)
+	{
+		generateBlockModels(generator, block, borderTexture, centerTexture, true);
+		generateBlockLitModels(generator, block, borderTexture.withSuffix("_lit"), centerTexture, true);
+
+		Identifier connectingModelUnlit = connectingModelId(block, true);
+		Identifier connectingModelLit = connectingModelLitId(block, true);
+
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, createWeightedVariant(connectingModelUnlit), createWeightedVariant(connectingModelLit))));
+
+		TextureMapping mapping = TextureMapping.column(new Material(borderTexture), new Material(centerTexture));
+		ModelTemplate template = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_pillar_block_item")), Optional.empty(), TextureSlot.END, TextureSlot.SIDE);
+		Identifier itemModel = template.create(block, mapping, generator.modelOutput);
+		generator.registerSimpleItemModel(block, itemModel);
+
 	}
 
 	private static void generateBlockModels(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture, boolean pillar)
@@ -72,6 +101,25 @@ public final class ConnectedTextureBlockGenerator
 		}
 
 		writeConnectingModel(generator, connectingModelId(block, pillar), borderTexture);
+	}
+	private static void generateBlockLitModels(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture, boolean pillar)
+	{
+		for (TextureQuadrant quadrant : TextureQuadrant.values())
+		{
+			writeModel(generator, normalModelId(block, quadrant, "none").withSuffix("_lit"), borderTexture, quadrant, sourceRegion(quadrant, 0));
+			writeModel(generator, normalModelId(block, quadrant, "vertical").withSuffix("_lit"), borderTexture, quadrant, sourceRegion(quadrant, 1));
+			if(!pillar)
+			{
+				writeModel(generator, normalModelId(block, quadrant, "horizontal").withSuffix("_lit"), borderTexture, quadrant, sourceRegion(quadrant, 2));
+			}
+
+			writeCenterModel(generator, centerModelId(block, quadrant).withSuffix("_lit"), centerTexture, quadrant);
+
+			writeModel(generator, cornerModelId(block, quadrant).withSuffix("_lit"), borderTexture, quadrant, sourceRegion(quadrant, 3));
+
+		}
+
+		writeConnectingModel(generator, connectingModelId(block, pillar).withSuffix("_lit"), borderTexture);
 	}
 
 	private static Identifier normalModelId(Block block, TextureQuadrant quadrant, String state)
@@ -95,6 +143,13 @@ public final class ConnectedTextureBlockGenerator
 		String blockKey =  blockId.getPath().substring(blockId.getPath().lastIndexOf('/') + 1, blockId.getPath().length());
 		String suffix = pillar ? "_connecting_pillar_model" : "_connecting_model";
 		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + blockKey + suffix);
+	}
+	private static Identifier connectingModelLitId(Block block, boolean pillar)
+	{
+		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
+		String blockKey =  blockId.getPath().substring(blockId.getPath().lastIndexOf('/') + 1, blockId.getPath().length());
+		String suffix = pillar ? "_connecting_pillar_model" : "_connecting_model";
+		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + blockKey + "_lit" + suffix);
 	}
 	private static Identifier getBaseIdentifier(Block block){
 		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
@@ -363,8 +418,12 @@ public final class ConnectedTextureBlockGenerator
 			@Override
 			public BlockStateModelDispatcher create()
 			{
-				return new BlockStateModelDispatcher(Optional.of(new BlockStateModelDispatcher.SimpleModelSelectors(Map.of("", new net.minecraft.client.renderer.block.dispatch.SingleVariant.Unbaked(new net.minecraft.client.renderer.block.dispatch.Variant(connectingModel))))), Optional.empty());
+				return new BlockStateModelDispatcher(Optional.of(new BlockStateModelDispatcher.SimpleModelSelectors(Map.of("", new SingleVariant.Unbaked(new Variant(connectingModel))))), Optional.empty());
 			}
 		};
+	}
+	public static MultiVariant createWeightedVariant(Identifier id)
+	{
+		return new MultiVariant(WeightedList.of(new Variant(id)));
 	}
 }

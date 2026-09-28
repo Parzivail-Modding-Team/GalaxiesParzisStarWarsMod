@@ -361,6 +361,10 @@ public class GalaxiesBlocks
 	/*@RegistryName("gray_imperial_tall_light_1")
 	@TarkinBlock(state = TrState.None, model = TrModel.None)
 	public static final InteractableConnectingInvertedLampBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY, 14);
+	*/
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_LIGHTING_PILLAR, pillarTopTexture = "block/gray_imperial_panel_pattern_3")
+	public static final InteractableConnectingInvertedLampBlock IMPERIAL_LIGHT_TALL_1 = Registrar.block(Galaxies.id("gray_imperial_tall_light_1"), InteractableConnectingInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.lightLevel(value -> value.getValue(InteractableConnectingInvertedLampBlock.LIT) ? 14 : 0));
+	/*
 	@RegistryName("gray_imperial_tall_light_2")
 	@TarkinBlock(state = TrState.None, model = TrModel.None)
 	public static final InteractableConnectingInvertedLampBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY, 14);*/
