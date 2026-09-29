@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.joml.Vector3f;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -45,7 +46,7 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 		this.block = block;
 		this.noneModels = noneModels;
 		this.verticalModels = verticalModels;
-		this.horizontalModels = horizontalModels;
+		this.horizontalModels = pillar ? horizontalModels : new HashMap<>();
 		this.cornerModels = cornerModels;
 		this.centerModels = centerModels;
 		this.pillar = pillar;

@@ -69,12 +69,12 @@ public final class ConnectedTextureBlockGenerator
 	public static void registerPillarLightingPanel(BlockModelGenerators generator, Block block, Identifier borderTexture, Identifier centerTexture)
 	{
 		generateBlockModels(generator, block, borderTexture, centerTexture, true);
-		generateBlockLitModels(generator, block, borderTexture.withSuffix("_lit"), centerTexture, true);
+		generateBlockLitModels(generator, block, borderTexture.withSuffix("_on"), centerTexture, true);
 
 		Identifier connectingModelUnlit = connectingModelId(block, true);
 		Identifier connectingModelLit = connectingModelLitId(block, true);
 
-		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, createWeightedVariant(connectingModelUnlit), createWeightedVariant(connectingModelLit))));
+		generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, createWeightedVariant(connectingModelLit), createWeightedVariant(connectingModelUnlit))));
 
 		TextureMapping mapping = TextureMapping.column(new Material(borderTexture), new Material(centerTexture));
 		ModelTemplate template = new ModelTemplate(Optional.of(Galaxies.id("block/template_connected_pillar_block_item")), Optional.empty(), TextureSlot.END, TextureSlot.SIDE);
@@ -106,35 +106,47 @@ public final class ConnectedTextureBlockGenerator
 	{
 		for (TextureQuadrant quadrant : TextureQuadrant.values())
 		{
-			writeModel(generator, normalModelId(block, quadrant, "none").withSuffix("_lit"), borderTexture, quadrant, sourceRegion(quadrant, 0));
-			writeModel(generator, normalModelId(block, quadrant, "vertical").withSuffix("_lit"), borderTexture, quadrant, sourceRegion(quadrant, 1));
+			writeModel(generator, normalLitModelId(block, quadrant, "none"), borderTexture, quadrant, sourceRegion(quadrant, 0));
+			writeModel(generator, normalLitModelId(block, quadrant, "vertical"), borderTexture, quadrant, sourceRegion(quadrant, 1));
 			if(!pillar)
 			{
-				writeModel(generator, normalModelId(block, quadrant, "horizontal").withSuffix("_lit"), borderTexture, quadrant, sourceRegion(quadrant, 2));
+				writeModel(generator, normalLitModelId(block, quadrant, "horizontal"), borderTexture, quadrant, sourceRegion(quadrant, 2));
 			}
 
-			writeCenterModel(generator, centerModelId(block, quadrant).withSuffix("_lit"), centerTexture, quadrant);
+			writeCenterModel(generator, centerLitModelId(block, quadrant), centerTexture, quadrant);
 
-			writeModel(generator, cornerModelId(block, quadrant).withSuffix("_lit"), borderTexture, quadrant, sourceRegion(quadrant, 3));
+			writeModel(generator, cornerLitModelId(block, quadrant), borderTexture, quadrant, sourceRegion(quadrant, 3));
 
 		}
 
-		writeConnectingModel(generator, connectingModelId(block, pillar).withSuffix("_lit"), borderTexture);
+		writeConnectingModel(generator, connectingModelLitId(block, pillar), borderTexture);
 	}
 
 	private static Identifier normalModelId(Block block, TextureQuadrant quadrant, String state)
 	{
 		return getBaseIdentifier(block).withSuffix(quadrant.name().toLowerCase() + "_" + state);
 	}
+	private static Identifier normalLitModelId(Block block, TextureQuadrant quadrant, String state)
+	{
+		return getBaseLitIdentifier(block).withSuffix("lit" + "_" + quadrant.name().toLowerCase() + "_" + state);
+	}
 
 	private static Identifier cornerModelId(Block block, TextureQuadrant quadrant)
 	{
 		return getBaseIdentifier(block).withSuffix(quadrant.name().toLowerCase() + "_corner");
 	}
+	private static Identifier cornerLitModelId(Block block, TextureQuadrant quadrant)
+	{
+		return getBaseLitIdentifier(block).withSuffix("lit" + "_" + quadrant.name().toLowerCase() + "_corner");
+	}
 
 	private static Identifier centerModelId(Block block, TextureQuadrant quadrant)
 	{
 		return getBaseIdentifier(block).withSuffix(quadrant.name().toLowerCase() + "_center");
+	}
+	private static Identifier centerLitModelId(Block block, TextureQuadrant quadrant)
+	{
+		return getBaseLitIdentifier(block).withSuffix("lit" + "_" + quadrant.name().toLowerCase() + "_center");
 	}
 
 	private static Identifier connectingModelId(Block block, boolean pillar)
@@ -149,12 +161,17 @@ public final class ConnectedTextureBlockGenerator
 		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
 		String blockKey =  blockId.getPath().substring(blockId.getPath().lastIndexOf('/') + 1, blockId.getPath().length());
 		String suffix = pillar ? "_connecting_pillar_model" : "_connecting_model";
-		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + blockKey + "_lit" + suffix);
+		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "_lit" + "/" + blockKey + "_lit" + suffix);
 	}
 	private static Identifier getBaseIdentifier(Block block){
 		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
 		String blockKey =  blockId.getPath().substring(blockId.getPath().lastIndexOf('/') + 1, blockId.getPath().length());
 		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "/" + blockKey + "_");
+	}
+	private static Identifier getBaseLitIdentifier(Block block){
+		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
+		String blockKey =  blockId.getPath().substring(blockId.getPath().lastIndexOf('/') + 1, blockId.getPath().length());
+		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), "block/connected/" + blockId.getPath() + "_lit" + "/" + blockKey + "_");
 	}
 
 	private static SourceRegion sourceRegion(TextureQuadrant quadrant, int state)

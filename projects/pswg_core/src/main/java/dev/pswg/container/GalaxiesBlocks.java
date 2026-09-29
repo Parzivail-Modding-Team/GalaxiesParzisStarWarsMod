@@ -344,7 +344,6 @@ public class GalaxiesBlocks
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_1 = createSelfConnectingBlock("gray_imperial_tall_panel_1", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
 	@DataGenBlock(model = DataGenBlockModel.CONNECTING_PILLAR, pillarTopTexture = "block/gray_imperial_panel_pattern_3")
 	public static final SelfConnectingBlock IMPERIAL_PANEL_TALL_2 = createSelfConnectingBlock("gray_imperial_tall_panel_2", IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.COLOR_GRAY));
-	// TODO: Implement connecting lighting panels
 	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_HALF_1 = createLightingPanelBlock("gray_imperial_light_half_1", 13);
 	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
@@ -358,16 +357,10 @@ public class GalaxiesBlocks
 	@DataGenBlock(model = DataGenBlockModel.NONE)
 	public static final InteractableInvertedLampSlab GRAY_IMPERIAL_LIGHTING_SLAB = createLightingPanelSlab("gray_imperial_lighting_panel_slab", 15, 12);
 
-	/*@RegistryName("gray_imperial_tall_light_1")
-	@TarkinBlock(state = TrState.None, model = TrModel.None)
-	public static final InteractableConnectingInvertedLampBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY, 14);
-	*/
 	@DataGenBlock(model = DataGenBlockModel.CONNECTING_LIGHTING_PILLAR, pillarTopTexture = "block/gray_imperial_panel_pattern_3")
 	public static final InteractableConnectingInvertedLampBlock IMPERIAL_LIGHT_TALL_1 = Registrar.block(Galaxies.id("gray_imperial_tall_light_1"), InteractableConnectingInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.lightLevel(value -> value.getValue(InteractableConnectingInvertedLampBlock.LIT) ? 14 : 0));
-	/*
-	@RegistryName("gray_imperial_tall_light_2")
-	@TarkinBlock(state = TrState.None, model = TrModel.None)
-	public static final InteractableConnectingInvertedLampBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY, 14);*/
+	@DataGenBlock(model = DataGenBlockModel.CONNECTING_LIGHTING_PILLAR, pillarTopTexture = "block/gray_imperial_panel_pattern_3")
+	public static final InteractableConnectingInvertedLampBlock IMPERIAL_LIGHT_TALL_2 = Registrar.block(Galaxies.id("gray_imperial_tall_light_2"), InteractableConnectingInvertedLampBlock::new, IMPERIAL_PANEL_SETTINGS.lightLevel(value -> value.getValue(InteractableConnectingInvertedLampBlock.LIT) ? 14 : 0));
 	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)
 	public static final InteractableInvertedLampBlock GRAY_IMPERIAL_LIGHT_PANEL_1 = createLightingPanelBlock("gray_imperial_light_panel_1", 11);
 	@DataGenBlock(model = DataGenBlockModel.LIGHTING_PANEL)

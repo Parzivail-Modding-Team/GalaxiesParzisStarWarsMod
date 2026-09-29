@@ -7,10 +7,10 @@
           "cullface": "north",
           "texture": "#texture",
           "uv": [
-            4.025,
-            12.025,
-            7.975,
-            15.975
+            0.0,
+            8.0,
+            8.0,
+            16.0
           ]
         }
       },
@@ -27,7 +27,7 @@
     }
   ],
   "textures": {
-    "particle": "pswg:block/gray_imperial_tall_light_1_border_lit",
-    "texture": "pswg:block/gray_imperial_tall_light_1_border_lit"
+    "particle": "pswg:block/gray_imperial_panel_pattern_3",
+    "texture": "pswg:block/gray_imperial_panel_pattern_3"
   }
 }

@@ -27,7 +27,7 @@
     }
   ],
   "textures": {
-    "particle": "pswg:block/gray_imperial_tall_light_1_border_lit",
-    "texture": "pswg:block/gray_imperial_tall_light_1_border_lit"
+    "particle": "pswg:block/gray_imperial_tall_light_2_border_on",
+    "texture": "pswg:block/gray_imperial_tall_light_2_border_on"
   }
 }

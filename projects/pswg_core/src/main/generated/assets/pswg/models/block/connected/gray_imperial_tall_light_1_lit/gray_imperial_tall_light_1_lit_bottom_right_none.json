@@ -8,26 +8,26 @@
           "texture": "#texture",
           "uv": [
             0.025,
-            0.025,
+            4.025,
             3.975,
-            3.975
+            7.975
           ]
         }
       },
       "from": [
         8.0,
-        8.0,
+        0.0,
         0.0
       ],
       "to": [
         16.0,
-        16.0,
+        8.0,
         0.0
       ]
     }
   ],
   "textures": {
-    "particle": "pswg:block/gray_imperial_tall_light_1_border_lit",
-    "texture": "pswg:block/gray_imperial_tall_light_1_border_lit"
+    "particle": "pswg:block/gray_imperial_tall_light_1_border_on",
+    "texture": "pswg:block/gray_imperial_tall_light_1_border_on"
   }
 }

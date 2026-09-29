@@ -1,0 +1,7 @@
+{
+  "parent": "pswg:block/template_connected_pillar_block_item",
+  "textures": {
+    "end": "pswg:block/gray_imperial_panel_pattern_3",
+    "side": "pswg:block/gray_imperial_tall_light_2_border"
+  }
+}

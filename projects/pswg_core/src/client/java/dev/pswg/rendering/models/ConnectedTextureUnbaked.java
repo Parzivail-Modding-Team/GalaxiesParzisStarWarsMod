@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -57,7 +58,7 @@ public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 
 		Map<ConnectedTextureModel.Face, Map<ConnectedTextureModel.TextureQuadrant, BlockStateModelPart>> noneModels = bakeQuadrantModels(modelBaker, "none");
 		Map<ConnectedTextureModel.Face, Map<ConnectedTextureModel.TextureQuadrant, BlockStateModelPart>> verticalModels = bakeQuadrantModels(modelBaker, "vertical");
-		Map<ConnectedTextureModel.Face, Map<ConnectedTextureModel.TextureQuadrant, BlockStateModelPart>> horizontalModels = bakeQuadrantModels(modelBaker, "horizontal");
+		Map<ConnectedTextureModel.Face, Map<ConnectedTextureModel.TextureQuadrant, BlockStateModelPart>> horizontalModels = pillar ? new HashMap<>() : bakeQuadrantModels(modelBaker, "horizontal");
 		Map<ConnectedTextureModel.Face, Map<ConnectedTextureModel.TextureQuadrant, BlockStateModelPart>> cornerModels = bakeQuadrantModels(modelBaker, "corner");
 		Map<ConnectedTextureModel.Face, Map<ConnectedTextureModel.TextureQuadrant, BlockStateModelPart>> centerModels = bakeCenterModels(modelBaker);
 
@@ -163,6 +164,8 @@ public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 		}
 
 		String blockPath = path.substring(prefix.length());
+		if(blockPath.endsWith("_lit"))
+			blockPath = blockPath.replace("_lit", "");
 
 		Identifier blockId = Identifier.fromNamespaceAndPath(baseId.getNamespace(), blockPath);
 
@@ -176,7 +179,8 @@ public final class ConnectedTextureUnbaked implements BlockStateModel.Unbaked
 		{
 			resolver.markDependency(modelId(quadrant, "none"));
 			resolver.markDependency(modelId(quadrant, "vertical"));
-			resolver.markDependency(modelId(quadrant, "horizontal"));
+			if(!pillar)
+				resolver.markDependency(modelId(quadrant, "horizontal"));
 			resolver.markDependency(modelId(quadrant, "corner"));
 			resolver.markDependency(modelId(quadrant, "center"));
 		}
