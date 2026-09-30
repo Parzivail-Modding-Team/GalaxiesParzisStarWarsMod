@@ -18,6 +18,7 @@ import java.util.List;
 public final class PswgBlockModelPlugin
 		implements ModelLoadingPlugin
 {
+	public static PswgBlockModelPlugin INSTANCE = new PswgBlockModelPlugin();
 
     @Override
     public void initialize(Context context) {

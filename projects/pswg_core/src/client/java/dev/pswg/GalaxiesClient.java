@@ -154,7 +154,7 @@ public class GalaxiesClient implements ClientModInitializer
 
 		GalaxiesRenderLayers.init();
 
-		ModelLoadingPlugin.register(new PswgBlockModelPlugin());
+		ModelLoadingPlugin.register(PswgBlockModelPlugin.INSTANCE);
 
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);
