@@ -1,0 +1,79 @@
+{
+  "variants": {
+    "cluster_size=1,facing=down": {
+      "model": "pswg:block/wall_cluster_light",
+      "x": 90,
+      "y": 90
+    },
+    "cluster_size=1,facing=east": {
+      "model": "pswg:block/wall_cluster_light",
+      "y": 90
+    },
+    "cluster_size=1,facing=north": {
+      "model": "pswg:block/wall_cluster_light"
+    },
+    "cluster_size=1,facing=south": {
+      "model": "pswg:block/wall_cluster_light",
+      "y": 180
+    },
+    "cluster_size=1,facing=up": {
+      "model": "pswg:block/wall_cluster_light",
+      "x": 270,
+      "y": 90
+    },
+    "cluster_size=1,facing=west": {
+      "model": "pswg:block/wall_cluster_light",
+      "y": 270
+    },
+    "cluster_size=2,facing=down": {
+      "model": "pswg:block/wall_cluster_light_2",
+      "x": 90,
+      "y": 90
+    },
+    "cluster_size=2,facing=east": {
+      "model": "pswg:block/wall_cluster_light_2",
+      "y": 90
+    },
+    "cluster_size=2,facing=north": {
+      "model": "pswg:block/wall_cluster_light_2"
+    },
+    "cluster_size=2,facing=south": {
+      "model": "pswg:block/wall_cluster_light_2",
+      "y": 180
+    },
+    "cluster_size=2,facing=up": {
+      "model": "pswg:block/wall_cluster_light_2",
+      "x": 270,
+      "y": 90
+    },
+    "cluster_size=2,facing=west": {
+      "model": "pswg:block/wall_cluster_light_2",
+      "y": 270
+    },
+    "cluster_size=3,facing=down": {
+      "model": "pswg:block/wall_cluster_light_3",
+      "x": 90,
+      "y": 90
+    },
+    "cluster_size=3,facing=east": {
+      "model": "pswg:block/wall_cluster_light_3",
+      "y": 90
+    },
+    "cluster_size=3,facing=north": {
+      "model": "pswg:block/wall_cluster_light_3"
+    },
+    "cluster_size=3,facing=south": {
+      "model": "pswg:block/wall_cluster_light_3",
+      "y": 180
+    },
+    "cluster_size=3,facing=up": {
+      "model": "pswg:block/wall_cluster_light_3",
+      "x": 270,
+      "y": 90
+    },
+    "cluster_size=3,facing=west": {
+      "model": "pswg:block/wall_cluster_light_3",
+      "y": 270
+    }
+  }
+}

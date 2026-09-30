@@ -12,6 +12,9 @@ import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class DelegatedConnectingBlock extends PipeBlock
 {
@@ -63,6 +66,12 @@ public abstract class DelegatedConnectingBlock extends PipeBlock
 			var bl = shouldConnectTo(state, neighborState);
 			return state.setValue(PROPERTY_BY_DIRECTION.get(direction), bl);
 		}
+	}
+
+	@Override
+	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
+	{
+		return Shapes.block();
 	}
 
 	@Override

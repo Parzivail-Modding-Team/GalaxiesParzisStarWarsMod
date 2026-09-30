@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "pswg:block/tall_lamp",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "pswg:block/tall_lamp",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "pswg:block/tall_lamp"
+    },
+    "facing=south": {
+      "model": "pswg:block/tall_lamp",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "pswg:block/tall_lamp"
+    },
+    "facing=west": {
+      "model": "pswg:block/tall_lamp",
+      "y": 270
+    }
+  }
+}

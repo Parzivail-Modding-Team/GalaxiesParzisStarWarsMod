@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "pswg:block/plasteel_block"
+      "model": "pswg:block/connected/plasteel_block/plasteel_block_connecting_model"
     }
   }
 }

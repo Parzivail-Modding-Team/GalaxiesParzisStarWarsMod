@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "pswg:block/template_connected_pillar_block_item",
   "textures": {
-    "all": "pswg:block/gray_imperial_tall_panel_2"
+    "end": "pswg:block/gray_imperial_panel_pattern_3",
+    "side": "pswg:block/gray_imperial_tall_panel_2_border"
   }
 }

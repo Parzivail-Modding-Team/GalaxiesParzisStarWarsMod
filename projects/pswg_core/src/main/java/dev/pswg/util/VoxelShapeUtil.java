@@ -3,6 +3,7 @@ package dev.pswg.util;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -136,5 +137,13 @@ public class VoxelShapeUtil
 		return new Vec3((shape.min(Direction.Axis.X) + shape.max(Direction.Axis.X)) / 2,
 		                 (shape.min(Direction.Axis.Y) + shape.max(Direction.Axis.Y)) / 2,
 		                 (shape.min(Direction.Axis.Z) + shape.max(Direction.Axis.Z)) / 2);
+	}
+
+	public static VoxelShape union(VoxelShape... shapes){
+		VoxelShape finalShape = Shapes.empty();
+		for(VoxelShape shape : shapes){
+			finalShape = Shapes.join(finalShape, shape, BooleanOp.OR);
+		}
+		return finalShape;
 	}
 }

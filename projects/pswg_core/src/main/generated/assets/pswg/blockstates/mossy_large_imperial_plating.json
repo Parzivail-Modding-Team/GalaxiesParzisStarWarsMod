@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "pswg:block/mossy_large_imperial_plating"
+      "model": "pswg:block/connected/mossy_large_imperial_plating/mossy_large_imperial_plating_connecting_model"
     }
   }
 }

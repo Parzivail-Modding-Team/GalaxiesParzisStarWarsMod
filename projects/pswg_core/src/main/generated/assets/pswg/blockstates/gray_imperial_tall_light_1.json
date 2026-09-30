@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "pswg:block/connected/gray_imperial_tall_light_1/gray_imperial_tall_light_1_connecting_pillar_model"
+    },
+    "lit=true": {
+      "model": "pswg:block/connected/gray_imperial_tall_light_1_lit/gray_imperial_tall_light_1_lit_connecting_pillar_model"
+    }
+  }
+}

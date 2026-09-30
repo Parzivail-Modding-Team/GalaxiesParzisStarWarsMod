@@ -131,6 +131,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 						registerStoneProducts(stoneProducts, blockStateModelGenerator);
 				}
 			});
+
 		}
 		private static void registerDataGenBlock(Block block, DataGenBlock dataGenBlock, BlockModelGenerators generator)
 		{
@@ -147,14 +148,18 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 				{
 					switch (dataGenBlock.dataGenModelKey())
 					{
-						case "corrugated_crate":
-							registerCorrugatedCrate(generator, block);
 						case null, default:
 					}
 				}
 				case JAPOR_LEAVES -> registerJaporLeaves(block, generator);
 				case LOG, LOG_WITH_WOOD -> registerLog(block, dataGenBlock, generator);
 				case LIGHTING_PANEL -> registerLightingPanel(block, generator);
+				case ROTATING_PLAIN -> registerPlainWithRotation(block, dataGenBlock, generator);
+				case ROTATING_CLUSTER_3 -> registerRotatingPickling3(block, dataGenBlock, generator);
+				case TEMPLATE, TEMPLATE_ROTATING -> registerTemplateBlock(block, dataGenBlock, generator);
+				case CONNECTING_CUBE -> registerConnectedCubeBlock(block, generator);
+				case CONNECTING_PILLAR -> registerConnectedPillarBlock(block, dataGenBlock, generator);
+				case CONNECTING_LIGHTING_PILLAR -> registerConnectedLightingPillarBlock(block, dataGenBlock, generator);
 				case SLAB -> registerVerticalSlab(block, generator);
 				case STAIRS -> registerStairs(block, generator);
 			}

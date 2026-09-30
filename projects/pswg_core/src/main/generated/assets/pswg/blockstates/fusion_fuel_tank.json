@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "pswg:block/fusion_fuel_tank",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "pswg:block/fusion_fuel_tank",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "pswg:block/fusion_fuel_tank"
+    },
+    "facing=south": {
+      "model": "pswg:block/fusion_fuel_tank",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "pswg:block/fusion_fuel_tank"
+    },
+    "facing=west": {
+      "model": "pswg:block/fusion_fuel_tank",
+      "y": 270
+    }
+  }
+}

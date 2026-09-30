@@ -23,7 +23,9 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4fc;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.*;
 
@@ -76,7 +78,12 @@ public final class GalaxiesModelBakery
 
 					var bufferBuilder = new BufferBuilder(bufferAllocator, VertexFormat.Mode.QUADS, format);
 
-					var vertices = List.of(quad.a(), quad.b(), quad.c(), quad.d());
+					var vertices = List.of(
+							transformVertex(quad.a(), settings),
+							transformVertex(quad.b(), settings),
+							transformVertex(quad.c(), settings),
+							transformVertex(quad.d(), settings)
+					);
 					for (int index = 0; index < vertices.size(); index++)
 					{
 						var vertex = vertices.get(index);
@@ -131,6 +138,22 @@ public final class GalaxiesModelBakery
 
 			return geometryBuilder.build();
 		}
+	}
+
+	private static GVertex transformVertex(GVertex vertex, ModelState settings) {
+		Matrix4fc matrix = settings.transformation().getMatrix();
+
+		Vector3f position = new Vector3f(vertex.position());
+		Vector3f normal = new Vector3f(vertex.normal());
+
+		position.sub(0.5f, 0.5f, 0.5f);
+		matrix.transformPosition(position);
+		position.add(0.5f, 0.5f, 0.5f);
+		matrix.transformDirection(normal);
+
+		normal.normalize();
+
+		return new GVertex(position, normal, new Vector2f(vertex.texCoords()), vertex.color(), vertex.overlay(), vertex.light());
 	}
 
 	/**

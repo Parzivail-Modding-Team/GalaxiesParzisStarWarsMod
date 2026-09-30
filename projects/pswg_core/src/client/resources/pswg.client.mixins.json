@@ -3,6 +3,8 @@
 	"package": "dev.pswg.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
+		"accesors.MultiPartModelUnbakedAccessor",
+		"accesors.SimpleCachedUnbakedRootAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
 		"attributes.MouseMixin",
