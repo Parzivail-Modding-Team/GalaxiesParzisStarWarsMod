@@ -8,7 +8,7 @@
       },
       {
         "type": "minecraft:condition",
-        "extractorId": "baseExtractor",
+        "extractorId": "pswg_gadgets:base_extractor",
         "on_false": {
           "type": "minecraft:empty"
         },
@@ -20,7 +20,7 @@
       },
       {
         "type": "minecraft:condition",
-        "extractorId": "laserExtractor",
+        "extractorId": "pswg_gadgets:laser_extractor",
         "on_false": {
           "type": "minecraft:empty"
         },
@@ -32,7 +32,7 @@
       },
       {
         "type": "minecraft:condition",
-        "extractorId": "plasteelExtractor",
+        "extractorId": "pswg_gadgets:plasteel_extractor",
         "on_false": {
           "type": "minecraft:empty"
         },
@@ -44,7 +44,7 @@
       },
       {
         "type": "minecraft:condition",
-        "capsuleId": "baseCapsule",
+        "capsule": "pswg_gadgets:base_capsule",
         "on_false": {
           "type": "minecraft:empty"
         },
@@ -56,7 +56,7 @@
       },
       {
         "type": "minecraft:condition",
-        "capsuleId": "transparisteelCapsule",
+        "capsule": "pswg_gadgets:transparisteel_capsule",
         "on_false": {
           "type": "minecraft:empty"
         },
@@ -68,7 +68,7 @@
       },
       {
         "type": "minecraft:condition",
-        "capsuleId": "reinforcedCapsule",
+        "capsule": "pswg_gadgets:reinforced_capsule",
         "on_false": {
           "type": "minecraft:empty"
         },
@@ -80,7 +80,7 @@
       },
       {
         "type": "minecraft:condition",
-        "drillId": "baseDrill",
+        "drill": "pswg_gadgets:base_drill",
         "on_false": {
           "type": "minecraft:empty"
         },
@@ -92,7 +92,7 @@
       },
       {
         "type": "minecraft:condition",
-        "drillId": "titaniumDrill",
+        "drill": "pswg_gadgets:titanium_drill",
         "on_false": {
           "type": "minecraft:empty"
         },
@@ -104,7 +104,7 @@
       },
       {
         "type": "minecraft:condition",
-        "drillId": "plasteelDrill",
+        "drill": "pswg_gadgets:plasteel_drill",
         "on_false": {
           "type": "minecraft:empty"
         },

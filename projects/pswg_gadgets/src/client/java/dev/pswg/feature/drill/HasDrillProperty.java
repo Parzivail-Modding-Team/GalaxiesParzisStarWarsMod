@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -17,11 +18,11 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public record HasDrillProperty(String drillId) implements ConditionalItemModelProperty
+public record HasDrillProperty(Identifier drillId) implements ConditionalItemModelProperty
 {
 	public static final MapCodec<HasDrillProperty> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
-					Codec.STRING.fieldOf("drillId").forGetter(HasDrillProperty::drillId)
+					Identifier.CODEC.fieldOf("drill").forGetter(HasDrillProperty::drillId)
 			).apply(instance, HasDrillProperty::new)
 	);
 	
@@ -37,6 +38,6 @@ public record HasDrillProperty(String drillId) implements ConditionalItemModelPr
 		DrillProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		if(properties == null)
 			return false;
-		return Objects.equals(properties.drillId(), drillId);
+		return Objects.equals(properties.drill().id(), drillId);
 	}
 }

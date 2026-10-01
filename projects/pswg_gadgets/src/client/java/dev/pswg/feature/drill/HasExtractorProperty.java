@@ -1,6 +1,5 @@
 package dev.pswg.feature.drill;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.container.GadgetsItems;
@@ -9,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.fabricmc.api.Environment;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -17,11 +17,11 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public record HasExtractorProperty(String extractorId) implements ConditionalItemModelProperty
+public record HasExtractorProperty(Identifier extractorId) implements ConditionalItemModelProperty
 {
 	public static final MapCodec<HasExtractorProperty> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
-					Codec.STRING.fieldOf("extractorId").forGetter(HasExtractorProperty::extractorId)
+					Identifier.CODEC.fieldOf("extractorId").forGetter(HasExtractorProperty::extractorId)
 			).apply(instance, HasExtractorProperty::new)
 	);
 
@@ -37,6 +37,6 @@ public record HasExtractorProperty(String extractorId) implements ConditionalIte
 		DrillProperties properties = itemStack.get(GadgetsItems.Components.DRILL_EXTRACTOR_PROPERTIES);
 		if(properties == null)
 			return false;
-		return Objects.equals(properties.extractorId(), extractorId);
+		return Objects.equals(properties.extractor().id(), extractorId);
 	}
 }
