@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,12 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GameRendererMixin
 {
 	@Shadow
-	public abstract Minecraft getMinecraft();
+	@Final
+	private Minecraft minecraft;
 
 	@Inject(at = @At("HEAD"), method = "bobHurt", cancellable = true)
 	void tiltViewWhenHurt(CameraRenderState cameraState, PoseStack poseStack, CallbackInfo ci)
 	{
-		if (getMinecraft().getCameraEntity() instanceof LivingEntity livingEntity)
+		if (minecraft.getCameraEntity() instanceof LivingEntity livingEntity)
 			if (livingEntity.getLastDamageSource() != null && livingEntity.getLastDamageSource().is(Galaxies.IGNORES_DAMAGE_TILT))
 				ci.cancel();
 	}

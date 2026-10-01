@@ -1,6 +1,5 @@
 package dev.pswg.feature.brewing;
 
-import com.mojang.serialization.MapCodec;
 import dev.pswg.container.GadgetsBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -22,13 +21,6 @@ public class MixerBlock extends BaseEntityBlock
 	{
 		super(settings);
 	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec()
-	{
-		return simpleCodec(MixerBlock::new);
-	}
-
 	@Override
 	public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{

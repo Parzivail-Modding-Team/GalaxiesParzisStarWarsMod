@@ -573,7 +573,7 @@ public class GalaxiesBlocks
 
 	private static BushLeavesBlock createBushLeavesBlock(String key)
 	{
-		return Registrar.block(Galaxies.id(key), settings -> new BushLeavesBlock(8, 3, settings), BlockBehaviour.Properties.of().strength(0.2F).sound(SoundType.GRASS).noCollision().pushReaction(PushReaction.DESTROY));
+		return Registrar.block(Galaxies.id(key), settings -> new BushLeavesBlock(8, 3, settings), BlockBehaviour.Properties.of().strength(0.2F).sound(SoundType.GRASS).noCollision().pushReaction(PushReaction.POPPED));
 	}
 	private static InteractableInvertedLampBlock createLightingPanelBlock(String key, int luminosity)
 	{

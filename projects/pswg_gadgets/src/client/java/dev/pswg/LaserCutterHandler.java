@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 public class LaserCutterHandler
 {
@@ -20,7 +21,7 @@ public class LaserCutterHandler
 		ItemStack mainStack = player.getMainHandItem();
 		if (mainStack.getItem() instanceof LaserCutterItem && mainStack.has(GadgetsItems.Components.MIN_POS))
 		{
-			double distanceMod = (player.blockInteractionRange() - player.position().distanceTo(mainStack.get(GadgetsItems.Components.CURRENT_BLOCK).getCenter())) / player.blockInteractionRange();
+			double distanceMod = (player.blockInteractionRange() - player.position().distanceTo(Vec3.atCenterOf(mainStack.get(GadgetsItems.Components.CURRENT_BLOCK)))) / player.blockInteractionRange();
 			modifier = (0.125f + (1 - (double)mainStack.getOrDefault(DataComponents.DAMAGE, 0) / mainStack.getOrDefault(DataComponents.MAX_DAMAGE, 1) * 0.125f)) * distanceMod;
 		}
 		else

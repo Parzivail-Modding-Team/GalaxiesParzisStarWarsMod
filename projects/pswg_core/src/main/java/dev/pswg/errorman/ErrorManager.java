@@ -7,9 +7,9 @@ import dev.pswg.errorman.model.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.CrashReport;
-import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import org.slf4j.Logger;
 
+import java.io.Console;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -100,13 +100,25 @@ public final class ErrorManager
 		getConsentToDispatch(report);
 	}
 
+	/**
+	 * Requests explicit permission from an interactive console before submitting a crash report.
+	 *
+	 * @param report the crash report to submit if permission is granted
+	 */
 	private static void getConsentToDispatch(CrashReport report)
 	{
 		LOGGER.warn("Getting consent to dispatch error");
 
-		// Do not report errors without the user's consent
-		var message = "PSWG has crashed! Send this crash report to the developers?";
-		if (TinyFileDialogs.tinyfd_messageBox("PSWG Error", message, "yesno", "error", 1) != 0)
+		// Do not report errors without explicit consent from an interactive console.
+		Console console = System.console();
+		if (console == null)
+		{
+			LOGGER.warn("No interactive console is available; abandoning crash report submission");
+			return;
+		}
+
+		var consent = console.readLine("PSWG has crashed. Send this crash report to the developers? [y/N] ");
+		if (consent != null && consent.trim().equalsIgnoreCase("y"))
 		{
 			try
 			{

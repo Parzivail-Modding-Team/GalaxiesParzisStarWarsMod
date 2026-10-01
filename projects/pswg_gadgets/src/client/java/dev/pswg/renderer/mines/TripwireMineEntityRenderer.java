@@ -32,8 +32,8 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 	{
 		matrices.pushPose();
 
-		matrices.mulPose(Axis.YP.rotationDegrees(-state.yaw + 90));
-		matrices.mulPose(Axis.ZP.rotationDegrees(state.pitch + 90));
+		matrices.rotateDegrees(Axis.YP, -state.yaw + 90);
+		matrices.rotateDegrees(Axis.ZP, state.pitch + 90);
 
 		this.model.setupAnim(state);
 		this.model.setupAnim(state);
@@ -42,7 +42,7 @@ public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntit
 		model.root().getChild("laser").y = state.tripwireDistance * -31 + 1f;
 		model.root().getChild("laser").skipDraw = !state.primed;
 
-		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
 		matrices.popPose();
 		super.submit(state, matrices, queue, cameraState);
 	}

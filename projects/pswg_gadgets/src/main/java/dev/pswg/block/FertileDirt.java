@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -21,7 +22,8 @@ public class FertileDirt extends Block
 		var plantState = world.getBlockState(pos.above());
 		if (world instanceof ServerLevel serverWorld)
 			if (plantState.getBlock() instanceof BonemealableBlock fertilizableBlock)
-				if (fertilizableBlock.isBonemealSuccess(serverWorld, serverWorld.getRandom(), pos.above(), plantState))
-					fertilizableBlock.performBonemeal(serverWorld, serverWorld.getRandom(), pos.above(), plantState);
+				if (fertilizableBlock.isValidBonemealTarget(serverWorld, pos.above(), plantState, BonemealSource.MOB)
+				    && fertilizableBlock.isBonemealSuccess(serverWorld, serverWorld.getRandom(), pos.above(), plantState, BonemealSource.MOB))
+					fertilizableBlock.performBonemeal(serverWorld, serverWorld.getRandom(), pos.above(), plantState, BonemealSource.MOB);
 	}
 }

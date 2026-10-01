@@ -4,7 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.pswg.util.worldgen.TerrainGenerator;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldGenRegion;
@@ -14,6 +19,7 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Blocks;
@@ -24,10 +30,13 @@ import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import org.jspecify.annotations.Nullable;
 
+/**
+ * Generates Tatooine terrain using PSWG's custom terrain and decoration layers.
+ */
 public class GalaxiesChunkGenerator extends ChunkGenerator
 {
 	public static final MapCodec<GalaxiesChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(
@@ -60,18 +69,6 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public void applyCarvers(WorldGenRegion chunkRegion, long seed, RandomState noiseConfig, BiomeManager biomeAccess, StructureManager structureAccessor, ChunkAccess chunk)
-	{
-
-	}
-
-	@Override
-	public void buildSurface(WorldGenRegion region, StructureManager structures, RandomState noiseConfig, ChunkAccess chunk)
-	{
-		this.backing.buildSurface(new MinecraftChunkView(chunk));
-	}
-
-	@Override
 	public void spawnOriginalMobs(WorldGenRegion region)
 	{
 
@@ -83,10 +80,30 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 		return -64;
 	}
 
+	/**
+	 * Builds custom terrain and surface layers in Minecraft's 26.3 terrain stage.
+	 *
+	 * @param chunk the chunk being generated
+	 * @param blender the blender for old-world terrain transitions
+	 * @param randomState the worldgen random state
+	 * @param structureManager the structure manager
+	 * @param biomeManager the biome manager
+	 * @param carverBiomeRegion the optional region used for carver biome sampling
+	 * @param possibleBiomes the possible biomes in the generated chunk
+	 * @return the completed chunk
+	 */
 	@Override
-	public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk)
+	public CompletableFuture<ChunkAccess> buildTerrain(
+			ChunkAccess chunk,
+			Blender blender,
+			RandomState randomState,
+			StructureManager structureManager,
+			BiomeManager biomeManager,
+			@Nullable WorldGenRegion carverBiomeRegion,
+			Set<Holder<Biome>> possibleBiomes)
 	{
 		this.backing.buildNoise(new MinecraftChunkView(chunk));
+		this.backing.buildSurface(new MinecraftChunkView(chunk));
 
 		return CompletableFuture.completedFuture(chunk);
 	}
@@ -128,7 +145,7 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public void addDebugScreenInfo(List<String> text, RandomState noiseConfig, BlockPos pos)
+	public void addDebugScreenInfo(List<String> text, RandomState noiseConfig, BlockPos pos, SamplerContext samplerContext)
 	{
 
 	}

@@ -14,6 +14,8 @@ import dev.pswg.renderer.BlasterBoltEntityRenderer;
 import dev.pswg.rendering.Drawables;
 import dev.pswg.rendering.ItemHudRenderer;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -50,7 +52,12 @@ public class BlastersClient implements GalaxiesClientAddon
 
 		BLASTER_HUD_REGISTRY.register(Blasters.DEFAULT_HUD, new DefaultBlasterHudRenderer());
 
-		HudRenderEvents.CROSSHAIR.register(BlastersClient::renderCrosshair);
+		HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, Blasters.id("crosshair"), (context, tickCounter) -> {
+			var matrix = context.pose();
+			matrix.pushMatrix();
+			HudRenderEvents.CROSSHAIR.invoker().render(context, tickCounter);
+			matrix.popMatrix();
+		});
 
 		ItemRenderEvents.STACK.register(BlastersClient::renderItemBars);
 

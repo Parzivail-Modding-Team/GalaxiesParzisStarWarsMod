@@ -132,5 +132,5 @@ if ($env:TOOLCHAIN_JAVA_OPTS)
 }
 
 Set-Location $ScriptDir
-& java @javaOptions -jar $resolvedJar @Arguments
+& "C:\Users\cnewman\scoop\apps\temurin25-jdk\current\bin\java.exe" @javaOptions -jar $resolvedJar @Arguments
 exit $LASTEXITCODE

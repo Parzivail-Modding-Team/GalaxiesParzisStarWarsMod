@@ -31,10 +31,10 @@ public class FragmentationGrenadeEntityRenderer extends EntityRenderer<Fragmenta
 	{
 		matrices.pushPose();
 
-		matrices.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+		matrices.rotateDegrees(Axis.YP, -state.yaw);
 		this.model.setupAnim(state);
 
-		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
 
 		matrices.popPose();
 		super.submit(state, matrices, queue, cameraState);

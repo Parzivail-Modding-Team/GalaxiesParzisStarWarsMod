@@ -166,7 +166,7 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 		else
 		{
 			this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
-			this.hurtMarked = true;
+			this.needsSync = true;
 		}
 		this.applyDrag();
 		if (this.tickCount == PRIMING_TIME)
@@ -195,7 +195,7 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 					inBlockState = level().getBlockState(blockHit.getBlockPos());
 					setRotation(normal);
 					setInGround(true);
-					this.hurtMarked = true;
+					this.needsSync = true;
 				}
 			}
 		}

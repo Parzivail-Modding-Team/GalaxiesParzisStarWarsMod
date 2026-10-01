@@ -30,12 +30,6 @@ public abstract class ClientPlayerEntityMixin
 		pswg$currentRecoilVelocity = recoil.recoilVelocity();
 	}
 
-	@ModifyReturnValue(method = "getViewXRot(F)F", at = @At("RETURN"))
-	private float getPitch(float original, float tickDelta)
-	{
-		return Math.clamp(original + tickDelta * pswg$currentRecoilVelocity.x, -90, 90);
-	}
-
 	@ModifyReturnValue(method = "getViewYRot(F)F", at = @At("RETURN"))
 	private float getYaw(float original, float tickDelta)
 	{

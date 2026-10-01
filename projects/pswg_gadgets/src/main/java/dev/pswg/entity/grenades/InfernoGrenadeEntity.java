@@ -130,7 +130,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 			firewaveTicks++;
 			detonationTicks++;
 			setDeltaMovement(Vec3.ZERO);
-			hurtMarked = true;
+			needsSync = true;
 		}
 		var world = level();
 		if (detonationTicks == 1)

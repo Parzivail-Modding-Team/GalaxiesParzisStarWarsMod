@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.ArrayList;
@@ -28,8 +29,9 @@ public class RepellerBlock extends WaterloggableRotatingBlockWithBounds
 		var targets = new ArrayList<BlockPos>();
 
 		// TODO: make a tag for sand repellents
-		for (BlockPos blockPos : BlockPos.withinManhattan(pos, REPELLENT_RADIUS, REPELLENT_RADIUS, REPELLENT_RADIUS))
-			if (blockPos.getCenter().distanceTo(pos.getCenter()) < REPELLENT_RADIUS_SQUARED && level.getBlockState(blockPos).is(GalaxiesBlocks.LOOSE_DESERT_SAND))
+		var center = Vec3.atCenterOf(pos);
+		for (BlockPos blockPos : BlockPos.withinClippedManhattan(pos, REPELLENT_RADIUS, REPELLENT_RADIUS, REPELLENT_RADIUS))
+			if (Vec3.atCenterOf(blockPos).distanceToSqr(center) < REPELLENT_RADIUS_SQUARED && level.getBlockState(blockPos).is(GalaxiesBlocks.LOOSE_DESERT_SAND))
 				targets.add(blockPos.immutable());
 
 		Collections.shuffle(targets);

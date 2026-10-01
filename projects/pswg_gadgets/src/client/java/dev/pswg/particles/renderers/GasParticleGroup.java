@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.state.level.ParticleGroupRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ARGB;
+import org.joml.Quaternionf;
 import java.util.List;
 
 public class GasParticleGroup extends ParticleGroup<GasParticle>
@@ -38,7 +39,7 @@ public class GasParticleGroup extends ParticleGroup<GasParticle>
 			PoseStack matrixStack = new PoseStack();
 			matrixStack.pushPose();
 			matrixStack.translate(particle.getPos().subtract(camera.position()));
-			matrixStack.mulPose(camera.rotation().rotateZ((float)Math.toRadians(particle.getBillowing())));
+			matrixStack.rotate(new Quaternionf(camera.rotation()).rotateZ((float)Math.toRadians(particle.getBillowing())));
 
 			return new State(
 					matrixStack,

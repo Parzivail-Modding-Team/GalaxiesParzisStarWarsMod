@@ -98,7 +98,7 @@ public class CodecDataLoader<T> implements ResourceManagerReloadListener
 
 		var namespaces = new HashSet<String>();
 
-		for (var entry : manager.listResources(folderName, filter).entrySet())
+		for (var entry : manager.listResources(folderName, filter::test).entrySet())
 		{
 			var key = entry.getKey();
 			var resource = entry.getValue();

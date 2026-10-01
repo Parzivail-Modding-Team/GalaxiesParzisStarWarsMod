@@ -1,6 +1,5 @@
 package dev.pswg.block.plant;
 
-import com.mojang.serialization.MapCodec;
 import dev.pswg.container.GalaxiesBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -18,13 +17,6 @@ public class AridPlant extends VegetationBlock
 	{
 		super(settings);
 	}
-
-	@Override
-	protected MapCodec<? extends VegetationBlock> codec()
-	{
-		return simpleCodec(AridPlant::new);
-	}
-
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
 	{

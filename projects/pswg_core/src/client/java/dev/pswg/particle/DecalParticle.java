@@ -38,7 +38,8 @@ public class DecalParticle extends SimpleAnimatedParticle
 		var normal = new Vec3(xd, yd, zd).normalize();
 		var pos = new Vec3(this.x, this.y, this.z);
 
-		var hostBlockPos = new BlockPos(MathUtil.floorInt(pos.subtract(normal.scale(0.1f))));
+		var hostPosition = pos.subtract(normal.scale(0.1f));
+		var hostBlockPos = BlockPos.containing(hostPosition.x, hostPosition.y, hostPosition.z);
 		if (level.isEmptyBlock(hostBlockPos))
 			this.remove();
 	}
