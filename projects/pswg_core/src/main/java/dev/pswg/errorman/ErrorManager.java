@@ -9,7 +9,9 @@ import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.minecraft.CrashReport;
 import org.slf4j.Logger;
 
-import java.io.Console;
+import java.awt.AWTError;
+import java.awt.GraphicsEnvironment;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -18,6 +20,9 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public final class ErrorManager
 {
@@ -101,7 +106,7 @@ public final class ErrorManager
 	}
 
 	/**
-	 * Requests explicit permission from an interactive console before submitting a crash report.
+	 * Requests explicit permission in a standalone desktop dialog before submitting a crash report.
 	 *
 	 * @param report the crash report to submit if permission is granted
 	 */
@@ -109,28 +114,86 @@ public final class ErrorManager
 	{
 		LOGGER.warn("Getting consent to dispatch error");
 
-		// Do not report errors without explicit consent from an interactive console.
-		Console console = System.console();
-		if (console == null)
-		{
-			LOGGER.warn("No interactive console is available; abandoning crash report submission");
+		if (!showConsentDialog())
 			return;
+
+		try
+		{
+			dispatchError(report);
+		}
+		catch (Throwable t)
+		{
+			LOGGER.error("Failed to dispatch error:", t);
+		}
+	}
+
+	/**
+	 * Displays a standalone desktop dialog for crash-report submission consent.
+	 *
+	 * @return true if the user explicitly selects the send option
+	 */
+	private static boolean showConsentDialog()
+	{
+		var consent = new AtomicBoolean(false);
+		Runnable showDialog = () -> {
+			var options = new Object[] {"Send report", "Don't send"};
+			var message = String.join(
+					"\n",
+					"PSWG has crashed.",
+					"",
+					"Would you like to send the crash report to the developers?",
+					"The report includes the exception stack trace and installed mod/version information."
+			);
+			var selection = JOptionPane.showOptionDialog(
+					null,
+					message,
+					"PSWG Crash Report",
+					JOptionPane.DEFAULT_OPTION,
+					JOptionPane.WARNING_MESSAGE,
+					null,
+					options,
+					options[1]
+			);
+			consent.set(selection == 0);
+		};
+
+		try
+		{
+			if (GraphicsEnvironment.isHeadless())
+			{
+				LOGGER.warn("No graphical environment is available; abandoning crash report submission");
+				return false;
+			}
+
+			if (SwingUtilities.isEventDispatchThread())
+				showDialog.run();
+			else
+				SwingUtilities.invokeAndWait(showDialog);
+		}
+		catch (InterruptedException e)
+		{
+			Thread.currentThread().interrupt();
+			LOGGER.warn("Interrupted while waiting for crash report consent; abandoning report");
+			return false;
+		}
+		catch (InvocationTargetException e)
+		{
+			LOGGER.error("Unable to display crash report consent dialog; abandoning report", e.getCause());
+			return false;
+		}
+		catch (RuntimeException | AWTError | LinkageError e)
+		{
+			LOGGER.error("Unable to display crash report consent dialog; abandoning report", e);
+			return false;
 		}
 
-		var consent = console.readLine("PSWG has crashed. Send this crash report to the developers? [y/N] ");
-		if (consent != null && consent.trim().equalsIgnoreCase("y"))
+		if (!consent.get())
 		{
-			try
-			{
-				dispatchError(report);
-			}
-			catch (Throwable t)
-			{
-				LOGGER.error("Failed to dispatch error:", t);
-			}
-		}
-		else
 			LOGGER.warn("No consent, abandoning report");
+			return false;
+		}
+
+		return true;
 	}
 
 	private static void dispatchError(CrashReport report)

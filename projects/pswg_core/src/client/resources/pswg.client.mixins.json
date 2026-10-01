@@ -13,9 +13,7 @@
 		"handbobbing.FirstPersonHandsAndItemsMixin",
 		"leftuse.MinecraftClientMixin",
 		"models.CuboidItemModelWrapperMixin",
-		"recoil.ClientPlayerEntityMixin",
 		"recoil.FirstPersonHandsAndItemsRenderStateMixin",
-		"recoil.EntityViewRotationMixin",
 		"recoil.FirstPersonHandsAndItemsRendererMixin"
 	],
 	"injectors": {

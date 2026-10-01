@@ -51,6 +51,7 @@ public class BlastersClient implements GalaxiesClientAddon
 		EntityRenderers.register(Blasters.BLASTER_BOLT_ENTITY, BlasterBoltEntityRenderer::new);
 
 		BLASTER_HUD_REGISTRY.register(Blasters.DEFAULT_HUD, new DefaultBlasterHudRenderer());
+		HudRenderEvents.CROSSHAIR.register(BlastersClient::renderCrosshair);
 
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, Blasters.id("crosshair"), (context, tickCounter) -> {
 			var matrix = context.pose();
