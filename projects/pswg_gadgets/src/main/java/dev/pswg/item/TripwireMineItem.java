@@ -27,7 +27,7 @@ public class TripwireMineItem extends Item
 	{
 		TripwireMineEntity mine = GadgetsEntities.TRIPWIRE_MINE_ENTITY.create(world, EntitySpawnReason.EVENT);
 
-		mine.recreateFromPacket(new ClientboundAddEntityPacket(mine.getId(), mine.getUUID(), player.getX(), player.getY() + 1.5, player.getZ(), -player.getXRot(), -player.getYRot(), mine.getType(), 0, Vec3.ZERO, player.getYHeadRot()));
+		mine.setPos(new Vec3(player.getX(), player.getY() + 1.5, player.getZ()));
 		mine.setOwner(player);
 		mine.setDeltaMovement(player.getForward().x * 0.6, player.getForward().y * 0.4, player.getForward().z * 0.6);
 
