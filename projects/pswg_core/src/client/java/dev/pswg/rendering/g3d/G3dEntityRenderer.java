@@ -49,6 +49,11 @@ public class G3dEntityRenderer<T extends Entity> extends EntityRenderer<T, G3dEn
 		 * Overall ARGB color for untinted surfaces.
 		 */
 		public int color = -1;
+
+		/**
+		 * Scratch storage for the selected asset's placement socket.
+		 */
+		private final Matrix4f _origin = new Matrix4f();
 	}
 
 	/**
@@ -62,12 +67,31 @@ public class G3dEntityRenderer<T extends Entity> extends EntityRenderer<T, G3dEn
 	private final Identifier _modelId;
 
 	/**
+	 * Optional artist-authored origin that is placed at the entity position.
+	 */
+	private final @Nullable String _originSocket;
+
+	/**
 	 * Creates a renderer for a registered module entity and a G3D model id.
 	 */
 	public G3dEntityRenderer(EntityRendererProvider.Context context, Identifier modelId)
 	{
+		this(context, modelId, null);
+	}
+
+	/**
+	 * Creates a renderer whose named socket defines placement and orientation.
+	 * The socket is resolved from the current asset and captured pose each frame.
+	 */
+	public G3dEntityRenderer(
+			EntityRendererProvider.Context context,
+			Identifier modelId,
+			@Nullable String originSocket
+	)
+	{
 		super(context);
 		_modelId = modelId;
+		_originSocket = originSocket;
 	}
 
 	/**
@@ -86,9 +110,9 @@ public class G3dEntityRenderer<T extends Entity> extends EntityRenderer<T, G3dEn
 	public void extractRenderState(T entity, State state, float tickDelta)
 	{
 		super.extractRenderState(entity, state, tickDelta);
-		state.model = G3dClientModels.get(_modelId).orElse(null);
+		state.model = G3dClientModels.get(extractModelId(entity, tickDelta)).orElse(null);
 		state.transform.identity();
-		state.color = -1;
+		state.color = extractColor(entity, tickDelta);
 		extractTransform(entity, state.transform, tickDelta);
 
 		if (state.model == null)
@@ -106,6 +130,16 @@ public class G3dEntityRenderer<T extends Entity> extends EntityRenderer<T, G3dEn
 			pose.evaluate(overrides);
 			state.matrices = pose.snapshot();
 		}
+		if (_originSocket != null)
+		{
+			var socket = state.model.model().rig().socket(_originSocket);
+			socket.localTransform().matrix(state._origin);
+			state.matrices[socket.node()].mul(state._origin, state._origin);
+			// A collapsed anchor cannot define a placement basis. Keep the captured
+			// transform finite while its hidden geometry is skipped by submission.
+			if (state._origin.determinant() != 0)
+				state.transform.mul(state._origin.invert());
+		}
 	}
 
 	/**
@@ -114,25 +148,48 @@ public class G3dEntityRenderer<T extends Entity> extends EntityRenderer<T, G3dEn
 	@Override
 	public void submit(State state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState camera)
 	{
-		if (state.model != null)
+		if (state.model != null && (!state.isInvisible || state.outlineColor != 0))
 		{
 			stack.pushPose();
-			stack.mulPose(state.transform);
-			state.model.submit(
-					state.matrices,
-					stack,
-					collector,
-					state.lightCoords,
-					OverlayTexture.NO_OVERLAY,
-					state.color,
-					NO_TINTS,
-					false,
-					false,
-					state.outlineColor
-			);
-			stack.popPose();
+			try
+			{
+				stack.mulPose(state.transform);
+				state.model.submit(
+						state.matrices,
+						stack,
+						collector,
+						state.lightCoords,
+						OverlayTexture.NO_OVERLAY,
+						state.color,
+						NO_TINTS,
+						false,
+						false,
+						state.outlineColor,
+						!state.isInvisible
+				);
+			}
+			finally
+			{
+				stack.popPose();
+			}
 		}
 		super.submit(state, stack, collector, camera);
+	}
+
+	/**
+	 * Override to select an asset from captured gameplay state, such as priming.
+	 */
+	protected Identifier extractModelId(T entity, float tickDelta)
+	{
+		return _modelId;
+	}
+
+	/**
+	 * Override to capture an overall ARGB color before submission.
+	 */
+	protected int extractColor(T entity, float tickDelta)
+	{
+		return -1;
 	}
 
 	/**

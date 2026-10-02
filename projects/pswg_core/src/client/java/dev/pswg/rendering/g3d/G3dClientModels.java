@@ -87,7 +87,7 @@ public final class G3dClientModels
 				public Map<Identifier, G3dRenderer> bake(ModelBaker baker)
 				{
 					var renderers = new HashMap<Identifier, G3dRenderer>();
-					geometries.forEach((id, geometry) -> renderers.put(id, new G3dRenderer(geometry)));
+					geometries.forEach((id, geometry) -> renderers.put(id, new G3dRenderer(geometry, baker)));
 					return Map.copyOf(renderers);
 				}
 			});

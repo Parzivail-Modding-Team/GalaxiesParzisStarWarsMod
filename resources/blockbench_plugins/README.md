@@ -20,6 +20,8 @@ The module's normal datagen run creates the game model sidecar, compiled geometr
 
 Groups become model parts. Their names are the names used in the game, and **Scale** changes their rest size. Locators become attachment points, such as a grip or muzzle; name and place them with the normal locator tools. Keep a locator inside the group it should follow.
 
+Gadget models are also used by their thrown or placed entities. Their **entity_origin** locator marks the point placed at the entity's position. Keep that locator when editing a gadget; moving it changes world placement without changing the item's Display values. The tripwire mine's **beam** group is hidden at rest with Scale `[0, 0, 0]`. The entity supplies its live length and orientation. Temporarily set the group's scale to `[1, 1, 1]` to inspect its shape, then restore the rest scale before export.
+
 A mesh can use several textures. The exporter splits it into the required surfaces for you. For faces without a texture, it uses the mesh's only assigned texture, or Blockbench's default/selected texture.
 
 ## Texture surface settings

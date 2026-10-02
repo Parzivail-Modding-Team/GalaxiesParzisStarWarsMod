@@ -3,7 +3,8 @@
 	"materials": [
 		{
 			"id": "0",
-			"texture": "pswg_gadgets:model/item/grenade/3d/impact_grenade_in_hand"
+			"texture": "pswg_gadgets:model/item/grenade/3d/impact_grenade_in_hand",
+			"layers": {"entity": "minecraft:entity/cutout_no_cull"}
 		}
 	],
 	"nodes": [
@@ -1709,5 +1710,5 @@
 			]
 		}
 	],
-	"sockets": []
+	"sockets": [{"id": "entity_origin", "node": "root", "localTransform": {"translation": [8, 0, 8]}}]
 }

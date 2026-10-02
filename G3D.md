@@ -183,7 +183,9 @@ The atlas declaration is `projects/pswg_core/src/main/resources/assets/minecraft
 
 Every graph also has sampled output. `atlas: false` selects sampled-only surfaces; items then use the native special-model path. Chunk-rendered blocks require atlas output. Sampled or changing block textures need a block-entity/special renderer using `G3dRenderer`.
 
-On the render thread, sampled requests return a stable texture ID immediately. Generated graphs begin with a visible checkerboard placeholder. Shared background work replaces the image at that ID, and reload cancels stale work. Failures are logged and keep the placeholder. Addons can register graph codecs with `PtexCodecs.register` during client startup.
+On the render thread, sampled-only requests return a stable texture ID immediately. Generated graphs begin with a visible checkerboard placeholder. Shared background work replaces the image at that ID, and reload cancels stale work. Failures are logged and keep the placeholder. Addons can register graph codecs with `PtexCodecs.register` during client startup.
+
+G3D entity and special-item renderers capture atlas-capable surfaces from the current `ModelBaker`. They bind the sprite's atlas and map model UVs into its region. Vanilla then updates the current animation frame, including `.mcmeta` frame timing and interpolation. An animated PNG strip must not be bound as a whole sampled image: its model UVs describe one frame. Primed grenade entities share the same animated atlas sprites as their item forms. Sampled-only graphs keep their sampler texture and normalized UVs. Custom callers should obtain a renderer through `G3dClientModels` or use `new G3dRenderer(geometry, baker)` for atlas animation; the geometry-only constructor supplies the sampler-only path when no baker is available.
 
 ## Native layers and rendering
 
@@ -193,7 +195,7 @@ On the render thread, sampled requests return a stable texture ID immediately. G
 | Item | `minecraft:item/solid`, `minecraft:item/cutout`, `minecraft:item/translucent` |
 | Entity | `minecraft:entity/solid`, `minecraft:entity/cutout`, `minecraft:entity/cutout_no_cull`, `minecraft:entity/translucent`, `minecraft:entity/translucent_emissive` |
 
-Block and item layers are independent. Static baking produces vanilla `BakedQuad.MaterialInfo`; sampled items use native item render types, including standard foil. Unknown layer identifiers are logged once and use cutout. `doubleSided` selects native no-cull layers or adds reversed faces for culling layers. `lightEmission` is a level from 0 to 15.
+Block and item layers are independent. Static baking produces vanilla `BakedQuad.MaterialInfo`; special items use native item render types, including standard foil, with either captured atlas sprites or sampled-only textures. Unknown layer identifiers are logged once and use cutout. `doubleSided` selects native no-cull layers or adds reversed faces for culling layers. `lightEmission` is a level from 0 to 15.
 
 Static geometry uses vanilla face-direction shading. Special/entity geometry retains per-vertex normals. Native quads repeat the final vertex of each triangle. Particles, custom pipelines, skinning, and authored animation clips are outside V1.
 
@@ -227,6 +229,24 @@ pose.socketMatrix("tip", modelToWorld, destinationMatrix);
 `G3dPose` reuses JOML matrices and evaluates parent-first without recursion. Reuse it while its rig is current. `nodeMatrix` is read-only until the next evaluation; `snapshot` copies matrices for render-state extraction. Caller-owned destination matrices let socket queries avoid allocating results. Treat JOML values in loaded models and transform records as read-only.
 
 `G3dClientModels.get(modelId)` reads the current model-manager snapshot. `G3dEntityRenderer` is a module-facing entity/projectile base: override `extractPose` for named inputs and `extractTransform` for orientation/scale. It copies state and submits through `SubmitNodeCollector` and `VertexConsumer`. Block entities or other custom consumers can call `G3dRenderer.submit` with captured matrices.
+
+### Share item and entity models
+
+Gadget entities use the same compiled models as their item forms. All six grenade renderers use `G3dGrenadeEntityRenderer`; normal and primed appearances select the corresponding `item/*_in_hand` asset. Pressure and tripwire mines use `item/pressure_mine` and `item/tripwire_mine` for inventory, held items, and placed entities. Their source `model` metadata supplies the generated vanilla sidecar. Each model keeps one geometry definition and one texture set for both consumers.
+
+Each shared gadget source has an `entity_origin` socket on its root. In Blockbench, this is a locator placed at the gadget's base. Its position uses source units, just like other sockets. Pass its name to the entity renderer's three-argument constructor:
+
+```java
+new G3dEntityRenderer<>(context, modelId, "entity_origin");
+```
+
+The renderer places that socket at the entity position and cancels its local orientation before applying the entity's captured transform. This keeps item display placement independent of world placement. The named socket is part of the model contract and must exist in replacement assets. The two-argument constructor still uses the model's own origin. `extractModelId` can select a gameplay variant, and `extractColor` can supply an overall ARGB color. Both run during extraction; submission reads captured data only.
+
+The tripwire's `beam` node is fully collapsed at rest with scale `[0, 0, 0]`, so it is hidden in inventory and while unarmed. Its local +Y mesh has a one-block length. The entity captures a replacement pose that starts at the body, reaches the traced endpoint, and follows wall or ceiling orientation. Its material uses the native emissive entity layer and light level 15. A fully collapsed node and its descendants are skipped before normal-matrix calculation in both static baking and dynamic submission; hidden parts and empty groups do not enlarge posed item bounds. Partial zero scales remain ordinary source transforms.
+
+Tripwire armed state is synchronized by the server and saved with the entity, including for clients that begin tracking an existing mine. Beam length comes from the current local trace and is copied into each render state's pose. No shared model part is changed during submission. Its culling bounds include the visible beam.
+
+`G3dEntityRenderer` respects invisible bodies and native outlines. `G3dRenderer` also has a submission overload for outline-only rendering. Both adapters restore their pose-stack entries if a collector fails, and a resource reload is resolved again on the next extraction.
 
 Both projections expose the same `sourceHash`. Modules should compare hashes when consistency matters, refresh cached rigs on datapack reload, and synchronize gameplay pose inputs through normal networking. G3D does not introduce another animation or networking system.
 

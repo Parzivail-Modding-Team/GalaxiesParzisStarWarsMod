@@ -122,6 +122,16 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void generateItemModels(ItemModelGenerators itemModelGenerator)
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
+			register(
+					itemModelGenerator,
+					GadgetsItems.PRESSURE_MINE_ITEM,
+					ItemModelUtils.plainModel(Gadgets.id("item/pressure_mine"))
+			);
+			register(
+					itemModelGenerator,
+					GadgetsItems.TRIPWIRE_MINE_ITEM,
+					ItemModelUtils.plainModel(Gadgets.id("item/tripwire_mine"))
+			);
 
 
 			register(itemModelGenerator, GadgetsItems.DRILL_ITEM, ItemModelUtils.composite(

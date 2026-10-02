@@ -132,7 +132,7 @@ public final class G3dGeometry implements UnbakedGeometry
 	/**
 	 * Gets the atlas sprite for a material, respecting explicit Ptex graphs first.
 	 */
-	private Identifier spriteId(Identifier id)
+	public Identifier spriteId(Identifier id)
 	{
 		if (_textures.containsKey(id))
 			return PtexDefinition.spriteId(id);
@@ -175,6 +175,8 @@ public final class G3dGeometry implements UnbakedGeometry
 
 		for (var mesh : _model.meshes())
 		{
+			if (G3dPose.isCollapsed(pose.nodeMatrix(mesh.node())))
+				continue;
 			var surface = _model.materials().get(mesh.material());
 			if (!texture(surface.texture()).atlas())
 				throw new IllegalArgumentException("Sampled-only Ptex surface cannot be baked into a block: " + surface.texture());

@@ -77,7 +77,22 @@ public final class G3dItemModel implements ItemModel, SpecialModelRenderer<G3dIt
 			G3dClientModels.@Nullable ItemPoseProvider poseProvider
 	)
 	{
-		_renderer = new G3dRenderer(geometry);
+		this(new G3dRenderer(geometry), properties, transform, tints, poseProvider);
+	}
+
+	/**
+	 * Creates a special leaf with sprites captured by the current model baker.
+	 * This keeps atlas animation working for posed items and mixed texture models.
+	 */
+	public G3dItemModel(
+			G3dRenderer renderer,
+			ModelRenderProperties properties,
+			Matrix4fc transform,
+			List<ItemTintSource> tints,
+			G3dClientModels.@Nullable ItemPoseProvider poseProvider
+	)
+	{
+		_renderer = renderer;
 		_properties = properties;
 		_transform = transform;
 		_tints = List.copyOf(tints);

@@ -12,6 +12,17 @@ import java.util.Map;
 public final class G3dPose
 {
 	/**
+	 * Tests whether a node has been reduced to a point. A fully zero scale is
+	 * the pose-side way to hide a part; skip it before building normal matrices.
+	 */
+	public static boolean isCollapsed(Matrix4fc matrix)
+	{
+		return matrix.m00() == 0 && matrix.m01() == 0 && matrix.m02() == 0
+		       && matrix.m10() == 0 && matrix.m11() == 0 && matrix.m12() == 0
+		       && matrix.m20() == 0 && matrix.m21() == 0 && matrix.m22() == 0;
+	}
+
+	/**
 	 * Shared, read-only rest data.
 	 */
 	private final G3dRig _rig;

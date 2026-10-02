@@ -4,6 +4,7 @@ import com.mojang.math.Transformation;
 import dev.pswg.rendering.g3d.G3dClientModels;
 import dev.pswg.rendering.g3d.G3dGeometry;
 import dev.pswg.rendering.g3d.G3dItemModel;
+import dev.pswg.rendering.g3d.G3dRenderer;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
@@ -72,6 +73,12 @@ public abstract class CuboidItemModelWrapperMixin
 		var properties = ModelRenderProperties.fromResolvedModel(baker, resolvedModel, textureSlots);
 		Matrix4fc modelTransform = Transformation.compose(transformation, transformation());
 
-		cir.setReturnValue(new G3dItemModel(geometry, properties, modelTransform, tints(), poseProvider));
+		cir.setReturnValue(new G3dItemModel(
+				new G3dRenderer(geometry, baker),
+				properties,
+				modelTransform,
+				tints(),
+				poseProvider
+		));
 	}
 }

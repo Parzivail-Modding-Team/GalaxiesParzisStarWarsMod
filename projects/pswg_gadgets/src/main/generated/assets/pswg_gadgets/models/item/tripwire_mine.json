@@ -1,6 +1,91 @@
 {
-  "parent": "minecraft:item/generated",
+  "display": {
+    "firstperson_lefthand": {
+      "translation": [
+        0.0,
+        7.0,
+        0.0
+      ]
+    },
+    "firstperson_righthand": {
+      "translation": [
+        0.0,
+        7.0,
+        0.0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        90.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "translation": [
+        0.0,
+        0.0,
+        15.0
+      ]
+    },
+    "ground": {
+      "translation": [
+        0.0,
+        8.0,
+        0.0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30.0,
+        225.0,
+        0.0
+      ],
+      "scale": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "translation": [
+        0.0,
+        26.0,
+        15.0
+      ]
+    },
+    "head": {
+      "translation": [
+        0.0,
+        8.0,
+        0.0
+      ]
+    },
+    "on_shelf": {
+      "translation": [
+        0.0,
+        8.0,
+        0.0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "translation": [
+        0.0,
+        7.0,
+        0.0
+      ]
+    },
+    "thirdperson_righthand": {
+      "translation": [
+        0.0,
+        7.0,
+        0.0
+      ]
+    }
+  },
+  "gui_light": "side",
   "textures": {
-    "layer0": "pswg:item/wizard"
+    "particle": "pswg_gadgets:item/tripwire_mine"
   }
 }

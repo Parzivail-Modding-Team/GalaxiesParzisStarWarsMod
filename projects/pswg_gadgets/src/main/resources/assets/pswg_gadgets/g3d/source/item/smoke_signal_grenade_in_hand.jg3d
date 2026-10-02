@@ -3,7 +3,8 @@
 	"materials": [
 		{
 			"id": "0",
-			"texture": "pswg_gadgets:model/item/grenade/3d/smoke_signal_grenade_in_hand"
+			"texture": "pswg_gadgets:model/item/grenade/3d/smoke_signal_grenade_in_hand",
+			"layers": {"entity": "minecraft:entity/cutout_no_cull"}
 		}
 	],
 	"nodes": [
@@ -869,5 +870,5 @@
 			]
 		}
 	],
-	"sockets": []
+	"sockets": [{"id": "entity_origin", "node": "root", "localTransform": {"translation": [7.5, 0, 7.5]}}]
 }
