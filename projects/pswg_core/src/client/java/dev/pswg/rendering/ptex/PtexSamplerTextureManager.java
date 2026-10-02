@@ -14,9 +14,7 @@ import net.minecraft.util.Util;
 import org.slf4j.Logger;
 
 import java.io.FileNotFoundException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
@@ -45,7 +43,7 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	/**
 	 * The active async sampler textures keyed by their immutable texture spec.
 	 */
-	private final ConcurrentHashMap<PtexTextureSpec, AsyncTexture> _asyncTextures = new ConcurrentHashMap<>();
+	private final Map<PtexTextureSpec, AsyncTexture> _asyncTextures = new HashMap<>();
 
 	/**
 	 * The active runtime texture entries keyed by their immutable texture spec.
@@ -101,27 +99,21 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 			return Optional.empty();
 		}
 
-		if (textureSpec instanceof SourceTexture sourceTexture)
+		if (textureSpec instanceof SourceTexture(Identifier identifier))
 		{
-			return Optional.of(sourceTexture.identifier());
+			return Optional.of(identifier);
 		}
 
 		try
 		{
 			var generation = _reloadGeneration.get();
-			var asyncTexture = _asyncTextures.computeIfAbsent(textureSpec, ignored -> {
-				LOGGER.debug("Creating async sampler texture {} in generation {}", textureSpec.cacheKey(), generation);
-				return createAsyncTexture(textureSpec, generation);
-			});
+			var asyncTexture = loadGraph(textureSpec, generation);
 			var runtimeTexture = _textures.computeIfAbsent(textureSpec, ignored -> {
 				LOGGER.debug("Creating runtime sampler texture {} in generation {}", textureSpec.cacheKey(), generation);
 				return createResolvedTexture(textureSpec, asyncTexture);
 			});
-			if (!runtimeTexture._ready)
-			{
-				return Optional.empty();
-			}
-
+			// The placeholder is already registered. Its id must not change when
+			// background generation finishes, or baked render states keep a fallback.
 			return Optional.of(runtimeTexture._runtimeIdentifier);
 		}
 		catch (RuntimeException exception)
@@ -148,10 +140,7 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 		try
 		{
 			var generation = _reloadGeneration.get();
-			return Optional.of(_asyncTextures.computeIfAbsent(textureSpec, ignored -> {
-				LOGGER.debug("Creating cached async sampler load {} in generation {}", textureSpec.cacheKey(), generation);
-				return createAsyncTexture(textureSpec, generation);
-			}));
+			return Optional.of(loadGraph(textureSpec, generation));
 		}
 		catch (RuntimeException exception)
 		{
@@ -178,12 +167,12 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 
 		_textures.clear();
 
-		for (var texture : _asyncTextures.values())
+		synchronized (_asyncTextures)
 		{
-			texture.close();
+			for (var texture : _asyncTextures.values())
+				texture.close();
+			_asyncTextures.clear();
 		}
-
-		_asyncTextures.clear();
 	}
 
 	/**
@@ -335,6 +324,27 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 	}
 
 	/**
+	 * Coalesces nested graph work under a reentrant lock.
+	 */
+	private AsyncTexture loadGraph(PtexTextureSpec spec, int generation)
+	{
+		synchronized (_asyncTextures)
+		{
+			if (generation != _reloadGeneration.get())
+				return new AsyncTexture(CompletableFuture.failedFuture(new java.util.concurrent.CancellationException("Ptex resource reload")), null);
+
+			var existing = _asyncTextures.get(spec);
+			if (existing != null)
+				return existing;
+
+			var texture = createAsyncTexture(spec, generation);
+			_asyncTextures.put(spec, texture);
+
+			return texture;
+		}
+	}
+
+	/**
 	 * Creates a generation-bound resolver for one resource-reload cycle.
 	 *
 	 * @param generation The reload generation the request belongs to.
@@ -442,10 +452,7 @@ public final class PtexSamplerTextureManager implements ResourceManagerReloadLis
 		@Override
 		public AsyncTexture load(PtexTextureSpec textureSpec)
 		{
-			return _asyncTextures.computeIfAbsent(textureSpec, ignored -> {
-				LOGGER.debug("Resolver loading nested texture {} in generation {}", textureSpec.cacheKey(), _generation);
-				return createAsyncTexture(textureSpec, _generation);
-			});
+			return loadGraph(textureSpec, _generation);
 		}
 
 		@Override
