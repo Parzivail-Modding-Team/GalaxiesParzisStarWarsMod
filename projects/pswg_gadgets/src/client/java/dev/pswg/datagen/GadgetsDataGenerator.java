@@ -17,6 +17,7 @@ import dev.pswg.feature.drill.HasExtractorProperty;
 import dev.pswg.rendering.models.GalaxiesModelBakery;
 import dev.pswg.rendering.models.GqbIntermediary;
 import dev.pswg.util.gen.*;
+import net.minecraft.advancements.Advancement;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -36,17 +37,19 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -243,7 +246,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
 
-			translationBuilder.add(GadgetsItemGroups.DEMOLITIONS_ITEMS_GROUP_KEY, "PSWG - Demolitions Gadgets");
+			translationBuilder.addCreativeModeTab(GadgetsItemGroups.DEMOLITIONS_ITEMS_GROUP_KEY, "PSWG - Demolitions Gadgets");
 
 		}
 
@@ -387,13 +390,13 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 					.addOptionalTag(BlockTags.CAVE_VINES.location())
 					.addOptionalTag(BlockTags.FLOWERS.location())
 					.addOptionalTag(BlockTags.CROPS.location())
-					.addOptionalTag(BlockTags.CRIMSON_STEMS.location())
+					.addOptionalTag(BlockItemTags.CRIMSON_STEMS.block().location())
 					.addOptionalTag(BlockTags.ALL_SIGNS.location())
 					.addOptionalTag(BlockTags.BANNERS.location())
 					.addOptionalTag(BlockTags.FLOWER_POTS.location())
 					.addOptionalTag(BlockTags.WOOL_CARPETS.location())
 					.addOptionalTag(BlockTags.WOODEN_BUTTONS.location())
-					.addOptionalTag(BlockTags.WARPED_STEMS.location())
+					.addOptionalTag(BlockItemTags.WARPED_STEMS.block().location())
 					.addOptionalTag(BlockTags.SNOW.location())
 					.addOptionalTag(BlockTags.ICE.location())
 					.add(blockId(Blocks.BAMBOO))
@@ -418,7 +421,7 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DataGenBlockTag.PICKAXE_MINEABLE, this);
 			addBlocksToTag(BlockTags.SAND, DataGenBlockTag.SAND, this);
 			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DataGenBlockTag.SHOVEL_MINEABLE, this);
-			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DataGenBlockTag.LOGS_THAT_BURN, this);
+			addBlocksToTag(BlockItemTags.LOGS_THAT_BURN.block(), DataGenBlockTag.LOGS_THAT_BURN, this);
 			addBlocksToTag(BlockTags.STAIRS, DataGenBlockTag.STAIRS, this);
 
 
@@ -449,9 +452,12 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		}
 
 		@Override
-		protected RecipeProvider createRecipeProvider(HolderLookup.Provider registryLookup, RecipeOutput exporter)
+		protected RecipeProvider createRecipeProvider(
+				HolderLookup.Provider registryLookup,
+				BootstrapContext<Recipe<?>> recipeContext,
+				BootstrapContext<Advancement> advancementContext)
 		{
-			return new RecipeProvider(registryLookup, exporter)
+			return new RecipeProvider(recipeContext, advancementContext)
 			{
 
 				@Override
@@ -591,13 +597,13 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 				public void createLaserCuttingRecipe(ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
 				{
-					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
+					HolderLookup.RegistryLookup<Item> itemLookup = registryLookup.lookupOrThrow(Registries.ITEM);
 					LaserCuttingRecipeJsonBuilder.create(itemLookup, Ingredient.of(input), primaryOutput, secondaryOutput, secondaryChance).offerTo(output, ResourceKey.create(Registries.RECIPE, Identifier.parse(input.asItem().toString().replaceAll(Galaxies.MODID, Gadgets.MODID) + "_cutting")));
 				}
 
 				public void createScrappingRecipe(ScrappingToolType tool, ItemLike input, ItemStackTemplate primaryOutput, ItemStackTemplate secondaryOutput, float secondaryChance)
 				{
-					HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
+					HolderLookup.RegistryLookup<Item> itemLookup = registryLookup.lookupOrThrow(Registries.ITEM);
 					Ingredient toolIngredient = null;
 					String suffix = "";
 					switch (tool)

@@ -1,6 +1,5 @@
 package dev.pswg.block.plant;
 
-import com.mojang.serialization.MapCodec;
 import dev.pswg.container.GalaxiesBlocks;
 import dev.pswg.container.GalaxiesItems;
 import dev.pswg.util.world.WorldUtil;
@@ -12,6 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,13 +42,6 @@ public class MoloShrubBlock extends VegetationBlock implements BonemealableBlock
 		super(settings.randomTicks());
 		this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(BLOOMING, false));
 	}
-
-	@Override
-	protected MapCodec<? extends VegetationBlock> codec()
-	{
-		return simpleCodec(MoloShrubBlock::new);
-	}
-
 	@Override
 	protected ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData)
 	{
@@ -91,19 +84,19 @@ public class MoloShrubBlock extends VegetationBlock implements BonemealableBlock
 	}
 
 	@Override
-	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state)
+	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state, BonemealSource source)
 	{
 		return state.getValue(AGE) < 3;
 	}
 
 	@Override
-	public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state)
+	public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state, BonemealSource source)
 	{
 		return true;
 	}
 
 	@Override
-	public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state)
+	public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state, BonemealSource source)
 	{
 		var i = Math.min(3, state.getValue(AGE) + 1);
 		world.setBlock(pos, state.setValue(AGE, i), Block.UPDATE_CLIENTS);

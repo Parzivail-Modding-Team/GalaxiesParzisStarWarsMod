@@ -5,10 +5,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
@@ -65,7 +65,7 @@ public abstract class GasParticle extends SingleQuadParticle implements CustomRe
 	public int getLightCoords(float tint)
 	{
 		BlockPos blockPos = BlockPos.containing(this.x, this.y, this.z);
-		int light = this.level.hasChunkAt(blockPos) ? LevelRenderer.getLightCoords(this.level, blockPos) : 0;
+		int light = this.level.hasChunkAt(blockPos) ? LightCoordsUtil.getLightCoords(this.level, blockPos) : 0;
 		return Math.max(light, 80);
 	}
 

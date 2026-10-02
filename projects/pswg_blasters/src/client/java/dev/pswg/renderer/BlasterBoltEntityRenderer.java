@@ -70,8 +70,8 @@ public class BlasterBoltEntityRenderer extends EntityRenderer<BlasterBoltEntity,
 	{
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0.2f, 0);
-		matrixStack.mulPose(Axis.YP.rotationDegrees(-(state.yaw + 90)));
-		matrixStack.mulPose(Axis.ZP.rotationDegrees(-state.pitch));
+		matrixStack.rotateDegrees(Axis.YP, -(state.yaw + 90));
+		matrixStack.rotateDegrees(Axis.ZP, -state.pitch);
 		matrixStack.translate(0.2f, 0, 0);
 
 		this.model.setupAnim(state);
@@ -82,8 +82,7 @@ public class BlasterBoltEntityRenderer extends EntityRenderer<BlasterBoltEntity,
 				TEXTURE_SPEC.getOrElse(SOURCE_TEXTURE),
 				state.lightCoords,
 				OverlayTexture.NO_OVERLAY,
-				state.outlineColor,
-				null
+				state.outlineColor
 		);
 
 		matrixStack.popPose();

@@ -1,11 +1,6 @@
 package dev.pswg.rendering.models;
 
 import com.mojang.blaze3d.platform.Transparency;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.MeshData;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.pswg.GalaxiesClient;
 import dev.pswg.networking.GalaxiesPacketCodecs;
 import io.netty.buffer.ByteBuf;
@@ -63,77 +58,55 @@ public final class GalaxiesModelBakery
 		{
 			var geometryBuilder = new QuadCollection.Builder();
 
-			var format = DefaultVertexFormat.BLOCK;
-			try (ByteBufferBuilder bufferAllocator = ByteBufferBuilder.exactlySized(format.getVertexSize() * 4))
+			for (var quad : quads())
 			{
-				for (var quad : quads())
+				var material = baker.materials().resolveSlot(textures, quad.textureRef(), model);
+				var sprite = material.sprite();
+				var minUv = new Vector2f(sprite.getU0(), sprite.getV0());
+				var maxUv = new Vector2f(sprite.getU1(), sprite.getV1());
+				var packedUvs = new long[4];
+
+				var uvExtent = maxUv.sub(minUv, new Vector2f());
+
+				var vertices = List.of(
+						transformVertex(quad.a(), settings),
+						transformVertex(quad.b(), settings),
+						transformVertex(quad.c(), settings),
+						transformVertex(quad.d(), settings)
+				);
+				for (int index = 0; index < vertices.size(); index++)
 				{
-					var material = baker.materials().resolveSlot(textures, quad.textureRef(), model);
-					var sprite = material.sprite();
-					var minUv = new Vector2f(sprite.getU0(), sprite.getV0());
-					var maxUv = new Vector2f(sprite.getU1(), sprite.getV1());
-					var packedUvs = new long[4];
-
-					var uvExtent = maxUv.sub(minUv, new Vector2f());
-
-					var bufferBuilder = new BufferBuilder(bufferAllocator, VertexFormat.Mode.QUADS, format);
-
-					var vertices = List.of(
-							transformVertex(quad.a(), settings),
-							transformVertex(quad.b(), settings),
-							transformVertex(quad.c(), settings),
-							transformVertex(quad.d(), settings)
-					);
-					for (int index = 0; index < vertices.size(); index++)
-					{
-						var vertex = vertices.get(index);
-						var translatedTexCoords = new Vector2f(vertex.texCoords());
-						translatedTexCoords.mul(uvExtent);
-						translatedTexCoords.add(minUv);
-						packedUvs[index] = UVPair.pack(translatedTexCoords.x, translatedTexCoords.y);
-
-						bufferBuilder.addVertex(
-								vertex.position().x,
-								vertex.position().y,
-								vertex.position().z,
-								vertex.color(),
-								translatedTexCoords.x,
-								translatedTexCoords.y,
-								vertex.overlay(),
-								vertex.light(),
-								vertex.normal().x,
-								vertex.normal().y,
-								vertex.normal().z
-						);
-					}
-
-					var faceNormal = new Vec3(0, 0, 0);
-					for (var vertex : vertices)
-					{
-						faceNormal = faceNormal.add(
-								vertex.normal().x / 4,
-								vertex.normal().y / 4,
-								vertex.normal().z / 4
-						);
-					}
-
-					try (MeshData builtBuffer = bufferBuilder.buildOrThrow())
-					{
-						var materialInfo = baker.interner().materialInfo(BakedQuad.MaterialInfo.of(material, Transparency.TRANSLUCENT, -1, true, 0));
-						geometryBuilder.addUnculledFace(new BakedQuad(
-								baker.interner().vector(vertices.get(0).position()),
-								baker.interner().vector(vertices.get(1).position()),
-								baker.interner().vector(vertices.get(2).position()),
-								baker.interner().vector(vertices.get(3).position()),
-								packedUvs[0],
-								packedUvs[1],
-								packedUvs[2],
-								packedUvs[3],
-								Direction.getApproximateNearest(faceNormal),
-								materialInfo
-						));
-					}
+					var vertex = vertices.get(index);
+					var translatedTexCoords = new Vector2f(vertex.texCoords());
+					translatedTexCoords.mul(uvExtent);
+					translatedTexCoords.add(minUv);
+					packedUvs[index] = UVPair.pack(translatedTexCoords.x, translatedTexCoords.y);
 				}
+
+				var faceNormal = new Vec3(0, 0, 0);
+				for (var vertex : vertices)
+				{
+					faceNormal = faceNormal.add(
+							vertex.normal().x / 4,
+							vertex.normal().y / 4,
+							vertex.normal().z / 4
+					);
+				}
+
+				var direction = Direction.getApproximateNearest(faceNormal);
+				var materialInfo = baker.interner().materialInfo(BakedQuad.MaterialInfo.of(material, Transparency.TRANSLUCENT, -1, direction, 0));
+				geometryBuilder.addUnculledFace(new BakedQuad(
+						baker.interner().vector(vertices.get(0).position()),
+						baker.interner().vector(vertices.get(1).position()),
+						baker.interner().vector(vertices.get(2).position()),
+						baker.interner().vector(vertices.get(3).position()),
+						packedUvs[0],
+						packedUvs[1],
+						packedUvs[2],
+						packedUvs[3],
+						direction,
+						materialInfo
+				));
 			}
 
 			return geometryBuilder.build();

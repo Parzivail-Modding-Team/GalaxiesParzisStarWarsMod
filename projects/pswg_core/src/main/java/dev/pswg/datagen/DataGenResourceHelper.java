@@ -27,7 +27,7 @@ public final class DataGenResourceHelper
 	public static void loadResources(PackType type, PreparableReloadListener... reloaders)
 	{
 		var list = new ArrayList<PackResources>();
-		new ModResourcePackCreator(type).loadPacks(resourcePackProfile -> list.add(resourcePackProfile.open()));
+		new ModResourcePackCreator(type).loadPacks(pack -> pack.open().forEach(list::add));
 
 		if (allResourceManagerReloadListeners(reloaders))
 		{

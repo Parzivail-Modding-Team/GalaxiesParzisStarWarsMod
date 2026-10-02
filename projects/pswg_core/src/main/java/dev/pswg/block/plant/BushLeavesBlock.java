@@ -1,10 +1,7 @@
 package dev.pswg.block.plant;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -16,6 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -42,18 +40,9 @@ public class BushLeavesBlock extends LeavesBlock
 	protected final int height;
 	protected final int xzOffset;
 
-	public static final MapCodec<BushLeavesBlock> CODEC = RecordCodecBuilder.mapCodec(
-			instance -> instance.group(
-					                    ExtraCodecs.POSITIVE_INT.fieldOf("height").forGetter(bushLeavesBlock -> bushLeavesBlock.height),
-					                    ExtraCodecs.POSITIVE_INT.fieldOf("xzOffset").forGetter(bushLeavesBlock -> bushLeavesBlock.xzOffset),
-					                    propertiesCodec()
-			                    )
-			                    .apply(instance, BushLeavesBlock::new)
-	);
-
 	public BushLeavesBlock(int height, int xzOffset, BlockBehaviour.Properties settings)
 	{
-		super(0, settings);
+		super(AmbientLeavesBlockSoundPlayer.noAmbientSound(), settings);
 		this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.UP));
 		this.height = height;
 		this.xzOffset = xzOffset;
@@ -89,21 +78,9 @@ public class BushLeavesBlock extends LeavesBlock
 	}
 
 	@Override
-	public MapCodec<? extends LeavesBlock> codec()
-	{
-		return null;
-	}
-
-	@Override
 	protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random)
 	{
 		return direction == state.getValue(FACING).getOpposite() && !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
-	}
-
-	@Override
-	protected void spawnFallingLeavesParticle(Level world, BlockPos pos, RandomSource random)
-	{
-
 	}
 
 	@Override

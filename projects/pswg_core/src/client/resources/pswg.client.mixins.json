@@ -10,12 +10,11 @@
 		"attributes.MouseMixin",
 		"events.DrawContextMixin",
 		"events.GameRendererMixin",
-		"events.HudMixin",
-		"handbobbing.HeldItemRendererMixin",
+		"handbobbing.FirstPersonHandsAndItemsMixin",
 		"leftuse.MinecraftClientMixin",
 		"models.CuboidItemModelWrapperMixin",
-		"recoil.ClientPlayerEntityMixin",
-		"recoil.HeldItemRendererMixin"
+		"recoil.FirstPersonHandsAndItemsRenderStateMixin",
+		"recoil.FirstPersonHandsAndItemsRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -66,7 +66,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 				createSmoke(pos, serverWorld);
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
-		else if (state.is(BlockTags.DIRT) && pos.closerToCenterThan(position(), INNER_AREA_DISTANCE))
+		else if ((state.is(BlockTags.DIRT) || state.is(BlockTags.GRASS_BLOCKS))&& pos.closerToCenterThan(position(), INNER_AREA_DISTANCE))
 		{
 			world.setBlockAndUpdate(pos, GadgetsBlocks.FERTILE_DIRT_BLOCK.defaultBlockState());
 		}
@@ -130,7 +130,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 			firewaveTicks++;
 			detonationTicks++;
 			setDeltaMovement(Vec3.ZERO);
-			hurtMarked = true;
+			needsSync = true;
 		}
 		var world = level();
 		if (detonationTicks == 1)

@@ -18,11 +18,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
@@ -191,7 +188,7 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item BALL_BEARING = registerSimpleItem("ball_bearing", new Item.Properties().component(Components.METAL_COMPONENT, 2));
 	@DataGenItem
-	public static final Item DESH_WIRE = registerSimpleItem("desh_wire", new Item.Properties().component(Components.METAL_COMPONENT, 1).component(Components.PLASTIC_COMPONENT, 1));
+	public static final Item DESH_WIRE = registerSimpleItem("desh_wire", new Item.Properties().component(Components.METAL_COMPONENT, 1).component(Components.ENERGY_COMPONENT, 1));
 	@DataGenItem
 	public static final Item DESH_COIL = registerSimpleItem("desh_coil", new Item.Properties().component(Components.METAL_COMPONENT, 2).component(Components.PLASTIC_COMPONENT, 2).component(Components.ENERGY_COMPONENT, 2).component(Components.SCRAP, false));
 	@DataGenItem
@@ -212,13 +209,13 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item BESKAR_INGOT = registerSimpleItem("beskar_ingot");
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final ShovelItem BESKAR_SHOVEL = Registrar.item(Galaxies.id("beskar_shovel"), settings -> new ShovelItem(GalaxiesToolMaterials.BESKAR, 1.5F, -3.0F, settings), new Item.Properties());
+	public static final Item BESKAR_SHOVEL = Registrar.item(Galaxies.id("beskar_shovel"), Item::new, new Item.Properties().shovel(GalaxiesToolMaterials.BESKAR, 1.5F, -3.0F));
 	@DataGenItem(model = ItemModel.HANDHELD)
 	public static final Item BESKAR_PICKAXE = Registrar.item(Galaxies.id("beskar_pickaxe"), Item::new, new Item.Properties().pickaxe(GalaxiesToolMaterials.BESKAR, 1, -2.8F));
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final AxeItem BESKAR_AXE = Registrar.item(Galaxies.id("beskar_axe"), settings -> new AxeItem(GalaxiesToolMaterials.BESKAR, 5, -3.0F, settings), new Item.Properties());
+	public static final Item BESKAR_AXE = Registrar.item(Galaxies.id("beskar_axe"), Item::new, new Item.Properties().axe(GalaxiesToolMaterials.BESKAR, 5, -3.0F));
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final HoeItem BESKAR_HOE = Registrar.item(Galaxies.id("beskar_hoe"), settings -> new HoeItem(GalaxiesToolMaterials.BESKAR, 0, 0.0F, settings), new Item.Properties());
+	public static final Item BESKAR_HOE = Registrar.item(Galaxies.id("beskar_hoe"), Item::new, new Item.Properties().hoe(GalaxiesToolMaterials.BESKAR, 0, 0.0F));
 
 	@DataGenItem
 	public static final Item CHROMIUM_RAW = registerSimpleItem("raw_chromium");
@@ -251,11 +248,11 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item DURASTEEL_NUGGET = registerSimpleItem("durasteel_nugget");
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final ShovelItem DURASTEEL_SHOVEL = Registrar.item(Galaxies.id("durasteel_shovel"), settings -> new ShovelItem(GalaxiesToolMaterials.DURASTEEL, 1.5F, -3.0F, settings), new Item.Properties());
+	public static final Item DURASTEEL_SHOVEL = Registrar.item(Galaxies.id("durasteel_shovel"), Item::new, new Item.Properties().shovel(GalaxiesToolMaterials.DURASTEEL, 1.5F, -3.0F));
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final AxeItem DURASTEEL_AXE = Registrar.item(Galaxies.id("durasteel_axe"), settings -> new AxeItem(GalaxiesToolMaterials.DURASTEEL, 5, -3.0F, settings), new Item.Properties());
+	public static final Item DURASTEEL_AXE = Registrar.item(Galaxies.id("durasteel_axe"), Item::new, new Item.Properties().axe(GalaxiesToolMaterials.DURASTEEL, 5, -3.0F));
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final HoeItem DURASTEEL_HOE = Registrar.item(Galaxies.id("durasteel_hoe"), settings -> new HoeItem(GalaxiesToolMaterials.DURASTEEL, 0, 0.0F, settings), new Item.Properties());
+	public static final Item DURASTEEL_HOE = Registrar.item(Galaxies.id("durasteel_hoe"), Item::new, new Item.Properties().hoe(GalaxiesToolMaterials.DURASTEEL, 0, 0.0F));
 	@DataGenItem(model = ItemModel.HANDHELD)
 	public static final Item DURASTEEL_PICKAXE = Registrar.item(Galaxies.id("durasteel_pickaxe"), Item::new, new Item.Properties().pickaxe(GalaxiesToolMaterials.DURASTEEL, 1, -2.8F));
 
@@ -305,13 +302,13 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item TITANIUM_NUGGET = registerSimpleItem("titanium_nugget");
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final ShovelItem TITANIUM_SHOVEL = Registrar.item(Galaxies.id("titanium_shovel"), settings -> new ShovelItem(GalaxiesToolMaterials.TITANIUM, 1.5F, -3.0F, settings), new Item.Properties());
+	public static final Item TITANIUM_SHOVEL = Registrar.item(Galaxies.id("titanium_shovel"), Item::new, new Item.Properties().shovel(GalaxiesToolMaterials.TITANIUM, 1.5F, -3.0F));
 	@DataGenItem(model = ItemModel.HANDHELD)
 	public static final Item TITANIUM_PICKAXE = Registrar.item(Galaxies.id("titanium_pickaxe"), Item::new, new Item.Properties().pickaxe(GalaxiesToolMaterials.TITANIUM, 1, -2.8F));
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final AxeItem TITANIUM_AXE = Registrar.item(Galaxies.id("titanium_axe"), settings -> new AxeItem(GalaxiesToolMaterials.TITANIUM, 5, -3.0F, settings), new Item.Properties());
+	public static final Item TITANIUM_AXE = Registrar.item(Galaxies.id("titanium_axe"), Item::new, new Item.Properties().axe(GalaxiesToolMaterials.TITANIUM, 5, -3.0F));
 	@DataGenItem(model = ItemModel.HANDHELD)
-	public static final HoeItem TITANIUM_HOE = Registrar.item(Galaxies.id("titanium_hoe"), settings -> new HoeItem(GalaxiesToolMaterials.TITANIUM, 0, 0.0F, settings), new Item.Properties());
+	public static final Item TITANIUM_HOE = Registrar.item(Galaxies.id("titanium_hoe"), Item::new, new Item.Properties().hoe(GalaxiesToolMaterials.TITANIUM, 0, 0.0F));
 
 	@DataGenItem
 	public static final Item TRANSPARISTEEL_INGOT = registerSimpleItem("transparisteel_ingot");

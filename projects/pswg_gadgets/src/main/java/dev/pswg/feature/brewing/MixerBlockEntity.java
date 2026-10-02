@@ -34,12 +34,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -223,19 +226,22 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 	public static void spawnFailParticles(Level world, BlockPos pos)
 	{
 		if (world instanceof ServerLevel serverWorld)
+		{
+			var center = Vec3.atCenterOf(pos);
 			serverWorld.sendParticles(
 					ParticleTypes.SMOKE,
 					false,
 					false,
-					pos.getCenter().x(),
-					pos.getCenter().y(),
-					pos.getCenter().z(),
+					center.x(),
+					center.y(),
+					center.z(),
 					20,
 					0,
 					0,
 					0,
 					0.05f
 			);
+		}
 	}
 
 	public static void sendSyncPacket(MixerBlockEntity mixer)
@@ -243,7 +249,7 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 		var payload = new MixerSyncS2CPayload(mixer.drinkEffects, mixer.drinkColors, mixer.drinkFoods);
 		if (!mixer.level.isClientSide())
 		{
-			for (ServerPlayer player : PlayerLookup.around((ServerLevel)mixer.level, mixer.worldPosition.getCenter(), 6))
+			for (ServerPlayer player : PlayerLookup.around((ServerLevel)mixer.level, Vec3.atCenterOf(mixer.worldPosition), 6))
 				ServerPlayNetworking.send(player, payload);
 		}
 	}
@@ -283,11 +289,25 @@ public class MixerBlockEntity extends BaseContainerBlockEntity implements Worldl
 				mixer.bellowProgress = Math.max(mixer.bellowProgress - 2, 0);
 
 			ItemStack fuelStack = mixer.getItem(FUEL_SLOT_INDEX);
-			if (mixer.litTimeRemaining == 0 && drinkContainerPresent && !fuelStack.isEmpty() && world.fuelValues().isFuel(fuelStack) && (!mixer.path.empty() || !mixer.getItem(INPUT_SLOT_INDEX).isEmpty()))
+			if (world instanceof ServerLevel serverWorld
+			    && mixer.litTimeRemaining == 0
+			    && drinkContainerPresent
+			    && fuelStack.has(DataComponents.COOKING_FUEL)
+			    && (!mixer.path.empty() || !mixer.getItem(INPUT_SLOT_INDEX).isEmpty()))
 			{
-				mixer.litTotalTime = world.fuelValues().burnDuration(fuelStack);
-				mixer.litTimeRemaining = world.fuelValues().burnDuration(fuelStack);
-				fuelStack.shrink(1);
+				var fuelDuration = ResolvableInt.getFromItem(
+						fuelStack,
+						DataComponents.COOKING_FUEL,
+						CookingFuel::burnTime,
+						mixer.getLootContext(serverWorld),
+						0
+				);
+				if (fuelDuration > 0)
+				{
+					mixer.litTotalTime = fuelDuration;
+					mixer.litTimeRemaining = fuelDuration;
+					fuelStack.shrink(1);
+				}
 			}
 
 			if (MixerBrewingPaths.pathMap.containsKey(inputStack.getItem()) && mixer.path.empty() && mixer.litTimeRemaining > 0 && drinkContainerPresent)

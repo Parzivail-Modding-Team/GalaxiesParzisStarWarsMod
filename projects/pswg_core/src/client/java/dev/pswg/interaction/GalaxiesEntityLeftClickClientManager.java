@@ -137,9 +137,9 @@ public final class GalaxiesEntityLeftClickClientManager
 			if (stack.isEmpty() || !(interactItemLeft(client, client.gameMode, client.player, hand) instanceof InteractionResult.Success success))
 				continue;
 
-			if (success.swingSource() == InteractionResult.SwingSource.CLIENT)
+			if (success.swingSource() == InteractionResult.SwingSource.PREDICTED)
 			{
-				client.player.swing(hand);
+				client.player.swing(hand, stack.getAttackAnimation(), false);
 			}
 
 			return;

@@ -135,7 +135,7 @@ public class LaserCutterItem extends Item
 		stack.remove(GadgetsItems.Components.MIN_POS);
 		stack.remove(GadgetsItems.Components.MAX_POS);
 		stack.remove(GadgetsItems.Components.CURRENT_BLOCK);
-		Vec3 centerBlockPos = blockPos.getCenter();
+		Vec3 centerBlockPos = Vec3.atCenterOf(blockPos);
 		if (world instanceof ServerLevel serverWorld)
 		{
 			SingleRecipeInput recipeInput = new SingleRecipeInput(new ItemStack(world.getBlockState(blockPos).getBlock()));

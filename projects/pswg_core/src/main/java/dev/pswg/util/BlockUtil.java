@@ -8,6 +8,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 
 public class BlockUtil
 {
@@ -17,6 +18,20 @@ public class BlockUtil
 	}
 
 	public static boolean never(BlockState blockState, BlockGetter blockView, BlockPos blockPos, EntityType<?> entityType)
+	{
+		return false;
+	}
+
+	/**
+	 * Predicate that disables view blocking for a block state.
+	 *
+	 * @param blockState the block state
+	 * @param blockView the block view
+	 * @param blockPos the block position
+	 * @param viewBlockingBox the view-blocking query box
+	 * @return {@code false}
+	 */
+	public static boolean never(BlockState blockState, BlockGetter blockView, BlockPos blockPos, AABB viewBlockingBox)
 	{
 		return false;
 	}

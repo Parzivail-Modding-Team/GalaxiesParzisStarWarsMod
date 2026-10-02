@@ -145,7 +145,7 @@ public abstract class GrenadeEntity extends ThrowableProjectile
 		if (hasDrag())
 		{
 			this.setDeltaMovement(getDeltaMovement().scale(0.975d));
-			hurtMarked = true;
+			needsSync = true;
 		}
 	}
 

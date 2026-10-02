@@ -39,7 +39,7 @@ public class FragmentationGrenadeWaveParticleGroup extends ParticleGroup<Fragmen
 			PoseStack matrixStack = new PoseStack();
 			matrixStack.pushPose();
 			matrixStack.translate(particle.getPos().subtract(camera.position()));
-			matrixStack.mulPose(camera.rotation());
+			matrixStack.rotate(camera.rotation());
 
 			return new State(matrixStack, particle.getSprite(), particle.getScaleX(), particle.getScaleY(), particle.getQuadSize(tickProgress), particle.getAlpha());
 		}

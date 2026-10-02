@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.client.resources.model.geometry.QuadCollection;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.ItemOwner;
@@ -30,7 +31,8 @@ import java.util.function.Supplier;
 public class GqbItemModel implements ItemModel
 {
 	private final List<ItemTintSource> _tints;
-	private final QuadCollection _quads;
+	private final boolean _animated;
+	private final ItemQuads _quads;
 	private final Supplier<Vector3fc[]> _extents;
 	private final ModelRenderProperties _properties;
 	private final Matrix4fc _transformation;
@@ -46,7 +48,8 @@ public class GqbItemModel implements ItemModel
 	public GqbItemModel(List<ItemTintSource> tints, QuadCollection quads, ModelRenderProperties properties, Matrix4fc transformation)
 	{
 		_tints = tints;
-		_quads = quads;
+		_animated = quads.hasMaterialFlag(2);
+		_quads = ItemQuads.split(quads.getAll());
 		_properties = properties;
 		_transformation = transformation;
 		_extents = Suppliers.memoize(() -> computeExtents(quads.getAll()));
@@ -89,9 +92,9 @@ public class GqbItemModel implements ItemModel
 		layer.setExtents(_extents);
 		layer.setLocalTransform(_transformation);
 		_properties.applyToLayer(layer, displayContext);
-		layer.prepareQuadList().addAll(_quads.getAll());
+		layer.setQuads(_quads);
 
-		if (_quads.hasMaterialFlag(2))
+		if (_animated)
 		{
 			output.setAnimated();
 		}

@@ -37,10 +37,10 @@
 		}
 	],
 	"depends": {
-		"fabricloader": ">=0.18.4",
-		"minecraft": ">=26.1",
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
 		"java": ">=25",
-		"fabric-api": ">=0.144.3"
+		"fabric-api": ">=0.161.0"
 	},
 	"breaks": {
 		"optifabric": "*"

@@ -58,7 +58,7 @@ public class MixerScreenHandler extends AbstractContainerMenu
 			MixerBlockEntity.sendSyncPacket(mixer);
 
 		/// FUEL
-		this.addSlot(new FuelSlot(inventory, 0, 146, 122, this));
+		this.addSlot(new FuelSlot(inventory, 0, 146, 122));
 		/// INPUT
 		this.addSlot(new BrewingIngredientSlot(inventory, 1, 146, 69));
 		/// OUTPUT / DRINK CONTAINER INPUT

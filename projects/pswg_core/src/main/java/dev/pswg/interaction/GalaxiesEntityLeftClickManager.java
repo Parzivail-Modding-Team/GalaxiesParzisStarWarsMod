@@ -52,9 +52,9 @@ public final class GalaxiesEntityLeftClickManager
 				}
 
 				var result = interactItemLeft(player.gameMode, player, serverWorld, itemStack, hand, packet.repeat());
-				if (result instanceof InteractionResult.Success success && success.swingSource() == InteractionResult.SwingSource.SERVER)
+				if (result instanceof InteractionResult.Success success && success.swingSource() == InteractionResult.SwingSource.SERVER_ONLY)
 				{
-					player.swing(hand, true);
+					player.swing(hand, itemStack.getAttackAnimation(), true);
 				}
 			}
 		});

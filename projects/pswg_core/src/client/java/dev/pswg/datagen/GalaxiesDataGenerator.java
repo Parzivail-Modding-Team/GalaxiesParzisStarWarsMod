@@ -12,6 +12,7 @@ import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.item.ArmorItems;
 import dev.pswg.item.DyedItems;
 import dev.pswg.item.NumberedItems;
+import net.minecraft.advancements.Advancement;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -25,15 +26,17 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -245,10 +248,10 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> addDataGenBlock(translationBuilder, block, dataGenBlock));
 
 			//Item Groups
-			translationBuilder.add(GalaxiesItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY, "PSWG - Construction Blocks");
-			translationBuilder.add(GalaxiesItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "PSWG - Worldgen Blocks");
-			translationBuilder.add(GalaxiesItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG - Items");
-			translationBuilder.add(GalaxiesItemGroups.FOOD_ITEMS_GROUP_KEY, "PSWG - Food");
+			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY, "PSWG - Construction Blocks");
+			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "PSWG - Worldgen Blocks");
+			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG - Items");
+			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.FOOD_ITEMS_GROUP_KEY, "PSWG - Food");
 
 			//Tags
 			translationBuilder.add(GalaxiesBlocks.Tags.BOUNCY, "Bouncy");
@@ -378,7 +381,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			addBlocksToTag(BlockTags.MINEABLE_WITH_PICKAXE, DataGenBlockTag.PICKAXE_MINEABLE, this);
 			addBlocksToTag(BlockTags.SAND, DataGenBlockTag.SAND, this);
 			addBlocksToTag(BlockTags.MINEABLE_WITH_SHOVEL, DataGenBlockTag.SHOVEL_MINEABLE, this);
-			addBlocksToTag(BlockTags.LOGS_THAT_BURN, DataGenBlockTag.LOGS_THAT_BURN, this);
+			addBlocksToTag(BlockItemTags.LOGS_THAT_BURN.block(), DataGenBlockTag.LOGS_THAT_BURN, this);
 			addBlocksToTag(BlockTags.STAIRS, DataGenBlockTag.STAIRS, this);
 			addBlocksToTag(GalaxiesBlocks.Tags.BUSH_PLACEABLE, DataGenBlockTag.BUSH_PLACEABLE, this);
 			addBlocksToTag(ConventionalBlockTags.ORES, DataGenBlockTag.ORES, this);
@@ -434,9 +437,12 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 		}
 
 		@Override
-		protected RecipeProvider createRecipeProvider(HolderLookup.Provider registryLookup, RecipeOutput exporter)
+		protected RecipeProvider createRecipeProvider(
+				HolderLookup.Provider registryLookup,
+				BootstrapContext<Recipe<?>> recipeContext,
+				BootstrapContext<Advancement> advancementContext)
 		{
-			return new RecipeProvider(registryLookup, exporter)
+			return new RecipeProvider(recipeContext, advancementContext)
 			{
 				@Override
 				public void buildRecipes()

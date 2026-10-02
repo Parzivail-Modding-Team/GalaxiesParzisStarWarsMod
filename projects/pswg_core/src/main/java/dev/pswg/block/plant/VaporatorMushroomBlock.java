@@ -1,6 +1,5 @@
 package dev.pswg.block.plant;
 
-import com.mojang.serialization.MapCodec;
 import dev.pswg.container.GalaxiesItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -22,13 +21,6 @@ public class VaporatorMushroomBlock extends VegetationBlock
 	{
 		super(settings);
 	}
-
-	@Override
-	protected MapCodec<? extends VegetationBlock> codec()
-	{
-		return simpleCodec(VaporatorMushroomBlock::new);
-	}
-
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
 	{

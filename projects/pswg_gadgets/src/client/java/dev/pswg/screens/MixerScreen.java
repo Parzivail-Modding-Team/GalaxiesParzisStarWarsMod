@@ -1,12 +1,8 @@
 package dev.pswg.screens;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.pswg.Gadgets;
 import dev.pswg.feature.brewing.MixerScreenHandler;
 import dev.pswg.rendering.Drawables;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -19,7 +15,6 @@ import net.minecraft.util.CommonColors;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +24,10 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 {
 	private static final Identifier TEXTURE = Gadgets.id("textures/gui/container/mixer.png");
 	private static final Identifier MAP_TEXTURE = Gadgets.id("textures/gui/misc/brewing_map.png");
+	/**
+	 * Whether the user is holding the bellow control.
+	 */
+	private boolean _bellowButtonDown;
 	private List<Vector2i> previousMousePosition = new ArrayList<>();
 	public static HashMap<Holder<MobEffect>, Vector2i> ICON_MAP = new HashMap<>();
 
@@ -51,7 +50,7 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 	@Override
 	protected void containerTick()
 	{
-		if (isMouseHeld() && isHoveringBellow((int)(minecraft.mouseHandler.xpos() / minecraft.getWindow().getGuiScale()), (int)(minecraft.mouseHandler.ypos() / minecraft.getWindow().getGuiScale())) && this.menu.clickMenuButton(this.minecraft.player, 0))
+		if (_bellowButtonDown && isHoveringBellow((int)(minecraft.mouseHandler.xpos() / minecraft.getWindow().getGuiScale()), (int)(minecraft.mouseHandler.ypos() / minecraft.getWindow().getGuiScale())) && this.menu.clickMenuButton(this.minecraft.player, 0))
 			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 0);
 		super.containerTick();
 	}
@@ -59,10 +58,13 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 	@Override
 	public boolean mouseClicked(MouseButtonEvent click, boolean doubled)
 	{
-		int backgroundX = (this.width - this.imageWidth) / 2;
-		int backgroundY = (this.height - this.imageHeight) / 2;
 		int mouseX = (int)click.x();
 		int mouseY = (int)click.y();
+		if (click.button() == 1 && isHoveringBellow(mouseX, mouseY))
+		{
+			_bellowButtonDown = true;
+			return true;
+		}
 		if (within(mouseX, mouseY, 138, 145, 53, 60) && this.menu.clickMenuButton(this.minecraft.player, 1))
 		{
 			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 1);
@@ -81,16 +83,13 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 		return super.mouseClicked(click, doubled);
 	}
 
-	public boolean isMouseHeld()
+	@Override
+	public boolean mouseReleased(MouseButtonEvent click)
 	{
-		return GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+		if (click.button() == 1)
+			_bellowButtonDown = false;
 
-	}
-
-	public boolean isKeyPressed(int keyId)
-	{
-
-		return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), keyId);
+		return super.mouseReleased(click);
 	}
 
 	public boolean isHoveringBellow(int mouseX, int mouseY)

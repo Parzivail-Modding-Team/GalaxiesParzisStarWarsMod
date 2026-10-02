@@ -96,7 +96,7 @@ public class FragmentationGrenadeEntity extends GrenadeEntityWithBlock
 		if (IS_EXPLODING)
 		{
 			this.setDeltaMovement(Vec3.ZERO);
-			this.hurtMarked = true;
+			this.needsSync = true;
 		}
 
 		if (EXPLOSION_TICK == 6)

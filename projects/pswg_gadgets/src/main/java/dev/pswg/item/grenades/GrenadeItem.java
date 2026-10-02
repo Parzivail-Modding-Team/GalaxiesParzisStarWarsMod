@@ -62,7 +62,7 @@ public abstract class GrenadeItem extends Item implements ILeftClickUsable, Proj
 			grenade.setPrimed(false);
 		}
 		grenade.setVisible(true);
-		grenade.recreateFromPacket(new ClientboundAddEntityPacket(grenade.getId(), grenade.getUUID(), player.getX(), player.getY() + 1.5, player.getZ(), -player.getXRot(), -player.getYRot(), grenade.getType(), 0, Vec3.ZERO, player.getYHeadRot()));
+		grenade.setPos(new Vec3(player.getX(), player.getY() + 1.5, player.getZ()));
 		grenade.setOwner(player);
 		grenade.shootFromRotation(player, player.getXRot(), player.getYRot(), (float)player.getLookAngle().z * 10, 1.0F, 0F);
 
