@@ -52,10 +52,11 @@ public record G3dSource(int version, List<Material> materials, List<Node> nodes,
 	}
 
 	/**
-	 * A target-neutral surface. The texture names an assets/.../ptex/*.json graph.
+	 * A target-neutral surface. The texture names a Ptex graph or a direct
+	 * assets/.../textures/... image resource.
 	 *
 	 * @param id            The local material name.
-	 * @param texture       The Ptex definition identifier.
+	 * @param texture       A Ptex definition or direct texture resource identifier.
 	 * @param layers        Native render-layer references.
 	 * @param tintIndex     The vanilla tint source index, or -1 for no tint.
 	 * @param lightEmission Minimum light level from 0 to 15.
@@ -159,6 +160,8 @@ public record G3dSource(int version, List<Material> materials, List<Node> nodes,
 
 	/**
 	 * V1 accepts additional fields so exporters can keep their own metadata.
+	 * Client datagen reads the optional vanilla "model" sidecar separately;
+	 * display placement does not change compiled geometry or the shared rig hash.
 	 */
 	public static final Codec<G3dSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.intRange(1, 1).fieldOf("version").forGetter(G3dSource::version),

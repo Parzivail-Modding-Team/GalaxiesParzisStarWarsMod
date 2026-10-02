@@ -9,16 +9,14 @@ For model `example:item/tool`, use these paths within the owning module:
 | Resource | Location |
 | --- | --- |
 | Authoring source | `src/main/resources/assets/example/g3d/source/item/tool.jg3d` |
-| Vanilla sidecar | `src/main/resources/assets/example/models/item/tool.json` |
+| Generated vanilla sidecar | `src/main/generated/assets/example/models/item/tool.json` |
 | Ptex definition | `src/main/resources/assets/example/ptex/tool_surface.json` |
 | Generated visual model | `src/main/generated/assets/example/models/item/tool.g3d` |
 | Generated gameplay rig | `src/main/generated/data/example/g3d/rigs/item/tool.g3d` |
 
 The owning module's normal Fabric datagen run compiles the source. Official modules exclude `.jg3d` files and old `assets/**/datagen/**` references from release jars. Third-party modules should use those artifact exclusions and add `G3dModelProvider` after loading `G3dModelProvider.SOURCES` with `DataGenResourceHelper`.
 
-Vanilla sidecars are ordinary authored model JSON. They keep display transforms, parent inheritance, GUI lighting, ambient occlusion, particle fallback, and texture slots needed by vanilla. Geometry and Ptex surfaces come from the compiled model with the same identifier. Entity-only models do not need a sidecar.
-
-The active GQB geometry has been reauthored as 56 G3D sources with the existing model IDs, texture coordinates, groups, and display sidecars. The old JSON authoring references remain available for inspection; the GQB compiler, decoder, and rendering adapters have been removed. G3D datagen reads only `.jg3d` sources.
+Vanilla sidecars are ordinary model JSON. New Blockbench exports include their metadata in the source's `model` object, and `G3dModelProvider` generates the sidecar next to the compiled visual model. Sidecars keep display transforms, parent inheritance, GUI lighting, ambient occlusion, particle fallback, and texture slots needed by vanilla. Sources without `model` can still use an authored sidecar in `src/main/resources/assets/<namespace>/models/`. Geometry and Ptex surfaces come from the compiled model with the same identifier. Entity-only models do not require a sidecar.
 
 ## Block particle textures
 
@@ -45,9 +43,9 @@ Vanilla texture-slot references and parent inheritance work too. A separate slot
 }
 ```
 
-Changing the particle slot does not change mesh textures, geometry, or the compiled `.g3d` file. An atlas-capable Ptex output can also be selected using its generated sprite identifier, such as `pswg:ptex/model/block/model/tall_lamp`; a sampled-only texture cannot supply vanilla block debris. The active G3D blocks use their dedicated `*_particle` images. `pswg:block/empty` is transparent and intentionally hides these particles.
+Changing the particle slot does not change mesh textures, geometry, or the compiled `.g3d` file. For generated sidecars, set it in `model.textures.particle` in the `.jg3d` source; Blockbench retains imported particle choices and supports its normal particle-texture selection. An atlas-capable Ptex output can also be selected using its generated sprite identifier, such as `pswg:ptex/model/block/model/tall_lamp`; a sampled-only texture cannot supply vanilla block debris. The active G3D blocks use their dedicated `*_particle` images. `pswg:block/empty` is transparent and intentionally hides these particles.
 
-Rebuild resource outputs and reload the resource pack after editing a sidecar; particle-only changes do not require datagen. Vanilla remains responsible for spawning and rendering block debris.
+Run the owning module's datagen after changing source `model` metadata, then rebuild and reload resources. For separately authored sidecars, rebuild and reload directly. Vanilla remains responsible for spawning and rendering block debris.
 
 ## Source document
 
@@ -111,11 +109,55 @@ This complete example describes one triangle and a socket on its root group:
 - Positions and source translations use **16 units per block**. Compiled geometry, compiled transforms, and runtime pose inputs use **blocks**. Normals and scales are dimensionless.
 - Axes are right-handed: `+X` east, `+Y` up, `+Z` south. Front faces are counter-clockwise. UV `[0, 0]` is the image's top-left corner; runtime does not flip it.
 - The exporter triangulates polygons and bakes pivots/shear into geometry. The compiler normalizes rotations and orders parents before children.
-- Extra JSON fields are ignored. Degenerate faces, zero scales, unusual UVs, and non-unit normals are allowed.
+- The geometry codec ignores extra JSON fields. Datagen also reads the optional `model` metadata described below. Degenerate faces, zero scales, unusual UVs, and non-unit normals are allowed.
+
+## Generated model sidecars
+
+An optional `model` object stores vanilla presentation metadata in the same `.jg3d` document as the geometry. For example:
+
+```json
+{
+  "model": {
+    "display": {
+      "gui": {
+        "rotation": [30, 225, 0],
+        "translation": [0, 0, 0],
+        "scale": [0.625, 0.625, 0.625]
+      },
+      "firstperson_righthand": {
+        "rotation": [0, 45, 0],
+        "translation": [0, 0, 0],
+        "scale": [0.4, 0.4, 0.4]
+      }
+    },
+    "gui_light": "side",
+    "ambientocclusion": true,
+    "textures": {
+      "particle": "example:block/tool_debris"
+    }
+  }
+}
+```
+
+`display` uses native Java model view names, degree rotations, translations in sixteenths of a block, and dimensionless scales. Mirroring uses negative scale values. The plugin exports all nine Java views with explicit identity values for reset or unused views, including `on_shelf`; native left-hand fallback is applied when opening an older model that omits its left-hand views. The GUI light, ambient occlusion, parent, and texture slots also remain native model fields. Source groups and attachment transforms are independent of these display transforms.
+
+Datagen validates the metadata with Minecraft's model parser, rejects malformed or non-finite display vectors, and writes a cache-backed `models/<path>.json` alongside `models/<path>.g3d`. A supplied `elements` list is omitted because geometry comes from G3D. Authored particles and parent inheritance are retained. A standalone model without a particle uses its first atlas-capable surface: an explicit Ptex definition takes precedence, and a direct image uses its vanilla sprite name. With no atlas-capable surface, the native missing sprite is used.
+
+The metadata is read separately from the common geometry codec. It does not enter the compiled container or the shared source hash. A display-only edit updates the generated JSON without changing visual geometry or server rig bytes. The toolchain copies generated resources after authored resources, so a newly generated sidecar takes precedence during artifact assembly. Item definitions and blockstates remain the responsibility of their normal providers.
+
+## Blockbench authoring
+
+The [PSWG G3D plugin](resources/blockbench_plugins/README.md) provides a native Blockbench workspace for `.jg3d` sources. Artists assign textures to faces and edit **Surface**, **Glow strength**, and **Show both sides** in each texture's normal properties dialog. New textures default to showing both sides; imported material values retain their original sidedness. The exporter creates the material table and splits multi-texture meshes automatically. It uses normal group, mesh, and locator names for the exported model parts and sockets. The native **Display** workspace edits placement for hands, GUI, frames, shelves, and other Java views; those values are exported in `model` for automatic sidecar generation.
+
+Each Blockbench `Texture` instance owns its material settings and stable material ID. Two texture entries may share an image resource but have different emission, transparency, tint, or sidedness. Imported source materials each become a separate texture entry, including unresolved Ptex surfaces. Native duplication and `.bbmodel` save/undo retain those settings. Changing a texture's display name does not change its game resource path.
+
+Surface presets select the corresponding native solid, cutout, or translucent layers for all targets. Glow presets start at `lightEmission: 15`; transparent glow also selects `minecraft:entity/translucent_emissive`. Imported target-specific or custom layers remain intact until the author chooses a preset. Advanced texture controls retain Ptex selection, game tint slots, and custom layer paths.
+
+The editor previews alpha, sidedness, and emission through an extension of Blockbench's native texture shader. Shader edits support the minified text used by release builds. Emission supplies a preview light floor; at level 15 it uses the image colors without diffuse shading or scene light. It does not reuse Blockbench's alpha-based emissive mask. Game tint providers and complex Ptex graphs are not evaluated in the editor. The runtime still controls world lighting and the final target-specific rendering.
 
 ## Ptex surfaces
 
-A material's `texture` identifies a Ptex document. For `example:tool_surface`, write `assets/example/ptex/tool_surface.json`:
+A material's `texture` can identify a Ptex document or point directly at an existing Minecraft image resource. Use a Ptex document when the surface needs a tint/composite graph or an explicit atlas/sampler choice. For example, `example:tool_surface` resolves to `assets/example/ptex/tool_surface.json`:
 
 ```json
 {
@@ -127,13 +169,15 @@ A material's `texture` identifies a Ptex document. For `example:tool_surface`, w
 }
 ```
 
+For an ordinary texture, use its resource identifier including the `textures/` prefix and `.png` suffix, such as `example:textures/block/tool.png`. The runtime treats a missing Ptex definition with this path shape as a direct `SourceTexture`: vanilla atlas sprites use `example:block/tool`, while sampled rendering uses the image resource itself. An explicit Ptex definition with the same identifier takes precedence. This lets Blockbench's normal texture assignment work without authoring one wrapper JSON for every image.
+
 | Built-in service | Fields |
 | --- | --- |
 | `pswg:source` | `texture`: image identifier, including `textures/` and `.png` |
 | `pswg:tint` | `color`: an ARGB integer or vanilla color-codec value; `input`: another graph |
 | `pswg:composite` | `layers`: graphs ordered from bottom to top |
 
-`atlas` defaults to `true`. Fabric's `SpriteSourceRegistry` generates atlas-capable graphs during reload, before model baking. Their stable sprite name prepends `ptex/` to the definition's path. The official source adds them to the block atlas, which vanilla supports for both blocks and items. Direct-image graphs retain vanilla animation metadata; tint/composite graphs produce a static image per reload.
+`atlas` defaults to `true`. Fabric's `SpriteSourceRegistry` generates atlas-capable Ptex graphs during reload, before model baking. Their stable sprite name prepends `ptex/` to the definition's path. The official source adds them to the block atlas, which vanilla supports for both blocks and items. Direct-image graphs retain vanilla animation metadata; tint/composite graphs produce a static image per reload. Direct texture identifiers use the vanilla sprite directly and need no generated Ptex sprite.
 
 The atlas declaration is `projects/pswg_core/src/main/resources/assets/minecraft/atlases/blocks.json`. It belongs to the main mod resource pack, alongside `fabric.mod.json` and the Ptex definitions. A client classpath directory is not automatically a Fabric resource-pack root, so atlas declarations in `src/client/resources` can be invisible in development launches. The sprite-source implementation and its registration stay in client Java sources.
 
