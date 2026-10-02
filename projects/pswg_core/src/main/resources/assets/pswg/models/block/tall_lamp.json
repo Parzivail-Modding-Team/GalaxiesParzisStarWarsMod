@@ -84,6 +84,6 @@
 	},
 	"textures": {
 		"0": "pswg:block/model/tall_lamp",
-		"particle": "pswg:block/empty"
+		"particle": "pswg:block/model/light/tall_lamp_particle"
 	}
 }

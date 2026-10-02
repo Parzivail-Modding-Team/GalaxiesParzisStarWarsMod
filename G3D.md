@@ -20,6 +20,35 @@ Vanilla sidecars are ordinary authored model JSON. They keep display transforms,
 
 The active GQB geometry has been reauthored as 56 G3D sources with the existing model IDs, texture coordinates, groups, and display sidecars. The old JSON authoring references remain available for inspection; the GQB compiler, decoder, and rendering adapters have been removed. G3D datagen reads only `.jg3d` sources.
 
+## Block particle textures
+
+Block breaking and mining-hit debris use the vanilla sidecar's `textures.particle` entry, independently of the G3D mesh materials. For example, `assets/example/models/block/tool.json` can select a dedicated debris image:
+
+```json
+{
+  "textures": {
+    "particle": "example:block/tool_debris"
+  }
+}
+```
+
+This sprite identifier resolves to `assets/example/textures/block/tool_debris.png`. Use the sprite name without the `textures/` prefix or `.png` suffix. Particle sprites must be available in the block atlas; images under `textures/block/` are included by vanilla's atlas directory source.
+
+Vanilla texture-slot references and parent inheritance work too. A separate slot can make the choice explicit:
+
+```json
+{
+  "textures": {
+    "debris": "minecraft:block/iron_block",
+    "particle": "#debris"
+  }
+}
+```
+
+Changing the particle slot does not change mesh textures, geometry, or the compiled `.g3d` file. An atlas-capable Ptex output can also be selected using its generated sprite identifier, such as `pswg:ptex/model/block/model/tall_lamp`; a sampled-only texture cannot supply vanilla block debris. The active G3D blocks use their dedicated `*_particle` images. `pswg:block/empty` is transparent and intentionally hides these particles.
+
+Rebuild resource outputs and reload the resource pack after editing a sidecar; particle-only changes do not require datagen. Vanilla remains responsible for spawning and rendering block debris.
+
 ## Source document
 
 This complete example describes one triangle and a socket on its root group:

@@ -136,6 +136,6 @@
 	},
 	"textures": {
 		"0": "pswg:block/model/electrostatic_repeller",
-		"particle": "pswg:block/empty"
+		"particle": "pswg:block/model/electrostatic_repeller_particle"
 	}
 }

@@ -114,6 +114,6 @@
 	},
 	"textures": {
 		"2": "pswg:block/model/hangar_light_yellow",
-		"particle": "pswg:block/empty"
+		"particle": "pswg:block/model/light/hangar_light_particle"
 	}
 }

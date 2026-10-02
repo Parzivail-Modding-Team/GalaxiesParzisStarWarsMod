@@ -126,6 +126,6 @@
 	},
 	"textures": {
 		"0": "pswg:block/model/wall_cluster_light",
-		"particle": "pswg:block/empty"
+		"particle": "pswg:block/model/light/cluster_particle"
 	}
 }
