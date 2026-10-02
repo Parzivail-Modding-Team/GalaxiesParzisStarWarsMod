@@ -188,7 +188,7 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item BALL_BEARING = registerSimpleItem("ball_bearing", new Item.Properties().component(Components.METAL_COMPONENT, 2));
 	@DataGenItem
-	public static final Item DESH_WIRE = registerSimpleItem("desh_wire", new Item.Properties().component(Components.METAL_COMPONENT, 1).component(Components.PLASTIC_COMPONENT, 1));
+	public static final Item DESH_WIRE = registerSimpleItem("desh_wire", new Item.Properties().component(Components.METAL_COMPONENT, 1).component(Components.ENERGY_COMPONENT, 1));
 	@DataGenItem
 	public static final Item DESH_COIL = registerSimpleItem("desh_coil", new Item.Properties().component(Components.METAL_COMPONENT, 2).component(Components.PLASTIC_COMPONENT, 2).component(Components.ENERGY_COMPONENT, 2).component(Components.SCRAP, false));
 	@DataGenItem
