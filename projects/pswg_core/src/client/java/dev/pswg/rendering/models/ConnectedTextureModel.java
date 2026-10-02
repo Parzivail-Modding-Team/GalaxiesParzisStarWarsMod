@@ -46,7 +46,7 @@ public final class ConnectedTextureModel extends WrapperBlockStateModel
 		this.block = block;
 		this.noneModels = noneModels;
 		this.verticalModels = verticalModels;
-		this.horizontalModels = pillar ? horizontalModels : new HashMap<>();
+		this.horizontalModels = pillar ? new HashMap<>() : horizontalModels;
 		this.cornerModels = cornerModels;
 		this.centerModels = centerModels;
 		this.pillar = pillar;
