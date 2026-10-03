@@ -3,7 +3,7 @@
 	"materials": [
 		{
 			"id": "texture_pswg_armor_stormtrooper",
-			"texture": "pswg:textures/armor/stormtrooper.png",
+			"texture": "#base",
 			"layers": {
 				"block": "minecraft:block/cutout",
 				"item": "minecraft:item/cutout",
@@ -16057,7 +16057,8 @@
 		"gui_light": "side",
 		"ambientocclusion": true,
 		"textures": {
-			"particle": "pswg:armor/stormtrooper"
+			"base": "pswg:textures/armor/stormtrooper.png",
+			"particle": "#base"
 		}
 	}
 }

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.util.LightCoordsUtil;
 import org.joml.Matrix4fc;
 import org.joml.Vector3f;
@@ -76,18 +76,27 @@ public final class G3dRenderer
 	 */
 	public G3dRenderer(G3dGeometry geometry, @Nullable ModelBaker baker)
 	{
+		this(geometry, baker, TextureSlots.EMPTY);
+	}
+
+	/**
+	 * Binds one immutable consumer texture view while retaining the shared geometry.
+	 */
+	public G3dRenderer(G3dGeometry geometry, @Nullable ModelBaker baker, TextureSlots slots)
+	{
 		_model = geometry.model();
 
 		_textures = new PtexTextureSpec[_model.materials().size()];
 		_sprites = new TextureAtlasSprite[_textures.length];
 		for (int index = 0; index < _textures.length; index++)
 		{
-			var textureId = _model.materials().get(index).texture();
-			var definition = geometry.texture(textureId);
+			var reference = _model.materials().get(index).texture();
+			var material = geometry.material(reference, slots);
+			var definition = geometry.texture(reference, slots);
 			_textures[index] = definition.graph();
 			if (baker != null && definition.atlas())
 				_sprites[index] = baker.materials().get(
-						new Material(geometry.spriteId(textureId)),
+						material,
 						() -> _model.rig().id().toString()
 				).sprite();
 		}

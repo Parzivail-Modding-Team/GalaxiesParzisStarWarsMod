@@ -157,6 +157,7 @@
   },
   "gui_light": "side",
   "textures": {
-    "particle": "pswg:armor/imperial_officer_hat_khaki"
+    "base": "pswg:armor/rebel_forest_helmet",
+    "particle": "#base"
   }
 }

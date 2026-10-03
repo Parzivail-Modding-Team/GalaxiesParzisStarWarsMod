@@ -52,6 +52,14 @@ Each entry in the **Textures** panel owns one set of settings:
 | **Glow strength** | Sets the surface light level from 0 to 15. At 0 it uses scene light; at 15 it stays fully bright. It does not light nearby blocks. |
 | **Show both sides** | Shows the back of each face too, which is useful for sheets and fins. New textures have this enabled. Imported settings are retained. |
 
+### Reuse a model with different textures
+
+Enter an optional **Texture slot** in the texture's normal Properties dialog, such as `base` or `visor`. Keep painting and assigning the image normally. Export writes the material's texture as `#base`, and records the current **Game texture** as that slot's default in `model.textures`. Leaving Texture slot empty keeps today's fixed-image/Ptex workflow.
+
+Import resolves the default image for painting and preview while keeping the slot. Native Duplicate, `.bbmodel` save/reload, and undo retain it. A slot with no default remains editable with a missing preview; choosing **Change File** assigns a default without removing the slot. Alias defaults such as `#base` are preserved rather than flattened. Several surfaces can share a slot, provided their default game texture agrees.
+
+In game, armor sets can bind different images or Ptex graphs at registration. Block/item variants use ordinary parent models and texture maps. Both share the compiled geometry and UV layout. See [texture references and reusable slots](../../G3D.md#texture-references-and-reusable-slots) for source examples and the common binding API. Existing original `.bbmodel` files still export directly; neither mesh editing nor a source-format version change is required.
+
 You can also choose a surface preset from the texture's **Render Mode** context menu. The choice applies to that texture and any other selected textures. Use **Properties** to fine-tune it.
 
 The viewport previews changes while the properties dialog is open. **Cancel** restores the previous preview. Confirmed changes use Blockbench's normal undo/redo history.

@@ -157,6 +157,7 @@
   },
   "gui_light": "side",
   "textures": {
-    "particle": "pswg:armor/stormtrooper"
+    "base": "pswg:armor/stormtrooper",
+    "particle": "#base"
   }
 }

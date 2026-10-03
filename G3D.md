@@ -157,6 +157,77 @@ The editor previews alpha, sidedness, and emission through an extension of Block
 
 ## Ptex surfaces
 
+### Texture references and reusable slots
+
+Every material's existing `texture` string accepts either its usual image/Ptex identifier or a vanilla-style `#slot`. There is no separate material kind or duplicated geometry for variants:
+
+```json
+{
+  "id": "armor_surface",
+  "texture": "#base",
+  "layers": { "entity": "minecraft:entity/cutout" }
+}
+```
+
+The source's `model.textures` map supplies optional defaults and aliases. It uses the same resource/Ptex references as fixed materials:
+
+```json
+{
+  "model": {
+    "textures": {
+      "base": "example:textures/armor/default.png",
+      "visor": "#base",
+      "particle": "#base"
+    }
+  }
+}
+```
+
+Datagen translates resources to native atlas sprite names in the generated vanilla sidecar, retaining `#` aliases. A consumer override is applied before alias resolution, so `visor` and `particle` follow an overridden `base`. A slot-only template can omit its defaults when every consumer supplies bindings. Missing required bindings are diagnosed; sampled failures are cached for that reload instead of repeated every frame.
+
+Fixed references remain valid in existing V1 sources and compiled files. The material's UVs, layers, emission, tint index, and sidedness remain geometry-owned. Bindings choose only images or texture graphs. Original `.bbmodel` projects can be exported with the updated plugin without a format conversion.
+
+### Shared block and item variants
+
+Vanilla already inherits geometry from a parent model. A G3D template can therefore serve any number of small child JSON models, each overriding its normal `textures` map. Blockstates and item definitions refer to those child model IDs as usual. Only the parent has a `.jg3d` source and compiled geometry/rig.
+
+For a Ptex color variant, the native child JSON looks like this:
+
+```json
+{
+  "parent": "example:block/panel",
+  "textures": { "base": "example:ptex/block/red_panel" }
+}
+```
+
+Native JSON texture maps name atlas sprites, hence the `ptex/` prefix. Datagen code can use the same binding values as runtime consumers and let the shared helper make that projection:
+
+```java
+var bindings = G3dTextureBindings.of("base", Identifier.parse("example:block/red_panel"));
+var variant = G3dModelProvider.createVariant(templateModelId, bindings);
+```
+
+Save `variant` with the module's normal model/datagen output. Direct image bindings become native sprite names; Ptex bindings become their generated sprite names. All graph evaluation happens before atlas stitching. Chunk-rendered blocks require atlas-capable bindings; sampled-only graphs use a special/entity renderer. Native parent inheritance, particle aliases, rotations, UV lock, item transforms, and nested item selectors are preserved.
+
+### Runtime sampled appearances
+
+`G3dTextureBindings` is an immutable map, with `of(slot, resource)` and fluent `with(...)` methods. Any sampled consumer can request a view with `G3dClientModels.getSampled(modelId, bindings)`. Views share the exact loaded `G3dModel` and rig; only their resolved texture arrays differ. Identical requests reuse a cached view, and resource reload replaces the geometry/defaults/graph snapshot and its view cache together. No baker or stale resource manager is retained for runtime requests.
+
+Armor registration accepts bindings before its optional flags:
+
+```java
+G3dArmorRenderer.register(
+		Galaxies.id("armor/stormtrooper"),
+		GalaxiesItems.SHOCK_TROOPER,
+		G3dTextureBindings.of("base", Galaxies.id("textures/armor/shocktrooper.png")),
+		G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+);
+```
+
+Partial bindings inherit model defaults. Separate wide/slim models and individual-item registrations accept the same binding object. Fixed-texture registrations remain unchanged.
+
+The armor backlog demonstrates this without geometry changes: Stormtrooper/Shocktrooper share `armor/stormtrooper`; three goggles caps share `armor/goggles_cap`; four officer caps share `armor/imperial_officer_cap`; forest/tropical rebel helmets share `armor/rebel_helmet`. All eleven appearances retain their original textures and skin-overlay flags. The 27 authored armor exports are now 20 distinct geometry assets.
+
 A material's `texture` can identify a Ptex document or point directly at an existing Minecraft image resource. Use a Ptex document when the surface needs a tint/composite graph or an explicit atlas/sampler choice. For example, `example:tool_surface` resolves to `assets/example/ptex/tool_surface.json`:
 
 ```json

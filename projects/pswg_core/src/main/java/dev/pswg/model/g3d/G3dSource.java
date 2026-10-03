@@ -52,17 +52,17 @@ public record G3dSource(int version, List<Material> materials, List<Node> nodes,
 	}
 
 	/**
-	 * A target-neutral surface. The texture names a Ptex graph or a direct
-	 * assets/.../textures/... image resource.
+	 * A target-neutral surface. Texture strings name an image/Ptex resource or
+	 * a #slot supplied by the model's texture map or a runtime consumer.
 	 *
 	 * @param id            The local material name.
-	 * @param texture       A Ptex definition or direct texture resource identifier.
+	 * @param texture       A fixed resource or named texture-slot reference.
 	 * @param layers        Native render-layer references.
 	 * @param tintIndex     The vanilla tint source index, or -1 for no tint.
 	 * @param lightEmission Minimum light level from 0 to 15.
 	 * @param doubleSided   Whether both sides should be visible.
 	 */
-	public record Material(String id, Identifier texture, Layers layers, int tintIndex, int lightEmission,
+	public record Material(String id, G3dTextureReference texture, Layers layers, int tintIndex, int lightEmission,
 	                       boolean doubleSided)
 	{
 		/**
@@ -70,12 +70,20 @@ public record G3dSource(int version, List<Material> materials, List<Node> nodes,
 		 */
 		public static final Codec<Material> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				Codec.STRING.fieldOf("id").forGetter(Material::id),
-				Identifier.CODEC.fieldOf("texture").forGetter(Material::texture),
+				G3dTextureReference.CODEC.fieldOf("texture").forGetter(Material::texture),
 				Layers.CODEC.optionalFieldOf("layers", Layers.DEFAULT).forGetter(Material::layers),
 				Codec.intRange(-1, 255).optionalFieldOf("tintIndex", -1).forGetter(Material::tintIndex),
 				Codec.intRange(0, 15).optionalFieldOf("lightEmission", 0).forGetter(Material::lightEmission),
 				Codec.BOOL.optionalFieldOf("doubleSided", false).forGetter(Material::doubleSided)
 		).apply(instance, Material::new));
+
+		/**
+		 * Keeps fixed-resource construction convenient for existing module code.
+		 */
+		public Material(String id, Identifier texture, Layers layers, int tintIndex, int lightEmission, boolean doubleSided)
+		{
+			this(id, new G3dTextureReference(texture), layers, tintIndex, lightEmission, doubleSided);
+		}
 	}
 
 	/**

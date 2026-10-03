@@ -3,6 +3,7 @@ package dev.pswg.rendering.g3d;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.pswg.Galaxies;
 import dev.pswg.item.ArmorItems;
+import dev.pswg.model.g3d.G3dTextureBindings;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -46,8 +47,16 @@ public final class G3dArmorRenderer implements ArmorRenderer
 	 */
 	public static void register(Identifier modelId, ArmorItems armor, Flag... flags)
 	{
+		register(modelId, armor, G3dTextureBindings.EMPTY, flags);
+	}
+
+	/**
+	 * Registers a set's material bindings without copying its model or rig.
+	 */
+	public static void register(Identifier modelId, ArmorItems armor, G3dTextureBindings bindings, Flag... flags)
+	{
 		register(
-				new G3dArmorRenderer(modelId),
+				new G3dArmorRenderer(modelId, bindings),
 				flags,
 				armor.helmet,
 				armor.chestplate,
@@ -62,8 +71,16 @@ public final class G3dArmorRenderer implements ArmorRenderer
 	 */
 	public static void register(Identifier wideModelId, Identifier slimModelId, ArmorItems armor, Flag... flags)
 	{
+		register(wideModelId, slimModelId, armor, G3dTextureBindings.EMPTY, flags);
+	}
+
+	/**
+	 * Applies one appearance to separate wide/slim geometry assets.
+	 */
+	public static void register(Identifier wideModelId, Identifier slimModelId, ArmorItems armor, G3dTextureBindings bindings, Flag... flags)
+	{
 		register(
-				new G3dArmorRenderer(wideModelId, slimModelId),
+				new G3dArmorRenderer(wideModelId, slimModelId, bindings),
 				flags,
 				armor.helmet,
 				armor.chestplate,
@@ -81,11 +98,27 @@ public final class G3dArmorRenderer implements ArmorRenderer
 	}
 
 	/**
+	 * Registers an individual item's slot bindings and behavior.
+	 */
+	public static void register(Identifier modelId, ItemLike item, G3dTextureBindings bindings, Flag... flags)
+	{
+		register(new G3dArmorRenderer(modelId, bindings), flags, item);
+	}
+
+	/**
 	 * Registers one piece with separate wide/slim assets and its own behavior flags.
 	 */
 	public static void register(Identifier wideModelId, Identifier slimModelId, ItemLike item, Flag... flags)
 	{
 		register(new G3dArmorRenderer(wideModelId, slimModelId), flags, item);
+	}
+
+	/**
+	 * Registers a single piece with distinct wide/slim geometry and shared bindings.
+	 */
+	public static void register(Identifier wideModelId, Identifier slimModelId, ItemLike item, G3dTextureBindings bindings, Flag... flags)
+	{
+		register(new G3dArmorRenderer(wideModelId, slimModelId, bindings), flags, item);
 	}
 
 	/**
@@ -158,6 +191,11 @@ public final class G3dArmorRenderer implements ArmorRenderer
 	private final Identifier _slimModelId;
 
 	/**
+	 * This registration's immutable appearance overrides; model defaults fill gaps.
+	 */
+	private final G3dTextureBindings _bindings;
+
+	/**
 	 * Wide rig binding, replaced when the model manager publishes a new asset.
 	 */
 	private @Nullable G3dArmorPose _widePose;
@@ -186,8 +224,25 @@ public final class G3dArmorRenderer implements ArmorRenderer
 	 */
 	public G3dArmorRenderer(Identifier wideModelId, Identifier slimModelId)
 	{
+		this(wideModelId, slimModelId, G3dTextureBindings.EMPTY);
+	}
+
+	/**
+	 * Creates a sampled appearance over one shared geometry asset.
+	 */
+	public G3dArmorRenderer(Identifier modelId, G3dTextureBindings bindings)
+	{
+		this(modelId, modelId, bindings);
+	}
+
+	/**
+	 * Creates a set's sampled appearance over either native player model variant.
+	 */
+	public G3dArmorRenderer(Identifier wideModelId, Identifier slimModelId, G3dTextureBindings bindings)
+	{
 		_wideModelId = wideModelId;
 		_slimModelId = slimModelId;
+		_bindings = bindings;
 		G3dClientModels.registerSampled(wideModelId);
 		G3dClientModels.registerSampled(slimModelId);
 	}
@@ -210,11 +265,11 @@ public final class G3dArmorRenderer implements ArmorRenderer
 	{
 		boolean slim = isSlim(state);
 		var id = slim ? _slimModelId : _wideModelId;
-		var renderer = G3dClientModels.get(id).orElse(null);
+		var renderer = G3dClientModels.getSampled(id, _bindings).orElse(null);
 
 		if (renderer == null && slim && !id.equals(_wideModelId))
 		{
-			renderer = G3dClientModels.get(_wideModelId).orElse(null);
+			renderer = G3dClientModels.getSampled(_wideModelId, _bindings).orElse(null);
 			slim = false;
 		}
 
