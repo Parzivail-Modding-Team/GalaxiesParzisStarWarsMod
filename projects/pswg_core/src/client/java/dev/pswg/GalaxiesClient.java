@@ -1,6 +1,7 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
+import dev.pswg.container.GalaxiesItems;
 import dev.pswg.container.GalaxiesParticleTypes;
 import dev.pswg.container.GalaxiesScreenHandlerTypes;
 import dev.pswg.input.GalaxiesKeybinds;
@@ -12,6 +13,7 @@ import dev.pswg.networking.IPreciseSpawnDataEntity;
 import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particle.ShortFlameParticle;
 import dev.pswg.particle.SmallFlashParticle;
+import dev.pswg.rendering.GalaxiesArmorRenderer;
 import dev.pswg.rendering.g3d.G3dClientModels;
 import dev.pswg.rendering.models.PswgBlockModelPlugin;
 import dev.pswg.rendering.ptex.PtexSpriteSource;
@@ -21,6 +23,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.SpriteSourceRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
@@ -142,6 +145,8 @@ public class GalaxiesClient implements ClientModInitializer
 		GalaxiesRenderLayers.init();
 
 		ModelLoadingPlugin.register(PswgBlockModelPlugin.INSTANCE);
+
+		ArmorRenderer.register(new GalaxiesArmorRenderer(), GalaxiesItems.STORM_TROOPER.chestplate);
 
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);

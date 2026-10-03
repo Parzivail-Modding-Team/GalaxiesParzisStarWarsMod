@@ -5,6 +5,7 @@
 	"client": [
 		"accesors.MultiPartModelUnbakedAccessor",
 		"accesors.SimpleCachedUnbakedRootAccessor",
+		"accesors.PoseStackAccessor",
 		"attributes.AbstractClientPlayerEntityMixin",
 		"attributes.AttributeModifiersComponent$Display$DefaultMixin",
 		"attributes.MouseMixin",
