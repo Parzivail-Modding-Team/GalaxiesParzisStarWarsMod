@@ -3,8 +3,6 @@ package dev.pswg;
 import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.container.GalaxiesParticleTypes;
 import dev.pswg.container.GalaxiesScreenHandlerTypes;
-import dev.pswg.data.BinaryCodecDataLoader;
-import dev.pswg.data.IdentifierUtil;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
@@ -14,15 +12,16 @@ import dev.pswg.networking.IPreciseSpawnDataEntity;
 import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particle.ShortFlameParticle;
 import dev.pswg.particle.SmallFlashParticle;
-import dev.pswg.rendering.models.GalaxiesModelBakery;
+import dev.pswg.rendering.g3d.G3dClientModels;
 import dev.pswg.rendering.models.PswgBlockModelPlugin;
+import dev.pswg.rendering.ptex.PtexSpriteSource;
 import dev.pswg.rendering.ptex.PtexTextures;
 import dev.pswg.screens.CrateGenericSmallScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
-import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
+import net.fabricmc.fabric.api.client.rendering.v1.SpriteSourceRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -32,7 +31,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,18 +39,6 @@ import java.util.Optional;
 public class GalaxiesClient implements ClientModInitializer
 {
 	private static final Minecraft client = Minecraft.getInstance();
-
-	/**
-	 * A resource loader for quad buffer files
-	 */
-	public static final BinaryCodecDataLoader<GalaxiesModelBakery.GQuadGeometry> GQB_LOADER = new BinaryCodecDataLoader<>(
-			Galaxies.id("gqb"),
-			List.of(ResourceReloaderKeys.Client.MODELS),
-			"models",
-			true,
-			(i) -> IdentifierUtil.hasExtension(i, "gqb"),
-			GalaxiesModelBakery.GQuadGeometry.PACKET_CODEC
-	);
 
 	/**
 	 * A translatable text with two parameters: the keybind value, and the hint text
@@ -135,8 +121,9 @@ public class GalaxiesClient implements ClientModInitializer
 			context.client().particleEngine.createParticle(particleEffect, x, y, z, vX, vY, vZ);
 		});
 
-		// Register the quad buffer loader
-		GQB_LOADER.register();
+		// Atlas sources prepare images before the model plugin bakes geometry.
+		SpriteSourceRegistry.register(Galaxies.id("ptex"), PtexSpriteSource.CODEC);
+		G3dClientModels.register();
 
 		// Register runtime texture services
 		PtexTextures.LOADER.register();

@@ -1,23 +1,18 @@
 package dev.pswg.datagen;
 
 import dev.pswg.Gadgets;
+import dev.pswg.Galaxies;
+import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.block.collection.NumberedBlocks;
 import dev.pswg.block.collection.StoneProducts;
 import dev.pswg.container.*;
-import dev.pswg.Galaxies;
-import dev.pswg.data.CodecDataLoader;
-import dev.pswg.data.IdentifierUtil;
-import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
-import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
-import dev.pswg.feature.scrapping.table.ScrappingToolType;
-import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.feature.drill.HasCapsuleProperty;
 import dev.pswg.feature.drill.HasDrillProperty;
 import dev.pswg.feature.drill.HasExtractorProperty;
-import dev.pswg.rendering.models.GalaxiesModelBakery;
-import dev.pswg.rendering.models.GqbIntermediary;
+import dev.pswg.feature.scrapping.cutter.LaserCuttingRecipeJsonBuilder;
+import dev.pswg.feature.scrapping.table.ScrappingRecipeJsonBuilder;
+import dev.pswg.feature.scrapping.table.ScrappingToolType;
 import dev.pswg.util.gen.*;
-import net.minecraft.advancements.Advancement;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -25,6 +20,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ItemModelUtils;
@@ -34,32 +30,28 @@ import net.minecraft.client.renderer.item.EmptyModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.tags.TagEntry;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.BlockItemTags;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
 
 /**
  * The gadget data generator
@@ -73,14 +65,14 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 
 		Galaxies.LOGGER.info("Running Gadgets Data Generator");
 
-		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, GQB_INTERMEDIARY_LOADER);
+		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, G3dModelProvider.SOURCES);
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ModelGenerator::new);
 		pack.addProvider(RecipesGenerator::new);
-		pack.addProvider((fabricPackOutput, completableFuture) -> new GqdCompiledModelGenerator(fabricPackOutput, Gadgets.MODID));
+		pack.addProvider((fabricPackOutput, completableFuture) -> new G3dModelProvider(fabricPackOutput, Gadgets.MODID));
 	}
 
 	/**
@@ -130,6 +122,16 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 		public void generateItemModels(ItemModelGenerators itemModelGenerator)
 		{
 			AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GadgetsItems.class, Item.class, (item, dataGenItem) -> registerItem(itemModelGenerator, item, dataGenItem));
+			register(
+					itemModelGenerator,
+					GadgetsItems.PRESSURE_MINE_ITEM,
+					ItemModelUtils.plainModel(Gadgets.id("item/pressure_mine"))
+			);
+			register(
+					itemModelGenerator,
+					GadgetsItems.TRIPWIRE_MINE_ITEM,
+					ItemModelUtils.plainModel(Gadgets.id("item/tripwire_mine"))
+			);
 
 
 			register(itemModelGenerator, GadgetsItems.DRILL_ITEM, ItemModelUtils.composite(

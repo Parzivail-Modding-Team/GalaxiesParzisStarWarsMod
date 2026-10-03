@@ -1,0 +1,6 @@
+{
+	"graph": {
+		"type": "pswg:source",
+		"texture": "pswg_gadgets:textures/item/grenade/3d/thermal_detonator_primed_in_hand.png"
+	}
+}

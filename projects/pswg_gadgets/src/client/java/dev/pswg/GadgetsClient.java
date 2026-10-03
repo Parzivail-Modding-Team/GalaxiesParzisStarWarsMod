@@ -5,14 +5,14 @@ import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GadgetsScreenHandlerTypes;
 import dev.pswg.container.entity.GadgetsEntities;
+import dev.pswg.entity.grenades.GrenadeEntity;
 import dev.pswg.feature.brewing.MixerScreenHandler;
 import dev.pswg.feature.drill.HasCapsuleProperty;
 import dev.pswg.feature.drill.HasDrillProperty;
 import dev.pswg.feature.drill.HasExtractorProperty;
-import dev.pswg.models.*;
 import dev.pswg.networking.MixerSyncS2CPayload;
 import dev.pswg.particles.*;
-import dev.pswg.renderer.grenades.*;
+import dev.pswg.renderer.grenades.G3dGrenadeEntityRenderer;
 import dev.pswg.renderer.mines.PressureMineEntityRenderer;
 import dev.pswg.renderer.mines.TripwireMineEntityRenderer;
 import dev.pswg.screens.MixerScreen;
@@ -21,12 +21,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.ParticleGroup;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import org.joml.Vector2i;
 
 import java.util.Map;
@@ -36,26 +36,35 @@ import java.util.Map;
  */
 public class GadgetsClient implements GalaxiesClientAddon
 {
+	/**
+	 * Registers one grenade against the same normal and primed assets as its item.
+	 */
+	private static <T extends GrenadeEntity> void registerGrenade(
+			EntityType<T> type,
+			String modelName,
+			boolean primed
+	)
+	{
+		var modelId = Gadgets.id("item/" + modelName + "_in_hand");
+		var primedModelId = primed ? Gadgets.id("item/" + modelName + "_primed_in_hand") : null;
+		EntityRendererRegistry.register(
+				type,
+				context -> new G3dGrenadeEntityRenderer<>(context, modelId, primedModelId)
+		);
+	}
+
 	public static Map<GadgetsParticleRenderer, ParticleGroup<?>> particleRenderers = Maps.newIdentityHashMap();
 	@Override
 	public void onGalaxiesClientReady()
 	{
-		EntityRendererRegistry.register(GadgetsEntities.THERMAL_DETONATOR_ENTITY, ThermalDetonatorEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(ThermalDetonatorEntityRenderer.MODEL_LAYER, ThermalDetonatorGrenadeModel::getTexturedModelData);
-		EntityRendererRegistry.register(GadgetsEntities.FRAGMENTATION_GRENADE_ENTITY, FragmentationGrenadeEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(FragmentationGrenadeEntityRenderer.MODEL_LAYER, FragmentationGrenadeModel::getTexturedModelData);
-		EntityRendererRegistry.register(GadgetsEntities.NERVE_GAS_GRENADE_ENTITY, NerveGasGrenadeEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(NerveGasGrenadeEntityRenderer.MODEL_LAYER, NerveGasGrenadeModel::getTexturedModelData);
-		EntityRendererRegistry.register(GadgetsEntities.SMOKE_SIGNAL_GRENADE_ENTITY, SmokeSignalGrenadeEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(SmokeSignalGrenadeEntityRenderer.MODEL_LAYER, SmokeSignalGrenadeModel::getTexturedModelData);
-		EntityRendererRegistry.register(GadgetsEntities.IMPACT_GRENADE_ENTITY, ImpactGrenadeEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(ImpactGrenadeEntityRenderer.MODEL_LAYER, ImpactGrenadeModel::getTexturedModelData);
-		EntityRendererRegistry.register(GadgetsEntities.INFERNO_GRENADE_ENTITY, InfernoGrenadeEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(InfernoGrenadeEntityRenderer.MODEL_LAYER, InfernoGrenadeModel::getTexturedModelData);
+		registerGrenade(GadgetsEntities.THERMAL_DETONATOR_ENTITY, "thermal_detonator", true);
+		registerGrenade(GadgetsEntities.FRAGMENTATION_GRENADE_ENTITY, "fragmentation_grenade", true);
+		registerGrenade(GadgetsEntities.NERVE_GAS_GRENADE_ENTITY, "nerve_gas_grenade", false);
+		registerGrenade(GadgetsEntities.SMOKE_SIGNAL_GRENADE_ENTITY, "smoke_signal_grenade", true);
+		registerGrenade(GadgetsEntities.IMPACT_GRENADE_ENTITY, "impact_grenade", false);
+		registerGrenade(GadgetsEntities.INFERNO_GRENADE_ENTITY, "inferno_grenade", true);
 		EntityRendererRegistry.register(GadgetsEntities.PRESSURE_MINE_ENTITY, PressureMineEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(PressureMineEntityRenderer.MODEL_LAYER, PressureMineEntityRenderer.Model::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.TRIPWIRE_MINE_ENTITY, TripwireMineEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(TripwireMineEntityRenderer.MODEL_LAYER, TripwireMineModel::getTexturedModelData);
 		EntityRendererRegistry.register(GadgetsEntities.NERVE_GAS, NoopRenderer::new);
 		EntityRendererRegistry.register(GadgetsEntities.SMOKE_GAS, NoopRenderer::new);
 

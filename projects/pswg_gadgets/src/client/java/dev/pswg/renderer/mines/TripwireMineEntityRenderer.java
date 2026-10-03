@@ -1,66 +1,71 @@
 package dev.pswg.renderer.mines;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import dev.pswg.Gadgets;
 import dev.pswg.entity.mines.TripwireMineEntity;
-import dev.pswg.models.TripwireMineRenderState;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import dev.pswg.model.g3d.G3dTransform;
+import dev.pswg.rendering.g3d.G3dEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.Identifier;
-import dev.pswg.models.TripwireMineModel;
+import net.minecraft.world.phys.AABB;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
-public class TripwireMineEntityRenderer extends EntityRenderer<TripwireMineEntity, TripwireMineRenderState>
+import java.util.Map;
+
+/**
+ * Shares the tripwire body with its item and poses its authored beam per entity.
+ * The beam is collapsed at rest, so inventory rendering contains only the mine.
+ */
+public final class TripwireMineEntityRenderer extends G3dEntityRenderer<TripwireMineEntity>
 {
+	/**
+	 * Beam start at the top of the mine, measured in blocks from entity_origin.
+	 */
+	private static final float BEAM_OFFSET = 1 / 16f;
 
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Gadgets.id("tripwire_mine"), "temp");
-	public static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("pswg_gadgets", "textures/items/tripwire_mine.png");
-	private final TripwireMineModel model;
-
+	/**
+	 * Binds the body, beam, and placement socket from the same shared asset.
+	 */
 	public TripwireMineEntityRenderer(EntityRendererProvider.Context context)
 	{
-		super(context);
-		this.model = new TripwireMineModel(context.bakeLayer(MODEL_LAYER));
+		super(context, Gadgets.id("item/tripwire_mine"), "entity_origin");
 	}
 
+	/**
+	 * Aligns local +Y with the mine's look direction, including walls and ceilings.
+	 */
 	@Override
-	public void submit(TripwireMineRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState)
+	protected void extractTransform(TripwireMineEntity entity, Matrix4f output, float tickDelta)
 	{
-		matrices.pushPose();
-
-		matrices.rotateDegrees(Axis.YP, -state.yaw + 90);
-		matrices.rotateDegrees(Axis.ZP, state.pitch + 90);
-
-		this.model.setupAnim(state);
-		this.model.setupAnim(state);
-
-		model.root().getChild("laser").yScale = state.tripwireDistance * 31f;
-		model.root().getChild("laser").y = state.tripwireDistance * -31 + 1f;
-		model.root().getChild("laser").skipDraw = !state.primed;
-
-		queue.submitModel(this.model, state, matrices, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
-		matrices.popPose();
-		super.submit(state, matrices, queue, cameraState);
+		output.rotateY((float)Math.toRadians(-entity.getYRot(tickDelta) + 90));
+		output.rotateZ((float)Math.toRadians(entity.getXRot(tickDelta) + 90));
 	}
 
+	/**
+	 * Captures beam length in the pose. No shared model part is edited at submit.
+	 */
 	@Override
-	public TripwireMineRenderState createRenderState()
+	protected Map<String, G3dTransform> extractPose(TripwireMineEntity entity, float tickDelta)
 	{
-		return new TripwireMineRenderState();
+		float length = entity.tripwireDistance - BEAM_OFFSET;
+		if (!entity.isPrimed() || !Float.isFinite(length) || length <= 0)
+			return Map.of();
+		return Map.of("beam", new G3dTransform(
+				new Vector3f(0.5f, BEAM_OFFSET, 0.5f),
+				new Quaternionf(),
+				new Vector3f(1, length, 1)
+		));
 	}
 
+	/**
+	 * Includes the visible ray when the body itself is outside the camera view.
+	 */
 	@Override
-	public void extractRenderState(TripwireMineEntity entity, TripwireMineRenderState state, float tickDelta)
+	protected AABB getBoundingBoxForCulling(TripwireMineEntity entity, float tickDelta)
 	{
-		super.extractRenderState(entity, state, tickDelta);
-		state.pitch = entity.getXRot(tickDelta);
-		state.yaw = entity.getYRot();
-		state.primed = entity.primed;
-		state.tripwireDistance = entity.tripwireDistance;
-		state.rotationVec = entity.getLookAngle();
+		var bounds = super.getBoundingBoxForCulling(entity, tickDelta);
+		return entity.isPrimed() && Float.isFinite(entity.tripwireDistance)
+				? bounds.expandTowards(entity.getLookAngle().scale(Math.max(0, entity.tripwireDistance)))
+				: bounds;
 	}
 }

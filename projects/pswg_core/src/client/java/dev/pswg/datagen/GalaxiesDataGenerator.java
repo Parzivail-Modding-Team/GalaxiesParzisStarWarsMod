@@ -45,7 +45,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
 
 /**
  * The base data generator
@@ -59,14 +58,14 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 
 		Galaxies.LOGGER.info("Running Galaxies Client Data Generator");
 
-		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, GQB_INTERMEDIARY_LOADER);
+		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, G3dModelProvider.SOURCES);
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(ModelGenerator::new);
 		pack.addProvider(RecipesGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
-		pack.addProvider((fabricPackOutput, completableFuture) -> new GqdCompiledModelGenerator(fabricPackOutput, Galaxies.MODID));
+		pack.addProvider((fabricPackOutput, completableFuture) -> new G3dModelProvider(fabricPackOutput, Galaxies.MODID));
 	}
 
 	/**

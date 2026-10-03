@@ -38,8 +38,12 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 	private BlockState inBlockState;
 	private static final EntityDataAccessor<Boolean> IN_GROUND = SynchedEntityData.defineId(TripwireMineEntity.class, EntityDataSerializers.BOOLEAN);
 
+	/**
+	 * Shared armed state, including clients that begin tracking an existing mine.
+	 */
+	private static final EntityDataAccessor<Boolean> PRIMED = SynchedEntityData.defineId(TripwireMineEntity.class, EntityDataSerializers.BOOLEAN);
+
 	private int PRIMING_TIME = 60;
-	public boolean primed;
 	public float tripwireDistance;
 
 	@Nullable
@@ -50,7 +54,14 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 	public TripwireMineEntity(EntityType<?> type, Level world)
 	{
 		super(type, world);
-		primed = false;
+	}
+
+	/**
+	 * Gets the server-authored armed state used by both gameplay and rendering.
+	 */
+	public boolean isPrimed()
+	{
+		return entityData.get(PRIMED);
 	}
 
 	public void setOwner(@Nullable Entity entity)
@@ -169,9 +180,9 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 			this.needsSync = true;
 		}
 		this.applyDrag();
-		if (this.tickCount == PRIMING_TIME)
+		if (!level().isClientSide() && this.tickCount >= PRIMING_TIME && !isPrimed())
 		{
-			primed = true;
+			entityData.set(PRIMED, true);
 			playSound(GadgetsSounds.ARM, 1, 1);
 		}
 		float maxDist = 3;
@@ -223,12 +234,12 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 				entity -> true,
 				tripwireDistance);
 
-		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && this.primed)
+		if (entityRaycast != null && entityRaycast.getType() == HitResult.Type.ENTITY && isPrimed())
 			explode();
 
 		tripwireDistance = blockRaycast.getType() == HitResult.Type.MISS ? maxDist : (float)(blockRaycast.getLocation().distanceTo(position()));
 
-		if (this.primed)
+		if (isPrimed())
 		{
 			for (float f = 0.015f; f < tripwireDistance; f += 0.015f)
 			{
@@ -266,6 +277,7 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
 		builder.define(IN_GROUND, false);
+		builder.define(PRIMED, false);
 	}
 
 	@Override
@@ -283,6 +295,7 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 			this.setOwner(UUID.fromString(view.getStringOr("owner", "")));
 		}
 		this.setInGround(view.getBooleanOr("inGround", false));
+		entityData.set(PRIMED, view.getBooleanOr("primed", false));
 		if (view.contains("inBlockState"))
 		{
 			this.inBlockState = view.read("inBlockState", BlockState.CODEC).get();
@@ -297,6 +310,7 @@ public class TripwireMineEntity extends Entity implements TraceableEntity
 			view.putString("owner", this.ownerUuid.toString());
 		}
 		view.putBoolean("inGround", this.isInGround());
+		view.putBoolean("primed", isPrimed());
 		if (this.inBlockState != null)
 		{
 			view.store("inBlockState", BlockState.CODEC, inBlockState);

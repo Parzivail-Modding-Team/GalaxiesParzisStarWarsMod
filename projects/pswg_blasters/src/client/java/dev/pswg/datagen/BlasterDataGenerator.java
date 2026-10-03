@@ -20,7 +20,6 @@ import net.minecraft.server.packs.PackType;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static dev.pswg.rendering.models.GqbIntermediary.GQB_INTERMEDIARY_LOADER;
 
 /**
  * The blaster data generator
@@ -32,13 +31,13 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	{
 		var pack = generator.createPack();
 
-		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, GQB_INTERMEDIARY_LOADER);
+		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, G3dModelProvider.SOURCES);
 		DataGenResourceHelper.loadResources(PackType.SERVER_DATA, Blasters.DATAPACK_LOADER);
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(TagGenerator::new);
 		pack.addProvider(ModelGenerator::new);
-		pack.addProvider((fabricPackOutput, completableFuture) -> new dev.pswg.datagen.GqdCompiledModelGenerator(fabricPackOutput, Blasters.MODID));
+		pack.addProvider((fabricPackOutput, completableFuture) -> new G3dModelProvider(fabricPackOutput, Blasters.MODID));
 	}
 
 	/**

@@ -1,0 +1,77 @@
+{
+	"version": 1,
+	"materials": [
+		{
+			"id": "body",
+			"texture": "pswg_gadgets:textures/item/grenade/3d/thermal_detonator_in_hand.png",
+			"doubleSided": true
+		}
+	],
+	"nodes": [
+		{
+			"id": "root",
+			"meshes": []
+		},
+		{
+			"id": "body",
+			"parent": "root",
+			"meshes": ["body"]
+		}
+	],
+	"meshes": [
+		{
+			"id": "body",
+			"material": "body",
+			"vertices": [
+				{"position": [6.5, 1.0, 9.5], "normal": [0.0, 1.0, 0.0], "uv": [0.375, 0.0]},
+				{"position": [9.5, 1.0, 9.5], "normal": [0.0, 1.0, 0.0], "uv": [0.1875, 0.0]},
+				{"position": [9.5, 1.0, 6.5], "normal": [0.0, 1.0, 0.0], "uv": [0.1875, 0.1875]},
+				{"position": [6.5, 1.0, 6.5], "normal": [0.0, 1.0, 0.0], "uv": [0.375, 0.1875]},
+				{"position": [6.5, 0.0, 6.5], "normal": [0.0, -1.0, 0.0], "uv": [0.5625, 0.1875]},
+				{"position": [9.5, 0.0, 6.5], "normal": [0.0, -1.0, 0.0], "uv": [0.375, 0.1875]},
+				{"position": [9.5, 0.0, 9.5], "normal": [0.0, -1.0, 0.0], "uv": [0.375, 0.0]},
+				{"position": [6.5, 0.0, 9.5], "normal": [0.0, -1.0, 0.0], "uv": [0.5625, 0.0]},
+				{"position": [9.5, 1.0, 6.5], "normal": [1.0, 0.0, 0.0], "uv": [0.1875, 0.1875]},
+				{"position": [9.5, 1.0, 9.5], "normal": [1.0, 0.0, 0.0], "uv": [0.0, 0.1875]},
+				{"position": [9.5, 0.0, 9.5], "normal": [1.0, 0.0, 0.0], "uv": [0.0, 0.25]},
+				{"position": [9.5, 0.0, 6.5], "normal": [1.0, 0.0, 0.0], "uv": [0.1875, 0.25]},
+				{"position": [6.5, 1.0, 6.5], "normal": [0.0, 0.0, -1.0], "uv": [0.375, 0.1875]},
+				{"position": [9.5, 1.0, 6.5], "normal": [0.0, 0.0, -1.0], "uv": [0.1875, 0.1875]},
+				{"position": [9.5, 0.0, 6.5], "normal": [0.0, 0.0, -1.0], "uv": [0.1875, 0.25]},
+				{"position": [6.5, 0.0, 6.5], "normal": [0.0, 0.0, -1.0], "uv": [0.375, 0.25]},
+				{"position": [6.5, 1.0, 9.5], "normal": [-1.0, 0.0, 0.0], "uv": [0.5625, 0.1875]},
+				{"position": [6.5, 1.0, 6.5], "normal": [-1.0, 0.0, 0.0], "uv": [0.375, 0.1875]},
+				{"position": [6.5, 0.0, 6.5], "normal": [-1.0, 0.0, 0.0], "uv": [0.375, 0.25]},
+				{"position": [6.5, 0.0, 9.5], "normal": [-1.0, 0.0, 0.0], "uv": [0.5625, 0.25]},
+				{"position": [9.5, 1.0, 9.5], "normal": [0.0, 0.0, 1.0], "uv": [0.75, 0.1875]},
+				{"position": [6.5, 1.0, 9.5], "normal": [0.0, 0.0, 1.0], "uv": [0.5625, 0.1875]},
+				{"position": [6.5, 0.0, 9.5], "normal": [0.0, 0.0, 1.0], "uv": [0.5625, 0.25]},
+				{"position": [9.5, 0.0, 9.5], "normal": [0.0, 0.0, 1.0], "uv": [0.75, 0.25]}
+			],
+			"indices": [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23]
+		}
+	],
+	"sockets": [
+		{
+			"id": "entity_origin",
+			"node": "root",
+			"localTransform": {
+				"translation": [8.0, 0.0, 8.0]
+			}
+		}
+	],
+	"model": {
+		"display": {
+			"gui": {"translation": [0.0, 26.0, 15.0], "rotation": [30.0, 225.0, 0.0], "scale": [4.0, 4.0, 4.0]},
+			"ground": {"translation": [0.0, 8.0, 0.0]},
+			"fixed": {"translation": [0.0, 0.0, 15.0], "rotation": [90.0, 0.0, 0.0], "scale": [2.0, 2.0, 2.0]},
+			"on_shelf": {"translation": [0.0, 8.0, 0.0]},
+			"head": {"translation": [0.0, 8.0, 0.0]},
+			"firstperson_righthand": {"translation": [0.0, 7.0, 0.0]},
+			"firstperson_lefthand": {"translation": [0.0, 7.0, 0.0]},
+			"thirdperson_righthand": {"translation": [0.0, 7.0, 0.0]},
+			"thirdperson_lefthand": {"translation": [0.0, 7.0, 0.0]}
+		},
+		"gui_light": "side"
+	}
+}
