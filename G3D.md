@@ -237,10 +237,29 @@ Entity-only models can opt into standalone/dynamic textures during client startu
 `G3dArmorRenderer` implements Fabric's worn-armor API. Register a combined set during the module's client initialization:
 
 ```java
-G3dArmorRenderer.register(Galaxies.id("armor/stormtrooper"), GalaxiesItems.STORM_TROOPER);
+G3dArmorRenderer.register(
+		Galaxies.id("armor/stormtrooper"),
+		GalaxiesItems.STORM_TROOPER,
+		G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+);
 ```
 
 This registers the helmet, chestplate, leggings, and boots together. `new G3dArmorRenderer(modelId)` can also be passed to Fabric's `ArmorRenderer.register` for individual addon items. A set with separately authored Steve and Alex assets can use `G3dArmorRenderer.register(wideModelId, slimModelId, armorItems)`. Other humanoid wearers use the wide asset; a missing slim asset falls back to the current wide asset.
+
+### Skin overlay visibility
+
+Registration accepts optional `G3dArmorRenderer.Flag` values. `HIDE_SKIN_OVERLAY` suppresses only the outer player-skin layers for each flagged item while it is equipped:
+
+| Equipped item | Hidden skin overlays |
+| --- | --- |
+| Helmet | Hat |
+| Chestplate | Jacket and both sleeves |
+| Leggings | Both pants legs |
+| Boots | Both pants legs |
+
+Minecraft has one pants overlay per leg, so boots suppress that complete overlay rather than only its foot section. The base skin and cape remain visible according to their normal rules. Omitting the flag preserves the player's skin-layer settings. Stormtrooper enables it for all four pieces; wearing just one piece hides only its relevant area.
+
+To configure pieces independently, use `G3dArmorRenderer.register(modelId, armorItems.chestplate, flags...)` or its `wideModelId, slimModelId, item, flags...` overload. Register each item once. Skin suppression is captured after vanilla extracts player skin options, before queued rendering, and also reaches first-person sleeves. Removing or replacing flagged armor restores the player's own settings on the next extraction. Spectators retain their normal skin options because worn armor is not rendered for them.
 
 ### Authoring contract
 

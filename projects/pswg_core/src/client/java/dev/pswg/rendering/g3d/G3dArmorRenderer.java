@@ -12,11 +12,16 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.PlayerModelType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.level.ItemLike;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,12 +30,25 @@ import java.util.Set;
 public final class G3dArmorRenderer implements ArmorRenderer
 {
 	/**
-	 * Registers one combined armor asset for all four items during client startup.
+	 * Optional behavior attached to registered armor items during client startup.
 	 */
-	public static void register(Identifier modelId, ArmorItems armor)
+	public enum Flag
 	{
-		ArmorRenderer.register(
+		/**
+		 * Hides the equipped slot's outer player-skin layers while keeping the base skin.
+		 */
+		HIDE_SKIN_OVERLAY
+	}
+
+	/**
+	 * Registers one combined armor asset for all four items during client startup.
+	 * Flags apply to each piece's equipped area; no flags keeps normal skin visibility.
+	 */
+	public static void register(Identifier modelId, ArmorItems armor, Flag... flags)
+	{
+		register(
 				new G3dArmorRenderer(modelId),
+				flags,
 				armor.helmet,
 				armor.chestplate,
 				armor.leggings,
@@ -42,15 +60,78 @@ public final class G3dArmorRenderer implements ArmorRenderer
 	 * Registers separate wide and slim assets when an armor set needs more than
 	 * arm-geometry variants. Both assets use the same named-anchor contract.
 	 */
-	public static void register(Identifier wideModelId, Identifier slimModelId, ArmorItems armor)
+	public static void register(Identifier wideModelId, Identifier slimModelId, ArmorItems armor, Flag... flags)
 	{
-		ArmorRenderer.register(
+		register(
 				new G3dArmorRenderer(wideModelId, slimModelId),
+				flags,
 				armor.helmet,
 				armor.chestplate,
 				armor.leggings,
 				armor.boots
 		);
+	}
+
+	/**
+	 * Registers one piece when a set needs different behavior for different items.
+	 */
+	public static void register(Identifier modelId, ItemLike item, Flag... flags)
+	{
+		register(new G3dArmorRenderer(modelId), flags, item);
+	}
+
+	/**
+	 * Registers one piece with separate wide/slim assets and its own behavior flags.
+	 */
+	public static void register(Identifier wideModelId, Identifier slimModelId, ItemLike item, Flag... flags)
+	{
+		register(new G3dArmorRenderer(wideModelId, slimModelId), flags, item);
+	}
+
+	/**
+	 * Stores immutable registration settings after Fabric accepts the renderer.
+	 */
+	private static void register(ArmorRenderer renderer, Flag[] flags, ItemLike... items)
+	{
+		var settings = Set.copyOf(Arrays.asList(flags));
+		ArmorRenderer.register(renderer, items);
+		for (var item : items)
+			_flags.put(item.asItem(), settings);
+	}
+
+	/**
+	 * Applies equipment visibility after vanilla extracts skin options. The same
+	 * snapshot drives queued player rendering and first-person hand sleeves.
+	 * Only disables overlays; vanilla restores the player's choices each extraction.
+	 */
+	public static void applySkinVisibility(AvatarRenderState state)
+	{
+		if (state.isSpectator)
+			return;
+
+		if (hidesSkinOverlay(state.headEquipment))
+			state.showHat = false;
+
+		if (hidesSkinOverlay(state.chestEquipment))
+		{
+			state.showJacket = false;
+			state.showLeftSleeve = false;
+			state.showRightSleeve = false;
+		}
+
+		if (hidesSkinOverlay(state.legsEquipment) || hidesSkinOverlay(state.feetEquipment))
+		{
+			state.showLeftPants = false;
+			state.showRightPants = false;
+		}
+	}
+
+	/**
+	 * Checks a worn item without retaining the wearer or reading live entity state.
+	 */
+	private static boolean hidesSkinOverlay(ItemStack stack)
+	{
+		return !stack.isEmpty() && _flags.getOrDefault(stack.getItem(), Set.of()).contains(Flag.HIDE_SKIN_OVERLAY);
 	}
 
 	/**
@@ -60,6 +141,11 @@ public final class G3dArmorRenderer implements ArmorRenderer
 	{
 		return state instanceof AvatarRenderState avatar && avatar.skin.model() == PlayerModelType.SLIM;
 	}
+
+	/**
+	 * Item behavior survives resource reload and is shared by wide/slim renderers.
+	 */
+	private static final Map<Item, Set<Flag>> _flags = new HashMap<>();
 
 	/**
 	 * Default model for Steve-style players and other humanoid entities.

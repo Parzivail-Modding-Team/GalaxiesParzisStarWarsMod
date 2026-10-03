@@ -34,6 +34,7 @@ The Stormtrooper model is a working combined armor template at `projects/pswg_co
 - Model upright in the normal feet-origin frame. The armor renderer handles Minecraft's coordinate conversion and uses the wearer's native animation. Display values do not position worn armor.
 - Assign a normal image, such as `pswg:textures/armor/stormtrooper.png`. Worn armor samples it directly; it does not need to be stitched into an atlas. Runtime Ptex surfaces can also supply dynamic textures.
 - Export to the module's `assets/<namespace>/g3d/source/armor/` folder and run its normal datagen. Register the set once with `G3dArmorRenderer.register(modelId, armorItems)` during client startup.
+- For armor that covers the skin's outer layer, add `G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY` to registration. A helmet hides the skin hat; a chestplate hides the jacket and sleeves; leggings or boots hide the pants overlays. Stormtrooper uses this for all four pieces. This is a registration setting, so no extra model export is needed.
 
 See [the humanoid armor contract](../../G3D.md#humanoid-armor) for pivot coordinates, separate Steve/Alex assets, dye slots, and rendering behavior. The same plugin/export format handles armor and ordinary models.
 
