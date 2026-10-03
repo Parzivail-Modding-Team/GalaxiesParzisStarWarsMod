@@ -19,8 +19,10 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -87,11 +89,22 @@ public final class G3dClientModels
 				public Map<Identifier, G3dRenderer> bake(ModelBaker baker)
 				{
 					var renderers = new HashMap<Identifier, G3dRenderer>();
-					geometries.forEach((id, geometry) -> renderers.put(id, new G3dRenderer(geometry, baker)));
+					geometries.forEach((id, geometry) -> renderers.put(id, new G3dRenderer(
+							geometry,
+							SAMPLED_MODELS.contains(id) ? null : baker
+					)));
 					return Map.copyOf(renderers);
 				}
 			});
 		});
+	}
+
+	/**
+	 * Selects standalone/dynamic textures for an entity-only model.
+	 */
+	public static void registerSampled(Identifier id)
+	{
+		SAMPLED_MODELS.add(id);
 	}
 
 	/**
@@ -128,6 +141,11 @@ public final class G3dClientModels
 	 * Module registrations survive resource reload; asset instances do not.
 	 */
 	private static final Map<Identifier, ItemPoseProvider> ITEM_POSES = new HashMap<>();
+
+	/**
+	 * The models that use samples textures.
+	 */
+	private static final Set<Identifier> SAMPLED_MODELS = new HashSet<>();
 
 	/**
 	 * Prevents construction of this registration utility.

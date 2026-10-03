@@ -7,6 +7,7 @@ import dev.pswg.model.g3d.G3dPose;
 import dev.pswg.rendering.ptex.PtexTextureSpec;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.sprite.Material;
@@ -24,6 +25,16 @@ import java.util.function.Consumer;
  */
 public final class G3dRenderer
 {
+	/**
+	 * Native consumer whose layer and glint conventions apply to a submission.
+	 */
+	private enum Target
+	{
+		ENTITY,
+		ITEM,
+		ARMOR
+	}
+
 	/**
 	 * Renderer-free geometry shared across instances.
 	 */
@@ -162,6 +173,43 @@ public final class G3dRenderer
 			boolean renderBody
 	)
 	{
+		submit(matrices, stack, collector, light, overlay, color, tints, item ? Target.ITEM : Target.ENTITY, foil, outline, renderBody);
+	}
+
+	/**
+	 * Submits worn geometry with native armor cutout/glint layers and no hurt
+	 * overlay.
+	 */
+	public void submitArmor(
+			Matrix4fc[] matrices,
+			PoseStack stack,
+			SubmitNodeCollector collector,
+			int light,
+			int[] tints,
+			boolean foil,
+			int outline
+	)
+	{
+		submit(matrices, stack, collector, light, OverlayTexture.NO_OVERLAY, -1, tints, Target.ARMOR, foil, outline, true);
+	}
+
+	/**
+	 * Shared vertex submission for native entity, item, and armor consumers.
+	 */
+	private void submit(
+			Matrix4fc[] matrices,
+			PoseStack stack,
+			SubmitNodeCollector collector,
+			int light,
+			int overlay,
+			int color,
+			int[] tints,
+			Target target,
+			boolean foil,
+			int outline,
+			boolean renderBody
+	)
+	{
 		for (var mesh : _model.meshes())
 		{
 			if (G3dPose.isCollapsed(matrices[mesh.node()]))
@@ -171,8 +219,10 @@ public final class G3dRenderer
 			var texture = sprite == null
 					? _textures[mesh.material()].getOrElse(MissingTextureAtlasSprite.getLocation())
 					: sprite.atlasLocation();
-			var layerId = item ? material.layers().item() : material.layers().entity();
-			var type = G3dLayers.sampled(layerId, texture, material.doubleSided(), foil);
+			var layerId = target == Target.ITEM ? material.layers().item() : material.layers().entity();
+			var type = target == Target.ARMOR
+					? G3dLayers.armor(layerId, texture, material.doubleSided(), foil)
+					: G3dLayers.sampled(layerId, texture, material.doubleSided(), foil);
 			boolean backFaces = G3dLayers.needsBackFaces(layerId, material.doubleSided());
 			int tint = material.tintIndex() >= 0 && material.tintIndex() < tints.length ? tints[material.tintIndex()] : color;
 			int lit = LightCoordsUtil.lightCoordsWithEmission(light, material.lightEmission());

@@ -24,6 +24,19 @@ Gadget models are also used by their thrown or placed entities. Their **entity_o
 
 A mesh can use several textures. The exporter splits it into the required surfaces for you. For faces without a texture, it uses the mesh's only assigned texture, or Blockbench's default/selected texture.
 
+## Make worn armor
+
+The Stormtrooper model is a working combined armor template at `projects/pswg_core/src/main/resources/assets/pswg/g3d/source/armor/stormtrooper.jg3d`. Open it with the plugin to reuse its group layout, pivots, and Steve/Alex arm branches.
+
+- Keep the `head`, `body`, `right_arm`, `left_arm`, `right_leg`, and `left_leg` group names. Put boots in `right_boot` and `left_boot`; a leggings belt can use a separate `waist` group.
+- Add details beneath the part they should follow. A pouch under an arm moves with that arm; a pauldron under the body follows the torso.
+- Put Steve's four-unit arms in the `_default` child groups and Alex's three-unit arms in `_slim` child groups. The game selects the appropriate branches from the player's skin model. Keep shared details outside those two branches.
+- Model upright in the normal feet-origin frame. The armor renderer handles Minecraft's coordinate conversion and uses the wearer's native animation. Display values do not position worn armor.
+- Assign a normal image, such as `pswg:textures/armor/stormtrooper.png`. Worn armor samples it directly; it does not need to be stitched into an atlas. Runtime Ptex surfaces can also supply dynamic textures.
+- Export to the module's `assets/<namespace>/g3d/source/armor/` folder and run its normal datagen. Register the set once with `G3dArmorRenderer.register(modelId, armorItems)` during client startup.
+
+See [the humanoid armor contract](../../G3D.md#humanoid-armor) for pivot coordinates, separate Steve/Alex assets, dye slots, and rendering behavior. The same plugin/export format handles armor and ordinary models.
+
 ## Texture surface settings
 
 Each entry in the **Textures** panel owns one set of settings:
