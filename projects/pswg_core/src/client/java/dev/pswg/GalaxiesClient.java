@@ -293,6 +293,16 @@ public class GalaxiesClient implements ClientModInitializer
 				GalaxiesItems.IMPERIAL_PILOT_COLD_HELMET,
 				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
 		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_pilot"),
+				GalaxiesItems.REBEL_PILOT_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_pilot"),
+				GalaxiesItems.REBEL_PILOT_KIT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
 
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);
