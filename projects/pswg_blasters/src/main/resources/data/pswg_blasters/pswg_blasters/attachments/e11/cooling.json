@@ -1,0 +1,7 @@
+{
+	"translationKey": "attachment.pswg_blasters.e11.cooling",
+	"slots": ["pswg_blasters:internal_slot"],
+	"function": "pswg_blasters:cooling_multiplier",
+	"category": "pswg_blasters:internal_cooling",
+	"value": 1.3
+}

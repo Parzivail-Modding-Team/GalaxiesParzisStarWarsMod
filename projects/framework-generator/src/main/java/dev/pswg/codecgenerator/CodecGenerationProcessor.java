@@ -6,17 +6,20 @@ import com.palantir.javapoet.*;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 
 /**
  * An annotation processor that generates record codecs as an
- * implementable interface that defines CODEC and PACKET_CODEC
- * static fields.
+ * implementable interface that defines MAP_CODEC and CODEC fields and,
+ * optionally, a PACKET_CODEC field.
  */
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("dev.pswg.codecgenerator.GenerateCodec")
@@ -24,18 +27,62 @@ import java.util.function.Function;
 public class CodecGenerationProcessor extends AbstractProcessor
 {
 	/**
-	 * Represents a qualified reference to a defined, pre-existing codec
+	 * Represents a reference to a defined, pre-existing codec expression
 	 *
 	 * @param className   The class in which the codec is defined
 	 * @param elementName The name of the codec field
+	 * @param customExpression An adapted expression for codec types whose native type differs
 	 */
-	private record CodecType(TypeName className, String elementName)
+	private record CodecType(TypeName className, String elementName, CodeBlock customExpression)
 	{
+		/**
+		 * Creates a reference to a codec field.
+		 */
+		private CodecType(TypeName className, String elementName)
+		{
+			this(className, elementName, null);
+		}
+
+		/**
+		 * Creates a codec reference whose expression requires an adaptation.
+		 */
+		private CodecType(CodeBlock customExpression)
+		{
+			this(null, null, customExpression);
+		}
+
+		/**
+		 * Returns the Java expression that evaluates to the codec.
+		 */
+		private CodeBlock asExpression()
+		{
+			if (customExpression != null)
+				return customExpression;
+
+			return CodeBlock.of("$T.$L", className, elementName);
+		}
+
+		/**
+		 * Returns a readable representation of the codec reference for processor logging.
+		 */
 		@Override
 		public String toString()
 		{
-			return "%s#%s".formatted(className(), elementName());
+			return customExpression == null
+					? "%s#%s".formatted(className(), elementName())
+					: customExpression.toString();
 		}
+	}
+
+	/**
+	 * Holds a standard codec expression and whether it decodes an absent optional
+	 * record field as {@link Optional#empty()}.
+	 *
+	 * @param expression The codec expression for the field value
+	 * @param optionalField Whether the component uses {@code optionalFieldOf}
+	 */
+	private record StandardCodecExpression(CodeBlock expression, boolean optionalField)
+	{
 	}
 
 	/**
@@ -69,6 +116,14 @@ public class CodecGenerationProcessor extends AbstractProcessor
 	private static final TypeName MC_TYPES = ClassName.get("net.minecraft.util", "ExtraCodecs");
 	private static final TypeName MC_PACKET_TYPES = ClassName.get("net.minecraft.network.codec", "ByteBufCodecs");
 
+	/**
+	 * The core PSWG codec class
+	 */
+	private static final TypeName GALAXIES_CODECS = ClassName.get("dev.pswg.codec", "GalaxiesCodecs");
+
+	/**
+	 * Initializes the standard and packet codec type registries.
+	 */
 	public CodecGenerationProcessor()
 	{
 		var mojangTypes = ClassName.get("com.mojang.serialization", "Codec");
@@ -100,8 +155,8 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				GenStandardCodec.INT,
 				Map.of(
 						GenStandardCodec.INT, new CodecType(mojangTypes, "INT"),
-						GenStandardCodec.RGB, new CodecType(MC_TYPES, "RGB"),
-						GenStandardCodec.ARGB, new CodecType(MC_TYPES, "ARGB"),
+						GenStandardCodec.RGB, new CodecType(MC_TYPES, "RGB_COLOR_CODEC"),
+						GenStandardCodec.ARGB, new CodecType(MC_TYPES, "ARGB_COLOR_CODEC"),
 						GenStandardCodec.NON_NEGATIVE_INT, new CodecType(MC_TYPES, "NON_NEGATIVE_INT"),
 						GenStandardCodec.POSITIVE_INT, new CodecType(MC_TYPES, "POSITIVE_INT"),
 						GenStandardCodec.UNICODE_CODEPOINT, new CodecType(MC_TYPES, "CODEPOINT")
@@ -130,6 +185,27 @@ public class CodecGenerationProcessor extends AbstractProcessor
 						GenStandardCodec.DOUBLE, new CodecType(mojangTypes, "DOUBLE")
 				)
 		);
+		registerCodecsForType("java.lang.Boolean", GenStandardCodec.BOOL, Map.of(GenStandardCodec.BOOL, new CodecType(mojangTypes, "BOOL")));
+		registerCodecsForType("java.lang.Byte", GenStandardCodec.BYTE, Map.of(
+				GenStandardCodec.BYTE, new CodecType(mojangTypes, "BYTE"),
+				GenStandardCodec.UNSIGNED_BYTE, new CodecType(MC_TYPES, "UNSIGNED_BYTE")
+		));
+		registerCodecsForType("java.lang.Short", GenStandardCodec.SHORT, Map.of(GenStandardCodec.SHORT, new CodecType(mojangTypes, "SHORT")));
+		registerCodecsForType("java.lang.Integer", GenStandardCodec.INT, Map.of(
+				GenStandardCodec.INT, new CodecType(mojangTypes, "INT"),
+				GenStandardCodec.RGB, new CodecType(MC_TYPES, "RGB_COLOR_CODEC"),
+				GenStandardCodec.ARGB, new CodecType(MC_TYPES, "ARGB_COLOR_CODEC"),
+				GenStandardCodec.NON_NEGATIVE_INT, new CodecType(MC_TYPES, "NON_NEGATIVE_INT"),
+				GenStandardCodec.POSITIVE_INT, new CodecType(MC_TYPES, "POSITIVE_INT"),
+				GenStandardCodec.UNICODE_CODEPOINT, new CodecType(MC_TYPES, "CODEPOINT")
+		));
+		registerCodecsForType("java.lang.Long", GenStandardCodec.LONG, Map.of(GenStandardCodec.LONG, new CodecType(mojangTypes, "LONG")));
+		registerCodecsForType("java.lang.Float", GenStandardCodec.FLOAT, Map.of(
+				GenStandardCodec.FLOAT, new CodecType(mojangTypes, "FLOAT"),
+				GenStandardCodec.NON_NEGATIVE_FLOAT, new CodecType(MC_TYPES, "NON_NEGATIVE_FLOAT"),
+				GenStandardCodec.POSITIVE_FLOAT, new CodecType(MC_TYPES, "POSITIVE_FLOAT")
+		));
+		registerCodecsForType("java.lang.Double", GenStandardCodec.DOUBLE, Map.of(GenStandardCodec.DOUBLE, new CodecType(mojangTypes, "DOUBLE")));
 		registerCodecsForType(
 				"java.lang.String",
 				GenStandardCodec.STRING,
@@ -173,37 +249,80 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				"org.joml.Vector3f",
 				GenStandardCodec.VECTOR_3F,
 				Map.of(
-						GenStandardCodec.VECTOR_3F, new CodecType(MC_TYPES, "VECTOR3F")
+						GenStandardCodec.VECTOR_3F, new CodecType(CodeBlock.of(
+								"$T.VECTOR3F.xmap($T::new, value -> value)",
+								MC_TYPES,
+								ClassName.get("org.joml", "Vector3f")
+						))
 				)
+		);
+		registerCodecsForType(
+				"org.joml.Vector3fc",
+				GenStandardCodec.VECTOR_3F,
+				Map.of(GenStandardCodec.VECTOR_3F, new CodecType(MC_TYPES, "VECTOR3F"))
 		);
 		registerCodecsForType(
 				"org.joml.Vector4f",
 				GenStandardCodec.VECTOR_4F,
 				Map.of(
-						GenStandardCodec.VECTOR_4F, new CodecType(MC_TYPES, "VECTOR4F")
+						GenStandardCodec.VECTOR_4F, new CodecType(CodeBlock.of(
+								"$T.VECTOR4F.xmap($T::new, value -> value)",
+								MC_TYPES,
+								ClassName.get("org.joml", "Vector4f")
+						))
 				)
+		);
+		registerCodecsForType(
+				"org.joml.Vector4fc",
+				GenStandardCodec.VECTOR_4F,
+				Map.of(GenStandardCodec.VECTOR_4F, new CodecType(MC_TYPES, "VECTOR4F"))
 		);
 		registerCodecsForType(
 				"org.joml.Quaternionf",
 				GenStandardCodec.QUATERNION_F,
 				Map.of(
-						GenStandardCodec.QUATERNION_F, new CodecType(MC_TYPES, "QUATERNION_F"),
-						GenStandardCodec.ROTATION, new CodecType(MC_TYPES, "ROTATION")
+						GenStandardCodec.QUATERNION_F, new CodecType(CodeBlock.of(
+								"$T.QUATERNIONF.xmap($T::new, value -> value)",
+								MC_TYPES,
+								ClassName.get("org.joml", "Quaternionf")
+						)),
+						GenStandardCodec.ROTATION, new CodecType(CodeBlock.of(
+								"$T.QUATERNIONF.xmap($T::new, value -> value)",
+								MC_TYPES,
+								ClassName.get("org.joml", "Quaternionf")
+						))
+				)
+		);
+		registerCodecsForType(
+				"org.joml.Quaternionfc",
+				GenStandardCodec.QUATERNION_F,
+				Map.of(
+						GenStandardCodec.QUATERNION_F, new CodecType(MC_TYPES, "QUATERNIONF"),
+						GenStandardCodec.ROTATION, new CodecType(MC_TYPES, "QUATERNIONF")
 				)
 		);
 		registerCodecsForType(
 				"org.joml.AxisAngle4f",
 				GenStandardCodec.AXIS_ANGLE_4F,
 				Map.of(
-						GenStandardCodec.AXIS_ANGLE_4F, new CodecType(MC_TYPES, "AXIS_ANGLE_4F")
+						GenStandardCodec.AXIS_ANGLE_4F, new CodecType(MC_TYPES, "AXISANGLE4F")
 				)
 		);
 		registerCodecsForType(
 				"org.joml.Matrix4f",
 				GenStandardCodec.MATRIX_4F,
 				Map.of(
-						GenStandardCodec.MATRIX_4F, new CodecType(MC_TYPES, "MATRIX_4F")
+						GenStandardCodec.MATRIX_4F, new CodecType(CodeBlock.of(
+								"$T.MATRIX4F.xmap($T::new, value -> value)",
+								MC_TYPES,
+								ClassName.get("org.joml", "Matrix4f")
+						))
 				)
+		);
+		registerCodecsForType(
+				"org.joml.Matrix4fc",
+				GenStandardCodec.MATRIX_4F,
+				Map.of(GenStandardCodec.MATRIX_4F, new CodecType(MC_TYPES, "MATRIX4F"))
 		);
 		registerCodecsForType(
 				"java.time.Instant",
@@ -246,6 +365,11 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				Map.of(
 						GenStandardCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.resources", "Identifier"), "CODEC")
 				)
+		);
+		registerCodecsForType(
+				"net.minecraft.world.item.crafting.Ingredient",
+				GenStandardCodec.AUTOMATIC,
+				Map.of(GenStandardCodec.AUTOMATIC, new CodecType(ClassName.get("net.minecraft.world.item.crafting", "Ingredient"), "CODEC"))
 		);
 		registerCodecsForType(
 				"byte[]",
@@ -356,15 +480,33 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				"org.joml.Vector3f",
 				GenPacketCodec.VECTOR_3F,
 				Map.of(
-						GenPacketCodec.VECTOR_3F, new CodecType(MC_PACKET_TYPES, "VECTOR3F")
+						GenPacketCodec.VECTOR_3F, new CodecType(CodeBlock.of(
+								"$T.VECTOR3F.map($T::new, vector -> vector)",
+								MC_PACKET_TYPES,
+								ClassName.get("org.joml", "Vector3f")
+						))
 				)
+		);
+		registerPacketCodecsForType(
+				"org.joml.Vector3fc",
+				GenPacketCodec.VECTOR_3F,
+				Map.of(GenPacketCodec.VECTOR_3F, new CodecType(MC_PACKET_TYPES, "VECTOR3F"))
 		);
 		registerPacketCodecsForType(
 				"org.joml.Quaternionf",
 				GenPacketCodec.QUATERNION_F,
 				Map.of(
-						GenPacketCodec.QUATERNION_F, new CodecType(MC_PACKET_TYPES, "QUATERNIONF")
+						GenPacketCodec.QUATERNION_F, new CodecType(CodeBlock.of(
+								"$T.QUATERNIONF.map($T::new, rotation -> rotation)",
+								MC_PACKET_TYPES,
+								ClassName.get("org.joml", "Quaternionf")
+						))
 				)
+		);
+		registerPacketCodecsForType(
+				"org.joml.Quaternionfc",
+				GenPacketCodec.QUATERNION_F,
+				Map.of(GenPacketCodec.QUATERNION_F, new CodecType(MC_PACKET_TYPES, "QUATERNIONF"))
 		);
 		registerPacketCodecsForType(
 				"com.mojang.authlib.properties.PropertyMap",
@@ -416,11 +558,17 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		defaultPacketCodecTypes.put(qualifiedType, defaultCodec);
 	}
 
+	/**
+	 * Emits a diagnostic note prefixed with this processor's name.
+	 */
 	private void log(String message)
 	{
 		processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "(CodecGen AP) %s".formatted(message));
 	}
 
+	/**
+	 * Generates codec interfaces for records annotated with {@link GenerateCodec}.
+	 */
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
 	{
@@ -459,105 +607,591 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		return true;
 	}
 
+	/**
+	 * Returns the package used for generated codec interfaces.
+	 */
 	private String getPackageName(TypeElement classElement)
 	{
 		return "dev.pswg.generated.codecs";
 	}
 
+	/**
+	 * Builds a generated interface containing the requested standard and packet codecs.
+	 */
 	private JavaFile generateInterface(String packageName, TypeElement classElement, String interfaceName)
 	{
 		var codec = generateCodec(classElement);
 		if (codec == null)
 			return null;
 
-		var packetCodec = generatePacketCodec(classElement);
-		if (packetCodec == null)
+		var includePacketCodec = classElement.getAnnotation(GenerateCodec.class).packetCodec();
+		var packetCodec = includePacketCodec ? generatePacketCodec(classElement) : null;
+		if (includePacketCodec && packetCodec == null)
 			return null;
 
 		var iface = TypeSpec.interfaceBuilder(interfaceName)
 		                    .addModifiers(Modifier.PUBLIC)
 		                    .addOriginatingElement(classElement)
-		                    .addField(codec)
-		                    .addField(packetCodec)
-		                    .build();
+		                    .addField(codec.mapCodec())
+		                    .addField(codec.codec());
 
-		return JavaFile.builder(packageName, iface)
+		if (packetCodec != null)
+			iface.addField(packetCodec);
+
+		return JavaFile.builder(packageName, iface.build())
 		               .indent("\t")
 		               .build();
 	}
 
 	/**
-	 * Generates a static final field representing a codec for the given class element.
-	 * The codec is constructed using the record components of the class.
+	 * Holds the two standard codec fields generated for a record.
+	 *
+	 * @param mapCodec The field codec for the record
+	 * @param codec The value codec for the record
+	 */
+	private record GeneratedStandardCodec(FieldSpec mapCodec, FieldSpec codec)
+	{
+	}
+
+	/**
+	 * Generates standard map and value codecs for the given record.
 	 *
 	 * @param classElement The class element for which the codec is to be generated.
 	 *
-	 * @return A {@link FieldSpec} representing the codec, or null if the class has no components or a suitable codec could not be found.
+	 * @return The generated codec fields, or null if a suitable component codec could not be found.
 	 */
-	private FieldSpec generateCodec(TypeElement classElement)
+	private GeneratedStandardCodec generateCodec(TypeElement classElement)
 	{
 		var stateComponentType = TypeName.get(classElement.asType());
 		var codecType = ClassName.get("com.mojang.serialization", "Codec");
+		var mapCodecType = ClassName.get("com.mojang.serialization", "MapCodec");
 		var parameterizedCodec = ParameterizedTypeName.get(codecType, stateComponentType);
-
+		var parameterizedMapCodec = ParameterizedTypeName.get(mapCodecType, stateComponentType);
 		var recordCodecBuilder = ClassName.get("com.mojang.serialization.codecs", "RecordCodecBuilder");
 
-		// TODO: this will need to generate an anonymous class (?) for record with more than 16 members
-		var codecInitializer = CodeBlock.builder()
-		                                .add("$T.create(instance -> instance.group(\n", recordCodecBuilder)
-		                                .indent();
-
 		var components = classElement.getRecordComponents();
+		var annotation = classElement.getAnnotation(GenerateCodec.class);
+		CodeBlock mapCodecInitializer;
 		if (components.isEmpty())
-			return null;
-
-		var first = true;
-		for (var component : components)
 		{
-			var nestedCodecType = getCodec(
-					component,
-					UseCodec::customCodec,
-					UseCodec::codec,
-					GenStandardCodec.AUTOMATIC,
-					codecTypes,
-					defaultCodecTypes,
-					"CODEC",
-					"codec"
-			);
-			if (nestedCodecType == null)
-				return null;
-
-			if (!first)
-				codecInitializer.add(",\n");
-			first = false;
-
-			String fieldInitializer;
-
-			var codecDefault = component.getAnnotation(CodecDefault.class);
-			if (codecDefault != null)
+			mapCodecInitializer = CodeBlock.of("$T.unit(new $T())", mapCodecType, stateComponentType);
+		}
+		else
+		{
+			var codecInitializer = CodeBlock.builder()
+			                                .add("$T.mapCodec(instance -> instance.group(\n", recordCodecBuilder)
+			                                .indent();
+			var first = true;
+			for (var component : components)
 			{
-				fieldInitializer = "optionalFieldOf($2S, %s)".formatted(codecDefault.value());
-			}
-			else
-				fieldInitializer = "fieldOf($2S)";
+				var codecExpression = getStandardCodec(component, annotation.strict());
+				if (codecExpression == null)
+					return null;
 
-			var classTypeName = nestedCodecType.className().toString();
-			if (classTypeName.startsWith("java.util.List"))
-			{
-				var listArg = ClassName.bestGuess(classTypeName.substring("java.util.List<".length(), classTypeName.length() - 1));
-				codecInitializer.add("$5T.listOrSingle($3T.$4L)." + fieldInitializer + ".forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), listArg, nestedCodecType.elementName(), MC_TYPES);
+				if (!first)
+					codecInitializer.add(",\n");
+				first = false;
+
+				var codecDefault = component.getAnnotation(CodecDefault.class);
+				var codecName = component.getAnnotation(CodecName.class);
+				var fieldName = codecName == null ? component.getSimpleName().toString() : codecName.value();
+				var fieldCodec = CodeBlock.builder().add("$L", codecExpression.expression());
+
+				if (codecDefault != null)
+					fieldCodec.add(".optionalFieldOf($S, $L)", fieldName, codecDefault.value());
+				else if (codecExpression.optionalField())
+					fieldCodec.add(".optionalFieldOf($S)", fieldName);
+				else
+					fieldCodec.add(".fieldOf($S)", fieldName);
+
+				fieldCodec.add(".forGetter($T::$L)", stateComponentType, component.getSimpleName().toString());
+				codecInitializer.add("$L", fieldCodec.build());
 			}
-			else
-				codecInitializer.add("$3T.$4L." + fieldInitializer + ".forGetter($1T::$2L)", stateComponentType, component.getSimpleName().toString(), nestedCodecType.className(), nestedCodecType.elementName());
+
+			codecInitializer.unindent()
+			                .add("\n).apply(instance, $T::new))", stateComponentType);
+			mapCodecInitializer = codecInitializer.build();
 		}
 
-		codecInitializer.unindent()
-		                .add("\n).apply(instance, $T::new))", stateComponentType);
+		var mapCodec = FieldSpec.builder(parameterizedMapCodec, "MAP_CODEC")
+		                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+		                        .initializer(mapCodecInitializer)
+		                        .build();
+		var codecInitializer = annotation.strict()
+				? CodeBlock.of("$T.strict(MAP_CODEC)", GALAXIES_CODECS)
+				: CodeBlock.of("MAP_CODEC.codec()");
+		var codec = FieldSpec.builder(parameterizedCodec, "CODEC")
+		                      .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+		                      .initializer(codecInitializer)
+		                      .build();
 
-		return FieldSpec.builder(parameterizedCodec, "CODEC")
-		                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-		                .initializer(codecInitializer.build())
-		                .build();
+		return new GeneratedStandardCodec(mapCodec, codec);
+	}
+
+	/**
+	 * Resolves a record component's standard codec, including component annotations
+	 * and recursive collection types.
+	 */
+	private StandardCodecExpression getStandardCodec(RecordComponentElement component, boolean strict)
+	{
+		var componentType = component.asType();
+		var optionalField = isDeclaredType(componentType, "java.util.Optional");
+		if (optionalField)
+		{
+			var optionalArguments = getTypeArguments(componentType);
+			if (optionalArguments.size() != 1)
+			{
+				reportError(component, "Optional codec fields must declare exactly one type argument.");
+				return null;
+			}
+			componentType = optionalArguments.get(0);
+		}
+
+		var codecSize = component.getAnnotation(CodecSize.class);
+		if (codecSize != null && !isCollectionType(componentType))
+		{
+			reportError(component, "@CodecSize can only be applied to List or Map record components.");
+			return null;
+		}
+
+		if (codecSize != null && (codecSize.min() < 0 || codecSize.max() < codecSize.min()))
+		{
+			reportError(component, "@CodecSize requires 0 <= min <= max.");
+			return null;
+		}
+
+		var codecRange = component.getAnnotation(CodecRange.class);
+		if (codecRange != null && (!Double.isFinite(codecRange.min())
+				|| !Double.isFinite(codecRange.max())
+				|| codecRange.min() > codecRange.max()))
+		{
+			reportError(component, "@CodecRange requires finite bounds with min <= max.");
+			return null;
+		}
+
+		var useCodec = component.getAnnotation(UseCodec.class);
+		var selfCodec = component.getAnnotation(SelfCodec.class) != null;
+		var customSource = useCodec == null ? null : useCodec.customCodec();
+		if (!selfCodec && customSource != null && !customSource.member().isEmpty())
+		{
+			if (optionalField && (codecRange != null || codecSize != null))
+			{
+				reportError(component, "Optional custom codecs cannot be combined with @CodecRange or @CodecSize.");
+				return null;
+			}
+			var expression = getCodecSourceExpression(customSource);
+			if (expression == null)
+				return null;
+			if (codecRange != null)
+				expression = applyRangeValidation(expression, componentType, codecRange, component);
+			if (expression == null)
+				return null;
+			if (codecSize != null)
+			{
+				expression = applyCustomCollectionSize(expression, componentType, codecSize);
+				if (expression == null)
+					return null;
+			}
+			if (strict)
+				expression = CodeBlock.of("$T.catchDecoderException($L)", MC_TYPES, expression);
+			return new StandardCodecExpression(expression, false);
+		}
+
+		var selectedCodec = useCodec == null ? GenStandardCodec.AUTOMATIC : useCodec.codec();
+		var expression = buildStandardCodec(componentType, component, selfCodec, selectedCodec, codecSize, codecRange, true);
+		if (expression == null)
+			return null;
+
+		if (strict)
+			expression = CodeBlock.of("$T.catchDecoderException($L)", MC_TYPES, expression);
+
+		return new StandardCodecExpression(expression, optionalField);
+	}
+
+	/**
+	 * Builds a standard codec expression from a type mirror without parsing type
+	 * names or generic arguments from source strings.
+	 */
+	private CodeBlock buildStandardCodec(
+			TypeMirror type,
+			RecordComponentElement component,
+			boolean selfCodec,
+			GenStandardCodec selectedCodec,
+			CodecSize size,
+			CodecRange range,
+			boolean rootType
+	)
+	{
+		if (isDeclaredType(type, "java.util.Optional"))
+		{
+			reportError(component, "Optional values are supported as record fields, but not nested inside collections.");
+			return null;
+		}
+
+		if (isDeclaredType(type, "java.util.List"))
+		{
+			var arguments = getTypeArguments(type);
+			if (arguments.size() != 1)
+			{
+				reportError(component, "List codec fields must declare exactly one type argument.");
+				return null;
+			}
+			if (range != null)
+			{
+				reportError(component, "@CodecRange can only be applied to a numeric component.");
+				return null;
+			}
+
+			var elementCodec = buildStandardCodec(arguments.get(0), component, selfCodec, selectedCodec, null, null, false);
+			if (elementCodec == null)
+				return null;
+			if (rootType && size != null)
+				return CodeBlock.of("$L.listOf($L, $L)", elementCodec, size.min(), size.max());
+			return CodeBlock.of("$L.listOf()", elementCodec);
+		}
+
+		if (isDeclaredType(type, "java.util.Map"))
+		{
+			var arguments = getTypeArguments(type);
+			if (arguments.size() != 2)
+			{
+				reportError(component, "Map codec fields must declare key and value type arguments.");
+				return null;
+			}
+			if (range != null)
+			{
+				reportError(component, "@CodecRange can only be applied to a numeric component.");
+				return null;
+			}
+
+			var keyCodec = buildStandardCodec(arguments.get(0), component, false, GenStandardCodec.AUTOMATIC, null, null, false);
+			var valueCodec = buildStandardCodec(arguments.get(1), component, selfCodec, selectedCodec, null, null, false);
+			if (keyCodec == null || valueCodec == null)
+				return null;
+
+			CodeBlock mapCodec = CodeBlock.of("$T.strictUnboundedMap($L, $L)", MC_TYPES, keyCodec, valueCodec);
+			if (rootType && size != null)
+			{
+				mapCodec = CodeBlock.of("$T.sizeLimitedMap($L, $L)", MC_TYPES, mapCodec, size.max());
+				if (size.min() > 0)
+					mapCodec = applyMinimumSize(mapCodec, size.min());
+			}
+			return mapCodec;
+		}
+
+		if (range != null)
+		{
+			if (selectedCodec == GenStandardCodec.AUTOMATIC && !selfCodec)
+				return createNativeRangeCodec(type, range, component);
+		}
+
+		if (selfCodec)
+		{
+			if (!(type instanceof DeclaredType declaredType) || !(declaredType.asElement() instanceof TypeElement typeElement))
+			{
+				reportError(component, "@SelfCodec requires a declared type with a static CODEC field.");
+				return null;
+			}
+			return CodeBlock.of("$T.CODEC", ClassName.get(typeElement));
+		}
+
+		var typeKey = getTypeKey(type);
+		var codecTypeMap = codecTypes.get(typeKey);
+		if (codecTypeMap == null)
+		{
+			reportError(component, "No standard codec is registered for component type " + type + ".");
+			return null;
+		}
+
+		var requestedCodec = selectedCodec == GenStandardCodec.AUTOMATIC
+				? defaultCodecTypes.get(typeKey)
+				: selectedCodec;
+		var codecType = codecTypeMap.get(requestedCodec);
+		if (codecType == null)
+		{
+			reportError(component, "Codec " + requestedCodec + " is not registered for component type " + type + ".");
+			return null;
+		}
+
+		var expression = codecType.asExpression();
+		if (range != null)
+			expression = applyRangeValidation(expression, type, range, component);
+		return expression;
+	}
+
+	/**
+	 * Creates the native range codec used for automatically mapped numeric types.
+	 */
+	private CodeBlock createNativeRangeCodec(TypeMirror type, CodecRange range, Element element)
+	{
+		var numericType = getTypeKey(type);
+		var codecType = ClassName.get("com.mojang.serialization", "Codec");
+
+		switch (numericType)
+		{
+			case "byte", "java.lang.Byte" ->
+			{
+				var min = rangeBoundLiteral(numericType, range.min(), element);
+				var max = rangeBoundLiteral(numericType, range.max(), element);
+				return min == null || max == null ? null : createRangeValidation(CodeBlock.of("$T.BYTE", codecType), range, min, max);
+			}
+			case "short", "java.lang.Short" ->
+			{
+				var min = rangeBoundLiteral(numericType, range.min(), element);
+				var max = rangeBoundLiteral(numericType, range.max(), element);
+				return min == null || max == null ? null : createRangeValidation(CodeBlock.of("$T.SHORT", codecType), range, min, max);
+			}
+			case "int", "java.lang.Integer" ->
+			{
+				var min = rangeBoundLiteral(numericType, range.min(), element);
+				var max = rangeBoundLiteral(numericType, range.max(), element);
+				return min == null || max == null
+						? null
+						: CodeBlock.of("$T.intRange($L, $L)", codecType, min, max);
+			}
+			case "long", "java.lang.Long" ->
+			{
+				var min = rangeBoundLiteral(numericType, range.min(), element);
+				var max = rangeBoundLiteral(numericType, range.max(), element);
+				return min == null || max == null ? null : createRangeValidation(CodeBlock.of("$T.LONG", codecType), range, min, max);
+			}
+			case "float", "java.lang.Float" ->
+			{
+				var min = (float)range.min();
+				var max = (float)range.max();
+				if (!Float.isFinite(min) || !Float.isFinite(max))
+				{
+					reportError(element, "@CodecRange bounds for float components must be representable as finite floats.");
+					return null;
+				}
+				return CodeBlock.of("$T.floatRange($L, $L)", MC_TYPES, floatLiteral(min), floatLiteral(max));
+			}
+			case "double", "java.lang.Double" ->
+			{
+				return CodeBlock.of("$T.doubleRange($L, $L)", codecType, doubleLiteral(range.min()), doubleLiteral(range.max()));
+			}
+			default ->
+			{
+				reportError(element, "@CodecRange can only be applied to byte, short, int, long, float, or double components.");
+				return null;
+			}
+		}
+	}
+
+	/**
+	 * Applies an inclusive numeric range to an existing codec expression.
+	 */
+	private CodeBlock applyRangeValidation(CodeBlock codec, TypeMirror type, CodecRange range, Element element)
+	{
+		var numericType = getTypeKey(type);
+		var minLiteral = rangeBoundLiteral(numericType, range.min(), element);
+		var maxLiteral = rangeBoundLiteral(numericType, range.max(), element);
+		if (minLiteral == null || maxLiteral == null)
+		{
+			if (!isNumericType(type))
+				reportError(element, "@CodecRange can only be applied to byte, short, int, long, float, or double components.");
+			return null;
+		}
+		return createRangeValidation(codec, range, minLiteral, maxLiteral);
+	}
+
+	/**
+	 * Formats and validates a range bound for its numeric component type.
+	 */
+	private String rangeBoundLiteral(String numericType, double value, Element element)
+	{
+		return switch (numericType)
+		{
+			case "byte", "java.lang.Byte" -> integerBound(value, Byte.MIN_VALUE, Byte.MAX_VALUE, element);
+			case "short", "java.lang.Short" -> integerBound(value, Short.MIN_VALUE, Short.MAX_VALUE, element);
+			case "int", "java.lang.Integer" -> integerBound(value, Integer.MIN_VALUE, Integer.MAX_VALUE, element);
+			case "long", "java.lang.Long" ->
+			{
+				var bound = integerBound(value, Long.MIN_VALUE, Long.MAX_VALUE, element);
+				yield bound == null ? null : bound + "L";
+			}
+			case "float", "java.lang.Float" ->
+			{
+				var floatValue = (float)value;
+				if (!Float.isFinite(floatValue))
+				{
+					reportError(element, "@CodecRange bounds for float components must be representable as finite floats.");
+					yield null;
+				}
+				yield floatLiteral(floatValue);
+			}
+			case "double", "java.lang.Double" -> doubleLiteral(value);
+			default -> null;
+		};
+	}
+
+	/**
+	 * Creates a validation wrapper around a codec expression.
+	 */
+	private CodeBlock createRangeValidation(CodeBlock codec, CodecRange range, String minLiteral, String maxLiteral)
+	{
+		var dataResultType = ClassName.get("com.mojang.serialization", "DataResult");
+		return CodeBlock.of(
+				"$L.validate(value -> value >= $L && value <= $L ? $T.success(value) : $T.error(() -> $S + value))",
+				codec,
+				minLiteral,
+				maxLiteral,
+				dataResultType,
+				dataResultType,
+				"Value must be within range [" + range.min() + ";" + range.max() + "]: "
+		);
+	}
+
+	/**
+	 * Wraps an explicitly supplied collection codec in size checks.
+	 */
+	private CodeBlock applyCustomCollectionSize(CodeBlock codec, TypeMirror type, CodecSize size)
+	{
+		if (isDeclaredType(type, "java.util.List"))
+		{
+			return CodeBlock.of(
+					"$L.validate(value -> value.size() >= $L && value.size() <= $L ? $T.success(value) : $T.error(() -> $S + value.size()))",
+					codec,
+					size.min(),
+					size.max(),
+					ClassName.get("com.mojang.serialization", "DataResult"),
+					ClassName.get("com.mojang.serialization", "DataResult"),
+					"Collection size must be in range [" + size.min() + ";" + size.max() + "]: "
+			);
+		}
+
+		var mapCodec = CodeBlock.of("$T.sizeLimitedMap($L, $L)", MC_TYPES, codec, size.max());
+		return size.min() == 0 ? mapCodec : applyMinimumSize(mapCodec, size.min());
+	}
+
+	/**
+	 * Adds the minimum-size check not provided by the native maximum-size map codec.
+	 */
+	private CodeBlock applyMinimumSize(CodeBlock codec, int minimum)
+	{
+		var dataResultType = ClassName.get("com.mojang.serialization", "DataResult");
+		return CodeBlock.of(
+				"$L.validate(value -> value.size() >= $L ? $T.success(value) : $T.error(() -> $S + value.size()))",
+				codec,
+				minimum,
+				dataResultType,
+				dataResultType,
+				"Map size must be at least " + minimum + ": "
+		);
+	}
+
+	/**
+	 * Returns true when a type mirror is the named declared type.
+	 */
+	private boolean isDeclaredType(TypeMirror type, String qualifiedName)
+	{
+		if (type.getKind() != TypeKind.DECLARED)
+			return false;
+
+		var declaredType = (DeclaredType)type;
+		return declaredType.asElement() instanceof TypeElement typeElement
+				&& typeElement.getQualifiedName().contentEquals(qualifiedName);
+	}
+
+	/**
+	 * Returns the declared generic arguments of a type mirror.
+	 */
+	private List<? extends TypeMirror> getTypeArguments(TypeMirror type)
+	{
+		return type instanceof DeclaredType declaredType ? declaredType.getTypeArguments() : List.of();
+	}
+
+	/**
+	 * Returns whether the type is a supported list or map collection.
+	 */
+	private boolean isCollectionType(TypeMirror type)
+	{
+		return isDeclaredType(type, "java.util.List") || isDeclaredType(type, "java.util.Map");
+	}
+
+	/**
+	 * Returns a stable lookup key for primitive and declared types.
+	 */
+	private String getTypeKey(TypeMirror type)
+	{
+		if (type.getKind() == TypeKind.DECLARED && ((DeclaredType)type).asElement() instanceof TypeElement typeElement)
+			return typeElement.getQualifiedName().toString();
+		return type.toString();
+	}
+
+	/**
+	 * Returns whether a type mirror is one of the supported numeric types.
+	 */
+	private boolean isNumericType(TypeMirror type)
+	{
+		return switch (getTypeKey(type))
+		{
+			case "byte", "java.lang.Byte", "short", "java.lang.Short", "int", "java.lang.Integer", "long", "java.lang.Long", "float", "java.lang.Float", "double", "java.lang.Double" -> true;
+			default -> false;
+		};
+	}
+
+	/**
+	 * Converts an integral annotation bound into a checked integer literal.
+	 */
+	private String integerBound(double value, long minimum, long maximum, Element element)
+	{
+		var decimal = java.math.BigDecimal.valueOf(value).stripTrailingZeros();
+		if (decimal.scale() > 0)
+		{
+			reportError(element, "Integer codec bounds must be whole numbers.");
+			return null;
+		}
+
+		try
+		{
+			var integer = decimal.longValueExact();
+			if (integer < minimum || integer > maximum)
+			{
+				reportError(element, "@CodecRange bound is outside the range supported by the component type.");
+				return null;
+			}
+			return Long.toString(integer);
+		}
+		catch (ArithmeticException exception)
+		{
+			reportError(element, "@CodecRange bound is outside the range supported by the component type.");
+			return null;
+		}
+	}
+
+	/**
+	 * Formats a float literal for generated Java source.
+	 */
+	private String floatLiteral(float value)
+	{
+		return Float.toString(value) + "F";
+	}
+
+	/**
+	 * Formats a double literal for generated Java source.
+	 */
+	private String doubleLiteral(double value)
+	{
+		return Double.toString(value) + "D";
+	}
+
+	/**
+	 * Resolves a custom codec source annotation to its static Java expression.
+	 */
+	private CodeBlock getCodecSourceExpression(CodecSource codecSource)
+	{
+		if (!(processingEnv.getTypeUtils().asElement(getCodecSourceType(codecSource)) instanceof TypeElement sourceType))
+			return null;
+		return CodeBlock.of("$T.$L", ClassName.get(sourceType), codecSource.member());
+	}
+
+	/**
+	 * Reports a processor error attached to the source element.
+	 */
+	private void reportError(Element element, String message)
+	{
+		processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message, element);
 	}
 
 	/**
@@ -596,23 +1230,9 @@ public class CodecGenerationProcessor extends AbstractProcessor
 
 			var paramName = component.getSimpleName().toString();
 			paramNames.add(paramName);
-			
-			// PacketCodecs.collection(ArrayList::new, PACKET_CODEC, 65536)
-			var classTypeName = nestedCodecType.className().toString();
-			if (classTypeName.startsWith("java.util.List"))
-			{
-				var arrayListType = ClassName.get("java.util", "ArrayList");
 
-				var listArg = ClassName.bestGuess(classTypeName.substring("java.util.List<".length(), classTypeName.length() - 1));
-
-				encodeBuilder.addStatement("$4T.collection(null, $1T.$2L, 65536).encode(registryByteBuf, value.$3L())", listArg, nestedCodecType.elementName(), component.getSimpleName().toString(), MC_PACKET_TYPES);
-				decodeBuilder.addStatement("var $1L = $4T.collection($5T::new, $2T.$3L, 65536).decode(registryByteBuf)", paramName, listArg, nestedCodecType.elementName(), MC_PACKET_TYPES, arrayListType);
-			}
-			else
-			{
-				encodeBuilder.addStatement("$1T.$2L.encode(registryByteBuf, value.$3L())", nestedCodecType.className(), nestedCodecType.elementName(), component.getSimpleName().toString());
-				decodeBuilder.addStatement("var $1L = $2T.$3L.decode(registryByteBuf)", paramName, nestedCodecType.className(), nestedCodecType.elementName());
-			}
+			encodeBuilder.addStatement("$L.encode(registryByteBuf, value.$L())", nestedCodecType.asExpression(), component.getSimpleName().toString());
+			decodeBuilder.addStatement("var $L = $L.decode(registryByteBuf)", paramName, nestedCodecType.asExpression());
 		}
 
 		decodeBuilder.addStatement(
@@ -666,22 +1286,27 @@ public class CodecGenerationProcessor extends AbstractProcessor
 			String friendlyName
 	)
 	{
-		if (component.getAnnotation(SelfCodec.class) != null)
-		{
-			var type = component.asType();
-			var codecType = new CodecType(ClassName.get(type), memberName);
-			log("Requested element %s of type %s use defined %s member within type, using %s: %s".formatted(component.getSimpleName().toString(), type, memberName, friendlyName, codecType));
-			return codecType;
-		}
-
 		var useCodecInstance = Optional.ofNullable(component.getAnnotation(UseCodec.class));
 
 		// If a custom codec is requested, it takes the highest precedence
 		if (useCodecInstance.map(customCodecGetter).filter(src -> !"".equals(src.member())).orElse(null) instanceof CodecSource codecSource)
 		{
-			var customCodecType = new CodecType(ClassName.bestGuess(getCodecSourceType(codecSource).toString()), codecSource.member());
+			var customCodecType = new CodecType(getCodecSourceExpression(codecSource));
 			log("Custom %s requested for %s: %s".formatted(friendlyName, component.getSimpleName().toString(), customCodecType));
 			return customCodecType;
+		}
+
+		if (component.getAnnotation(SelfCodec.class) != null)
+		{
+			var type = component.asType();
+			if (!(type instanceof DeclaredType declaredType) || !(declaredType.asElement() instanceof TypeElement typeElement))
+			{
+				log("Self codec requested for non-declared type %s".formatted(type));
+				return null;
+			}
+			var codecType = new CodecType(ClassName.get(typeElement), memberName);
+			log("Requested element %s of type %s use defined %s member within type, using %s: %s".formatted(component.getSimpleName().toString(), type, memberName, friendlyName, codecType));
+			return codecType;
 		}
 
 		var type = component.asType().toString();

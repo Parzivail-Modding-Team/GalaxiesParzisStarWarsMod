@@ -3,18 +3,22 @@ package dev.pswg.data;
 import dev.pswg.codecgenerator.GenerateCodec;
 import dev.pswg.codecgenerator.SelfCodec;
 import dev.pswg.generated.codecs.IBlasterDatapackDefinitionCodec;
-import dev.pswg.item.BlasterItem;
+import dev.pswg.generated.recordbuilders.IBlasterDatapackDefinitionBuilder;
+import dev.pswg.mutablerecord.MutableRecord;
+
+import java.util.Objects;
 
 /**
- * Defines the format for a blaster datapack JSON entry
+ * Defines the common data format for one blaster datapack entry.
  *
- * @param stats       The stats the blaster preset will use
- * @param attachments The attachments the blaster preset will use
+ * @param stats Stats, ammunition, modes, and configuration for this blaster.
+ * @param attachments HUD, defaults, and attachment options for this blaster.
  */
-@GenerateCodec
+@GenerateCodec(packetCodec = false, strict = true)
+@MutableRecord
 public record BlasterDatapackDefinition(
-		@SelfCodec BlasterItem.StatsComponent stats,
-		@SelfCodec BlasterItem.AvailableAttachmentsComponent attachments
-) implements IBlasterDatapackDefinitionCodec
+		@SelfCodec BlasterStats stats,
+		@SelfCodec BlasterAttachmentSet attachments
+) implements IBlasterDatapackDefinitionCodec, IBlasterDatapackDefinitionBuilder
 {
 }

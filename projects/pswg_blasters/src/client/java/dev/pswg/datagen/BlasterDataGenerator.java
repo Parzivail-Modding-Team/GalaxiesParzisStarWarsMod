@@ -17,9 +17,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
 
 /**
  * The blaster data generator
@@ -32,7 +31,6 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		var pack = generator.createPack();
 
 		DataGenResourceHelper.loadResources(PackType.CLIENT_RESOURCES, G3dModelProvider.SOURCES);
-		DataGenResourceHelper.loadResources(PackType.SERVER_DATA, Blasters.DATAPACK_LOADER);
 
 		pack.addProvider(LangGenerator::new);
 		pack.addProvider(TagGenerator::new);
@@ -81,11 +79,17 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 	 */
 	private static class LangGenerator extends FabricLanguageProvider
 	{
+		/**
+		 * Static translation values for one blaster and its attachment IDs.
+		 */
 		private record BlasterLang(String name, Map<Identifier, String> attachmentLangs)
 		{
 		}
 
-		private final Map<Identifier, BlasterLang> blasterLang = Map.ofEntries(
+		/**
+		 * Static translations for the test blaster.
+		 */
+		private final Map<Identifier, BlasterLang> _blasterLang = Map.ofEntries(
 				Map.entry(Blasters.id("test_blaster"), new BlasterLang(
 						"Test Blaster",
 						Map.ofEntries(
@@ -116,23 +120,15 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			// Model number of each blaster
 			translationBuilder.add(BlasterItem.MISSING_ID, "[unknown model]");
 
-			for (var entry : Blasters.DATAPACK_LOADER.getDefinitions().entrySet())
+			for (var entry : _blasterLang.entrySet())
 			{
-				var blasterEntry = blasterLang.getOrDefault(entry.getKey(), null);
-				if (blasterEntry == null)
-					throw new RuntimeException("Missing blaster lang entry for " + entry.getKey());
-
 				// Add the name of the blaster
-				translationBuilder.add(entry.getKey(), blasterEntry.name());
+				translationBuilder.add(entry.getKey().toLanguageKey(), entry.getValue().name());
 
 				// Add all the attachments
-				for (var attachmentEntry : entry.getValue().attachments().options().entrySet())
+				for (var attachmentEntry : entry.getValue().attachmentLangs().entrySet())
 				{
-					var blasterAttachmentEntry = blasterEntry.attachmentLangs().getOrDefault(attachmentEntry.getKey(), null);
-					if (blasterAttachmentEntry == null)
-						throw new RuntimeException("Missing blaster attachment lang entry for " + attachmentEntry.getKey());
-
-					translationBuilder.add(attachmentEntry.getValue().translationKey(), blasterAttachmentEntry);
+					translationBuilder.add("attachment." + attachmentEntry.getKey().toLanguageKey(), attachmentEntry.getValue());
 				}
 			}
 

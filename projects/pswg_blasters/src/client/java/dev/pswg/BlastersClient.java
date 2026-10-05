@@ -47,6 +47,7 @@ public class BlastersClient implements GalaxiesClientAddon
 	@Override
 	public void onGalaxiesClientReady()
 	{
+		BlasterClientDefinitions.register();
 		EntityRenderers.register(Blasters.BLASTER_BOLT_ENTITY, BlasterBoltEntityRenderer::new);
 
 		BLASTER_HUD_REGISTRY.register(Blasters.DEFAULT_HUD, new DefaultBlasterHudRenderer());
@@ -97,11 +98,15 @@ public class BlastersClient implements GalaxiesClientAddon
 			BlasterItem.getFireCooldownProgress(client.level, stack, GalaxiesClient.getTickDelta())
 			           .ifPresent(value -> Drawables.itemDurability(context, value, x, y - 13, 13, 0x0000FF));
 
-			var optionalStats = BlasterItem.getStats(stack);
+			var optionalStats = BlasterItem.getStats(client.level, stack);
 			if (optionalStats.isEmpty())
 				return;
 
 			var stats = optionalStats.get();
+			if (stats.heat().capacity() <= 0)
+			{
+				return;
+			}
 
 			var state = BlasterItem.getState(stack);
 			if (state.coolingMode() == BlasterItem.CoolingMode.PASSIVE)

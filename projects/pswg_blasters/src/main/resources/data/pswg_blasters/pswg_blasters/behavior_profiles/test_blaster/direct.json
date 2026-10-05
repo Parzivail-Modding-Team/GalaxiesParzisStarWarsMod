@@ -1,0 +1,7 @@
+{
+	"delivery": {
+		"type": "pswg_blasters:hitscan"
+	},
+	"damageType": "pswg_blasters:direct_blaster",
+	"effects": []
+}

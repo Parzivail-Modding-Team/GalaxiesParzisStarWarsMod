@@ -18,6 +18,30 @@
 			"primaryBypassTolerance": 0.1,
 			"secondaryBypassTime": 0.25,
 			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": "pswg_blasters:per_shot",
+			"ingredient": "minecraft:amethyst_shard",
+			"consumption": {
+				"type": "pswg_blasters:item_count",
+				"itemsPerRound": 1
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:rifle",
+			"itemModel": "pswg_blasters:blaster"
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "pswg_blasters:semi"
+					},
+					"behaviorProfile": "pswg_blasters:test_blaster/direct"
+				}
+			]
 		}
 	},
 	"attachments": {
@@ -63,13 +87,7 @@
 				"value": 0.8
 			},
 			"pswg_blasters:e11/cooling": {
-				"translationKey": "attachment.pswg_blasters.e11.cooling",
-				"slots": [
-					"pswg_blasters:internal_slot"
-				],
-				"function": "pswg_blasters:cooling_multiplier",
-				"category": "pswg_blasters:internal_cooling",
-				"value": 1.3
+				"reference": "pswg_blasters:e11/cooling"
 			},
 			"pswg_blasters:e11/rapidfire": {
 				"translationKey": "attachment.pswg_blasters.e11.rapidfire",

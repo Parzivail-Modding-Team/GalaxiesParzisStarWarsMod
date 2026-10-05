@@ -6,15 +6,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the decorated record component should use the provided
- * default value in the codec when none is provided.
+ * Restricts the number of elements in a list or map record component.
  */
 @Target(ElementType.RECORD_COMPONENT)
 @Retention(RetentionPolicy.SOURCE)
-public @interface CodecDefault
+public @interface CodecSize
 {
 	/**
-	 * The Java expression used when the serialized field is absent.
+	 * The minimum inclusive number of elements. Defaults to zero.
 	 */
-	String value();
+	int min() default 0;
+
+	/**
+	 * The maximum inclusive number of elements.
+	 */
+	int max() default Integer.MAX_VALUE;
 }

@@ -7,7 +7,10 @@ import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.*;
+import dev.pswg.data.BlasterAttachmentDefinition;
+import dev.pswg.data.BlasterData;
 import dev.pswg.data.BlasterDatapackDefinition;
+import dev.pswg.data.BlasterStats;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.generated.codecs.*;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
@@ -226,10 +229,11 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		{
 			float identity = function.getCombinator().getIdentity();
 
-			for (var equipped : applied().values())
+			for (var equipped : applied().entrySet())
 			{
-				var equippedValue = options.getOrDefault(equipped, null);
-				if (equippedValue != null && equippedValue.function().equals(function.getId()))
+				var equippedValue = options.get(equipped.getValue());
+				if (equippedValue != null && equippedValue.slots().contains(equipped.getKey())
+						&& equippedValue.function().equals(function.getId()))
 					identity = function.getCombinator().combine(identity, equippedValue.value());
 			}
 
@@ -255,44 +259,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	{
 	}
 
-	/**
-	 * Contains stats related to blaster heating and cooling
-	 *
-	 * @param capacity             The maximum amount of heat units that may be accumulated before overheating.
-	 * @param perRound             The amount of heat units accumulated per shot fired.
-	 * @param drainSpeed           The amount of heat units removed from the blaster per tick while passively cooling
-	 *                             or venting.
-	 * @param overheatPenalty      The amount of "extra" heat units accumulated when the blaster overheats, effectively
-	 *                             delaying the blaster from beginning to cool by {@code overheatPenalty / (overheatDrainSpeed * 20)} seconds.
-	 * @param overheatDrainSpeed   The amount of heat units removed from the blaster per tick while venting due to
-	 *                             an overheat.
-	 * @param passiveCooldownDelay The amount of time, in ticks, after the most recent shot was fired before the
-	 *                             blaster will begin to passively cool without venting.
-	 * @param overchargeBonus      The amount of time, in ticks, the blaster stays in overcharge when the secondary
-	 *                             bypass is triggered.
-	 */
-	@GenerateCodec
-	public record Heat(
-			int capacity,
-			int perRound,
-			float drainSpeed,
-			int overheatPenalty,
-			int overheatDrainSpeed,
-			int passiveCooldownDelay,
-			int overchargeBonus
-	) implements IHeatCodec
-	{
-		public static final Heat DEFAULT = new Heat(
-				100,
-				20,
-				5,
-				60,
-				1,
-				20,
-				40
-		);
-	}
-
 	@GenerateCodec
 	public record Cooling(
 			float primaryBypassTime,
@@ -301,41 +267,21 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			float secondaryBypassTolerance
 	) implements ICoolingCodec
 	{
+		/**
+		 * Zero-valued cooling used when the cooling object is absent.
+		 */
+		public static final Cooling ZERO = new BlasterItem.Cooling(
+				0,
+				0,
+				0,
+				0
+		);
+
 		public static final Cooling DEFAULT = new Cooling(
 				0.7f,
 				0.1f,
 				0.25f,
 				0.05f
-		);
-	}
-
-	/**
-	 * Contains the immutable, intrinsic stats of this particular
-	 * variant of blaster
-	 *
-	 * @param damage               The damage, in hit points (half hearts) a single shot inflicts.
-	 * @param range                The maximum distance, in blocks, a blaster can fire a bolt.
-	 * @param automaticRepeatDelay The minimum time, in ticks, between two bolts firing during automatic fire.
-	 * @param heat                 The heating and heat dissipation stats.
-	 * @param cooling              The cooling bypass stats.
-	 */
-	@GenerateCodec
-	public record StatsComponent(
-			float damage,
-			int range,
-			int automaticRepeatDelay,
-			Identifier fireSound,
-			@SelfCodec Heat heat,
-			@SelfCodec Cooling cooling
-	) implements IStatsComponentCodec
-	{
-		public static final StatsComponent DEFAULT = new StatsComponent(
-				8,
-				48,
-				4,
-				Identifier.withDefaultNamespace("entity.snowball.throw"),
-				Heat.DEFAULT,
-				Cooling.DEFAULT
 		);
 	}
 
@@ -529,23 +475,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		// Set the item name to the model name by default
 		stack.set(DataComponents.ITEM_NAME, Component.translatable(id.toLanguageKey()));
+		stack.set(DataComponents.ITEM_MODEL, definition.stats().configuration().itemModel());
 
 		stack.set(ID, id);
-		stack.set(ATTACHMENTS, createAvailableAttachments(definition.attachments()));
+		var attachments = definition.attachments();
+		stack.set(ATTACHMENTS, new AttachmentsComponent(attachments.hud(), attachments.defaults()));
 
 		return stack;
-	}
-
-	/**
-	 * Creates a new attachments component that equips the default attachments
-	 *
-	 * @param attachments The available attachments
-	 *
-	 * @return A new attachments component that equips the default attachments
-	 */
-	private static AttachmentsComponent createAvailableAttachments(AvailableAttachmentsComponent attachments)
-	{
-		return new AttachmentsComponent(attachments.hud(), attachments.defaults());
 	}
 
 	public BlasterItem(Properties settings)
@@ -554,16 +490,33 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	/**
-	 * Gets the stats of the given blaster
+	 * Gets the modern stats definition of the given blaster.
 	 *
+	 * @param world The world whose current blaster baked is queried
 	 * @param stack The stack to query
 	 *
-	 * @return The blaster's stats
+	 * @return The blaster definition, if its ID is present in the current baked
 	 */
-	public static Optional<StatsComponent> getStats(ItemStack stack)
+	public static Optional<BlasterDatapackDefinition> getDefinition(Level world, ItemStack stack)
 	{
-		return Optional.ofNullable(Blasters.DATAPACK_LOADER.getDefinitions().getOrDefault(stack.get(ID), null))
-		               .map(BlasterDatapackDefinition::stats);
+		var id = stack.get(ID);
+		if (id == null)
+			return Optional.empty();
+
+		return Optional.ofNullable(BlasterData.get(world).blasters().get(id));
+	}
+
+	/**
+	 * Reads the modern stats for the given blaster.
+	 *
+	 * @param world The world whose current blaster baked is queried
+	 * @param stack The stack to query
+	 *
+	 * @return The modern stats, if the stack's blaster ID exists in the baked
+	 */
+	public static Optional<BlasterStats> getStats(Level world, ItemStack stack)
+	{
+		return getDefinition(world, stack).map(BlasterDatapackDefinition::stats);
 	}
 
 	/**
@@ -579,16 +532,83 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	/**
-	 * Gets the available attachments of the given blaster
+	 * Gets the available legacy-compatible attachments of the given blaster; multi-stat definitions are omitted.
 	 *
+	 * @param world The world whose current blaster baked is queried
 	 * @param stack The stack to query
 	 *
 	 * @return The blaster's available attachments
 	 */
-	public static Optional<AvailableAttachmentsComponent> getAvailableAttachments(ItemStack stack)
+	public static Optional<AvailableAttachmentsComponent> getAvailableAttachments(Level world, ItemStack stack)
 	{
-		return Optional.ofNullable(Blasters.DATAPACK_LOADER.getDefinitions().getOrDefault(stack.get(ID), null))
-		               .map(BlasterDatapackDefinition::attachments);
+		var id = stack.get(ID);
+		if (id == null)
+			return Optional.empty();
+
+		var snapshot = BlasterData.get(world);
+		var definition = snapshot.blasters().get(id);
+		if (definition == null)
+			return Optional.empty();
+
+		var resolvedAttachments = snapshot.resolvedAttachments(id);
+		if (resolvedAttachments.isEmpty())
+			return Optional.empty();
+
+		var legacyOptions = new HashMap<Identifier, AttachmentDefinition>();
+		for (var entry : resolvedAttachments.orElseThrow().entrySet())
+		{
+			var modern = entry.getValue();
+			if (modern.function().isEmpty() || modern.value().isEmpty())
+				continue;
+
+			legacyOptions.put(
+					entry.getKey(),
+					new AttachmentDefinition(
+							modern.translationKey(),
+							modern.slots(),
+							modern.function().orElseThrow(),
+							modern.category(),
+							modern.value().orElseThrow()
+					)
+			);
+		}
+
+		var attachments = definition.attachments();
+		return Optional.of(new AvailableAttachmentsComponent(
+				attachments.hud(),
+				attachments.defaults(),
+				Map.copyOf(legacyOptions)
+		));
+	}
+
+	/**
+	 * Gets the currently applied attachment definitions that still resolve within this stack's current blaster baked.
+	 * The result is keyed by equipped slot; stale IDs and definitions that no longer fit their slot are omitted.
+	 *
+	 * @param world The world whose current blaster baked is queried
+	 * @param stack The stack to query
+	 *
+	 * @return Resolved active attachments, or empty if this blaster is absent from the baked
+	 */
+	public static Optional<Map<Identifier, BlasterAttachmentDefinition>> getActiveAttachments(Level world, ItemStack stack)
+	{
+		var id = stack.get(ID);
+		if (id == null)
+			return Optional.empty();
+
+		var resolvedAttachments = BlasterData.get(world).resolvedAttachments(id);
+		if (resolvedAttachments.isEmpty())
+			return Optional.empty();
+
+		var activeAttachments = new HashMap<Identifier, BlasterAttachmentDefinition>();
+		for (var entry : getAttachments(stack).applied().entrySet())
+		{
+			var definition = resolvedAttachments.orElseThrow().get(entry.getValue());
+			if (definition != null && definition.slots().contains(entry.getKey()))
+				activeAttachments.put(entry.getKey(), definition);
+		}
+
+		return Optional.of(Map.copyOf(activeAttachments));
 	}
 
 	/**
@@ -682,7 +702,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (!state.coolingMode.canBypass())
 			return Optional.empty();
 
-		var optionalStats = getStats(stack);
+		var optionalStats = getStats(world, stack);
 		if (optionalStats.isEmpty())
 			return Optional.empty();
 
@@ -692,18 +712,22 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (potentialVentingHeat.isEmpty())
 			return Optional.empty();
 
-		var ventingHeat = potentialVentingHeat.get() / state.lastVentingHeat();
+		var lastVentingHeat = state.lastVentingHeat();
+		if (lastVentingHeat <= 0)
+			return Optional.empty();
+
+		var ventingHeat = potentialVentingHeat.get() / lastVentingHeat;
 
 		var attachments = getAttachments(stack);
 
 		var primaryBypassTime = stats.cooling().primaryBypassTime();
 		var primaryBypassTolerance = getScaledPrimaryBypassTolerance(stats, attachments);
-		if (Math.abs(ventingHeat - primaryBypassTime) <= primaryBypassTolerance)
+		if (primaryBypassTime > 0 && Math.abs(ventingHeat - primaryBypassTime) <= primaryBypassTolerance)
 			return Optional.of(CoolingBypass.PRIMARY);
 
 		var secondaryBypassTime = stats.cooling().secondaryBypassTime();
 		var secondaryBypassTolerance = getScaledSecondaryBypassTolerance(stats, attachments);
-		if (Math.abs(ventingHeat - secondaryBypassTime) <= secondaryBypassTolerance)
+		if (secondaryBypassTime > 0 && Math.abs(ventingHeat - secondaryBypassTime) <= secondaryBypassTolerance)
 			return Optional.of(CoolingBypass.SECONDARY);
 
 		return Optional.empty();
@@ -721,6 +745,9 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static boolean canFire(Level world, LivingEntity user, ItemStack stack)
 	{
+		if (getDefinition(world, stack).isEmpty())
+			return false;
+
 		var state = getState(stack);
 
 		var isWaitingToFire = state.fireCooldown() >= world.getGameTime();
@@ -745,14 +772,16 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	{
 		var state = getState(stack);
 
-		var optionalStats = getStats(stack);
+		var optionalStats = getStats(world, stack);
 		if (optionalStats.isEmpty())
 			return Optional.empty();
 
 		var stats = optionalStats.get();
+		if (stats.heat().overchargeBonus() <= 0)
+			return Optional.empty();
 
 		var overchargeStart = state.overchargeStart();
-		var overchargeLength = stats.heat.overchargeBonus();
+		var overchargeLength = stats.heat().overchargeBonus();
 		var time = world.getGameTime() + tickDelta;
 
 		if (time > overchargeStart + overchargeLength)
@@ -776,15 +805,17 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static Optional<Float> getAccumulatedHeat(Level world, ItemStack stack, float tickDelta)
 	{
-		var state = getState(stack);
-		if (state.coolingMode() != CoolingMode.PASSIVE)
-			return Optional.empty();
-
-		var optionalStats = getStats(stack);
+		var optionalStats = getStats(world, stack);
 		if (optionalStats.isEmpty())
 			return Optional.empty();
 
 		var stats = optionalStats.get();
+		if (stats.heat().capacity() <= 0)
+			return Optional.of(0f);
+
+		var state = getState(stack);
+		if (state.coolingMode() != CoolingMode.PASSIVE)
+			return Optional.empty();
 
 		var attachments = getAttachments(stack);
 
@@ -811,15 +842,19 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static Optional<Float> getVentingHeat(Level world, ItemStack stack, float tickDelta)
 	{
-		var state = getState(stack);
-		if (state.coolingMode() == CoolingMode.PASSIVE)
-			return Optional.empty();
-
-		var optionalStats = getStats(stack);
+		var optionalStats = getStats(world, stack);
 		if (optionalStats.isEmpty())
 			return Optional.empty();
 
 		var stats = optionalStats.get();
+		if (stats.heat().capacity() <= 0)
+			return Optional.empty();
+
+		var state = getState(stack);
+		if (state.coolingMode() == CoolingMode.PASSIVE)
+			return Optional.empty();
+		if (state.lastVentingHeat() <= 0)
+			return Optional.empty();
 
 		var attachments = getAttachments(stack);
 
@@ -861,19 +896,19 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The minimum repeat interval, in ticks
 	 */
-	private static int getScaledAutoRepeatDelay(StatsComponent stats, AttachmentsComponent attachments)
+	private static int getScaledAutoRepeatDelay(BlasterStats stats, AttachmentsComponent attachments)
 	{
 		// TODO: attachment mutations
 		return stats.automaticRepeatDelay();
 	}
 
-	private static float getScaledPrimaryBypassTolerance(StatsComponent stats, AttachmentsComponent attachments)
+	private static float getScaledPrimaryBypassTolerance(BlasterStats stats, AttachmentsComponent attachments)
 	{
 		// TODO: attachment mutations
 		return stats.cooling().primaryBypassTolerance();
 	}
 
-	private static float getScaledSecondaryBypassTolerance(StatsComponent stats, AttachmentsComponent attachments)
+	private static float getScaledSecondaryBypassTolerance(BlasterStats stats, AttachmentsComponent attachments)
 	{
 		// TODO: attachment mutations
 		return stats.cooling().secondaryBypassTolerance();
@@ -888,7 +923,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The delay before passive cooldown begins, in ticks
 	 */
-	private static int getScaledPassiveCooldownDelay(StatsComponent stats, AttachmentsComponent attachments)
+	private static int getScaledPassiveCooldownDelay(BlasterStats stats, AttachmentsComponent attachments)
 	{
 		// TODO: attachment mutations
 		return stats.heat().passiveCooldownDelay();
@@ -903,7 +938,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The passive drain speed, in units per tick
 	 */
-	private static float getScaledHeatDrainSpeed(StatsComponent stats, AttachmentsComponent attachments)
+	private static float getScaledHeatDrainSpeed(BlasterStats stats, AttachmentsComponent attachments)
 	{
 		// TODO: attachment mutations
 		return stats.heat().drainSpeed();
@@ -918,7 +953,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @return The overheated drain speed, in units per tick
 	 */
-	private static float getScaledOverheatDrainSpeed(StatsComponent stats, AttachmentsComponent attachments)
+	private static float getScaledOverheatDrainSpeed(BlasterStats stats, AttachmentsComponent attachments)
 	{
 		// TODO: attachment mutations
 		return stats.heat().overheatDrainSpeed();
@@ -990,6 +1025,9 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	public InteractionResult use(Level world, Player user, InteractionHand hand)
 	{
 		var stack = user.getItemInHand(hand);
+		if (getDefinition(world, stack).isEmpty())
+			return InteractionResult.FAIL;
+
 		var state = getState(stack);
 
 		if (!world.isClientSide())
@@ -1013,6 +1051,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		// TODO: dryfire sound when no ammunition
 
 		ItemStack itemStack = user.getItemInHand(hand);
+		if (getDefinition(world, itemStack).isEmpty())
+			return InteractionResult.PASS;
 
 		if (!canFire(world, user, itemStack))
 			return InteractionResult.PASS;
@@ -1020,14 +1060,14 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		var state = getState(itemStack);
 		var attachments = getAttachments(itemStack);
 
-		var optionalStats = getStats(itemStack);
+		var optionalStats = getStats(world, itemStack);
 		if (optionalStats.isEmpty())
 		{
 			Blasters.LOGGER.warn("Blaster stats not found for blaster {}", itemStack);
 			return InteractionResult.FAIL;
 		}
 
-		var optionalAvailableAttachments = getAvailableAttachments(itemStack);
+		var optionalAvailableAttachments = getAvailableAttachments(world, itemStack);
 		if (optionalAvailableAttachments.isEmpty())
 		{
 			Blasters.LOGGER.warn("Blaster available attachments not found for blaster {}", itemStack);
@@ -1040,6 +1080,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		var timestamp = world.getGameTime();
 
 		var coolingStatus = getCoolingStatus(world, itemStack, 0);
+		var heatEnabled = stats.heat().capacity() > 0;
 
 		if (coolingStatus.coolingMode() == CoolingMode.PASSIVE && state.coolingMode() != CoolingMode.PASSIVE)
 			state = state.withCooling(CoolingMode.PASSIVE, timestamp);
@@ -1138,7 +1179,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var totalHeat = coolingStatus.totalHeat();
 
-		if (getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
+		if (heatEnabled && getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
 
 		if (world instanceof ServerLevel serverWorld)
@@ -1162,18 +1203,21 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (user instanceof IRecoilEntity recoilEntity)
 			recoilEntity.pswg$setRecoilTime(timestamp);
 
-		world.playSound(
-				user,
-				user.getX(),
-				user.getY(),
-				user.getZ(),
-				Holder.direct(SoundEvent.createVariableRangeEvent(stats.fireSound())),
-				SoundSource.NEUTRAL,
-				1,
-				RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
-		);
+		if (stats.fireSound().isPresent())
+		{
+			world.playSound(
+					user,
+					user.getX(),
+					user.getY(),
+					user.getZ(),
+					Holder.direct(SoundEvent.createVariableRangeEvent(stats.fireSound().orElseThrow())),
+					SoundSource.NEUTRAL,
+					1,
+					RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
+			);
+		}
 
-		if (totalHeat > stats.heat().capacity())
+		if (heatEnabled && totalHeat > stats.heat().capacity())
 		{
 			world.playSound(
 					user,
@@ -1203,10 +1247,20 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	@Override
 	public ItemStack invokePrimaryAction(ItemStack stack, Level world, LivingEntity user)
 	{
+		var optionalStats = getStats(world, stack);
+		if (optionalStats.isEmpty())
+			return stack;
+
+		var heat = optionalStats.orElseThrow().heat();
+		if (heat.capacity() <= 0 || heat.overheatDrainSpeed() <= 0)
+			return stack;
+
 		var timestamp = world.getGameTime();
 
 		var coolingStatus = getCoolingStatus(world, stack, 0);
 		if (coolingStatus.coolingMode().isCooling())
+			return stack;
+		if (coolingStatus.totalHeat() <= 0)
 			return stack;
 
 		var state = getState(stack);

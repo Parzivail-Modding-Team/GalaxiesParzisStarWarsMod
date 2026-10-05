@@ -1,0 +1,68 @@
+{
+	"archetype": "pswg_blasters:rifle",
+	"poseDefinitions": {
+		"pswg_blasters:rifle/standing_carry": {
+			"weaponTransform": {"translation": [0.0, 0.0, 0.0], "rotation": [0.0, 0.0, 0.0], "scale": [1.0, 1.0, 1.0]},
+			"boneTransforms": {"rightArm": {"rotation": [-20.0, 0.0, 0.0]}},
+			"gripTransforms": {"mainHandGrip": {"translation": [0.0, 0.0, 0.0]}},
+			"armMask": ["mainArm", "supportArm"]
+		},
+		"pswg_blasters:rifle/patrol": {
+			"weaponTransform": {"translation": [0.08, -0.05, 0.02], "rotation": [12.0, 8.0, -4.0]},
+			"boneTransforms": {"rightArm": {"rotation": [-12.0, 0.0, 0.0]}},
+			"armMask": ["mainArm", "supportArm"]
+		},
+		"pswg_blasters:rifle/standing_ads": {
+			"weaponTransform": {"translation": [0.0, 0.0, 0.0], "rotation": [0.0, 0.0, 0.0]},
+			"boneTransforms": {"rightArm": {"rotation": [0.0, 0.0, 0.0]}, "leftArm": {"rotation": [0.0, 0.0, 0.0]}},
+			"armMask": ["mainArm", "supportArm"]
+		},
+		"pswg_blasters:rifle/crouch": {
+			"weaponTransform": {"translation": [0.0, -0.08, 0.0], "rotation": [4.0, 0.0, 0.0]},
+			"armMask": []
+		},
+		"pswg_blasters:rifle/running_low_ready": {
+			"weaponTransform": {"translation": [0.0, -0.12, 0.0], "rotation": [18.0, 0.0, 0.0]},
+			"boneTransforms": {"rightArm": {"rotation": [-35.0, 0.0, 0.0]}, "leftArm": {"rotation": [-35.0, 0.0, 0.0]}},
+			"armMask": ["mainArm", "supportArm"]
+		},
+		"pswg_blasters:rifle/holstered_back": {
+			"weaponTransform": {"translation": [0.0, 0.12, -0.18], "rotation": [15.0, 0.0, 180.0]},
+			"armMask": []
+		}
+	},
+	"rows": [
+		{"layer": "locomotion", "when": {"locomotion": "idle"}, "pose": "pswg_blasters:rifle/standing_carry"},
+		{"layer": "weapon_state", "when": {"weaponState": "patrol"}, "pose": "pswg_blasters:rifle/patrol"},
+		{"layer": "weapon_state", "when": {"weaponState": "ads"}, "pose": "pswg_blasters:rifle/standing_ads"},
+		{"layer": "posture", "when": {"posture": "crouching"}, "pose": "pswg_blasters:rifle/crouch"},
+		{"layer": "locomotion", "when": {"locomotion": "sprinting"}, "pose": "pswg_blasters:rifle/running_low_ready"},
+		{"layer": "holster", "when": {"weaponState": "holstered"}, "pose": "pswg_blasters:rifle/holstered_back"}
+	],
+	"transitions": [
+		{"from": "pswg_blasters:rifle/standing_carry", "to": "pswg_blasters:rifle/standing_ads", "track": "pswg_blasters:rifle/ads_transition"},
+		{"from": "pswg_blasters:rifle/standing_ads", "to": "pswg_blasters:rifle/running_low_ready", "track": "pswg_blasters:rifle/run_exit_ads"}
+	],
+	"tracks": [
+		{
+			"id": "pswg_blasters:rifle/ads_transition",
+			"durationTicks": 4,
+			"loop": "once",
+			"easing": "smoothstep",
+			"channels": [
+				{"target": "rightArm.rotation", "keyframes": [{"timeTicks": 0, "value": [-20.0, 0.0, 0.0]}, {"timeTicks": 4, "value": [0.0, 0.0, 0.0]}]},
+				{"target": "weaponRoot.rotation", "keyframes": [{"timeTicks": 0, "value": [12.0, 8.0, -4.0]}, {"timeTicks": 4, "value": [0.0, 0.0, 0.0]}]}
+			]
+		},
+		{
+			"id": "pswg_blasters:rifle/run_exit_ads",
+			"durationTicks": 4,
+			"loop": "once",
+			"easing": "smoothstep",
+			"channels": [
+				{"target": "weaponRoot.translation", "keyframes": [{"timeTicks": 0, "value": [0.0, 0.0, 0.0]}, {"timeTicks": 4, "value": [0.0, -0.12, 0.0]}]},
+				{"target": "rightArm.rotation", "keyframes": [{"timeTicks": 0, "value": [0.0, 0.0, 0.0]}, {"timeTicks": 4, "value": [-20.0, 0.0, 0.0]}]}
+			]
+		}
+	]
+}

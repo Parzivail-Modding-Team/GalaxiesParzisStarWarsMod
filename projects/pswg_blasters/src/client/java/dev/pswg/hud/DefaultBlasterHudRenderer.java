@@ -50,11 +50,13 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 
 		assert client.level != null;
 
-		var optionalStats = BlasterItem.getStats(stack);
+		var optionalStats = BlasterItem.getStats(client.level, stack);
 		if (optionalStats.isEmpty())
 			return;
 
 		var stats = optionalStats.get();
+		if (stats.heat().capacity() <= 0)
+			return;
 
 		var state = BlasterItem.getState(stack);
 

@@ -1,11 +1,10 @@
 package dev.pswg.item;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.resources.Identifier;
@@ -27,8 +26,9 @@ public record HasAttachmentProperty(Identifier attachmentSlot, Identifier attach
 	@Override
 	public boolean get(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext)
 	{
-		var attachments = BlasterItem.getAttachments(stack);
-		return attachmentId.equals(attachments.applied().getOrDefault(attachmentSlot(), null));
+		var level = world != null ? world : Minecraft.getInstance().level;
+		return attachmentId.equals(BlasterItem.getAttachments(stack).applied().get(attachmentSlot))
+		       && BlasterItem.getActiveAttachments(level, stack).map(active -> active.containsKey(attachmentSlot)).orElse(false);
 	}
 
 	@Override

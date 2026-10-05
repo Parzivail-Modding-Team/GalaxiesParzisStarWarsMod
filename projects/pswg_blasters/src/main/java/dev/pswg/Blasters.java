@@ -4,23 +4,16 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.configuration.BlastersConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
-import dev.pswg.data.BlasterDatapackDefinition;
-import dev.pswg.data.CodecDataLoader;
-import dev.pswg.data.IdentifierUtil;
+import dev.pswg.data.BlasterData;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.registry.Registrar;
 import dev.pswg.sound.BlasterSounds;
-import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
-import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput;
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import org.slf4j.Logger;
 
@@ -57,14 +50,6 @@ public final class Blasters implements GalaxiesAddon
 	 */
 	public static final IConfigContainer<BlastersConfig> CONFIG = new MemoryConfigContainer<>(new BlastersConfig());
 
-	public static final CodecDataLoader<BlasterDatapackDefinition> DATAPACK_LOADER = new CodecDataLoader<>(
-			id("data"),
-			"blasters",
-			true,
-			IdentifierUtil::isJsonFile,
-			BlasterDatapackDefinition.CODEC
-	);
-
 	/**
 	 * An item tag that contains all PSWG module and addon blasters
 	 */
@@ -85,25 +70,19 @@ public final class Blasters implements GalaxiesAddon
 			                  .updateInterval(20)
 	);
 
-	private static void addBlastersToTab(FabricCreativeModeTabOutput itemGroup)
-	{
-		for (var definition : DATAPACK_LOADER.getDefinitions().entrySet())
-		{
-			LOGGER.debug("Registering blaster definition: {}", definition.getKey());
-			itemGroup.accept(BlasterItem.createStack(definition.getKey(), definition.getValue()));
-		}
-	}
-
 	@Override
 	public void onGalaxiesReady()
 	{
-		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.COMBAT)
-		               .register(Blasters::addBlastersToTab);
-
-		ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(DATAPACK_LOADER.getId(), DATAPACK_LOADER);
+		BlasterData.register();
 
 		BlasterSounds.register();
 
 		LOGGER.info("Module initialized");
+	}
+
+	@Override
+	public void onGalaxiesFinalizing()
+	{
+		BlasterData.freezeTypes();
 	}
 }

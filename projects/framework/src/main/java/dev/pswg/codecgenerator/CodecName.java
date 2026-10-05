@@ -6,15 +6,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the decorated record component should use the provided
- * default value in the codec when none is provided.
+ * Overrides the serialized field name for a record component.
  */
 @Target(ElementType.RECORD_COMPONENT)
 @Retention(RetentionPolicy.SOURCE)
-public @interface CodecDefault
+public @interface CodecName
 {
 	/**
-	 * The Java expression used when the serialized field is absent.
+	 * The name used for the component in the serialized record.
 	 */
 	String value();
 }

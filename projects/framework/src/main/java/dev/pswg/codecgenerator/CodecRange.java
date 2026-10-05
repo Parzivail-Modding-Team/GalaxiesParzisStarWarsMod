@@ -6,15 +6,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the decorated record component should use the provided
- * default value in the codec when none is provided.
+ * Restricts a numeric record component to an inclusive range.
  */
 @Target(ElementType.RECORD_COMPONENT)
 @Retention(RetentionPolicy.SOURCE)
-public @interface CodecDefault
+public @interface CodecRange
 {
 	/**
-	 * The Java expression used when the serialized field is absent.
+	 * The inclusive minimum value.
 	 */
-	String value();
+	double min();
+
+	/**
+	 * The inclusive maximum value.
+	 */
+	double max() default Float.MAX_VALUE;
 }
