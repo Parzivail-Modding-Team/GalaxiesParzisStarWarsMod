@@ -20,10 +20,10 @@
 			"secondaryBypassTolerance": 0.05
 		},
 		"ammo": {
-			"feed": "pswg_blasters:per_shot",
+			"feed": {"type": "per_shot"},
 			"ingredient": "minecraft:amethyst_shard",
 			"consumption": {
-				"type": "pswg_blasters:item_count",
+				"type": "item_count",
 				"itemsPerRound": 1
 			}
 		},
@@ -37,7 +37,7 @@
 				{
 					"id": "pswg_blasters:semi",
 					"trigger": {
-						"type": "pswg_blasters:semi"
+						"type": "semi"
 					},
 					"behaviorProfile": "pswg_blasters:test_blaster/direct"
 				}
@@ -55,36 +55,32 @@
 				"slots": [
 					"pswg_blasters:scope_slot"
 				],
-				"function": "pswg_blasters:zoom_multiplier",
 				"category": "pswg_blasters:scope",
-				"value": 1.5
+				"modifiers": [{"function": "zoom_multiplier", "value": 1.5}]
 			},
 			"pswg_blasters:e11/scope_x": {
 				"translationKey": "attachment.pswg_blasters.e11.scope_x",
 				"slots": [
 					"pswg_blasters:scope_slot"
 				],
-				"function": "pswg_blasters:zoom_multiplier",
 				"category": "pswg_blasters:scope",
-				"value": 2.5
+				"modifiers": [{"function": "zoom_multiplier", "value": 2.5}]
 			},
 			"pswg_blasters:e11/bipod": {
 				"translationKey": "attachment.pswg_blasters.e11.bipod",
 				"slots": [
 					"pswg_blasters:barrel_slot"
 				],
-				"function": "pswg_blasters:recoil_multiplier",
 				"category": "pswg_blasters:barrel",
-				"value": 0.8
+				"modifiers": [{"function": "recoil_multiplier", "value": 0.8}]
 			},
 			"pswg_blasters:e11/barrel_d": {
 				"translationKey": "attachment.pswg_blasters.e11.barrel_d",
 				"slots": [
 					"pswg_blasters:barrel_slot"
 				],
-				"function": "pswg_blasters:spread_multiplier",
 				"category": "pswg_blasters:barrel",
-				"value": 0.8
+				"modifiers": [{"function": "spread_multiplier", "value": 0.8}]
 			},
 			"pswg_blasters:e11/cooling": {
 				"reference": "pswg_blasters:e11/cooling"
@@ -94,9 +90,8 @@
 				"slots": [
 					"pswg_blasters:internal_slot"
 				],
-				"function": "pswg_blasters:fire_rate_multiplier",
 				"category": "pswg_blasters:internal_ordnance_config",
-				"value": 1.5
+				"modifiers": [{"function": "fire_rate_multiplier", "value": 1.5}]
 			}
 		}
 	}

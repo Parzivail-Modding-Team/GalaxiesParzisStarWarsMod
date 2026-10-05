@@ -1,32 +1,26 @@
 package dev.pswg.item;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.UnboundedMapCodec;
+import com.mojang.serialization.DataResult;
 import dev.pswg.Blasters;
 import dev.pswg.attributes.AttributeUtil;
 import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.*;
-import dev.pswg.data.BlasterAttachmentDefinition;
-import dev.pswg.data.BlasterData;
-import dev.pswg.data.BlasterDatapackDefinition;
-import dev.pswg.data.BlasterStats;
+import dev.pswg.data.*;
 import dev.pswg.entity.BlasterBoltEntity;
-import dev.pswg.generated.codecs.*;
+import dev.pswg.generated.codecs.IAttachmentsComponentCodec;
+import dev.pswg.generated.codecs.ICoolingCodec;
+import dev.pswg.generated.codecs.IStateComponentCodec;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.interaction.IRecoilEntity;
-import dev.pswg.math.Combinator;
 import dev.pswg.math.GMath;
+import dev.pswg.math.ModifierOperation;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
 import dev.pswg.sound.BlasterSounds;
 import dev.pswg.world.TickConstants;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
-
-import java.util.*;
-import java.util.function.UnaryOperator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -56,6 +50,13 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler, IHandAnimationAware
 {
@@ -143,39 +144,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	/**
-	 * Contains the immutable attachment data for the blaster
-	 *
-	 * @param hud      The ID of the HUD renderer this blaster should display
-	 * @param defaults The default values of each slot in the blaster
-	 * @param options  The list of attachment definitions for this blaster
-	 */
-	@GenerateCodec
-	public record AvailableAttachmentsComponent(
-			Identifier hud,
-			@UseCodec(
-					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_MAP"),
-					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_MAP")
-			)
-			Map<Identifier, Identifier> defaults,
-			@UseCodec(
-					customCodec = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_CODEC"),
-					customPacket = @CodecSource(source = AvailableAttachmentsComponent.class, member = "OPTIONS_PACKET_CODEC")
-			)
-			Map<Identifier, AttachmentDefinition> options
-	) implements IAvailableAttachmentsComponentCodec
-	{
-		/**
-		 * The codec for the `options` field
-		 */
-		public static final UnboundedMapCodec<Identifier, AttachmentDefinition> OPTIONS_CODEC = Codec.unboundedMap(Identifier.CODEC, AttachmentDefinition.CODEC);
-
-		/**
-		 * The packet codec for the `options` field
-		 */
-		public static final StreamCodec<RegistryFriendlyByteBuf, Map<Identifier, AttachmentDefinition>> OPTIONS_PACKET_CODEC = ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, AttachmentDefinition.PACKET_CODEC);
-	}
-
-	/**
 	 * Contains the infrequently-modified attachment data for the blaster
 	 *
 	 * @param hud     The ID of the HUD renderer this blaster should display
@@ -195,78 +163,32 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				Blasters.DEFAULT_HUD,
 				Map.of()
 		);
-
-		/**
-		 * Gets the attachment definition applied in the given slot for the given stack
-		 *
-		 * @param slot The slot where the attachment would be applied
-		 *
-		 * @return An optional attachment definition if one is applied, empty otherwise
-		 */
-		public Optional<AttachmentDefinition> getAttachmentInSlot(Map<Identifier, AttachmentDefinition> options, Identifier slot)
-		{
-			// Find the ID of the attachment in the given slot
-			Identifier appliedEntryId = applied().getOrDefault(slot, null);
-
-			if (appliedEntryId == null)
-				return Optional.empty();
-
-			// Find the attachment definition for the applied attachment
-			var appliedDefinition = options.getOrDefault(appliedEntryId, null);
-			return Optional.ofNullable(appliedDefinition);
-		}
-
-		/**
-		 * Gets a combined value of the attachment by stacking all equipped
-		 * attachments of the given function
-		 *
-		 * @param options  The available attachment options
-		 * @param function The attachment function to evaluate
-		 *
-		 * @return The evaluated attachment combinator
-		 */
-		public float getAttachmentsValue(Map<Identifier, AttachmentDefinition> options, AttachmentFunction function)
-		{
-			float identity = function.getCombinator().getIdentity();
-
-			for (var equipped : applied().entrySet())
-			{
-				var equippedValue = options.get(equipped.getValue());
-				if (equippedValue != null && equippedValue.slots().contains(equipped.getKey())
-						&& equippedValue.function().equals(function.getId()))
-					identity = function.getCombinator().combine(identity, equippedValue.value());
-			}
-
-			return identity;
-		}
 	}
 
 	/**
-	 * Contains the attachment options
+	 * Fractional bypass windows; absence is represented by the containing stats Optional.
 	 */
-	@GenerateCodec
-	public record AttachmentDefinition(
-			String translationKey,
-			@UseCodec(
-					customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "IDENTIFIER_LIST"),
-					customPacket = @CodecSource(source = GalaxiesPacketCodecs.class, member = "IDENTIFIER_LIST")
-			)
-			List<Identifier> slots,
-			Identifier function,
-			Identifier category,
-			@CodecDefault("0f") float value
-	) implements IAttachmentDefinitionCodec
-	{
-	}
-
-	@GenerateCodec
+	@GenerateCodec(strict = true)
 	public record Cooling(
-			float primaryBypassTime,
-			float primaryBypassTolerance,
-			float secondaryBypassTime,
-			float secondaryBypassTolerance
+			@CodecRange(min = 0, max = 1) float primaryBypassTime,
+			@CodecRange(min = 0, max = 1) float primaryBypassTolerance,
+			@CodecRange(min = 0, max = 1) float secondaryBypassTime,
+			@CodecRange(min = 0, max = 1) float secondaryBypassTolerance
 	) implements ICoolingCodec
 	{
+		/**
+		 * Keeps both complete windows within their normalized domain after scalar codec validation.
+		 */
+		public static final Codec<Cooling> CODEC = ICoolingCodec.CODEC.validate(
+				value ->
+						value.primaryBypassTime() - value.primaryBypassTolerance() >= 0
+						&& value.primaryBypassTime() + value.primaryBypassTolerance() <= 1
+						&& value.secondaryBypassTime() - value.secondaryBypassTolerance() >= 0
+						&& value.secondaryBypassTime() + value.secondaryBypassTolerance() <= 1
+						? DataResult.success(value)
+						: DataResult.error(() -> "Cooling bypass windows must fit within 0..1")
+		);
+
 		/**
 		 * Zero-valued cooling used when the cooling object is absent.
 		 */
@@ -341,47 +263,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		{
 			return this.withCoolingMode(mode)
 			           .withCooldownStart(timestamp);
-		}
-	}
-
-	/**
-	 * Represents an attachment function that can stack values between multiple attachments
-	 */
-	public enum AttachmentFunction
-	{
-		ZOOM_MULTIPLIER(Blasters.id("zoom_multiplier"), Combinator.GEOMETRIC),
-		RECOIL_MULTIPLIER(Blasters.id("recoil_multiplier"), Combinator.GEOMETRIC),
-		SPREAD_MULTIPLIER(Blasters.id("spread_multiplier"), Combinator.GEOMETRIC),
-		COOLING_MULTIPLIER(Blasters.id("cooling_multiplier"), Combinator.GEOMETRIC),
-		FIRE_RATE_MULTIPLIER(Blasters.id("fire_rate_multiplier"), Combinator.GEOMETRIC);
-
-		private final Identifier id;
-		private final Combinator combinator;
-
-		AttachmentFunction(Identifier id, Combinator combinator)
-		{
-			this.id = id;
-			this.combinator = combinator;
-		}
-
-		/**
-		 * Gets the function ID
-		 *
-		 * @return the function ID
-		 */
-		public Identifier getId()
-		{
-			return id;
-		}
-
-		/**
-		 * Gets the combining function
-		 *
-		 * @return The combinator
-		 */
-		public Combinator getCombinator()
-		{
-			return combinator;
 		}
 	}
 
@@ -532,56 +413,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	/**
-	 * Gets the available legacy-compatible attachments of the given blaster; multi-stat definitions are omitted.
-	 *
-	 * @param world The world whose current blaster baked is queried
-	 * @param stack The stack to query
-	 *
-	 * @return The blaster's available attachments
-	 */
-	public static Optional<AvailableAttachmentsComponent> getAvailableAttachments(Level world, ItemStack stack)
-	{
-		var id = stack.get(ID);
-		if (id == null)
-			return Optional.empty();
-
-		var snapshot = BlasterData.get(world);
-		var definition = snapshot.blasters().get(id);
-		if (definition == null)
-			return Optional.empty();
-
-		var resolvedAttachments = snapshot.resolvedAttachments(id);
-		if (resolvedAttachments.isEmpty())
-			return Optional.empty();
-
-		var legacyOptions = new HashMap<Identifier, AttachmentDefinition>();
-		for (var entry : resolvedAttachments.orElseThrow().entrySet())
-		{
-			var modern = entry.getValue();
-			if (modern.function().isEmpty() || modern.value().isEmpty())
-				continue;
-
-			legacyOptions.put(
-					entry.getKey(),
-					new AttachmentDefinition(
-							modern.translationKey(),
-							modern.slots(),
-							modern.function().orElseThrow(),
-							modern.category(),
-							modern.value().orElseThrow()
-					)
-			);
-		}
-
-		var attachments = definition.attachments();
-		return Optional.of(new AvailableAttachmentsComponent(
-				attachments.hud(),
-				attachments.defaults(),
-				Map.copyOf(legacyOptions)
-		));
-	}
-
-	/**
 	 * Gets the currently applied attachment definitions that still resolve within this stack's current blaster baked.
 	 * The result is keyed by equipped slot; stale IDs and definitions that no longer fit their slot are omitted.
 	 *
@@ -609,6 +440,27 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		}
 
 		return Optional.of(Map.copyOf(activeAttachments));
+	}
+
+	/**
+	 * Temp scale until the stat modifier evaluation is implemented.
+	 */
+	private static float getTempRecoilScale(Level world, ItemStack stack)
+	{
+		var scale = 1.0F;
+		for (var attachment : getActiveAttachments(world, stack).orElse(Map.of()).values())
+		{
+			for (var modifier : attachment.modifiers())
+			{
+				if (
+						modifier.function() == BlasterStatFunction.RECOIL_MULTIPLIER
+						&& modifier.operation() == ModifierOperation.MULTIPLY_TOTAL
+						&& modifier.modifierCondition().equals(BlasterAttachmentDefinition.ModifierCondition.UNCONDITIONAL)
+				)
+					scale *= modifier.value();
+			}
+		}
+		return scale;
 	}
 
 	/**
@@ -707,6 +559,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			return Optional.empty();
 
 		var stats = optionalStats.get();
+		if (stats.cooling().isEmpty())
+			return Optional.empty();
 
 		var potentialVentingHeat = getVentingHeat(world, stack, tickDelta);
 		if (potentialVentingHeat.isEmpty())
@@ -720,14 +574,14 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var attachments = getAttachments(stack);
 
-		var primaryBypassTime = stats.cooling().primaryBypassTime();
+		var primaryBypassTime = stats.cooling().orElseThrow().primaryBypassTime();
 		var primaryBypassTolerance = getScaledPrimaryBypassTolerance(stats, attachments);
-		if (primaryBypassTime > 0 && Math.abs(ventingHeat - primaryBypassTime) <= primaryBypassTolerance)
+		if (Math.abs(ventingHeat - primaryBypassTime) <= primaryBypassTolerance)
 			return Optional.of(CoolingBypass.PRIMARY);
 
-		var secondaryBypassTime = stats.cooling().secondaryBypassTime();
+		var secondaryBypassTime = stats.cooling().orElseThrow().secondaryBypassTime();
 		var secondaryBypassTolerance = getScaledSecondaryBypassTolerance(stats, attachments);
-		if (secondaryBypassTime > 0 && Math.abs(ventingHeat - secondaryBypassTime) <= secondaryBypassTolerance)
+		if (Math.abs(ventingHeat - secondaryBypassTime) <= secondaryBypassTolerance)
 			return Optional.of(CoolingBypass.SECONDARY);
 
 		return Optional.empty();
@@ -905,13 +759,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	private static float getScaledPrimaryBypassTolerance(BlasterStats stats, AttachmentsComponent attachments)
 	{
 		// TODO: attachment mutations
-		return stats.cooling().primaryBypassTolerance();
+		return stats.cooling().orElseThrow().primaryBypassTolerance();
 	}
 
 	private static float getScaledSecondaryBypassTolerance(BlasterStats stats, AttachmentsComponent attachments)
 	{
 		// TODO: attachment mutations
-		return stats.cooling().secondaryBypassTolerance();
+		return stats.cooling().orElseThrow().secondaryBypassTolerance();
 	}
 
 	/**
@@ -1067,15 +921,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			return InteractionResult.FAIL;
 		}
 
-		var optionalAvailableAttachments = getAvailableAttachments(world, itemStack);
-		if (optionalAvailableAttachments.isEmpty())
-		{
-			Blasters.LOGGER.warn("Blaster available attachments not found for blaster {}", itemStack);
-			return InteractionResult.FAIL;
-		}
-
 		var stats = optionalStats.get();
-		var availableAttachments = optionalAvailableAttachments.get();
 
 		var timestamp = world.getGameTime();
 
@@ -1188,7 +1034,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 			// TODO: fixed recoil mean/std pattern for first n shots
 
-			var recoilScale = attachments.getAttachmentsValue(availableAttachments.options(), AttachmentFunction.RECOIL_MULTIPLIER);
+			var recoilScale = getTempRecoilScale(world, itemStack);
 
 			var recoil = new Vector3f(
 					-(float)RandomHelper.nextGaussian(world.getRandom(), 3.6, 0.2),

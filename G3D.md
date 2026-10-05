@@ -104,7 +104,7 @@ This complete example describes one triangle and a socket on its root group:
 - `version`, `materials`, `nodes`, and `meshes` are required. `sockets` defaults to an empty list.
 - Model-local names are case-sensitive strings. External resources and layer choices use Minecraft's `Identifier` codec.
 - A node's `parent` names another node. Omit it for a root. Multiple roots and unordered source nodes are allowed.
-- Missing transforms mean identity. Translation, rotation, and scale fields may also be omitted individually. Minecraft's quaternion codec also accepts its axis-angle form.
+- Missing transforms mean identity. Translation, rotation, and scale fields may also be omitted individually. The shared core transform codec accepts a three-element Euler XYZ rotation in degrees or a four-element quaternion in x/y/z/w order, plus Minecraft's native axis-angle form. Encoded rotations are canonical quaternions. The same transform representation is used by numeric humanoid/item poses; those pose translations are already in blocks and do not run through source compilation.
 - Material layers default to native cutout. `tintIndex` defaults to `-1`, `lightEmission` to `0`, and `doubleSided` to `false`.
 - Positions and source translations use **16 units per block**. Compiled geometry, compiled transforms, and runtime pose inputs use **blocks**. Normals and scales are dimensionless.
 - Axes are right-handed: `+X` east, `+Y` up, `+Z` south. Front faces are counter-clockwise. UV `[0, 0]` is the image's top-left corner; runtime does not flip it.

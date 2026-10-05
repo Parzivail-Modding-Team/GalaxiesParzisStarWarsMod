@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Overrides the serialized field name for a record component.
+ * Overrides the serialized name for a record component or enum constant.
  */
-@Target(ElementType.RECORD_COMPONENT)
+@Target({ ElementType.FIELD, ElementType.RECORD_COMPONENT })
 @Retention(RetentionPolicy.SOURCE)
 public @interface CodecName
 {

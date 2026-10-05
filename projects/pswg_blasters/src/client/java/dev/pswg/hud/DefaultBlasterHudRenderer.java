@@ -109,9 +109,9 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 						-1
 				);
 
-				if (coolingStatus.coolingMode().canBypass())
+				if (coolingStatus.coolingMode().canBypass() && stats.cooling().isPresent())
 				{
-					var profile = stats.cooling();
+					var profile = stats.cooling().orElseThrow();
 					var primaryBypassStartX = (int)((profile.primaryBypassTime() - profile.primaryBypassTolerance()) * COOLDOWN_WIDTH);
 					var primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance() * COOLDOWN_WIDTH);
 					var secondaryBypassStartX = (int)((profile.secondaryBypassTime() - profile.secondaryBypassTolerance()) * COOLDOWN_WIDTH);

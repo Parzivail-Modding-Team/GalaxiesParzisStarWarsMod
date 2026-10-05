@@ -13,6 +13,7 @@ kind = "java"
 dependency = "framework"
 provided_annotation_processor_classes = [
 	"dev.pswg.codecgenerator.CodecGenerationProcessor",
+	"dev.pswg.codecgenerator.EnumCodecGenerationProcessor",
 	"dev.pswg.mutablerecord.MutableRecordProcessor",
 ]
 generated_sources = true

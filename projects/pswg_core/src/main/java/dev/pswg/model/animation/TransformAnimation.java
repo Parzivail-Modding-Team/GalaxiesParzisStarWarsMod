@@ -1,347 +1,191 @@
 package dev.pswg.model.animation;
 
-import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.*;
-import dev.pswg.generated.codecs.IChannelCodec;
-import dev.pswg.generated.codecs.ITransformAnimationCodec;
-import dev.pswg.generated.codecs.IVectorKeyframeCodec;
+import dev.pswg.generated.codecs.*;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.*;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Generic bounded vector animation data backed by Minecraft keyframes and easing.
- * It describes data and exposes a native sampler adapter; it does not implement
- * any renderer or pose-composition system.
+ * Reusable numeric transform animation.
  *
- * @param id            Resource identifier for this animation.
- * @param durationTicks Animation duration in ticks.
+ * @param id            Animation identifier.
+ * @param durationTicks Duration in ticks.
  * @param loop          Playback loop mode.
- * @param easing        Native keyframe easing selected from the contract aliases.
- * @param channels      Independently targeted vector channels.
+ * @param easing        Closed easing choice.
+ * @param channels      Independently targeted ordered vector channels.
  */
-@GenerateCodec(packetCodec = false, strict = true)
+@GenerateCodec(strict = true)
 public record TransformAnimation(
 		Identifier id,
-		@CodecRange(min = 1) int durationTicks,
-		@SelfCodec
-		@CodecDefault("dev.pswg.model.animation.TransformAnimation.LoopMode.ONCE")
-		LoopMode loop,
-		@UseCodec(customCodec = @CodecSource(source = TransformAnimation.Codecs.class, member = "EASING_CODEC"))
-		@CodecDefault("net.minecraft.util.EasingType.LINEAR")
-		EasingType easing,
-		@SelfCodec
-		@CodecSize(min = 1)
-		List<Channel> channels
+		@CodecRange(min = 1, max = 12000) int durationTicks,
+		@CodecDefault("dev.pswg.model.animation.TransformAnimation.LoopMode.ONCE") LoopMode loop,
+		@CodecDefault("dev.pswg.model.animation.TransformAnimation.Easing.LINEAR") Easing easing,
+		@SelfCodec @CodecSize(min = 1, max = 128) @CodecUnique(key = "target") List<Channel> channels
 ) implements ITransformAnimationCodec
 {
 	/**
-	 * Generic clip loop modes serialized with the profile contract's names.
+	 * Supported playback policies.
 	 */
-	public enum LoopMode implements StringRepresentable
+	@GenerateEnumCodec
+	public enum LoopMode implements ILoopModeCodec
 	{
 		/**
-		 * Plays through once and then holds the last keyframe.
+		 * Play once, then hold the final frame.
 		 */
-		ONCE("once"),
+		ONCE,
 
 		/**
-		 * Repeats from the first keyframe after the duration.
+		 * Repeat from the start.
 		 */
-		LOOP("loop"),
+		LOOP,
 
 		/**
-		 * Reverses direction on alternating duration intervals.
+		 * Alternate forwards and backwards.
 		 */
-		PING_PONG("ping_pong");
+		PING_PONG
+	}
 
-		public static final Codec<LoopMode> CODEC = StringRepresentable.fromEnum(LoopMode::values);
+	/**
+	 * Fixed author-facing easing choices with native sampler adapters.
+	 */
+	@GenerateEnumCodec
+	public enum Easing implements IEasingCodec
+	{
+		/**
+		 * Constant interpolation speed.
+		 */
+		LINEAR,
 
 		/**
-		 * Serialized loop-mode name.
+		 * Smooth acceleration and deceleration.
 		 */
-		private final String _serializedName;
+		SMOOTHSTEP,
 
-		LoopMode(String serializedName)
+		/**
+		 * Quadratic acceleration.
+		 */
+		EASE_IN,
+
+		/**
+		 * Quadratic deceleration.
+		 */
+		EASE_OUT;
+
+		/**
+		 * Returns the function expected by Minecraft's keyframe track.
+		 */
+		public EasingType nativeEasing()
 		{
-			_serializedName = serializedName;
-		}
-
-		/**
-		 * Gets the serialized loop-mode name.
-		 */
-		@Override
-		public String getSerializedName()
-		{
-			return _serializedName;
+			return switch (this)
+			{
+				case LINEAR -> EasingType.LINEAR;
+				case SMOOTHSTEP -> value -> (float)Mth.smoothstep(value);
+				case EASE_IN -> EasingType.IN_QUAD;
+				case EASE_OUT -> EasingType.OUT_QUAD;
+			};
 		}
 	}
 
 	/**
-	 * One generic target and its ordered native vector keyframes.
-	 *
-	 * @param target    Consumer-defined channel target string.
-	 * @param keyframes Ordered vector keyframes using Minecraft's native record.
+	 * A consumer-defined transform/component path and its strictly ordered frames.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record Channel(
-			@UseCodec(customCodec = @CodecSource(source = TransformAnimation.Codecs.class, member = "TARGET_CODEC"))
-			String target,
-			@UseCodec(customCodec = @CodecSource(source = TransformAnimation.Codecs.class, member = "KEYFRAMES_CODEC"))
-			@CodecSize(min = 2)
-			List<Keyframe<Vector3fc>> keyframes
+			@UseCodec(codec = GenStandardCodec.NON_EMPTY_STRING) String target,
+			@UseCodec(
+					customCodec = @CodecSource(source = TransformAnimation.class, member = "KEYFRAMES_CODEC"),
+					customPacket = @CodecSource(source = TransformAnimation.class, member = "KEYFRAMES_PACKET_CODEC")
+			)
+			@CodecSize(min = 2) List<Keyframe<Vector3fc>> keyframes
 	) implements IChannelCodec
 	{
-		public static final Codec<Channel> CODEC = GalaxiesCodecs.validate(IChannelCodec.CODEC, Channel::validate);
-
-		public Channel
-		{
-			Objects.requireNonNull(target);
-			keyframes = keyframes.stream()
-			                     .map(keyframe -> new Keyframe<Vector3fc>(keyframe.ticks(), new Vector3f(keyframe.value())))
-			                     .toList();
-		}
-
-		/**
-		 * Validates generic target-string and keyframe ordering constraints.
-		 */
-		private void validate()
-		{
-			Codecs.validateTarget(target);
-			Codecs.validateKeyframeOrder(keyframes);
-		}
 	}
 
 	/**
-	 * Wire record preserving the contract's {@code timeTicks} key for native keyframes.
-	 *
-	 * @param ticks Keyframe tick, serialized as {@code timeTicks}.
-	 * @param value Finite vector value.
+	 * Contract-shaped adapter for a native vector keyframe.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record VectorKeyframe(
-			@CodecName("timeTicks")
-			@CodecRange(min = 0)
-			int ticks,
-			@UseCodec(customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "FINITE_VECTOR3F"))
-			Vector3fc value
+			@CodecName("timeTicks") @CodecRange(min = 0) int ticks,
+			@UseCodec(customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "FINITE_VECTOR3F")) Vector3fc value
 	) implements IVectorKeyframeCodec
 	{
-		public VectorKeyframe
+		/**
+		 * Adapts a native frame without copying or mutating its read-only vector.
+		 */
+		public static VectorKeyframe fromNative(Keyframe<Vector3fc> frame)
 		{
-			value = new Vector3f(Objects.requireNonNull(value));
+			return new VectorKeyframe(frame.ticks(), frame.value());
 		}
 
 		/**
-		 * Converts this contract-shaped wire value to Minecraft's keyframe record.
+		 * Creates the native sampler frame.
 		 */
 		public Keyframe<Vector3fc> toNative()
 		{
-			return new Keyframe<>(ticks, new Vector3f(value));
-		}
-
-		/**
-		 * Adapts a Minecraft keyframe to the contract-shaped wire record.
-		 */
-		public static VectorKeyframe fromNative(Keyframe<Vector3fc> keyframe)
-		{
-			return new VectorKeyframe(keyframe.ticks(), keyframe.value());
+			return new Keyframe<>(ticks, value);
 		}
 	}
 
 	/**
-	 * Codec sources shared by the generated animation records.
+	 * Validates only the ordering relationship between already validated frames.
 	 */
-	public static final class Codecs
+	private static DataResult<List<Keyframe<Vector3fc>>> orderedFrames(List<Keyframe<Vector3fc>> frames)
 	{
-
-		/**
-		 * Bounded nonempty channel-target string codec; target interpretation is consumer-specific.
-		 */
-		public static final Codec<String> TARGET_CODEC = Codec.sizeLimitedString(256).validate(
-				target ->
-						!target.isBlank()
-						? DataResult.success(target)
-						: DataResult.error(() -> "Animation targets must be nonempty")
-		);
-
-		/**
-		 * Core smoothstep easing function, independent of blaster code.
-		 */
-		public static final EasingType SMOOTHSTEP = value -> (float)Mth.smoothstep(value);
-
-		/**
-		 * Closed contract easing aliases mapped to Minecraft's easing functions.
-		 */
-		public static final Codec<EasingType> EASING_CODEC = Codec.STRING.comapFlatMap(
-				Codecs::easingForName,
-				Codecs::nameForEasing
-		);
-
-		/**
-		 * Codec adapting contract-shaped wire frames to Minecraft keyframe records.
-		 */
-		public static final Codec<Keyframe<Vector3fc>> KEYFRAME_CODEC = VectorKeyframe.CODEC.xmap(
-				VectorKeyframe::toNative,
-				VectorKeyframe::fromNative
-		);
-		/**
-		 * Codec for lists of native keyframes in the contract's object shape.
-		 */
-		public static final Codec<List<Keyframe<Vector3fc>>> KEYFRAMES_CODEC = KEYFRAME_CODEC.listOf();
-
-		/**
-		 * Maps one supported contract alias to the native easing function.
-		 */
-		private static DataResult<EasingType> easingForName(String name)
+		for (var index = 1; index < frames.size(); index++)
 		{
-			return switch (name)
-			{
-				case "linear" -> DataResult.success(EasingType.LINEAR);
-				case "smoothstep" -> DataResult.success(SMOOTHSTEP);
-				case "ease_in" -> DataResult.success(EasingType.IN_QUAD);
-				case "ease_out" -> DataResult.success(EasingType.OUT_QUAD);
-				default -> DataResult.error(() -> "Unknown transform easing '" + name + "'");
-			};
+			if (frames.get(index).ticks() <= frames.get(index - 1).ticks())
+				return DataResult.error(() -> "Keyframe times must be strictly increasing");
 		}
 
-		/**
-		 * Gets the contract alias for one of the supported native easing instances.
-		 */
-		private static String nameForEasing(EasingType easing)
-		{
-			if (easing == EasingType.LINEAR)
-			{
-				return "linear";
-			}
-
-			if (easing == SMOOTHSTEP)
-			{
-				return "smoothstep";
-			}
-
-			if (easing == EasingType.IN_QUAD)
-			{
-				return "ease_in";
-			}
-
-			if (easing == EasingType.OUT_QUAD)
-			{
-				return "ease_out";
-			}
-
-			throw new IllegalArgumentException("Unsupported transform easing " + easing);
-		}
-
-		/**
-		 * Validates a generic target string before channel data is used.
-		 */
-		private static void validateTarget(String target)
-		{
-			Preconditions.checkArgument(!target.isBlank(), "Animation targets must be nonempty");
-		}
-
-		/**
-		 * Validates generic channel keyframe limits, finite values, and strict time order.
-		 */
-		private static void validateKeyframeOrder(List<Keyframe<Vector3fc>> keyframes)
-		{
-			Preconditions.checkArgument(keyframes.size() >= 2 && keyframes.size() <= 32,
-			                            "Animation channel keyframes must contain 2..32 entries");
-			var previous = -1;
-			for (var keyframe : keyframes)
-			{
-				Preconditions.checkArgument(keyframe.ticks() > previous,
-				                            "Keyframe times must be unique and strictly increasing");
-				previous = keyframe.ticks();
-				Preconditions.checkArgument(Float.isFinite(keyframe.value().x())
-				                            && Float.isFinite(keyframe.value().y())
-				                            && Float.isFinite(keyframe.value().z()),
-				                            "Keyframe values must have finite axes");
-			}
-		}
-
-		/**
-		 * Prevents instances of this codec-holder utility.
-		 */
-		private Codecs()
-		{
-		}
+		return DataResult.success(frames);
 	}
 
 	/**
-	 * Strict codec wrapped with semantic checks for duration, endpoints, and channel uniqueness.
+	 * Validates clip endpoints after its field codecs have decoded channel contents.
 	 */
-	public static final Codec<TransformAnimation> CODEC = GalaxiesCodecs.validate(
-			ITransformAnimationCodec.CODEC,
-			TransformAnimation::validate
-	);
-
-	/**
-	 * Copies channel inputs to preserve animation immutability.
-	 */
-	public TransformAnimation
+	private static DataResult<TransformAnimation> validate(TransformAnimation animation)
 	{
-		Objects.requireNonNull(id);
-		Objects.requireNonNull(loop);
-		Objects.requireNonNull(easing);
-		channels = List.copyOf(channels);
-	}
-
-	/**
-	 * Validates generic duration, uniqueness, and each channel's endpoint contract.
-	 */
-	private void validate()
-	{
-		Preconditions.checkArgument(durationTicks >= 1 && durationTicks <= 12000,
-		                            "Animation durationTicks must be in [1, 12000]");
-		Preconditions.checkArgument(!channels.isEmpty() && channels.size() <= 128,
-		                            "Animation channels must contain 1..128 entries");
-		var targets = new HashSet<String>();
-		for (var channel : channels)
+		for (var channel : animation.channels())
 		{
-			channel.validate();
-			Preconditions.checkArgument(targets.add(channel.target()), "Duplicate animation target " + channel.target());
-			Preconditions.checkArgument(channel.keyframes().getFirst().ticks() == 0,
-			                            "Animation channel " + channel.target() + " must start at tick 0");
-			Preconditions.checkArgument(channel.keyframes().getLast().ticks() == durationTicks,
-			                            "Animation channel " + channel.target() + " must end at durationTicks");
-			for (var keyframe : channel.keyframes())
-			{
-				Preconditions.checkArgument(keyframe.ticks() <= durationTicks,
-				                            "Keyframe exceeds durationTicks in channel " + channel.target());
-				Preconditions.checkArgument(Float.isFinite(keyframe.value().x())
-				                            && Float.isFinite(keyframe.value().y())
-				                            && Float.isFinite(keyframe.value().z()),
-				                            "Keyframe values must have finite axes");
-			}
+			if (channel.keyframes().getFirst().ticks() != 0 || channel.keyframes().getLast().ticks() != animation.durationTicks())
+				return DataResult.error(() -> "Channel " + channel.target() + " must span tick 0 through durationTicks");
 		}
+		return DataResult.success(animation);
 	}
 
+	public static final Codec<Keyframe<Vector3fc>> KEYFRAME_CODEC = VectorKeyframe.CODEC.xmap(VectorKeyframe::toNative, VectorKeyframe::fromNative);
+
+	public static final Codec<List<Keyframe<Vector3fc>>> KEYFRAMES_CODEC = KEYFRAME_CODEC.listOf(1, Integer.MAX_VALUE).validate(TransformAnimation::orderedFrames);
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, Keyframe<Vector3fc>> KEYFRAME_PACKET_CODEC = VectorKeyframe.PACKET_CODEC
+			.map(VectorKeyframe::toNative, VectorKeyframe::fromNative);
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, List<Keyframe<Vector3fc>>> KEYFRAMES_PACKET_CODEC = KEYFRAME_PACKET_CODEC
+			.apply(net.minecraft.network.codec.ByteBufCodecs.list(32))
+			.map(List::copyOf, java.util.function.Function.identity());
+
+	public static final Codec<TransformAnimation> CODEC = ITransformAnimationCodec.CODEC.validate(TransformAnimation::validate);
+
 	/**
-	 * Maps elapsed ticks to the bounded clip interval for this loop mode. Pass the
-	 * returned tick to a sampler produced by {@link #bakeSampler(Channel)}.
-	 *
-	 * @param elapsedTicks Elapsed clip ticks, including negative values.
-	 *
-	 * @return A sample tick in {@code 0..durationTicks}.
+	 * Maps elapsed ticks into this clip's playback interval.
 	 */
 	public long sampleTicks(long elapsedTicks)
 	{
-		validate();
 		return switch (loop)
 		{
-			case ONCE -> Math.max(0L, Math.min((long)durationTicks, elapsedTicks));
-			case LOOP -> Math.floorMod(elapsedTicks, (long)durationTicks);
+			case ONCE -> Math.clamp(elapsedTicks, 0L, durationTicks);
+			case LOOP -> Math.floorMod(elapsedTicks, durationTicks);
 			case PING_PONG ->
 			{
 				var phase = Math.floorMod(elapsedTicks, durationTicks * 2L);
@@ -351,18 +195,11 @@ public record TransformAnimation(
 	}
 
 	/**
-	 * Bakes one channel through Minecraft's native keyframe sampler and linear vector lerp.
-	 * Loop behavior is applied by {@link #sampleTicks(long)} before sampling.
-	 *
-	 * @param channel Channel belonging to this animation.
-	 *
-	 * @return Minecraft's native sampler for the channel.
+	 * Bakes a channel using Minecraft's native vector interpolation.
 	 */
 	public KeyframeTrackSampler<Vector3fc> bakeSampler(Channel channel)
 	{
-		validate();
-		Preconditions.checkArgument(channels.contains(channel), "Channel does not belong to animation " + id);
-		return new KeyframeTrack<>(channel.keyframes(), easing).bakeSampler(
+		return new KeyframeTrack<>(channel.keyframes(), easing.nativeEasing()).bakeSampler(
 				Optional.empty(),
 				(alpha, from, to) -> new Vector3f(from).lerp(to, alpha)
 		);

@@ -3,17 +3,19 @@ package dev.pswg.data;
 import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import dev.pswg.Blasters;
 import dev.pswg.codecgenerator.CodecDefault;
 import dev.pswg.codecgenerator.GenerateCodec;
 import dev.pswg.codecgenerator.SelfCodec;
 import dev.pswg.generated.codecs.IBlasterAttachmentSetCodec;
 import dev.pswg.generated.codecs.IReferenceFieldsCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Blaster attachment options and defaults.
@@ -22,7 +24,7 @@ import java.util.Objects;
  * @param defaults Slot-ID to attachment-ID selections applied to new blasters.
  * @param options  Attachment-ID to inline or shared-reference option map.
  */
-@GenerateCodec(packetCodec = false, strict = true)
+@GenerateCodec(strict = true)
 public record BlasterAttachmentSet(
 		@CodecDefault("dev.pswg.data.BlasterAttachmentSet.DEFAULT_HUD")
 		Identifier hud,
@@ -52,6 +54,15 @@ public record BlasterAttachmentSet(
 					                           return Either.right(new ReferenceFields(reference.referenceId()));
 				                           }
 		                           );
+		/**
+		 * Binary option form; the boolean discriminates inline from shared reference.
+		 */
+		StreamCodec<RegistryFriendlyByteBuf, Option> PACKET_CODEC = ByteBufCodecs.BOOL.<RegistryFriendlyByteBuf>cast().dispatch(
+				option -> option instanceof Inline,
+				inline -> inline
+				          ? BlasterAttachmentDefinition.PACKET_CODEC.map(Inline::new, Inline::definition)
+				          : Identifier.STREAM_CODEC.map(Reference::new, Reference::referenceId)
+		);
 	}
 
 	/**
@@ -79,7 +90,7 @@ public record BlasterAttachmentSet(
 	/**
 	 * Default attachment HUD ID.
 	 */
-	public static final Identifier DEFAULT_HUD = Identifier.fromNamespaceAndPath("pswg_blasters", "default");
+	public static final Identifier DEFAULT_HUD = Blasters.id("default");
 
 	/**
 	 * Resolves local options against the shared attachment table and validates defaults and cross-option conflicts.
@@ -116,6 +127,13 @@ public record BlasterAttachmentSet(
 			);
 
 			resolvedAttachments.put(optionId, definition);
+		}
+
+		for (var entry : defaults.entrySet())
+		{
+			var attachment = resolvedAttachments.get(entry.getValue());
+			Preconditions.checkArgument(attachment != null && attachment.slots().contains(entry.getKey()),
+			                            "Default attachment %s does not resolve in slot %s", entry.getValue(), entry.getKey());
 		}
 
 		return resolvedAttachments;

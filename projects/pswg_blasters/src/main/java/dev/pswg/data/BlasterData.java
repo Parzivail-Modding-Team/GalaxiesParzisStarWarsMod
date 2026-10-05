@@ -1,5 +1,6 @@
 package dev.pswg.data;
 
+import dev.pswg.Blasters;
 import dev.pswg.networking.BlasterDefinitionsPayload;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
@@ -12,7 +13,6 @@ import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.reloader.SimpleReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +49,7 @@ public final class BlasterData
 			);
 
 			var snapshot = BakedBlasterDefinition.fromLookup(lookup, candidateTags);
-			return new Prepared(snapshot, BlasterDefinitionsPayload.prepare(snapshot));
+			return new Prepared(snapshot, BlasterDefinitionsPayload.prepare(snapshot, lookup));
 		}
 
 		@Override
@@ -69,12 +69,12 @@ public final class BlasterData
 		DynamicRegistries.registerReloadable(BEHAVIOR_PROFILES, BlasterBehaviorProfile.CODEC);
 		DynamicRegistries.registerReloadable(STANCE_PROFILES, BlasterStanceProfile.CODEC);
 
-		DataResourceLoader.get().registerReloadListener(id("definitions"), new Reloader());
+		DataResourceLoader.get().registerReloadListener(Blasters.id("definitions"), new Reloader());
 
 		PayloadTypeRegistry.clientboundPlay().registerLarge(
 				BlasterDefinitionsPayload.TYPE,
 				BlasterDefinitionsPayload.CODEC,
-				BlasterDefinitionsPayload.MAX_JSON_BYTES + 1024
+				BlasterDefinitionsPayload.MAX_PACKET_BYTES + 1024
 		);
 
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> synchronize(player));
@@ -93,9 +93,7 @@ public final class BlasterData
 	 */
 	public static void freezeTypes()
 	{
-		BlasterStats.freezeTypes();
 		BlasterBehaviorProfile.freezeTypes();
-		BlasterStatFunctions.freezeTypes();
 	}
 
 	/**
@@ -126,38 +124,30 @@ public final class BlasterData
 	{
 		if (ServerPlayNetworking.canSend(player, BlasterDefinitionsPayload.TYPE))
 		{
-			var prepared = ((DataResourceStore)player.level().getServer()).getOrThrow(SNAPSHOT);
+			var prepared = player.level().getServer().getOrThrow(SNAPSHOT);
 			ServerPlayNetworking.send(player, prepared.payload());
 		}
 	}
 
 	/**
-	 * Creates registry/resource identifiers without initializing item registration.
-	 */
-	private static Identifier id(String path)
-	{
-		return Identifier.fromNamespaceAndPath("pswg_blasters", path);
-	}
-
-	/**
 	 * Native reloadable weapon definitions.
 	 */
-	public static final ResourceKey<Registry<BlasterDatapackDefinition>> BLASTERS = ResourceKey.createRegistryKey(id("blasters"));
+	public static final ResourceKey<Registry<BlasterDatapackDefinition>> BLASTERS = ResourceKey.createRegistryKey(Blasters.id("blasters"));
 
 	/**
 	 * Native reloadable shared attachment definitions.
 	 */
-	public static final ResourceKey<Registry<BlasterAttachmentDefinition>> ATTACHMENTS = ResourceKey.createRegistryKey(id("attachments"));
+	public static final ResourceKey<Registry<BlasterAttachmentDefinition>> ATTACHMENTS = ResourceKey.createRegistryKey(Blasters.id("attachments"));
 
 	/**
 	 * Native reloadable behavior definitions.
 	 */
-	public static final ResourceKey<Registry<BlasterBehaviorProfile>> BEHAVIOR_PROFILES = ResourceKey.createRegistryKey(id("behavior_profiles"));
+	public static final ResourceKey<Registry<BlasterBehaviorProfile>> BEHAVIOR_PROFILES = ResourceKey.createRegistryKey(Blasters.id("behavior_profiles"));
 
 	/**
 	 * Native reloadable numeric pose definitions.
 	 */
-	public static final ResourceKey<Registry<BlasterStanceProfile>> STANCE_PROFILES = ResourceKey.createRegistryKey(id("stance_profiles"));
+	public static final ResourceKey<Registry<BlasterStanceProfile>> STANCE_PROFILES = ResourceKey.createRegistryKey(Blasters.id("stance_profiles"));
 
 	/**
 	 * Per-resource-generation store key, shared across dimensions of one server instance.

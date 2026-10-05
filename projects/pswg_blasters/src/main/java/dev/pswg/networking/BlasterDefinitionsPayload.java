@@ -1,100 +1,68 @@
 package dev.pswg.networking;
 
-import com.google.common.base.Preconditions;
-import com.mojang.serialization.JsonOps;
+import dev.pswg.Blasters;
 import dev.pswg.data.BakedBlasterDefinition;
-import dev.pswg.data.BlasterDatapackDefinition;
 import dev.pswg.data.BlasterDefinitionData;
-import dev.pswg.item.crafting.IngredientSnapshots;
+import io.netty.buffer.Unpooled;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.util.StrictJsonParser;
-
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Blaster definition payload.
+ * Standalone ID/value projection encoded with generated and native packet codecs.
  */
-public record BlasterDefinitionsPayload(String json) implements CustomPacketPayload
+public record BlasterDefinitionsPayload(BlasterDefinitionData data) implements CustomPacketPayload
 {
 	/**
-	 * Serialize
+	 * Preflights the exact binary payload against the candidate registry context before it can be published.
 	 */
-	public static BlasterDefinitionsPayload prepare(BakedBlasterDefinition snapshot)
+	public static BlasterDefinitionsPayload prepare(BakedBlasterDefinition snapshot, HolderLookup.Provider lookup)
 	{
-		var blasters = new HashMap<Identifier, BlasterDatapackDefinition>();
+		var registries = lookup.listRegistries().map(
+				registry ->
+				{
+					HolderLookup.RegistryLookup<?> current = registry;
+					while (current instanceof HolderLookup.RegistryLookup.Delegate<?> delegate)
+						current = delegate.parent();
+					return (Registry<?>)current;
+				}
+		).toList();
 
-		for (var entry : snapshot.blasters().entrySet())
+		var buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), new RegistryAccess.ImmutableRegistryAccess(registries));
+		try
 		{
-			var definition = entry.getValue();
-			var stats = definition.stats();
-			var ammo = stats.ammo();
-
-			// Resolve ingredients
-			var directAmmo = ammo.withIngredient(IngredientSnapshots.resolve(ammo.ingredient(), Map.of()));
-
-			blasters.put(entry.getKey(), definition.withStats(stats.withAmmo(directAmmo)));
+			var payload = new BlasterDefinitionsPayload(snapshot.data());
+			CODEC.encode(buffer, payload);
+			return payload;
 		}
-
-		var data = snapshot.data();
-		var projection = new BlasterDefinitionData(
-				data.generation(),
-				blasters,
-				data.attachments(),
-				data.behaviorProfiles(),
-				data.stanceProfiles()
-		);
-
-		var ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
-
-		var payload = new BlasterDefinitionsPayload(BlasterDefinitionData.CODEC.encodeStart(ops, projection).getOrThrow().toString());
-		payload.decodeSnapshot();
-
-		return payload;
+		finally
+		{
+			buffer.release();
+		}
 	}
 
 	/**
-	 * Deserialize
+	 * Resolves projection references once; decoding has already produced the typed data.
 	 */
 	public BakedBlasterDefinition decodeSnapshot()
 	{
-		var ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
-		var data = BlasterDefinitionData.CODEC.parse(ops, StrictJsonParser.parse(json)).getOrThrow();
 		return new BakedBlasterDefinition(data);
 	}
 
 	/**
-	 * Writes a bounded UTF-8 byte string; the native large-payload transport handles splitting.
+	 * Maximum binary definition data, exclusive of its small length prefix.
 	 */
-	private void encode(RegistryFriendlyByteBuf buffer)
-	{
-		buffer.writeByteArray(json.getBytes(StandardCharsets.UTF_8));
-	}
+	public static final int MAX_PACKET_BYTES = 8 * 1024 * 1024;
 
 	/**
-	 * Reads only the bounded application data before invoking any JSON/definition decoder.
+	 * Common payload type.
 	 */
-	private static BlasterDefinitionsPayload decode(RegistryFriendlyByteBuf buffer)
-	{
-		return new BlasterDefinitionsPayload(new String(buffer.readByteArray(), StandardCharsets.UTF_8));
-	}
+	public static final Type<BlasterDefinitionsPayload> TYPE = new Type<>(Blasters.id("definitions"));
 
-	/**
-	 * Payload type registered during common module initialization on both physical sides.
-	 */
-	public static final Type<BlasterDefinitionsPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath("pswg_blasters", "definitions"));
-
-	public static final StreamCodec<RegistryFriendlyByteBuf, BlasterDefinitionsPayload> CODEC = StreamCodec.ofMember(
-			BlasterDefinitionsPayload::encode,
-			BlasterDefinitionsPayload::decode
-	);
+	public static final StreamCodec<RegistryFriendlyByteBuf, BlasterDefinitionsPayload> CODEC = BlasterDefinitionData.PACKET_CODEC.map(BlasterDefinitionsPayload::new, BlasterDefinitionsPayload::data);
 
 	@Override
 	public Type<? extends CustomPacketPayload> type()

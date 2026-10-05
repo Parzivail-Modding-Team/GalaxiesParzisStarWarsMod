@@ -1,23 +1,17 @@
 package dev.pswg.data;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonObject;
-import com.mojang.serialization.JsonOps;
 import dev.pswg.item.component.StoredCharge;
 import dev.pswg.item.crafting.IngredientSnapshots;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.display.SlotDisplay;
 
 import java.util.*;
 
@@ -48,8 +42,14 @@ public final class BakedBlasterDefinition
 	 */
 	public BakedBlasterDefinition(BlasterDefinitionData data)
 	{
-		_data = Objects.requireNonNull(data, "data");
-		_resolvedAttachments = validateAndResolve(data);
+		_data = new BlasterDefinitionData(
+				data.generation(),
+				data.blasters(),
+				data.attachments(),
+				data.behaviorProfiles(),
+				data.stanceProfiles()
+		);
+		_resolvedAttachments = validateAndResolve(_data);
 	}
 
 	/**
@@ -67,9 +67,6 @@ public final class BakedBlasterDefinition
 			Map<TagKey<Item>, List<Holder<Item>>> candidateTags
 	)
 	{
-		Objects.requireNonNull(lookup, "lookup");
-		Objects.requireNonNull(candidateTags, "candidateTags");
-
 		var registryName = BlasterData.BLASTERS.identifier().toString();
 		var normalizedBlasters = new HashMap<Identifier, BlasterDatapackDefinition>();
 
@@ -110,9 +107,7 @@ public final class BakedBlasterDefinition
 	 */
 	public void validateNativeReferences(HolderLookup.Provider lookup)
 	{
-		Objects.requireNonNull(lookup, "lookup");
 		var damageTypes = lookup.lookupOrThrow(Registries.DAMAGE_TYPE);
-		var items = lookup.lookupOrThrow(Registries.ITEM);
 
 		for (var entry : _data.behaviorProfiles().entrySet())
 		{
@@ -130,28 +125,20 @@ public final class BakedBlasterDefinition
 
 			validateInRegistry(BlasterData.BLASTERS.identifier().toString(), entry.getKey(), () ->
 			{
-				Preconditions.checkArgument(ammo.creativePolicy().equals(BlasterStats.FREE_AMMO_POLICY),
-				                            "references unknown creative ammunition policy %s", ammo.creativePolicy());
-				validateNativeIngredient(ammo.ingredient(), items);
-
 				if (ammo.consumption() instanceof BlasterStats.ComponentChargeConsumption(
-						Identifier component, int unitsPerRound, Optional<BlasterStats.EmptyContainer> container
+						Identifier component, _, Optional<net.minecraft.world.item.ItemStackTemplate> container
 				))
 				{
 					var componentType = BuiltInRegistries.DATA_COMPONENT_TYPE.getOptional(component);
 					Preconditions.checkArgument(componentType.isPresent(),
 					                            "references missing data component %s", component);
-					Preconditions.checkArgument(isNetworkedPersistentChargeComponent(
-							                            componentType.orElseThrow(), unitsPerRound),
-					                            "data component %s must persist and synchronize StoredCharge values with capacity at least %s",
-					                            component, unitsPerRound);
+					Preconditions.checkArgument(componentType.orElseThrow().codec() == StoredCharge.CODEC,
+					                            "data component %s must use the persistent StoredCharge codec", component);
 
 					container.ifPresent(
 							emptyContainer ->
 							{
-								var item = items.get(ResourceKey.create(Registries.ITEM, emptyContainer.item()));
-								Preconditions.checkArgument(item.isPresent(), "references missing empty-container item %s", emptyContainer.item());
-								Preconditions.checkArgument(emptyContainer.count() <= item.orElseThrow().value().getDefaultMaxStackSize(),
+								Preconditions.checkArgument(emptyContainer.count() <= emptyContainer.item().value().getDefaultMaxStackSize(),
 								                            "emptyContainer.count %s exceeds the maximum stack size for %s",
 								                            emptyContainer.count(), emptyContainer.item());
 							}
@@ -222,30 +209,6 @@ public final class BakedBlasterDefinition
 		var behaviorProfiles = data.behaviorProfiles();
 		var knownArchetypes = collectProfileArchetypes(stanceProfiles);
 
-		for (var entry : stanceProfiles.entrySet())
-		{
-			validateInRegistry(BlasterData.STANCE_PROFILES.identifier().toString(), entry.getKey(), () ->
-			{
-				var codecResult = BlasterStanceProfile.CODEC.encodeStart(JsonOps.INSTANCE, entry.getValue());
-				Preconditions.checkArgument(codecResult.error().isEmpty(), "invalid stance profile: %s", codecResult);
-			});
-		}
-
-		for (var entry : behaviorProfiles.entrySet())
-		{
-			validateInRegistry(BlasterData.BEHAVIOR_PROFILES.identifier().toString(), entry.getKey(), () ->
-			{
-				var profile = entry.getValue();
-				for (var effect : profile.effects())
-				{
-					Preconditions.checkArgument(effect.when() != null,
-					                            "effect %s must declare an application phase", effect.type());
-				}
-				var codecResult = BlasterBehaviorProfile.CODEC.encodeStart(JsonOps.INSTANCE, profile);
-				Preconditions.checkArgument(codecResult.error().isEmpty(), "invalid behavior profile: %s", codecResult);
-			});
-		}
-
 		for (var entry : data.attachments().entrySet())
 		{
 			validateInRegistry(BlasterData.ATTACHMENTS.identifier().toString(), entry.getKey(), () ->
@@ -308,7 +271,7 @@ public final class BakedBlasterDefinition
 			Preconditions.checkArgument(previous == null, "%s contains a duplicate definition ID %s", registryKey.identifier(), id);
 		}
 
-		return values;
+		return Map.copyOf(values);
 	}
 
 	/**
@@ -365,7 +328,7 @@ public final class BakedBlasterDefinition
 						                                                   field, mode.id(), mode.behaviorProfile()))
 		);
 
-		for (var modifier : attachment.effectiveModifiers())
+		for (var modifier : attachment.modifiers())
 		{
 			for (var archetype : modifier.modifierCondition().archetype())
 			{
@@ -471,22 +434,21 @@ public final class BakedBlasterDefinition
 			return;
 
 		var chargedShot = profile.chargedShot().orElseThrow();
-		if (chargedShot.source().equals("held_duration"))
+		if (chargedShot.source() == BlasterBehaviorProfile.ChargeSource.HELD_DURATION)
 		{
 			Preconditions.checkArgument(mode.trigger() instanceof BlasterStats.ChargeTrigger,
 			                            "mode %s of %s uses held_duration charged damage but does not have a charge trigger", mode.id(), blasterId);
 		}
 		else
 		{
-			Preconditions.checkArgument(ammo.feed().equals(BlasterStats.FEED_CHARGE_STORE)
+			Preconditions.checkArgument(ammo.feed().type() == BlasterStats.Feed.CHARGE_STORE
 			                            && ammo.consumption() instanceof BlasterStats.ComponentChargeConsumption,
 			                            "mode %s of %s uses loaded_component_charge without a component-charge ammunition feed", mode.id(), blasterId);
 		}
 
-		if (chargedShot.consume().equals("all_remaining_component_charge"))
+		if (chargedShot.consume() == BlasterBehaviorProfile.ChargeConsumer.ALL_REMAINING_COMPONENT_CHARGE)
 		{
-			Preconditions.checkArgument(chargedShot.source().equals("loaded_component_charge")
-			                            && ammo.feed().equals(BlasterStats.FEED_CHARGE_STORE),
+			Preconditions.checkArgument(ammo.feed().type() == BlasterStats.Feed.CHARGE_STORE,
 			                            "mode %s of %s consumes all component charge without a loaded component-charge source", mode.id(), blasterId);
 		}
 	}
@@ -501,7 +463,7 @@ public final class BakedBlasterDefinition
 			Set<Identifier> knownArchetypes
 	)
 	{
-		for (var modifier : attachment.effectiveModifiers())
+		for (var modifier : attachment.modifiers())
 		{
 			var context = modifier.modifierCondition();
 			for (var modeId : context.mode())
@@ -555,10 +517,10 @@ public final class BakedBlasterDefinition
 					}
 					else if (condition instanceof BlasterStats.LoadedChargeMinCondition(int units))
 					{
-						Preconditions.checkArgument(stats.ammo().feed().equals(BlasterStats.FEED_CHARGE_STORE),
+						Preconditions.checkArgument(stats.ammo().feed().type() == BlasterStats.Feed.CHARGE_STORE,
 						                            "fieldConversion option %s requires a charge-store feed for loaded_charge_min",
 						                            option.id());
-						var capacity = stats.ammo().chargeCapacityUnits().orElseThrow();
+						var capacity = ((BlasterStats.ChargeStoreFeed)stats.ammo().feed()).chargeCapacityUnits();
 						Preconditions.checkArgument(units <= capacity,
 						                            "fieldConversion option %s loaded_charge_min.units %s exceeds charge capacity %s",
 						                            option.id(), units, capacity);
@@ -567,10 +529,10 @@ public final class BakedBlasterDefinition
 			}
 		}
 
-		if (stats.ammo().feed().equals(BlasterStats.FEED_CHARGE_STORE)
+		if (stats.ammo().feed() instanceof BlasterStats.ChargeStoreFeed feed
 		    && stats.ammo().consumption() instanceof BlasterStats.ComponentChargeConsumption consumption)
 		{
-			var capacity = stats.ammo().chargeCapacityUnits().orElseThrow();
+			var capacity = feed.chargeCapacityUnits();
 			Preconditions.checkArgument(consumption.unitsPerRound() <= capacity,
 			                            "component-charge unitsPerRound %s exceeds charge capacity %s on %s",
 			                            consumption.unitsPerRound(), capacity, blasterId);
@@ -602,55 +564,6 @@ public final class BakedBlasterDefinition
 					                            option.id(), option.targetBlasterId());
 				});
 			}
-		}
-	}
-
-	/**
-	 * Validates that a native ingredient resolves to bounded, registered, non-air concrete items.
-	 */
-	private static void validateNativeIngredient(Ingredient ingredient, HolderLookup.RegistryLookup<Item> items)
-	{
-		var ingredientHolders = ((SlotDisplay.TagSlotDisplay)ingredient.display()).tag().unwrap().map(
-				tag -> {
-					throw new IllegalArgumentException("ammunition ingredient tag " + tag + " was not resolved from candidate tags");
-				},
-				directItems -> directItems
-		);
-		Preconditions.checkArgument(!ingredientHolders.isEmpty(), "ammunition ingredient resolves to an empty item set");
-		var concreteItems = ingredientHolders.stream().distinct().toList();
-		Preconditions.checkArgument(!concreteItems.isEmpty(), "ammunition ingredient resolves to an empty item set");
-		for (var item : concreteItems)
-		{
-			var key = item.unwrapKey();
-			Preconditions.checkArgument(item.value() != Items.AIR,
-			                            "ammunition ingredient must not include air (%s)", key.map(ResourceKey::identifier).orElse(Items.AIR.builtInRegistryHolder().key().identifier()));
-			Preconditions.checkArgument(key.isPresent(), "ammunition ingredient contains an unkeyed item %s", item.value());
-			var itemKey = key.orElseThrow();
-			Preconditions.checkArgument(items.get(itemKey).isPresent(),
-			                            "ammunition ingredient references item %s not registered in the server lookup", itemKey.identifier());
-		}
-	}
-
-	/**
-	 * Requires a component type with a persistent {@link StoredCharge} codec and a network stream codec.
-	 */
-	private static boolean isNetworkedPersistentChargeComponent(DataComponentType<?> componentType, int minimumCapacity)
-	{
-		var codec = componentType.codec();
-		if (codec == null)
-			return false;
-
-		try
-		{
-			var chargeValue = new JsonObject();
-			chargeValue.addProperty("current", 0);
-			chargeValue.addProperty("capacity", minimumCapacity);
-			var parseResult = codec.parse(JsonOps.INSTANCE, chargeValue);
-			return parseResult.error().isEmpty() && parseResult.result().filter(StoredCharge.class::isInstance).isPresent();
-		}
-		catch (RuntimeException exception)
-		{
-			return false;
 		}
 	}
 }

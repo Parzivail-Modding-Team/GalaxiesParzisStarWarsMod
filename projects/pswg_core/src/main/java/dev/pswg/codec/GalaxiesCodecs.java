@@ -1,35 +1,80 @@
 package dev.pswg.codec;
 
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Decoder;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
+import org.joml.*;
 
-import java.util.List;
-import java.util.Map;
+import java.lang.Math;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.ExtraCodecs;
 
 /**
  * Defines codecs and related utilities for common data types
  */
 public final class GalaxiesCodecs
 {
-	/** Minecraft's native array-vector codec, rejecting non-finite axes. */
-	public static final Codec<Vector3fc> FINITE_VECTOR3F = ExtraCodecs.VECTOR3F.validate(vector ->
-			vector.isFinite()
+	/**
+	 * Returns an empty optional when a value equals its canonical default.
+	 */
+	public static <A> Optional<A> optionalUnless(A value, A defaultValue)
+	{
+		return Objects.equals(value, defaultValue) ? Optional.empty() : Optional.of(value);
+	}
+
+	/**
+	 * Adds uniqueness by element value to an existing ordered-list codec.
+	 */
+	public static <A> Codec<List<A>> unique(Codec<List<A>> codec)
+	{
+		return unique(codec, Function.identity());
+	}
+
+	/**
+	 * Adds uniqueness by key without duplicating the list's element or size constraints.
+	 */
+	public static <A, K> Codec<List<A>> unique(Codec<List<A>> codec, Function<A, K> key)
+	{
+		return codec.validate(values ->
+		                      {
+			                      var keys = new HashSet<K>();
+			                      for (var value : values)
+			                      {
+				                      if (!keys.add(key.apply(value)))
+					                      return DataResult.error(() -> "Duplicate list key: " + key.apply(value));
+			                      }
+			                      return DataResult.success(values);
+		                      });
+	}
+
+	/**
+	 * Minecraft's native array-vector codec, rejecting non-finite axes.
+	 */
+	public static final Codec<Vector3fc> FINITE_VECTOR3F = ExtraCodecs.VECTOR3F.validate(
+			vector ->
+					vector.isFinite()
 					? DataResult.success(vector)
-					: DataResult.error(() -> "Vector axes must be finite"));
+					: DataResult.error(() -> "Vector axes must be finite")
+	);
+
+	/**
+	 * One rotation representation: Euler XYZ degrees on three-axis input, native quaternion/axis-angle otherwise.
+	 */
+	public static final Codec<Quaternionfc> ROTATION = Codec.withAlternative(
+			ExtraCodecs.QUATERNIONF.validate(rotation -> rotation.isFinite()
+			                                             ? DataResult.success(rotation)
+			                                             : DataResult.error(() -> "Rotation must be finite")),
+			FINITE_VECTOR3F,
+			angles -> new Quaternionf().rotationXYZ(
+					(float)Math.toRadians(angles.x()),
+					(float)Math.toRadians(angles.y()),
+					(float)Math.toRadians(angles.z())
+			)
+	);
 
 	/**
 	 * A codec for serializing and deserializing a list of {@link Identifier}s.
@@ -129,8 +174,8 @@ public final class GalaxiesCodecs
 				"type",
 				value -> DataResult.success(typeGetter.apply(value)),
 				id -> codecs.containsKey(id)
-						? DataResult.success(codecs.get(id))
-						: DataResult.error(() -> "Unknown " + description + " type " + id)
+				      ? DataResult.success(codecs.get(id))
+				      : DataResult.error(() -> "Unknown " + description + " type " + id)
 		);
 		return ExtraCodecs.catchDecoderException(Codec.of(dispatch, new Decoder<A>()
 		{
@@ -149,17 +194,24 @@ public final class GalaxiesCodecs
 						{
 							return DataResult.error(() -> "Unknown " + description + " type " + id);
 						}
-						return GalaxiesCodecs.<A>strictBranch(branch).decode(ops, ops.remove(input, "type")).flatMap(pair ->
-								id.equals(typeGetter.apply(pair.getFirst()))
-										? DataResult.success(pair)
-										: DataResult.error(() -> "Mismatched " + description + " type " + id));
+
+						return GalaxiesCodecs.<A>strictBranch(branch)
+						                     .decode(ops, ops.remove(input, "type"))
+						                     .flatMap(
+								                     pair ->
+										                     id.equals(typeGetter.apply(pair.getFirst()))
+										                     ? DataResult.success(pair)
+										                     : DataResult.error(() -> "Mismatched " + description + " type " + id)
+						                     );
 					});
 				});
 			}
 		}));
 	}
 
-	/** Narrows a branch only after its registered discriminator has selected its value type. */
+	/**
+	 * Narrows a branch only after its registered discriminator has selected its value type.
+	 */
 	@SuppressWarnings("unchecked")
 	private static <A> Codec<A> strictBranch(MapCodec<? extends A> branch)
 	{

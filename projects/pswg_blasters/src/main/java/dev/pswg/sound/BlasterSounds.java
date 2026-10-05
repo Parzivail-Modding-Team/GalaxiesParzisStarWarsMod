@@ -30,7 +30,7 @@ public final class BlasterSounds
 	 */
 	private static SoundEvent registerSound(String id)
 	{
-		Identifier identifier = Identifier.fromNamespaceAndPath(Blasters.MODID, id);
+		Identifier identifier = Blasters.id(id);
 		return Registry.register(BuiltInRegistries.SOUND_EVENT, identifier, SoundEvent.createVariableRangeEvent(identifier));
 	}
 

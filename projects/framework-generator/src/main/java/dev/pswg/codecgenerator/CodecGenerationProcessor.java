@@ -372,6 +372,11 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				Map.of(GenStandardCodec.AUTOMATIC, new CodecType(ClassName.get("net.minecraft.world.item.crafting", "Ingredient"), "CODEC"))
 		);
 		registerCodecsForType(
+				"net.minecraft.world.item.ItemStackTemplate",
+				GenStandardCodec.AUTOMATIC,
+				Map.of(GenStandardCodec.AUTOMATIC, new CodecType(ClassName.get("net.minecraft.world.item", "ItemStackTemplate"), "CODEC"))
+		);
+		registerCodecsForType(
 				"byte[]",
 				GenStandardCodec.BASE_64,
 				Map.of(
@@ -528,6 +533,16 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				Map.of(
 						GenPacketCodec.IDENTIFIER, new CodecType(ClassName.get("net.minecraft.resources", "Identifier"), "STREAM_CODEC")
 				)
+		);
+		registerPacketCodecsForType(
+				"net.minecraft.world.item.crafting.Ingredient",
+				GenPacketCodec.AUTOMATIC,
+				Map.of(GenPacketCodec.AUTOMATIC, new CodecType(ClassName.get("net.minecraft.world.item.crafting", "Ingredient"), "CONTENTS_STREAM_CODEC"))
+		);
+		registerPacketCodecsForType(
+				"net.minecraft.world.item.ItemStackTemplate",
+				GenPacketCodec.AUTOMATIC,
+				Map.of(GenPacketCodec.AUTOMATIC, new CodecType(ClassName.get("net.minecraft.world.item", "ItemStackTemplate"), "STREAM_CODEC"))
 		);
 	}
 
@@ -748,6 +763,12 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		}
 
 		var codecSize = component.getAnnotation(CodecSize.class);
+		var unique = component.getAnnotation(CodecUnique.class);
+		if (unique != null && !isDeclaredType(componentType, "java.util.List"))
+		{
+			reportError(component, "@CodecUnique requires a List component (optionally wrapped in Optional).");
+			return null;
+		}
 		if (codecSize != null && !isCollectionType(componentType))
 		{
 			reportError(component, "@CodecSize can only be applied to List or Map record components.");
@@ -792,6 +813,8 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				if (expression == null)
 					return null;
 			}
+			if (unique != null)
+				expression = applyUniqueness(expression, unique);
 			if (strict)
 				expression = CodeBlock.of("$T.catchDecoderException($L)", MC_TYPES, expression);
 			return new StandardCodecExpression(expression, false);
@@ -801,11 +824,23 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		var expression = buildStandardCodec(componentType, component, selfCodec, selectedCodec, codecSize, codecRange, true);
 		if (expression == null)
 			return null;
+		if (unique != null)
+			expression = applyUniqueness(expression, unique);
 
 		if (strict)
 			expression = CodeBlock.of("$T.catchDecoderException($L)", MC_TYPES, expression);
 
 		return new StandardCodecExpression(expression, optionalField);
+	}
+
+	/**
+	 * Wraps an ordered-list codec in the shared value/key uniqueness constraint.
+	 */
+	private CodeBlock applyUniqueness(CodeBlock expression, CodecUnique unique)
+	{
+		return unique.key().isEmpty()
+		       ? CodeBlock.of("$T.unique($L)", GALAXIES_CODECS, expression)
+		       : CodeBlock.of("$T.unique($L, value -> value.$L())", GALAXIES_CODECS, expression, unique.key());
 	}
 
 	/**
@@ -894,6 +929,8 @@ public class CodecGenerationProcessor extends AbstractProcessor
 			}
 			return CodeBlock.of("$T.CODEC", ClassName.get(typeElement));
 		}
+		if (type instanceof DeclaredType declaredType && declaredType.asElement().getKind() == ElementKind.ENUM)
+			return CodeBlock.of("$T.CODEC", ClassName.get((TypeElement)declaredType.asElement()));
 
 		var typeKey = getTypeKey(type);
 		var codecTypeMap = codecTypes.get(typeKey);
@@ -1215,24 +1252,19 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		var paramNames = new ArrayList<String>();
 		for (var component : classElement.getRecordComponents())
 		{
-			var nestedCodecType = getCodec(
-					component,
-					UseCodec::customPacket,
-					UseCodec::packet,
-					GenPacketCodec.AUTOMATIC,
-					packetCodecTypes,
-					defaultPacketCodecTypes,
-					"PACKET_CODEC",
-					"packet codec"
-			);
+			var use = component.getAnnotation(UseCodec.class);
+			var nestedCodecType = use != null && !use.customPacket().member().isEmpty()
+			                      ? getCodecSourceExpression(use.customPacket())
+			                      : buildPacketCodec(component.asType(), component, component.getAnnotation(SelfCodec.class) != null,
+			                                         use == null ? GenPacketCodec.AUTOMATIC : use.packet());
 			if (nestedCodecType == null)
 				return null;
 
 			var paramName = component.getSimpleName().toString();
 			paramNames.add(paramName);
 
-			encodeBuilder.addStatement("$L.encode(registryByteBuf, value.$L())", nestedCodecType.asExpression(), component.getSimpleName().toString());
-			decodeBuilder.addStatement("var $L = $L.decode(registryByteBuf)", paramName, nestedCodecType.asExpression());
+			encodeBuilder.addStatement("$L.encode(registryByteBuf, value.$L())", nestedCodecType, component.getSimpleName().toString());
+			decodeBuilder.addStatement("var $L = $L.decode(registryByteBuf)", paramName, nestedCodecType);
 		}
 
 		decodeBuilder.addStatement(
@@ -1266,6 +1298,75 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		                                      .add("$L", anonPacketCodec)
 		                                      .build())
 		                .build();
+	}
+
+	/**
+	 * Resolves native packet primitives and recursively composes optional/list/map packet codecs.
+	 */
+	private CodeBlock buildPacketCodec(TypeMirror type, RecordComponentElement component, boolean selfCodec, GenPacketCodec selected)
+	{
+		if (isDeclaredType(type, "java.util.Optional"))
+		{
+			var element = buildPacketCodec(getTypeArguments(type).getFirst(), component, selfCodec, selected);
+			return element == null ? null : CodeBlock.of("$T.optional($L)", MC_PACKET_TYPES, element);
+		}
+
+		if (isDeclaredType(type, "java.util.List"))
+		{
+			var element = buildPacketCodec(getTypeArguments(type).getFirst(), component, selfCodec, selected);
+			var size = component.getAnnotation(CodecSize.class);
+			return element == null ? null : CodeBlock.of("$L.apply($T.list($L)).map($T::copyOf, $T.identity())", element, MC_PACKET_TYPES,
+			                                             size == null ? Integer.MAX_VALUE : size.max(), ClassName.get(List.class), ClassName.get(Function.class));
+		}
+
+		if (isDeclaredType(type, "java.util.Map"))
+		{
+			var arguments = getTypeArguments(type);
+			var key = buildPacketCodec(arguments.get(0), component, false, GenPacketCodec.AUTOMATIC);
+			var value = buildPacketCodec(arguments.get(1), component, selfCodec, selected);
+			var size = component.getAnnotation(CodecSize.class);
+			return key == null || value == null ? null : CodeBlock.of(
+					"$T.<$T, $T, $T, $T>map($T::new, $L, $L, $L).map($T::copyOf, $T.identity())",
+					MC_PACKET_TYPES,
+					ClassName.get("net.minecraft.network", "RegistryFriendlyByteBuf"),
+					TypeName.get(arguments.get(0)),
+					TypeName.get(arguments.get(1)),
+					TypeName.get(type),
+					ClassName.get(HashMap.class),
+					key,
+					value,
+					size == null ? Integer.MAX_VALUE : size.max(),
+					ClassName.get(Map.class),
+					ClassName.get(Function.class)
+			);
+		}
+
+		if (type instanceof DeclaredType declaredType
+		    && ((selfCodec && !packetCodecTypes.containsKey(getTypeKey(type))) || declaredType.asElement().getKind() == ElementKind.ENUM))
+			return CodeBlock.of("$T.PACKET_CODEC", ClassName.get((TypeElement)declaredType.asElement()));
+
+		var key = getTypeKey(type);
+		key = switch (key)
+		{
+			case "java.lang.Boolean" -> "boolean";
+			case "java.lang.Byte" -> "byte";
+			case "java.lang.Short" -> "short";
+			case "java.lang.Integer" -> "int";
+			case "java.lang.Long" -> "long";
+			case "java.lang.Float" -> "float";
+			case "java.lang.Double" -> "double";
+			default -> key;
+		};
+
+		var codecs = packetCodecTypes.get(key);
+		var requested = selected == GenPacketCodec.AUTOMATIC ? defaultPacketCodecTypes.get(key) : selected;
+		if (codecs == null || !codecs.containsKey(requested))
+		{
+			reportError(component, "No packet codec is registered for " + type + ".");
+			return null;
+		}
+
+		return codecs.get(requested).asExpression();
 	}
 
 	/**

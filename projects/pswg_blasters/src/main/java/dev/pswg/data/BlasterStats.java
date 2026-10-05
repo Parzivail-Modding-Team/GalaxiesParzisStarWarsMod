@@ -1,9 +1,7 @@
 package dev.pswg.data;
 
-import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
 import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.*;
 import dev.pswg.generated.codecs.*;
@@ -11,38 +9,39 @@ import dev.pswg.generated.recordbuilders.IAmmoBuilder;
 import dev.pswg.generated.recordbuilders.IBlasterStatsBuilder;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.mutablerecord.MutableRecord;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * Statistics for a blaster.
+ * Normalized blaster statistics.
  *
- * @param damage               Base direct-hit damage in Minecraft damage points.
- * @param range                Maximum trace distance in blocks.
+ * @param damage Base direct-hit damage.
+ * @param range Maximum trace distance in blocks.
  * @param automaticRepeatDelay Minimum accepted-shot interval in ticks.
- * @param fireSound            Optional fire-sound override.
- * @param heat                 Heat values; absence in the definition becomes zero heat.
- * @param cooling              Cooling bypass windows; absence becomes zero bypass windows.
- * @param damageRange          Distance used to evaluate the falloff curve.
- * @param ammo                 Required ammunition feed and consumption definition.
- * @param configuration        Required archetype and native item-model configuration.
- * @param modes                Required ordered firing modes.
- * @param recoil               Configured server aim recoil.
- * @param spread               Configured cone spread.
- * @param falloff              Ordered damage multipliers from distance fraction zero through one.
+ * @param fireSound Optional sound override.
+ * @param heat Heat values, zero when omitted.
+ * @param cooling Optional cooling windows; explicit zero windows remain present.
+ * @param damageRange Distance over which falloff is sampled.
+ * @param ammo Required feed and consumption options.
+ * @param configuration Required archetype and item model.
+ * @param modes Ordered firing modes.
+ * @param recoil Server aim impulse.
+ * @param spread Cone spread.
+ * @param falloff Ordered normalized damage curve.
  */
 @MutableRecord
 public record BlasterStats(
 		float damage,
 		int range,
 		int automaticRepeatDelay,
-		Optional<Identifier> fireSound,
-		HeatDefinition heat,
-		BlasterItem.Cooling cooling,
+		Optional<Identifier> fireSound, HeatDefinition heat, Optional<BlasterItem.Cooling> cooling,
 		float damageRange,
 		Ammo ammo,
 		BlasterConfiguration configuration,
@@ -53,177 +52,298 @@ public record BlasterStats(
 ) implements IBlasterStatsBuilder
 {
 	/**
-	 * Shared definition and runtime heat values, preserving fractional drain rates without a second stats adapter.
-	 *
-	 * @param capacity             Maximum normal heat, in units.
-	 * @param perRound             Heat added per accepted shot.
-	 * @param drainSpeed           Passive and ordinary-vent drain, in units per tick.
-	 * @param overheatPenalty      Heat added on overheat.
-	 * @param overheatDrainSpeed   Overheat-vent drain, in units per tick.
-	 * @param passiveCooldownDelay Delay before passive cooling begins, in ticks.
-	 * @param overchargeBonus      Secondary-bypass overcharge duration, in ticks.
+	 * Supported ammunition feeds.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateEnumCodec
+	public enum Feed implements IFeedCodec
+	{
+		/**
+		 * Inventory ammunition consumed per shot.
+		 */
+		PER_SHOT,
+
+		/**
+		 * Discrete rounds loaded into a magazine.
+		 */
+		MAGAZINE,
+
+		/**
+		 * Charge units loaded from component-backed packs.
+		 */
+		CHARGE_STORE
+	}
+
+	/**
+	 * Fixed source-ammunition consumption choices.
+	 */
+	@GenerateEnumCodec
+	public enum ConsumptionType implements IConsumptionTypeCodec
+	{
+		/**
+		 * Consume matching item counts.
+		 */
+		ITEM_COUNT,
+
+		/**
+		 * Debit a persistent charge component.
+		 */
+		COMPONENT_CHARGE
+	}
+
+	/**
+	 * Fixed firing trigger choices.
+	 */
+	@GenerateEnumCodec
+	public enum TriggerType implements ITriggerTypeCodec
+	{
+		/**
+		 * Fire once on a press edge.
+		 */
+		SEMI,
+
+		/**
+		 * Repeat while held.
+		 */
+		AUTO,
+
+		/**
+		 * Schedule a bounded burst.
+		 */
+		BURST,
+
+		/**
+		 * Charge while held.
+		 */
+		CHARGE
+	}
+
+	/**
+	 * Fixed field-conversion predicates.
+	 */
+	@GenerateEnumCodec
+	public enum FieldConditionType implements IFieldConditionTypeCodec
+	{
+		/**
+		 * Require a selected mode.
+		 */
+		MODE_IS,
+
+		/**
+		 * Require an installed attachment.
+		 */
+		HAS_ATTACHMENT,
+
+		/**
+		 * Require loaded charge.
+		 */
+		LOADED_CHARGE_MIN
+	}
+
+	/**
+	 * Supported creative ammunition rules.
+	 */
+	@GenerateEnumCodec
+	public enum CreativeAmmoPolicy implements ICreativeAmmoPolicyCodec
+	{
+		/**
+		 * Creative players bypass ammunition debits.
+		 */
+		FREE_AMMO
+	}
+
+	/**
+	 * Charge-trigger release behavior.
+	 */
+	@GenerateEnumCodec
+	public enum ReleasePolicy implements IReleasePolicyCodec
+	{
+		/**
+		 * Fire on release after minimum charge.
+		 */
+		FIRE_ON_RELEASE,
+
+		/**
+		 * Fire once when fully charged.
+		 */
+		FIRE_AT_FULL
+	}
+
+	/**
+	 * Heat values in units and ticks.
+	 */
+	@GenerateCodec(strict = true)
 	public record HeatDefinition(
-			int capacity,
-			int perRound,
-			float drainSpeed,
-			int overheatPenalty,
-			float overheatDrainSpeed,
-			int passiveCooldownDelay,
-			int overchargeBonus
+			@CodecRange(min = 0) int capacity,
+			@CodecRange(min = 0) int perRound,
+			@CodecRange(min = 0) float drainSpeed,
+			@CodecRange(min = 0) int overheatPenalty,
+			@CodecRange(min = 0) float overheatDrainSpeed,
+			@CodecRange(min = 0) int passiveCooldownDelay,
+			@CodecRange(min = 0) int overchargeBonus
 	) implements IHeatDefinitionCodec
 	{
 		/**
-		 * Zero heat used when the heat object is absent.
+		 * Disabled heat.
 		 */
 		public static final HeatDefinition ZERO = new HeatDefinition(0, 0, 0, 0, 0, 0, 0);
 	}
 
 	/**
-	 * Required ammunition declaration and feed-specific settings.
-	 *
-	 * @param feed                Registered feed ID.
-	 * @param ingredient          Native Minecraft ingredient selecting ammunition.
-	 * @param consumption         Typed source-ammunition consumption policy.
-	 * @param magazineSize        Magazine rounds, present only for magazine feeds.
-	 * @param reloadTicks         Reload duration, present for magazine and charge-store feeds.
-	 * @param chargeCapacityUnits Loaded-charge capacity, present only for charge-store feeds.
-	 * @param creativePolicy      Registered creative ammunition policy.
+	 * Required ammo settings; each feed's closed shape carries only its own parameters.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	@MutableRecord
 	public record Ammo(
-			Identifier feed,
-			@SelfCodec Ingredient ingredient,
-			@SelfCodec Consumption consumption,
-			Optional<Integer> magazineSize,
-			Optional<Integer> reloadTicks,
-			Optional<Integer> chargeCapacityUnits,
-			@CodecDefault("dev.pswg.data.BlasterStats.FREE_AMMO_POLICY") Identifier creativePolicy
+			@SelfCodec FeedSettings feed,
+			Ingredient ingredient, @SelfCodec Consumption consumption,
+			@CodecDefault("dev.pswg.data.BlasterStats.CreativeAmmoPolicy.FREE_AMMO") CreativeAmmoPolicy creativePolicy
 	) implements IAmmoCodec, IAmmoBuilder
 	{
 	}
 
 	/**
-	 * Typed ammunition-consumption policy.
+	 * Closed feed configuration selected by the feed enum.
 	 */
-	public interface Consumption
+	public sealed interface FeedSettings permits PerShotFeed, MagazineFeed, ChargeStoreFeed
 	{
 		/**
-		 * Returns this consumption variant's registered discriminator.
+		 * Selected built-in feed.
 		 */
-		Identifier type();
+		Feed type();
 
-		/**
-		 * Strict codec for the built-in consumption variants.
-		 */
-		Codec<Consumption> CODEC = CONSUMPTION_CODEC;
+		Codec<FeedSettings> CODEC = GalaxiesCodecs.typedDispatch(Feed.CODEC, Map.of(Feed.PER_SHOT, PerShotFeed.MAP_CODEC, Feed.MAGAZINE, MagazineFeed.MAP_CODEC, Feed.CHARGE_STORE, ChargeStoreFeed.MAP_CODEC), FeedSettings::type, "feed");
+
+		StreamCodec<RegistryFriendlyByteBuf, FeedSettings> PACKET_CODEC = Feed.PACKET_CODEC.<RegistryFriendlyByteBuf>cast().dispatch(FeedSettings::type, type -> switch (type)
+		{
+			case PER_SHOT -> IPerShotFeedCodec.PACKET_CODEC;
+			case MAGAZINE -> IMagazineFeedCodec.PACKET_CODEC;
+			case CHARGE_STORE -> IChargeStoreFeedCodec.PACKET_CODEC;
+		});
 	}
 
 	/**
-	 * Consumes a positive item count for each round.
-	 *
-	 * @param itemsPerRound Number of matching items debited for one round.
+	 * Inventory-fed shots have no magazine/reload settings.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
+	public record PerShotFeed() implements FeedSettings, IPerShotFeedCodec
+	{
+		@Override
+		public Feed type()
+		{
+			return Feed.PER_SHOT;
+		}
+	}
+
+	/**
+	 * Discrete magazine capacity and reload duration.
+	 */
+	@GenerateCodec(strict = true)
+	public record MagazineFeed(
+			@CodecRange(min = 1) int magazineSize,
+			@CodecRange(min = 1) int reloadTicks
+	) implements FeedSettings, IMagazineFeedCodec
+	{
+		@Override
+		public Feed type()
+		{
+			return Feed.MAGAZINE;
+		}
+	}
+
+	/**
+	 * Component-charge capacity and reload duration.
+	 */
+	@GenerateCodec(strict = true)
+	public record ChargeStoreFeed(
+			@CodecRange(min = 1, max = 1_000_000) int chargeCapacityUnits,
+			@CodecRange(min = 1, max = 12000) int reloadTicks
+	) implements FeedSettings, IChargeStoreFeedCodec
+	{
+		@Override
+		public Feed type()
+		{
+			return Feed.CHARGE_STORE;
+		}
+	}
+
+	/**
+	 * Closed ammunition consumption configurations.
+	 */
+	public sealed interface Consumption permits ItemCountConsumption, ComponentChargeConsumption
+	{
+		/**
+		 * Selected built-in consumption rule.
+		 */
+		ConsumptionType type();
+
+		Codec<Consumption> CODEC = GalaxiesCodecs.typedDispatch(ConsumptionType.CODEC, Map.of(ConsumptionType.ITEM_COUNT, ItemCountConsumption.MAP_CODEC, ConsumptionType.COMPONENT_CHARGE, ComponentChargeConsumption.MAP_CODEC), Consumption::type, "consumption");
+
+		StreamCodec<RegistryFriendlyByteBuf, Consumption> PACKET_CODEC = ConsumptionType.PACKET_CODEC.<RegistryFriendlyByteBuf>cast().dispatch(Consumption::type, type -> switch (type)
+		{
+			case ITEM_COUNT -> IItemCountConsumptionCodec.PACKET_CODEC;
+			case COMPONENT_CHARGE -> IComponentChargeConsumptionCodec.PACKET_CODEC;
+		});
+	}
+
+	/**
+	 * Item count debited for each round.
+	 */
+	@GenerateCodec(strict = true)
 	public record ItemCountConsumption(
 			@CodecRange(min = 1) int itemsPerRound
 	) implements Consumption, IItemCountConsumptionCodec
 	{
 		@Override
-		public Identifier type()
+		public ConsumptionType type()
 		{
-			return CONSUMPTION_ITEM_COUNT;
+			return ConsumptionType.ITEM_COUNT;
 		}
 	}
 
 	/**
-	 * Consumes charge units from a data component on an ammunition pack.
-	 *
-	 * @param component      Registered pack charge-component ID.
-	 * @param unitsPerRound  Charge units consumed for one round.
-	 * @param emptyContainer Optional exact item/count result emitted when the source pack reaches zero.
+	 * Charge pack source.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record ComponentChargeConsumption(
 			Identifier component,
 			@CodecRange(min = 1) int unitsPerRound,
-			@SelfCodec Optional<EmptyContainer> emptyContainer
+			Optional<ItemStackTemplate> emptyContainer
 	) implements Consumption, IComponentChargeConsumptionCodec
 	{
 		@Override
-		public Identifier type()
+		public ConsumptionType type()
 		{
-			return CONSUMPTION_COMPONENT_CHARGE;
+			return ConsumptionType.COMPONENT_CHARGE;
 		}
 	}
 
 	/**
-	 * Stack to produce when a charge pack is emptied.
-	 *
-	 * @param item  Output item ID.
-	 * @param count Output item count.
+	 * Archetype/model configuration and optional data-defined conversion destinations.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
-	public record EmptyContainer(
-			Identifier item,
-			@CodecRange(min = 1, max = 64) int count
-	) implements IEmptyContainerCodec
-	{
-	}
-
-	/**
-	 * Required archetype/model configuration and optional stance/conversion profiles.
-	 *
-	 * @param archetype       Data-defined archetype ID.
-	 * @param itemModel       Native item-model root ID.
-	 * @param stanceProfile   Optional named stance profile; absence resolves by archetype ID.
-	 * @param fieldConversion Optional bounded field-conversion options.
-	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record BlasterConfiguration(
-			Identifier archetype,
-			Identifier itemModel,
-			Optional<Identifier> stanceProfile,
+			Identifier archetype, Identifier itemModel, Optional<Identifier> stanceProfile,
 			@SelfCodec Optional<FieldConversion> fieldConversion
 	) implements IBlasterConfigurationCodec
 	{
 	}
 
 	/**
-	 * Field-conversion options.
-	 *
-	 * @param options Conversion options available on this blaster.
+	 * Available conversions with unique option IDs.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record FieldConversion(
-			@SelfCodec List<FieldConversionOption> options
+			@SelfCodec @CodecSize(min = 1) @CodecUnique(key = "id") List<FieldConversionOption> options
 	) implements IFieldConversionCodec
 	{
-		/**
-		 * Copies options and rejects duplicate option IDs.
-		 */
-		public FieldConversion
-		{
-			var ids = new HashSet<Identifier>();
-			for (var option : options)
-				Preconditions.checkArgument(ids.add(option.id()), "Duplicate field-conversion option ID: %s", option.id());
-		}
 	}
 
 	/**
-	 * One same-registry target and its optional availability conditions.
-	 *
-	 * @param id              Stable option ID.
-	 * @param targetBlasterId Target definition in the blasters registry.
-	 * @param durationTicks   Active duration; zero means manual deactivation.
-	 * @param conditions      ANDed conditions; an empty list is always available.
+	 * A destination and the supported predicates which gate it.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record FieldConversionOption(
-			Identifier id,
-			Identifier targetBlasterId,
+			Identifier id, Identifier targetBlasterId,
 			@CodecRange(min = 0) @CodecDefault("0") int durationTicks,
 			@CodecDefault("java.util.List.of()") @SelfCodec List<FieldConversionCondition> conditions
 	) implements IFieldConversionOptionCodec
@@ -231,102 +351,90 @@ public record BlasterStats(
 	}
 
 	/**
-	 * Typed field-conversion availability condition.
+	 * Closed conversion predicate configurations.
 	 */
-	public interface FieldConversionCondition
+	public sealed interface FieldConversionCondition permits ModeIsCondition, HasAttachmentCondition, LoadedChargeMinCondition
 	{
 		/**
-		 * Returns this condition's registered discriminator.
+		 * Supported predicate choice.
 		 */
-		Identifier type();
+		FieldConditionType type();
 
-		/**
-		 * Strict codec for the built-in condition variants.
-		 */
-		Codec<FieldConversionCondition> CODEC = FIELD_CONDITION_CODEC;
+		Codec<FieldConversionCondition> CODEC = GalaxiesCodecs.typedDispatch(FieldConditionType.CODEC, Map.of(FieldConditionType.MODE_IS, ModeIsCondition.MAP_CODEC, FieldConditionType.HAS_ATTACHMENT, HasAttachmentCondition.MAP_CODEC, FieldConditionType.LOADED_CHARGE_MIN, LoadedChargeMinCondition.MAP_CODEC), FieldConversionCondition::type, "conversion condition");
+
+		StreamCodec<RegistryFriendlyByteBuf, FieldConversionCondition> PACKET_CODEC = FieldConditionType.PACKET_CODEC.<RegistryFriendlyByteBuf>cast().dispatch(FieldConversionCondition::type, type -> switch (type)
+		{
+			case MODE_IS -> IModeIsConditionCodec.PACKET_CODEC;
+			case HAS_ATTACHMENT -> IHasAttachmentConditionCodec.PACKET_CODEC;
+			case LOADED_CHARGE_MIN -> ILoadedChargeMinConditionCodec.PACKET_CODEC;
+		});
 	}
 
 	/**
-	 * Requires the selected firing mode to match.
-	 *
-	 * @param modeId Required selected mode ID.
+	 * Require a selected mode.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record ModeIsCondition(Identifier modeId) implements FieldConversionCondition, IModeIsConditionCodec
 	{
 		@Override
-		public Identifier type()
+		public FieldConditionType type()
 		{
-			return CONDITION_MODE_IS;
+			return FieldConditionType.MODE_IS;
 		}
 	}
 
 	/**
-	 * Requires a named attachment to be installed.
-	 *
-	 * @param attachmentSlot Slot ID to inspect.
-	 * @param attachmentId   Required installed attachment ID.
+	 * Require an installed, slot-compatible attachment.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record HasAttachmentCondition(
 			Identifier attachmentSlot,
 			Identifier attachmentId
 	) implements FieldConversionCondition, IHasAttachmentConditionCodec
 	{
 		@Override
-		public Identifier type()
+		public FieldConditionType type()
 		{
-			return CONDITION_HAS_ATTACHMENT;
+			return FieldConditionType.HAS_ATTACHMENT;
 		}
 	}
 
 	/**
-	 * Requires at least the declared amount of loaded charge.
-	 *
-	 * @param units Minimum loaded units.
+	 * Require a minimum loaded charge.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record LoadedChargeMinCondition(
 			@CodecRange(min = 1) int units
 	) implements FieldConversionCondition, ILoadedChargeMinConditionCodec
 	{
 		@Override
-		public Identifier type()
+		public FieldConditionType type()
 		{
-			return CONDITION_LOADED_CHARGE_MIN;
+			return FieldConditionType.LOADED_CHARGE_MIN;
 		}
 	}
 
 	/**
-	 * Firing modes and the default mode.
-	 *
-	 * @param defaultMode ID of one listed mode.
-	 * @param options     Ordered unique modes.
+	 * Ordered modes and one default from that list.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record Modes(
 			@CodecName("default") Identifier defaultMode,
-			@CodecSize(min = 1) @SelfCodec List<Mode> options
+			@CodecSize(min = 1) @CodecUnique(key = "id") @SelfCodec List<Mode> options
 	) implements IModesCodec
 	{
-		public Modes
-		{
-			var ids = new HashSet<Identifier>();
-			for (var option : options)
-				Preconditions.checkArgument(ids.add(option.id()), "Duplicate mode ID: %s", option.id());
-
-			Preconditions.checkArgument(ids.contains(defaultMode), "Default mode is not listed: %s", defaultMode);
-		}
+		public static final Codec<Modes> CODEC = IModesCodec.CODEC.validate(
+				value ->
+						value.options().stream().anyMatch(mode -> mode.id().equals(value.defaultMode()))
+						? DataResult.success(value)
+						: DataResult.error(() -> "Default mode is not listed: " + value.defaultMode())
+		);
 	}
 
 	/**
-	 * One firing mode, its typed trigger, and its registered behavior profile.
-	 *
-	 * @param id              Stable mode ID.
-	 * @param trigger         Typed firing trigger.
-	 * @param behaviorProfile Registered behavior-profile ID.
+	 * One trigger choice and referenced behavior profile.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record Mode(
 			Identifier id,
 			@SelfCodec Trigger trigger,
@@ -336,203 +444,135 @@ public record BlasterStats(
 	}
 
 	/**
-	 * Extensible typed firing trigger.
+	 * Closed trigger configurations; data cannot register additional scheduling behavior.
 	 */
-	public interface Trigger
+	public sealed interface Trigger permits SemiTrigger, AutoTrigger, BurstTrigger, ChargeTrigger
 	{
 		/**
-		 * Returns this trigger's registered discriminator.
+		 * Supported trigger choice.
 		 */
-		Identifier type();
+		TriggerType type();
 
-		/**
-		 * Strict codec for built-in and registered triggers.
-		 */
-		Codec<Trigger> CODEC = TRIGGER_CODEC;
+		Codec<Trigger> CODEC = GalaxiesCodecs.<TriggerType, Trigger>typedDispatch(TriggerType.CODEC, Map.of(TriggerType.SEMI, SemiTrigger.MAP_CODEC, TriggerType.AUTO, AutoTrigger.MAP_CODEC, TriggerType.BURST, BurstTrigger.MAP_CODEC, TriggerType.CHARGE, ChargeTrigger.MAP_CODEC), Trigger::type, "trigger").validate(trigger -> trigger instanceof ChargeTrigger charge && charge.minimumChargeTicks() > charge.maximumChargeTicks() ? DataResult.error(() -> "minimumChargeTicks exceeds maximumChargeTicks") : DataResult.success(trigger));
+
+		StreamCodec<RegistryFriendlyByteBuf, Trigger> PACKET_CODEC = TriggerType.PACKET_CODEC.<RegistryFriendlyByteBuf>cast().dispatch(Trigger::type, type -> switch (type)
+		{
+			case SEMI -> ISemiTriggerCodec.PACKET_CODEC;
+			case AUTO -> IAutoTriggerCodec.PACKET_CODEC;
+			case BURST -> IBurstTriggerCodec.PACKET_CODEC;
+			case CHARGE -> IChargeTriggerCodec.PACKET_CODEC;
+		});
 	}
 
 	/**
-	 * Built-in trigger that fires once on a valid press edge.
+	 * Press-edge trigger.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record SemiTrigger() implements Trigger, ISemiTriggerCodec
 	{
-		/**
-		 * Returns the semi trigger ID.
-		 */
 		@Override
-		public Identifier type()
+		public TriggerType type()
 		{
-			return TRIGGER_SEMI;
+			return TriggerType.SEMI;
 		}
 	}
 
 	/**
-	 * Built-in trigger that repeats while the server trigger lease remains valid.
+	 * Held automatic trigger.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record AutoTrigger() implements Trigger, IAutoTriggerCodec
 	{
-		/**
-		 * Returns the automatic trigger ID.
-		 */
 		@Override
-		public Identifier type()
+		public TriggerType type()
 		{
-			return TRIGGER_AUTO;
+			return TriggerType.AUTO;
 		}
 	}
 
 	/**
-	 * Schedules a bounded number of independent shots.
-	 *
-	 * @param rounds                  Number of rounds in one burst.
-	 * @param intervalTicks           Ticks between burst rounds.
-	 * @param interburstCooldownTicks Optional delay after the burst; absence uses automaticRepeatDelay.
+	 * Burst-specific rounds and scheduling.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record BurstTrigger(
-			@CodecRange(min = 1) int rounds,
+			@CodecRange(min = 1, max = 99) int rounds,
 			@CodecRange(min = 1) int intervalTicks,
 			@CodecRange(min = 1) Optional<Integer> interburstCooldownTicks
 	) implements Trigger, IBurstTriggerCodec
 	{
+		@Override
+		public TriggerType type()
+		{
+			return TriggerType.BURST;
+		}
+
 		/**
-		 * Resolves the default interburst delay against the containing stats definition.
-		 *
-		 * @param automaticRepeatDelay The containing blaster's required repeat interval.
-		 *
-		 * @return Explicit interburst cooldown or the containing repeat interval.
+		 * Resolves the containing weapon's default cooldown.
 		 */
 		public int effectiveInterburstCooldownTicks(int automaticRepeatDelay)
 		{
 			return interburstCooldownTicks.orElse(automaticRepeatDelay);
 		}
-
-		/**
-		 * Returns the burst trigger ID.
-		 */
-		@Override
-		public Identifier type()
-		{
-			return TRIGGER_BURST;
-		}
 	}
 
 	/**
-	 * Holds a trigger until minimum charge, maximum charge, or release policy resolves it.
-	 *
-	 * @param maximumChargeTicks Maximum held duration.
-	 * @param minimumChargeTicks Minimum duration; defaults to one tick.
-	 * @param releasePolicy      Whether to fire on release or at full charge.
+	 * Held charge timing and release policy.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record ChargeTrigger(
 			@CodecRange(min = 1) int maximumChargeTicks,
 			@CodecRange(min = 1) @CodecDefault("1") int minimumChargeTicks,
-			@SelfCodec ReleasePolicy releasePolicy
+			ReleasePolicy releasePolicy
 	) implements Trigger, IChargeTriggerCodec
 	{
-		/**
-		 * Returns the charge trigger ID.
-		 */
+		public static final Codec<ChargeTrigger> CODEC = IChargeTriggerCodec.CODEC.validate(value -> value.minimumChargeTicks() <= value.maximumChargeTicks() ? DataResult.success(value) : DataResult.error(() -> "minimumChargeTicks exceeds maximumChargeTicks"));
+
 		@Override
-		public Identifier type()
+		public TriggerType type()
 		{
-			return TRIGGER_CHARGE;
+			return TriggerType.CHARGE;
 		}
 	}
 
 	/**
-	 * Charge-trigger release behavior.
+	 * Server aim impulses in degrees and recovery duration in ticks.
 	 */
-	public enum ReleasePolicy implements StringRepresentable
-	{
-		/**
-		 * Fire once when released after the minimum charge duration.
-		 */
-		FIRE_ON_RELEASE("fire_on_release"),
-
-		/**
-		 * Fire once at maximum charge even if the trigger remains held.
-		 */
-		FIRE_AT_FULL("fire_at_full");
-
-		public static final Codec<ReleasePolicy> CODEC = StringRepresentable.fromValues(ReleasePolicy::values);
-
-		/**
-		 * Serialized release-policy identifier.
-		 */
-		private final String _id;
-
-		ReleasePolicy(String id)
-		{
-			_id = id;
-		}
-
-		/**
-		 * Returns the serialized release-policy identifier.
-		 */
-		@Override
-		public String getSerializedName()
-		{
-			return _id;
-		}
-	}
-
-	/**
-	 * Configured server-side aim impulse and recovery.
-	 *
-	 * @param hipPitchDegrees Positive upward hip-fire pitch impulse.
-	 * @param hipYawDegrees   Non-negative hip-fire yaw magnitude.
-	 * @param aimPitchDegrees Positive upward aimed pitch impulse.
-	 * @param aimYawDegrees   Non-negative aimed yaw magnitude.
-	 * @param recoveryTicks   Linear return duration in ticks.
-	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record Recoil(
-			@CodecRange(min = 0, max = 90) float hipPitchDegrees,
-			@CodecRange(min = 0, max = 90) float hipYawDegrees,
-			@CodecRange(min = 0, max = 90) float aimPitchDegrees,
-			@CodecRange(min = 0, max = 90) float aimYawDegrees,
+			@CodecRange(min = 0) float hipPitchDegrees,
+			@CodecRange(min = 0) float hipYawDegrees,
+			@CodecRange(min = 0) float aimPitchDegrees,
+			@CodecRange(min = 0) float aimYawDegrees,
 			@CodecRange(min = 0) int recoveryTicks
 	) implements IRecoilCodec
 	{
 		/**
-		 * Zero recoil used when the recoil object is absent.
+		 * No server aim recoil.
 		 */
 		public static final Recoil ZERO = new Recoil(0, 0, 0, 0, 0);
 	}
 
 	/**
-	 * Configured hip/aim cone half-angles and movement multipliers.
-	 *
-	 * @param hipDegrees          Hip-fire cone half-angle.
-	 * @param aimDegrees          Aimed cone half-angle.
-	 * @param movingMultiplier    Spread multiplier while moving.
-	 * @param sprintingMultiplier Spread multiplier while sprinting.
+	 * Cone half-angles and movement multipliers.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record Spread(
-			@CodecRange(min = 0, max = 90) float hipDegrees,
-			@CodecRange(min = 0, max = 90) float aimDegrees,
+			@CodecRange(min = 0) float hipDegrees,
+			@CodecRange(min = 0) float aimDegrees,
 			@CodecRange(min = 0) @CodecDefault("1.0f") float movingMultiplier,
 			@CodecRange(min = 0) @CodecDefault("1.0f") float sprintingMultiplier
 	) implements ISpreadCodec
 	{
 		/**
-		 * Zero spread and identity movement multipliers used when spread is absent.
+		 * No cone spread.
 		 */
 		public static final Spread DEFAULT = new Spread(0, 0, 1, 1);
 	}
 
 	/**
-	 * One normalized distance sample in a linear damage-falloff curve.
-	 *
-	 * @param distanceFraction Normalized distance within damageRange.
-	 * @param multiplier       Base-damage multiplier at that distance.
+	 * One linear falloff sample in normalized distance and damage.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record FalloffPoint(
 			@CodecRange(min = 0, max = 1) float distanceFraction,
 			@CodecRange(min = 0, max = 1) float multiplier
@@ -541,32 +581,16 @@ public record BlasterStats(
 	}
 
 	/**
-	 * Generated codec wire shape. Optional fields stay optional here so sibling-dependent defaults can be resolved
-	 * into a fully populated {@link BlasterStats} value after decoding.
-	 *
-	 * @param damage               Base direct-hit damage.
-	 * @param range                Maximum trace distance.
-	 * @param automaticRepeatDelay Minimum accepted-shot interval.
-	 * @param fireSound            Optional fire-sound override.
-	 * @param heat                 Optional heat object.
-	 * @param cooling              Optional cooling bypass definition.
-	 * @param damageRange          Optional falloff distance; defaults to range.
-	 * @param ammo                 Required ammunition definition.
-	 * @param configuration        Required profile and item-model configuration.
-	 * @param modes                Required mode list.
-	 * @param recoil               Optional recoil definition.
-	 * @param spread               Optional spread definition.
-	 * @param falloff              Optional falloff curve.
+	 * Generated authoring shape preserving optional fields before sibling-dependent normalization.
 	 */
-	@GenerateCodec(packetCodec = false, strict = true)
+	@GenerateCodec(strict = true)
 	public record BlasterStatsFields(
 			@CodecRange(min = 0) float damage,
 			@CodecRange(min = 1) int range,
 			@CodecRange(min = 1) int automaticRepeatDelay,
 			Optional<Identifier> fireSound,
 			@SelfCodec Optional<HeatDefinition> heat,
-			@UseCodec(customCodec = @CodecSource(source = BlasterStats.class, member = "COOLING_OPTIONAL_CODEC"))
-			@CodecDefault("java.util.Optional.empty()") Optional<BlasterItem.Cooling> cooling,
+			@SelfCodec Optional<BlasterItem.Cooling> cooling,
 			@CodecRange(min = 0) Optional<Float> damageRange,
 			@SelfCodec Ammo ammo,
 			@SelfCodec BlasterConfiguration configuration,
@@ -576,270 +600,82 @@ public record BlasterStats(
 			@CodecSize(min = 2) @SelfCodec Optional<List<FalloffPoint>> falloff
 	) implements IBlasterStatsFieldsCodec
 	{
-		/**
-		 * Copies an optional falloff list to keep the wire value immutable.
-		 */
-		public BlasterStatsFields
-		{
-			falloff = falloff.map(List::copyOf);
-		}
 	}
 
 	/**
-	 * IDs for the supported ammunition feed policies.
-	 */
-	public static final Identifier FEED_MAGAZINE = id("magazine");
-
-	/**
-	 * ID for the discrete per-shot ammunition feed.
-	 */
-	public static final Identifier FEED_PER_SHOT = id("per_shot");
-
-	/**
-	 * ID for the loaded component-charge feed.
-	 */
-	public static final Identifier FEED_CHARGE_STORE = id("charge_store");
-
-	/**
-	 * ID for the default creative ammunition policy.
-	 */
-	public static final Identifier FREE_AMMO_POLICY = id("free_ammo");
-
-	/**
-	 * ID for item-count ammunition consumption.
-	 */
-	public static final Identifier CONSUMPTION_ITEM_COUNT = id("item_count");
-
-	/**
-	 * ID for component-charge ammunition consumption.
-	 */
-	public static final Identifier CONSUMPTION_COMPONENT_CHARGE = id("component_charge");
-
-	/**
-	 * Built-in semi trigger ID.
-	 */
-	public static final Identifier TRIGGER_SEMI = id("semi");
-
-	/**
-	 * Built-in automatic trigger ID.
-	 */
-	public static final Identifier TRIGGER_AUTO = id("auto");
-
-	/**
-	 * Built-in burst trigger ID.
-	 */
-	public static final Identifier TRIGGER_BURST = id("burst");
-
-	/**
-	 * Built-in charge trigger ID.
-	 */
-	public static final Identifier TRIGGER_CHARGE = id("charge");
-
-	/**
-	 * Built-in mode-is field-conversion condition ID.
-	 */
-	public static final Identifier CONDITION_MODE_IS = id("mode_is");
-
-	/**
-	 * Built-in has-attachment field-conversion condition ID.
-	 */
-	public static final Identifier CONDITION_HAS_ATTACHMENT = id("has_attachment");
-
-	/**
-	 * Built-in loaded-charge-minimum field-conversion condition ID.
-	 */
-	public static final Identifier CONDITION_LOADED_CHARGE_MIN = id("loaded_charge_min");
-
-	/**
-	 * Module-namespaced typed trigger map codecs.
-	 */
-	private static final Map<Identifier, MapCodec<? extends Trigger>> _triggerCodecs = new ConcurrentHashMap<>();
-
-	/**
-	 * Closed built-in ammunition-consumption map codecs.
-	 */
-	private static final Map<Identifier, MapCodec<? extends Consumption>> _consumptionCodecs = new ConcurrentHashMap<>();
-
-	/**
-	 * Closed built-in field-conversion condition map codecs.
-	 */
-	private static final Map<Identifier, MapCodec<? extends FieldConversionCondition>> _conditionCodecs = new ConcurrentHashMap<>();
-
-	/**
-	 * Lock shared by addon trigger registration and type freezing.
-	 */
-	private static final Object _typeLock = new Object();
-
-	/**
-	 * Whether addon trigger registration has been frozen.
-	 */
-	private static volatile boolean _typesFrozen;
-
-	/**
-	 * Constant base-damage curve used when falloff is absent.
-	 */
-	private static final List<FalloffPoint> DEFAULT_FALLOFF = List.of(new FalloffPoint(0, 1), new FalloffPoint(1, 1));
-
-	static
-	{
-		_triggerCodecs.put(TRIGGER_SEMI, SemiTrigger.MAP_CODEC);
-		_triggerCodecs.put(TRIGGER_AUTO, AutoTrigger.MAP_CODEC);
-		_triggerCodecs.put(TRIGGER_BURST, BurstTrigger.MAP_CODEC);
-		_triggerCodecs.put(TRIGGER_CHARGE, ChargeTrigger.MAP_CODEC);
-		_consumptionCodecs.put(CONSUMPTION_ITEM_COUNT, ItemCountConsumption.MAP_CODEC);
-		_consumptionCodecs.put(CONSUMPTION_COMPONENT_CHARGE, ComponentChargeConsumption.MAP_CODEC);
-		_conditionCodecs.put(CONDITION_MODE_IS, ModeIsCondition.MAP_CODEC);
-		_conditionCodecs.put(CONDITION_HAS_ATTACHMENT, HasAttachmentCondition.MAP_CODEC);
-		_conditionCodecs.put(CONDITION_LOADED_CHARGE_MIN, LoadedChargeMinCondition.MAP_CODEC);
-	}
-
-	/**
-	 * Strict codec for typed firing triggers.
-	 */
-	public static final Codec<Trigger> TRIGGER_CODEC = GalaxiesCodecs.typedDispatch(
-			Identifier.CODEC,
-			_triggerCodecs,
-			Trigger::type,
-			"trigger"
-	);
-
-	/**
-	 * Strict codec for typed ammunition consumption.
-	 */
-	private static final Codec<Consumption> CONSUMPTION_CODEC = GalaxiesCodecs.typedDispatch(
-			Identifier.CODEC,
-			_consumptionCodecs,
-			Consumption::type,
-			"consumption"
-	);
-
-	/**
-	 * Strict codec for typed field-conversion conditions.
-	 */
-	private static final Codec<FieldConversionCondition> FIELD_CONDITION_CODEC = GalaxiesCodecs.typedDispatch(
-			Identifier.CODEC,
-			_conditionCodecs,
-			FieldConversionCondition::type,
-			"field-conversion condition"
-	);
-
-	/**
-	 * Strict bounded codec for the retained runtime cooling record.
-	 */
-	public static final Codec<BlasterItem.Cooling> COOLING_CODEC = GalaxiesCodecs.strict(BlasterItem.Cooling.MAP_CODEC);
-
-	/**
-	 * Optional wrapper retains cooling-object presence for heat cross-validation.
-	 */
-	public static final Codec<Optional<BlasterItem.Cooling>> COOLING_OPTIONAL_CODEC = COOLING_CODEC.flatXmap(
-			cooling -> DataResult.success(Optional.of(cooling)),
-			cooling -> cooling.map(DataResult::success)
-			                  .orElseGet(() -> DataResult.error(() -> "cooling cannot be encoded as an explicit empty value"))
-	);
-
-	/**
-	 * Strict generated-fields codec plus sibling-dependent normalization to the public stats record.
-	 */
-	public static final Codec<BlasterStats> CODEC = BlasterStatsFields.CODEC.flatXmap(
-			BlasterStats::fromFields,
-			BlasterStats::toFields
-	);
-
-	/**
-	 * Registers an addon trigger before definitions are decoded and before types are frozen.
-	 */
-	public static void registerTrigger(Identifier id, MapCodec<? extends Trigger> codec)
-	{
-		Objects.requireNonNull(id, "id");
-		Objects.requireNonNull(codec, "codec");
-
-		synchronized (_typeLock)
-		{
-			Preconditions.checkArgument(!_typesFrozen, "Trigger registration has been frozen");
-			Preconditions.checkArgument(!_triggerCodecs.containsKey(id), "Trigger codec already registered: %s", id);
-			_triggerCodecs.put(id, codec);
-		}
-	}
-
-	/**
-	 * Prevents further addon trigger registration after module initialization has finalized its types.
-	 */
-	public static void freezeTypes()
-	{
-		synchronized (_typeLock)
-		{
-			_typesFrozen = true;
-		}
-	}
-
-	/**
-	 * Converts non-default fields to a stats block.
+	 * Project fields to stats.
 	 */
 	private static DataResult<BlasterStats> fromFields(BlasterStatsFields fields)
 	{
-		try
-		{
-			var heat = fields.heat().orElse(HeatDefinition.ZERO);
-			var cooling = fields.cooling().orElse(BlasterItem.Cooling.ZERO);
-			if (fields.cooling().isPresent())
-				Preconditions.checkArgument(heat.capacity() > 0, "cooling requires heat.capacity greater than zero");
-			return DataResult.success(new BlasterStats(
-					fields.damage(),
-					fields.range(),
-					fields.automaticRepeatDelay(),
-					fields.fireSound(),
-					heat,
-					cooling,
-					fields.damageRange().orElse((float)fields.range()),
-					fields.ammo(),
-					fields.configuration(),
-					fields.modes(),
-					fields.recoil().orElse(Recoil.ZERO),
-					fields.spread().orElse(Spread.DEFAULT),
-					fields.falloff().orElse(DEFAULT_FALLOFF)
-			));
-		}
-		catch (IllegalArgumentException exception)
-		{
-			return DataResult.error(exception::getMessage);
-		}
-	}
+		var heat = fields.heat().orElse(HeatDefinition.ZERO);
 
-	/**
-	 * Converts non-default stats to a field block.
-	 */
-	private static DataResult<BlasterStatsFields> toFields(BlasterStats stats)
-	{
-		return DataResult.success(new BlasterStatsFields(
-				stats.damage(),
-				stats.range(),
-				stats.automaticRepeatDelay(),
-				stats.fireSound(),
-				optionalUnless(stats.heat(), HeatDefinition.ZERO),
-				optionalUnless(stats.cooling(), BlasterItem.Cooling.ZERO),
-				Float.compare(stats.damageRange(), stats.range()) == 0 ? Optional.empty() : Optional.of(stats.damageRange()),
-				stats.ammo(),
-				stats.configuration(),
-				stats.modes(),
-				optionalUnless(stats.recoil(), Recoil.ZERO),
-				optionalUnless(stats.spread(), Spread.DEFAULT),
-				stats.falloff().equals(DEFAULT_FALLOFF) ? Optional.empty() : Optional.of(stats.falloff())
+		if (heat.capacity() == 0 && !heat.equals(HeatDefinition.ZERO))
+			return DataResult.error(() -> "Disabled heat must have zero costs, rates and penalties");
+
+		if (fields.cooling().isPresent() && heat.capacity() == 0)
+			return DataResult.error(() -> "cooling requires nonzero heat capacity");
+
+		if (fields.damageRange().orElse((float)fields.range()) > fields.range())
+			return DataResult.error(() -> "damageRange cannot exceed range");
+
+		var falloff = fields.falloff().orElse(_defaultFalloff);
+		if (falloff.getFirst().distanceFraction() != 0 || falloff.getLast().distanceFraction() != 1)
+			return DataResult.error(() -> "falloff must span distance fractions 0 through 1");
+
+		for (var index = 1; index < falloff.size(); index++)
+		{
+			if (falloff.get(index).distanceFraction() <= falloff.get(index - 1).distanceFraction())
+				return DataResult.error(() -> "falloff distance fractions must be strictly increasing");
+		}
+
+		if (fields.ammo().feed() instanceof ChargeStoreFeed && !(fields.ammo().consumption() instanceof ComponentChargeConsumption))
+			return DataResult.error(() -> "charge_store requires component_charge consumption");
+
+		return DataResult.success(new BlasterStats(
+				fields.damage(),
+				fields.range(),
+				fields.automaticRepeatDelay(),
+				fields.fireSound(),
+				heat,
+				fields.cooling(),
+				fields.damageRange().orElse((float)fields.range()),
+				fields.ammo(),
+				fields.configuration(),
+				fields.modes(),
+				fields.recoil().orElse(Recoil.ZERO),
+				fields.spread().orElse(Spread.DEFAULT),
+				falloff
 		));
 	}
 
 	/**
-	 * Returns an empty optional when a value equals its canonical default.
+	 * Projects the stats values to fields.
 	 */
-	private static <A> Optional<A> optionalUnless(A value, A defaultValue)
+	private static BlasterStatsFields toFields(BlasterStats stats)
 	{
-		return Objects.equals(value, defaultValue) ? Optional.empty() : Optional.of(value);
+		return new BlasterStatsFields(
+				stats.damage(),
+				stats.range(),
+				stats.automaticRepeatDelay(),
+				stats.fireSound(),
+				GalaxiesCodecs.optionalUnless(stats.heat(), HeatDefinition.ZERO),
+				stats.cooling(),
+				GalaxiesCodecs.optionalUnless(stats.damageRange(), (float)stats.range()),
+				stats.ammo(),
+				stats.configuration(),
+				stats.modes(),
+				GalaxiesCodecs.optionalUnless(stats.recoil(), Recoil.ZERO),
+				GalaxiesCodecs.optionalUnless(stats.spread(), Spread.DEFAULT),
+				GalaxiesCodecs.optionalUnless(stats.falloff(), _defaultFalloff)
+		);
 	}
 
 	/**
-	 * Creates a namespaced identifier in this module.
+	 * Default constant-damage curve.
 	 */
-	private static Identifier id(String path)
-	{
-		return Identifier.fromNamespaceAndPath("pswg_blasters", path);
-	}
+	private static final List<FalloffPoint> _defaultFalloff = List.of(new FalloffPoint(0, 1), new FalloffPoint(1, 1));
+
+	public static final Codec<BlasterStats> CODEC = BlasterStatsFields.CODEC.comapFlatMap(BlasterStats::fromFields, BlasterStats::toFields);
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, BlasterStats> PACKET_CODEC = BlasterStatsFields.PACKET_CODEC.map(fields -> fromFields(fields).getOrThrow(), BlasterStats::toFields);
 }

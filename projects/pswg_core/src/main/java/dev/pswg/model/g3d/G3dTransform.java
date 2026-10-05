@@ -1,8 +1,9 @@
 package dev.pswg.model.g3d;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.ExtraCodecs;
+import dev.pswg.codec.GalaxiesCodecs;
+import dev.pswg.codecgenerator.*;
+import dev.pswg.generated.codecs.IComponentCodec;
+import dev.pswg.generated.codecs.IG3dTransformCodec;
 import org.joml.*;
 
 /**
@@ -10,34 +11,45 @@ import org.joml.*;
  * of a block; compiled transforms and runtime poses use blocks.
  *
  * @param translation The offset from the parent.
- * @param rotation    The rotation in x, y, z, w order.
+ * @param rotation    Quaternion rotation; authoring accepts Euler XYZ degrees or x/y/z/w quaternion input.
  * @param scale       The scale along each local axis.
  */
-public record G3dTransform(Vector3fc translation, Quaternionfc rotation, Vector3fc scale)
+@GenerateCodec(strict = true)
+public record G3dTransform(
+		@UseCodec(customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "FINITE_VECTOR3F"))
+		@CodecDefault("new org.joml.Vector3f()") Vector3fc translation,
+		@UseCodec(customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "ROTATION"))
+		@CodecDefault("new org.joml.Quaternionf()") Quaternionfc rotation,
+		@UseCodec(customCodec = @CodecSource(source = GalaxiesCodecs.class, member = "FINITE_VECTOR3F"))
+		@CodecDefault("new org.joml.Vector3f(1)") Vector3fc scale
+) implements IG3dTransformCodec
 {
+	/**
+	 * Numeric components used by transform-animation channel paths.
+	 */
+	@GenerateEnumCodec
+	public enum Component implements IComponentCodec
+	{
+		/**
+		 * Translation in consumer-owned coordinate units.
+		 */
+		TRANSLATION,
+
+		/**
+		 * Rotation; vector animation values use Euler XYZ degrees.
+		 */
+		ROTATION,
+
+		/**
+		 * Dimensionless scale.
+		 */
+		SCALE
+	}
+
 	/**
 	 * The unchanged local transform. Treat its JOML values as read-only.
 	 */
 	public static final G3dTransform IDENTITY = new G3dTransform(new Vector3f(), new Quaternionf(), new Vector3f(1));
-
-	/**
-	 * Uses Minecraft's vector and quaternion codecs, including axis-angle input.
-	 */
-	public static final Codec<G3dTransform> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ExtraCodecs.VECTOR3F.optionalFieldOf("translation", IDENTITY.translation()).forGetter(G3dTransform::translation),
-			ExtraCodecs.QUATERNIONF.optionalFieldOf("rotation", IDENTITY.rotation()).forGetter(G3dTransform::rotation),
-			ExtraCodecs.VECTOR3F.optionalFieldOf("scale", IDENTITY.scale()).forGetter(G3dTransform::scale)
-	).apply(instance, G3dTransform::new));
-
-	/**
-	 * Copies the caller's values so later edits do not change this transform.
-	 */
-	public G3dTransform
-	{
-		translation = new Vector3f(translation);
-		rotation = new Quaternionf(rotation);
-		scale = new Vector3f(scale);
-	}
 
 	/**
 	 * Writes this transform into a caller-owned matrix without allocating one.
@@ -55,7 +67,6 @@ public record G3dTransform(Vector3fc translation, Quaternionfc rotation, Vector3
 		if (!translation.isFinite() || !rotation.isFinite() || !scale.isFinite())
 			throw new IllegalArgumentException("Transform contains a non-finite value");
 
-		// A zero rotation is harmless authoring input. Interpret it as no rotation.
 		var normalized = new Quaternionf(rotation);
 		if (normalized.lengthSquared() == 0)
 			normalized.identity();

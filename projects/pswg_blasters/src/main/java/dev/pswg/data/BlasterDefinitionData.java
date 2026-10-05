@@ -1,17 +1,11 @@
 package dev.pswg.data;
 
-import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
-import dev.pswg.codec.GalaxiesCodecs;
-import dev.pswg.codecgenerator.CodecSource;
-import dev.pswg.codecgenerator.GenerateCodec;
-import dev.pswg.codecgenerator.SelfCodec;
-import dev.pswg.codecgenerator.UseCodec;
+import dev.pswg.codecgenerator.*;
 import dev.pswg.generated.codecs.IBlasterDefinitionDataCodec;
 import net.minecraft.resources.Identifier;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Contains all definition registries used by the common blaster API.
@@ -22,7 +16,7 @@ import java.util.Objects;
  * @param behaviorProfiles Shared behavior profiles keyed by their registry identifiers.
  * @param stanceProfiles   Shared numeric stance profiles keyed by their registry identifiers.
  */
-@GenerateCodec(packetCodec = false, strict = true)
+@GenerateCodec(strict = true)
 public record BlasterDefinitionData(
 		@UseCodec(customCodec = @CodecSource(source = BlasterDefinitionData.class, member = "GENERATION_CODEC"))
 		String generation,
