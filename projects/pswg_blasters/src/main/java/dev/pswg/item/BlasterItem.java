@@ -15,7 +15,6 @@ import dev.pswg.generated.codecs.IStateComponentCodec;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.interaction.IRecoilEntity;
 import dev.pswg.math.GMath;
-import dev.pswg.math.ModifierOperation;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
@@ -397,7 +396,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	/**
-	 * Reads the modern stats for the given blaster.
+	 * Reads shared effective stats for the given blaster and its current item context.
 	 *
 	 * @param world The world whose current blaster baked is queried
 	 * @param stack The stack to query
@@ -406,7 +405,26 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static Optional<BlasterStats> getStats(Level world, ItemStack stack)
 	{
-		return getDefinition(world, stack).map(BlasterDatapackDefinition::stats);
+		return getEffectiveStats(world, stack).map(BlasterEffectiveStats::stats);
+	}
+
+	/**
+	 * Evaluates the current stack's ADS/venting/hip context; deployment is not yet an item mechanic.
+	 */
+	public static Optional<BlasterEffectiveStats> getEffectiveStats(Level world, ItemStack stack)
+	{
+		var state = getState(stack);
+		var stance = state.coolingMode().isCooling() ? BlasterStanceProfile.WeaponState.VENTING
+		                                             : state.isAiming() ? BlasterStanceProfile.WeaponState.ADS : BlasterStanceProfile.WeaponState.HIP;
+		return getEffectiveStats(world, stack, new BlasterEffectiveStats.Context(stance, false, state.isAiming()));
+	}
+
+	/**
+	 * Shared query for a caller's captured runtime state or a UI's explicit preview context.
+	 */
+	public static Optional<BlasterEffectiveStats> getEffectiveStats(Level world, ItemStack stack, BlasterEffectiveStats.Context context)
+	{
+		return getLoadout(world, stack).map(loadout -> BlasterEffectiveStats.evaluate(loadout, context));
 	}
 
 	/**
@@ -467,28 +485,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			return false;
 
 		stack.set(SELECTED_MODE, modeId);
+		refreshAimingZoom(world, stack);
 		return true;
-	}
-
-	/**
-	 * Temp scale until the stat modifier evaluation is implemented.
-	 */
-	private static float getTempRecoilScale(Level world, ItemStack stack)
-	{
-		var scale = 1.0F;
-		for (var attachment : getActiveAttachments(world, stack).orElse(Map.of()).values())
-		{
-			for (var modifier : attachment.modifiers())
-			{
-				if (
-						modifier.function() == BlasterStatFunction.RECOIL_MULTIPLIER
-						&& modifier.operation() == ModifierOperation.MULTIPLY_TOTAL
-						&& modifier.modifierCondition().equals(BlasterAttachmentDefinition.ModifierCondition.UNCONDITIONAL)
-				)
-					scale *= modifier.value();
-			}
-		}
-		return scale;
 	}
 
 	/**
@@ -520,7 +518,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 * @param stack  The stack to modify
 	 * @param aiming True if the blaster should be aiming-down-sights, false otherwise
 	 */
-	public static void setAiming(ItemStack stack, boolean aiming)
+	public static void setAiming(Level world, ItemStack stack, boolean aiming)
 	{
 		applyState(stack, state -> state.withIsAiming(aiming));
 
@@ -529,7 +527,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (aiming)
 		{
 			attrs = attrs.withModifierAdded(Attributes.MOVEMENT_SPEED, ATTR_MODIFIER_AIMING_SPEED_PENALTY_ENABLED, EquipmentSlotGroup.HAND);
-			attrs = attrs.withModifierAdded(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED, EquipmentSlotGroup.HAND);
 		}
 		else
 		{
@@ -537,7 +534,38 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			attrs = AttributeUtil.without(attrs, GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED);
 		}
 
-		stack.set(DataComponents.ATTRIBUTE_MODIFIERS, attrs);
+		stack.set(DataComponents.ATTRIBUTE_MODIFIERS, withAimingZoom(world, stack, attrs));
+	}
+
+	/**
+	 * Derives this weapon's native zoom modifier from the same effective result used by gameplay/UI.
+	 */
+	private static ItemAttributeModifiers withAimingZoom(Level world, ItemStack stack, ItemAttributeModifiers attributes)
+	{
+		if (!getState(stack).isAiming())
+			return AttributeUtil.without(attributes, GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED);
+
+		var effective = getEffectiveStats(world, stack);
+		if (effective.isEmpty())
+			return AttributeUtil.without(attributes, GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, ATTR_MODIFIER_AIMING_FOV_ENABLED);
+
+		return attributes.withModifierAdded(GalaxiesEntityAttributes.FIELD_OF_VIEW_ZOOM, new AttributeModifier(
+				ATTR_MODIFIER_AIMING_FOV_ENABLED.id(),
+				effective.orElseThrow().zoom() - 1.0,
+				AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+		), EquipmentSlotGroup.HAND);
+	}
+
+	/**
+	 * Updates native attributes only when their value changes, including after definition reloads.
+	 */
+	private static void refreshAimingZoom(Level world, ItemStack stack)
+	{
+		var previous = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+		var updated = withAimingZoom(world, stack, previous);
+
+		if (!updated.equals(previous))
+			stack.set(DataComponents.ATTRIBUTE_MODIFIERS, updated);
 	}
 
 	/**
@@ -558,7 +586,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		var cooldown = state.fireCooldown();
 		var time = world.getGameTime() + tickDelta;
 
-		if (cooldown <= lastFired || cooldown < time)
+		if (cooldown <= lastFired || cooldown <= time)
 			return Optional.empty();
 
 		var cooldownLength = cooldown - lastFired;
@@ -600,15 +628,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var ventingHeat = potentialVentingHeat.get() / lastVentingHeat;
 
-		var attachments = getAttachments(stack);
-
 		var primaryBypassTime = stats.cooling().orElseThrow().primaryBypassTime();
-		var primaryBypassTolerance = getScaledPrimaryBypassTolerance(stats, attachments);
+		var primaryBypassTolerance = stats.cooling().orElseThrow().primaryBypassTolerance();
 		if (Math.abs(ventingHeat - primaryBypassTime) <= primaryBypassTolerance)
 			return Optional.of(CoolingBypass.PRIMARY);
 
 		var secondaryBypassTime = stats.cooling().orElseThrow().secondaryBypassTime();
-		var secondaryBypassTolerance = getScaledSecondaryBypassTolerance(stats, attachments);
+		var secondaryBypassTolerance = stats.cooling().orElseThrow().secondaryBypassTolerance();
 		if (Math.abs(ventingHeat - secondaryBypassTime) <= secondaryBypassTolerance)
 			return Optional.of(CoolingBypass.SECONDARY);
 
@@ -632,7 +658,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var state = getState(stack);
 
-		var isWaitingToFire = state.fireCooldown() >= world.getGameTime();
+		var isWaitingToFire = state.fireCooldown() > world.getGameTime();
 		if (isWaitingToFire)
 			return false;
 
@@ -699,12 +725,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (state.coolingMode() != CoolingMode.PASSIVE)
 			return Optional.empty();
 
-		var attachments = getAttachments(stack);
-
 		var time = world.getGameTime() + tickDelta;
 
 		var lastCommittedHeat = state.lastTotalHeat();
-		var dissipationPerTick = getScaledHeatDrainSpeed(stats, attachments);
+		var dissipationPerTick = stats.heat().drainSpeed();
 
 		var dissipation = dissipationPerTick * (time - state.cooldownStart());
 		if (dissipation > lastCommittedHeat)
@@ -738,12 +762,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (state.lastVentingHeat() <= 0)
 			return Optional.empty();
 
-		var attachments = getAttachments(stack);
-
 		var time = world.getGameTime() + tickDelta;
 
 		var lastVentingHeat = state.lastVentingHeat();
-		var dissipationPerTick = getScaledOverheatDrainSpeed(stats, attachments);
+		var dissipationPerTick = stats.heat().overheatDrainSpeed();
 
 		var dissipation = dissipationPerTick * (time - state.cooldownStart());
 		if (dissipation > lastVentingHeat)
@@ -769,84 +791,14 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				.orElseGet(() -> new CoolingStatus(CoolingMode.PASSIVE, getAccumulatedHeat(world, stack, tickDelta).orElse(0f)));
 	}
 
-	/**
-	 * Determines the auto-repeat delay of a blaster considering both it's base stats and its
-	 * attachment modifiers.
-	 *
-	 * @param stats       The base blaster stats to consider
-	 * @param attachments The blaster attachments to consider
-	 *
-	 * @return The minimum repeat interval, in ticks
-	 */
-	private static int getScaledAutoRepeatDelay(BlasterStats stats, AttachmentsComponent attachments)
-	{
-		// TODO: attachment mutations
-		return stats.automaticRepeatDelay();
-	}
-
-	private static float getScaledPrimaryBypassTolerance(BlasterStats stats, AttachmentsComponent attachments)
-	{
-		// TODO: attachment mutations
-		return stats.cooling().orElseThrow().primaryBypassTolerance();
-	}
-
-	private static float getScaledSecondaryBypassTolerance(BlasterStats stats, AttachmentsComponent attachments)
-	{
-		// TODO: attachment mutations
-		return stats.cooling().orElseThrow().secondaryBypassTolerance();
-	}
-
-	/**
-	 * Determines the passive cooldown delay of a blaster considering both it's base stats and its
-	 * attachment modifiers.
-	 *
-	 * @param stats       The base blaster stats to consider
-	 * @param attachments The blaster attachments to consider
-	 *
-	 * @return The delay before passive cooldown begins, in ticks
-	 */
-	private static int getScaledPassiveCooldownDelay(BlasterStats stats, AttachmentsComponent attachments)
-	{
-		// TODO: attachment mutations
-		return stats.heat().passiveCooldownDelay();
-	}
-
-	/**
-	 * Determines the passive heat drain speed of a blaster considering both it's base stats and its
-	 * attachment modifiers.
-	 *
-	 * @param stats       The base blaster stats to consider
-	 * @param attachments The blaster attachments to consider
-	 *
-	 * @return The passive drain speed, in units per tick
-	 */
-	private static float getScaledHeatDrainSpeed(BlasterStats stats, AttachmentsComponent attachments)
-	{
-		// TODO: attachment mutations
-		return stats.heat().drainSpeed();
-	}
-
-	/**
-	 * Determines the overheated heat drain speed of a blaster considering both it's base stats and its
-	 * attachment modifiers.
-	 *
-	 * @param stats       The base blaster stats to consider
-	 * @param attachments The blaster attachments to consider
-	 *
-	 * @return The overheated drain speed, in units per tick
-	 */
-	private static float getScaledOverheatDrainSpeed(BlasterStats stats, AttachmentsComponent attachments)
-	{
-		// TODO: attachment mutations
-		return stats.heat().overheatDrainSpeed();
-	}
-
 	@Override
 	public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot)
 	{
 		// If the stack does not have a serial number, assign one
 		if (stack.get(SERIAL) == null)
 			stack.set(SERIAL, world.getRandom().nextLong());
+		if (getState(stack).isAiming())
+			refreshAimingZoom(world, stack);
 	}
 
 	@Override
@@ -898,7 +850,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		var state = getState(stack);
 
 		if (!world.isClientSide() && user.getTicksUsingItem() > TOGGLE_AIMING_USE_TIME_TICKS && state.isAiming())
-			setAiming(stack, false);
+			setAiming(world, stack, false);
 
 		return super.releaseUsing(stack, world, user, remainingUseTicks);
 	}
@@ -914,7 +866,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		if (!world.isClientSide())
 		{
-			setAiming(stack, !state.isAiming());
+			setAiming(world, stack, !state.isAiming());
 
 			// this is required to "start using" the item instead of
 			// immediately consuming it.
@@ -940,7 +892,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			return InteractionResult.PASS;
 
 		var state = getState(itemStack);
-		var attachments = getAttachments(itemStack);
 
 		var optionalStats = getStats(world, itemStack);
 		if (optionalStats.isEmpty())
@@ -1047,9 +998,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			}
 		}
 
+		var shotStats = getEffectiveStats(world, itemStack, new BlasterEffectiveStats.Context(
+				BlasterStanceProfile.WeaponState.FIRING, false, state.isAiming()
+		)).orElseThrow();
+		stats = shotStats.stats();
 		state = state.withLastFired(timestamp)
-		             .withCooling(CoolingMode.PASSIVE, timestamp + getScaledPassiveCooldownDelay(stats, attachments))
-		             .withFireCooldown(timestamp + getScaledAutoRepeatDelay(stats, attachments));
+		             .withCooling(CoolingMode.PASSIVE, timestamp + stats.heat().passiveCooldownDelay())
+		             .withFireCooldown(timestamp + stats.automaticRepeatDelay());
 
 		var totalHeat = coolingStatus.totalHeat();
 
@@ -1062,7 +1017,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 			// TODO: fixed recoil mean/std pattern for first n shots
 
-			var recoilScale = getTempRecoilScale(world, itemStack);
+			var recoilScale = shotStats.recoilMultiplier();
 
 			var recoil = new Vector3f(
 					-(float)RandomHelper.nextGaussian(world.getRandom(), 3.6, 0.2),
@@ -1071,7 +1026,11 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			);
 
 			if (user instanceof IRecoilEntity recoilEntity)
-				recoilEntity.pswg$addRecoilVelocity(recoil.mul(recoilScale));
+				recoilEntity.pswg$addRecoilVelocity(recoil.set(
+						(float)Math.clamp((double)recoil.x() * recoilScale, -90, 90),
+						(float)Math.clamp((double)recoil.y() * recoilScale, -90, 90),
+						0
+				));
 		}
 
 		if (user instanceof IRecoilEntity recoilEntity)

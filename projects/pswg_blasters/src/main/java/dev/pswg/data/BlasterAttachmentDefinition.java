@@ -1,5 +1,7 @@
 package dev.pswg.data;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import dev.pswg.codecgenerator.*;
 import dev.pswg.generated.codecs.IBlasterAttachmentDefinitionCodec;
 import dev.pswg.generated.codecs.IModifierCodec;
@@ -14,12 +16,12 @@ import java.util.Optional;
  * Modifier-only attachment definition, shared or inline in a weapon's option catalog.
  *
  * @param translationKey Display translation key.
- * @param slots Unique compatible slot IDs.
- * @param category Group used by selection UIs.
- * @param modifiers Ordered stat modifications; empty for cosmetic-only options.
- * @param grantedModes Optional unique mode grants.
- * @param stanceProfile Optional cosmetic pose profile.
- * @param itemModel Optional cosmetic model root.
+ * @param slots          Unique compatible slot IDs.
+ * @param category       Group used by selection UIs.
+ * @param modifiers      Ordered stat modifications; empty for cosmetic-only options.
+ * @param grantedModes   Optional unique mode grants.
+ * @param stanceProfile  Optional cosmetic pose profile.
+ * @param itemModel      Optional cosmetic model root.
  */
 @GenerateCodec(strict = true)
 public record BlasterAttachmentDefinition(
@@ -62,5 +64,15 @@ public record BlasterAttachmentDefinition(
 			@SelfCodec @CodecDefault("dev.pswg.data.BlasterAttachmentDefinition.ModifierCondition.UNCONDITIONAL") ModifierCondition modifierCondition
 	) implements IModifierCodec
 	{
+		/**
+		 * Zoom and cadence require a positive literal-total factor; zero remains useful for recoil/spread/cooling.
+		 */
+		public static final Codec<Modifier> CODEC = IModifierCodec.CODEC.validate(
+				modifier ->
+						modifier.operation() == ModifierOperation.MULTIPLY_TOTAL && modifier.value() == 0
+						&& (modifier.function() == BlasterStatFunction.ZOOM_MULTIPLIER || modifier.function() == BlasterStatFunction.FIRE_RATE_MULTIPLIER)
+						? DataResult.error(() -> "Zoom and fire-rate multipliers must be positive")
+						: DataResult.success(modifier)
+		);
 	}
 }
