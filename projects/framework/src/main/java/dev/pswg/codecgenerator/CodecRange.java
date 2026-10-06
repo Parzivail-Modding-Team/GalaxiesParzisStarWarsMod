@@ -18,7 +18,8 @@ public @interface CodecRange
 	double min();
 
 	/**
-	 * The inclusive maximum value.
+	 * The inclusive maximum value. When omitted, generated codecs use the component's numeric type maximum.
+	 * The declared default is a finite placeholder; the processor distinguishes omitted and authored bounds.
 	 */
 	double max() default Float.MAX_VALUE;
 }

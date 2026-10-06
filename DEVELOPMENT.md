@@ -55,7 +55,7 @@ The processor supports:
 - `@SelfCodec` to reuse a type's existing codec, including elements in optional/list/map values.
 - `@CodecDefault("<Java expression>")` for absent-field defaults.
 - `@CodecName("<serialized name>")` when a Java component name differs from its data field, such as `defaultMode` serialized as `default`.
-- `@CodecRange(min = ..., max = ...)` for inclusive numeric limits, including optional numeric fields.
+- `@CodecRange(min = ..., max = ...)` for inclusive numeric limits, including optional numeric fields. An omitted maximum uses the component's numeric type maximum; explicitly supplied maxima remain validated against that type.
 - `@CodecSize(min = ..., max = ...)` for list/map counts.
 - `@CodecUnique` and `@CodecUnique(key = "id")` for unique list values or unique record keys.
 - Native codecs for JOML vectors/quaternions and Minecraft `Ingredient`, plus recursive optionals, lists, and maps.

@@ -53,7 +53,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -332,6 +331,15 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	);
 
 	/**
+	 * Persistent mode preference.
+	 */
+	private static final DataComponentType<Identifier> SELECTED_MODE = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			Blasters.id("selected_mode"),
+			DataComponentType.<Identifier>builder().persistent(Identifier.CODEC).networkSynchronized(Identifier.STREAM_CODEC).build()
+	);
+
+	/**
 	 * @return A new instance of the item settings for this item
 	 */
 	public static Properties createSettings()
@@ -359,6 +367,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		stack.set(DataComponents.ITEM_MODEL, definition.stats().configuration().itemModel());
 
 		stack.set(ID, id);
+		stack.set(SELECTED_MODE, definition.stats().modes().defaultMode());
 		var attachments = definition.attachments();
 		stack.set(ATTACHMENTS, new AttachmentsComponent(attachments.hud(), attachments.defaults()));
 
@@ -423,23 +432,42 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static Optional<Map<Identifier, BlasterAttachmentDefinition>> getActiveAttachments(Level world, ItemStack stack)
 	{
+		return getLoadout(world, stack).map(BlasterLoadout::activeAttachments);
+	}
+
+	/**
+	 * Reads one current definition snapshot and resolves the stack's component-owned loadout.
+	 */
+	public static Optional<BlasterLoadout> getLoadout(Level world, ItemStack stack)
+	{
 		var id = stack.get(ID);
 		if (id == null)
 			return Optional.empty();
 
-		var resolvedAttachments = BlasterData.get(world).resolvedAttachments(id);
-		if (resolvedAttachments.isEmpty())
+		var snapshot = BlasterData.get(world);
+		var definition = snapshot.blasters().get(id);
+		if (definition == null)
 			return Optional.empty();
 
-		var activeAttachments = new HashMap<Identifier, BlasterAttachmentDefinition>();
-		for (var entry : getAttachments(stack).applied().entrySet())
-		{
-			var definition = resolvedAttachments.orElseThrow().get(entry.getValue());
-			if (definition != null && definition.slots().contains(entry.getKey()))
-				activeAttachments.put(entry.getKey(), definition);
-		}
+		return snapshot.resolvedAttachments(id).map(options -> BlasterLoadout.resolve(
+				definition,
+				options,
+				getAttachments(stack).applied(),
+				Optional.ofNullable(stack.get(SELECTED_MODE))
+		));
+	}
 
-		return Optional.of(Map.copyOf(activeAttachments));
+	/**
+	 * Selects an available base/granted mode on the logical server, leaving the stack unchanged on rejection.
+	 */
+	public static boolean selectMode(ServerLevel world, ItemStack stack, Identifier modeId)
+	{
+		var loadout = getLoadout(world, stack);
+		if (loadout.isEmpty() || loadout.orElseThrow().findMode(modeId).isEmpty())
+			return false;
+
+		stack.set(SELECTED_MODE, modeId);
+		return true;
 	}
 
 	/**

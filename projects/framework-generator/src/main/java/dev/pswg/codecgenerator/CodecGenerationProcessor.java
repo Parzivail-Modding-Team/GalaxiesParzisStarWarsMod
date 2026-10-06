@@ -784,7 +784,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 		var codecRange = component.getAnnotation(CodecRange.class);
 		if (codecRange != null && (!Double.isFinite(codecRange.min())
 				|| !Double.isFinite(codecRange.max())
-				|| codecRange.min() > codecRange.max()))
+				|| (hasExplicitRangeMaximum(component) && codecRange.min() > codecRange.max())))
 		{
 			reportError(component, "@CodecRange requires finite bounds with min <= max.");
 			return null;
@@ -969,19 +969,19 @@ public class CodecGenerationProcessor extends AbstractProcessor
 			case "byte", "java.lang.Byte" ->
 			{
 				var min = rangeBoundLiteral(numericType, range.min(), element);
-				var max = rangeBoundLiteral(numericType, range.max(), element);
+				var max = maximumRangeLiteral(numericType, range, element);
 				return min == null || max == null ? null : createRangeValidation(CodeBlock.of("$T.BYTE", codecType), range, min, max);
 			}
 			case "short", "java.lang.Short" ->
 			{
 				var min = rangeBoundLiteral(numericType, range.min(), element);
-				var max = rangeBoundLiteral(numericType, range.max(), element);
+				var max = maximumRangeLiteral(numericType, range, element);
 				return min == null || max == null ? null : createRangeValidation(CodeBlock.of("$T.SHORT", codecType), range, min, max);
 			}
 			case "int", "java.lang.Integer" ->
 			{
 				var min = rangeBoundLiteral(numericType, range.min(), element);
-				var max = rangeBoundLiteral(numericType, range.max(), element);
+				var max = maximumRangeLiteral(numericType, range, element);
 				return min == null || max == null
 						? null
 						: CodeBlock.of("$T.intRange($L, $L)", codecType, min, max);
@@ -989,7 +989,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 			case "long", "java.lang.Long" ->
 			{
 				var min = rangeBoundLiteral(numericType, range.min(), element);
-				var max = rangeBoundLiteral(numericType, range.max(), element);
+				var max = maximumRangeLiteral(numericType, range, element);
 				return min == null || max == null ? null : createRangeValidation(CodeBlock.of("$T.LONG", codecType), range, min, max);
 			}
 			case "float", "java.lang.Float" ->
@@ -1005,7 +1005,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 			}
 			case "double", "java.lang.Double" ->
 			{
-				return CodeBlock.of("$T.doubleRange($L, $L)", codecType, doubleLiteral(range.min()), doubleLiteral(range.max()));
+				return CodeBlock.of("$T.doubleRange($L, $L)", codecType, doubleLiteral(range.min()), maximumRangeLiteral(numericType, range, element));
 			}
 			default ->
 			{
@@ -1022,7 +1022,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 	{
 		var numericType = getTypeKey(type);
 		var minLiteral = rangeBoundLiteral(numericType, range.min(), element);
-		var maxLiteral = rangeBoundLiteral(numericType, range.max(), element);
+		var maxLiteral = maximumRangeLiteral(numericType, range, element);
 		if (minLiteral == null || maxLiteral == null)
 		{
 			if (!isNumericType(type))
@@ -1030,6 +1030,32 @@ public class CodecGenerationProcessor extends AbstractProcessor
 			return null;
 		}
 		return createRangeValidation(codec, range, minLiteral, maxLiteral);
+	}
+
+	/** Distinguishes an authored maximum from the annotation's legacy floating-point default. */
+	private boolean hasExplicitRangeMaximum(Element element)
+	{
+		return element.getAnnotationMirrors().stream()
+				.filter(annotation -> annotation.getAnnotationType().toString().equals(CodecRange.class.getName()))
+				.anyMatch(annotation -> annotation.getElementValues().keySet().stream().anyMatch(member -> member.getSimpleName().contentEquals("max")));
+	}
+
+	/** Uses the numeric type's exact maximum when the author supplied only a minimum. */
+	private String maximumRangeLiteral(String numericType, CodecRange range, Element element)
+	{
+		if (hasExplicitRangeMaximum(element))
+			return rangeBoundLiteral(numericType, range.max(), element);
+
+		return switch (numericType)
+		{
+			case "byte", "java.lang.Byte" -> "Byte.MAX_VALUE";
+			case "short", "java.lang.Short" -> "Short.MAX_VALUE";
+			case "int", "java.lang.Integer" -> "Integer.MAX_VALUE";
+			case "long", "java.lang.Long" -> "Long.MAX_VALUE";
+			case "float", "java.lang.Float" -> "Float.MAX_VALUE";
+			case "double", "java.lang.Double" -> "Double.MAX_VALUE";
+			default -> null;
+		};
 	}
 
 	/**
@@ -1075,7 +1101,7 @@ public class CodecGenerationProcessor extends AbstractProcessor
 				maxLiteral,
 				dataResultType,
 				dataResultType,
-				"Value must be within range [" + range.min() + ";" + range.max() + "]: "
+				"Value must be within range [" + minLiteral + ";" + maxLiteral + "]: "
 		);
 	}
 
