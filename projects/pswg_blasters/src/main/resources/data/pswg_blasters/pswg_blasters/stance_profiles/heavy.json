@@ -1,0 +1,11 @@
+{
+	"archetype": "pswg_blasters:heavy",
+	"poses": {"poseDefinitions": {
+		"pswg_blasters:heavy/hip": {"itemTransform": {"rotation": [0, 0, 0]}, "armMask": ["mainArm", "supportArm"]},
+		"pswg_blasters:heavy/deployed": {"itemTransform": {"rotation": [0, 0, 0]}, "armMask": ["mainArm", "supportArm"]}
+	}},
+	"rows": [
+		{"layer": "weapon_state", "when": {"weaponState": "hip"}, "pose": "pswg_blasters:heavy/hip"},
+		{"layer": "weapon_state", "when": {"weaponState": "deployed"}, "pose": "pswg_blasters:heavy/deployed"}
+	]
+}

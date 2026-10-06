@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [" I ", "RCR", " A "],
+	"key": {"I":"minecraft:iron_ingot","R":"minecraft:redstone","C":"minecraft:copper_ingot","A":"minecraft:amethyst_shard"},
+	"result": {"id":"pswg_blasters:small_power_pack","count":1}
+}

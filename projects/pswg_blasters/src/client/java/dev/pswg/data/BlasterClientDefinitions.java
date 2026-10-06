@@ -57,6 +57,8 @@ public final class BlasterClientDefinitions
 		});
 
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.COMBAT).register(output -> {
+			output.accept(Blasters.SMALL_POWER_PACK);
+			output.accept(Blasters.POWER_PACK);
 			current().blasters().entrySet().stream().sorted(
 					java.util.Map.Entry.comparingByKey()).forEach(entry -> output.accept(BlasterItem.createStack(entry.getKey(), entry.getValue()))
 			);

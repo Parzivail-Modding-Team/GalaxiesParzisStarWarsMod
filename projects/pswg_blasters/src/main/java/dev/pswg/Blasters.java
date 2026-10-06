@@ -7,6 +7,9 @@ import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.data.BlasterData;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
+import dev.pswg.item.ChargedItem;
+import dev.pswg.item.component.StoredCharge;
+import dev.pswg.interaction.BlasterActions;
 import dev.pswg.registry.Registrar;
 import dev.pswg.sound.BlasterSounds;
 import net.minecraft.core.registries.Registries;
@@ -60,6 +63,28 @@ public final class Blasters implements GalaxiesAddon
 	public static final Identifier BLASTER_ITEM_ID = id("blaster");
 	public static final BlasterItem BLASTER_ITEM = Registrar.item(BLASTER_ITEM_ID, BlasterItem::new, BlasterItem.createSettings());
 
+	/**
+	 * Compact 100-unit pack.
+	 */
+	public static final Item SMALL_POWER_PACK = Registrar.item(
+			id("small_power_pack"),
+			ChargedItem::new,
+			new Item.Properties()
+					.stacksTo(1)
+					.component(StoredCharge.COMPONENT, new StoredCharge(100, 100))
+	);
+
+	/**
+	 * Standard 500-unit pack.
+	 */
+	public static final Item POWER_PACK = Registrar.item(
+			id("power_pack"),
+			ChargedItem::new,
+			new Item.Properties()
+					.stacksTo(1)
+					.component(StoredCharge.COMPONENT, new StoredCharge(500, 500))
+	);
+
 	public static final EntityType<BlasterBoltEntity> BLASTER_BOLT_ENTITY = Registrar.entityType(
 			id("blaster_bolt"),
 			EntityType.Builder.of(BlasterBoltEntity::new, MobCategory.MISC)
@@ -74,6 +99,7 @@ public final class Blasters implements GalaxiesAddon
 	public void onGalaxiesReady()
 	{
 		BlasterData.register();
+		BlasterActions.register();
 
 		BlasterSounds.register();
 

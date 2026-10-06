@@ -1,0 +1,22 @@
+{
+	"stats": {
+		"damage": 12,
+		"range": 48,
+		"damageRange": 32,
+		"automaticRepeatDelay": 8,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {"capacity": 100, "perRound": 18, "drainSpeed": 5, "overheatPenalty": 25, "overheatDrainSpeed": 2, "passiveCooldownDelay": 15, "overchargeBonus": 40},
+		"cooling": {"primaryBypassTime": 0.7, "primaryBypassTolerance": 0.1, "secondaryBypassTime": 0.25, "secondaryBypassTolerance": 0.05},
+		"ammo": {
+			"feed": {"type": "magazine", "magazineSize": 25, "reloadTicks": 40},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {"type": "component_charge", "component": "pswg:stored_charge", "unitsPerRound": 4}
+		},
+		"configuration": {"archetype": "pswg_blasters:pistol", "itemModel": "pswg_blasters:dl44"},
+		"modes": {"default": "pswg_blasters:semi", "options": [{"id": "pswg_blasters:semi", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:test_blaster/direct"}]},
+		"recoil": {"hipPitchDegrees": 4, "hipYawDegrees": 1, "aimPitchDegrees": 1.5, "aimYawDegrees": 0.5, "recoveryTicks": 3},
+		"spread": {"hipDegrees": 2, "aimDegrees": 0.5},
+		"falloff": [{"distanceFraction": 0, "multiplier": 1}, {"distanceFraction": 1, "multiplier": 0.5}]
+	},
+	"attachments": {"hud": "pswg_blasters:default", "defaults": {}, "options": {}}
+}

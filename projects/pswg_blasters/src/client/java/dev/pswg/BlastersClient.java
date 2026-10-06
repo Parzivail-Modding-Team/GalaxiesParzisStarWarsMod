@@ -7,6 +7,11 @@ import dev.pswg.events.HudRenderEvents;
 import dev.pswg.events.ItemRenderEvents;
 import dev.pswg.hud.DefaultBlasterHudRenderer;
 import dev.pswg.input.GalaxiesKeybinds;
+import dev.pswg.input.BlasterControls;
+import dev.pswg.interaction.BlasterActions;
+import dev.pswg.data.BlasterStanceProfile;
+import dev.pswg.item.BlasterEffectiveStats;
+import dev.pswg.item.component.StoredCharge;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.item.HasAttachmentProperty;
 import dev.pswg.item.ItemTooltipHelper;
@@ -48,6 +53,7 @@ public class BlastersClient implements GalaxiesClientAddon
 	public void onGalaxiesClientReady()
 	{
 		BlasterClientDefinitions.register();
+		BlasterControls.register();
 		EntityRenderers.register(Blasters.BLASTER_BOLT_ENTITY, BlasterBoltEntityRenderer::new);
 
 		BLASTER_HUD_REGISTRY.register(Blasters.DEFAULT_HUD, new DefaultBlasterHudRenderer());
@@ -64,6 +70,8 @@ public class BlastersClient implements GalaxiesClientAddon
 
 		// Add the name of the blaster in the tool tip, with a fallback
 		ItemTooltipHelper.registerTooltip(Blasters.BLASTER_ITEM, BlastersClient::getTooltip);
+		ItemTooltipHelper.registerTooltip(Blasters.SMALL_POWER_PACK, BlastersClient::getPackTooltip);
+		ItemTooltipHelper.registerTooltip(Blasters.POWER_PACK, BlastersClient::getPackTooltip);
 
 		ConditionalItemModelProperties.ID_MAPPER.put(Blasters.id("has_attachment"), HasAttachmentProperty.CODEC);
 
@@ -88,6 +96,8 @@ public class BlastersClient implements GalaxiesClientAddon
 	{
 		list.add(Component.translatable(itemStack.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID).toLanguageKey()));
 		list.add(GalaxiesClient.getKeybindHint(GalaxiesKeybinds.getPrimaryAction(), Component.translatable(I18N_VENT_BLASTER)));
+		list.add(GalaxiesClient.getKeybindHint(BlasterControls.mode, Component.translatable("text.pswg_blasters.cycle_mode")));
+		list.add(GalaxiesClient.getKeybindHint(BlasterControls.reload, Component.translatable("text.pswg_blasters.reload")));
 
 		var level = Minecraft.getInstance().level;
 		var loadout = BlasterItem.getLoadout(level, itemStack);
@@ -100,9 +110,19 @@ public class BlastersClient implements GalaxiesClientAddon
 		var effective = BlasterItem.getEffectiveStats(level, itemStack).orElseThrow();
 		var stats = effective.stats();
 
-		list.add(Component.translatable("tooltip.pswg_blasters.mode", loadout.orElseThrow().selectedMode().id().toString()));
+		list.add(Component.translatable("tooltip.pswg_blasters.mode", BlasterActions.modeName(loadout.orElseThrow().selectedMode().id())));
 		list.add(Component.translatable("tooltip.pswg_blasters.stats", number(stats.damage()), stats.range(), stats.automaticRepeatDelay(), number(stats.damageRange())));
-		list.add(Component.translatable("tooltip.pswg_blasters.handling", number(effective.zoom()), number(stats.recoil().hipPitchDegrees()), number(stats.spread().hipDegrees())));
+
+		var hip = BlasterItem.getEffectiveStats(level, itemStack, new BlasterEffectiveStats.Context(
+				BlasterStanceProfile.WeaponState.FIRING, BlasterItem.isDeployed(itemStack), false, BlasterItem.isFolded(itemStack)
+		)).orElseThrow().stats().recoil();
+
+		var aim = BlasterItem.getEffectiveStats(level, itemStack, new BlasterEffectiveStats.Context(
+				BlasterStanceProfile.WeaponState.FIRING, BlasterItem.isDeployed(itemStack), true, BlasterItem.isFolded(itemStack)
+		)).orElseThrow().stats().recoil();
+
+		list.add(Component.translatable("tooltip.pswg_blasters.handling", number(effective.zoom()), number(stats.spread().hipDegrees())));
+		list.add(Component.translatable("tooltip.pswg_blasters.recoil", number(hip.hipPitchDegrees()), number(hip.hipYawDegrees()), number(aim.aimPitchDegrees()), number(aim.aimYawDegrees()), hip.recoveryTicks()));
 		list.add(Component.translatable("tooltip.pswg_blasters.cooling", number(stats.heat().drainSpeed()), number(stats.heat().overheatDrainSpeed())));
 
 		if (BlasterItem.getAmmoCapacity(stats.ammo()) > 0)
@@ -115,6 +135,16 @@ public class BlastersClient implements GalaxiesClientAddon
 
 		if (BlasterItem.isFolded(itemStack))
 			list.add(Component.translatable("tooltip.pswg_blasters.folded"));
+	}
+
+	/**
+	 * Shows the charge amount.
+	 */
+	private static void getPackTooltip(ItemStack stack, Item.TooltipContext context, TooltipFlag flag, List<Component> lines)
+	{
+		var charge = stack.get(StoredCharge.COMPONENT);
+		if (charge != null)
+			lines.add(Component.translatable("tooltip.pswg_blasters.pack", charge.current(), charge.capacity()));
 	}
 
 	/**

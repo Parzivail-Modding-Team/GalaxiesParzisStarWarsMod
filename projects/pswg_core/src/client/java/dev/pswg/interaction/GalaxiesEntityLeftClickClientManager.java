@@ -57,6 +57,19 @@ public final class GalaxiesEntityLeftClickClientManager
 	{
 		assert client.player != null;
 
+		for (var hand : InteractionHand.values())
+		{
+			if (client.player.getItemInHand(hand).getItem() instanceof ILeftClickUsable item && item.usesCustomLeftInput())
+			{
+				while (client.options.keyAttack.consumeClick())
+				{
+					// The item's own input handler reads physical press/release state.
+				}
+
+				return;
+			}
+		}
+
 		var handItem = client.player.getItemInHand(client.player.getUsedItemHand());
 		var isHoldingLeftClickableItem = handItem.getItem() instanceof ILeftClickUsable;
 

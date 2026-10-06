@@ -20,11 +20,12 @@
 			"secondaryBypassTolerance": 0.05
 		},
 		"ammo": {
-			"feed": {"type": "per_shot"},
-			"ingredient": "minecraft:amethyst_shard",
+			"feed": {"type": "magazine", "magazineSize": 24, "reloadTicks": 30},
+			"ingredient": "#pswg_blasters:power_packs",
 			"consumption": {
-				"type": "item_count",
-				"itemsPerRound": 1
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 1
 			}
 		},
 		"configuration": {
@@ -40,9 +41,13 @@
 						"type": "semi"
 					},
 					"behaviorProfile": "pswg_blasters:test_blaster/direct"
-				}
+				},
+				{"id": "pswg_blasters:auto", "trigger": {"type": "auto"}, "behaviorProfile": "pswg_blasters:test_blaster/direct"},
+				{"id": "pswg_blasters:burst", "trigger": {"type": "burst", "rounds": 3, "intervalTicks": 2, "interburstCooldownTicks": 8}, "behaviorProfile": "pswg_blasters:test_blaster/direct"}
 			]
-		}
+		},
+		"recoil": {"hipPitchDegrees": 3.6, "hipYawDegrees": 0.2, "aimPitchDegrees": 1.5, "aimYawDegrees": 0.1, "recoveryTicks": 3},
+		"spread": {"hipDegrees": 2, "aimDegrees": 0.5}
 	},
 	"attachments": {
 		"hud": "pswg_blasters:default",

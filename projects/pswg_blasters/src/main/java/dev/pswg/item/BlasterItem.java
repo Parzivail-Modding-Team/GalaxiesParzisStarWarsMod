@@ -1193,10 +1193,30 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	@Override
+	public boolean usesCustomLeftInput()
+	{
+		return true;
+	}
+
+	@Override
 	public InteractionResult useLeft(Level world, LivingEntity user, InteractionHand hand, boolean repeatEvent)
 	{
-		// TODO: manual reload
-		// TODO: dryfire sound when no ammunition
+		return InteractionResult.FAIL;
+	}
+
+	/**
+	 * Attempts a shot.
+	 */
+	public static boolean tryFire(ServerLevel world, Player user, InteractionHand hand, boolean pressed)
+	{
+		return fireServer(world, user, hand, !pressed) == InteractionResult.SUCCESS;
+	}
+
+	/**
+	 * Executes one shot.
+	 */
+	private static InteractionResult fireServer(ServerLevel world, Player user, InteractionHand hand, boolean repeatEvent)
+	{
 
 		ItemStack itemStack = user.getItemInHand(hand);
 		if (getDefinition(world, itemStack).isEmpty())
@@ -1236,7 +1256,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			if (bypass.isEmpty())
 			{
 				world.playSound(
-						user,
+						null,
 						user.getX(),
 						user.getY(),
 						user.getZ(),
@@ -1258,7 +1278,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			else if (bypass.get() == CoolingBypass.PRIMARY)
 			{
 				world.playSound(
-						user,
+						null,
 						user.getX(),
 						user.getY(),
 						user.getZ(),
@@ -1286,7 +1306,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				// TODO: overcharge end sound
 
 				world.playSound(
-						user,
+						null,
 						user.getX(),
 						user.getY(),
 						user.getZ(),
@@ -1320,6 +1340,15 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		)).orElseThrow();
 
 		stats = shotStats.stats();
+
+		if (!BlasterAmmo.consumeShot(world, user, itemStack, stats.ammo()))
+		{
+			if (!repeatEvent)
+				world.playSound(null, user.getX(), user.getY(), user.getZ(), BlasterSounds.DRYFIRE, SoundSource.PLAYERS, 1, 1);
+
+			return InteractionResult.FAIL;
+		}
+
 		state = state.withLastFired(timestamp)
 		             .withCooling(CoolingMode.PASSIVE, timestamp + stats.heat().passiveCooldownDelay())
 		             .withFireCooldown(timestamp + stats.automaticRepeatDelay());
@@ -1329,27 +1358,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (heatEnabled && getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
 
-		if (world instanceof ServerLevel serverWorld)
-		{
-			fireBolt(user, serverWorld);
-
-			// TODO: fixed recoil mean/std pattern for first n shots
-
-			var recoilScale = shotStats.recoilMultiplier();
-
-			var recoil = new Vector3f(
-					-(float)RandomHelper.nextGaussian(world.getRandom(), 3.6, 0.2),
-					-(float)RandomHelper.nextGaussian(world.getRandom(), -0.2, 0.2),
-					0
-			);
-
-			if (user instanceof IRecoilEntity recoilEntity)
-				recoilEntity.pswg$addRecoilVelocity(recoil.set(
-						(float)Math.clamp((double)recoil.x() * recoilScale, -90, 90),
-						(float)Math.clamp((double)recoil.y() * recoilScale, -90, 90),
-						0
-				));
-		}
+		fireBolt(user, world);
+		var recoil = stats.recoil();
+		var pitch = state.isAiming() ? recoil.aimPitchDegrees() : recoil.hipPitchDegrees();
+		var yaw = state.isAiming() ? recoil.aimYawDegrees() : recoil.hipYawDegrees();
+		if (user instanceof IRecoilEntity recoilEntity)
+			recoilEntity.pswg$addRecoilImpulse(new Vector3f(-pitch, world.getRandom().nextBoolean() ? yaw : -yaw, 0), recoil.recoveryTicks());
 
 		if (user instanceof IRecoilEntity recoilEntity)
 			recoilEntity.pswg$setRecoilTime(timestamp);
@@ -1357,7 +1371,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (stats.fireSound().isPresent())
 		{
 			world.playSound(
-					user,
+					null,
 					user.getX(),
 					user.getY(),
 					user.getZ(),
@@ -1371,7 +1385,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (heatEnabled && totalHeat > stats.heat().capacity())
 		{
 			world.playSound(
-					user,
+					null,
 					user.getX(),
 					user.getY(),
 					user.getZ(),
@@ -1392,7 +1406,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		itemStack.set(STATE, state);
 
-		return InteractionResult.CONSUME;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override

@@ -39,6 +39,10 @@ public final class GalaxiesEntityLeftClickManager
 			ServerLevel serverWorld = player.level();
 			InteractionHand hand = packet.hand();
 			ItemStack itemStack = player.getItemInHand(hand);
+
+			if (itemStack.getItem() instanceof ILeftClickUsable item && item.usesCustomLeftInput())
+				return;
+
 			player.resetLastActionTime();
 
 			if (!itemStack.isEmpty() && itemStack.isItemEnabled(serverWorld.enabledFeatures()))

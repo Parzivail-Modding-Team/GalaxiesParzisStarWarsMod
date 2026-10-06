@@ -14,6 +14,14 @@ import net.minecraft.world.level.Level;
 public interface ILeftClickUsable
 {
 	/**
+	 * Whether the item supplies its own press/release protocol instead of the generic repeat interaction.
+	 */
+	default boolean usesCustomLeftInput()
+	{
+		return false;
+	}
+
+	/**
 	 * Called when the user uses (or starts using) the item.
 	 * The use action, by default, is bound to the right mouse button.
 	 *

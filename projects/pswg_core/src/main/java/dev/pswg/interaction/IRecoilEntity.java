@@ -56,4 +56,9 @@ public interface IRecoilEntity
 	 * @param velocity The new velocity
 	 */
 	void pswg$addRecoilVelocity(Vector3f velocity);
+
+	/**
+	 * Adds a finite angular displacement in degrees, distributed over the supplied recovery ticks.
+	 */
+	void pswg$addRecoilImpulse(Vector3f degrees, int recoveryTicks);
 }

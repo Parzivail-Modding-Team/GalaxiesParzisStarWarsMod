@@ -1,0 +1,11 @@
+{
+	"archetype": "pswg_blasters:pistol",
+	"poses": {"poseDefinitions": {
+		"pswg_blasters:pistol/hip": {"itemTransform": {"rotation": [0, 0, 0]}, "armMask": ["mainArm"]},
+		"pswg_blasters:pistol/ads": {"itemTransform": {"rotation": [0, 0, 0]}, "armMask": ["mainArm"]}
+	}},
+	"rows": [
+		{"layer": "weapon_state", "when": {"weaponState": "hip"}, "pose": "pswg_blasters:pistol/hip"},
+		{"layer": "weapon_state", "when": {"weaponState": "ads"}, "pose": "pswg_blasters:pistol/ads"}
+	]
+}

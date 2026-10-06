@@ -57,8 +57,9 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		@Override
 		public void generateItemModels(ItemModelGenerators itemModelGenerator)
 		{
-			//			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModels.basic(Blasters.id("item/blaster")));
-
+			register(itemModelGenerator, Blasters.SMALL_POWER_PACK, ItemModelUtils.plainModel(Blasters.id("item/small_power_pack")));
+			register(itemModelGenerator, Blasters.POWER_PACK, ItemModelUtils.plainModel(Blasters.id("item/power_pack")));
+			
 			register(itemModelGenerator, Blasters.BLASTER_ITEM, ItemModelUtils.composite(
 					ItemModelUtils.plainModel(Blasters.id("item/e11d")),
 					ItemModelUtils.conditional(
@@ -90,6 +91,9 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 		 * Static translations for the test blaster.
 		 */
 		private final Map<Identifier, BlasterLang> _blasterLang = Map.ofEntries(
+				Map.entry(Blasters.id("dl44"), new BlasterLang("DL-44", Map.of())),
+				Map.entry(Blasters.id("e11d"), new BlasterLang("E-11D", Map.of(Blasters.id("e11d/stock"), "Extensible Stock"))),
+				Map.entry(Blasters.id("dlt19"), new BlasterLang("DLT-19", Map.of(Blasters.id("dlt19/bipod"), "Folding Bipod"))),
 				Map.entry(Blasters.id("test_blaster"), new BlasterLang(
 						"Test Blaster",
 						Map.ofEntries(
@@ -116,6 +120,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 
 			// Item name
 			translationBuilder.add(Blasters.BLASTER_ITEM, "Blaster");
+			translationBuilder.add(Blasters.SMALL_POWER_PACK, "Small Power Pack");
+			translationBuilder.add(Blasters.POWER_PACK, "Power Pack");
 
 			// Model number of each blaster
 			translationBuilder.add(BlasterItem.MISSING_ID, "[unknown model]");
@@ -147,12 +153,27 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add("tooltip.pswg_blasters.unavailable", "Definition unavailable");
 			translationBuilder.add("tooltip.pswg_blasters.mode", "Mode: %s");
 			translationBuilder.add("tooltip.pswg_blasters.stats", "Damage: %s\nRange: %s blocks\nInterval: %s t\nEffective Range: %s blocks");
-			translationBuilder.add("tooltip.pswg_blasters.handling", "Zoom: %sx\nHip recoil %s degrees\nHip spread %s degrees");
+			translationBuilder.add("tooltip.pswg_blasters.handling", "Zoom: %sx\nHip spread %s degrees");
+			translationBuilder.add("tooltip.pswg_blasters.recoil", "Hip kick (pitch/yaw): %s° / %s°\nADS kick: %s° / %s°\nRecovery: %s ticks");
+			translationBuilder.add("tooltip.pswg_blasters.pack", "Charge: %s / %s units");
 			translationBuilder.add("tooltip.pswg_blasters.cooling", "Cooling: %s /t\nVent %s /t");
 			translationBuilder.add("tooltip.pswg_blasters.ammo", "Loaded: %s / %s");
 			translationBuilder.add("tooltip.pswg_blasters.conversion", "Conversion: %s");
 			translationBuilder.add("tooltip.pswg_blasters.deployed", "Deployed");
 			translationBuilder.add("tooltip.pswg_blasters.folded", "Folded");
+			translationBuilder.add("mode.pswg_blasters.semi", "Semi-automatic");
+			translationBuilder.add("mode.pswg_blasters.auto", "Automatic");
+			translationBuilder.add("mode.pswg_blasters.burst", "Burst");
+			translationBuilder.add("mode.pswg_blasters.charge", "Charged");
+			translationBuilder.add("text.pswg_blasters.cycle_mode", "Change Firing Mode");
+			translationBuilder.add("text.pswg_blasters.reload", "Reload Power Pack");
+			translationBuilder.add("text.pswg_blasters.reloading", "Reloading…");
+			translationBuilder.add("text.pswg_blasters.cannot_reload", "Magazine full or no usable power-pack charge");
+			translationBuilder.add("key.pswg_blasters.cycle_mode", "Change Blaster Firing Mode");
+			translationBuilder.add("key.pswg_blasters.reload", "Reload Blaster");
+			translationBuilder.add("key.pswg_blasters.fold", "Fold / Extend Blaster Stock");
+			translationBuilder.add("key.pswg_blasters.deploy", "Deploy / Stow Blaster Bipod");
+			translationBuilder.add("key.pswg_blasters.convert", "Toggle Blaster Field Conversion");
 		}
 	}
 
