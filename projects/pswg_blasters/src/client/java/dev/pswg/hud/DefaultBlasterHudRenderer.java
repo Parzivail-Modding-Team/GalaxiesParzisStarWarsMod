@@ -9,6 +9,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -55,6 +56,21 @@ public class DefaultBlasterHudRenderer implements ItemHudRenderer
 			return;
 
 		var stats = optionalStats.get();
+
+		var ammoCapacity = BlasterItem.getAmmoCapacity(stats.ammo());
+		if (ammoCapacity > 0)
+		{
+			var text = Component.translatable("tooltip.pswg_blasters.ammo", BlasterItem.getLoadedAmmo(stack, stats.ammo()), ammoCapacity);
+			context.text(
+					client.font,
+					text,
+					context.guiWidth() / 2 - client.font.width(text) / 2,
+					context.guiHeight() / 2 + COOLDOWN_OFFSET + 10,
+					-1,
+					true
+			);
+		}
+
 		if (stats.heat().capacity() <= 0)
 			return;
 

@@ -17,5 +17,14 @@
   "subtitle.pswg_blasters.blaster.reload": "Blaster reloads",
   "subtitle.pswg_blasters.blaster.vent": "Blaster vents",
   "tag.item.pswg_blasters.blasters": "Blasters",
-  "text.pswg_blasters.vent_blaster": "Vent Heat"
+  "text.pswg_blasters.vent_blaster": "Vent Heat",
+  "tooltip.pswg_blasters.ammo": "Loaded: %s / %s",
+  "tooltip.pswg_blasters.conversion": "Conversion: %s",
+  "tooltip.pswg_blasters.cooling": "Cooling %s units/tick | Vent %s units/tick",
+  "tooltip.pswg_blasters.deployed": "Deployed",
+  "tooltip.pswg_blasters.folded": "Folded",
+  "tooltip.pswg_blasters.handling": "Zoom %sx | Hip recoil %s degrees | Hip spread %s degrees",
+  "tooltip.pswg_blasters.mode": "Mode: %s",
+  "tooltip.pswg_blasters.stats": "Damage %s | Range %s blocks | Interval %s ticks | Falloff %s blocks",
+  "tooltip.pswg_blasters.unavailable": "Definition unavailable"
 }

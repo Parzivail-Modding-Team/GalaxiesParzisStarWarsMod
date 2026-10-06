@@ -11,18 +11,20 @@ import java.util.*;
  * Resolved, read-only loadout for one definition generation and physical stack's selections.
  * This derived view is not stored or synchronized independently of its source components.
  *
- * @param definition Current weapon definition, captured with the resolved options.
+ * @param definition        Current weapon definition, captured with the resolved options.
  * @param activeAttachments Slot-compatible installed attachments, keyed by slot.
- * @param activeOptions Installed options keyed by option ID, each contributing only once.
+ * @param activeOptions     Installed options keyed by option ID, each contributing only once.
  * @param availableModes    Base modes in authored order, followed by installed attachment grants.
  * @param selectedMode      Available preferred mode, or the definition's default when unavailable.
+ * @param activeConversion  Active base option when this loadout represents a converted form.
  */
 public record BlasterLoadout(
 		BlasterDatapackDefinition definition,
 		Map<Identifier, BlasterAttachmentDefinition> activeAttachments,
 		Map<Identifier, BlasterAttachmentDefinition> activeOptions,
 		List<BlasterStats.Mode> availableModes,
-		BlasterStats.Mode selectedMode
+		BlasterStats.Mode selectedMode,
+		Optional<Identifier> activeConversion
 )
 {
 	/**
@@ -67,7 +69,7 @@ public record BlasterLoadout(
 		var selected = preferredMode.map(modes::get)
 		                            .orElseGet(() -> modes.get(definition.stats().modes().defaultMode()));
 
-		return new BlasterLoadout(definition, activeSlots, activeOptions, List.copyOf(modes.values()), selected);
+		return new BlasterLoadout(definition, activeSlots, activeOptions, List.copyOf(modes.values()), selected, Optional.empty());
 	}
 
 	/**

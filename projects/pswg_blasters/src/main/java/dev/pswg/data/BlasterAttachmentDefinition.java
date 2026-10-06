@@ -43,13 +43,14 @@ public record BlasterAttachmentDefinition(
 			@CodecDefault("java.util.List.of()") @CodecUnique List<Identifier> archetype,
 			@CodecDefault("java.util.List.of()") @CodecUnique List<BlasterStanceProfile.WeaponState> stance,
 			Optional<Boolean> deployed,
+			Optional<Boolean> folded,
 			Optional<Boolean> ads
 	) implements IModifierConditionCodec
 	{
 		/**
 		 * Context matching every state.
 		 */
-		public static final ModifierCondition UNCONDITIONAL = new ModifierCondition(List.of(), List.of(), List.of(), Optional.empty(), Optional.empty());
+		public static final ModifierCondition UNCONDITIONAL = new ModifierCondition(List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
 	/**

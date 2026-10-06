@@ -14,6 +14,7 @@ import dev.pswg.generated.codecs.ICoolingCodec;
 import dev.pswg.generated.codecs.IStateComponentCodec;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.interaction.IRecoilEntity;
+import dev.pswg.item.component.StoredCharge;
 import dev.pswg.math.GMath;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
@@ -34,6 +35,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -339,11 +341,54 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	);
 
 	/**
+	 * If the blaster is deployed.
+	 */
+	private static final DataComponentType<Boolean> DEPLOYED = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			Blasters.id("deployed"),
+			DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build()
+	);
+
+	/**
+	 * If the blaster is folded.
+	 */
+	private static final DataComponentType<Boolean> FOLDED = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			Blasters.id("folded"),
+			DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build()
+	);
+	/**
+	 * The number of loaded rounds.
+	 */
+	private static final DataComponentType<Integer> LOADED_ROUNDS = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			Blasters.id("loaded_rounds"),
+			DataComponentType.<Integer>builder().persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT).build()
+	);
+	/**
+	 * The amount of loaded charge
+	 */
+	private static final DataComponentType<StoredCharge> LOADED_CHARGE = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			Blasters.id("loaded_charge"),
+			DataComponentType.<StoredCharge>builder().persistent(StoredCharge.CODEC).networkSynchronized(StoredCharge.PACKET_CODEC).build()
+	);
+	/**
+	 * Field conversion data.
+	 */
+	private static final DataComponentType<BlasterFieldConversion> FIELD_CONVERSION = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			Blasters.id("field_conversion"),
+			DataComponentType.<BlasterFieldConversion>builder().persistent(BlasterFieldConversion.CODEC).networkSynchronized(BlasterFieldConversion.PACKET_CODEC).build()
+	);
+
+	/**
 	 * @return A new instance of the item settings for this item
 	 */
 	public static Properties createSettings()
 	{
 		return new Properties()
+				.stacksTo(1)
 				.component(ID, MISSING_ID)
 				.component(ATTACHMENTS, AttachmentsComponent.DEFAULT)
 				.component(STATE, StateComponent.DEFAULT);
@@ -369,6 +414,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		stack.set(SELECTED_MODE, definition.stats().modes().defaultMode());
 		var attachments = definition.attachments();
 		stack.set(ATTACHMENTS, new AttachmentsComponent(attachments.hud(), attachments.defaults()));
+		initializeLoadedAmmo(stack, definition.stats().ammo());
 
 		return stack;
 	}
@@ -388,6 +434,9 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static Optional<BlasterDatapackDefinition> getDefinition(Level world, ItemStack stack)
 	{
+		if (!stack.is(Blasters.BLASTER_ITEM))
+			return Optional.empty();
+
 		var id = stack.get(ID);
 		if (id == null)
 			return Optional.empty();
@@ -409,14 +458,17 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	/**
-	 * Evaluates the current stack's ADS/venting/hip context; deployment is not yet an item mechanic.
+	 * Evaluates current item's stats.
 	 */
 	public static Optional<BlasterEffectiveStats> getEffectiveStats(Level world, ItemStack stack)
 	{
 		var state = getState(stack);
 		var stance = state.coolingMode().isCooling() ? BlasterStanceProfile.WeaponState.VENTING
-		                                             : state.isAiming() ? BlasterStanceProfile.WeaponState.ADS : BlasterStanceProfile.WeaponState.HIP;
-		return getEffectiveStats(world, stack, new BlasterEffectiveStats.Context(stance, false, state.isAiming()));
+		                                             : state.isAiming() ? BlasterStanceProfile.WeaponState.ADS
+		                                                                : isDeployed(stack) ? BlasterStanceProfile.WeaponState.DEPLOYED
+		                                                                                    : isFolded(stack) ? BlasterStanceProfile.WeaponState.FOLDED : BlasterStanceProfile.WeaponState.HIP;
+
+		return getEffectiveStats(world, stack, new BlasterEffectiveStats.Context(stance, isDeployed(stack), state.isAiming(), isFolded(stack)));
 	}
 
 	/**
@@ -458,6 +510,9 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static Optional<BlasterLoadout> getLoadout(Level world, ItemStack stack)
 	{
+		if (!stack.is(Blasters.BLASTER_ITEM))
+			return Optional.empty();
+
 		var id = stack.get(ID);
 		if (id == null)
 			return Optional.empty();
@@ -467,12 +522,22 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (definition == null)
 			return Optional.empty();
 
-		return snapshot.resolvedAttachments(id).map(options -> BlasterLoadout.resolve(
-				definition,
-				options,
-				getAttachments(stack).applied(),
-				Optional.ofNullable(stack.get(SELECTED_MODE))
-		));
+		return snapshot.resolvedAttachments(id).map(
+				options ->
+				{
+					var applied = getAttachments(stack).applied();
+					var preference = Optional.ofNullable(stack.get(SELECTED_MODE));
+					var source = BlasterLoadout.resolve(definition, options, applied, preference);
+					return Optional.ofNullable(stack.get(FIELD_CONVERSION)).flatMap(conversion -> conversion.resolve(
+							snapshot,
+							source,
+							applied,
+							preference,
+							world == null ? 0 : world.getGameTime(),
+							getLoadedCharge(stack)
+					)).orElse(source);
+				}
+		);
 	}
 
 	/**
@@ -485,8 +550,255 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			return false;
 
 		stack.set(SELECTED_MODE, modeId);
+		refreshState(world, stack);
 		refreshAimingZoom(world, stack);
+
 		return true;
+	}
+
+	/**
+	 * Gets if the blaster is deployed.
+	 */
+	public static boolean isDeployed(ItemStack stack)
+	{
+		return stack.getOrDefault(DEPLOYED, false);
+	}
+
+	/**
+	 * Gets if the blaster is folded.
+	 */
+	public static boolean isFolded(ItemStack stack)
+	{
+		return stack.getOrDefault(FOLDED, false);
+	}
+
+	/**
+	 * Sets if the blaster is deployed.
+	 */
+	public static boolean setDeployed(ServerLevel world, ItemStack stack, boolean deployed)
+	{
+		if (getLoadout(world, stack).isEmpty())
+			return false;
+
+		stack.set(DEPLOYED, deployed);
+		refreshAimingZoom(world, stack);
+
+		return true;
+	}
+
+	/**
+	 * Sets if the blaster is folded.
+	 */
+	public static boolean setFolded(ServerLevel world, ItemStack stack, boolean folded)
+	{
+		if (getLoadout(world, stack).isEmpty())
+			return false;
+
+		stack.set(FOLDED, folded);
+		refreshAimingZoom(world, stack);
+
+		return true;
+	}
+
+	/**
+	 * Gets the number of loaded rounds.
+	 */
+	public static int getLoadedRounds(ItemStack stack)
+	{
+		return stack.getOrDefault(LOADED_ROUNDS, 0);
+	}
+
+	/**
+	 * Gets the amount of stored charge.
+	 */
+	public static Optional<StoredCharge> getLoadedCharge(ItemStack stack)
+	{
+		return Optional.ofNullable(stack.get(LOADED_CHARGE));
+	}
+
+	/**
+	 * Gets the amount of ammo the blaster is capable of holding.
+	 */
+	public static int getAmmoCapacity(BlasterStats.Ammo ammo)
+	{
+		return switch (ammo.feed())
+		{
+			case BlasterStats.PerShotFeed ignored -> 0;
+			case BlasterStats.MagazineFeed magazine -> magazine.magazineSize();
+			case BlasterStats.ChargeStoreFeed charge -> charge.chargeCapacityUnits();
+		};
+	}
+
+	/**
+	 * Gets the amount of ammo the blaster currently holds.
+	 */
+	public static int getLoadedAmmo(ItemStack stack, BlasterStats.Ammo ammo)
+	{
+		return switch (ammo.feed())
+		{
+			case BlasterStats.PerShotFeed ignored -> 0;
+			case BlasterStats.MagazineFeed ignored -> getLoadedRounds(stack);
+			case BlasterStats.ChargeStoreFeed ignored -> getLoadedCharge(stack).map(StoredCharge::current).orElse(0);
+		};
+	}
+
+	/**
+	 * Sets the amount of rounds the blaster currently holds.
+	 */
+	public static boolean setLoadedRounds(ServerLevel world, ItemStack stack, int rounds)
+	{
+		var loadout = getLoadout(world, stack);
+		if (loadout.isEmpty() || !(loadout.orElseThrow().definition().stats().ammo().feed() instanceof BlasterStats.MagazineFeed magazine)
+		    || rounds < 0 || (rounds > magazine.magazineSize() && rounds > getLoadedRounds(stack)))
+			return false;
+
+		stack.set(LOADED_ROUNDS, rounds);
+		refreshState(world, stack);
+
+		return true;
+	}
+
+	/**
+	 * Sets the amount of charge the blaster currently holds.
+	 */
+	public static boolean setLoadedCharge(ServerLevel world, ItemStack stack, int units)
+	{
+		var loadout = getLoadout(world, stack);
+		if (loadout.isEmpty() || !(loadout.orElseThrow().definition().stats().ammo().feed() instanceof BlasterStats.ChargeStoreFeed charge)
+		    || units < 0 || (units > charge.chargeCapacityUnits() && units > getLoadedCharge(stack).map(StoredCharge::current).orElse(0)))
+			return false;
+
+		stack.set(LOADED_CHARGE, new StoredCharge(units, Math.max(units, charge.chargeCapacityUnits())));
+		refreshState(world, stack);
+
+		return true;
+	}
+
+	/**
+	 * Sets the applied attachments on the blaster
+	 */
+	public static boolean setAttachments(ServerLevel world, ItemStack stack, Map<Identifier, Identifier> applied)
+	{
+		var loadout = getLoadout(world, stack);
+		if (loadout.isEmpty())
+			return false;
+
+		var snapshot = BlasterData.get(world);
+		var definition = loadout.orElseThrow().definition();
+		var options = definition.attachments().resolve(snapshot.attachments());
+
+		if (!BlasterFieldConversion.canAttachmentsFit(options, applied))
+			return false;
+
+		stack.set(ATTACHMENTS, new AttachmentsComponent(definition.attachments().hud(), Map.copyOf(applied)));
+		refreshState(world, stack);
+		refreshAimingZoom(world, stack);
+
+		return true;
+	}
+
+	/**
+	 * Activates a field conversion.
+	 */
+	public static boolean activateConversion(ServerLevel world, ItemStack stack, Identifier optionId)
+	{
+		var base = getDefinition(world, stack);
+		if (base.isEmpty())
+			return false;
+
+		var snapshot = BlasterData.get(world);
+		var options = snapshot.resolvedAttachments(stack.get(ID)).orElseThrow();
+		var applied = getAttachments(stack).applied();
+		var preferred = Optional.ofNullable(stack.get(SELECTED_MODE));
+		var source = BlasterLoadout.resolve(base.orElseThrow(), options, applied, preferred);
+		var selection = new BlasterFieldConversion(optionId, world.getGameTime());
+		var target = selection.resolve(snapshot, source, applied, preferred, world.getGameTime(), getLoadedCharge(stack));
+
+		if (target.isEmpty())
+			return false;
+
+		var targetAmmo = target.orElseThrow().definition().stats().ammo();
+		var currentAmmo = getLoadout(world, stack).orElseThrow().definition().stats().ammo();
+
+		if (!BlasterFieldConversion.isAmmoCompatible(currentAmmo, targetAmmo, getLoadedRounds(stack), getLoadedCharge(stack).map(StoredCharge::current).orElse(0))
+		    || getLoadedAmmo(stack, targetAmmo) > getAmmoCapacity(targetAmmo))
+			return false;
+
+		stack.set(FIELD_CONVERSION, selection);
+		refreshState(world, stack);
+		refreshAimingZoom(world, stack);
+
+		return true;
+	}
+
+	/**
+	 * Deactivates a field conversion.
+	 */
+	public static boolean clearConversion(ServerLevel world, ItemStack stack)
+	{
+		var base = getDefinition(world, stack);
+		if (base.isEmpty() || !stack.has(FIELD_CONVERSION))
+			return false;
+
+		stack.remove(FIELD_CONVERSION);
+		refreshVisuals(stack, base.orElseThrow());
+		refreshAimingZoom(world, stack);
+
+		return true;
+	}
+
+	/**
+	 * Initializes the loaded ammo.
+	 */
+	private static void initializeLoadedAmmo(ItemStack stack, BlasterStats.Ammo ammo)
+	{
+		if (ammo.feed() instanceof BlasterStats.MagazineFeed && !stack.has(LOADED_ROUNDS))
+			stack.set(LOADED_ROUNDS, 0);
+
+		if (ammo.feed() instanceof BlasterStats.ChargeStoreFeed charge)
+		{
+			var current = getLoadedCharge(stack).map(StoredCharge::current).orElse(0);
+			var capacity = Math.max(current, charge.chargeCapacityUnits());
+			if (getLoadedCharge(stack).map(value -> value.capacity() != capacity).orElse(true))
+				stack.set(LOADED_CHARGE, new StoredCharge(current, capacity));
+		}
+	}
+
+	/**
+	 * Refreshes the blaster state.
+	 */
+	private static void refreshState(ServerLevel world, ItemStack stack)
+	{
+		var loadout = getLoadout(world, stack);
+		if (loadout.isEmpty())
+			return;
+
+		var resolved = loadout.orElseThrow();
+		if (stack.has(FIELD_CONVERSION))
+		{
+			if (resolved.activeConversion().isEmpty())
+				stack.remove(FIELD_CONVERSION);
+
+			refreshVisuals(stack, resolved.definition());
+		}
+		else
+			initializeLoadedAmmo(stack, resolved.definition().stats().ammo());
+	}
+
+	/**
+	 * Refreshes the blaster's visual representation.
+	 */
+	private static void refreshVisuals(ItemStack stack, BlasterDatapackDefinition definition)
+	{
+		var model = definition.stats().configuration().itemModel();
+		if (!model.equals(stack.get(DataComponents.ITEM_MODEL)))
+			stack.set(DataComponents.ITEM_MODEL, model);
+
+		var attachments = getAttachments(stack);
+		if (!attachments.hud().equals(definition.attachments().hud()))
+			stack.set(ATTACHMENTS, new AttachmentsComponent(definition.attachments().hud(), attachments.applied()));
+
+		initializeLoadedAmmo(stack, definition.stats().ammo());
 	}
 
 	/**
@@ -797,6 +1109,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		// If the stack does not have a serial number, assign one
 		if (stack.get(SERIAL) == null)
 			stack.set(SERIAL, world.getRandom().nextLong());
+
+		refreshState(world, stack);
 		if (getState(stack).isAiming())
 			refreshAimingZoom(world, stack);
 	}
@@ -999,8 +1313,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		}
 
 		var shotStats = getEffectiveStats(world, itemStack, new BlasterEffectiveStats.Context(
-				BlasterStanceProfile.WeaponState.FIRING, false, state.isAiming()
+				BlasterStanceProfile.WeaponState.FIRING,
+				isDeployed(itemStack),
+				state.isAiming(),
+				isFolded(itemStack)
 		)).orElseThrow();
+
 		stats = shotStats.stats();
 		state = state.withLastFired(timestamp)
 		             .withCooling(CoolingMode.PASSIVE, timestamp + stats.heat().passiveCooldownDelay())

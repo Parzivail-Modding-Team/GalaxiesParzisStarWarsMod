@@ -1,7 +1,7 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
-import dev.pswg.data.*;
+import dev.pswg.data.BlasterClientDefinitions;
 import dev.pswg.data.SlimRegistry;
 import dev.pswg.events.HudRenderEvents;
 import dev.pswg.events.ItemRenderEvents;
@@ -15,7 +15,6 @@ import dev.pswg.rendering.Drawables;
 import dev.pswg.rendering.ItemHudRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -26,8 +25,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 
 /**
  * The main entrypoint for PSWG client-side blaster features
@@ -81,10 +81,48 @@ public class BlastersClient implements GalaxiesClientAddon
 		Blasters.LOGGER.info("Client module initialized");
 	}
 
+	/**
+	 * Displays the current resolved form, effective statistics, and item-owned ammo/configuration state.
+	 */
 	private static void getTooltip(ItemStack itemStack, Item.TooltipContext ctx, TooltipFlag type, List<Component> list)
 	{
 		list.add(Component.translatable(itemStack.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID).toLanguageKey()));
 		list.add(GalaxiesClient.getKeybindHint(GalaxiesKeybinds.getPrimaryAction(), Component.translatable(I18N_VENT_BLASTER)));
+
+		var level = Minecraft.getInstance().level;
+		var loadout = BlasterItem.getLoadout(level, itemStack);
+		if (loadout.isEmpty())
+		{
+			list.add(Component.translatable("tooltip.pswg_blasters.unavailable"));
+			return;
+		}
+
+		var effective = BlasterItem.getEffectiveStats(level, itemStack).orElseThrow();
+		var stats = effective.stats();
+
+		list.add(Component.translatable("tooltip.pswg_blasters.mode", loadout.orElseThrow().selectedMode().id().toString()));
+		list.add(Component.translatable("tooltip.pswg_blasters.stats", number(stats.damage()), stats.range(), stats.automaticRepeatDelay(), number(stats.damageRange())));
+		list.add(Component.translatable("tooltip.pswg_blasters.handling", number(effective.zoom()), number(stats.recoil().hipPitchDegrees()), number(stats.spread().hipDegrees())));
+		list.add(Component.translatable("tooltip.pswg_blasters.cooling", number(stats.heat().drainSpeed()), number(stats.heat().overheatDrainSpeed())));
+
+		if (BlasterItem.getAmmoCapacity(stats.ammo()) > 0)
+			list.add(Component.translatable("tooltip.pswg_blasters.ammo", BlasterItem.getLoadedAmmo(itemStack, stats.ammo()), BlasterItem.getAmmoCapacity(stats.ammo())));
+
+		loadout.orElseThrow().activeConversion().ifPresent(option -> list.add(Component.translatable("tooltip.pswg_blasters.conversion", option.toString())));
+
+		if (BlasterItem.isDeployed(itemStack))
+			list.add(Component.translatable("tooltip.pswg_blasters.deployed"));
+
+		if (BlasterItem.isFolded(itemStack))
+			list.add(Component.translatable("tooltip.pswg_blasters.folded"));
+	}
+
+	/**
+	 * Formats displayed effective values without changing their gameplay precision.
+	 */
+	private static String number(float value)
+	{
+		return String.format(Locale.ROOT, "%.2f", value);
 	}
 
 	private static void renderItemBars(GuiGraphicsExtractor context, Font textRenderer, ItemStack stack, int x, int y)

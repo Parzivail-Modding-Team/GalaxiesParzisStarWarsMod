@@ -128,7 +128,7 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 				// Add all the attachments
 				for (var attachmentEntry : entry.getValue().attachmentLangs().entrySet())
 				{
-					translationBuilder.add("attachment." + attachmentEntry.getKey().toLanguageKey(), attachmentEntry.getValue());
+					translationBuilder.add("attachment." + attachmentEntry.getKey().toLanguageKey().replace('/', '.'), attachmentEntry.getValue());
 				}
 			}
 
@@ -144,6 +144,15 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 
 			// Tooltips
 			translationBuilder.add(BlastersClient.I18N_VENT_BLASTER, "Vent Heat");
+			translationBuilder.add("tooltip.pswg_blasters.unavailable", "Definition unavailable");
+			translationBuilder.add("tooltip.pswg_blasters.mode", "Mode: %s");
+			translationBuilder.add("tooltip.pswg_blasters.stats", "Damage: %s\nRange: %s blocks\nInterval: %s t\nEffective Range: %s blocks");
+			translationBuilder.add("tooltip.pswg_blasters.handling", "Zoom: %sx\nHip recoil %s degrees\nHip spread %s degrees");
+			translationBuilder.add("tooltip.pswg_blasters.cooling", "Cooling: %s /t\nVent %s /t");
+			translationBuilder.add("tooltip.pswg_blasters.ammo", "Loaded: %s / %s");
+			translationBuilder.add("tooltip.pswg_blasters.conversion", "Conversion: %s");
+			translationBuilder.add("tooltip.pswg_blasters.deployed", "Deployed");
+			translationBuilder.add("tooltip.pswg_blasters.folded", "Folded");
 		}
 	}
 

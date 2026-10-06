@@ -6,6 +6,7 @@ import dev.pswg.data.BlasterStanceProfile.WeaponState;
 import dev.pswg.data.BlasterStatFunction;
 import dev.pswg.data.BlasterStats;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,7 +24,7 @@ public record BlasterEffectiveStats(BlasterStats stats, float zoom, float recoil
 	/**
 	 * Caller-owned runtime/preview context; mode and archetype are taken from the loadout itself.
 	 */
-	public record Context(WeaponState stance, boolean deployed, boolean ads)
+	public record Context(WeaponState stance, boolean deployed, boolean ads, boolean folded)
 	{
 	}
 
@@ -108,6 +109,7 @@ public record BlasterEffectiveStats(BlasterStats stats, float zoom, float recoil
 		       && (condition.archetype().isEmpty() || condition.archetype().contains(loadout.definition().stats().configuration().archetype()))
 		       && (condition.stance().isEmpty() || condition.stance().contains(context.stance()))
 		       && condition.deployed().map(required -> required == context.deployed()).orElse(true)
+		       && condition.folded().map(required -> required == context.folded()).orElse(true)
 		       && condition.ads().map(required -> required == context.ads()).orElse(true);
 	}
 
@@ -157,4 +159,27 @@ public record BlasterEffectiveStats(BlasterStats stats, float zoom, float recoil
 	 * Existing aiming attribute's base-one result with its +2 multiplied-base modifier.
 	 */
 	public static final float DEFAULT_ZOOM = 3;
+
+	/**
+	 * Gets the damage multiplier at a certain distance
+	 */
+	public float damageMultiplierAt(float distance)
+	{
+		var fraction = stats.damageRange() == 0 ? 1 : Math.clamp(distance / stats.damageRange(), 0, 1);
+		var points = stats.falloff();
+
+		for (var index = 1; index < points.size(); index++)
+		{
+			var right = points.get(index);
+			if (fraction <= right.distanceFraction())
+			{
+				var left = points.get(index - 1);
+				var alpha = (fraction - left.distanceFraction()) / (right.distanceFraction() - left.distanceFraction());
+
+				return Mth.lerp(alpha, left.multiplier(), right.multiplier());
+			}
+		}
+
+		return points.getLast().multiplier();
+	}
 }
