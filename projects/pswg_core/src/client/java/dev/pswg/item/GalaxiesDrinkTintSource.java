@@ -16,13 +16,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.DyedItemColor;
 
-public record SwgDrinkTintSource(int defaultColor) implements ItemTintSource
+public record GalaxiesDrinkTintSource(int defaultColor) implements ItemTintSource
 {
-	public static final MapCodec<SwgDrinkTintSource> CODEC = RecordCodecBuilder.mapCodec(
-			instance -> instance.group(ExtraCodecs.RGB_COLOR_CODEC.fieldOf("default").forGetter(SwgDrinkTintSource::defaultColor)).apply(instance, SwgDrinkTintSource::new)
+	public static final MapCodec<GalaxiesDrinkTintSource> CODEC = RecordCodecBuilder.mapCodec(
+			instance -> instance.group(ExtraCodecs.RGB_COLOR_CODEC.fieldOf("default").forGetter(GalaxiesDrinkTintSource::defaultColor)).apply(instance, GalaxiesDrinkTintSource::new)
 	);
 
-	public SwgDrinkTintSource()
+	public GalaxiesDrinkTintSource()
 	{
 		this(-13083194);
 	}
