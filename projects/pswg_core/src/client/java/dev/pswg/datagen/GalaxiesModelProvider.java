@@ -5,7 +5,7 @@ import dev.pswg.Galaxies;
 import dev.pswg.block.IPicklingBlock;
 import dev.pswg.block.collection.*;
 import dev.pswg.container.GalaxiesBlocks;
-import dev.pswg.item.SwgDrinkTintSource;
+import dev.pswg.item.GalaxiesDrinkTintSource;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.color.item.Constant;
@@ -31,6 +31,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -343,12 +344,12 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		if (dataGenItem.invertLayer())
 		{
 			modelId = generator.generateLayeredItem(item, base, overlay);
-			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new Constant(16777215), new SwgDrinkTintSource()));
+			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new Constant(16777215), new GalaxiesDrinkTintSource()));
 		}
 		else
 		{
 			modelId = generator.generateLayeredItem(item, overlay, base);
-			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new SwgDrinkTintSource()));
+			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new GalaxiesDrinkTintSource()));
 		}
 	}
 
@@ -357,16 +358,38 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		Material overlayFlat = new Material(Galaxies.id("item/cup_overlay"));
 		Material baseFlat = new Material(Identifier.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", "")));
 		Identifier flatModelId = generator.generateLayeredItem(item, baseFlat, overlayFlat);
-		ItemModel.Unbaked flatModel = ItemModelUtils.tintedModel(flatModelId, new SwgDrinkTintSource());
+		ItemModel.Unbaked flatModel = ItemModelUtils.tintedModel(flatModelId, new GalaxiesDrinkTintSource());
 
 		ModelTemplate modelTemplateInHand = createItemModelFromTemplate(Galaxies.id("item/template_cup_in_hand"), "", TextureSlot.LAYER1);
 		Material baseInHand = new Material(Identifier.parse(item.toString()).withSuffix("_in_hand").withPrefix("item/3d/"));
 		Material overlayInHand = new Material(Galaxies.id("item/3d/food/cup_overlay_in_hand"));
 
 		Identifier modelInHandId = modelTemplateInHand.create(createItemKey(item, dataGenItem).withSuffix("_in_hand"), TextureMapping.layered(baseInHand, overlayInHand), generator.modelOutput);
-		ItemModel.Unbaked inHandModel = ItemModelUtils.tintedModel(modelInHandId, new SwgDrinkTintSource());
+		ItemModel.Unbaked inHandModel = ItemModelUtils.tintedModel(
+				modelInHandId,
+				new Constant(cupColor(item).getTextureDiffuseColor()),
+				new GalaxiesDrinkTintSource()
+		);
 
 		generator.itemModelOutput.accept(item, generator.createFlatModelDispatch(flatModel, inHandModel));
+	}
+
+	/**
+	 * Resolves the named dye variant from a filled cup's registry identifier.
+	 */
+	private static DyeColor cupColor(Item item)
+	{
+		var path = item.builtInRegistryHolder().key().identifier().getPath();
+		var suffix = "_cup_filled";
+		if (!path.endsWith(suffix))
+			throw new IllegalArgumentException("Filled cup item must end with " + suffix + ": " + path);
+
+		var colorName = path.substring(0, path.length() - suffix.length());
+		var color = DyeColor.byName(colorName, null);
+		if (color == null)
+			throw new IllegalArgumentException("Filled cup item has no dye color name: " + path);
+
+		return color;
 	}
 
 	public ModelTemplate createItemModelFromTemplate(Identifier template, String suffix, TextureSlot... slots)

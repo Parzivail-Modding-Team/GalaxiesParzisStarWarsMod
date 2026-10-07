@@ -7,7 +7,7 @@ import dev.pswg.container.GalaxiesScreenHandlerTypes;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
-import dev.pswg.item.SwgDrinkTintSource;
+import dev.pswg.item.GalaxiesDrinkTintSource;
 import dev.pswg.model.g3d.G3dTextureBindings;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
 import dev.pswg.networking.IPreciseSpawnDataEntity;
@@ -132,7 +132,7 @@ public class GalaxiesClient implements ClientModInitializer
 		PtexTextures.LOADER.register();
 
 		//Register tints
-		ItemTintSources.ID_MAPPER.put(Galaxies.id("drink"), SwgDrinkTintSource.CODEC);
+		ItemTintSources.ID_MAPPER.put(Galaxies.id("drink"), GalaxiesDrinkTintSource.CODEC);
 
 		// Register particles
 		ParticleProviderRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_FLASH_PARTICLE, SmallFlashParticle.Factory::new);

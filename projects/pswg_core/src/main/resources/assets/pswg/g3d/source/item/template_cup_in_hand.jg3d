@@ -3,11 +3,13 @@
 	"materials": [
 		{
 			"id": "layer0",
-			"texture": "pswg:model/item/3d/cup_overlay_in_hand"
+			"texture": "pswg:model/item/3d/cup_overlay_in_hand",
+			"tintIndex": 1
 		},
 		{
 			"id": "layer1",
-			"texture": "pswg:model/item/3d/desh_cup_in_hand"
+			"texture": "pswg:model/item/3d/desh_cup_in_hand",
+			"tintIndex": 0
 		}
 	],
 	"nodes": [

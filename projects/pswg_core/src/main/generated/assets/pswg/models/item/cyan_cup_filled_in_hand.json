@@ -1,0 +1,6 @@
+{
+  "parent": "pswg:item/template_cup_in_hand",
+  "textures": {
+    "layer1": "pswg:item/3d/food/cup_overlay_in_hand"
+  }
+}
