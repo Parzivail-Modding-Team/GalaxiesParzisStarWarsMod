@@ -1,0 +1,106 @@
+{
+	"stats": {
+		"damage": 10,
+		"range": 112,
+		"damageRange": 96,
+		"automaticRepeatDelay": 6,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 160,
+			"perRound": 8,
+			"drainSpeed": 2,
+			"overheatPenalty": 40,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 25,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 60,
+				"reloadTicks": 60
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 5
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:rifle",
+			"itemModel": "pswg_blasters:dlt19d"
+		},
+		"modes": {
+			"default": "pswg_blasters:auto",
+			"options": [
+				{
+					"id": "pswg_blasters:auto",
+					"trigger": {
+						"type": "auto"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 3.5,
+			"hipYawDegrees": 1,
+			"aimPitchDegrees": 1.2,
+			"aimYawDegrees": 0.4,
+			"recoveryTicks": 5
+		},
+		"spread": {
+			"hipDegrees": 3.5,
+			"aimDegrees": 0.35,
+			"movingMultiplier": 1.5
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 0.25,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 0.7
+			}
+		]
+	},
+	"attachments": {
+		"defaults": {
+			"pswg_blasters:scope_slot": "pswg_blasters:dlt19/scope_d",
+			"pswg_blasters:barrel_slot": "pswg_blasters:dlt19/barrel_d"
+		},
+		"options": {
+			"pswg_blasters:dlt19/bipod": {
+				"reference": "pswg_blasters:dlt19/bipod"
+			},
+			"pswg_blasters:dlt19/barrel_d": {
+				"reference": "pswg_blasters:dlt19/barrel_d"
+			},
+			"pswg_blasters:dlt19/scope_d": {
+				"translationKey": "attachment.pswg_blasters.dlt19.scope_d",
+				"slots": [
+					"pswg_blasters:scope_slot"
+				],
+				"category": "pswg_blasters:scope",
+				"modifiers": [
+					{
+						"function": "zoom_multiplier",
+						"value": 1.5
+					}
+				]
+			}
+		}
+	}
+}

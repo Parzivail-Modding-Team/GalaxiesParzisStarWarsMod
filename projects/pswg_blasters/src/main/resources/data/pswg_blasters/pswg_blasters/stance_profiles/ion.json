@@ -1,0 +1,46 @@
+{
+	"archetype": "pswg_blasters:ion",
+	"poses": {
+		"poseDefinitions": {
+			"pswg_blasters:ion/carry": {
+				"itemTransform": {},
+				"boneTransforms": {
+					"rightArm": {
+						"rotation": [
+							-20.0,
+							0.0,
+							0.0
+						]
+					}
+				},
+				"armMask": [
+					"mainArm"
+				]
+			},
+			"pswg_blasters:ion/ads": {
+				"itemTransform": {},
+				"armMask": [
+					"mainArm"
+				]
+			}
+		},
+		"transitions": [],
+		"tracks": []
+	},
+	"rows": [
+		{
+			"layer": "locomotion",
+			"when": {
+				"locomotion": "idle"
+			},
+			"pose": "pswg_blasters:ion/carry"
+		},
+		{
+			"layer": "weapon_state",
+			"when": {
+				"weaponState": "ads"
+			},
+			"pose": "pswg_blasters:ion/ads"
+		}
+	]
+}

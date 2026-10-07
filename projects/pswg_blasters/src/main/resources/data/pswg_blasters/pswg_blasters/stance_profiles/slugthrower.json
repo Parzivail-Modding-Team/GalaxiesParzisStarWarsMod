@@ -1,0 +1,61 @@
+{
+	"archetype": "pswg_blasters:slugthrower",
+	"poses": {
+		"poseDefinitions": {
+			"pswg_blasters:slugthrower/carry": {
+				"itemTransform": {
+					"rotation": [
+						8.0,
+						0.0,
+						0.0
+					]
+				},
+				"boneTransforms": {
+					"rightArm": {
+						"rotation": [
+							-20.0,
+							0.0,
+							0.0
+						]
+					},
+					"leftArm": {
+						"rotation": [
+							-25.0,
+							0.0,
+							0.0
+						]
+					}
+				},
+				"armMask": [
+					"mainArm",
+					"supportArm"
+				]
+			},
+			"pswg_blasters:slugthrower/ads": {
+				"itemTransform": {},
+				"armMask": [
+					"mainArm",
+					"supportArm"
+				]
+			}
+		},
+		"transitions": [],
+		"tracks": []
+	},
+	"rows": [
+		{
+			"layer": "locomotion",
+			"when": {
+				"locomotion": "idle"
+			},
+			"pose": "pswg_blasters:slugthrower/carry"
+		},
+		{
+			"layer": "weapon_state",
+			"when": {
+				"weaponState": "ads"
+			},
+			"pose": "pswg_blasters:slugthrower/ads"
+		}
+	]
+}

@@ -5,6 +5,7 @@ import dev.pswg.configuration.BlastersConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.data.BlasterData;
+import dev.pswg.data.BlasterImpactEffect;
 import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.item.ChargedItem;
@@ -92,12 +93,13 @@ public final class Blasters implements GalaxiesAddon
 			                  .eyeHeight(0.2f)
 			                  .noLootTable()
 			                  .clientTrackingRange(4)
-			                  .updateInterval(20)
+			                  .updateInterval(BlasterBoltEntity.UPDATE_INTERVAL_TICKS)
 	);
 
 	@Override
 	public void onGalaxiesReady()
 	{
+		BlasterImpactEffect.register();
 		BlasterData.register();
 		BlasterActions.register();
 

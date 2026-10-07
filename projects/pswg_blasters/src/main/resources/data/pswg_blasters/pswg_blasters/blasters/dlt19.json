@@ -12,8 +12,11 @@
 			"ingredient": "#pswg_blasters:power_packs",
 			"consumption": {"type": "component_charge", "component": "pswg:stored_charge", "unitsPerRound": 5}
 		},
-		"configuration": {"archetype": "pswg_blasters:heavy", "itemModel": "pswg_blasters:dlt19"},
-		"modes": {"default": "pswg_blasters:auto", "options": [{"id": "pswg_blasters:auto", "trigger": {"type": "auto"}, "behaviorProfile": "pswg_blasters:test_blaster/direct"}]},
+		"configuration": {"archetype": "pswg_blasters:heavy", "itemModel": "pswg_blasters:dlt19", "fieldConversion": {"options": [
+			{"id": "pswg_blasters:dlt19/precision", "targetBlasterId": "pswg_blasters:dlt19x", "conditions": [{"type": "has_attachment", "attachmentSlot": "pswg_blasters:scope_slot", "attachmentId": "pswg_blasters:dlt19/scope_x"}]},
+			{"id": "pswg_blasters:dlt19/heavy_rifle", "targetBlasterId": "pswg_blasters:dlt19d", "conditions": [{"type": "has_attachment", "attachmentSlot": "pswg_blasters:scope_slot", "attachmentId": "pswg_blasters:dlt19/scope_d"}, {"type": "has_attachment", "attachmentSlot": "pswg_blasters:barrel_slot", "attachmentId": "pswg_blasters:dlt19/barrel_d"}]}
+		]}},
+		"modes": {"default": "pswg_blasters:auto", "options": [{"id": "pswg_blasters:auto", "trigger": {"type": "auto"}, "behaviorProfile": "pswg_blasters:energy"}]},
 		"recoil": {"hipPitchDegrees": 3, "hipYawDegrees": 1, "aimPitchDegrees": 1.5, "aimYawDegrees": 0.5, "recoveryTicks": 5},
 		"spread": {"hipDegrees": 4, "aimDegrees": 1},
 		"falloff": [{"distanceFraction": 0, "multiplier": 1}, {"distanceFraction": 1, "multiplier": 0.5}]
@@ -22,15 +25,10 @@
 		"hud": "pswg_blasters:default",
 		"defaults": {"pswg_blasters:barrel_slot": "pswg_blasters:dlt19/bipod"},
 		"options": {
-			"pswg_blasters:dlt19/bipod": {
-				"translationKey": "attachment.pswg_blasters.dlt19.bipod",
-				"slots": ["pswg_blasters:barrel_slot"],
-				"category": "pswg_blasters:barrel",
-				"modifiers": [
-					{"function": "recoil_multiplier", "value": 0.5, "modifierCondition": {"deployed": true}},
-					{"function": "spread_multiplier", "value": 0.5, "modifierCondition": {"deployed": true}}
-				]
-			}
+			"pswg_blasters:dlt19/scope_x": {"translationKey": "attachment.pswg_blasters.dlt19.scope_x", "slots": ["pswg_blasters:scope_slot"], "category": "pswg_blasters:scope", "modifiers": [{"function": "zoom_multiplier", "value": 2}]},
+			"pswg_blasters:dlt19/scope_d": {"translationKey": "attachment.pswg_blasters.dlt19.scope_d", "slots": ["pswg_blasters:scope_slot"], "category": "pswg_blasters:scope", "modifiers": [{"function": "zoom_multiplier", "value": 1.5}]},
+			"pswg_blasters:dlt19/barrel_d": {"reference": "pswg_blasters:dlt19/barrel_d"},
+			"pswg_blasters:dlt19/bipod": {"reference": "pswg_blasters:dlt19/bipod"}
 		}
 	}
 }

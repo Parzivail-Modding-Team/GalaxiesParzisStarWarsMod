@@ -13,6 +13,7 @@ import dev.pswg.interaction.GalaxiesEntityLeftClickManager;
 import dev.pswg.interaction.GalaxiesPlayerActionManager;
 import dev.pswg.interaction.LeftClickingEntityAttachment;
 import dev.pswg.interaction.RecoilEntityAttachment;
+import dev.pswg.interaction.ItemInteractionTimer;
 import dev.pswg.item.component.StoredCharge;
 import dev.pswg.model.g3d.G3dResources;
 import dev.pswg.networking.*;
@@ -135,6 +136,7 @@ public final class Galaxies implements ModInitializer
 		LeftClickingEntityAttachment.register();
 
 		RecoilEntityAttachment.register();
+		ItemInteractionTimer.register();
 		StoredCharge.register();
 
 		G3dResources.register();

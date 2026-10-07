@@ -1,0 +1,24 @@
+{
+	"model": {
+		"type": "minecraft:composite",
+		"models": [
+			{"type": "minecraft:model", "model": "pswg_blasters:item/tusken_cycler_base"},
+			{
+				"type": "minecraft:condition",
+				"property": "pswg_blasters:has_attachment",
+				"attachmentId": "pswg_blasters:tusken_cycler/barrel_extension",
+				"attachmentSlot": "pswg_blasters:barrel_slot",
+				"on_false": {"type": "minecraft:empty"},
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/tusken_cycler_barrel_extension"}
+			},
+			{
+				"type": "minecraft:condition",
+				"property": "pswg_blasters:has_attachment",
+				"attachmentId": "pswg_blasters:tusken_cycler/scope",
+				"attachmentSlot": "pswg_blasters:scope_slot",
+				"on_false": {"type": "minecraft:empty"},
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/tusken_cycler_scope_extension"}
+			}
+		]
+	}
+}

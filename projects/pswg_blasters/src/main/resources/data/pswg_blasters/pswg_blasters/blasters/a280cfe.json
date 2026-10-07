@@ -1,0 +1,134 @@
+{
+	"stats": {
+		"damage": 8,
+		"range": 128,
+		"damageRange": 96,
+		"automaticRepeatDelay": 4,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 120,
+			"perRound": 8,
+			"drainSpeed": 3,
+			"overheatPenalty": 30,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 20,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 20,
+				"reloadTicks": 35
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 2
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:sniper",
+			"itemModel": "pswg_blasters:a280cfe"
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 2.5,
+			"hipYawDegrees": 0.6,
+			"aimPitchDegrees": 1,
+			"aimYawDegrees": 0.2,
+			"recoveryTicks": 4
+		},
+		"spread": {
+			"hipDegrees": 3,
+			"aimDegrees": 0.15,
+			"movingMultiplier": 1.5
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 0.3,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 0.76
+			}
+		]
+	},
+	"attachments": {
+		"defaults": {
+			"pswg_blasters:scope_slot": "pswg_blasters:a280cfe/scope",
+			"pswg_blasters:barrel_slot": "pswg_blasters:a280/standard_barrel"
+		},
+		"options": {
+			"pswg_blasters:a280/standard_barrel": {
+				"reference": "pswg_blasters:a280/standard_barrel"
+			},
+			"pswg_blasters:a280/dual_barrel": {
+				"reference": "pswg_blasters:a280/dual_barrel"
+			},
+			"pswg_blasters:a280/standard_scope": {
+				"reference": "pswg_blasters:a280/standard_scope"
+			},
+			"pswg_blasters:a280/extended_scope": {
+				"reference": "pswg_blasters:a280/extended_scope"
+			},
+			"pswg_blasters:a280/magazine": {
+				"reference": "pswg_blasters:a280/magazine"
+			},
+			"pswg_blasters:a280/burst": {
+				"translationKey": "attachment.pswg_blasters.a280.burst",
+				"slots": [
+					"pswg_blasters:internal_slot"
+				],
+				"category": "pswg_blasters:internal_ordnance_config",
+				"grantedModes": [
+					{
+						"id": "pswg_blasters:burst",
+						"trigger": {
+							"type": "burst",
+							"rounds": 3,
+							"intervalTicks": 3,
+							"interburstCooldownTicks": 6
+						},
+						"behaviorProfile": "pswg_blasters:energy"
+					}
+				]
+			},
+			"pswg_blasters:a280cfe/scope": {
+				"translationKey": "attachment.pswg_blasters.a280cfe.scope",
+				"slots": [
+					"pswg_blasters:scope_slot"
+				],
+				"category": "pswg_blasters:scope",
+				"modifiers": [
+					{
+						"function": "zoom_multiplier",
+						"value": 2
+					}
+				]
+			}
+		}
+	}
+}

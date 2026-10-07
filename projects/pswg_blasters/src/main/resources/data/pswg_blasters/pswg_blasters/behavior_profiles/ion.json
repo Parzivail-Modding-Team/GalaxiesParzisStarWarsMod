@@ -1,0 +1,12 @@
+{
+	"delivery": "projectile",
+	"damageType": "pswg_blasters:direct_blaster",
+	"effects": [
+		{
+			"type": "pswg_blasters:contact",
+			"when": "on_entity_hit",
+			"kind": "ion",
+			"durationTicks": 100
+		}
+	]
+}

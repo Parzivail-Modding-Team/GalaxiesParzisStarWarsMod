@@ -1,0 +1,13 @@
+{
+	"translationKey": "attachment.pswg_blasters.dlt19.barrel_d",
+	"slots": [
+		"pswg_blasters:barrel_slot"
+	],
+	"category": "pswg_blasters:barrel",
+	"modifiers": [
+		{
+			"function": "spread_multiplier",
+			"value": 0.4
+		}
+	]
+}

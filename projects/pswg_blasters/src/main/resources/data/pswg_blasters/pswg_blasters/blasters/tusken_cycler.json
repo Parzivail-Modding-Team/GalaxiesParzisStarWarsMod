@@ -1,0 +1,82 @@
+{
+	"stats": {
+		"damage": 15,
+		"range": 160,
+		"damageRange": 160,
+		"automaticRepeatDelay": 12,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 5,
+				"reloadTicks": 50
+			},
+			"ingredient": "minecraft:iron_nugget",
+			"consumption": {
+				"type": "item_count",
+				"itemsPerRound": 1
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:slugthrower",
+			"itemModel": "pswg_blasters:tusken_cycler"
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:slug"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 6,
+			"hipYawDegrees": 1.5,
+			"aimPitchDegrees": 3,
+			"aimYawDegrees": 0.6,
+			"recoveryTicks": 8
+		},
+		"spread": {
+			"hipDegrees": 5,
+			"aimDegrees": 0.15,
+			"movingMultiplier": 2
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 1
+			}
+		]
+	},
+	"attachments": {
+		"defaults": {
+			"pswg_blasters:scope_slot": "pswg_blasters:tusken_cycler/scope"
+		},
+		"options": {
+			"pswg_blasters:tusken_cycler/scope": {
+				"translationKey": "attachment.pswg_blasters.tusken_cycler.scope",
+				"slots": [
+					"pswg_blasters:scope_slot"
+				],
+				"category": "pswg_blasters:scope",
+				"modifiers": [
+					{
+						"function": "zoom_multiplier",
+						"value": 2
+					}
+				]
+			},
+			"pswg_blasters:tusken_cycler/barrel_extension": {
+				"reference": "pswg_blasters:tusken_cycler/barrel_extension"
+			}
+		}
+	}
+}

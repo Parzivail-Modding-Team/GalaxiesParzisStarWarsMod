@@ -1,0 +1,23 @@
+{
+	"translationKey": "attachment.pswg_blasters.dlt19.bipod",
+	"slots": [
+		"pswg_blasters:barrel_slot"
+	],
+	"category": "pswg_blasters:barrel",
+	"modifiers": [
+		{
+			"function": "recoil_multiplier",
+			"value": 0.5,
+			"modifierCondition": {
+				"deployed": true
+			}
+		},
+		{
+			"function": "spread_multiplier",
+			"value": 0.5,
+			"modifierCondition": {
+				"deployed": true
+			}
+		}
+	]
+}

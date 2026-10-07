@@ -1,0 +1,24 @@
+{
+	"model": {
+		"type": "minecraft:composite",
+		"models": [
+			{"type": "minecraft:model", "model": "pswg_blasters:item/e11_base"},
+			{
+				"type": "minecraft:condition",
+				"property": "pswg_blasters:has_attachment",
+				"attachmentSlot": "pswg_blasters:scope_slot",
+				"attachmentId": "pswg_blasters:e11/counter",
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/e11_counter"},
+				"on_false": {"type": "minecraft:empty"}
+			},
+			{
+				"type": "minecraft:condition",
+				"property": "pswg_blasters:has_attachment",
+				"attachmentSlot": "pswg_blasters:barrel_slot",
+				"attachmentId": "pswg_blasters:e11/flashlight",
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/e11_flashlight"},
+				"on_false": {"type": "minecraft:empty"}
+			}
+		]
+	}
+}

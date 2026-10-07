@@ -1,0 +1,16 @@
+{
+	"model": {
+		"type": "minecraft:composite",
+		"models": [
+			{"type": "minecraft:model", "model": "pswg_blasters:item/dc15s_base"},
+			{
+				"type": "minecraft:condition",
+				"property": "pswg_blasters:has_attachment",
+				"attachmentSlot": "pswg_blasters:stock_slot",
+				"attachmentId": "pswg_blasters:dc15s/stock",
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/dc15s_stock"},
+				"on_false": {"type": "minecraft:empty"}
+			}
+		]
+	}
+}

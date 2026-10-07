@@ -16,8 +16,8 @@
 		"modes": {
 			"default": "pswg_blasters:auto",
 			"options": [
-				{"id": "pswg_blasters:auto", "trigger": {"type": "auto"}, "behaviorProfile": "pswg_blasters:test_blaster/direct"},
-				{"id": "pswg_blasters:semi", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:test_blaster/direct"}
+				{"id": "pswg_blasters:auto", "trigger": {"type": "auto"}, "behaviorProfile": "pswg_blasters:energy"},
+				{"id": "pswg_blasters:semi", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:energy"}
 			]
 		},
 		"recoil": {"hipPitchDegrees": 2.5, "hipYawDegrees": 0.75, "aimPitchDegrees": 1, "aimYawDegrees": 0.35, "recoveryTicks": 4},

@@ -1,0 +1,7 @@
+{
+	"translationKey": "attachment.pswg_blasters.t21.long_barrel",
+	"slots": [
+		"pswg_blasters:barrel_slot"
+	],
+	"category": "pswg_blasters:barrel"
+}

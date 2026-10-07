@@ -9,6 +9,7 @@ import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.*;
 import dev.pswg.data.*;
 import dev.pswg.entity.BlasterBoltEntity;
+import dev.pswg.entity.BlasterShot;
 import dev.pswg.generated.codecs.IAttachmentsComponentCodec;
 import dev.pswg.generated.codecs.ICoolingCodec;
 import dev.pswg.generated.codecs.IStateComponentCodec;
@@ -45,6 +46,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
@@ -60,6 +62,26 @@ import java.util.function.UnaryOperator;
 
 public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActionHandler, IHandAnimationAware
 {
+	/**
+	 * Shot interaction result.
+	 */
+	public enum ShotResult
+	{
+		/**
+		 * The interaction fired a shot.
+		 */
+		FIRED,
+
+		/**
+		 * The interaction fed the minigame.
+		 */
+		COOLING_HANDLED,
+
+		/**
+		 * The interaction failed.
+		 */
+		BLOCKED
+	}
 	/**
 	 * The reason, if any, for a blaster to be cooling.
 	 * Different cooling modes allow different interactions
@@ -1207,9 +1229,11 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	/**
 	 * Attempts a shot.
 	 */
-	public static boolean tryFire(ServerLevel world, Player user, InteractionHand hand, boolean pressed)
+	public static ShotResult tryFire(ServerLevel world, Player user, InteractionHand hand, boolean pressed)
 	{
-		return fireServer(world, user, hand, !pressed) == InteractionResult.SUCCESS;
+		var result = fireServer(world, user, hand, !pressed);
+		return result == InteractionResult.SUCCESS ? ShotResult.FIRED
+				: result == InteractionResult.CONSUME ? ShotResult.COOLING_HANDLED : ShotResult.BLOCKED;
 	}
 
 	/**
@@ -1341,6 +1365,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		stats = shotStats.stats();
 
+		var profile = getLoadout(world, itemStack).map(loadout -> BlasterData.get(world).behaviorProfiles().get(loadout.selectedMode().behaviorProfile()));
+		if (profile.isEmpty())
+			return InteractionResult.FAIL;
+
 		if (!BlasterAmmo.consumeShot(world, user, itemStack, stats.ammo()))
 		{
 			if (!repeatEvent)
@@ -1358,15 +1386,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (heatEnabled && getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
 
-		fireBolt(user, world);
+		fireShot(user, world, new BlasterShot(stats, profile.orElseThrow()), state.isAiming());
+
 		var recoil = stats.recoil();
 		var pitch = state.isAiming() ? recoil.aimPitchDegrees() : recoil.hipPitchDegrees();
 		var yaw = state.isAiming() ? recoil.aimYawDegrees() : recoil.hipYawDegrees();
 		if (user instanceof IRecoilEntity recoilEntity)
 			recoilEntity.pswg$addRecoilImpulse(new Vector3f(-pitch, world.getRandom().nextBoolean() ? yaw : -yaw, 0), recoil.recoveryTicks());
-
-		if (user instanceof IRecoilEntity recoilEntity)
-			recoilEntity.pswg$setRecoilTime(timestamp);
 
 		if (stats.fireSound().isPresent())
 		{
@@ -1449,22 +1475,36 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		return stack;
 	}
 
-	private static void fireBolt(LivingEntity user, ServerLevel serverWorld)
+	/**
+	 * Fires a shot.
+	 */
+	private static void fireShot(LivingEntity user, ServerLevel serverWorld, BlasterShot shot, boolean aiming)
 	{
+		var spread = shot.stats().spread();
+		var angle = aiming ? spread.aimDegrees() : spread.hipDegrees();
+
+		if (user.getDeltaMovement().horizontalDistanceSqr() > 0.0001)
+			angle *= spread.movingMultiplier();
+
+		if (user.isSprinting())
+			angle *= spread.sprintingMultiplier();
+
+		var direction = RandomHelper.directionInCone(serverWorld.getRandom(), GMath.getForwardVector(user.getYHeadRot(), user.getXRot()), Math.min(angle, 90));
+		var origin = user.getEyePosition();
+
+		if (shot.behavior().delivery() == BlasterBehaviorProfile.Delivery.HITSCAN)
+		{
+			var hit = BlasterShot.trace(serverWorld, user, origin, direction.scale(shot.stats().range()));
+			shot.hit(serverWorld, user, user, hit, (float)origin.distanceTo(hit.getLocation()));
+			return;
+		}
+
 		var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
-
-		// TODO: abstract into bolt-creating factory
-		projectile.setPos(user.getX(), user.getY() + user.getEyeHeight(user.getPose()), user.getZ());
-
-		var pitch = user.getXRot();
-		var yaw = user.getYHeadRot();
-
-		projectile.setDeltaMovement(GMath.getForwardVector(yaw, pitch).scale(5));
-		projectile.absSnapRotationTo(yaw, pitch);
-
-		//			Vec3d vec3d = user.getMovement();
-		//			projectile.setVelocity(projectile.getVelocity().add(vec3d));
-
+		projectile.setOwner(user);
+		projectile.setShot(shot);
+		projectile.setPos(origin);
+		projectile.setDeltaMovement(direction.scale(5));
+		ProjectileUtil.rotateTowardsMovement(projectile, 1);
 		serverWorld.addFreshEntity(projectile);
 	}
 }

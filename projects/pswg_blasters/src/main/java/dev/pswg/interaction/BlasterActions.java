@@ -92,12 +92,18 @@ public final class BlasterActions
 		private Session(ServerPlayer player, InteractionHand hand, long until)
 		{
 			_stack = player.getItemInHand(hand);
+
+			if (!_stack.has(BlasterItem.SERIAL))
+				_stack.set(BlasterItem.SERIAL, player.level().getRandom().nextLong());
+
 			_hand = hand;
 			_slot = player.getInventory().getSelectedSlot();
 			_level = player.level();
+
 			var loadout = BlasterItem.getLoadout(_level, _stack).orElseThrow();
 			_definition = loadout.definition();
 			_mode = loadout.selectedMode().id();
+
 			_generation = BlasterData.get(_level).data().generation();
 			_until = until;
 		}
@@ -107,13 +113,22 @@ public final class BlasterActions
 		 */
 		private boolean matches(ServerPlayer player)
 		{
+			return matchesSource(player) && BlasterItem.getLoadout(_level, _stack)
+			                                           .map(loadout -> loadout.selectedMode().id().equals(_mode)).orElse(false);
+		}
+
+		/**
+		 * Check to see if the session is for this player.
+		 */
+		private boolean matchesSource(ServerPlayer player)
+		{
 			if (!player.isAlive() || player.isSpectator() || player.level() != _level
 			    || player.containerMenu != player.inventoryMenu || player.getItemInHand(_hand) != _stack
 			    || (_hand == InteractionHand.MAIN_HAND && player.getInventory().getSelectedSlot() != _slot)
 			    || !BlasterData.get(_level).data().generation().equals(_generation))
 				return false;
-			return BlasterItem.getLoadout(_level, _stack).map(loadout -> loadout.definition() == _definition
-			                                                             && loadout.selectedMode().id().equals(_mode)).orElse(false);
+
+			return BlasterItem.getLoadout(_level, _stack).map(loadout -> loadout.definition() == _definition).orElse(false);
 		}
 	}
 
@@ -136,6 +151,11 @@ public final class BlasterActions
 		 * Current reload session, if waiting.
 		 */
 		private Session _reload;
+
+		/**
+		 * Last physical source.
+		 */
+		private Session _equipped;
 
 		/**
 		 * Creates an idle connection-local state.
@@ -178,6 +198,38 @@ public final class BlasterActions
 	}
 
 	/**
+	 * Refreshes draw timing once per source.
+	 */
+	private static void refreshEquipped(ServerPlayer player, InputState state)
+	{
+		if (state._equipped != null && state._equipped.matchesSource(player))
+			return;
+
+		state._trigger = null;
+		state._reload = null;
+		state._equipped = null;
+
+		ItemInteractionTimer.clear(player);
+		if (!player.isAlive() || player.isSpectator() || player.containerMenu != player.inventoryMenu)
+			return;
+
+		var hand = player.getMainHandItem().is(Blasters.BLASTER_ITEM) ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+		var stack = player.getItemInHand(hand);
+		var loadout = BlasterItem.getLoadout(player.level(), stack);
+
+		if (loadout.isEmpty())
+			return;
+
+		if (!stack.has(BlasterItem.SERIAL))
+			stack.set(BlasterItem.SERIAL, player.level().getRandom().nextLong());
+
+		var duration = loadout.orElseThrow().definition().stats().configuration().drawTicks();
+		state._equipped = new Session(player, hand, time(player) + duration);
+
+		ItemInteractionTimer.begin(player, ItemInteractionTimer.ItemInteractionKind.DRAW, stack.get(BlasterItem.SERIAL), time(player), duration);
+	}
+
+	/**
 	 * Handles ordered intents.
 	 */
 	private static void handle(ServerPlayer player, BlasterInputPayload packet)
@@ -187,6 +239,7 @@ public final class BlasterActions
 			return;
 
 		state._sequence = packet.sequence();
+		refreshEquipped(player, state);
 		if (packet.action() == BlasterInputPayload.BlasterInputAction.RELEASE)
 		{
 			if (state._trigger != null && state._trigger._hand == packet.hand())
@@ -217,17 +270,23 @@ public final class BlasterActions
 		player.resetLastActionTime();
 		if (packet.action() == BlasterInputPayload.BlasterInputAction.PRESS)
 		{
-			if (state._trigger != null || state._reload != null)
+			if (state._trigger != null || state._reload != null || (state._equipped != null && time(player) < state._equipped._until))
 				return;
+
 			var session = new Session(player, packet.hand(), time(player) + HEARTBEAT_TIMEOUT);
 			state._trigger = session;
 			var trigger = loadout.orElseThrow().selectedMode().trigger();
 			session._remaining = trigger instanceof BlasterStats.BurstTrigger burst ? burst.rounds() : 1;
 			attempt(player, session, true);
+
 			return;
 		}
 
 		state._trigger = null;
+
+		if (state._reload != null)
+			ItemInteractionTimer.clear(player);
+
 		state._reload = null;
 
 		switch (packet.action())
@@ -243,6 +302,9 @@ public final class BlasterActions
 			}
 			case RELOAD ->
 			{
+				if (state._equipped != null && time(player) < state._equipped._until)
+					return;
+
 				var ammo = loadout.orElseThrow().definition().stats().ammo();
 				var current = BlasterItem.getLoadedAmmo(stack, ammo);
 
@@ -253,29 +315,60 @@ public final class BlasterActions
 					case BlasterStats.ChargeStoreFeed charge -> charge.reloadTicks();
 				};
 
-				if (ticks > 0 && current < BlasterItem.getAmmoCapacity(ammo)
-				    && (player.isCreative() || BlasterAmmo.prepare(player.getInventory(), stack, ammo, BlasterItem.getAmmoCapacity(ammo) - current).isPresent()))
+				var room = BlasterItem.getAmmoCapacity(ammo) - current;
+				var plan = player.isCreative() ? java.util.Optional.<dev.pswg.item.InventoryResourceTransfer.Transfer>empty()
+				                               : BlasterAmmo.prepare(player.getInventory(), stack, ammo, room);
+
+				if (ticks > 0 && room > 0 && (player.isCreative() || plan.isPresent()))
 				{
 					state._reload = new Session(player, packet.hand(), time(player) + ticks);
+					ItemInteractionTimer.begin(player, ItemInteractionTimer.ItemInteractionKind.RELOAD, stack.get(BlasterItem.SERIAL), time(player), ticks);
 					player.level().playSound(null, player.getX(), player.getY(), player.getZ(), BlasterSounds.RELOAD, SoundSource.PLAYERS, 1, 1);
-					player.sendOverlayMessage(Component.translatable("text.pswg_blasters.reloading"));
+
+					var quantity = player.isCreative() ? room : plan.orElseThrow().quantity();
+					var units = player.isCreative() ? 0L : plan.orElseThrow().debitedUnits();
+					player.sendOverlayMessage(Component.translatable("text.pswg_blasters.reload_cost", quantity, units));
 				}
 				else
 					player.sendOverlayMessage(Component.translatable("text.pswg_blasters.cannot_reload"));
 			}
-			case FOLD -> BlasterItem.setFolded(player.level(), stack, !BlasterItem.isFolded(stack));
+			case FOLD ->
+			{
+				if (BlasterItem.setFolded(player.level(), stack, !BlasterItem.isFolded(stack)))
+					player.sendOverlayMessage(Component.translatable(BlasterItem.isFolded(stack) ? "text.pswg_blasters.stock_folded" : "text.pswg_blasters.stock_extended"));
+			}
 			case DEPLOY ->
 			{
 				if (BlasterItem.isDeployed(stack) || player.onGround())
+				{
 					BlasterItem.setDeployed(player.level(), stack, !BlasterItem.isDeployed(stack));
+					player.sendOverlayMessage(Component.translatable(BlasterItem.isDeployed(stack) ? "text.pswg_blasters.bipod_deployed" : "text.pswg_blasters.bipod_stowed"));
+				}
+				else
+					player.sendOverlayMessage(Component.translatable("text.pswg_blasters.needs_ground"));
 			}
 			case CONVERT ->
 			{
 				if (loadout.orElseThrow().activeConversion().isPresent())
+				{
 					BlasterItem.clearConversion(player.level(), stack);
+					player.sendOverlayMessage(Component.translatable("text.pswg_blasters.base_form"));
+				}
 				else
-					BlasterItem.getDefinition(player.level(), stack).orElseThrow().stats().configuration().fieldConversion()
-					           .ifPresent(conversion -> conversion.options().stream().filter(option -> BlasterItem.activateConversion(player.level(), stack, option.id())).findFirst());
+				{
+					var options = BlasterItem.getDefinition(player.level(), stack).orElseThrow().stats().configuration().fieldConversion();
+					var activated = false;
+					if (options.isPresent())
+						for (var option : options.orElseThrow().options())
+							if (BlasterItem.activateConversion(player.level(), stack, option.id()))
+							{
+								player.sendOverlayMessage(Component.translatable("tooltip.pswg_blasters.conversion", option.id().toString()));
+								activated = true;
+								break;
+							}
+					if (!activated)
+						player.sendOverlayMessage(Component.translatable("text.pswg_blasters.no_conversion"));
+				}
 			}
 			default ->
 			{
@@ -301,7 +394,18 @@ public final class BlasterActions
 		if (trigger instanceof BlasterStats.ChargeTrigger)
 			return;
 
-		var fired = BlasterItem.tryFire(player.level(), player, session._hand, pressed);
+		var result = BlasterItem.tryFire(player.level(), player, session._hand, pressed);
+		var fired = result == BlasterItem.ShotResult.FIRED;
+
+		if (result == BlasterItem.ShotResult.COOLING_HANDLED)
+		{
+			player.getAttachedOrCreate(INPUT)._trigger = null;
+			return;
+		}
+
+		if (BlasterItem.getState(session._stack).coolingMode().isCooling())
+			player.getAttachedOrCreate(INPUT)._trigger = null;
+
 		if (trigger instanceof BlasterStats.BurstTrigger && !fired
 		    && (pressed || BlasterItem.getState(session._stack).fireCooldown() <= player.level().getGameTime()))
 			session._remaining = 0;
@@ -322,21 +426,33 @@ public final class BlasterActions
 	 */
 	private static void tick(ServerPlayer player)
 	{
-		var state = player.getAttached(INPUT);
-		if (state == null)
-			return;
+		var state = player.getAttachedOrCreate(INPUT);
+		refreshEquipped(player, state);
 
 		var now = time(player);
+		var timer = player.getAttached(ItemInteractionTimer.ATTACHMENT);
+		if (timer != null && !timer.isActive(now))
+			ItemInteractionTimer.clear(player);
+
 		if (state._reload != null)
 		{
 			var session = state._reload;
 			if (!session.matches(player))
+			{
 				state._reload = null;
+				ItemInteractionTimer.clear(player);
+				player.sendOverlayMessage(Component.translatable("text.pswg_blasters.reload_cancelled"));
+			}
 
 			else if (now >= session._until)
 			{
-				BlasterAmmo.reload(player.level(), player, session._stack, session._definition.stats().ammo());
+				var ammo = session._definition.stats().ammo();
+				var amount = BlasterAmmo.reload(player.level(), player, session._stack, ammo);
+				var units = player.isCreative() ? 0L : (long)amount * BlasterAmmo.unitsPerLoadedQuantity(ammo);
+				player.sendOverlayMessage(Component.translatable(amount > 0 ? "text.pswg_blasters.reload_complete" : "text.pswg_blasters.cannot_reload", amount, units));
 				state._reload = null;
+
+				ItemInteractionTimer.clear(player);
 			}
 		}
 

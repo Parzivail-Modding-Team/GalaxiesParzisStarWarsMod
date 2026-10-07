@@ -1,0 +1,117 @@
+{
+	"stats": {
+		"damage": 8.5,
+		"range": 80,
+		"damageRange": 60,
+		"automaticRepeatDelay": 4,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 160,
+			"perRound": 5,
+			"drainSpeed": 5,
+			"overheatPenalty": 30,
+			"overheatDrainSpeed": 3,
+			"passiveCooldownDelay": 15,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 60,
+				"reloadTicks": 40
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 3
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:rifle",
+			"itemModel": "pswg_blasters:e22"
+		},
+		"modes": {
+			"default": "pswg_blasters:auto",
+			"options": [
+				{
+					"id": "pswg_blasters:auto",
+					"trigger": {
+						"type": "auto"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 2.5,
+			"hipYawDegrees": 0.8,
+			"aimPitchDegrees": 1,
+			"aimYawDegrees": 0.3,
+			"recoveryTicks": 4
+		},
+		"spread": {
+			"hipDegrees": 3,
+			"aimDegrees": 0.7
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 0.33,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 0.55
+			}
+		]
+	},
+	"attachments": {
+		"options": {
+			"pswg_blasters:e22/burst": {
+				"translationKey": "attachment.pswg_blasters.e22.burst",
+				"slots": [
+					"pswg_blasters:internal_slot"
+				],
+				"category": "pswg_blasters:internal_ordnance_config",
+				"grantedModes": [
+					{
+						"id": "pswg_blasters:burst",
+						"trigger": {
+							"type": "burst",
+							"rounds": 2,
+							"intervalTicks": 4,
+							"interburstCooldownTicks": 6
+						},
+						"behaviorProfile": "pswg_blasters:energy"
+					}
+				]
+			},
+			"pswg_blasters:e22/counter": {
+				"translationKey": "attachment.pswg_blasters.e22.counter",
+				"slots": [
+					"pswg_blasters:scope_slot"
+				],
+				"category": "pswg_blasters:scope",
+				"modifiers": []
+			},
+			"pswg_blasters:e22/flashlight": {
+				"translationKey": "attachment.pswg_blasters.e22.flashlight",
+				"slots": [
+					"pswg_blasters:barrel_slot"
+				],
+				"category": "pswg_blasters:barrel",
+				"modifiers": []
+			}
+		}
+	}
+}

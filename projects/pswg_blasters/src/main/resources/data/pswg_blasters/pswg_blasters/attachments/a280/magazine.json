@@ -1,0 +1,13 @@
+{
+	"translationKey": "attachment.pswg_blasters.a280.magazine",
+	"slots": [
+		"pswg_blasters:internal_slot"
+	],
+	"category": "pswg_blasters:internal_cooling",
+	"modifiers": [
+		{
+			"function": "cooling_multiplier",
+			"value": 1.3
+		}
+	]
+}

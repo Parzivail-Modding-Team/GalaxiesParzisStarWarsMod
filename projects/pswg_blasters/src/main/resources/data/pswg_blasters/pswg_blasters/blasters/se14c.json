@@ -1,0 +1,112 @@
+{
+	"stats": {
+		"damage": 4,
+		"range": 40,
+		"damageRange": 32,
+		"automaticRepeatDelay": 2,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 100,
+			"perRound": 4,
+			"drainSpeed": 4,
+			"overheatPenalty": 30,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 15,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 40,
+				"reloadTicks": 30
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 1
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:pistol",
+			"itemModel": "pswg_blasters:se14c"
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				},
+				{
+					"id": "pswg_blasters:burst",
+					"trigger": {
+						"type": "burst",
+						"rounds": 5,
+						"intervalTicks": 2,
+						"interburstCooldownTicks": 6
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				},
+				{
+					"id": "pswg_blasters:stun",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:stun"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 1.8,
+			"hipYawDegrees": 0.8,
+			"aimPitchDegrees": 0.9,
+			"aimYawDegrees": 0.4,
+			"recoveryTicks": 3
+		},
+		"spread": {
+			"hipDegrees": 3.5,
+			"aimDegrees": 1.5
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 0.6,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 0.5
+			}
+		]
+	},
+	"attachments": {
+		"options": {
+			"pswg_blasters:se14c/barrel_extension": {
+				"translationKey": "attachment.pswg_blasters.se14c.barrel_extension",
+				"slots": [
+					"pswg_blasters:barrel_slot"
+				],
+				"category": "pswg_blasters:barrel",
+				"modifiers": [
+					{
+						"function": "spread_multiplier",
+						"value": 0.4
+					}
+				]
+			}
+		}
+	}
+}

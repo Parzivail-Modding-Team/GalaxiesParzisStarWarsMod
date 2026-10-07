@@ -9,6 +9,8 @@ import dev.pswg.hud.DefaultBlasterHudRenderer;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.input.BlasterControls;
 import dev.pswg.interaction.BlasterActions;
+import dev.pswg.interaction.ItemInteractionTimer;
+import dev.pswg.item.BlasterAmmo;
 import dev.pswg.data.BlasterStanceProfile;
 import dev.pswg.item.BlasterEffectiveStats;
 import dev.pswg.item.component.StoredCharge;
@@ -125,6 +127,16 @@ public class BlastersClient implements GalaxiesClientAddon
 		list.add(Component.translatable("tooltip.pswg_blasters.recoil", number(hip.hipPitchDegrees()), number(hip.hipYawDegrees()), number(aim.aimPitchDegrees()), number(aim.aimYawDegrees()), hip.recoveryTicks()));
 		list.add(Component.translatable("tooltip.pswg_blasters.cooling", number(stats.heat().drainSpeed()), number(stats.heat().overheatDrainSpeed())));
 
+		if (stats.heat().capacity() > 0)
+			list.add(Component.translatable("tooltip.pswg_blasters.heat_cost", stats.heat().perRound(), stats.heat().capacity()));
+
+		if (stats.ammo().feed() instanceof dev.pswg.data.BlasterStats.MagazineFeed magazine)
+		{
+			var units = BlasterAmmo.unitsPerLoadedQuantity(stats.ammo());
+			var room = Math.max(0, magazine.magazineSize() - BlasterItem.getLoadedRounds(itemStack));
+			list.add(Component.translatable("tooltip.pswg_blasters.magazine_cost", units, (long)magazine.magazineSize() * units, (long)room * units));
+		}
+
 		if (BlasterItem.getAmmoCapacity(stats.ammo()) > 0)
 			list.add(Component.translatable("tooltip.pswg_blasters.ammo", BlasterItem.getLoadedAmmo(itemStack, stats.ammo()), BlasterItem.getAmmoCapacity(stats.ammo())));
 
@@ -155,46 +167,18 @@ public class BlastersClient implements GalaxiesClientAddon
 		return String.format(Locale.ROOT, "%.2f", value);
 	}
 
+	/** Draws only the owning player's active interaction timer at the native durability-bar location. */
 	private static void renderItemBars(GuiGraphicsExtractor context, Font textRenderer, ItemStack stack, int x, int y)
 	{
-		if (stack.is(Blasters.BLASTER_ITEM))
-		{
-			var client = Minecraft.getInstance();
-			assert client.level != null;
-
-			// TODO: better visual
-			BlasterItem.getFireCooldownProgress(client.level, stack, GalaxiesClient.getTickDelta())
-			           .ifPresent(value -> Drawables.itemDurability(context, value, x, y - 13, 13, 0x0000FF));
-
-			var optionalStats = BlasterItem.getStats(client.level, stack);
-			if (optionalStats.isEmpty())
-				return;
-
-			var stats = optionalStats.get();
-			if (stats.heat().capacity() <= 0)
-			{
-				return;
-			}
-
-			var state = BlasterItem.getState(stack);
-			if (state.coolingMode() == BlasterItem.CoolingMode.PASSIVE)
-			{
-				BlasterItem.getAccumulatedHeat(client.level, stack, GalaxiesClient.getTickDelta())
-				           .ifPresent(heat -> {
-					           Drawables.itemDurability(context, heat / stats.heat().capacity(), x, y - 10, 13, 0x30FF00);
-				           });
-			}
-			else
-			{
-				BlasterItem.getVentingHeat(client.level, stack, GalaxiesClient.getTickDelta())
-				           .ifPresent(heat -> {
-					           Drawables.itemDurability(context, heat / stats.heat().capacity(), x, y - 10, 13, 0xFF3000);
-				           });
-			}
-
-			BlasterItem.getOverchargeTimeRemaining(client.level, stack, GalaxiesClient.getTickDelta())
-			           .ifPresent(value -> Drawables.itemDurability(context, value, x, y - 7, 13, 0xFFFF00));
-		}
+		var client = Minecraft.getInstance();
+		if (!stack.is(Blasters.BLASTER_ITEM) || client.player == null || client.level == null)
+			return;
+		var timer = client.player.getAttached(ItemInteractionTimer.ATTACHMENT);
+		var serial = stack.get(BlasterItem.SERIAL);
+		if (timer == null || serial == null || serial.longValue() != timer.serial() || !timer.isActive(client.level.getGameTime()))
+			return;
+		var color = timer.kind() == ItemInteractionTimer.ItemInteractionKind.RELOAD ? 0x54D9FF : 0xFFD45A;
+		Drawables.itemDurability(context, timer.progress(client.level.getGameTime(), GalaxiesClient.getTickDelta()), x, y, 13, color);
 	}
 
 	@Override

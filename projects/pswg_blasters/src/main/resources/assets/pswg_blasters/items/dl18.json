@@ -1,0 +1,19 @@
+{
+	"model": {
+		"type": "minecraft:composite",
+		"models": [
+			{
+				"type": "minecraft:model",
+				"model": "pswg_blasters:item/dl18_base"
+			},
+			{
+				"type": "minecraft:condition",
+				"attachmentId": "pswg_blasters:dl18/scope",
+				"attachmentSlot": "pswg_blasters:scope_slot",
+				"on_false": {"type": "minecraft:empty"},
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/dl18_scope"},
+				"property": "pswg_blasters:has_attachment"
+			}
+		]
+	}
+}

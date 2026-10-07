@@ -1,1 +1,32 @@
-{"model":{"type":"minecraft:model","model":"pswg_blasters:item/e11d"}}
+{
+	"model": {
+		"type": "minecraft:composite",
+		"models": [
+			{"type": "minecraft:model", "model": "pswg_blasters:item/dlt19_base"},
+			{
+				"type": "minecraft:condition",
+				"property": "pswg_blasters:has_attachment",
+				"attachmentId": "pswg_blasters:dlt19/scope_x",
+				"attachmentSlot": "pswg_blasters:scope_slot",
+				"on_false": {"type": "minecraft:empty"},
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/dlt19_scope_x"}
+			},
+			{
+				"type": "minecraft:condition",
+				"property": "pswg_blasters:has_attachment",
+				"attachmentId": "pswg_blasters:dlt19/scope_d",
+				"attachmentSlot": "pswg_blasters:scope_slot",
+				"on_false": {"type": "minecraft:empty"},
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/dlt19_scope_d"}
+			},
+			{
+				"type": "minecraft:condition",
+				"property": "pswg_blasters:has_attachment",
+				"attachmentId": "pswg_blasters:dlt19/barrel_d",
+				"attachmentSlot": "pswg_blasters:barrel_slot",
+				"on_false": {"type": "minecraft:empty"},
+				"on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/dlt19_barrel_d"}
+			}
+		]
+	}
+}

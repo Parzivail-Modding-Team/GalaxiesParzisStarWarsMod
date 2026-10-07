@@ -1,0 +1,115 @@
+{
+	"stats": {
+		"damage": 7.5,
+		"range": 64,
+		"damageRange": 48,
+		"automaticRepeatDelay": 5,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 100,
+			"perRound": 7,
+			"drainSpeed": 3,
+			"overheatPenalty": 30,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 20,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 40,
+				"reloadTicks": 35
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 2
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:rifle",
+			"itemModel": "pswg_blasters:e10r"
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 2.5,
+			"hipYawDegrees": 0.7,
+			"aimPitchDegrees": 1,
+			"aimYawDegrees": 0.3,
+			"recoveryTicks": 4
+		},
+		"spread": {
+			"hipDegrees": 3,
+			"aimDegrees": 0.8
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 0.33,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 0.5
+			}
+		]
+	},
+	"attachments": {
+		"defaults": {
+			"pswg_blasters:stock_slot": "pswg_blasters:e10/stock",
+			"pswg_blasters:scope_slot": "pswg_blasters:e10/range_scope"
+		},
+		"options": {
+			"pswg_blasters:e10/stock": {
+				"translationKey": "attachment.pswg_blasters.e10.stock",
+				"slots": [
+					"pswg_blasters:stock_slot"
+				],
+				"category": "pswg_blasters:stock",
+				"modifiers": [
+					{
+						"function": "recoil_multiplier",
+						"value": 0.7,
+						"modifierCondition": {
+							"folded": false
+						}
+					}
+				]
+			},
+			"pswg_blasters:e10/range_scope": {
+				"translationKey": "attachment.pswg_blasters.e10.range_scope",
+				"slots": [
+					"pswg_blasters:scope_slot"
+				],
+				"category": "pswg_blasters:scope",
+				"modifiers": [
+					{
+						"function": "zoom_multiplier",
+						"value": 1.5
+					}
+				]
+			}
+		}
+	}
+}

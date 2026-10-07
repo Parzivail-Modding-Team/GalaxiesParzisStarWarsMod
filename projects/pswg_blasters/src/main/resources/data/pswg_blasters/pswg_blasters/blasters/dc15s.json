@@ -1,0 +1,108 @@
+{
+	"stats": {
+		"damage": 7,
+		"range": 64,
+		"damageRange": 48,
+		"automaticRepeatDelay": 4,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 120,
+			"perRound": 6,
+			"drainSpeed": 3,
+			"overheatPenalty": 30,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 20,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 50,
+				"reloadTicks": 30
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 2
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:rifle",
+			"itemModel": "pswg_blasters:dc15s"
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				},
+				{
+					"id": "pswg_blasters:stun",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:stun"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 2,
+			"hipYawDegrees": 0.6,
+			"aimPitchDegrees": 0.8,
+			"aimYawDegrees": 0.3,
+			"recoveryTicks": 4
+		},
+		"spread": {
+			"hipDegrees": 3,
+			"aimDegrees": 0.6
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 0.4,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 0.55
+			}
+		]
+	},
+	"attachments": {
+		"defaults": {
+			"pswg_blasters:stock_slot": "pswg_blasters:dc15s/stock"
+		},
+		"options": {
+			"pswg_blasters:dc15s/stock": {
+				"translationKey": "attachment.pswg_blasters.dc15s.stock",
+				"slots": [
+					"pswg_blasters:stock_slot"
+				],
+				"category": "pswg_blasters:stock",
+				"modifiers": [
+					{
+						"function": "recoil_multiplier",
+						"value": 0.7,
+						"modifierCondition": {
+							"folded": false
+						}
+					}
+				]
+			}
+		}
+	}
+}

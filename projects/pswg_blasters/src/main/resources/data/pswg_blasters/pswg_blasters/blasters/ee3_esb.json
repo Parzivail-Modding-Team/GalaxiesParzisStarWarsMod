@@ -1,0 +1,109 @@
+{
+	"stats": {
+		"damage": 9,
+		"range": 112,
+		"damageRange": 96,
+		"automaticRepeatDelay": 7,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 120,
+			"perRound": 10,
+			"drainSpeed": 3,
+			"overheatPenalty": 30,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 20,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 25,
+				"reloadTicks": 35
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 2
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:rifle",
+			"itemModel": "pswg_blasters:ee3_esb"
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				},
+				{
+					"id": "pswg_blasters:stun",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:stun"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 3,
+			"hipYawDegrees": 0.7,
+			"aimPitchDegrees": 1,
+			"aimYawDegrees": 0.25,
+			"recoveryTicks": 5
+		},
+		"spread": {
+			"hipDegrees": 3,
+			"aimDegrees": 0.2
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 0.3,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 0.75
+			}
+		]
+	},
+	"attachments": {
+		"defaults": {
+			"pswg_blasters:barrel_slot": "pswg_blasters:ee3/smooth_barrel",
+			"pswg_blasters:scope_slot": "pswg_blasters:ee3/tall_scope",
+			"pswg_blasters:stock_slot": "pswg_blasters:ee3/stock"
+		},
+		"options": {
+			"pswg_blasters:ee3/vane_barrel": {
+				"reference": "pswg_blasters:ee3/vane_barrel"
+			},
+			"pswg_blasters:ee3/smooth_barrel": {
+				"reference": "pswg_blasters:ee3/smooth_barrel"
+			},
+			"pswg_blasters:ee3/short_scope": {
+				"reference": "pswg_blasters:ee3/short_scope"
+			},
+			"pswg_blasters:ee3/tall_scope": {
+				"reference": "pswg_blasters:ee3/tall_scope"
+			},
+			"pswg_blasters:ee3/stock": {
+				"reference": "pswg_blasters:ee3/stock"
+			}
+		}
+	}
+}

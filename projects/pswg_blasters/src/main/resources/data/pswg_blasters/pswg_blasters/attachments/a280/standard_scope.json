@@ -1,0 +1,8 @@
+{
+	"translationKey": "attachment.pswg_blasters.a280.standard_scope",
+	"slots": [
+		"pswg_blasters:scope_slot"
+	],
+	"category": "pswg_blasters:scope",
+	"modifiers": []
+}

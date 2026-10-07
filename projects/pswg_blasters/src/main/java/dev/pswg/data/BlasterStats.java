@@ -323,7 +323,8 @@ public record BlasterStats(
 	@GenerateCodec(strict = true)
 	public record BlasterConfiguration(
 			Identifier archetype, Identifier itemModel, Optional<Identifier> stanceProfile,
-			@SelfCodec Optional<FieldConversion> fieldConversion
+			@SelfCodec Optional<FieldConversion> fieldConversion,
+			@CodecDefault("6") @CodecRange(min = 0) int drawTicks
 	) implements IBlasterConfigurationCodec
 	{
 	}

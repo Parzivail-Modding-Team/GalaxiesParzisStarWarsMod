@@ -1,0 +1,82 @@
+{
+	"archetype": "pswg_blasters:sniper",
+	"poses": {
+		"poseDefinitions": {
+			"pswg_blasters:sniper/carry": {
+				"itemTransform": {
+					"translation": [
+						0.0,
+						-0.05,
+						0.0
+					],
+					"rotation": [
+						8.0,
+						0.0,
+						0.0
+					]
+				},
+				"boneTransforms": {
+					"rightArm": {
+						"rotation": [
+							-20.0,
+							0.0,
+							0.0
+						]
+					},
+					"leftArm": {
+						"rotation": [
+							-25.0,
+							0.0,
+							0.0
+						]
+					}
+				},
+				"armMask": [
+					"mainArm",
+					"supportArm"
+				]
+			},
+			"pswg_blasters:sniper/ads": {
+				"itemTransform": {},
+				"boneTransforms": {
+					"rightArm": {
+						"rotation": [
+							0.0,
+							0.0,
+							0.0
+						]
+					},
+					"leftArm": {
+						"rotation": [
+							0.0,
+							0.0,
+							0.0
+						]
+					}
+				},
+				"armMask": [
+					"mainArm",
+					"supportArm"
+				]
+			}
+		},
+		"transitions": [],
+		"tracks": []
+	},
+	"rows": [
+		{
+			"layer": "locomotion",
+			"when": {
+				"locomotion": "idle"
+			},
+			"pose": "pswg_blasters:sniper/carry"
+		},
+		{
+			"layer": "weapon_state",
+			"when": {
+				"weaponState": "ads"
+			},
+			"pose": "pswg_blasters:sniper/ads"
+		}
+	]
+}

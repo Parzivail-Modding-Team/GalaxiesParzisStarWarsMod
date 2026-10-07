@@ -1,0 +1,87 @@
+{
+	"stats": {
+		"damage": 6.8,
+		"range": 48,
+		"damageRange": 40,
+		"automaticRepeatDelay": 5,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 100,
+			"perRound": 5,
+			"drainSpeed": 4,
+			"overheatPenalty": 30,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 15,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 30,
+				"reloadTicks": 30
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 2
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:pistol",
+			"itemModel": "pswg_blasters:a180",
+			"fieldConversion": {
+				"options": [
+					{
+						"id": "pswg_blasters:a180/precision",
+						"targetBlasterId": "pswg_blasters:a180_sniper"
+					}
+				]
+			}
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 1.8,
+			"hipYawDegrees": 0.5,
+			"aimPitchDegrees": 0.7,
+			"aimYawDegrees": 0.2,
+			"recoveryTicks": 3
+		},
+		"spread": {
+			"hipDegrees": 2,
+			"aimDegrees": 0.6
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 0.5,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 0.35
+			}
+		]
+	},
+	"attachments": {}
+}

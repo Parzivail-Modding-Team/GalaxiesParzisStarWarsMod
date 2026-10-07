@@ -14,19 +14,42 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.InterpolationHandler;
+import net.minecraft.world.entity.LinearInterpolationHandler;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
+/**
+ * Blaster bolt entity.
+ */
+public class BlasterBoltEntity extends Projectile implements IPreciseSpawnDataEntity
 {
-	public BlasterBoltEntity(EntityType<?> type, Level world)
+	/**
+	 * Short correction interval for fast bolts.
+	 */
+	public static final int UPDATE_INTERVAL_TICKS = 2;
+
+	/**
+	 * Captured server shot data.
+	 */
+	private BlasterShot _shot;
+
+	/**
+	 * Traveled distance.
+	 */
+	private double _travelled;
+
+	/**
+	 * Creates an unlaunched bolt.
+	 */
+	public BlasterBoltEntity(EntityType<? extends BlasterBoltEntity> type, Level world)
 	{
 		super(type, world);
 	}
@@ -34,6 +57,15 @@ public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder)
 	{
+	}
+
+	/**
+	 * Smooths corrections while vanilla accounts for the bolt's predicted travel between updates.
+	 */
+	@Override
+	protected InterpolationHandler createInterpolationHandler()
+	{
+		return LinearInterpolationHandler.create(this, UPDATE_INTERVAL_TICKS);
 	}
 
 	@Override
@@ -45,7 +77,25 @@ public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 	@Override
 	public void tick()
 	{
-		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHit);
+		super.tick();
+
+		// Clients predict straight travel only
+		if (level().isClientSide())
+		{
+			setPos(position().add(getDeltaMovement()));
+			return;
+		}
+
+		var velocity = getDeltaMovement();
+		var remaining = _shot == null ? Float.MAX_VALUE : _shot.stats().range() - _travelled;
+		if (remaining <= 0 || velocity.lengthSqr() < 1.0E-12)
+		{
+			discard();
+			return;
+		}
+		if (velocity.length() > remaining)
+			setDeltaMovement(velocity.normalize().scale(remaining));
+		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 		Vec3 nextPos;
 
 		if (hitResult.getType() != HitResult.Type.MISS)
@@ -53,17 +103,25 @@ public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 		else
 			nextPos = this.position().add(this.getDeltaMovement());
 
+		_travelled += position().distanceTo(nextPos);
 		this.setPos(nextPos);
-
-		super.tick();
+		setDeltaMovement(velocity);
 
 		if (hitResult.getType() != HitResult.Type.MISS && this.isAlive())
 		{
 			this.hitOrDeflect(hitResult);
 		}
 
-		if (this.tickCount > 20)
+		if ((_shot != null && _travelled >= _shot.stats().range()) || (_shot == null && this.tickCount > 20))
 			discard();
+	}
+
+	/**
+	 * Assigns shot before spawning.
+	 */
+	public void setShot(BlasterShot shot)
+	{
+		_shot = shot;
 	}
 
 	/**
@@ -74,13 +132,8 @@ public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 	 */
 	protected void hitOrDeflect(HitResult hitResult)
 	{
-		if (hitResult.getType() == HitResult.Type.ENTITY)
-		{
-			EntityHitResult entityHitResult = (EntityHitResult)hitResult;
-			Entity entity = entityHitResult.getEntity();
-
-			// TODO: deflect against blocking player
-		}
+		if (_shot != null && level() instanceof ServerLevel world)
+			_shot.hit(world, this, getOwner(), hitResult, (float)_travelled);
 
 		this.onCollision(hitResult);
 	}
@@ -104,9 +157,10 @@ public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 	 *
 	 * @return True if the collision is allowed
 	 */
-	protected boolean canHit(Entity entity)
+	@Override
+	protected boolean canHitEntity(Entity entity)
 	{
-		return true;
+		return !(entity instanceof BlasterBoltEntity) && super.canHitEntity(entity);
 	}
 
 	@Override
@@ -123,7 +177,8 @@ public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 	public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entityTrackerEntry)
 	{
 		var nbt = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
-		addAdditionalSaveData(nbt);
+
+		super.addAdditionalSaveData(nbt);
 
 		return GalaxiesNetworking.createPlayS2CPacket(new GalaxiesEntitySpawnS2CPacket(
 				this,
@@ -136,13 +191,21 @@ public class BlasterBoltEntity extends Entity implements IPreciseSpawnDataEntity
 	@Override
 	protected void readAdditionalSaveData(ValueInput view)
 	{
+		super.readAdditionalSaveData(view);
 
+		_shot = view.read("shot", BlasterShot.CODEC).orElse(null);
+		_travelled = view.getDoubleOr("travelled", 0);
 	}
 
 	@Override
 	protected void addAdditionalSaveData(ValueOutput view)
 	{
+		super.addAdditionalSaveData(view);
 
+		if (_shot != null)
+			view.store("shot", BlasterShot.CODEC, _shot);
+
+		view.putDouble("travelled", _travelled);
 	}
 
 	@Override

@@ -1,0 +1,65 @@
+{
+	"stats": {
+		"damage": 0,
+		"range": 12,
+		"damageRange": 8,
+		"automaticRepeatDelay": 20,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 100,
+			"perRound": 40,
+			"drainSpeed": 3,
+			"overheatPenalty": 30,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 20,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 1,
+				"reloadTicks": 25
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 6
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:ion",
+			"itemModel": "pswg_blasters:jawa_ion"
+		},
+		"modes": {
+			"default": "pswg_blasters:ion",
+			"options": [
+				{
+					"id": "pswg_blasters:ion",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:ion"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 3,
+			"hipYawDegrees": 1,
+			"aimPitchDegrees": 1.5,
+			"aimYawDegrees": 0.5,
+			"recoveryTicks": 6
+		},
+		"spread": {
+			"hipDegrees": 4,
+			"aimDegrees": 1.5
+		}
+	},
+	"attachments": {}
+}

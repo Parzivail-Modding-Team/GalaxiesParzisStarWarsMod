@@ -1,0 +1,13 @@
+{
+	"translationKey": "attachment.pswg_blasters.tusken_cycler.barrel_extension",
+	"slots": [
+		"pswg_blasters:barrel_slot"
+	],
+	"category": "pswg_blasters:barrel",
+	"modifiers": [
+		{
+			"function": "recoil_multiplier",
+			"value": 0.7
+		}
+	]
+}

@@ -1,0 +1,117 @@
+{
+	"stats": {
+		"damage": 13,
+		"range": 96,
+		"damageRange": 80,
+		"automaticRepeatDelay": 7,
+		"fireSound": "pswg_blasters:blaster.fire.e11",
+		"heat": {
+			"capacity": 120,
+			"perRound": 10,
+			"drainSpeed": 2,
+			"overheatPenalty": 40,
+			"overheatDrainSpeed": 2,
+			"passiveCooldownDelay": 25,
+			"overchargeBonus": 40
+		},
+		"cooling": {
+			"primaryBypassTime": 0.7,
+			"primaryBypassTolerance": 0.1,
+			"secondaryBypassTime": 0.25,
+			"secondaryBypassTolerance": 0.05
+		},
+		"ammo": {
+			"feed": {
+				"type": "magazine",
+				"magazineSize": 35,
+				"reloadTicks": 50
+			},
+			"ingredient": "#pswg_blasters:power_packs",
+			"consumption": {
+				"type": "component_charge",
+				"component": "pswg:stored_charge",
+				"unitsPerRound": 4
+			}
+		},
+		"configuration": {
+			"archetype": "pswg_blasters:heavy",
+			"itemModel": "pswg_blasters:t21"
+		},
+		"modes": {
+			"default": "pswg_blasters:semi",
+			"options": [
+				{
+					"id": "pswg_blasters:semi",
+					"trigger": {
+						"type": "semi"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				},
+				{
+					"id": "pswg_blasters:auto",
+					"trigger": {
+						"type": "auto"
+					},
+					"behaviorProfile": "pswg_blasters:energy"
+				}
+			]
+		},
+		"recoil": {
+			"hipPitchDegrees": 4,
+			"hipYawDegrees": 1.5,
+			"aimPitchDegrees": 2,
+			"aimYawDegrees": 0.6,
+			"recoveryTicks": 6
+		},
+		"spread": {
+			"hipDegrees": 4,
+			"aimDegrees": 1,
+			"movingMultiplier": 1.5
+		},
+		"falloff": [
+			{
+				"distanceFraction": 0,
+				"multiplier": 1
+			},
+			{
+				"distanceFraction": 1,
+				"multiplier": 1
+			}
+		]
+	},
+	"attachments": {
+		"defaults": {
+			"pswg_blasters:barrel_slot": "pswg_blasters:t21/long_barrel"
+		},
+		"options": {
+			"pswg_blasters:t21/long_barrel": {
+				"reference": "pswg_blasters:t21/long_barrel"
+			},
+			"pswg_blasters:t21/short_barrel": {
+				"reference": "pswg_blasters:t21/short_barrel"
+			},
+			"pswg_blasters:t21/scope": {
+				"reference": "pswg_blasters:t21/scope"
+			},
+			"pswg_blasters:t21/burst": {
+				"translationKey": "attachment.pswg_blasters.t21.burst",
+				"slots": [
+					"pswg_blasters:internal_slot"
+				],
+				"category": "pswg_blasters:internal_ordnance_config",
+				"grantedModes": [
+					{
+						"id": "pswg_blasters:burst",
+						"trigger": {
+							"type": "burst",
+							"rounds": 3,
+							"intervalTicks": 7,
+							"interburstCooldownTicks": 12
+						},
+						"behaviorProfile": "pswg_blasters:energy"
+					}
+				]
+			}
+		}
+	}
+}
