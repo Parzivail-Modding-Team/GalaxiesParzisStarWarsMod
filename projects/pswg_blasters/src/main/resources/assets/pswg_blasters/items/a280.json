@@ -1,13 +1,1 @@
-{
-	"model": {
-		"type": "minecraft:composite",
-		"models": [
-			{"type": "minecraft:model", "model": "pswg_blasters:item/a280_base"},
-			{"type": "minecraft:condition", "property": "pswg_blasters:has_attachment", "attachmentSlot": "pswg_blasters:barrel_slot", "attachmentId": "pswg_blasters:a280/standard_barrel", "on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/a280_barrel"}, "on_false": {"type": "minecraft:empty"}},
-			{"type": "minecraft:condition", "property": "pswg_blasters:has_attachment", "attachmentSlot": "pswg_blasters:barrel_slot", "attachmentId": "pswg_blasters:a280/dual_barrel", "on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/a280_dual_barrel"}, "on_false": {"type": "minecraft:empty"}},
-			{"type": "minecraft:condition", "property": "pswg_blasters:has_attachment", "attachmentSlot": "pswg_blasters:scope_slot", "attachmentId": "pswg_blasters:a280/standard_scope", "on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/a280_scope"}, "on_false": {"type": "minecraft:empty"}},
-			{"type": "minecraft:condition", "property": "pswg_blasters:has_attachment", "attachmentSlot": "pswg_blasters:scope_slot", "attachmentId": "pswg_blasters:a280/extended_scope", "on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/a280_extended_scope"}, "on_false": {"type": "minecraft:empty"}},
-			{"type": "minecraft:condition", "property": "pswg_blasters:has_attachment", "attachmentSlot": "pswg_blasters:internal_slot", "attachmentId": "pswg_blasters:a280/magazine", "on_true": {"type": "minecraft:model", "model": "pswg_blasters:item/a280_magazine"}, "on_false": {"type": "minecraft:empty"}}
-		]
-	}
-}
+{"model":{"type":"minecraft:model","model":"pswg_blasters:item/e11d"}}
