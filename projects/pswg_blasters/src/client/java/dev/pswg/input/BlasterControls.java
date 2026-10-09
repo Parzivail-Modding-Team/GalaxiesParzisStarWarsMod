@@ -213,7 +213,6 @@ public final class BlasterControls
 				action,
 				hand,
 				++_sequence,
-				BlasterInputPayload.PROTOCOL_VERSION,
 				session
 		);
 		ClientPlayNetworking.send(packet);
