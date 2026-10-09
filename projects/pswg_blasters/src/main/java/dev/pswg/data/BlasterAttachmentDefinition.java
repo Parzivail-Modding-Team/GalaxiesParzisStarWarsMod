@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Modifier-only attachment definition, shared or inline in a weapon's option catalog.
+ * Data-only attachment definition, shared or inline in a weapon's option catalog.
  *
  * @param translationKey Display translation key.
  * @param slots          Unique compatible slot IDs.
@@ -22,6 +22,7 @@ import java.util.Optional;
  * @param grantedModes   Optional unique mode grants.
  * @param stanceProfile  Optional cosmetic pose profile.
  * @param itemModel      Optional cosmetic model root.
+	 * @param recoilPattern  Optional prioritized pitch/yaw pattern override.
  */
 @GenerateCodec(strict = true)
 public record BlasterAttachmentDefinition(
@@ -31,7 +32,8 @@ public record BlasterAttachmentDefinition(
 		@SelfCodec @CodecDefault("java.util.List.of()") List<Modifier> modifiers,
 		@SelfCodec @CodecUnique(key = "id") Optional<List<BlasterStats.Mode>> grantedModes,
 		Optional<Identifier> stanceProfile,
-		Optional<Identifier> itemModel
+		Optional<Identifier> itemModel,
+		@SelfCodec Optional<BlasterStats.RecoilPattern> recoilPattern
 ) implements IBlasterAttachmentDefinitionCodec
 {
 	/**

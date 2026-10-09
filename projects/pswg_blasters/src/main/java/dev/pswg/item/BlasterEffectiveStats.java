@@ -66,6 +66,25 @@ public record BlasterEffectiveStats(BlasterStats stats, float zoom, float recoil
 		var heat = base.heat();
 		var aimRecoil = base.recoil();
 		var cone = base.spread();
+		var recoilPattern = aimRecoil.pattern();
+		var recoilPatternPriority = Integer.MIN_VALUE;
+		var recoilPatternOption = (Identifier)null;
+
+		for (var option : loadout.activeOptions().entrySet())
+		{
+			var override = option.getValue().recoilPattern();
+			if (override.isEmpty())
+				continue;
+
+			var candidate = override.orElseThrow();
+			if (candidate.priority() > recoilPatternPriority
+			    || (candidate.priority() == recoilPatternPriority && (recoilPatternOption == null || option.getKey().compareTo(recoilPatternOption) > 0)))
+			{
+				recoilPattern = candidate;
+				recoilPatternPriority = candidate.priority();
+				recoilPatternOption = option.getKey();
+			}
+		}
 
 		var effective = base
 				.withAutomaticRepeatDelay((int)Math.clamp(Math.ceil(base.automaticRepeatDelay() / fireRate), 1, Integer.MAX_VALUE))
@@ -84,7 +103,8 @@ public record BlasterEffectiveStats(BlasterStats stats, float zoom, float recoil
 						scaled(aimRecoil.hipYawDegrees(), recoil, 90),
 						scaled(aimRecoil.aimPitchDegrees(), recoil, 90),
 						scaled(aimRecoil.aimYawDegrees(), recoil, 90),
-						aimRecoil.recoveryTicks()
+						aimRecoil.recoveryTicks(),
+						recoilPattern
 				))
 				.withSpread(new BlasterStats.Spread(
 						scaled(cone.hipDegrees(), spread, 90),

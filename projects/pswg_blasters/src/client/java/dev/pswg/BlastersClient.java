@@ -2,6 +2,7 @@ package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
 import dev.pswg.data.BlasterClientDefinitions;
+import dev.pswg.data.BlasterStats;
 import dev.pswg.data.SlimRegistry;
 import dev.pswg.events.HudRenderEvents;
 import dev.pswg.events.ItemRenderEvents;
@@ -22,6 +23,7 @@ import dev.pswg.rendering.Drawables;
 import dev.pswg.rendering.ItemHudRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -92,28 +94,66 @@ public class BlastersClient implements GalaxiesClientAddon
 	}
 
 	/**
-	 * Displays the current resolved form, effective statistics, and item-owned ammo/configuration state.
+	 * Displays operating information by default and detailed effective statistics while Shift is held.
 	 */
 	private static void getTooltip(ItemStack itemStack, Item.TooltipContext ctx, TooltipFlag type, List<Component> list)
 	{
-		list.add(Component.translatable(itemStack.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID).toLanguageKey()));
-		list.add(GalaxiesClient.getKeybindHint(GalaxiesKeybinds.getPrimaryAction(), Component.translatable(I18N_VENT_BLASTER)));
-		list.add(GalaxiesClient.getKeybindHint(BlasterControls.mode, Component.translatable("text.pswg_blasters.cycle_mode")));
-		list.add(GalaxiesClient.getKeybindHint(BlasterControls.reload, Component.translatable("text.pswg_blasters.reload")));
+		list.add(Component.translatable(itemStack.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID).toLanguageKey()).withStyle(ChatFormatting.YELLOW));
 
 		var level = Minecraft.getInstance().level;
 		var loadout = BlasterItem.getLoadout(level, itemStack);
 		if (loadout.isEmpty())
 		{
-			list.add(Component.translatable("tooltip.pswg_blasters.unavailable"));
+			list.add(Component.translatable("tooltip.pswg_blasters.unavailable").withStyle(ChatFormatting.RED));
 			return;
 		}
 
 		var effective = BlasterItem.getEffectiveStats(level, itemStack).orElseThrow();
 		var stats = effective.stats();
+		var resolvedLoadout = loadout.orElseThrow();
+		var definition = resolvedLoadout.definition();
 
-		list.add(Component.translatable("tooltip.pswg_blasters.mode", BlasterActions.modeName(loadout.orElseThrow().selectedMode().id())));
-		list.add(Component.translatable("tooltip.pswg_blasters.stats", number(stats.damage()), stats.range(), stats.automaticRepeatDelay(), number(stats.damageRange())));
+		list.add(Component.translatable("tooltip.pswg_blasters.mode", ItemTooltipHelper.color(BlasterActions.modeName(resolvedLoadout.selectedMode().id()), ChatFormatting.GOLD)).withStyle(ChatFormatting.GRAY));
+		if (resolvedLoadout.availableModes().size() > 1)
+			list.add(ItemTooltipHelper.keyHint(BlasterControls.mode, "text.pswg_blasters.cycle_mode"));
+
+		if (stats.heat().capacity() > 0)
+			list.add(ItemTooltipHelper.color(GalaxiesClient.getKeybindHint(GalaxiesKeybinds.getPrimaryAction(), Component.translatable(I18N_VENT_BLASTER)), ChatFormatting.AQUA));
+
+		if (BlasterItem.canReload(stats))
+			list.add(ItemTooltipHelper.keyHint(BlasterControls.reload, "text.pswg_blasters.reload"));
+
+		var hasFoldedBehavior = BlasterItem.hasContextualAttachmentModifier(resolvedLoadout, true);
+		var hasDeployedBehavior = BlasterItem.hasContextualAttachmentModifier(resolvedLoadout, false);
+
+		if (hasFoldedBehavior)
+			list.add(ItemTooltipHelper.keyHint(BlasterControls.fold, "key.pswg_blasters.fold"));
+
+		if (hasDeployedBehavior)
+			list.add(ItemTooltipHelper.keyHint(BlasterControls.deploy, "key.pswg_blasters.deploy"));
+
+		if (definition.stats().configuration().fieldConversion().isPresent() || resolvedLoadout.activeConversion().isPresent())
+			list.add(ItemTooltipHelper.keyHint(BlasterControls.convert, "key.pswg_blasters.convert"));
+
+		if (BlasterItem.isDeployed(itemStack))
+			list.add(Component.translatable("tooltip.pswg_blasters.deployed").withStyle(ChatFormatting.GREEN));
+
+		if (BlasterItem.isFolded(itemStack))
+			list.add(Component.translatable("tooltip.pswg_blasters.folded").withStyle(ChatFormatting.GRAY));
+
+		var ammoCapacity = BlasterItem.getAmmoCapacity(stats.ammo());
+		if (ammoCapacity > 0)
+			list.add(ItemTooltipHelper.detail(
+					"tooltip.pswg_blasters.ammo",
+					ItemTooltipHelper.value(Long.toString(BlasterItem.getLoadedAmmo(itemStack, stats.ammo()))),
+					ItemTooltipHelper.value(Integer.toString(ammoCapacity))
+			));
+
+		if (!Minecraft.getInstance().hasShiftDown())
+		{
+			list.add(Component.translatable("tooltip.pswg_blasters.extended_hint").withStyle(ChatFormatting.DARK_GRAY));
+			return;
+		}
 
 		var hip = BlasterItem.getEffectiveStats(level, itemStack, new BlasterEffectiveStats.Context(
 				BlasterStanceProfile.WeaponState.FIRING, BlasterItem.isDeployed(itemStack), false, BlasterItem.isFolded(itemStack)
@@ -123,30 +163,39 @@ public class BlastersClient implements GalaxiesClientAddon
 				BlasterStanceProfile.WeaponState.FIRING, BlasterItem.isDeployed(itemStack), true, BlasterItem.isFolded(itemStack)
 		)).orElseThrow().stats().recoil();
 
-		list.add(Component.translatable("tooltip.pswg_blasters.handling", number(effective.zoom()), number(stats.spread().hipDegrees())));
-		list.add(Component.translatable("tooltip.pswg_blasters.recoil", number(hip.hipPitchDegrees()), number(hip.hipYawDegrees()), number(aim.aimPitchDegrees()), number(aim.aimYawDegrees()), hip.recoveryTicks()));
-		list.add(Component.translatable("tooltip.pswg_blasters.cooling", number(stats.heat().drainSpeed()), number(stats.heat().overheatDrainSpeed())));
+		list.add(Component.translatable("tooltip.pswg_blasters.details").withStyle(ChatFormatting.GOLD));
+		list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.damage", ItemTooltipHelper.value(number(stats.damage()))));
+		list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.range", ItemTooltipHelper.value(Integer.toString(stats.range()))));
+		list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.fire_interval", ItemTooltipHelper.value(Integer.toString(stats.automaticRepeatDelay()))));
+		list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.effective_range", ItemTooltipHelper.value(number(stats.damageRange()))));
+		list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.zoom", ItemTooltipHelper.value(number(effective.zoom()))));
+		list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.spread", ItemTooltipHelper.value(number(stats.spread().hipDegrees())), ItemTooltipHelper.value(number(stats.spread().aimDegrees()))));
+		list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.hip_recoil", ItemTooltipHelper.value(number(hip.hipPitchDegrees())), ItemTooltipHelper.value(number(hip.hipYawDegrees()))));
+		list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.aim_recoil", ItemTooltipHelper.value(number(aim.aimPitchDegrees())), ItemTooltipHelper.value(number(aim.aimYawDegrees()))));
+		list.add(ItemTooltipHelper.detail(
+				"tooltip.pswg_blasters.recoil_profile",
+				ItemTooltipHelper.value(Integer.toString(hip.pattern().pitchStages().size())),
+				ItemTooltipHelper.value(Integer.toString(hip.pattern().yawCycle().size())),
+				ItemTooltipHelper.value(Integer.toString(hip.recoveryTicks()))
+		));
 
 		if (stats.heat().capacity() > 0)
-			list.add(Component.translatable("tooltip.pswg_blasters.heat_cost", stats.heat().perRound(), stats.heat().capacity()));
+		{
+			list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.cooling", ItemTooltipHelper.value(number(stats.heat().drainSpeed()))));
+			list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.overheat_cooling", ItemTooltipHelper.value(number(stats.heat().overheatDrainSpeed()))));
+			list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.heat_cost", ItemTooltipHelper.value(Integer.toString(stats.heat().perRound())), ItemTooltipHelper.value(Integer.toString(stats.heat().capacity()))));
+		}
 
-		if (stats.ammo().feed() instanceof dev.pswg.data.BlasterStats.MagazineFeed magazine)
+		if (stats.ammo().feed() instanceof BlasterStats.MagazineFeed magazine)
 		{
 			var units = BlasterAmmo.unitsPerLoadedQuantity(stats.ammo());
 			var room = Math.max(0, magazine.magazineSize() - BlasterItem.getLoadedRounds(itemStack));
-			list.add(Component.translatable("tooltip.pswg_blasters.magazine_cost", units, (long)magazine.magazineSize() * units, (long)room * units));
+			list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.units_per_round", ItemTooltipHelper.value(Long.toString(units))));
+			list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.full_magazine_cost", ItemTooltipHelper.value(Long.toString((long)magazine.magazineSize() * units))));
+			list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.top_up_cost", ItemTooltipHelper.value(Long.toString((long)room * units))));
 		}
 
-		if (BlasterItem.getAmmoCapacity(stats.ammo()) > 0)
-			list.add(Component.translatable("tooltip.pswg_blasters.ammo", BlasterItem.getLoadedAmmo(itemStack, stats.ammo()), BlasterItem.getAmmoCapacity(stats.ammo())));
-
-		loadout.orElseThrow().activeConversion().ifPresent(option -> list.add(Component.translatable("tooltip.pswg_blasters.conversion", option.toString())));
-
-		if (BlasterItem.isDeployed(itemStack))
-			list.add(Component.translatable("tooltip.pswg_blasters.deployed"));
-
-		if (BlasterItem.isFolded(itemStack))
-			list.add(Component.translatable("tooltip.pswg_blasters.folded"));
+		resolvedLoadout.activeConversion().ifPresent(option -> list.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.conversion", ItemTooltipHelper.value(option.toString()))));
 	}
 
 	/**
@@ -156,18 +205,20 @@ public class BlastersClient implements GalaxiesClientAddon
 	{
 		var charge = stack.get(StoredCharge.COMPONENT);
 		if (charge != null)
-			lines.add(Component.translatable("tooltip.pswg_blasters.pack", charge.current(), charge.capacity()));
+			lines.add(ItemTooltipHelper.detail("tooltip.pswg_blasters.pack", ItemTooltipHelper.value(Integer.toString(charge.current())), ItemTooltipHelper.value(Integer.toString(charge.capacity()))));
 	}
 
 	/**
-	 * Formats displayed effective values without changing their gameplay precision.
+	 * Formats displayed effective values.
 	 */
 	private static String number(float value)
 	{
 		return String.format(Locale.ROOT, "%.2f", value);
 	}
 
-	/** Draws only the owning player's active interaction timer at the native durability-bar location. */
+	/**
+	 * Draws only the owning player's active interaction timer at the native durability-bar location.
+	 */
 	private static void renderItemBars(GuiGraphicsExtractor context, Font textRenderer, ItemStack stack, int x, int y)
 	{
 		var client = Minecraft.getInstance();

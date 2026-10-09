@@ -71,7 +71,8 @@
 			"hipYawDegrees": 0.8,
 			"aimPitchDegrees": 0.9,
 			"aimYawDegrees": 0.4,
-			"recoveryTicks": 3
+			"recoveryTicks": 3,
+			"pattern": {"pitchStages":[{"firstShot":1,"multiplier":1.2},{"firstShot":2,"multiplier":1.0},{"firstShot":6,"multiplier":1.3}],"yawCycle":[{"multiplier":0.35},{"multiplier":0.7},{"multiplier":1.0},{"multiplier":0.7},{"multiplier":0.35},{"multiplier":-0.35},{"multiplier":-0.7},{"multiplier":-1.0},{"multiplier":-0.7},{"multiplier":-0.35}]}
 		},
 		"spread": {
 			"hipDegrees": 3.5,

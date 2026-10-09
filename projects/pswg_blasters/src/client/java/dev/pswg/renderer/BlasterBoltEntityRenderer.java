@@ -70,7 +70,7 @@ public class BlasterBoltEntityRenderer extends EntityRenderer<BlasterBoltEntity,
 	{
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0.2f, 0);
-		matrixStack.rotateDegrees(Axis.YP, -(state.yaw + 90));
+		matrixStack.rotateDegrees(Axis.YP, 90 - state.yaw);
 		matrixStack.rotateDegrees(Axis.ZP, -state.pitch);
 		matrixStack.translate(0.2f, 0, 0);
 

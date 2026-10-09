@@ -27,7 +27,19 @@ public interface IRecoilEntity
 	long pswg$getRecoilTime();
 
 	/**
-	 * Adds a finite angular displacement in degrees, distributed over the supplied recovery ticks.
+	 * Adds an aim impulse and advances this entity's firing-burst profile.
+	 *
+	 * @param degrees                 Signed pitch/yaw impulse in degrees.
+	 * @param sourceSerial            Physical weapon whose burst profile is advancing.
+	 * @param recoveryTicks           Quiet ticks before exponential aim recovery and a fresh burst.
+	 * @param pitchMultipliers        One-based pitch ramp expanded for this burst.
+	 * @param yawCycle                Repeating signed yaw multipliers.
 	 */
-	void pswg$addRecoilImpulse(Vector3f degrees, int recoveryTicks);
+	void pswg$addRecoilImpulse(
+			Vector3f degrees,
+			long sourceSerial,
+			int recoveryTicks,
+			float[] pitchMultipliers,
+			float[] yawCycle
+	);
 }

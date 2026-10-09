@@ -17,7 +17,7 @@
 			{"id": "pswg_blasters:dlt19/heavy_rifle", "targetBlasterId": "pswg_blasters:dlt19d", "conditions": [{"type": "has_attachment", "attachmentSlot": "pswg_blasters:scope_slot", "attachmentId": "pswg_blasters:dlt19/scope_d"}, {"type": "has_attachment", "attachmentSlot": "pswg_blasters:barrel_slot", "attachmentId": "pswg_blasters:dlt19/barrel_d"}]}
 		]}},
 		"modes": {"default": "pswg_blasters:auto", "options": [{"id": "pswg_blasters:auto", "trigger": {"type": "auto"}, "behaviorProfile": "pswg_blasters:energy"}]},
-		"recoil": {"hipPitchDegrees": 3, "hipYawDegrees": 1, "aimPitchDegrees": 1.5, "aimYawDegrees": 0.5, "recoveryTicks": 5},
+		"recoil": {"hipPitchDegrees": 3, "hipYawDegrees": 1, "aimPitchDegrees": 1.5, "aimYawDegrees": 0.5, "recoveryTicks": 5, "pattern":{"pitchStages":[{"firstShot":1,"multiplier":1.2},{"firstShot":2,"multiplier":1.0},{"firstShot":6,"multiplier":1.3}],"yawCycle":[{"multiplier":0.35},{"multiplier":0.7},{"multiplier":1.0},{"multiplier":0.7},{"multiplier":0.35},{"multiplier":-0.35},{"multiplier":-0.7},{"multiplier":-1.0},{"multiplier":-0.7},{"multiplier":-0.35}]}},
 		"spread": {"hipDegrees": 4, "aimDegrees": 1},
 		"falloff": [{"distanceFraction": 0, "multiplier": 1}, {"distanceFraction": 1, "multiplier": 0.5}]
 	},

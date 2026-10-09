@@ -20,7 +20,7 @@
 				{"id": "pswg_blasters:semi", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:energy"}
 			]
 		},
-		"recoil": {"hipPitchDegrees": 2.5, "hipYawDegrees": 0.75, "aimPitchDegrees": 1, "aimYawDegrees": 0.35, "recoveryTicks": 4},
+		"recoil": {"hipPitchDegrees": 2.5, "hipYawDegrees": 0.75, "aimPitchDegrees": 1, "aimYawDegrees": 0.35, "recoveryTicks": 4, "pattern":{"pitchStages":[{"firstShot":1,"multiplier":1.2},{"firstShot":2,"multiplier":1.0},{"firstShot":6,"multiplier":1.3}],"yawCycle":[{"multiplier":0.35},{"multiplier":0.7},{"multiplier":1.0},{"multiplier":0.7},{"multiplier":0.35},{"multiplier":-0.35},{"multiplier":-0.7},{"multiplier":-1.0},{"multiplier":-0.7},{"multiplier":-0.35}]}},
 		"spread": {"hipDegrees": 3, "aimDegrees": 0.75},
 		"falloff": [{"distanceFraction": 0, "multiplier": 1}, {"distanceFraction": 1, "multiplier": 0.5}]
 	},

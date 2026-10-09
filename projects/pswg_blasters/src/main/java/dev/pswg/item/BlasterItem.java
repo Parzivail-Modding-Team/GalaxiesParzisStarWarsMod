@@ -16,7 +16,6 @@ import dev.pswg.generated.codecs.IStateComponentCodec;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.interaction.IRecoilEntity;
 import dev.pswg.item.component.StoredCharge;
-import dev.pswg.math.GMath;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
@@ -720,6 +719,36 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	}
 
 	/**
+	 * Returns whether the loadout has an installed modifier whose result depends on folding or deployment.
+	 */
+	public static boolean hasContextualAttachmentModifier(BlasterLoadout loadout, boolean folded)
+	{
+		for (var attachment : loadout.activeOptions().values())
+		{
+			for (var modifier : attachment.modifiers())
+			{
+				if (folded ? modifier.modifierCondition().folded().isPresent() : modifier.modifierCondition().deployed().isPresent())
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns whether this feed can currently be reloaded through the reload action.
+	 */
+	public static boolean canReload(BlasterStats stats)
+	{
+		return switch (stats.ammo().feed())
+		{
+			case BlasterStats.PerShotFeed ignored -> false;
+			case BlasterStats.MagazineFeed magazine -> magazine.reloadTicks() > 0;
+			case BlasterStats.ChargeStoreFeed charge -> charge.reloadTicks() > 0;
+		};
+	}
+
+	/**
 	 * Activates a field conversion.
 	 */
 	public static boolean activateConversion(ServerLevel world, ItemStack stack, Identifier optionId)
@@ -1392,7 +1421,13 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		var pitch = state.isAiming() ? recoil.aimPitchDegrees() : recoil.hipPitchDegrees();
 		var yaw = state.isAiming() ? recoil.aimYawDegrees() : recoil.hipYawDegrees();
 		if (user instanceof IRecoilEntity recoilEntity)
-			recoilEntity.pswg$addRecoilImpulse(new Vector3f(-pitch, world.getRandom().nextBoolean() ? yaw : -yaw, 0), recoil.recoveryTicks());
+			recoilEntity.pswg$addRecoilImpulse(
+				new Vector3f(-pitch, yaw, 0),
+				itemStack.getOrDefault(SERIAL, 0L),
+				recoil.recoveryTicks(),
+				recoil.pattern().pitchMultipliers(20),
+				recoil.pattern().yawMultipliers()
+			);
 
 		if (stats.fireSound().isPresent())
 		{
@@ -1489,7 +1524,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (user.isSprinting())
 			angle *= spread.sprintingMultiplier();
 
-		var direction = RandomHelper.directionInCone(serverWorld.getRandom(), GMath.getForwardVector(user.getYHeadRot(), user.getXRot()), Math.min(angle, 90));
+		var direction = RandomHelper.directionInCone(serverWorld.getRandom(), user.getViewVector(1).normalize(), Math.min(angle, 90));
 		var origin = user.getEyePosition();
 
 		if (shot.behavior().delivery() == BlasterBehaviorProfile.Delivery.HITSCAN)

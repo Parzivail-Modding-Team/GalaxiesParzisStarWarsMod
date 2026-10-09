@@ -22,19 +22,19 @@ import java.util.Optional;
 /**
  * Normalized blaster statistics.
  *
- * @param damage Base direct-hit damage.
- * @param range Maximum trace distance in blocks.
+ * @param damage               Base direct-hit damage.
+ * @param range                Maximum trace distance in blocks.
  * @param automaticRepeatDelay Minimum accepted-shot interval in ticks.
- * @param fireSound Optional sound override.
- * @param heat Heat values, zero when omitted.
- * @param cooling Optional cooling windows; explicit zero windows remain present.
- * @param damageRange Distance over which falloff is sampled.
- * @param ammo Required feed and consumption options.
- * @param configuration Required archetype and item model.
- * @param modes Ordered firing modes.
- * @param recoil Server aim impulse.
- * @param spread Cone spread.
- * @param falloff Ordered normalized damage curve.
+ * @param fireSound            Optional sound override.
+ * @param heat                 Heat values, zero when omitted.
+ * @param cooling              Optional cooling windows; explicit zero windows remain present.
+ * @param damageRange          Distance over which falloff is sampled.
+ * @param ammo                 Required feed and consumption options.
+ * @param configuration        Required archetype and item model.
+ * @param modes                Ordered firing modes.
+ * @param recoil               Shot-indexed aim recoil profile.
+ * @param spread               Cone spread.
+ * @param falloff              Ordered normalized damage curve.
  */
 @MutableRecord
 public record BlasterStats(
@@ -536,7 +536,14 @@ public record BlasterStats(
 	}
 
 	/**
-	 * Server aim impulses in degrees and recovery duration in ticks.
+	 * Server aim impulses in degrees and recoil pattern.
+	 *
+	 * @param hipPitchDegrees Base upward hip-fire impulse per shot.
+	 * @param hipYawDegrees   Base horizontal hip-fire impulse per shot.
+	 * @param aimPitchDegrees Base upward aimed-fire impulse per shot.
+	 * @param aimYawDegrees   Base horizontal aimed-fire impulse per shot.
+	 * @param recoveryTicks   Quiet ticks before exponential recovery and a fresh burst.
+	 * @param pattern         Recoil pattern.
 	 */
 	@GenerateCodec(strict = true)
 	public record Recoil(
@@ -544,13 +551,138 @@ public record BlasterStats(
 			@CodecRange(min = 0) float hipYawDegrees,
 			@CodecRange(min = 0) float aimPitchDegrees,
 			@CodecRange(min = 0) float aimYawDegrees,
-			@CodecRange(min = 0) int recoveryTicks
+			@CodecRange(min = 0) int recoveryTicks,
+			@SelfCodec @CodecDefault("dev.pswg.data.BlasterStats.RecoilPattern.DEFAULT") RecoilPattern pattern
 	) implements IRecoilCodec
 	{
 		/**
 		 * No server aim recoil.
 		 */
-		public static final Recoil ZERO = new Recoil(0, 0, 0, 0, 0);
+		public static final Recoil ZERO = new Recoil(0, 0, 0, 0, 0, RecoilPattern.DEFAULT);
+	}
+
+	/**
+	 * A compact pitch ramp and repeating yaw pattern. Attachment overrides use priority, then option ID.
+	 *
+	 * @param priority    Priority when this pattern overrides a blaster pattern from an installed attachment.
+	 * @param pitchStages Piecewise-linear pitch multiplier stages, starting at shot one.
+	 * @param yawCycle    Signed yaw multipliers repeated for each subsequent shot.
+	 */
+	@GenerateCodec(strict = true)
+	public record RecoilPattern(
+			@CodecRange(min = 0, max = 1000) @CodecDefault("0") int priority,
+			@CodecSize(min = 1, max = 20) @CodecUnique(key = "firstShot") @SelfCodec List<RecoilPitchStage> pitchStages,
+			@CodecSize(min = 1, max = 20) @SelfCodec List<RecoilYawStep> yawCycle
+	) implements IRecoilPatternCodec
+	{
+		/**
+		 * Default first-shot and sustained pitch stages.
+		 */
+		public static final List<RecoilPitchStage> DEFAULT_PITCH_STAGES = List.of(
+				new RecoilPitchStage(1, 1.2f),
+				new RecoilPitchStage(2, 1.0f),
+				new RecoilPitchStage(6, 1.3f)
+		);
+
+		/**
+		 * Default controlled lateral pattern; signs describe direction and magnitudes scale blaster's provided yaw recoil.
+		 */
+		public static final List<RecoilYawStep> DEFAULT_YAW_CYCLE = List.of(
+				new RecoilYawStep(0.35f),
+				new RecoilYawStep(0.7f),
+				new RecoilYawStep(1.0f),
+				new RecoilYawStep(0.7f),
+				new RecoilYawStep(0.35f),
+				new RecoilYawStep(-0.35f),
+				new RecoilYawStep(-0.7f),
+				new RecoilYawStep(-1.0f),
+				new RecoilYawStep(-0.7f),
+				new RecoilYawStep(-0.35f)
+		);
+
+		/**
+		 * Default recoil shape for definitions that have not selected a bespoke pattern.
+		 */
+		public static final RecoilPattern DEFAULT = new RecoilPattern(0, DEFAULT_PITCH_STAGES, DEFAULT_YAW_CYCLE);
+
+		public static final Codec<RecoilPattern> CODEC = IRecoilPatternCodec.CODEC.validate(RecoilPattern::validate);
+
+		private static DataResult<RecoilPattern> validate(RecoilPattern pattern)
+		{
+			if (pattern.pitchStages().getFirst().firstShot() != 1)
+				return DataResult.error(() -> "pitchStages must begin at shot one");
+
+			for (var index = 1; index < pattern.pitchStages().size(); index++)
+				if (pattern.pitchStages().get(index).firstShot() <= pattern.pitchStages().get(index - 1).firstShot())
+					return DataResult.error(() -> "pitchStages must be ordered by increasing firstShot");
+
+			return DataResult.success(pattern);
+		}
+
+		/**
+		 * Resolves the piecewise-linear pitch multiplier at a one-based shot index.
+		 */
+		public float pitchMultiplier(int shotIndex)
+		{
+			var previous = pitchStages().getFirst();
+			if (shotIndex <= previous.firstShot())
+				return previous.multiplier();
+
+			for (var next : pitchStages().subList(1, pitchStages().size()))
+			{
+				if (shotIndex <= next.firstShot())
+				{
+					var progress = (shotIndex - previous.firstShot()) / (float)(next.firstShot() - previous.firstShot());
+					return previous.multiplier() + (next.multiplier() - previous.multiplier()) * progress;
+				}
+				previous = next;
+			}
+
+			return previous.multiplier();
+		}
+
+		/**
+		 * Resolves the pitch curve for the bounded burst sequence.
+		 */
+		public float[] pitchMultipliers(int shotCount)
+		{
+			var multipliers = new float[shotCount];
+			for (var index = 0; index < shotCount; index++)
+				multipliers[index] = pitchMultiplier(index + 1);
+			return multipliers;
+		}
+
+		/**
+		 * Resolves one full signed yaw cycle.
+		 */
+		public float[] yawMultipliers()
+		{
+			var multipliers = new float[yawCycle().size()];
+			for (var index = 0; index < multipliers.length; index++)
+				multipliers[index] = yawCycle().get(index).multiplier();
+			return multipliers;
+		}
+	}
+
+	/**
+	 * One one-based starting shot and pitch multiplier in an recoil ramp.
+	 */
+	@GenerateCodec(strict = true)
+	public record RecoilPitchStage(
+			@CodecRange(min = 1, max = 20) int firstShot,
+			@CodecRange(min = 0, max = 4) float multiplier
+	) implements IRecoilPitchStageCodec
+	{
+	}
+
+	/**
+	 * A signed multiplier for one step of an repeating yaw cycle.
+	 */
+	@GenerateCodec(strict = true)
+	public record RecoilYawStep(
+			@CodecRange(min = -4, max = 4) float multiplier
+	) implements IRecoilYawStepCodec
+	{
 	}
 
 	/**

@@ -17,22 +17,34 @@ import org.joml.Vector3f;
  * An attachment for entities that contains the data required to
  * represent recoil
  *
- * @param recoilImpulse  Remaining finite angular displacement in degrees.
- * @param recoilTicks    Ticks over which the remaining impulse is applied.
- * @param recoilStart    Timestamp of the last authored impulse for view/item presentation.
+ * @param recoilImpulse      Pending one-shot angular displacement in degrees.
+ * @param recoilAimOffset    Current aim displacement that is gradually recovered after firing stops.
+ * @param recoilTicks        Quiet ticks before the current firing burst resets.
+ * @param recoilStart        Timestamp of the last authored impulse for view/item presentation.
+ * @param recoilShotSequence Number of shots in the current firing burst.
+ * @param recoilSourceSerial Physical weapon whose current burst profile is stored.
+ * @param lastViewPitch      Last pitch sampled while tracking player compensation input.
+ * @param lastViewYaw        Last head yaw sampled while tracking player compensation input.
+ * @param hasViewSnapshot    Whether the previous view angles are valid input samples.
  */
 @MutableRecord
 @GenerateCodec
 public record RecoilEntityAttachment(
 		@CodecDefault("new org.joml.Vector3f()") Vector3f recoilImpulse,
+		@CodecDefault("new org.joml.Vector3f()") Vector3f recoilAimOffset,
 		@CodecDefault("0") @CodecRange(min = 0) int recoilTicks,
-		@CodecDefault("0L") long recoilStart
+		@CodecDefault("0L") long recoilStart,
+		@CodecDefault("0") @CodecRange(min = 0) int recoilShotSequence,
+		@CodecDefault("0L") long recoilSourceSerial,
+		@CodecDefault("0.0f") float lastViewPitch,
+		@CodecDefault("0.0f") float lastViewYaw,
+		@CodecDefault("false") boolean hasViewSnapshot
 ) implements IRecoilEntityAttachmentBuilder, IRecoilEntityAttachmentCodec
 {
 	/**
 	 * No pending recoil.
 	 */
-	public static final RecoilEntityAttachment DEFAULT = new RecoilEntityAttachment(new Vector3f(), 0, -20);
+	public static final RecoilEntityAttachment DEFAULT = new RecoilEntityAttachment(new Vector3f(), new Vector3f(), 0, -20, 0, 0, 0, 0, false);
 
 	@SuppressWarnings("UnstableApiUsage")
 	public static final AttachmentType<RecoilEntityAttachment> ATTACHMENT = AttachmentRegistry.create(
