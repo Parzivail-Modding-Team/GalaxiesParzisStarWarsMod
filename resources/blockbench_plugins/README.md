@@ -24,6 +24,20 @@ Gadget models are also used by their thrown or placed entities. Their **entity_o
 
 A mesh can use several textures. The exporter splits it into the required surfaces for you. For faces without a texture, it uses the mesh's only assigned texture, or Blockbench's default/selected texture.
 
+## Make worn armor
+
+The Stormtrooper model is a working combined armor template at `projects/pswg_core/src/main/resources/assets/pswg/g3d/source/armor/stormtrooper.jg3d`. Open it with the plugin to reuse its group layout, pivots, and Steve/Alex arm branches.
+
+- Keep the `head`, `body`, `right_arm`, `left_arm`, `right_leg`, and `left_leg` group names. Put boots in `right_boot` and `left_boot`; a leggings belt can use a separate `waist` group.
+- Add details beneath the part they should follow. A pouch under an arm moves with that arm; a pauldron under the body follows the torso.
+- Put Steve's four-unit arms in the `_default` child groups and Alex's three-unit arms in `_slim` child groups. The game selects the appropriate branches from the player's skin model. Keep shared details outside those two branches.
+- Model upright in the normal feet-origin frame. The armor renderer handles Minecraft's coordinate conversion and uses the wearer's native animation. Display values do not position worn armor.
+- Assign a normal image, such as `pswg:textures/armor/stormtrooper.png`. Worn armor samples it directly; it does not need to be stitched into an atlas. Runtime Ptex surfaces can also supply dynamic textures.
+- Export to the module's `assets/<namespace>/g3d/source/armor/` folder and run its normal datagen. Register the set once with `G3dArmorRenderer.register(modelId, armorItems)` during client startup.
+- For armor that covers the skin's outer layer, add `G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY` to registration. A helmet hides the skin hat; a chestplate hides the jacket and sleeves; leggings or boots hide the pants overlays. Stormtrooper uses this for all four pieces. This is a registration setting, so no extra model export is needed.
+
+See [the humanoid armor contract](../../G3D.md#humanoid-armor) for pivot coordinates, separate Steve/Alex assets, dye slots, and rendering behavior. The same plugin/export format handles armor and ordinary models.
+
 ## Texture surface settings
 
 Each entry in the **Textures** panel owns one set of settings:
@@ -37,6 +51,14 @@ Each entry in the **Textures** panel owns one set of settings:
 | **Glow with transparency** | Starts with a fully bright surface that keeps partial transparency. |
 | **Glow strength** | Sets the surface light level from 0 to 15. At 0 it uses scene light; at 15 it stays fully bright. It does not light nearby blocks. |
 | **Show both sides** | Shows the back of each face too, which is useful for sheets and fins. New textures have this enabled. Imported settings are retained. |
+
+### Reuse a model with different textures
+
+Enter an optional **Texture slot** in the texture's normal Properties dialog, such as `base` or `visor`. Keep painting and assigning the image normally. Export writes the material's texture as `#base`, and records the current **Game texture** as that slot's default in `model.textures`. Leaving Texture slot empty keeps today's fixed-image/Ptex workflow.
+
+Import resolves the default image for painting and preview while keeping the slot. Native Duplicate, `.bbmodel` save/reload, and undo retain it. A slot with no default remains editable with a missing preview; choosing **Change File** assigns a default without removing the slot. Alias defaults such as `#base` are preserved rather than flattened. Several surfaces can share a slot, provided their default game texture agrees.
+
+In game, armor sets can bind different images or Ptex graphs at registration. Block/item variants use ordinary parent models and texture maps. Both share the compiled geometry and UV layout. See [texture references and reusable slots](../../G3D.md#texture-references-and-reusable-slots) for source examples and the common binding API. Existing original `.bbmodel` files still export directly; neither mesh editing nor a source-format version change is required.
 
 You can also choose a surface preset from the texture's **Render Mode** context menu. The choice applies to that texture and any other selected textures. Use **Properties** to fine-tune it.
 

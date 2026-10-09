@@ -1,17 +1,20 @@
 package dev.pswg;
 
 import dev.pswg.api.GalaxiesClientAddon;
+import dev.pswg.container.GalaxiesItems;
 import dev.pswg.container.GalaxiesParticleTypes;
 import dev.pswg.container.GalaxiesScreenHandlerTypes;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
 import dev.pswg.item.GalaxiesDrinkTintSource;
+import dev.pswg.model.g3d.G3dTextureBindings;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
 import dev.pswg.networking.IPreciseSpawnDataEntity;
 import dev.pswg.networking.PreciseVelocityParticleS2CPayload;
 import dev.pswg.particle.ShortFlameParticle;
 import dev.pswg.particle.SmallFlashParticle;
+import dev.pswg.rendering.g3d.G3dArmorRenderer;
 import dev.pswg.rendering.g3d.G3dClientModels;
 import dev.pswg.rendering.models.PswgBlockModelPlugin;
 import dev.pswg.rendering.ptex.PtexSpriteSource;
@@ -142,6 +145,164 @@ public class GalaxiesClient implements ClientModInitializer
 		GalaxiesRenderLayers.init();
 
 		ModelLoadingPlugin.register(PswgBlockModelPlugin.INSTANCE);
+
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/stormtrooper"),
+				GalaxiesItems.STORM_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/stormtrooper"),
+				GalaxiesItems.SHOCK_TROOPER,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/shocktrooper.png")),
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/artillerytrooper"),
+				GalaxiesItems.ARTILLERY_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/deathtrooper"),
+				GalaxiesItems.DEATH_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/purgetrooper"),
+				GalaxiesItems.PURGE_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/incineratortrooper"),
+				GalaxiesItems.INCINERATOR_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/sandtrooper"),
+				GalaxiesItems.SANDTROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/shoretrooper"),
+				GalaxiesItems.SHORE_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/scouttrooper"),
+				GalaxiesItems.SCOUT_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/jumptrooper"),
+				GalaxiesItems.JUMP_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/elite_squad_trooper"),
+				GalaxiesItems.ELITE_SQUAD_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/hovertank_pilot"),
+				GalaxiesItems.HOVERTANK_PILOT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/imperial_pilot"),
+				GalaxiesItems.IMPERIAL_PILOT_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/imperial_pilot"),
+				GalaxiesItems.IMPERIAL_PILOT_KIT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/technical_helmet"),
+				GalaxiesItems.IMPERIAL_PILOT_TECHNICAL_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/beach_insurgence_hat"),
+				GalaxiesItems.BEACH_INSURGENCE_HAT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/desert_insurgence_hat"),
+				GalaxiesItems.DESERT_INSURGENCE_HAT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/imperial_officer_cap"),
+				GalaxiesItems.BLACK_IMPERIAL_OFFICER,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/imperial_officer_hat_black.png")),
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/imperial_officer_cap"),
+				GalaxiesItems.GRAY_IMPERIAL_OFFICER,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/imperial_officer_hat_gray.png"))
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/imperial_officer_cap"),
+				GalaxiesItems.LIGHT_GRAY_IMPERIAL_OFFICER,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/imperial_officer_hat_light_gray.png"))
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/imperial_officer_cap"),
+				GalaxiesItems.KHAKI_IMPERIAL_OFFICER,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/imperial_officer_hat_khaki.png"))
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/goggles_cap"),
+				GalaxiesItems.GRAY_GOGGLES_CAP,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/gray_goggles_cap.png")),
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/goggles_cap"),
+				GalaxiesItems.BROWN_GOGGLES_CAP,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/brown_goggles_cap.png")),
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/goggles_cap"),
+				GalaxiesItems.TAN_GOGGLES_CAP,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/tan_goggles_cap.png")),
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_helmet"),
+				GalaxiesItems.REBEL_TROPICAL,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/rebel_tropical_helmet.png")),
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_helmet"),
+				GalaxiesItems.REBEL_FOREST,
+				G3dTextureBindings.of("base", Galaxies.id("textures/armor/rebel_forest_helmet.png")),
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/tie_cadet"),
+				GalaxiesItems.IMPERIAL_PILOT_CADET_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/tie_cold_mask"),
+				GalaxiesItems.IMPERIAL_PILOT_COLD_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_pilot"),
+				GalaxiesItems.REBEL_PILOT_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_pilot"),
+				GalaxiesItems.REBEL_PILOT_KIT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
 
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);

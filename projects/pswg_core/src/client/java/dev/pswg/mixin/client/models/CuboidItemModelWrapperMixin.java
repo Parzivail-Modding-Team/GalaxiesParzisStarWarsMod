@@ -66,15 +66,15 @@ public abstract class CuboidItemModelWrapperMixin
 			return;
 
 		var poseProvider = G3dClientModels.itemPose(model());
-		if (geometry.atlasCapable() && poseProvider == null)
+		TextureSlots textureSlots = resolvedModel.getTopTextureSlots();
+		if (geometry.atlasCapable(textureSlots) && poseProvider == null)
 			return;
 
-		TextureSlots textureSlots = resolvedModel.getTopTextureSlots();
 		var properties = ModelRenderProperties.fromResolvedModel(baker, resolvedModel, textureSlots);
 		Matrix4fc modelTransform = Transformation.compose(transformation, transformation());
 
 		cir.setReturnValue(new G3dItemModel(
-				new G3dRenderer(geometry, baker),
+				new G3dRenderer(geometry, baker, textureSlots),
 				properties,
 				modelTransform,
 				tints(),

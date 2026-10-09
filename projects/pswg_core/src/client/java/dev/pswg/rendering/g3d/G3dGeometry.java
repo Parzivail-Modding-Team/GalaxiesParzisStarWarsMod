@@ -2,8 +2,8 @@ package dev.pswg.rendering.g3d;
 
 import dev.pswg.model.g3d.G3dModel;
 import dev.pswg.model.g3d.G3dPose;
+import dev.pswg.model.g3d.G3dTextureReference;
 import dev.pswg.rendering.ptex.PtexDefinition;
-import dev.pswg.rendering.ptex.SourceTexture;
 import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
@@ -117,16 +117,23 @@ public final class G3dGeometry implements UnbakedGeometry
 	 */
 	public PtexDefinition texture(Identifier id)
 	{
-		var result = _textures.get(id);
-		if (result != null)
-			return result;
+		return G3dTextures.definition(id, _textures);
+	}
 
-		// Plain Minecraft texture resources need no wrapper document. Keep the
-		// explicit Ptex definition lookup first so authored graphs take precedence.
-		if (isDirectTexture(id))
-			return new PtexDefinition(new SourceTexture(id), true);
+	/**
+	 * Resolves the same surface reference for baked and sampled consumers.
+	 */
+	public PtexDefinition texture(G3dTextureReference reference, TextureSlots slots)
+	{
+		return texture(reference.isSlot() ? material(reference, slots).sprite() : reference.resource());
+	}
 
-		throw new IllegalArgumentException("Missing Ptex definition or direct texture resource " + id + " for " + _model.rig().id());
+	/**
+	 * Preserves native material properties while resolving a fixed texture or slot.
+	 */
+	public Material material(G3dTextureReference reference, TextureSlots slots)
+	{
+		return G3dTextures.material(reference, slots, _textures);
 	}
 
 	/**
@@ -134,23 +141,7 @@ public final class G3dGeometry implements UnbakedGeometry
 	 */
 	public Identifier spriteId(Identifier id)
 	{
-		if (_textures.containsKey(id))
-			return PtexDefinition.spriteId(id);
-
-		if (!isDirectTexture(id))
-			throw new IllegalArgumentException("Not a direct texture resource: " + id);
-
-		var path = id.getPath();
-		return Identifier.fromNamespaceAndPath(id.getNamespace(), path.substring("textures/".length(), path.length() - ".png".length()));
-	}
-
-	/**
-	 * Tests whether an identifier points directly to an image in a resource pack.
-	 */
-	private static boolean isDirectTexture(Identifier id)
-	{
-		var path = id.getPath();
-		return path.startsWith("textures/") && path.endsWith(".png") && path.length() > "textures/.png".length();
+		return G3dTextures.spriteId(id, _textures);
 	}
 
 	/**
@@ -158,7 +149,15 @@ public final class G3dGeometry implements UnbakedGeometry
 	 */
 	public boolean atlasCapable()
 	{
-		return _model.materials().stream().allMatch(material -> texture(material.texture()).atlas());
+		return atlasCapable(TextureSlots.EMPTY);
+	}
+
+	/**
+	 * Checks the concrete bindings of this consumer, not the shared template alone.
+	 */
+	public boolean atlasCapable(TextureSlots slots)
+	{
+		return _model.materials().stream().allMatch(material -> texture(material.texture(), slots).atlas());
 	}
 
 	/**
@@ -178,10 +177,10 @@ public final class G3dGeometry implements UnbakedGeometry
 			if (G3dPose.isCollapsed(pose.nodeMatrix(mesh.node())))
 				continue;
 			var surface = _model.materials().get(mesh.material());
-			if (!texture(surface.texture()).atlas())
+			if (!texture(surface.texture(), slots).atlas())
 				throw new IllegalArgumentException("Sampled-only Ptex surface cannot be baked into a block: " + surface.texture());
 
-			var nativeMaterial = baker.materials().get(new Material(spriteId(surface.texture())), debugName);
+			var nativeMaterial = baker.materials().get(material(surface.texture(), slots), debugName);
 
 			var blockInfo = BakedQuad.MaterialInfo.of(
 					nativeMaterial,

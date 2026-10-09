@@ -140,7 +140,7 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item IMPERIAL_PILOT_HELMET = registerArmorItem("imperial_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
 	@DataGenItem
-	public static final Item IMPERIAL_PILOT_KIT = registerArmorItem("imperial_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.BODY);
+	public static final Item IMPERIAL_PILOT_KIT = registerArmorItem("imperial_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
 	@DataGenItem
 	public static final Item IMPERIAL_PILOT_CADET_HELMET = registerArmorItem("imperial_pilot_cadet_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
 	@DataGenItem
