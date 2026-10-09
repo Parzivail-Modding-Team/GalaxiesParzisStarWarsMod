@@ -346,7 +346,7 @@ public class GalaxiesItems
 	public static final DyedItems FILLED_CUPS = new DyedItems(color -> registerDefaultPotionItem(color.name().toLowerCase() + "_cup_filled", new Item.Properties().usingConvertsTo(CUPS.get(color))));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, itemTags = DataGenItemTag.DRINK_CONTAINER, langOverride = "Glass")
 	public static final NumberedItems GLASSES = new NumberedItems(10, i -> registerSimpleItem("glass_" + i));
-	@DataGenItem(itemGroup = DataGenItemGroup.NONE, langOverride = "Glass", model = ItemModel.DRINK)
+	@DataGenItem(itemGroup = DataGenItemGroup.NONE, langOverride = "Glass", model = ItemModel.FILLED_DRINK)
 	public static final NumberedItems FILLED_GLASSES = new NumberedItems(10, i -> registerDefaultPotionItem("glass_" + i + "_filled", new Item.Properties().usingConvertsTo(GLASSES.get(i - 1))));
 	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, itemTags = DataGenItemTag.DRINK_CONTAINER, langOverride = "Glass Bottle")
 	public static final NumberedItems GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i));

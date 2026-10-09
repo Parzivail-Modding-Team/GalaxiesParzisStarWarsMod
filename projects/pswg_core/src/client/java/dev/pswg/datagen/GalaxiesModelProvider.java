@@ -384,23 +384,23 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 
 		generator.itemModelOutput.accept(item, generator.createFlatModelDispatch(flatModel, inHandModel));
 	}
-
-	/**
-	 * Resolves the named dye variant from a filled cup's registry identifier.
-	 */
-	private static DyeColor cupColor(Item item)
+	public void registerFilledDrink(ItemModelGenerators generator, Item item, DataGenItem dataGenItem)
 	{
-		var path = item.builtInRegistryHolder().key().identifier().getPath();
-		var suffix = "_cup_filled";
-		if (!path.endsWith(suffix))
-			throw new IllegalArgumentException("Filled cup item must end with " + suffix + ": " + path);
+		Material overlayFlat = new Material(Identifier.parse(item.toString().replace("_filled", "")).withPrefix("item/").withSuffix("_overlay"));
+		Material baseFlat = new Material(Identifier.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", "")));
+		Identifier flatModelId = generator.generateLayeredItem(item, baseFlat, overlayFlat);
+		ItemModel.Unbaked flatModel = ItemModelUtils.tintedModel(
+				flatModelId,
+				new Constant(0xFFFFFF),
+				new GalaxiesDrinkTintSource()
+		);
 
-		var colorName = path.substring(0, path.length() - suffix.length());
-		var color = DyeColor.byName(colorName, null);
-		if (color == null)
-			throw new IllegalArgumentException("Filled cup item has no dye color name: " + path);
+		ItemModel.Unbaked inHandModel = ItemModelUtils.tintedModel(
+				ModelLocationUtils.getModelLocation(item, "_in_hand"),
+				new GalaxiesDrinkTintSource()
+		);
 
-		return color;
+		generator.itemModelOutput.accept(item, generator.createFlatModelDispatch(flatModel, inHandModel));
 	}
 
 	public ModelTemplate createItemModelFromTemplate(Identifier template, String suffix, TextureSlot... slots)

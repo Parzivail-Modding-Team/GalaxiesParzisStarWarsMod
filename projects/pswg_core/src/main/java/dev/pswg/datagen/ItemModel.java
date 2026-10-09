@@ -4,6 +4,7 @@ public enum ItemModel
 {
 	GENERATED,
 	DRINK,
+	FILLED_DRINK,
 	CUP,
 	FILLED_CUP,
 	HANDHELD,
