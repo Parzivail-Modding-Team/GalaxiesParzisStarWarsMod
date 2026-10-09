@@ -23,6 +23,7 @@ public final class GameTime
 	{
 	}
 
+	public static void register()
 	{
 		PayloadTypeRegistry.clientboundPlay().register(GameTimeOffsetPayload.TYPE, GameTimeOffsetPayload.PACKET_CODEC);
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
