@@ -5,9 +5,9 @@
 			"id": "texture_glass_1",
 			"texture": "pswg:item/3d/glass_1_in_hand",
 			"layers": {
-				"block": "minecraft:block/cutout",
-				"item": "minecraft:item/cutout",
-				"entity": "minecraft:entity/cutout"
+				"block": "minecraft:block/translucent",
+				"item": "minecraft:item/translucent",
+				"entity": "minecraft:entity/translucent"
 			},
 			"tintIndex": -1,
 			"lightEmission": 0,

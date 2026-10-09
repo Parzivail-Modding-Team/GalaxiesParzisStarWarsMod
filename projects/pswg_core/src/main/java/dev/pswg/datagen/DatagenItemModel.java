@@ -1,6 +1,6 @@
 package dev.pswg.datagen;
 
-public enum ItemModel
+public enum DatagenItemModel
 {
 	GENERATED,
 	DRINK,

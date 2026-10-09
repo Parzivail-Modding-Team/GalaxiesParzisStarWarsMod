@@ -12,7 +12,7 @@ public @interface DataGenItem
 	boolean wiz() default false;
 	DataGenItemTag[] itemTags() default {};
 
-	ItemModel model() default ItemModel.GENERATED;
+	DatagenItemModel model() default DatagenItemModel.GENERATED;
 
 	DataGenItemGroup itemGroup() default DataGenItemGroup.ITEMS;
 
