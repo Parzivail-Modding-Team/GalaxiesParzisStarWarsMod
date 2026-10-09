@@ -19,8 +19,12 @@ public final class GalaxiesEntityItemActionManager
 			player.resetLastActionTime();
 
 			var hand = player.getUsedItemHand();
+
+			if (!ItemHandPermission.EVENT.invoker().mayInteract(player, hand))
+				return;
+
 			var activeStack = player.getItemInHand(hand);
-			if (!(activeStack.getItem() instanceof IPrimaryActionHandler item))
+			if (!(activeStack.getItem() instanceof IPrimaryActionHandler item) || item.usesCustomPrimaryAction())
 				return;
 
 			ItemStack resultStack = item.invokePrimaryAction(activeStack, player.level(), player);

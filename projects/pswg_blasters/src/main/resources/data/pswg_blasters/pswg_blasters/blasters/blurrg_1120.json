@@ -102,6 +102,23 @@
 	},
 	"attachments": {
 		"options": {
+			"pswg_blasters:blurrg_1120/high_power": {
+				"translationKey": "attachment.pswg_blasters.blurrg_1120.high_power",
+				"slots": ["pswg_blasters:internal_slot"],
+				"category": "pswg_blasters:internal_ordnance_config",
+				"grantedModes": [
+					{
+						"id": "pswg_blasters:high_power",
+						"trigger": {
+							"type": "charge",
+							"minimumChargeTicks": 10,
+							"maximumChargeTicks": 30,
+							"releasePolicy": "fire_on_release"
+						},
+						"behaviorProfile": "pswg_blasters:blurrg_high_power"
+					}
+				]
+			},
 			"pswg_blasters:blurrg_1120/burst4": {
 				"translationKey": "attachment.pswg_blasters.blurrg_1120.burst4",
 				"slots": [

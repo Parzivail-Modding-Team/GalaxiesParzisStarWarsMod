@@ -324,9 +324,34 @@ public record BlasterStats(
 	public record BlasterConfiguration(
 			Identifier archetype, Identifier itemModel, Optional<Identifier> stanceProfile,
 			@SelfCodec Optional<FieldConversion> fieldConversion,
-			@CodecDefault("6") @CodecRange(min = 0) int drawTicks
+			@CodecDefault("6") @CodecRange(min = 0) int drawTicks,
+			Optional<BlasterHandling> handling
 	) implements IBlasterConfigurationCodec
 	{
+		/**
+		 * Default handling preserves one-handed pistols and two-handed long weapons.
+		 */
+		public BlasterHandling effectiveHandling()
+		{
+			return handling.orElse(archetype.equals(Identifier.parse("pswg_blasters:pistol")) ? BlasterHandling.ONE_HANDED : BlasterHandling.TWO_HANDED);
+		}
+	}
+
+	/**
+	 * Wield handling.
+	 */
+	@GenerateEnumCodec
+	public enum BlasterHandling implements IBlasterHandlingCodec
+	{
+		/**
+		 * Uses only its source hand.
+		 */
+		ONE_HANDED,
+
+		/**
+		 * Reserves both hands while wielded and holsters when busy.
+		 */
+		TWO_HANDED
 	}
 
 	/**

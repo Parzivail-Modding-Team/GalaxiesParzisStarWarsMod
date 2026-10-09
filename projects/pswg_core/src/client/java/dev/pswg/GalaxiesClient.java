@@ -7,6 +7,7 @@ import dev.pswg.container.GalaxiesScreenHandlerTypes;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.interaction.GalaxiesEntityLeftClickClientManager;
 import dev.pswg.interaction.GalaxiesPlayerClientActionManager;
+import dev.pswg.interaction.RecoilClient;
 import dev.pswg.item.GalaxiesDrinkTintSource;
 import dev.pswg.model.g3d.G3dTextureBindings;
 import dev.pswg.networking.GalaxiesEntitySpawnS2CPacket;
@@ -20,6 +21,7 @@ import dev.pswg.rendering.models.PswgBlockModelPlugin;
 import dev.pswg.rendering.ptex.PtexSpriteSource;
 import dev.pswg.rendering.ptex.PtexTextures;
 import dev.pswg.screens.CrateGenericSmallScreen;
+import dev.pswg.world.GameTimeClient;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -141,6 +143,9 @@ public class GalaxiesClient implements ClientModInitializer
 		ParticleProviderRegistry.getInstance().register(GalaxiesParticleTypes.SMALL_SHORT_FLAME_PARTICLE, ShortFlameParticle.SmallFactory::new);
 
 		MenuScreens.register(GalaxiesScreenHandlerTypes.CORRUGATED, CrateGenericSmallScreen::new);
+
+		RecoilClient.register();
+		GameTimeClient.register();
 
 		GalaxiesRenderLayers.init();
 

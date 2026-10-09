@@ -7,10 +7,13 @@ import dev.pswg.data.SlimRegistry;
 import dev.pswg.events.HudRenderEvents;
 import dev.pswg.events.ItemRenderEvents;
 import dev.pswg.hud.DefaultBlasterHudRenderer;
+import dev.pswg.hud.BlasterHeatBar;
 import dev.pswg.input.GalaxiesKeybinds;
 import dev.pswg.input.BlasterControls;
 import dev.pswg.interaction.BlasterActions;
 import dev.pswg.interaction.ItemInteractionTimer;
+import dev.pswg.interaction.BlasterWield;
+import dev.pswg.interaction.BlasterWieldState;
 import dev.pswg.item.BlasterAmmo;
 import dev.pswg.data.BlasterStanceProfile;
 import dev.pswg.item.BlasterEffectiveStats;
@@ -21,6 +24,7 @@ import dev.pswg.item.ItemTooltipHelper;
 import dev.pswg.renderer.BlasterBoltEntityRenderer;
 import dev.pswg.rendering.Drawables;
 import dev.pswg.rendering.ItemHudRenderer;
+import dev.pswg.world.GameTime;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.ChatFormatting;
@@ -34,6 +38,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.client.renderer.RenderPipelines;
 
 import java.util.List;
 import java.util.Locale;
@@ -217,19 +223,63 @@ public class BlastersClient implements GalaxiesClientAddon
 	}
 
 	/**
-	 * Draws only the owning player's active interaction timer at the native durability-bar location.
+	 * Draws heat for every blaster stack and progress for held stacks.
 	 */
 	private static void renderItemBars(GuiGraphicsExtractor context, Font textRenderer, ItemStack stack, int x, int y)
 	{
 		var client = Minecraft.getInstance();
+
 		if (!stack.is(Blasters.BLASTER_ITEM) || client.player == null || client.level == null)
+		{
 			return;
-		var timer = client.player.getAttached(ItemInteractionTimer.ATTACHMENT);
+		}
+
+		var heat = BlasterHeatBar.sample(client.level, stack, GalaxiesClient.getTickDelta());
+		if (heat.isPresent())
+		{
+			context.fill(RenderPipelines.GUI, x + 2, y + 13, x + 15, y + 15, 0xFF000000);
+			BlasterHeatBar.render(context, heat.orElseThrow(), x + 2, y + 13, 13, 1, true);
+		}
+
+		renderProgress(context, stack, x, y);
+	}
+
+	/**
+	 * Draws the matching hand's progress above its heat bar.
+	 */
+	private static void renderProgress(GuiGraphicsExtractor context, ItemStack stack, int x, int y)
+	{
+		var client = Minecraft.getInstance();
+		var now = GameTime.now(client.level);
 		var serial = stack.get(BlasterItem.SERIAL);
-		if (timer == null || serial == null || serial.longValue() != timer.serial() || !timer.isActive(client.level.getGameTime()))
+
+		if (serial == null)
+		{
 			return;
-		var color = timer.kind() == ItemInteractionTimer.ItemInteractionKind.RELOAD ? 0x54D9FF : 0xFFD45A;
-		Drawables.itemDurability(context, timer.progress(client.level.getGameTime(), GalaxiesClient.getTickDelta()), x, y, 13, color);
+		}
+
+		for (var hand : InteractionHand.values())
+		{
+			var timer = ItemInteractionTimer.get(client.player, hand);
+			if (timer != null && timer.serial() == serial && timer.isActive(now))
+			{
+				Drawables.itemDurability(context, timer.progress(now, GalaxiesClient.getTickDelta()), x, y - 4, 13, progressColor(timer));
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Selects the progress color for the current action.
+	 */
+	private static int progressColor(ItemInteractionTimer timer)
+	{
+		return switch (timer.kind())
+		{
+			case RELOAD -> 0x54D9FF;
+			case DRAW -> 0xFFD45A;
+			case CHARGE -> 0xCF83FF;
+		};
 	}
 
 	@Override
@@ -238,18 +288,80 @@ public class BlastersClient implements GalaxiesClientAddon
 		BLASTER_HUD_REGISTRY.freeze();
 	}
 
+	/**
+	 * Draws both held weapon HUDs in fixed main/offhand order.
+	 */
 	private static void renderCrosshair(GuiGraphicsExtractor context, DeltaTracker tickCounter)
 	{
 		var client = Minecraft.getInstance();
 		if (client.player == null)
+		{
 			return;
+		}
 
-		var stack = client.player.getMainHandItem();
-		if (!stack.is(Blasters.BLASTER_ITEM))
-			return;
+		var both = client.player.getMainHandItem().is(Blasters.BLASTER_ITEM)
+		           && client.player.getOffhandItem().is(Blasters.BLASTER_ITEM);
+		var offset = 0;
 
-		var attachments = BlasterItem.getAttachments(stack);
-		BLASTER_HUD_REGISTRY.tryGetValue(attachments.hud())
-		                    .ifPresent(hudRenderer -> hudRenderer.render(stack, context, tickCounter));
+		for (var hand : InteractionHand.values())
+		{
+			var stack = client.player.getItemInHand(hand);
+			if (!stack.is(Blasters.BLASTER_ITEM))
+			{
+				continue;
+			}
+
+			var renderer = BLASTER_HUD_REGISTRY.tryGetValue(BlasterItem.getAttachments(stack).hud());
+			if (renderer.isEmpty())
+			{
+				continue;
+			}
+
+			if (both)
+			{
+				renderHandLabel(context, stack, hand, offset);
+			}
+
+			renderer.orElseThrow().render(stack, context, tickCounter, offset);
+			offset += renderer.orElseThrow().rowHeight();
+		}
+	}
+
+	/**
+	 * Names the source and shows inactive, patrol, or ADS state.
+	 */
+	private static void renderHandLabel(GuiGraphicsExtractor context, ItemStack stack, InteractionHand hand, int offset)
+	{
+		var client = Minecraft.getInstance();
+		var key = hand == InteractionHand.MAIN_HAND ? "hud.pswg_blasters.main" : "hud.pswg_blasters.off";
+		var label = Component.translatable(key, stack.getHoverName());
+		var color = 0xFFFFFFFF;
+
+		if (!BlasterWield.canWield(client.player, hand))
+		{
+			label.append(Component.translatable("hud.pswg_blasters.inactive"));
+			color = 0xFFAAAAAA;
+		}
+		else if (BlasterItem.getState(stack).isAiming())
+		{
+			label.append(Component.translatable("hud.pswg_blasters.ads"));
+		}
+		else
+		{
+			var state = client.player.getAttachedOrElse(BlasterWieldState.ATTACHMENT, BlasterWieldState.EMPTY).weapon(hand);
+			if (state.isPresent() && state.orElseThrow().patrol())
+			{
+				label.append(Component.translatable("hud.pswg_blasters.patrol"));
+			}
+		}
+
+		context.text(
+				client.font,
+				label,
+				context.guiWidth() / 2 - client.font.width(label) / 2,
+				context.guiHeight() / 2 + 16 + offset,
+				color,
+				true
+		);
 	}
 }

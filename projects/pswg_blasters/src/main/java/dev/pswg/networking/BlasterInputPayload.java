@@ -15,7 +15,8 @@ import net.minecraft.world.InteractionHand;
 public record BlasterInputPayload(
 		BlasterInputAction action,
 		InteractionHand hand,
-		long sequence
+		long sequence,
+		long session
 ) implements CustomPacketPayload
 {
 	/**
@@ -62,7 +63,37 @@ public record BlasterInputPayload(
 		/**
 		 * Cycle authored field-conversion options, then return to the base form.
 		 */
-		CONVERT
+		CONVERT,
+
+		/**
+		 * Cancel held input without firing a charged shot or finishing a burst.
+		 */
+		CANCEL,
+
+		/**
+		 * Toggle server-validated ADS for the invoked hand.
+		 */
+		AIM,
+
+		/**
+		 * Toggle the invoked weapon's public patrol/ready carry state.
+		 */
+		PATROL,
+
+		/**
+		 * Start manual venting for the invoked hand without retaining held fire.
+		 */
+		VENT,
+
+		/**
+		 * Begin ADS while the use control is held.
+		 */
+		AIM_START,
+
+		/**
+		 * End ADS when the use control is released.
+		 */
+		AIM_STOP
 	}
 
 	/**
@@ -80,6 +111,8 @@ public record BlasterInputPayload(
 			BlasterInputPayload::hand,
 			ByteBufCodecs.VAR_LONG,
 			BlasterInputPayload::sequence,
+			ByteBufCodecs.VAR_LONG,
+			BlasterInputPayload::session,
 			BlasterInputPayload::new
 	);
 

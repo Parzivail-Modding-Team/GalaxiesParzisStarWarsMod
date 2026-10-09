@@ -63,10 +63,45 @@ public final class BlasterAmmo
 	}
 
 	/**
+	 * Checks the current shot cost. All-charge shots still require at least the normal round cost.
+	 */
+	public static boolean canConsumeShot(Player player, ItemStack stack, BlasterStats.Ammo ammo)
+	{
+		if (player.isCreative())
+			return true;
+
+		return switch (ammo.feed())
+		{
+			case BlasterStats.MagazineFeed ignored -> BlasterItem.getLoadedRounds(stack) > 0;
+			case BlasterStats.ChargeStoreFeed ignored -> BlasterItem.getLoadedCharge(stack).map(StoredCharge::current).orElse(0)
+			                                          >= ((BlasterStats.ComponentChargeConsumption)ammo.consumption()).unitsPerRound();
+			case BlasterStats.PerShotFeed ignored -> prepare(player.getInventory(), stack, ammo, 1)
+					.map(transfer -> transfer.matches(player.getInventory())).orElse(false);
+		};
+	}
+
+	/**
 	 * Debits one shot.
 	 */
 	public static boolean consumeShot(ServerLevel level, Player player, ItemStack stack, BlasterStats.Ammo ammo)
 	{
+		return consumeShot(level, player, stack, ammo, false);
+	}
+
+	/**
+	 * Debits a shot, optionally spending all loaded component charge.
+	 */
+	public static boolean consumeShot(
+			ServerLevel level,
+			Player player,
+			ItemStack stack,
+			BlasterStats.Ammo ammo,
+			boolean allLoadedCharge
+	)
+	{
+		if (allLoadedCharge && !(ammo.feed() instanceof BlasterStats.ChargeStoreFeed))
+			return false;
+
 		if (player.isCreative())
 			return true;
 
@@ -78,7 +113,7 @@ public final class BlasterAmmo
 			{
 				var units = ((BlasterStats.ComponentChargeConsumption)ammo.consumption()).unitsPerRound();
 				var current = BlasterItem.getLoadedCharge(stack).map(StoredCharge::current).orElse(0);
-				yield current >= units && BlasterItem.setLoadedCharge(level, stack, current - units);
+				yield current >= units && BlasterItem.setLoadedCharge(level, stack, allLoadedCharge ? 0 : current - units);
 			}
 			case BlasterStats.PerShotFeed ignored ->
 			{

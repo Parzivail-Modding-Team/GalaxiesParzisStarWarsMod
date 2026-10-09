@@ -2,6 +2,8 @@ package dev.pswg.input;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.pswg.Blasters;
+import dev.pswg.interaction.BlasterWield;
+import dev.pswg.interaction.GalaxiesEntityItemActionClientManager;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.networking.BlasterInputPayload;
 import dev.pswg.networking.BlasterInputPayload.BlasterInputAction;
@@ -14,83 +16,137 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 
+import java.util.EnumMap;
+import java.util.Objects;
+
 /**
- * Configurable weapon controls.
+ * Sends hand-specific weapon controls.
  */
 public final class BlasterControls
 {
 	/**
-	 * Mode-cycle mapping, available for tooltip hints.
+	 * Stores the source and trigger state for one hand.
+	 */
+	private static class HandInput
+	{
+		/**
+		 * Previous trigger state.
+		 */
+		private boolean _down;
+
+		/**
+		 * True while this hand needs a release packet.
+		 */
+		private boolean _firing;
+
+		/**
+		 * Serial of the last held stack.
+		 */
+		private Long _serial;
+
+		/**
+		 * Base ID of the last held stack.
+		 */
+		private Identifier _id;
+
+		/**
+		 * Last selected hotbar slot.
+		 */
+		private int _slot;
+
+		/**
+		 * Ticks since the last heartbeat.
+		 */
+		private int _heartbeat;
+
+		/**
+		 * Sequence of the accepted press.
+		 */
+		private long _session;
+	}
+
+	/**
+	 * Fires the one-handed offhand weapon.
+	 */
+	public static KeyMapping offhandFire;
+
+	/**
+	 * Routes configuration controls to the offhand.
+	 */
+	public static KeyMapping offhandModifier;
+
+	/**
+	 * Toggles ADS for the selected weapon.
+	 */
+	public static KeyMapping aim;
+
+	/**
+	 * Toggles patrol carry for the selected weapon.
+	 */
+	public static KeyMapping patrol;
+
+	/**
+	 * Cycles the selected weapon's modes.
 	 */
 	public static KeyMapping mode;
 
 	/**
-	 * Reload mapping, available for tooltip hints.
+	 * Reloads the selected weapon.
 	 */
 	public static KeyMapping reload;
 
 	/**
-	 * Fold/extend mapping.
+	 * Folds the selected weapon's stock.
 	 */
 	public static KeyMapping fold;
 
 	/**
-	 * Ground-supported deployment mapping.
+	 * Deploys the selected weapon's bipod.
 	 */
 	public static KeyMapping deploy;
 
 	/**
-	 * Authored field-conversion mapping.
+	 * Converts the selected weapon's form.
 	 */
 	public static KeyMapping convert;
 
 	/**
-	 * Connection owning the local sequence.
+	 * Stores each hand's trigger state.
+	 */
+	private static final EnumMap<InteractionHand, HandInput> _hands = new EnumMap<>(InteractionHand.class);
+
+	/**
+	 * Owns the current input sequence.
 	 */
 	private static ClientPacketListener _owner;
 
 	/**
-	 * Monotonic sequence, reset on a new play connection.
+	 * Last packet sequence.
 	 */
 	private static long _sequence;
 
 	/**
-	 * Previous physical attack-key state.
+	 * Previous attack control state.
 	 */
-	private static boolean _down;
+	private static boolean _primaryDown;
 
 	/**
-	 * Whether a held intent needs a release.
+	 * Previous secondary fire control state.
 	 */
-	private static boolean _firing;
+	private static boolean _secondaryDown;
 
 	/**
-	 * Held-request hand.
+	 * Previous primary item-action control state.
 	 */
-	private static InteractionHand _hand;
+	private static boolean _ventDown;
 
 	/**
-	 * Last physical serial, stable through native component updates.
+	 * Previous vanilla use control state.
 	 */
-	private static Long _serial;
+	private static boolean _useDown;
 
 	/**
-	 * Last authored base ID.
-	 */
-	private static Identifier _id;
-
-	/**
-	 * Last main-hand slot.
-	 */
-	private static int _slot;
-
-	/**
-	 * Ticks until the next held-input heartbeat.
-	 */
-	private static int _heartbeat;
-
-	/**
-	 * Registers this module's controls under the existing PSWG key category.
+	 * Registers the controls and the client tick handler.
 	 */
 	public static void register()
 	{
@@ -99,12 +155,31 @@ public final class BlasterControls
 		fold = key("fold", InputConstants.KEY_B);
 		deploy = key("deploy", InputConstants.KEY_N);
 		convert = key("convert", InputConstants.KEY_G);
+		aim = key("aim", InputConstants.KEY_Z);
+		patrol = key("patrol", InputConstants.KEY_H);
+		offhandModifier = key("offhand_modifier", InputConstants.KEY_LALT);
+		offhandFire = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+				"key.pswg_blasters.offhand_fire",
+				InputConstants.Type.MOUSE,
+				1,
+				GalaxiesKeybinds.CATEGORY
+		));
 
+		resetHands();
+
+		GalaxiesEntityItemActionClientManager.HAND_SELECTION.register(player -> {
+			var hand = offhandModifier.isDown() ? InteractionHand.OFF_HAND : BlasterWield.primaryHand(player);
+			if (player.getItemInHand(hand).is(Blasters.BLASTER_ITEM))
+			{
+				return hand;
+			}
+			return null;
+		});
 		ClientTickEvents.END_CLIENT_TICK.register(BlasterControls::tick);
 	}
 
 	/**
-	 * Creates one control.
+	 * Registers a keyboard control.
 	 */
 	private static KeyMapping key(String name, int code)
 	{
@@ -117,40 +192,89 @@ public final class BlasterControls
 	}
 
 	/**
-	 * Sends ordered intent using only the physical hand and action.
+	 * Sends a control that does not refer to a held trigger.
 	 */
 	private static void send(BlasterInputAction action, InteractionHand hand)
 	{
-		if (ClientPlayNetworking.canSend(BlasterInputPayload.TYPE))
-			ClientPlayNetworking.send(new BlasterInputPayload(action, hand, ++_sequence));
+		send(action, hand, 0);
 	}
 
 	/**
-	 * Stops any held request before a control action or source change.
+	 * Sends a trigger packet and returns its sequence.
 	 */
-	private static void release()
+	private static long send(BlasterInputAction action, InteractionHand hand, long session)
 	{
-		if (_firing && _hand != null)
-			send(BlasterInputAction.RELEASE, _hand);
-
-		_firing = false;
-	}
-
-	/**
-	 * Consumes a native key click without letting a held trigger resume after the configuration changes.
-	 */
-	private static void control(KeyMapping key, BlasterInputAction action, InteractionHand hand)
-	{
-		while (key.consumeClick())
+		if (!ClientPlayNetworking.canSend(BlasterInputPayload.TYPE))
 		{
-			release();
-			if (hand != null)
-				send(action, hand);
+			return 0;
+		}
+
+		var packet = new BlasterInputPayload(
+				action,
+				hand,
+				++_sequence,
+				BlasterInputPayload.PROTOCOL_VERSION,
+				session
+		);
+		ClientPlayNetworking.send(packet);
+
+		return _sequence;
+	}
+
+	/**
+	 * Releases or cancels the trigger for one hand.
+	 */
+	private static void release(InteractionHand hand, boolean cancelled)
+	{
+		var input = _hands.get(hand);
+
+		if (input._firing)
+		{
+			var action = cancelled ? BlasterInputAction.CANCEL : BlasterInputAction.RELEASE;
+			send(action, hand, input._session);
+		}
+
+		input._firing = false;
+	}
+
+	/**
+	 * Resets input state for a new connection.
+	 */
+	private static void resetHands()
+	{
+		for (var hand : InteractionHand.values())
+		{
+			_hands.put(hand, new HandInput());
 		}
 	}
 
 	/**
-	 * Tracks connection lifetime, screens, physical source identity and input lease renewal.
+	 * Records the physical controls after processing a tick.
+	 */
+	private static void rememberButtons(Minecraft client)
+	{
+		_primaryDown = client.options.keyAttack.isDown();
+		_secondaryDown = offhandFire.isDown();
+		_ventDown = GalaxiesKeybinds.getPrimaryAction().isDown();
+		_useDown = client.options.keyUse.isDown();
+	}
+
+	/**
+	 * Cancels input when the player cannot use weapon controls.
+	 */
+	private static void cancelInput(Minecraft client)
+	{
+		for (var hand : InteractionHand.values())
+		{
+			release(hand, true);
+			_hands.get(hand)._down = triggerDown(client, hand);
+		}
+
+		rememberButtons(client);
+	}
+
+	/**
+	 * Processes source changes, controls, aim, and trigger input.
 	 */
 	private static void tick(Minecraft client)
 	{
@@ -158,60 +282,174 @@ public final class BlasterControls
 		{
 			_owner = client.getConnection();
 			_sequence = 0;
-			_firing = false;
-			_down = client.options.keyAttack.isDown();
-			_hand = null;
+			resetHands();
+			rememberButtons(client);
 		}
 
-		var down = client.options.keyAttack.isDown();
-		if (client.player == null || client.level == null || client.gui.screen() != null || !client.player.isAlive() || client.isPaused())
+		if (client.player == null || client.level == null || client.gui.screen() != null
+		    || !client.player.isAlive() || client.isPaused())
 		{
-			release();
-			_down = down;
+			cancelInput(client);
 			return;
 		}
 
-		InteractionHand hand = client.player.getMainHandItem().is(Blasters.BLASTER_ITEM) ? InteractionHand.MAIN_HAND
-		                                                                                 : client.player.getOffhandItem().is(Blasters.BLASTER_ITEM) ? InteractionHand.OFF_HAND : null;
-		var stack = hand == null ? net.minecraft.world.item.ItemStack.EMPTY : client.player.getItemInHand(hand);
-		var serial = stack.get(BlasterItem.SERIAL);
-		var id = stack.get(BlasterItem.ID);
-		var slot = client.player.getInventory().getSelectedSlot();
+		var hand = offhandModifier.isDown() ? InteractionHand.OFF_HAND : BlasterWield.primaryHand(client.player);
+		processControls(client, hand);
+		processUseAim(client, hand);
+		for (var source : InteractionHand.values())
+		{
+			processTrigger(client, source);
+		}
 
-		if (hand != _hand || !java.util.Objects.equals(serial, _serial) || !java.util.Objects.equals(id, _id)
-		    || (hand == InteractionHand.MAIN_HAND && slot != _slot))
-			release();
+		rememberButtons(client);
+	}
 
-		_hand = hand;
-		_serial = serial;
-		_id = id;
-		_slot = slot;
-
+	/**
+	 * Routes configuration controls to the selected hand.
+	 */
+	private static void processControls(Minecraft client, InteractionHand hand)
+	{
 		control(mode, BlasterInputAction.CYCLE_MODE, hand);
 		control(reload, BlasterInputAction.RELOAD, hand);
 		control(fold, BlasterInputAction.FOLD, hand);
 		control(deploy, BlasterInputAction.DEPLOY, hand);
 		control(convert, BlasterInputAction.CONVERT, hand);
+		control(aim, BlasterInputAction.AIM, hand);
+		control(patrol, BlasterInputAction.PATROL, hand);
 
-		if (!down)
-			release();
-		else if (!_down && hand != null)
+		if (
+				GalaxiesKeybinds.getPrimaryAction().isDown()
+				&& !_ventDown
+				&& client.player.getItemInHand(hand).is(Blasters.BLASTER_ITEM)
+		)
 		{
-			send(BlasterInputAction.PRESS, hand);
-			_firing = true;
-			_heartbeat = 0;
+			release(hand, true);
+			send(BlasterInputAction.VENT, hand);
 		}
-		else if (_firing && ++_heartbeat >= 5)
-		{
-			send(BlasterInputAction.HEARTBEAT, hand);
-			_heartbeat = 0;
-		}
-
-		_down = down;
 	}
 
 	/**
-	 * Utility class.
+	 * Sends each control click once.
+	 */
+	private static void control(KeyMapping key, BlasterInputAction action, InteractionHand hand)
+	{
+		while (key.consumeClick())
+		{
+			release(hand, true);
+			send(action, hand);
+		}
+	}
+
+	/**
+	 * Uses the secondary control only for an eligible one-handed source.
+	 */
+	private static boolean secondaryDown(Minecraft client)
+	{
+		if (client.player == null || !offhandFire.isDown())
+		{
+			return false;
+		}
+
+		if (!BlasterWield.canWield(client.player, InteractionHand.OFF_HAND)
+		    || BlasterWield.twoHanded(client.player, InteractionHand.OFF_HAND))
+		{
+			return false;
+		}
+
+		return !offhandFire.same(client.options.keyUse) || BlasterWield.dualWielding(client.player);
+	}
+
+	/**
+	 * Reads the trigger that belongs to this hand.
+	 */
+	private static boolean triggerDown(Minecraft client, InteractionHand hand)
+	{
+		if (client.player == null)
+		{
+			return false;
+		}
+
+		if (hand == BlasterWield.primaryHand(client.player) && client.options.keyAttack.isDown())
+		{
+			return true;
+		}
+
+		return hand == InteractionHand.OFF_HAND && secondaryDown(client);
+	}
+
+	/**
+	 * Toggles ADS on a fresh use press.
+	 */
+	private static void processUseAim(Minecraft client, InteractionHand hand)
+	{
+		if (!client.options.keyUse.isDown() || _useDown || secondaryDown(client))
+		{
+			return;
+		}
+
+		if (BlasterWield.canWield(client.player, hand))
+		{
+			send(BlasterInputAction.AIM, hand);
+		}
+	}
+
+	/**
+	 * Checks whether this tick has a new physical trigger press.
+	 */
+	private static boolean freshPress(Minecraft client, InteractionHand hand)
+	{
+		if (hand == BlasterWield.primaryHand(client.player) && client.options.keyAttack.isDown() && !_primaryDown)
+		{
+			return true;
+		}
+
+		return hand == InteractionHand.OFF_HAND && secondaryDown(client) && !_secondaryDown;
+	}
+
+	/**
+	 * Cancels stale sources and renews the current hand's trigger lease.
+	 */
+	private static void processTrigger(Minecraft client, InteractionHand hand)
+	{
+		var input = _hands.get(hand);
+		var stack = client.player.getItemInHand(hand);
+		var serial = stack.get(BlasterItem.SERIAL);
+		var id = stack.get(BlasterItem.ID);
+		var slot = client.player.getInventory().getSelectedSlot();
+		var eligible = BlasterWield.canWield(client.player, hand);
+		var sourceChanged = !Objects.equals(serial, input._serial) || !Objects.equals(id, input._id)
+		                    || hand == InteractionHand.MAIN_HAND && slot != input._slot;
+		if (!eligible || sourceChanged)
+		{
+			release(hand, true);
+		}
+
+		input._serial = serial;
+		input._id = id;
+		input._slot = slot;
+
+		var down = triggerDown(client, hand);
+		if (!down)
+		{
+			release(hand, false);
+		}
+		else if (!input._down && eligible && freshPress(client, hand))
+		{
+			input._session = send(BlasterInputAction.PRESS, hand, 0);
+			input._firing = input._session > 0;
+			input._heartbeat = 0;
+		}
+		else if (input._firing && ++input._heartbeat >= 5)
+		{
+			send(BlasterInputAction.HEARTBEAT, hand, input._session);
+			input._heartbeat = 0;
+		}
+
+		input._down = down;
+	}
+
+	/**
+	 * Prevents construction of this utility class.
 	 */
 	private BlasterControls()
 	{

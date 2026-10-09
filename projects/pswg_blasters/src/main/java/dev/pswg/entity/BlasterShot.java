@@ -41,6 +41,34 @@ public record BlasterShot(
 	public static final TagKey<EntityType<?>> ION_SUSCEPTIBLE = TagKey.create(Registries.ENTITY_TYPE, Blasters.id("ion_susceptible"));
 
 	/**
+	 * Captures effective damage.
+	 */
+	public static BlasterShot capture(
+			BlasterStats stats,
+			BlasterBehaviorProfile behavior,
+			BlasterStats.Trigger trigger,
+			int heldChargeTicks,
+			int loadedUnits
+	)
+	{
+		if (behavior.chargedShot().isPresent())
+		{
+			var charged = behavior.chargedShot().orElseThrow();
+
+			var fraction = switch (charged.source())
+			{
+				case HELD_DURATION -> Math.clamp((double)heldChargeTicks / ((BlasterStats.ChargeTrigger)trigger).maximumChargeTicks(), 0, 1);
+				case LOADED_COMPONENT_CHARGE -> Math.clamp((double)loadedUnits / ((BlasterStats.ChargeStoreFeed)stats.ammo().feed()).chargeCapacityUnits(), 0, 1);
+			};
+
+			var multiplier = 1 + fraction * (charged.maximumDamageMultiplier() - 1.0);
+			stats = stats.withDamage((float)Math.min((double)stats.damage() * multiplier, Float.MAX_VALUE));
+		}
+
+		return new BlasterShot(stats, behavior);
+	}
+
+	/**
 	 * Resolves the first block/entity collision along a ray, including the world border.
 	 */
 	public static HitResult trace(ServerLevel world, Entity source, Vec3 from, Vec3 delta)

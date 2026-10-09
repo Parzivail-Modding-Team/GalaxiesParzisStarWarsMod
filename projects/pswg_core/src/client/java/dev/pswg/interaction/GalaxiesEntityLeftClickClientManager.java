@@ -59,7 +59,7 @@ public final class GalaxiesEntityLeftClickClientManager
 
 		for (var hand : InteractionHand.values())
 		{
-			if (client.player.getItemInHand(hand).getItem() instanceof ILeftClickUsable item && item.usesCustomLeftInput())
+			if (client.player.getItemInHand(hand).getItem() instanceof ILeftClickUsable item && item.usesCustomLeftInput(client.player, client.player.getItemInHand(hand)))
 			{
 				while (client.options.keyAttack.consumeClick())
 				{
@@ -71,7 +71,7 @@ public final class GalaxiesEntityLeftClickClientManager
 		}
 
 		var handItem = client.player.getItemInHand(client.player.getUsedItemHand());
-		var isHoldingLeftClickableItem = handItem.getItem() instanceof ILeftClickUsable;
+		var isHoldingLeftClickableItem = handItem.getItem() instanceof ILeftClickUsable item && item.isLeftUseEnabled(client.player, handItem);
 
 		if (!isHoldingLeftClickableItem || !(client.player instanceof ILeftClickingEntity leftClickingEntity))
 			return;

@@ -7,10 +7,11 @@ import dev.pswg.configuration.MemoryConfigContainer;
 import dev.pswg.data.BlasterData;
 import dev.pswg.data.BlasterImpactEffect;
 import dev.pswg.entity.BlasterBoltEntity;
+import dev.pswg.interaction.BlasterActions;
+import dev.pswg.interaction.BlasterWield;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.item.ChargedItem;
 import dev.pswg.item.component.StoredCharge;
-import dev.pswg.interaction.BlasterActions;
 import dev.pswg.registry.Registrar;
 import dev.pswg.sound.BlasterSounds;
 import net.minecraft.core.registries.Registries;
@@ -102,6 +103,7 @@ public final class Blasters implements GalaxiesAddon
 		BlasterImpactEffect.register();
 		BlasterData.register();
 		BlasterActions.register();
+		BlasterWield.register();
 
 		BlasterSounds.register();
 

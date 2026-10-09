@@ -1,170 +1,59 @@
 package dev.pswg.hud;
 
-import dev.pswg.Blasters;
 import dev.pswg.GalaxiesClient;
 import dev.pswg.item.BlasterItem;
-import dev.pswg.rendering.BlittableTexture;
 import dev.pswg.rendering.ItemHudRenderer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * The default blaster HUD renderer. Renders a rectangular cooldown bar
- * with a primary and secondary bypass when overheated.
+ * Draws a weapon's heat bar and loaded ammunition below the crosshair.
  */
 public class DefaultBlasterHudRenderer implements ItemHudRenderer
 {
-	private static final int COOLDOWN_WIDTH = 61;
-	private static final int COOLDOWN_HEIGHT = 3;
-
-	private static final int COOLDOWN_OFFSET = 30;
-
-	private static final int PRIMARY_BYPASS_TEX_V = 8;
-	private static final int SECONDARY_BYPASS_TEX_V = 12;
-
-	private static final BlittableTexture HUD_ELEMENTS = new BlittableTexture(
-			Blasters.id("textures/gui/hud_elements.png"),
-			RenderPipelines.GUI_TEXTURED,
-			256, 256
-	);
-
-	private static final BlittableTexture.Patch BACKGROUND = HUD_ELEMENTS.createPatch(0, 0, COOLDOWN_WIDTH, COOLDOWN_HEIGHT);
-
-	private static final BlittableTexture.Patch ENDCAPS = HUD_ELEMENTS.createPatch(0, 20, COOLDOWN_WIDTH, COOLDOWN_HEIGHT);
-
-	private static final BlittableTexture.Patch PASSIVE_HEAT_BAR = HUD_ELEMENTS.createPatch(0, 4, COOLDOWN_WIDTH, COOLDOWN_HEIGHT);
-
-	private static final BlittableTexture.Patch OVERCHARGE_BAR = HUD_ELEMENTS.createPatch(0, 12, COOLDOWN_WIDTH, COOLDOWN_HEIGHT);
-
-	private static final BlittableTexture.Patch COOLDOWN_BACKGROUND = HUD_ELEMENTS.createPatch(0, 16, COOLDOWN_WIDTH, COOLDOWN_HEIGHT);
-
-	private static final BlittableTexture.Patch CURSOR = HUD_ELEMENTS.createPatch(0, 24, 3, 7);
+	/** Vertical distance from the crosshair to the heat bar. */
+	private static final int HEAT_OFFSET = 30;
 
 	@Override
 	public void render(ItemStack stack, GuiGraphicsExtractor context, DeltaTracker tickCounter)
 	{
 		var client = Minecraft.getInstance();
-
-		assert client.level != null;
-
-		var optionalStats = BlasterItem.getStats(client.level, stack);
-		if (optionalStats.isEmpty())
-			return;
-
-		var stats = optionalStats.get();
-
-		var ammoCapacity = BlasterItem.getAmmoCapacity(stats.ammo());
-		if (ammoCapacity > 0)
+		if (client.level == null)
 		{
-			var text = Component.translatable("tooltip.pswg_blasters.ammo", BlasterItem.getLoadedAmmo(stack, stats.ammo()), ammoCapacity);
-			context.text(
-					client.font,
-					text,
-					context.guiWidth() / 2 - client.font.width(text) / 2,
-					context.guiHeight() / 2 + COOLDOWN_OFFSET + 10,
-					-1,
-					true
-			);
+			return;
 		}
 
-		if (stats.heat().capacity() <= 0)
-			return;
-
-		var state = BlasterItem.getState(stack);
-
-		var m = context.pose();
-		m.pushMatrix();
-
-		var left = (int)(context.guiWidth() / 2f);
-		var top = (int)(context.guiHeight() / 2f);
-
-		var cooldownBarX = left - COOLDOWN_WIDTH / 2;
-
-		BACKGROUND.blit(context, cooldownBarX, top + COOLDOWN_OFFSET, -1);
-
-		var tickDelta = GalaxiesClient.getTickDelta();
-
-		var overcharge = BlasterItem.getOverchargeTimeRemaining(client.level, stack, tickDelta);
-		if (overcharge.isPresent())
+		var stats = BlasterItem.getStats(client.level, stack);
+		if (stats.isEmpty())
 		{
-			OVERCHARGE_BAR.blit(
+			return;
+		}
+
+		var centerX = context.guiWidth() / 2;
+		var top = context.guiHeight() / 2 + HEAT_OFFSET;
+		var visual = BlasterHeatBar.sample(client.level, stack, GalaxiesClient.getTickDelta());
+		if (visual.isPresent())
+		{
+			BlasterHeatBar.render(
 					context,
-					cooldownBarX, top + COOLDOWN_OFFSET,
-					COOLDOWN_WIDTH, COOLDOWN_HEIGHT,
-					-1
+					visual.orElseThrow(),
+					centerX - BlasterHeatBar.SOURCE_WIDTH / 2,
+					top,
+					BlasterHeatBar.SOURCE_WIDTH,
+					3,
+					false
 			);
-
-			// cursor
-			m.pushMatrix();
-			m.translate(cooldownBarX + overcharge.get() * (COOLDOWN_WIDTH - 3), 0);
-			CURSOR.blit(context, 0, top + COOLDOWN_OFFSET - 2, -1);
-			m.popMatrix();
 		}
-		else
+
+		var ammo = stats.orElseThrow().ammo();
+		var capacity = BlasterItem.getAmmoCapacity(ammo);
+		if (capacity > 0)
 		{
-			var coolingStatus = BlasterItem.getCoolingStatus(client.level, stack, tickDelta);
-			if (coolingStatus.coolingMode() == BlasterItem.CoolingMode.PASSIVE)
-			{
-				PASSIVE_HEAT_BAR.blit(
-						context,
-						cooldownBarX, top + COOLDOWN_OFFSET,
-						(int)(COOLDOWN_WIDTH * coolingStatus.totalHeat() / stats.heat().capacity()), COOLDOWN_HEIGHT,
-						-1
-				);
-			}
-			else
-			{
-				COOLDOWN_BACKGROUND.blit(
-						context,
-						cooldownBarX, top + COOLDOWN_OFFSET,
-						COOLDOWN_WIDTH, COOLDOWN_HEIGHT,
-						-1
-				);
-
-				if (coolingStatus.coolingMode().canBypass() && stats.cooling().isPresent())
-				{
-					var profile = stats.cooling().orElseThrow();
-					var primaryBypassStartX = (int)((profile.primaryBypassTime() - profile.primaryBypassTolerance()) * COOLDOWN_WIDTH);
-					var primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance() * COOLDOWN_WIDTH);
-					var secondaryBypassStartX = (int)((profile.secondaryBypassTime() - profile.secondaryBypassTolerance()) * COOLDOWN_WIDTH);
-					var secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance() * COOLDOWN_WIDTH);
-
-					// blue primary bypass
-					HUD_ELEMENTS.blit(
-							context,
-							cooldownBarX + primaryBypassStartX, top + COOLDOWN_OFFSET,
-							primaryBypassStartX, PRIMARY_BYPASS_TEX_V,
-							primaryBypassWidth, COOLDOWN_HEIGHT,
-							-1
-					);
-
-					// yellow secondary bypass
-					HUD_ELEMENTS.blit(
-							context,
-							cooldownBarX + secondaryBypassStartX, top + COOLDOWN_OFFSET,
-							secondaryBypassStartX, SECONDARY_BYPASS_TEX_V,
-							secondaryBypassWidth, COOLDOWN_HEIGHT,
-							-1
-					);
-				}
-
-				var heat = coolingStatus.totalHeat() / state.lastVentingHeat();
-
-				// cursor
-				m.pushMatrix();
-				m.translate(cooldownBarX + heat * (COOLDOWN_WIDTH - 3), 0);
-				CURSOR.blit(context, 0, top + COOLDOWN_OFFSET - 2, -1);
-				m.popMatrix();
-			}
+			var text = Component.translatable("tooltip.pswg_blasters.ammo", BlasterItem.getLoadedAmmo(stack, ammo), capacity);
+			context.text(client.font, text, centerX - client.font.width(text) / 2, top + 10, -1, true);
 		}
-
-		// endcaps
-		ENDCAPS.blit(context, cooldownBarX, top + COOLDOWN_OFFSET, -1);
-
-		m.popMatrix();
 	}
 }

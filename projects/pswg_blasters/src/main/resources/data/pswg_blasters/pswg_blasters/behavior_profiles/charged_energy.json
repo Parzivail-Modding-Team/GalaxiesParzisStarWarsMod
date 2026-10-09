@@ -1,0 +1,9 @@
+{
+	"delivery": "projectile",
+	"damageType": "pswg_blasters:direct_blaster",
+	"chargedShot": {
+		"source": "held_duration",
+		"maximumDamageMultiplier": 3,
+		"consume": "one_round"
+	}
+}

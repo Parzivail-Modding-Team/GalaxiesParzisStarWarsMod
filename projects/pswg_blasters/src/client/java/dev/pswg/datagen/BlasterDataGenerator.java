@@ -136,7 +136,8 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 				Map.entry(Blasters.id("e10r"), new BlasterLang("E-10R", Map.of())),
 				Map.entry(Blasters.id("blurrg_1120"), new BlasterLang("Blurrg-1120", Map.ofEntries(
 						Map.entry(Blasters.id("blurrg_1120/burst4"), "Four-round Burst Configurator"),
-						Map.entry(Blasters.id("blurrg_1120/ion"), "Ion Shot Configurator")
+						Map.entry(Blasters.id("blurrg_1120/ion"), "Ion Shot Configurator"),
+						Map.entry(Blasters.id("blurrg_1120/high_power"), "High-power Shot Configurator")
 				))),
 				Map.entry(Blasters.id("relby_v10"), new BlasterLang("Relby V-10", Map.of())),
 				Map.entry(Blasters.id("tl50"), new BlasterLang("TL-50", Map.of())),
@@ -228,9 +229,11 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add("tooltip.pswg_blasters.deployed", "Deployed");
 			translationBuilder.add("tooltip.pswg_blasters.folded", "Folded");
 			translationBuilder.add("mode.pswg_blasters.semi", "Semi-automatic");
+			translationBuilder.add("mode.pswg_blasters.charge", "Charged Shot");
+			translationBuilder.add("mode.pswg_blasters.charge_full", "Full-charge Shot");
+			translationBuilder.add("mode.pswg_blasters.high_power", "High-power Shot");
 			translationBuilder.add("mode.pswg_blasters.auto", "Automatic");
 			translationBuilder.add("mode.pswg_blasters.burst", "Burst");
-			translationBuilder.add("mode.pswg_blasters.charge", "Charged");
 			translationBuilder.add("mode.pswg_blasters.stun", "Stun");
 			translationBuilder.add("mode.pswg_blasters.ion", "Ion");
 			translationBuilder.add("mode.pswg_blasters.training", "Low-energy Training");
@@ -246,9 +249,20 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add("text.pswg_blasters.stock_extended", "Stock extended");
 			translationBuilder.add("text.pswg_blasters.bipod_deployed", "Bipod deployed");
 			translationBuilder.add("text.pswg_blasters.bipod_stowed", "Bipod stowed");
-			translationBuilder.add("text.pswg_blasters.needs_ground", "Bipod deployment requires stable ground");
+			translationBuilder.add("text.pswg_blasters.needs_ground", "Look at a reachable supported top face with a bipod installed");
+			translationBuilder.add("text.pswg_blasters.holstered", "Weapon holstered: hands busy");
+			translationBuilder.add("text.pswg_blasters.redrawing", "Hands free: drawing weapon");
+			translationBuilder.add("text.pswg_blasters.patrol", "Patrol carry");
+			translationBuilder.add("text.pswg_blasters.ready", "Ready carry");
 			translationBuilder.add("text.pswg_blasters.base_form", "Base configuration restored");
 			translationBuilder.add("text.pswg_blasters.no_conversion", "No eligible field conversion");
+			translationBuilder.add("text.pswg_blasters.no_stock", "No folding stock installed");
+			translationBuilder.add("text.pswg_blasters.inactive_hand", "Main weapon selected: swap hands or use two one-handed blasters");
+			translationBuilder.add("hud.pswg_blasters.main", "Main: %s");
+			translationBuilder.add("hud.pswg_blasters.off", "Off: %s");
+			translationBuilder.add("hud.pswg_blasters.inactive", " [Inactive]");
+			translationBuilder.add("hud.pswg_blasters.ads", " [ADS]");
+			translationBuilder.add("hud.pswg_blasters.patrol", " [Patrol]");
 			translationBuilder.add("tooltip.pswg_blasters.cooling", "Passive cooling: %s units/tick");
 			translationBuilder.add("tooltip.pswg_blasters.overheat_cooling", "Overheat cooling: %s units/tick");
 			translationBuilder.add("tooltip.pswg_blasters.heat_cost", "Heat cost/capacity: %s / %s");
@@ -260,6 +274,10 @@ public class BlasterDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add("key.pswg_blasters.fold", "Fold / Extend Blaster Stock");
 			translationBuilder.add("key.pswg_blasters.deploy", "Deploy / Stow Blaster Bipod");
 			translationBuilder.add("key.pswg_blasters.convert", "Toggle Blaster Field Conversion");
+			translationBuilder.add("key.pswg_blasters.offhand_fire", "Fire Offhand Blaster");
+			translationBuilder.add("key.pswg_blasters.offhand_modifier", "Route Blaster Controls to Offhand");
+			translationBuilder.add("key.pswg_blasters.aim", "Toggle Blaster Aim");
+			translationBuilder.add("key.pswg_blasters.patrol", "Toggle Blaster Patrol Carry");
 		}
 	}
 

@@ -1,7 +1,8 @@
 package dev.pswg.item;
 
-import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Optional;
 
 /**
  * Provides an interface for items that can skip the hand animation when swapping
@@ -17,4 +18,12 @@ public interface IHandAnimationAware
 	 * @return True if the hand animation should be skipped, false otherwise, and empty if the vanilla behavior is preferred
 	 */
 	Optional<Boolean> shouldSkipHandAnimationOnSwap(ItemStack from, ItemStack to);
+
+	/**
+	 * Reads the last cosmetic recoil timestamp for this stack.
+	 */
+	default Optional<Long> getRecoilStart(ItemStack stack)
+	{
+		return Optional.empty();
+	}
 }

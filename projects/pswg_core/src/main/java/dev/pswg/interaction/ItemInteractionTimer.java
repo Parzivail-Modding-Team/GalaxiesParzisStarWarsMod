@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.InteractionHand;
 
 /**
  * Unsaved item interaction timing.
@@ -38,7 +39,12 @@ public record ItemInteractionTimer(
 		/**
 		 * Reloading a stored resource.
 		 */
-		RELOAD
+		RELOAD,
+
+		/**
+		 * Charging an item before release or automatic completion.
+		 */
+		CHARGE
 	}
 
 	/**
@@ -53,10 +59,16 @@ public record ItemInteractionTimer(
 	 */
 	public static void begin(LivingEntity owner, ItemInteractionKind kind, long serial, long now, int duration)
 	{
+		begin(owner, InteractionHand.MAIN_HAND, kind, serial, now, duration);
+	}
+
+	/** Publishes an independently timed interaction for the invoked hand. */
+	public static void begin(LivingEntity owner, InteractionHand hand, ItemInteractionKind kind, long serial, long now, int duration)
+	{
 		if (duration <= 0)
-			clear(owner);
+			clear(owner, hand);
 		else
-			owner.setAttached(ATTACHMENT, new ItemInteractionTimer(kind, serial, now, now + duration));
+			owner.setAttached(hand == InteractionHand.MAIN_HAND ? ATTACHMENT : OFFHAND_ATTACHMENT, new ItemInteractionTimer(kind, serial, now, now + duration));
 	}
 
 	/**
@@ -64,7 +76,19 @@ public record ItemInteractionTimer(
 	 */
 	public static void clear(LivingEntity owner)
 	{
-		owner.removeAttached(ATTACHMENT);
+		clear(owner, InteractionHand.MAIN_HAND);
+	}
+
+	/** Removes feedback only from the invoked hand. */
+	public static void clear(LivingEntity owner, InteractionHand hand)
+	{
+		owner.removeAttached(hand == InteractionHand.MAIN_HAND ? ATTACHMENT : OFFHAND_ATTACHMENT);
+	}
+
+	/** Reads the hand-local owner-synchronized timer. */
+	public static ItemInteractionTimer get(LivingEntity owner, InteractionHand hand)
+	{
+		return owner.getAttached(hand == InteractionHand.MAIN_HAND ? ATTACHMENT : OFFHAND_ATTACHMENT);
 	}
 
 	public static final Codec<ItemInteractionTimer> CODEC = IItemInteractionTimerCodec.CODEC.validate(
@@ -78,6 +102,12 @@ public record ItemInteractionTimer(
 	 */
 	public static final AttachmentType<ItemInteractionTimer> ATTACHMENT = AttachmentRegistry.create(
 			Galaxies.id("item_interaction_timer"),
+			builder -> builder.syncWith(ItemInteractionTimer.PACKET_CODEC, AttachmentSyncPredicate.targetOnly())
+	);
+
+	/** Offhand feedback uses the same bounded timer shape and owner-only projection. */
+	public static final AttachmentType<ItemInteractionTimer> OFFHAND_ATTACHMENT = AttachmentRegistry.create(
+			Galaxies.id("offhand_item_interaction_timer"),
 			builder -> builder.syncWith(ItemInteractionTimer.PACKET_CODEC, AttachmentSyncPredicate.targetOnly())
 	);
 

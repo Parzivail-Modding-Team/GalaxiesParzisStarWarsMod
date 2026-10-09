@@ -2,21 +2,31 @@ package dev.pswg.mixin.recoil;
 
 import dev.pswg.interaction.IRecoilEntity;
 import dev.pswg.interaction.RecoilEntityAttachment;
+import dev.pswg.networking.RecoilImpulsePayload;
+import dev.pswg.world.GameTime;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Main featureset for recoil support in entities. Handles most
- * item interactions and data storage.
+ * Adds angular impulses and recovers the shared view offset.
  */
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements IRecoilEntity
 {
+	/**
+	 * Last local recoil update.
+	 */
+	@Unique
+	private long _pswgLastRecoilTick = Long.MIN_VALUE;
+
 	@Override
 	public long pswg$getRecoilTime()
 	{
@@ -24,113 +34,176 @@ public abstract class LivingEntityMixin implements IRecoilEntity
 	}
 
 	@Override
-	public float pswg$getRecoilFovMultiplier(LivingEntity entity, float tickDelta)
+	public float pswg$getRecoilFovMultiplier(LivingEntity entity, float partialTick)
 	{
-		var recoilTime = entity.level().getGameTime() - this.pswg$getRecoilTime() + tickDelta;
-		if (recoilTime <= 0 || recoilTime >= 20)
+		var elapsed = GameTime.now(entity.level()) - pswg$getRecoilTime() + partialTick;
+		if (elapsed <= 0 || elapsed >= 20)
+		{
 			return 1;
+		}
 
-		var effectDepth = 0.1;
-		var effectSpeed = 5;
-		return (float)(1 - effectDepth * Math.exp(-effectSpeed * recoilTime));
+		return (float)(1 - 0.1 * Math.exp(-5 * elapsed));
 	}
 
 	@Override
 	public void pswg$addRecoilImpulse(Vector3f degrees, long sourceSerial, int recoveryTicks, float[] pitchMultipliers, float[] yawCycle)
 	{
-		var self = (LivingEntity)(Object)this;
-		var recoil = RecoilEntityAttachment.get(self);
-		var currentTick = self.level().getGameTime();
-		var ticksSinceShot = currentTick - recoil.recoilStart();
+		var entity = (LivingEntity)(Object)this;
+		var state = RecoilEntityAttachment.get(entity);
+		var now = GameTime.now(entity.level());
+		var elapsed = now - state.recoilStart();
+		var sequence = 1;
 
-		var shotSequence = sourceSerial != recoil.recoilSourceSerial() || ticksSinceShot < 0 || ticksSinceShot > recoil.recoilTicks()
-		                   ? 1
-		                   : recoil.recoilShotSequence() == Integer.MAX_VALUE ? Integer.MAX_VALUE : recoil.recoilShotSequence() + 1;
+		if (sourceSerial == state.recoilSourceSerial() && elapsed >= 0 && elapsed <= state.recoilTicks())
+		{
+			sequence = state.recoilShotSequence() == Integer.MAX_VALUE ? Integer.MAX_VALUE : state.recoilShotSequence() + 1;
+		}
 
-		var pitchMultiplier = pitchMultipliers[Math.min(shotSequence - 1, pitchMultipliers.length - 1)];
-		var yawMultiplier = yawCycle[(shotSequence - 1) % yawCycle.length];
-		var impulse = new Vector3f(degrees.x * pitchMultiplier, degrees.y * pitchMultiplier * yawMultiplier, degrees.z * pitchMultiplier);
+		var pitch = pitchMultipliers[Math.min(sequence - 1, pitchMultipliers.length - 1)];
+		var yaw = yawCycle[(sequence - 1) % yawCycle.length];
+		var impulse = new Vector3f(degrees.x * pitch, degrees.y * pitch * yaw, degrees.z * pitch);
 
-		recoil.withRecoilImpulse(recoil.recoilImpulse().add(impulse, new Vector3f()))
-		      .withRecoilTicks(Math.max(0, recoveryTicks))
-		      .withRecoilStart(currentTick)
-		      .withRecoilShotSequence(shotSequence)
-		      .withRecoilSourceSerial(sourceSerial)
-		      .set(self);
+		if (entity instanceof ServerPlayer player)
+		{
+			var event = state.recoilEventSequence() + 1;
+			state.withRecoilEventSequence(event)
+			     .withRecoilStart(now)
+			     .withRecoilTicks(Math.max(0, recoveryTicks))
+			     .withRecoilShotSequence(sequence)
+			     .withRecoilSourceSerial(sourceSerial)
+			     .set(entity);
+
+			if (ServerPlayNetworking.canSend(player, RecoilImpulsePayload.TYPE))
+			{
+				ServerPlayNetworking.send(player, new RecoilImpulsePayload(
+						player.level().dimension().identifier(),
+						player.getId(),
+						event,
+						impulse,
+						Math.max(0, recoveryTicks),
+						sequence,
+						sourceSerial
+				));
+			}
+
+			return;
+		}
+
+		RecoilEntityAttachment.queueImpulse(entity, impulse, recoveryTicks, now, 0, sequence, sourceSerial);
 	}
 
 	/**
-	 * Applies one signed pitch/yaw rotation and returns the actual view change after pitch clamping.
+	 * Applies a kick and returns the actual rotation after pitch clamping.
 	 */
-	private static Vector3f applyAimRotation(LivingEntity entity, Vector3f degrees)
+	private static Vector3f applyKick(LivingEntity entity, Vector3f impulse)
 	{
-		var previousPitch = entity.getXRot();
-		var previousYaw = entity.getYHeadRot();
-		entity.setXRot(Mth.clamp(entity.getXRot() + degrees.x, -90, 90));
-		entity.setYRot(entity.getYRot() + degrees.y);
-		entity.setYHeadRot(entity.getYHeadRot() + degrees.y);
+		var pitch = entity.getXRot();
+		var yaw = entity.getYRot();
+		setView(entity, pitch + impulse.x, yaw + impulse.y);
 
-		return new Vector3f(entity.getXRot() - previousPitch, entity.getYHeadRot() - previousYaw, 0);
+		return new Vector3f(entity.getXRot() - pitch, entity.getYRot() - yaw, 0);
 	}
 
 	/**
-	 * Removes only mouse/controller motion that counters the stored recoil; excess input remains normal aim.
+	 * Sets view and head yaw together. Pitch stays inside native bounds.
 	 */
-	private static float consumeCounterInput(float recoilOffset, float playerInput)
+	private static void setView(LivingEntity entity, float pitch, float yaw)
 	{
-		if (recoilOffset == 0 || recoilOffset * playerInput >= 0)
-			return recoilOffset;
-
-		var remaining = Math.max(0, Math.abs(recoilOffset) - Math.abs(playerInput));
-		return Math.copySign(remaining, recoilOffset);
+		entity.setXRot(Mth.clamp(pitch, -90, 90));
+		entity.setYRot(yaw);
+		entity.setYHeadRot(yaw);
 	}
 
-	@Inject(method = "aiStep()V", at = @At(value = "TAIL"))
-	private void tick(CallbackInfo ci)
+	/**
+	 * Consumes only input that opposes recoverable recoil.
+	 */
+	private static float consumeCounterInput(float offset, float input)
 	{
-		var self = (LivingEntity)(Object)this;
-		var recoil = RecoilEntityAttachment.get(self);
-		var aimOffset = recoil.recoilAimOffset();
-		var changed = recoil.hasViewSnapshot() || aimOffset.lengthSquared() > 1.0E-8f;
-
-		if (recoil.hasViewSnapshot())
+		if (offset == 0 || offset * input >= 0)
 		{
-			var inputPitch = self.getXRot() - recoil.lastViewPitch();
-			var inputYaw = Mth.wrapDegrees(self.getYHeadRot() - recoil.lastViewYaw());
-			aimOffset = new Vector3f(
-					consumeCounterInput(aimOffset.x, inputPitch),
-					consumeCounterInput(aimOffset.y, inputYaw),
-					0
-			);
+			return offset;
 		}
 
-		if (recoil.recoilImpulse().lengthSquared() > 1.0E-8f)
+		return Math.copySign(Math.max(0, Math.abs(offset) - Math.abs(input)), offset);
+	}
+
+	/**
+	 * Applies all queued sources to one offset and one return aim.
+	 */
+	@Inject(method = "aiStep()V", at = @At("TAIL"))
+	private void tickRecoil(CallbackInfo ci)
+	{
+		var entity = (LivingEntity)(Object)this;
+		if (entity instanceof ServerPlayer)
 		{
-			var kick = recoil.recoilImpulse();
-			aimOffset = aimOffset.add(applyAimRotation(self, kick), new Vector3f());
-			recoil = recoil.withRecoilImpulse(new Vector3f());
-			changed = true;
+			return;
 		}
 
-		var ticksSinceShot = self.level().getGameTime() - recoil.recoilStart();
-		if (aimOffset.lengthSquared() > 1.0E-8f && ticksSinceShot > recoil.recoilTicks())
+		var now = GameTime.now(entity.level());
+		if (now == _pswgLastRecoilTick)
 		{
-			var recoveryFraction = (float)Math.exp(-1.0 / Math.max(1, recoil.recoilTicks()));
-			var recovery = aimOffset.mul(recoveryFraction - 1, new Vector3f());
-			aimOffset = aimOffset.add(applyAimRotation(self, recovery), new Vector3f());
-			if (aimOffset.lengthSquared() <= 1.0E-8f)
-				aimOffset = new Vector3f();
-			changed = true;
+			return;
 		}
 
-		if (changed)
+		_pswgLastRecoilTick = now;
+		var state = RecoilEntityAttachment.get(entity);
+		var offset = new Vector3f(state.recoilAimOffset());
+		var pending = state.recoilImpulse();
+
+		if (!state.hasViewSnapshot() && offset.lengthSquared() == 0 && pending.lengthSquared() == 0)
 		{
-			var hasViewSnapshot = aimOffset.lengthSquared() > 1.0E-8f;
-			recoil.withRecoilAimOffset(aimOffset)
-			      .withLastViewPitch(hasViewSnapshot ? self.getXRot() : 0)
-			      .withLastViewYaw(hasViewSnapshot ? self.getYHeadRot() : 0)
-			      .withHasViewSnapshot(hasViewSnapshot)
-			      .set(self);
+			return;
 		}
+
+		var returnPitch = state.hasViewSnapshot() ? state.recoilReturnPitch() : entity.getXRot();
+		var returnYaw = state.hasViewSnapshot() ? state.recoilReturnYaw() : entity.getYRot();
+
+		if (state.hasViewSnapshot())
+		{
+			var inputPitch = entity.getXRot() - state.lastViewPitch();
+			var yawChange = entity.getYRot() - state.lastViewYaw();
+			var inputYaw = Mth.wrapDegrees(yawChange);
+			offset.x = consumeCounterInput(offset.x, inputPitch);
+			offset.y = consumeCounterInput(offset.y, inputYaw);
+
+			if (inputPitch != 0)
+			{
+				returnPitch = entity.getXRot() - offset.x;
+			}
+			returnYaw += yawChange - inputYaw;
+
+			if (inputYaw != 0)
+			{
+				returnYaw = entity.getYRot() - offset.y;
+			}
+		}
+
+		if (pending.lengthSquared() > 0)
+		{
+			offset.add(applyKick(entity, pending));
+		}
+
+		if (offset.lengthSquared() > 0 && now - state.recoilStart() > state.recoilTicks())
+		{
+			offset.mul((float)Math.exp(-1.0 / Math.max(1, state.recoilTicks())));
+
+			if (offset.lengthSquared() <= 1.0E-6f)
+			{
+				offset.zero();
+			}
+
+			// Set the target from the stored baseline
+			setView(entity, returnPitch + offset.x, returnYaw + offset.y);
+		}
+
+		var active = offset.lengthSquared() > 0;
+		state.withRecoilImpulse(new Vector3f())
+		     .withRecoilAimOffset(offset)
+		     .withRecoilReturnPitch(returnPitch)
+		     .withRecoilReturnYaw(returnYaw)
+		     .withLastViewPitch(active ? entity.getXRot() : 0)
+		     .withLastViewYaw(active ? entity.getYRot() : 0)
+		     .withHasViewSnapshot(active)
+		     .set(entity);
 	}
 }

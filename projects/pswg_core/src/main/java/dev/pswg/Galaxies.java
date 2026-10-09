@@ -20,6 +20,7 @@ import dev.pswg.networking.*;
 import dev.pswg.updater.GithubReleaseEntry;
 import dev.pswg.updater.UpdateChecker;
 import dev.pswg.util.world.DimensionTeleporter;
+import dev.pswg.world.GameTime;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -137,6 +138,7 @@ public final class Galaxies implements ModInitializer
 
 		RecoilEntityAttachment.register();
 		ItemInteractionTimer.register();
+		GameTime.register();
 		StoredCharge.register();
 
 		G3dResources.register();

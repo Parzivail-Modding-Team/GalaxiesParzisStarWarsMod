@@ -22,6 +22,22 @@ public interface ILeftClickUsable
 	}
 
 	/**
+	 * Allows a custom-input item to release vanilla input when its source is inactive or holstered.
+	 */
+	default boolean usesCustomLeftInput(LivingEntity user, ItemStack stack)
+	{
+		return usesCustomLeftInput();
+	}
+
+	/**
+	 * Whether this source participates in the generic left-use path at all.
+	 */
+	default boolean isLeftUseEnabled(LivingEntity user, ItemStack stack)
+	{
+		return true;
+	}
+
+	/**
 	 * Called when the user uses (or starts using) the item.
 	 * The use action, by default, is bound to the right mouse button.
 	 *

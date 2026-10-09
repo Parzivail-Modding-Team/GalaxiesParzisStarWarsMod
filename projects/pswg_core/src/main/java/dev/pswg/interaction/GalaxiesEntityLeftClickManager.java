@@ -40,6 +40,9 @@ public final class GalaxiesEntityLeftClickManager
 			InteractionHand hand = packet.hand();
 			ItemStack itemStack = player.getItemInHand(hand);
 
+			if (!ItemHandPermission.EVENT.invoker().mayInteract(player, hand))
+				return;
+
 			if (itemStack.getItem() instanceof ILeftClickUsable item && item.usesCustomLeftInput())
 				return;
 

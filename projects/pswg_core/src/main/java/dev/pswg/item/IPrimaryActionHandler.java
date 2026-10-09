@@ -10,11 +10,19 @@ import net.minecraft.world.level.Level;
 public interface IPrimaryActionHandler
 {
 	/**
+	 * Whether this item supplies its own hand-qualified control protocol.
+	 */
+	default boolean usesCustomPrimaryAction()
+	{
+		return false;
+	}
+
+	/**
 	 * Called when an entity requests the primary action for the item.
 	 *
 	 * <p>This method is called on both the logical client and logical server, so take caution
 	 * when overriding this method. The logical side can be checked using {@link
-	 * Level#isClientSide}.
+	 * Level#isClientSide()}.
 	 *
 	 * @param stack The item stack to query
 	 * @param user  The user that is holding the stack

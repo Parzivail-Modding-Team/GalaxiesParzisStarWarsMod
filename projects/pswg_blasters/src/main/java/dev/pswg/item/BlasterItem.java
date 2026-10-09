@@ -15,12 +15,14 @@ import dev.pswg.generated.codecs.ICoolingCodec;
 import dev.pswg.generated.codecs.IStateComponentCodec;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
 import dev.pswg.interaction.IRecoilEntity;
+import dev.pswg.interaction.BlasterActions;
 import dev.pswg.item.component.StoredCharge;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
 import dev.pswg.sound.BlasterSounds;
 import dev.pswg.world.TickConstants;
+import dev.pswg.world.GameTime;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -70,6 +72,11 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 * The interaction fired a shot.
 		 */
 		FIRED,
+
+		/**
+		 * A charge press passed readiness checks without spending shot resources.
+		 */
+		READY,
 
 		/**
 		 * The interaction fed the minigame.
@@ -233,9 +240,9 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 *
 	 * @param isAiming            Determines if the blaster is currently aiming-down-sights
 	 * @param lastFired           The timestamp when the blaster was last fired. It is derived
-	 *                            from the global timestamp {@link Level#getGameTime()}.
+	 *                            from the saved Overworld timestamp {@link GameTime#now(Level)}.
 	 * @param fireCooldown        Determines the next world tick when the blaster is able to be
-	 *                            fired again. It is derived from the global timestamp {@link Level#getGameTime()}
+	 *                            fired again. It is derived from the saved Overworld timestamp {@link GameTime#now(Level)}
 	 * @param cooldownStart       The timestamp when the blaster will begin, or has begun, cooling down. The type of cooldown is/will be determined by {@link StateComponent#coolingMode()}
 	 * @param lastTotalHeat       The amount of heat the blaster contained the last time
 	 *                            heat was added. To get the current amount of heat, taking
@@ -554,7 +561,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 							source,
 							applied,
 							preference,
-							world == null ? 0 : world.getGameTime(),
+							world == null ? 0 : GameTime.now(world),
 							getLoadedCharge(stack)
 					)).orElse(source);
 				}
@@ -762,8 +769,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		var applied = getAttachments(stack).applied();
 		var preferred = Optional.ofNullable(stack.get(SELECTED_MODE));
 		var source = BlasterLoadout.resolve(base.orElseThrow(), options, applied, preferred);
-		var selection = new BlasterFieldConversion(optionId, world.getGameTime());
-		var target = selection.resolve(snapshot, source, applied, preferred, world.getGameTime(), getLoadedCharge(stack));
+		var selection = new BlasterFieldConversion(optionId, GameTime.now(world));
+		var target = selection.resolve(snapshot, source, applied, preferred, GameTime.now(world), getLoadedCharge(stack));
 
 		if (target.isEmpty())
 			return false;
@@ -947,7 +954,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var lastFired = state.lastFired();
 		var cooldown = state.fireCooldown();
-		var time = world.getGameTime() + tickDelta;
+		var time = GameTime.now(world) + tickDelta;
 
 		if (cooldown <= lastFired || cooldown <= time)
 			return Optional.empty();
@@ -1021,11 +1028,16 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var state = getState(stack);
 
-		var isWaitingToFire = state.fireCooldown() > world.getGameTime();
+		var isWaitingToFire = state.fireCooldown() > GameTime.now(world);
 		if (isWaitingToFire)
 			return false;
 
-		// TODO: other checks (e.g. quickdraw delay)
+		if (user instanceof Player player)
+		{
+			var hand = player.getMainHandItem() == stack ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+			if (player.getItemInHand(hand) != stack || !BlasterActions.canFire(player, hand))
+				return false;
+		}
 
 		return true;
 	}
@@ -1053,7 +1065,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var overchargeStart = state.overchargeStart();
 		var overchargeLength = stats.heat().overchargeBonus();
-		var time = world.getGameTime() + tickDelta;
+		var time = GameTime.now(world) + tickDelta;
 
 		if (time > overchargeStart + overchargeLength)
 			return Optional.empty();
@@ -1088,7 +1100,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (state.coolingMode() != CoolingMode.PASSIVE)
 			return Optional.empty();
 
-		var time = world.getGameTime() + tickDelta;
+		var time = GameTime.now(world) + tickDelta;
 
 		var lastCommittedHeat = state.lastTotalHeat();
 		var dissipationPerTick = stats.heat().drainSpeed();
@@ -1125,7 +1137,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (state.lastVentingHeat() <= 0)
 			return Optional.empty();
 
-		var time = world.getGameTime() + tickDelta;
+		var time = GameTime.now(world) + tickDelta;
 
 		var lastVentingHeat = state.lastVentingHeat();
 		var dissipationPerTick = stats.heat().overheatDrainSpeed();
@@ -1162,6 +1174,16 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			stack.set(SERIAL, world.getRandom().nextLong());
 
 		refreshState(world, stack);
+
+		if (entity instanceof Player player && player.getMainHandItem() != stack && player.getOffhandItem() != stack)
+		{
+			if (isDeployed(stack))
+				setDeployed(world, stack, false);
+
+			if (getState(stack).isAiming())
+				setAiming(world, stack, false);
+		}
+
 		if (getState(stack).isAiming())
 			refreshAimingZoom(world, stack);
 	}
@@ -1181,7 +1203,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	@Override
 	public boolean canDestroyBlock(ItemStack stack, BlockState state, Level world, BlockPos pos, LivingEntity user)
 	{
-		return false;
+		return user instanceof Player && !usesCustomLeftInput(user, stack);
 	}
 
 	@Override
@@ -1223,30 +1245,46 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	@Override
 	public InteractionResult use(Level world, Player user, InteractionHand hand)
 	{
-		var stack = user.getItemInHand(hand);
-		if (getDefinition(world, stack).isEmpty())
-			return InteractionResult.FAIL;
-
-		var state = getState(stack);
-
-		if (!world.isClientSide())
+		// The hand-qualified control protocol owns firing and ADS.
+		if (dev.pswg.interaction.BlasterWield.canWield(user, hand))
 		{
-			setAiming(world, stack, !state.isAiming());
-
-			// this is required to "start using" the item instead of
-			// immediately consuming it.
-			user.startUsingItem(hand);
-
-			return InteractionResult.CONSUME;
+			// A native success calls itemUsed and lowers the hand.
+			return InteractionResult.FAIL;
 		}
 
-		return InteractionResult.FAIL;
+		return InteractionResult.PASS;
+	}
+
+	@Override
+	public Optional<Long> getRecoilStart(ItemStack stack)
+	{
+		var start = getState(stack).lastFired();
+
+		if (start <= 0)
+		{
+			return Optional.empty();
+		}
+
+		return Optional.of(start);
 	}
 
 	@Override
 	public boolean usesCustomLeftInput()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean usesCustomLeftInput(LivingEntity user, ItemStack stack)
+	{
+		return user instanceof Player player && player.getItemInHand(dev.pswg.interaction.BlasterWield.primaryHand(player)) == stack
+		       && dev.pswg.interaction.BlasterWield.canWield(player, dev.pswg.interaction.BlasterWield.primaryHand(player));
+	}
+
+	@Override
+	public boolean isLeftUseEnabled(LivingEntity user, ItemStack stack)
+	{
+		return usesCustomLeftInput(user, stack);
 	}
 
 	@Override
@@ -1260,15 +1298,46 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	 */
 	public static ShotResult tryFire(ServerLevel world, Player user, InteractionHand hand, boolean pressed)
 	{
-		var result = fireServer(world, user, hand, !pressed);
+		return tryFire(world, user, hand, pressed, -1);
+	}
+
+	/**
+	 * Attempts one shot with hold duration. A negative duration denotes an ordinary, non-charge trigger.
+	 */
+	public static ShotResult tryFire(
+			ServerLevel world,
+			Player user,
+			InteractionHand hand,
+			boolean pressed,
+			int heldChargeTicks
+	)
+	{
+		var result = fireServer(world, user, hand, !pressed, heldChargeTicks, false);
 		return result == InteractionResult.SUCCESS ? ShotResult.FIRED
 				: result == InteractionResult.CONSUME ? ShotResult.COOLING_HANDLED : ShotResult.BLOCKED;
 	}
 
 	/**
-	 * Executes one shot.
+	 * Checks a charge press through the normal readiness/cooling path without emitting or debiting a shot.
 	 */
-	private static InteractionResult fireServer(ServerLevel world, Player user, InteractionHand hand, boolean repeatEvent)
+	public static ShotResult tryBeginCharge(ServerLevel world, Player user, InteractionHand hand)
+	{
+		var result = fireServer(world, user, hand, false, 0, true);
+		return result == InteractionResult.SUCCESS ? ShotResult.READY
+				: result == InteractionResult.CONSUME ? ShotResult.COOLING_HANDLED : ShotResult.BLOCKED;
+	}
+
+	/**
+	 * Checks or executes one shot.
+	 */
+	private static InteractionResult fireServer(
+			ServerLevel world,
+			Player user,
+			InteractionHand hand,
+			boolean repeatEvent,
+			int heldChargeTicks,
+			boolean chargePress
+	)
 	{
 
 		ItemStack itemStack = user.getItemInHand(hand);
@@ -1289,7 +1358,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		var stats = optionalStats.get();
 
-		var timestamp = world.getGameTime();
+		var timestamp = GameTime.now(world);
 
 		var coolingStatus = getCoolingStatus(world, itemStack, 0);
 		var heatEnabled = stats.heat().capacity() > 0;
@@ -1394,17 +1463,39 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 
 		stats = shotStats.stats();
 
-		var profile = getLoadout(world, itemStack).map(loadout -> BlasterData.get(world).behaviorProfiles().get(loadout.selectedMode().behaviorProfile()));
+		var loadout = getLoadout(world, itemStack).orElseThrow();
+
+		var trigger = loadout.selectedMode().trigger();
+		if (trigger instanceof BlasterStats.ChargeTrigger charge)
+		{
+			if (!chargePress && heldChargeTicks < charge.minimumChargeTicks())
+				return InteractionResult.FAIL;
+		}
+		else if (chargePress || heldChargeTicks >= 0)
+			return InteractionResult.FAIL;
+
+		var profile = Optional.ofNullable(BlasterData.get(world).behaviorProfiles().get(loadout.selectedMode().behaviorProfile()));
 		if (profile.isEmpty())
 			return InteractionResult.FAIL;
 
-		if (!BlasterAmmo.consumeShot(world, user, itemStack, stats.ammo()))
+		if (!BlasterAmmo.canConsumeShot(user, itemStack, stats.ammo()))
 		{
 			if (!repeatEvent)
 				world.playSound(null, user.getX(), user.getY(), user.getZ(), BlasterSounds.DRYFIRE, SoundSource.PLAYERS, 1, 1);
 
 			return InteractionResult.FAIL;
 		}
+
+		if (chargePress)
+			return InteractionResult.SUCCESS;
+
+		var behavior = profile.orElseThrow();
+		var chargedShot = behavior.chargedShot();
+		var shot = BlasterShot.capture(stats, behavior, trigger, heldChargeTicks, getLoadedAmmo(itemStack, stats.ammo()));
+
+		var spendAll = chargedShot.map(value -> value.consume() == BlasterBehaviorProfile.ChargeConsumer.ALL_REMAINING_COMPONENT_CHARGE).orElse(false);
+		if (!BlasterAmmo.consumeShot(world, user, itemStack, stats.ammo(), spendAll))
+			return InteractionResult.FAIL;
 
 		state = state.withLastFired(timestamp)
 		             .withCooling(CoolingMode.PASSIVE, timestamp + stats.heat().passiveCooldownDelay())
@@ -1415,7 +1506,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (heatEnabled && getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
 			totalHeat += stats.heat().perRound();
 
-		fireShot(user, world, new BlasterShot(stats, profile.orElseThrow()), state.isAiming());
+		fireShot(user, world, shot, state.isAiming());
 
 		var recoil = stats.recoil();
 		var pitch = state.isAiming() ? recoil.aimPitchDegrees() : recoil.hipPitchDegrees();
@@ -1473,6 +1564,16 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	@Override
 	public ItemStack invokePrimaryAction(ItemStack stack, Level world, LivingEntity user)
 	{
+		if (world.isClientSide())
+			return stack;
+
+		if (user instanceof Player player)
+		{
+			var hand = player.getMainHandItem() == stack ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+			if (player.getItemInHand(hand) != stack || !BlasterActions.canFire(player, hand))
+				return stack;
+		}
+
 		var optionalStats = getStats(world, stack);
 		if (optionalStats.isEmpty())
 			return stack;
@@ -1481,7 +1582,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (heat.capacity() <= 0 || heat.overheatDrainSpeed() <= 0)
 			return stack;
 
-		var timestamp = world.getGameTime();
+		var timestamp = GameTime.now(world);
 
 		var coolingStatus = getCoolingStatus(world, stack, 0);
 		if (coolingStatus.coolingMode().isCooling())
@@ -1508,6 +1609,12 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		);
 
 		return stack;
+	}
+
+	@Override
+	public boolean usesCustomPrimaryAction()
+	{
+		return true;
 	}
 
 	/**
