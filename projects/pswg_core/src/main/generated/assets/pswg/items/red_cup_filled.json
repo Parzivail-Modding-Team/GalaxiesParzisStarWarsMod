@@ -26,10 +26,6 @@
       "model": "pswg:item/red_cup_filled_in_hand",
       "tints": [
         {
-          "type": "minecraft:constant",
-          "value": -5231066
-        },
-        {
           "type": "pswg:drink",
           "default": -13083194
         }

@@ -21,6 +21,4 @@ public @interface DataGenItem
 	String textureOverride() default "";
 
 	String overlayTextureOverride() default "";
-
-	boolean invertLayer() default false;
 }

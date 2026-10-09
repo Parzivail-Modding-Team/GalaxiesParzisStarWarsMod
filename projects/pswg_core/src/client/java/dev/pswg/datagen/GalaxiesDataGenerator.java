@@ -186,6 +186,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 						case HANDHELD -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_HANDHELD_ITEM);
 						case MODEL_IN_HAND -> GalaxiesModelProvider.register3dHand(generator, item);
 						case DRINK -> registerDrink(generator, item, dataGenItem);
+						case CUP -> registerCup(generator, item, dataGenItem);
 						case FILLED_CUP -> registerFilledCup(generator, item, dataGenItem);
 					}
 			}

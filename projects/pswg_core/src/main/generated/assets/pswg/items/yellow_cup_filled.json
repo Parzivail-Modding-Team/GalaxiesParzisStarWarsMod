@@ -26,10 +26,6 @@
       "model": "pswg:item/yellow_cup_filled_in_hand",
       "tints": [
         {
-          "type": "minecraft:constant",
-          "value": -75715
-        },
-        {
           "type": "pswg:drink",
           "default": -13083194
         }

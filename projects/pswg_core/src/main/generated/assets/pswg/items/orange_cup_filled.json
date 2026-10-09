@@ -26,10 +26,6 @@
       "model": "pswg:item/orange_cup_filled_in_hand",
       "tints": [
         {
-          "type": "minecraft:constant",
-          "value": -425955
-        },
-        {
           "type": "pswg:drink",
           "default": -13083194
         }

@@ -340,17 +340,26 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		Identifier modelId;
 		Material overlay = dataGenItem.overlayTextureOverride().equals("") ? new Material(Identifier.parse(createItemKey(item, dataGenItem).withSuffix("_overlay").toString().replace("_filled", ""))) : new Material(Identifier.fromNamespaceAndPath(namespace, dataGenItem.overlayTextureOverride()).withPrefix("item/"));
 		Material base = new Material(Identifier.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", "")));
+		modelId = generator.generateLayeredItem(item, overlay, base);
+		generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new GalaxiesDrinkTintSource()));
 
-		if (dataGenItem.invertLayer())
-		{
-			modelId = generator.generateLayeredItem(item, base, overlay);
-			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new Constant(16777215), new GalaxiesDrinkTintSource()));
-		}
-		else
-		{
-			modelId = generator.generateLayeredItem(item, overlay, base);
-			generator.itemModelOutput.accept(item, ItemModelUtils.tintedModel(modelId, new GalaxiesDrinkTintSource()));
-		}
+	}
+
+	public void registerCup(ItemModelGenerators generator, Item item, DataGenItem dataGenItem)
+	{
+		Identifier flatModelId = generator.createFlatItemModel(item, ModelTemplates.FLAT_ITEM);
+		ItemModel.Unbaked flatModel = ItemModelUtils.plainModel(flatModelId);
+
+		ModelTemplate modelTemplateInHand = createItemModelFromTemplate(Galaxies.id("item/template_cup_in_hand"), "", TextureSlot.LAYER0);
+		Material baseInHand = new Material(Identifier.parse(item.toString()).withSuffix("_in_hand").withPrefix("item/3d/"));
+
+		Identifier modelInHandId = modelTemplateInHand.create(createItemKey(item, dataGenItem).withSuffix("_in_hand"), TextureMapping.layer0(baseInHand), generator.modelOutput);
+		ItemModel.Unbaked inHandModel = ItemModelUtils.tintedModel(
+				modelInHandId,
+				new GalaxiesDrinkTintSource()
+		);
+
+		generator.itemModelOutput.accept(item, generator.createFlatModelDispatch(flatModel, inHandModel));
 	}
 
 	public void registerFilledCup(ItemModelGenerators generator, Item item, DataGenItem dataGenItem)
@@ -358,16 +367,18 @@ public abstract class GalaxiesModelProvider extends FabricModelProvider
 		Material overlayFlat = new Material(Galaxies.id("item/cup_overlay"));
 		Material baseFlat = new Material(Identifier.parse(ModelLocationUtils.getModelLocation(item).toString().replace("_filled", "")));
 		Identifier flatModelId = generator.generateLayeredItem(item, baseFlat, overlayFlat);
-		ItemModel.Unbaked flatModel = ItemModelUtils.tintedModel(flatModelId, new GalaxiesDrinkTintSource());
+		ItemModel.Unbaked flatModel = ItemModelUtils.tintedModel(
+				flatModelId,
+				new GalaxiesDrinkTintSource()
+		);
 
-		ModelTemplate modelTemplateInHand = createItemModelFromTemplate(Galaxies.id("item/template_cup_in_hand"), "", TextureSlot.LAYER1);
-		Material baseInHand = new Material(Identifier.parse(item.toString()).withSuffix("_in_hand").withPrefix("item/3d/"));
-		Material overlayInHand = new Material(Galaxies.id("item/3d/food/cup_overlay_in_hand"));
+		ModelTemplate modelTemplateInHand = createItemModelFromTemplate(Galaxies.id("item/template_filled_cup_in_hand"), "", TextureSlot.LAYER0, TextureSlot.LAYER1);
+		Material baseInHand = new Material(Identifier.parse(item.toString().replace("_filled", "")).withSuffix("_in_hand").withPrefix("item/3d/"));
+		Material overlayInHand = new Material(Galaxies.id("item/3d/cup_overlay_in_hand"));
 
 		Identifier modelInHandId = modelTemplateInHand.create(createItemKey(item, dataGenItem).withSuffix("_in_hand"), TextureMapping.layered(baseInHand, overlayInHand), generator.modelOutput);
 		ItemModel.Unbaked inHandModel = ItemModelUtils.tintedModel(
 				modelInHandId,
-				new Constant(cupColor(item).getTextureDiffuseColor()),
 				new GalaxiesDrinkTintSource()
 		);
 
