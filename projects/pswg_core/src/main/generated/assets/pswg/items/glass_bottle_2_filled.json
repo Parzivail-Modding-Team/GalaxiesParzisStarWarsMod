@@ -1,12 +1,40 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "pswg:item/glass_bottle_2_filled",
-    "tints": [
+    "type": "minecraft:select",
+    "cases": [
       {
-        "type": "pswg:drink",
-        "default": -13083194
+        "model": {
+          "type": "minecraft:model",
+          "model": "pswg:item/glass_bottle_2_filled",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "pswg:drink",
+              "default": -13083194
+            }
+          ]
+        },
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "on_shelf"
+        ]
       }
-    ]
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "pswg:item/glass_bottle_2_filled_in_hand",
+      "tints": [
+        {
+          "type": "pswg:drink",
+          "default": -13083194
+        }
+      ]
+    },
+    "property": "minecraft:display_context"
   }
 }

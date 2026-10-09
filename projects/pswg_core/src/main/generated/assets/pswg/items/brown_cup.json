@@ -1,6 +1,30 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "pswg:item/brown_cup"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "pswg:item/brown_cup"
+        },
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "on_shelf"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "pswg:item/brown_cup_in_hand",
+      "tints": [
+        {
+          "type": "pswg:drink",
+          "default": -13083194
+        }
+      ]
+    },
+    "property": "minecraft:display_context"
   }
 }
