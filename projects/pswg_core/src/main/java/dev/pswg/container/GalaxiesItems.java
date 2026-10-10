@@ -154,6 +154,32 @@ public class GalaxiesItems
 	@DataGenItem
 	public static final Item REBEL_FOREST = registerArmorItem("rebel_forest_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
 	@DataGenItem
+	public static final Item AWING_PILOT_HELMET = registerArmorItem("awing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
+	@DataGenItem
+	public static final Item AWING_PILOT_KIT = registerArmorItem("awing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
+	@DataGenItem
+	public static final Item BWING_PILOT_HELMET = registerArmorItem("bwing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
+	@DataGenItem
+	public static final Item BWING_PILOT_KIT = registerArmorItem("bwing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
+	@DataGenItem
+	public static final Item UWING_PILOT_HELMET = registerArmorItem("uwing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
+	@DataGenItem
+	public static final Item UWING_PILOT_KIT = registerArmorItem("uwing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
+	@DataGenItem
+	public static final Item YWING_PILOT_HELMET = registerArmorItem("ywing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
+	@DataGenItem
+	public static final Item YWING_PILOT_KIT = registerArmorItem("ywing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
+	@DataGenItem
+	public static final Item XWING_PILOT_HELMET = registerArmorItem("xwing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
+	@DataGenItem
+	public static final Item XWING_PILOT_KIT = registerArmorItem("xwing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
+	@DataGenItem
+	public static final Item REBEL_FLEET_TROOPER = registerArmorItem("rebel_fleet_trooper_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
+	@DataGenItem
+	public static final Item REBEL_FLEET_TROOPER_JACKET = registerArmorItem("rebel_fleet_trooper_jacket", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
+	@DataGenItem
+	public static final Item REBEL_HONOR_GUARD = registerArmorItem("rebel_honor_guard_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
+	@DataGenItem
 	public static final Item REBEL_TROPICAL = registerArmorItem("rebel_tropical_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
 	@DataGenItem
 	public static final Item BLACK_IMPERIAL_OFFICER = registerArmorItem("black_imperial_officer_hat", ArmorMaterials.LEATHER, ArmorType.HELMET);

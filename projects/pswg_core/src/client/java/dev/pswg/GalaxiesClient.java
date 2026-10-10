@@ -304,6 +304,74 @@ public class GalaxiesClient implements ClientModInitializer
 				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
 		);
 
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/awing_pilot"),
+				GalaxiesItems.AWING_PILOT_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/awing_pilot"),
+				GalaxiesItems.AWING_PILOT_KIT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/bwing_pilot"),
+				GalaxiesItems.BWING_PILOT_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/bwing_pilot"),
+				GalaxiesItems.BWING_PILOT_KIT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/uwing_pilot"),
+				GalaxiesItems.UWING_PILOT_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/uwing_pilot"),
+				GalaxiesItems.UWING_PILOT_KIT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/ywing_pilot"),
+				GalaxiesItems.YWING_PILOT_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/ywing_pilot"),
+				GalaxiesItems.YWING_PILOT_KIT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/xwing_pilot"),
+				GalaxiesItems.XWING_PILOT_HELMET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/xwing_pilot"),
+				GalaxiesItems.XWING_PILOT_KIT,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_fleet_trooper"),
+				GalaxiesItems.REBEL_FLEET_TROOPER,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_fleet_trooper"),
+				GalaxiesItems.REBEL_FLEET_TROOPER_JACKET,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+		G3dArmorRenderer.register(
+				Galaxies.id("armor/rebel_honor_guard"),
+				GalaxiesItems.REBEL_HONOR_GUARD,
+				G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+		);
+
+
 		Galaxies.LOGGER.info("Loading PSWG modules and addons via pswg-client-addon");
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesClientReady);
 		FabricLoader.getInstance().invokeEntrypoints("pswg-client-addon", GalaxiesClientAddon.class, GalaxiesClientAddon::onGalaxiesFinalizing);
