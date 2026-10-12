@@ -2,7 +2,7 @@ package dev.pswg.datagen;
 
 public enum DatagenItemModel
 {
-	GENERATED,
+	GENERATED, DRINK_NO_HAND_MODEL,
 	DRINK,
 	FILLED_DRINK,
 	CUP,
