@@ -378,9 +378,9 @@ public class GalaxiesItems
 	public static final NumberedItems GLASS_BOTTLES = new NumberedItems(3, i -> registerSimpleItem("glass_bottle_" + i));
 	@DataGenItem(itemGroup = DataGenItemGroup.NONE, langOverride = "Glass Bottle", model = DatagenItemModel.FILLED_DRINK)
 	public static final NumberedItems FILLED_GLASS_BOTTLES = new NumberedItems(3, i -> registerDefaultPotionItem("glass_bottle_" + i + "_filled", new Item.Properties().usingConvertsTo(GLASS_BOTTLES.get(i - 1))));
-	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, model = DatagenItemModel.DRINK, itemTags = DataGenItemTag.DRINK_CONTAINER, langOverride = "Plastic Bottle")
+	@DataGenItem(itemGroup = DataGenItemGroup.FOOD, itemTags = DataGenItemTag.DRINK_CONTAINER, langOverride = "Plastic Bottle")
 	public static final NumberedItems PLASTIC_BOTTLES = new NumberedItems(2, i -> registerSimpleItem("plastic_bottle_" + i));
-	@DataGenItem(itemGroup = DataGenItemGroup.NONE, langOverride = "Plastic Bottle", model = DatagenItemModel.FILLED_DRINK)
+	@DataGenItem(itemGroup = DataGenItemGroup.NONE, langOverride = "Plastic Bottle", model = DatagenItemModel.DRINK_NO_HAND_MODEL)
 	public static final NumberedItems FILLED_PLASTIC_BOTTLES = new NumberedItems(2, i -> registerDefaultPotionItem("plastic_bottle_" + i + "_filled", new Item.Properties().usingConvertsTo(PLASTIC_BOTTLES.get(i - 1))));
 	///  FOOD
 

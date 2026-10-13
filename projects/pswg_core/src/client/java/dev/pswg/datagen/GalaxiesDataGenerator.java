@@ -185,7 +185,7 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 						case GENERATED -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_ITEM);
 						case HANDHELD -> GalaxiesModelProvider.register(generator, item, createItemKey(item, dataGenItem), ModelTemplates.FLAT_HANDHELD_ITEM);
 						case MODEL_IN_HAND -> GalaxiesModelProvider.register3dHand(generator, item);
-						//case DRINK -> registerDrink(generator, item, dataGenItem);
+						case DRINK_NO_HAND_MODEL -> registerDrink(generator, item, dataGenItem);
 						case DRINK -> registerEmptyDrink(generator, item, dataGenItem);
 						case FILLED_DRINK -> registerFilledDrink(generator, item, dataGenItem);
 						case CUP -> registerEmptyCup(generator, item, dataGenItem);
