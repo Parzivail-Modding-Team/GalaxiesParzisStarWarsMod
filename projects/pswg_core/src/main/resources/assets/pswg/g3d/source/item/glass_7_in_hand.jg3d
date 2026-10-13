@@ -16,7 +16,7 @@
 	],
 	"nodes": [
 		{
-			"id": "group",
+			"id": "root",
 			"restTransform": {
 				"translation": [
 					0,
@@ -37,7 +37,30 @@
 			},
 			"meshes": [
 				"cube",
-				"cube_2",
+				"cube_2"
+			]
+		},
+		{
+			"id": "group",
+			"restTransform": {
+				"translation": [
+					0,
+					0,
+					0
+				],
+				"rotation": [
+					0,
+					0,
+					0,
+					1
+				],
+				"scale": [
+					1,
+					1,
+					1
+				]
+			},
+			"meshes": [
 				"cube_3",
 				"cube_4",
 				"cube_5"
@@ -2196,14 +2219,14 @@
 					0
 				],
 				"translation": [
-					8,
-					0,
-					7.5
+					6,
+					3.5,
+					5
 				],
 				"scale": [
-					1,
-					1,
-					1
+					0.75,
+					0.75,
+					0.75
 				]
 			},
 			"thirdperson_lefthand": {
@@ -2213,14 +2236,14 @@
 					0
 				],
 				"translation": [
-					-8,
-					0,
-					7.5
+					-6,
+					3.5,
+					5
 				],
 				"scale": [
-					1,
-					1,
-					1
+					0.75,
+					0.75,
+					0.75
 				]
 			},
 			"firstperson_righthand": {
