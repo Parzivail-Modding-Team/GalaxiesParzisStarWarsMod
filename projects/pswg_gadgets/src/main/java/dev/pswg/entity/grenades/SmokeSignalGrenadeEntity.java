@@ -1,5 +1,7 @@
 package dev.pswg.entity.grenades;
 
+import dev.pswg.block.GrenadeBlock;
+import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.item.grenades.GrenadeItem;
@@ -7,7 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 
-public class SmokeSignalGrenadeEntity extends GasGrenadeEntity
+public class SmokeSignalGrenadeEntity extends GasGrenadeEntityWithBlock
 {
 
 	public SmokeSignalGrenadeEntity(EntityType<? extends ThrowableProjectile> entityType, Level world)
@@ -21,4 +23,8 @@ public class SmokeSignalGrenadeEntity extends GasGrenadeEntity
 		return GadgetsItems.SMOKE_SIGNAL_GRENADE_ITEM;
 	}
 
+	@Override
+	public GrenadeBlock getBlock() {
+		return GadgetsBlocks.SMOKE_SIGNAL_GRENADE_BLOCK;
+	}
 }

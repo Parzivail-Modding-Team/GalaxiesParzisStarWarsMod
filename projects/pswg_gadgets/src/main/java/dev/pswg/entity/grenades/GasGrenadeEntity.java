@@ -29,6 +29,10 @@ public abstract class GasGrenadeEntity extends GrenadeEntity
 		this.gasEntityType = gasEntityType;
 	}
 
+	public boolean isExpellingGas() {
+		return expellingGas;
+	}
+
 	@Override
 	public void explode()
 	{

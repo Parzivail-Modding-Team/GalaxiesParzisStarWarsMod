@@ -26,6 +26,8 @@ public class GadgetsBlocks
 	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.blockWithoutItem(Gadgets.id("thermal_detonator_block"), ThermalDetonatorBlock::new, BlockBehaviour.Properties.of());
 	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK)
 	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK)
+	public static final SmokeSignalGrenadeBlock SMOKE_SIGNAL_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("smoke_signal_grenade_block"), SmokeSignalGrenadeBlock::new, BlockBehaviour.Properties.of());
 
 	@DataGenBlock
 	public static final FertileDirt FERTILE_DIRT_BLOCK = Registrar.block(Gadgets.id("fertile_dirt"), FertileDirt::new, BlockBehaviour.Properties.of().randomTicks());
