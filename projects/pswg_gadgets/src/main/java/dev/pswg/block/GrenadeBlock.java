@@ -14,7 +14,6 @@ import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -33,28 +32,25 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class GrenadeBlock extends WaterloggableRotatingBlock
+public abstract class GrenadeBlock extends WaterloggableRotatingBlock
 {
-	public static final IntegerProperty CLUSTER_SIZE = IntegerProperty.create("cluster_size", 1, 5);
-	public static final int MAX_CLUSTER_SIZE = 5;
+	public static final IntegerProperty CLUSTER_SIZE_3 = IntegerProperty.create("cluster_size", 1, 3);
+	public static final IntegerProperty CLUSTER_SIZE_4 = IntegerProperty.create("cluster_size", 1, 4);
+	public static final IntegerProperty CLUSTER_SIZE_5 = IntegerProperty.create("cluster_size", 1, 5);
+	public static final int DEFAULT_MAX_CLUSTER_SIZE = 5;
 
 	/**
 	 * Returns the item corresponding with the block
 	 * Needs to be overwritten
 	 */
-	public Item getItem()
-	{
-		return Items.AIR;
-	}
+	public abstract Item getItem();
 
 	/**
 	 * Returns the entity type corresponding with the block
 	 * Needs to be overwritten
 	 */
-	public EntityType<? extends GrenadeEntity> getEntityType()
-	{
-		return null;
-	}
+	public abstract EntityType<? extends GrenadeEntity> getEntityType();
+
 
 	public GrenadeBlock(Properties settings)
 	{
@@ -91,10 +87,18 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 		return Shapes.empty();
 	}
 
+	public IntegerProperty getClusterSizeProperty(){
+		return CLUSTER_SIZE_5;
+	}
+
+	public int getMaxClusterSize(){
+		return DEFAULT_MAX_CLUSTER_SIZE;
+	}
+
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
 	{
-		var size = state.getValue(CLUSTER_SIZE);
+		var size = state.getValue(getClusterSizeProperty());
 
 		var shape = switch (size)
 		{
@@ -116,7 +120,7 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	@Override
 	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
 	{
-		int count = state.getValue(CLUSTER_SIZE);
+		int count = state.getValue(getClusterSizeProperty());
 		world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		for (int i = 0; i < count; i++)
 		{
@@ -145,12 +149,12 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	{
 		if (player.getMainHandItem().is(getItem()) && !player.isShiftKeyDown())
 		{
-			if (state.getValue(CLUSTER_SIZE) < MAX_CLUSTER_SIZE)
+			if (state.getValue(getClusterSizeProperty()) < getMaxClusterSize())
 			{
 				if (!player.isCreative())
 					player.getMainHandItem().shrink(1);
 
-				world.setBlockAndUpdate(pos, state.setValue(CLUSTER_SIZE, state.getValue(CLUSTER_SIZE) + 1));
+				world.setBlockAndUpdate(pos, state.setValue(getClusterSizeProperty(), state.getValue(getClusterSizeProperty()) + 1));
 				return InteractionResult.SUCCESS;
 			}
 			else
@@ -161,10 +165,10 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 
 		player.addItem(new ItemStack(getItem()));
 
-		if (state.getValue(CLUSTER_SIZE) == 1)
+		if (state.getValue(getClusterSizeProperty()) == 1)
 			world.destroyBlock(pos, false);
 		else
-			world.setBlockAndUpdate(pos, state.setValue(CLUSTER_SIZE, state.getValue(CLUSTER_SIZE) - 1));
+			world.setBlockAndUpdate(pos, state.setValue(getClusterSizeProperty(), state.getValue(getClusterSizeProperty()) - 1));
 
 		return InteractionResult.SUCCESS;
 	}
@@ -174,9 +178,9 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	{
 		if (entity instanceof GrenadeEntity grenade && entity.getType() == getEntityType())
 		{
-			if (state.getValue(CLUSTER_SIZE) < MAX_CLUSTER_SIZE && !grenade.isPrimed())
+			if (state.getValue(getClusterSizeProperty()) < getMaxClusterSize() && !grenade.isPrimed())
 			{
-				world.setBlockAndUpdate(pos, state.setValue(CLUSTER_SIZE, state.getValue(CLUSTER_SIZE) + 1));
+				world.setBlockAndUpdate(pos, state.setValue(getClusterSizeProperty(), state.getValue(getClusterSizeProperty()) + 1));
 				entity.discard();
 			}
 		}
@@ -199,8 +203,8 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	public void wasExploded(ServerLevel world, BlockPos pos, Explosion explosion)
 	{
 		float power;
-		if (world.getBlockState(pos).hasProperty(CLUSTER_SIZE))
-			power = calculatePower(world.getBlockState(pos).getValue(CLUSTER_SIZE));
+		if (world.getBlockState(pos).hasProperty(getClusterSizeProperty()))
+			power = calculatePower(world.getBlockState(pos).getValue(getClusterSizeProperty()));
 		else
 			power = 5;
 		explode(world, pos, power);
@@ -229,6 +233,6 @@ public class GrenadeBlock extends WaterloggableRotatingBlock
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
 	{
 		super.createBlockStateDefinition(builder);
-		builder.add(CLUSTER_SIZE);
+		builder.add(getClusterSizeProperty());
 	}
 }

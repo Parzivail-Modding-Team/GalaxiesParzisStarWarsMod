@@ -45,7 +45,7 @@ public abstract class GrenadeEntityWithBlock extends GrenadeEntity
 			else if (level().getBlockState(pos.relative(Direction.UP)).isAir())
 			{
 				this.discard();
-				level().setBlockAndUpdate(pos.relative(Direction.UP), getBlock().defaultBlockState().setValue(GrenadeBlock.CLUSTER_SIZE, 1));
+				level().setBlockAndUpdate(pos.relative(Direction.UP), getBlock().defaultBlockState().setValue(GrenadeBlock.CLUSTER_SIZE_5, 1));
 			}
 		}
 		super.tick();
