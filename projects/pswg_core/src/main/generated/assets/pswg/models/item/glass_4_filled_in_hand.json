@@ -98,9 +98,9 @@
         1
       ],
       "translation": [
-        0,
-        0,
-        0
+        8.25,
+        -4.5,
+        2.75
       ]
     },
     "on_shelf": {
@@ -127,14 +127,14 @@
         0
       ],
       "scale": [
-        0.99,
-        0.99,
-        0.99
+        0.75,
+        0.75,
+        0.75
       ],
       "translation": [
-        -7.925,
-        4.75,
-        7.75
+        -5.925,
+        3.25,
+        6
       ]
     },
     "thirdperson_righthand": {
@@ -144,19 +144,19 @@
         0
       ],
       "scale": [
-        0.99,
-        0.99,
-        0.99
+        0.75,
+        0.75,
+        0.75
       ],
       "translation": [
-        7.925,
-        4.75,
-        7.75
+        5.925,
+        3.25,
+        6
       ]
     }
   },
   "gui_light": "side",
   "textures": {
-    "particle": "pswg:ptex/item/3d/glass_4_overlay_in_hand"
+    "particle": "minecraft:missingno"
   }
 }

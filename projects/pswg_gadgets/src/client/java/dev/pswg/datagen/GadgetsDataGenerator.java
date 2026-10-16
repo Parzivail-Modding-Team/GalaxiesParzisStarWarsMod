@@ -3,6 +3,7 @@ package dev.pswg.datagen;
 import dev.pswg.Gadgets;
 import dev.pswg.Galaxies;
 import dev.pswg.autoreg.AutoGenerateUtil;
+import dev.pswg.block.GrenadeBlock;
 import dev.pswg.block.collection.NumberedBlocks;
 import dev.pswg.block.collection.StoneProducts;
 import dev.pswg.container.*;
@@ -23,9 +24,9 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.data.models.model.ModelTemplates;
-import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.item.EmptyModel;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -47,9 +48,11 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -110,12 +113,29 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 						case null, default:
 					}
 				}
+				case GRENADE_BLOCK -> registerGrenadeBlock(block, generator);
 				case JAPOR_LEAVES -> registerJaporLeaves(block, generator);
 				case LOG, LOG_WITH_WOOD -> registerLog(block, dataGenBlock, generator);
 				case LIGHTING_PANEL -> registerLightingPanel(block, generator);
 				case SLAB -> registerVerticalSlab(block, generator);
 				case STAIRS -> registerStairs(block, generator);
 			}
+		}
+
+		public static void registerGrenadeBlock(Block block, BlockModelGenerators generator){
+			var texture = TextureMapping.getBlockTexture(block);
+
+			Identifier blockKey = getBlockKey(block);
+
+			if(block instanceof GrenadeBlock grenadeBlock) {
+
+				generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(grenadeBlock.getClusterSizeProperty()).generate(amount -> {
+					Identifier modelId = blockKey.withPrefix("block/").withSuffix("_" + amount);
+					return createWeightedVariant(modelId);
+				})));
+			}
+			else throw new IllegalArgumentException("Cannot register grenade block model for a non-GrenadeBlock");
+
 		}
 
 		@Override

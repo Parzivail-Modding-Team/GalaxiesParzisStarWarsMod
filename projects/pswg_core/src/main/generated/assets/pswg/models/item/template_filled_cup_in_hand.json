@@ -157,6 +157,6 @@
   },
   "gui_light": "side",
   "textures": {
-    "particle": "#layer1"
+    "particle": "#layer0"
   }
 }

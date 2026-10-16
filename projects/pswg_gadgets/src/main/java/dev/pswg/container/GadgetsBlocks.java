@@ -22,7 +22,7 @@ public class GadgetsBlocks
 		public static final TagKey<Block> INFERNO_DESTROY = TagKey.create(Registries.BLOCK, Gadgets.id("inferno_destroy"));
 	}
 
-	@DataGenBlock(model = DataGenBlockModel.NONE)
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK)
 	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.block(Gadgets.id("thermal_detonator_block"), ThermalDetonatorBlock::new, BlockBehaviour.Properties.of());
 	@DataGenBlock(model = DataGenBlockModel.NONE)
 	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.block(Gadgets.id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, BlockBehaviour.Properties.of());

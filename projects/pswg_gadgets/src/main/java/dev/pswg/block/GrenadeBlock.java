@@ -32,7 +32,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class GrenadeBlock extends WaterloggableRotatingBlock
+public abstract class GrenadeBlock extends WaterloggableBlock
 {
 	public static final IntegerProperty CLUSTER_SIZE_3 = IntegerProperty.create("cluster_size", 1, 3);
 	public static final IntegerProperty CLUSTER_SIZE_4 = IntegerProperty.create("cluster_size", 1, 4);
@@ -108,7 +108,7 @@ public abstract class GrenadeBlock extends WaterloggableRotatingBlock
 			case 2 -> getDoubleShape();
 			default -> getSingleShape();
 		};
-		return VoxelShapeUtil.rotateToFace(shape, state.getValue(FACING));
+		return shape;
 	}
 
 	@Override
