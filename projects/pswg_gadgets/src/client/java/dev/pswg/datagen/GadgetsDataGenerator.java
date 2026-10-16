@@ -285,11 +285,13 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			if (!Objects.equals(dataGenBlock.langOverride(), ""))
 			{
 				translationBuilder.add(block, dataGenBlock.langOverride());
-				translationBuilder.add(block.asItem(), dataGenBlock.langOverride());
+				if(!block.asItem().equals(Blocks.AIR.asItem()))
+					translationBuilder.add(block.asItem(), dataGenBlock.langOverride());
 			}else
 			{
 				translationBuilder.add(block, generateDefaultLang(block.builtInRegistryHolder().key().identifier()));
-				translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().identifier()));
+				if(!block.asItem().equals(Blocks.AIR.asItem()))
+					translationBuilder.add(block.asItem(), generateDefaultLang(block.asItem().builtInRegistryHolder().key().identifier()));
 			}
 		}
 	}
