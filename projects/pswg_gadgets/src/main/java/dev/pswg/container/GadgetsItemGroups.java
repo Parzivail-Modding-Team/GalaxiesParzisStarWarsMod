@@ -4,28 +4,15 @@ import dev.pswg.Gadgets;
 import dev.pswg.datagen.DataGenBlock;
 import dev.pswg.datagen.DataGenItem;
 import dev.pswg.datagen.DataGenItemGroup;
-import dev.pswg.item.ArmorItems;
-import dev.pswg.item.DyedItems;
-import dev.pswg.item.NumberedItems;
-import dev.pswg.autoreg.AutoGenerateUtil;
 import dev.pswg.util.gen.GadgetsGenUtil;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
-import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 public class GadgetsItemGroups
 {
-
-	public static final ResourceKey<CreativeModeTab> DEMOLITIONS_ITEMS_GROUP_KEY = registerGroup("demolitions_items");
-	public static final CreativeModeTab DEMOLITIONS_ITEMS_GROUP = FabricCreativeModeTab.builder().icon(() -> new ItemStack(GadgetsItems.THERMAL_DETONATOR_ITEM)).title(Component.translatable("pswg_gadgets.demolitions_items_group")).build();
 
 	private static ResourceKey<CreativeModeTab> registerGroup(String id)
 	{
@@ -34,9 +21,11 @@ public class GadgetsItemGroups
 
 	public static void register()
 	{
-		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DEMOLITIONS_ITEMS_GROUP_KEY, DEMOLITIONS_ITEMS_GROUP);
-
-		CreativeModeTabEvents.modifyOutputEvent(DEMOLITIONS_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.DEMOLITIONS_GADGETS));
+		CreativeModeTabEvents.modifyOutputEvent(GalaxiesItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.CONSTRUCTION_BLOCK));
+		CreativeModeTabEvents.modifyOutputEvent(GalaxiesItemGroups.WORLDGEN_BLOCK_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.WORLD_GEN_BLOCK));
+		CreativeModeTabEvents.modifyOutputEvent(GalaxiesItemGroups.GENERIC_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.ITEMS));
+		CreativeModeTabEvents.modifyOutputEvent(GalaxiesItemGroups.FOOD_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.FOOD));
+		CreativeModeTabEvents.modifyOutputEvent(GalaxiesItemGroups.GEAR_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.GEAR));
 	}
 
 	public static void addItems(FabricCreativeModeTabOutput itemGroup, DataGenItemGroup group)
@@ -45,10 +34,7 @@ public class GadgetsItemGroups
 			if (dataGenItem.itemGroup() == group)
 				itemGroup.accept(item);
 		});
-	}
 
-	public static void addBlocks(FabricCreativeModeTabOutput itemGroup, DataGenItemGroup group)
-	{
 		GadgetsGenUtil.consumeAnnotatedGadgetsBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 			if(dataGenBlock.itemGroup() == group)
 				itemGroup.accept(block);

@@ -253,7 +253,8 @@ public class GalaxiesDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.CONSTRUCTION_BLOCK_GROUP_KEY, "PSWG - Construction Blocks");
 			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.WORLDGEN_BLOCK_GROUP_KEY, "PSWG - Worldgen Blocks");
 			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.GENERIC_ITEMS_GROUP_KEY, "PSWG - Items");
-			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.FOOD_ITEMS_GROUP_KEY, "PSWG - Food");
+			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.FOOD_GROUP_KEY, "PSWG - Food");
+			translationBuilder.addCreativeModeTab(GalaxiesItemGroups.GEAR_GROUP_KEY, "PSWG - Gear");
 
 			//Tags
 			translationBuilder.add(GalaxiesBlocks.Tags.BOUNCY, "Bouncy");

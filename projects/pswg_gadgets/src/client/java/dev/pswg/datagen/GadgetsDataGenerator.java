@@ -267,9 +267,6 @@ public class GadgetsDataGenerator implements DataGeneratorEntrypoint
 			translationBuilder.add("subtitle.pswg_gadgets.thermaldetonator.explode", "Explosion");
 
 			translationBuilder.add("effect.pswg_gadgets.intoxicated", "Intoxicated");
-
-			translationBuilder.addCreativeModeTab(GadgetsItemGroups.DEMOLITIONS_ITEMS_GROUP_KEY, "PSWG - Demolitions Gadgets");
-
 		}
 
 		public void addDatagenItem(TranslationBuilder translationBuilder, Item item, DataGenItem dataGenItem)

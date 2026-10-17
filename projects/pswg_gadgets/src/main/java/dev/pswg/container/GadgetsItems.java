@@ -86,40 +86,40 @@ public class GadgetsItems
 
 	/// GRENADE
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
-	@DataGenItem(langOverride = "CLS-A Thermal Detonator", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = DatagenItemModel.NONE)
+	@DataGenItem(langOverride = "CLS-A Thermal Detonator", itemGroup = DataGenItemGroup.GEAR, model = DatagenItemModel.NONE)
 	public static final ThermalDetonatorItem THERMAL_DETONATOR_ITEM = Registrar.item(Gadgets.id("thermal_detonator"), ThermalDetonatorItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
-	@DataGenItem(langOverride = "C-25 Fragmentation Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = DatagenItemModel.NONE)
+	@DataGenItem(langOverride = "C-25 Fragmentation Grenade", itemGroup = DataGenItemGroup.GEAR, model = DatagenItemModel.NONE)
 	public static final FragmentationGrenadeItem FRAGMENTATION_GRENADE_ITEM = Registrar.item(Gadgets.id("fragmentation_grenade"), FragmentationGrenadeItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
-	@DataGenItem(wiz = true, langOverride = "FEX-M3 Nerve Gas Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = DatagenItemModel.NONE)
+	@DataGenItem(wiz = true, langOverride = "FEX-M3 Nerve Gas Grenade", itemGroup = DataGenItemGroup.GEAR, model = DatagenItemModel.NONE)
 	public static final NerveGasGrenadeItem NERVE_GAS_GRENADE_ITEM = Registrar.item(Gadgets.id("nerve_gas_grenade"), NerveGasGrenadeItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
-	@DataGenItem(wiz = true, langOverride = "NACHT-5 Smoke Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = DatagenItemModel.NONE)
+	@DataGenItem(wiz = true, langOverride = "NACHT-5 Smoke Grenade", itemGroup = DataGenItemGroup.GEAR, model = DatagenItemModel.NONE)
 	public static final SmokeSignalGrenadeItem SMOKE_SIGNAL_GRENADE_ITEM = Registrar.item(Gadgets.id("smoke_signal_grenade"), SmokeSignalGrenadeItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
-	@DataGenItem(wiz = true, langOverride = "DTA-9 Impact Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = DatagenItemModel.NONE)
+	@DataGenItem(wiz = true, langOverride = "DTA-9 Impact Grenade", itemGroup = DataGenItemGroup.GEAR, model = DatagenItemModel.NONE)
 	public static final ImpactGrenadeItem IMPACT_GRENADE_ITEM = Registrar.item(Gadgets.id("impact_grenade"), ImpactGrenadeItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.GRENADE)
-	@DataGenItem(wiz = true, langOverride = "D-24 Inferno Grenade", itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = DatagenItemModel.NONE)
+	@DataGenItem(wiz = true, langOverride = "D-24 Inferno Grenade", itemGroup = DataGenItemGroup.GEAR, model = DatagenItemModel.NONE)
 	public static final InfernoGrenadeItem INFERNO_GRENADE_ITEM = Registrar.item(Gadgets.id("inferno_grenade"), InfernoGrenadeItem::new, new Item.Properties());
 
 	/// MINES
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.MINE)
-	@DataGenItem(itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = DatagenItemModel.NONE)
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR, model = DatagenItemModel.NONE)
 	public static final PressureMineItem PRESSURE_MINE_ITEM = Registrar.item(Gadgets.id("pressure_mine"), PressureMineItem::new, new Item.Properties());
 	@GadgetsItemTag(itemTags = DataGenGadgetsItemTag.MINE)
-	@DataGenItem(itemGroup = DataGenItemGroup.DEMOLITIONS_GADGETS, model = DatagenItemModel.NONE)
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR, model = DatagenItemModel.NONE)
 	public static final TripwireMineItem TRIPWIRE_MINE_ITEM = Registrar.item(Gadgets.id("tripwire_mine"), TripwireMineItem::new, new Item.Properties());
 
 	///  SCRAPPING TOOLS
-	@DataGenItem(wiz = true, langOverride = "F-187 Fusioncutter")
+	@DataGenItem(wiz = true, langOverride = "F-187 Fusioncutter", itemGroup = DataGenItemGroup.GEAR)
 	public static final Item CUTTER_ITEM = Registrar.item(Gadgets.id("cutter"), LaserCutterItem::new, new Item.Properties().durability(100));
-	@DataGenItem(wiz = true, langOverride = "FastTurn-3 Hydrospanner")
+	@DataGenItem(wiz = true, langOverride = "FastTurn-3 Hydrospanner", itemGroup = DataGenItemGroup.GEAR)
 	public static final Item SPANNER_ITEM = registerSimpleItem("spanner", new Item.Properties().durability(100));
-	@DataGenItem(wiz = true, langOverride = "ReliaCharge Power Calibrator")
+	@DataGenItem(wiz = true, langOverride = "ReliaCharge Power Calibrator", itemGroup = DataGenItemGroup.GEAR)
 	public static final Item CALIBRATOR_ITEM = registerSimpleItem("calibrator", new Item.Properties().durability(100));
-	@DataGenItem(langOverride = "Extractor", model = DatagenItemModel.NONE)
+	@DataGenItem(langOverride = "Extractor", model = DatagenItemModel.NONE, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item DRILL_ITEM = Registrar.item(Gadgets.id("extraction_drill"), DrillItem::new, new Item.Properties().durability(100)
 	                                                                                                                          .component(Components.DRILL_EXTRACTOR_PROPERTIES, new DrillProperties(
 			                                                                                                                          DrillComponents.BASE_EXTRACTOR,
