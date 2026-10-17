@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "cluster_size=1": {
+      "model": "pswg_gadgets:block/inferno_grenade_block_1"
+    },
+    "cluster_size=2": {
+      "model": "pswg_gadgets:block/inferno_grenade_block_2"
+    },
+    "cluster_size=3": {
+      "model": "pswg_gadgets:block/inferno_grenade_block_3"
+    }
+  }
+}

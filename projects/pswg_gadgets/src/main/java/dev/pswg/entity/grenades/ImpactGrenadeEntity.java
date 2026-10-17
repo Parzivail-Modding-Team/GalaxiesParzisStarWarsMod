@@ -1,5 +1,7 @@
 package dev.pswg.entity.grenades;
 
+import dev.pswg.block.GrenadeBlock;
+import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
 import dev.pswg.container.GalaxiesParticleTypes;
@@ -14,12 +16,18 @@ import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ImpactGrenadeEntity extends GrenadeEntity
+public class ImpactGrenadeEntity extends GrenadeEntityWithBlock
 {
 	public ImpactGrenadeEntity(EntityType<? extends ThrowableProjectile> entityType, Level world)
 	{
 		super(entityType, world, CollisionType.BOUNCE);
 		setExplosionPower(1.5f);
+	}
+
+	@Override
+	public GrenadeBlock getBlock()
+	{
+		return GadgetsBlocks.IMPACT_GRENADE_BLOCK;
 	}
 
 	@Override

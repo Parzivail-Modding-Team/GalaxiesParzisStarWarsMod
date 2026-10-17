@@ -1,6 +1,7 @@
 package dev.pswg.entity.grenades;
 
 import com.google.common.collect.ConcurrentHashMultiset;
+import dev.pswg.block.GrenadeBlock;
 import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.GadgetsParticleTypes;
@@ -29,7 +30,7 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfernoGrenadeEntity extends GrenadeEntity
+public class InfernoGrenadeEntity extends GrenadeEntityWithBlock
 {
 	public ConcurrentHashMultiset<BlockPos> burntBlocks;
 	public boolean detonated = false;
@@ -39,11 +40,18 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 	public final float MAX_DISTANCE = 8;
 	public final float MAX_DETONATION_TICKS = 20;
 	public final float MAX_FIRE_WAVE_TICKS = 15;
+	private final int DEFAULT_EXPLOSION_POWER = 4;
 
 	public InfernoGrenadeEntity(EntityType<? extends ThrowableProjectile> entityType, Level world)
 	{
 		super(entityType, world, CollisionType.BOUNCE);
 		burntBlocks = ConcurrentHashMultiset.create();
+	}
+
+	@Override
+	public GrenadeBlock getBlock()
+	{
+		return GadgetsBlocks.INFERNO_GRENADE_BLOCK;
 	}
 
 	@Override
@@ -66,7 +74,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 				createSmoke(pos, serverWorld);
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
-		else if ((state.is(BlockTags.DIRT) || state.is(BlockTags.GRASS_BLOCKS))&& pos.closerToCenterThan(position(), INNER_AREA_DISTANCE))
+		else if ((state.is(BlockTags.DIRT) || state.is(BlockTags.GRASS_BLOCKS))&& pos.closerToCenterThan(position(), INNER_AREA_DISTANCE * getExplosionPower() / DEFAULT_EXPLOSION_POWER))
 		{
 			world.setBlockAndUpdate(pos, GadgetsBlocks.FERTILE_DIRT_BLOCK.defaultBlockState());
 		}
@@ -92,7 +100,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 	{
 		if (level() instanceof ServerLevel serverWorld)
 		{
-			SimpleParticleType scorchParticleType = pos.closerToCenterThan(position(), INNER_AREA_DISTANCE) ? GadgetsParticleTypes.DENSE_INFERNO_SCORCH_PARTICLE : GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE;
+			SimpleParticleType scorchParticleType = pos.closerToCenterThan(position(), INNER_AREA_DISTANCE * getExplosionPower() / DEFAULT_EXPLOSION_POWER) ? GadgetsParticleTypes.DENSE_INFERNO_SCORCH_PARTICLE : GadgetsParticleTypes.INFERNO_SCORCH_PARTICLE;
 			createScorchParticles(serverWorld, scorchParticleType, pos.getX(), pos.getY(), pos.getZ(), unitVec.x, unitVec.y, unitVec.z);
 		}
 	}
@@ -152,7 +160,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 		}
 		if (detonationTicks == 12)
 		{
-			for (LivingEntity entity : world.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(MAX_DISTANCE), livingEntity -> livingEntity.position().distanceTo(position()) <= MAX_DISTANCE))
+			for (LivingEntity entity : world.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(MAX_DISTANCE * getExplosionPower() / DEFAULT_EXPLOSION_POWER), livingEntity -> livingEntity.position().distanceTo(position()) <= MAX_DISTANCE))
 			{
 				if (!entity.fireImmune())
 				{
@@ -171,7 +179,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 				for (Direction dir : Direction.values())
 				{
 					var offsetPos = pos.relative(dir);
-					if (!burntBlocks.contains(offsetPos) && offsetPos.closerThan(blockPosition(), MAX_DISTANCE))
+					if (!burntBlocks.contains(offsetPos) && offsetPos.closerThan(blockPosition(), MAX_DISTANCE * getExplosionPower() / DEFAULT_EXPLOSION_POWER))
 					{
 						List<Direction> airSideList = new ArrayList<>(6);
 						for (Direction dir2 : Direction.values())
@@ -205,7 +213,7 @@ public class InfernoGrenadeEntity extends GrenadeEntity
 				}
 			}
 		}
-		var flameWaveList = burntBlocks.stream().filter(pos -> pos.closerToCenterThan(position(), (float)firewaveTicks / MAX_FIRE_WAVE_TICKS * MAX_DISTANCE + 1) && !pos.closerToCenterThan(position(), (float)firewaveTicks / MAX_FIRE_WAVE_TICKS * MAX_DISTANCE)).toList();
+		var flameWaveList = burntBlocks.stream().filter(pos -> pos.closerToCenterThan(position(), (float)firewaveTicks / MAX_FIRE_WAVE_TICKS * MAX_DISTANCE + 1) && !pos.closerToCenterThan(position(), (float)firewaveTicks / MAX_FIRE_WAVE_TICKS * MAX_DISTANCE * getExplosionPower() / DEFAULT_EXPLOSION_POWER)).toList();
 		for (BlockPos pos : flameWaveList)
 		{
 			var state = world.getBlockState(pos);

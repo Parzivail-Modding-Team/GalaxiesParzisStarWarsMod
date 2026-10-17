@@ -27,6 +27,10 @@ public class GadgetsBlocks
 	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
 	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, BlockBehaviour.Properties.of());
 	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final ImpactGrenadeBlock IMPACT_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("impact_grenade_block"), ImpactGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final InfernoGrenadeBlock INFERNO_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("inferno_grenade_block"), InfernoGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
 	public static final SmokeSignalGrenadeBlock SMOKE_SIGNAL_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("smoke_signal_grenade_block"), SmokeSignalGrenadeBlock::new, BlockBehaviour.Properties.of());
 
 	@DataGenBlock(itemGroup = DataGenItemGroup.NONE)
