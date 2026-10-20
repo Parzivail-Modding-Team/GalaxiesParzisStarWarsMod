@@ -102,6 +102,22 @@
 	},
 	"attachments": {
 		"options": {
+			"pswg_blasters:blurrg_1120/scatter": {
+				"translationKey": "attachment.pswg_blasters.blurrg_1120.scatter",
+				"slots": ["pswg_blasters:internal_slot"],
+				"category": "pswg_blasters:internal_ordnance_config",
+				"grantedModes": [
+					{"id": "pswg_blasters:scatter_energy", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:scatter_energy"}
+				]
+			},
+			"pswg_blasters:blurrg_1120/explosive": {
+				"translationKey": "attachment.pswg_blasters.blurrg_1120.explosive",
+				"slots": ["pswg_blasters:barrel_slot"],
+				"category": "pswg_blasters:barrel",
+				"grantedModes": [
+					{"id": "pswg_blasters:explosive", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:explosive_energy"}
+				]
+			},
 			"pswg_blasters:blurrg_1120/high_power": {
 				"translationKey": "attachment.pswg_blasters.blurrg_1120.high_power",
 				"slots": ["pswg_blasters:internal_slot"],

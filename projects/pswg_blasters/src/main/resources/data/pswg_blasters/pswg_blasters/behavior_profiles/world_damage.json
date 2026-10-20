@@ -1,0 +1,8 @@
+{
+	"delivery": "hitscan",
+	"damageType": "pswg_blasters:direct_blaster",
+	"activateBlocks": true,
+	"effects": [
+		{"type": "pswg_blasters:world_damage", "when": "on_block_hit", "blocks": "pswg_blasters:fragile_blocks"}
+	]
+}

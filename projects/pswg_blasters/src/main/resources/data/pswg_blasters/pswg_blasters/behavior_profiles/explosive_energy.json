@@ -1,0 +1,8 @@
+{
+	"delivery": "projectile",
+	"damageType": "pswg_blasters:direct_blaster",
+	"flight": {"speed": 2, "gravity": 0, "fuseTicks": 0, "reflectable": false},
+	"effects": [
+		{"type": "pswg_blasters:explosion", "when": "on_detonate", "radius": 2, "damageEntities": true, "knockback": 1, "blockFluids": true}
+	]
+}

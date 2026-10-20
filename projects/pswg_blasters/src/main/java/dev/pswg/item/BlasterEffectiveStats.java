@@ -87,6 +87,7 @@ public record BlasterEffectiveStats(BlasterStats stats, float zoom, float recoil
 		}
 
 		var effective = base
+				.withDamage(scaled(base.damage(), loadout.selectedMode().damageMultiplier(), Float.MAX_VALUE))
 				.withAutomaticRepeatDelay((int)Math.clamp(Math.ceil(base.automaticRepeatDelay() / fireRate), 1, Integer.MAX_VALUE))
 				.withDamageRange(scaled(base.damageRange(), damageRange, base.range()))
 				.withHeat(new BlasterStats.HeatDefinition(

@@ -1,0 +1,5 @@
+{
+	"delivery": "projectile",
+	"damageType": "pswg_blasters:direct_blaster",
+	"scatter": {"pelletCount": 8, "damageMultiplier": 0.25, "coneDegrees": 8}
+}

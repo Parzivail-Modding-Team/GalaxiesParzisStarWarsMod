@@ -1,0 +1,13 @@
+{
+	"delivery": "projectile",
+	"damageType": "pswg_blasters:direct_blaster",
+	"muzzles": {
+		"sockets": ["left", "right"],
+		"selection": "all",
+		"costPolicy": "per_trigger",
+		"offsets": {
+			"left": {"x": -0.15, "y": -0.08, "z": 0.5},
+			"right": {"x": 0.15, "y": -0.08, "z": 0.5}
+		}
+	}
+}

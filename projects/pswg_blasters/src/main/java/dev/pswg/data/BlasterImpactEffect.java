@@ -5,6 +5,8 @@ import dev.pswg.Blasters;
 import dev.pswg.codecgenerator.CodecRange;
 import dev.pswg.codecgenerator.GenerateCodec;
 import dev.pswg.codecgenerator.GenerateEnumCodec;
+import dev.pswg.entity.BlasterEffectContext;
+import dev.pswg.entity.BlasterImpacts;
 import dev.pswg.generated.codecs.IBlasterImpactEffectCodec;
 import dev.pswg.generated.codecs.IImpactKindCodec;
 import net.minecraft.resources.Identifier;
@@ -47,8 +49,9 @@ public record BlasterImpactEffect(
 	{
 		BlasterBehaviorProfile.registerEffect(TYPE, MAP_CODEC.validate(value ->
 				                                                               value.when() == BlasterBehaviorProfile.EffectPhase.ON_ENTITY_HIT
+				                                                               || value.kind() == ImpactKind.ION && value.when() == BlasterBehaviorProfile.EffectPhase.ON_BLOCK_HIT
 				                                                               ? DataResult.success(value)
-				                                                               : DataResult.error(() -> "Contact effects require on_entity_hit")
+				                                                               : DataResult.error(() -> "Contact effects require an entity hit; ion also permits a block hit")
 		));
 	}
 
@@ -59,5 +62,14 @@ public record BlasterImpactEffect(
 	public Identifier type()
 	{
 		return TYPE;
+	}
+
+	/**
+	 * Applies one effect.
+	 */
+	@Override
+	public void apply(BlasterEffectContext context)
+	{
+		BlasterImpacts.contact(context, this);
 	}
 }

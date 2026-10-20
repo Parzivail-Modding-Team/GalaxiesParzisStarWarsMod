@@ -3,6 +3,7 @@
 	"package": "dev.pswg.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"blaster.MobMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

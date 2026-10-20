@@ -1,0 +1,18 @@
+{
+	"delivery": "pulse",
+	"damageType": "pswg_blasters:direct_blaster",
+	"allowAds": false,
+	"effects": [
+		{
+			"type": "pswg_blasters:area",
+			"when": "on_fire",
+			"kind": "repulsor",
+			"range": 8,
+			"coneDegrees": 30,
+			"maximumTargets": 16,
+			"durationTicks": 1,
+			"strength": 1.4,
+			"blockFluids": true
+		}
+	]
+}

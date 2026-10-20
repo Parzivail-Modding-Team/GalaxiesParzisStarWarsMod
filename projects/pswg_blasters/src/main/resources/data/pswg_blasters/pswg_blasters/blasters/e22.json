@@ -45,7 +45,7 @@
 					"trigger": {
 						"type": "auto"
 					},
-					"behaviorProfile": "pswg_blasters:energy"
+					"behaviorProfile": "pswg_blasters:e22_dual"
 				}
 			]
 		},
@@ -87,13 +87,14 @@
 				"grantedModes": [
 					{
 						"id": "pswg_blasters:burst",
+						"damageMultiplier": 1.5,
 						"trigger": {
 							"type": "burst",
 							"rounds": 2,
 							"intervalTicks": 4,
 							"interburstCooldownTicks": 6
 						},
-						"behaviorProfile": "pswg_blasters:energy"
+						"behaviorProfile": "pswg_blasters:e22_dual"
 					}
 				]
 			},

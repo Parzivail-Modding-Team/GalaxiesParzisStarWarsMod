@@ -1,0 +1,17 @@
+{
+	"delivery": "pulse",
+	"damageType": "pswg_blasters:direct_blaster",
+	"effects": [
+		{
+			"type": "pswg_blasters:area",
+			"when": "on_fire",
+			"kind": "ion",
+			"range": 12,
+			"coneDegrees": 20,
+			"maximumTargets": 16,
+			"durationTicks": 80,
+			"strength": 0,
+			"blockFluids": true
+		}
+	]
+}

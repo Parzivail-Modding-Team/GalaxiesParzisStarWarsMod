@@ -3,8 +3,9 @@ package dev.pswg.interaction;
 import dev.pswg.Blasters;
 import dev.pswg.data.BlasterData;
 import dev.pswg.data.BlasterDatapackDefinition;
-import dev.pswg.data.BlasterStats;
 import dev.pswg.data.BlasterStanceProfile;
+import dev.pswg.data.BlasterStats;
+import dev.pswg.entity.BlasterStatusEffects;
 import dev.pswg.item.BlasterAmmo;
 import dev.pswg.item.BlasterItem;
 import dev.pswg.item.BlasterLoadout;
@@ -22,9 +23,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.EnumMap;
 import java.util.Optional;
@@ -266,6 +267,11 @@ public final class BlasterActions
 	 */
 	public static boolean canFire(Player player, InteractionHand hand)
 	{
+		if (BlasterStatusEffects.disabled(player))
+		{
+			return false;
+		}
+
 		if (!BlasterWield.canWield(player, hand))
 			return false;
 
@@ -297,7 +303,20 @@ public final class BlasterActions
 	 */
 	public static boolean canAim(Player player, InteractionHand hand)
 	{
-		return BlasterWield.aimEligible(player, hand) && canFire(player, hand);
+		return BlasterWield.aimEligible(player, hand) && modeAllowsAim(player, hand) && canFire(player, hand);
+	}
+
+	/**
+	 * Reads the selected behavior's ADS policy on both sides.
+	 */
+	private static boolean modeAllowsAim(Player player, InteractionHand hand)
+	{
+		var loadout = BlasterItem.getLoadout(player.level(), player.getItemInHand(hand));
+		if (loadout.isEmpty())
+			return false;
+
+		var profile = dev.pswg.data.BlasterData.get(player.level()).behaviorProfiles().get(loadout.orElseThrow().selectedMode().behaviorProfile());
+		return profile != null && profile.allowAds() && !BlasterStatusEffects.disabled(player);
 	}
 
 	/**
@@ -414,7 +433,7 @@ public final class BlasterActions
 			BlasterItem.setDeployed(player.level(), stack, false);
 
 		if (BlasterItem.getState(stack).isAiming()
-		    && (!BlasterWield.aimEligible(player, hand) || state._reload != null || state._equipped == null || time(player) < state._equipped._until))
+		    && (!BlasterWield.aimEligible(player, hand) || !modeAllowsAim(player, hand) || state._reload != null || state._equipped == null || time(player) < state._equipped._until))
 			BlasterItem.setAiming(player.level(), stack, false);
 
 		if (state._equipped != null && state._equipped.matchesSource(player) && BlasterWield.canWield(player, hand))

@@ -46,6 +46,11 @@
 						"type": "semi"
 					},
 					"behaviorProfile": "pswg_blasters:energy"
+				},
+				{
+					"id": "pswg_blasters:micro_grenade",
+					"trigger": {"type": "semi"},
+					"behaviorProfile": "pswg_blasters:micro_grenade"
 				}
 			]
 		},
@@ -77,5 +82,16 @@
 			}
 		]
 	},
-	"attachments": {}
+	"attachments": {
+		"options": {
+			"pswg_blasters:relby_v10/charge": {
+				"translationKey": "attachment.pswg_blasters.relby_v10.charge",
+				"slots": ["pswg_blasters:internal_slot"],
+				"category": "pswg_blasters:internal_ordnance_config",
+				"grantedModes": [
+					{"id": "pswg_blasters:charge", "trigger": {"type": "charge", "minimumChargeTicks": 5, "maximumChargeTicks": 40, "releasePolicy": "fire_on_release"}, "behaviorProfile": "pswg_blasters:charged_energy"}
+				]
+			}
+		}
+	}
 }

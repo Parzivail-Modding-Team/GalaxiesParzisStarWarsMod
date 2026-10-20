@@ -76,5 +76,16 @@
 			}
 		]
 	},
-	"attachments": {}
+	"attachments": {
+		"options": {
+			"pswg_blasters:tl50/concussion": {
+				"translationKey": "attachment.pswg_blasters.tl50.concussion",
+				"slots": ["pswg_blasters:internal_slot"],
+				"category": "pswg_blasters:internal_ordnance_config",
+				"grantedModes": [
+					{"id": "pswg_blasters:concussion", "trigger": {"type": "charge", "minimumChargeTicks": 5, "maximumChargeTicks": 40, "releasePolicy": "fire_on_release"}, "behaviorProfile": "pswg_blasters:concussion"}
+				]
+			}
+		}
+	}
 }

@@ -4,9 +4,10 @@ import dev.pswg.api.GalaxiesAddon;
 import dev.pswg.configuration.BlastersConfig;
 import dev.pswg.configuration.IConfigContainer;
 import dev.pswg.configuration.MemoryConfigContainer;
-import dev.pswg.data.BlasterData;
-import dev.pswg.data.BlasterImpactEffect;
+import dev.pswg.data.*;
 import dev.pswg.entity.BlasterBoltEntity;
+import dev.pswg.entity.BlasterReflection;
+import dev.pswg.entity.BlasterStatusEffects;
 import dev.pswg.interaction.BlasterActions;
 import dev.pswg.interaction.BlasterWield;
 import dev.pswg.item.BlasterItem;
@@ -101,6 +102,11 @@ public final class Blasters implements GalaxiesAddon
 	public void onGalaxiesReady()
 	{
 		BlasterImpactEffect.register();
+		BlasterAreaEffect.register();
+		BlasterExplosionEffect.register();
+		BlasterWorldEffect.register();
+		BlasterStatusEffects.register();
+		BlasterReflection.register();
 		BlasterData.register();
 		BlasterActions.register();
 		BlasterWield.register();

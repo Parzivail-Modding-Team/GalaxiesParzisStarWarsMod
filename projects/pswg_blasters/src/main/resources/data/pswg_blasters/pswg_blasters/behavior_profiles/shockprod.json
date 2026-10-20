@@ -1,0 +1,18 @@
+{
+	"delivery": "pulse",
+	"damageType": "pswg_blasters:direct_blaster",
+	"allowAds": false,
+	"effects": [
+		{
+			"type": "pswg_blasters:area",
+			"when": "on_fire",
+			"kind": "shock",
+			"range": 2,
+			"coneDegrees": 12,
+			"maximumTargets": 1,
+			"durationTicks": 20,
+			"strength": 0,
+			"blockFluids": true
+		}
+	]
+}

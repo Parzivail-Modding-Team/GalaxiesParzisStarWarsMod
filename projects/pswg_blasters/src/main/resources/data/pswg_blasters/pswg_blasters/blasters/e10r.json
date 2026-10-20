@@ -79,9 +79,17 @@
 	"attachments": {
 		"defaults": {
 			"pswg_blasters:stock_slot": "pswg_blasters:e10/stock",
-			"pswg_blasters:scope_slot": "pswg_blasters:e10/range_scope"
+			"pswg_blasters:barrel_slot": "pswg_blasters:e10/range_scope"
 		},
 		"options": {
+			"pswg_blasters:e10/shockprod": {
+				"translationKey": "attachment.pswg_blasters.e10.shockprod",
+				"slots": ["pswg_blasters:barrel_slot"],
+				"category": "pswg_blasters:barrel",
+				"grantedModes": [
+					{"id": "pswg_blasters:shockprod", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:shockprod"}
+				]
+			},
 			"pswg_blasters:e10/stock": {
 				"translationKey": "attachment.pswg_blasters.e10.stock",
 				"slots": [
@@ -101,7 +109,7 @@
 			"pswg_blasters:e10/range_scope": {
 				"translationKey": "attachment.pswg_blasters.e10.range_scope",
 				"slots": [
-					"pswg_blasters:scope_slot"
+					"pswg_blasters:barrel_slot"
 				],
 				"category": "pswg_blasters:scope",
 				"modifiers": [

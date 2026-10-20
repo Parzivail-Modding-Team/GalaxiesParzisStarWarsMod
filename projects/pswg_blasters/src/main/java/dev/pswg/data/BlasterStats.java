@@ -459,12 +459,18 @@ public record BlasterStats(
 
 	/**
 	 * One trigger choice and referenced behavior profile.
+	 *
+	 * @param id               Stable mode ID.
+	 * @param trigger          Supported firing policy.
+	 * @param behaviorProfile  Delivery and effect profile ID.
+	 * @param damageMultiplier Base damage scale used by the shared evaluator.
 	 */
 	@GenerateCodec(strict = true)
 	public record Mode(
 			Identifier id,
 			@SelfCodec Trigger trigger,
-			Identifier behaviorProfile
+			Identifier behaviorProfile,
+			@CodecDefault("1.0f") @CodecRange(min = 0) float damageMultiplier
 	) implements IModeCodec
 	{
 	}

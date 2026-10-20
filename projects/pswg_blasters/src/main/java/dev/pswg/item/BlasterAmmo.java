@@ -67,16 +67,28 @@ public final class BlasterAmmo
 	 */
 	public static boolean canConsumeShot(Player player, ItemStack stack, BlasterStats.Ammo ammo)
 	{
+		return canConsumeShots(player, stack, ammo, 1);
+	}
+
+	/**
+	 * Checks the complete muzzle cost before changing the weapon or inventory.
+	 */
+	public static boolean canConsumeShots(Player player, ItemStack stack, BlasterStats.Ammo ammo, int count)
+	{
+		if (count < 1 || count > 8)
+			return false;
+
 		if (player.isCreative())
 			return true;
 
 		return switch (ammo.feed())
 		{
-			case BlasterStats.MagazineFeed ignored -> BlasterItem.getLoadedRounds(stack) > 0;
-			case BlasterStats.ChargeStoreFeed ignored -> BlasterItem.getLoadedCharge(stack).map(StoredCharge::current).orElse(0)
-			                                          >= ((BlasterStats.ComponentChargeConsumption)ammo.consumption()).unitsPerRound();
-			case BlasterStats.PerShotFeed ignored -> prepare(player.getInventory(), stack, ammo, 1)
-					.map(transfer -> transfer.matches(player.getInventory())).orElse(false);
+			case BlasterStats.MagazineFeed ignored -> BlasterItem.getLoadedRounds(stack) >= count;
+			case BlasterStats.ChargeStoreFeed ignored ->
+					BlasterItem.getLoadedCharge(stack).map(StoredCharge::current).orElse(0)
+					>= (long)count * ((BlasterStats.ComponentChargeConsumption)ammo.consumption()).unitsPerRound();
+			case BlasterStats.PerShotFeed ignored -> prepare(player.getInventory(), stack, ammo, count)
+					.map(transfer -> transfer.quantity() == count && transfer.matches(player.getInventory())).orElse(false);
 		};
 	}
 
@@ -99,31 +111,54 @@ public final class BlasterAmmo
 			boolean allLoadedCharge
 	)
 	{
+		return consumeShots(level, player, stack, ammo, 1, allLoadedCharge);
+	}
+
+	/**
+	 * Debits the complete muzzle cost as one transaction. Rejection spends nothing.
+	 */
+	public static boolean consumeShots(ServerLevel level, Player player, ItemStack stack, BlasterStats.Ammo ammo, int count, boolean allLoadedCharge)
+	{
 		if (allLoadedCharge && !(ammo.feed() instanceof BlasterStats.ChargeStoreFeed))
+		{
 			return false;
+		}
+
+		if (!canConsumeShots(player, stack, ammo, count) || allLoadedCharge && count != 1)
+		{
+			return false;
+		}
 
 		if (player.isCreative())
-			return true;
-
-		return switch (ammo.feed())
 		{
-			case BlasterStats.MagazineFeed ignored -> BlasterItem.getLoadedRounds(stack) > 0
-			                                          && BlasterItem.setLoadedRounds(level, stack, BlasterItem.getLoadedRounds(stack) - 1);
+			return true;
+		}
+
+		if (switch (ammo.feed())
+		{
+			case BlasterStats.MagazineFeed ignored ->
+					BlasterItem.setLoadedRounds(level, stack, BlasterItem.getLoadedRounds(stack) - count);
 			case BlasterStats.ChargeStoreFeed ignored ->
 			{
-				var units = ((BlasterStats.ComponentChargeConsumption)ammo.consumption()).unitsPerRound();
+				var units = (long)count * ((BlasterStats.ComponentChargeConsumption)ammo.consumption()).unitsPerRound();
 				var current = BlasterItem.getLoadedCharge(stack).map(StoredCharge::current).orElse(0);
-				yield current >= units && BlasterItem.setLoadedCharge(level, stack, allLoadedCharge ? 0 : current - units);
+				yield BlasterItem.setLoadedCharge(level, stack, allLoadedCharge ? 0 : (int)(current - units));
 			}
 			case BlasterStats.PerShotFeed ignored ->
 			{
-				var transfer = prepare(player.getInventory(), stack, ammo, 1);
-				if (transfer.isEmpty() || !transfer.orElseThrow().matches(player.getInventory()))
+				var transfer = prepare(player.getInventory(), stack, ammo, count);
+
+				if (transfer.isEmpty() || transfer.orElseThrow().quantity() != count || !transfer.orElseThrow().matches(player.getInventory()))
 					yield false;
+
 				transfer.orElseThrow().apply(player.getInventory());
+
 				yield true;
 			}
-		};
+		})
+			return true;
+		else
+			return false;
 	}
 
 	/**

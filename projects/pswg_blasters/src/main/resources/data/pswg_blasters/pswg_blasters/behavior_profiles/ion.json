@@ -7,6 +7,12 @@
 			"when": "on_entity_hit",
 			"kind": "ion",
 			"durationTicks": 100
+		},
+		{
+			"type": "pswg_blasters:contact",
+			"when": "on_block_hit",
+			"kind": "ion",
+			"durationTicks": 100
 		}
 	]
 }

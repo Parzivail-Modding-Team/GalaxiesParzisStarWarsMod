@@ -81,6 +81,22 @@
 			"pswg_blasters:stock_slot": "pswg_blasters:e10/stock"
 		},
 		"options": {
+			"pswg_blasters:e10/shockprod": {
+				"translationKey": "attachment.pswg_blasters.e10.shockprod",
+				"slots": ["pswg_blasters:barrel_slot"],
+				"category": "pswg_blasters:barrel",
+				"grantedModes": [
+					{"id": "pswg_blasters:shockprod", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:shockprod"}
+				]
+			},
+			"pswg_blasters:e10/micro_grenade": {
+				"translationKey": "attachment.pswg_blasters.e10.micro_grenade",
+				"slots": ["pswg_blasters:barrel_slot"],
+				"category": "pswg_blasters:barrel",
+				"grantedModes": [
+					{"id": "pswg_blasters:micro_grenade", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:micro_grenade"}
+				]
+			},
 			"pswg_blasters:e10/stock": {
 				"translationKey": "attachment.pswg_blasters.e10.stock",
 				"slots": [
@@ -100,7 +116,7 @@
 			"pswg_blasters:e10/range_scope": {
 				"translationKey": "attachment.pswg_blasters.e10.range_scope",
 				"slots": [
-					"pswg_blasters:scope_slot"
+					"pswg_blasters:barrel_slot"
 				],
 				"category": "pswg_blasters:scope",
 				"modifiers": [

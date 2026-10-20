@@ -8,21 +8,21 @@ import dev.pswg.attributes.GalaxiesEntityAttributes;
 import dev.pswg.codec.GalaxiesCodecs;
 import dev.pswg.codecgenerator.*;
 import dev.pswg.data.*;
-import dev.pswg.entity.BlasterBoltEntity;
 import dev.pswg.entity.BlasterShot;
+import dev.pswg.entity.BlasterStatusEffects;
 import dev.pswg.generated.codecs.IAttachmentsComponentCodec;
 import dev.pswg.generated.codecs.ICoolingCodec;
 import dev.pswg.generated.codecs.IStateComponentCodec;
 import dev.pswg.generated.recordbuilders.IStateComponentBuilder;
-import dev.pswg.interaction.IRecoilEntity;
 import dev.pswg.interaction.BlasterActions;
+import dev.pswg.interaction.IRecoilEntity;
 import dev.pswg.item.component.StoredCharge;
 import dev.pswg.math.RandomHelper;
 import dev.pswg.mutablerecord.MutableRecord;
 import dev.pswg.networking.GalaxiesPacketCodecs;
 import dev.pswg.sound.BlasterSounds;
-import dev.pswg.world.TickConstants;
 import dev.pswg.world.GameTime;
+import dev.pswg.world.TickConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -47,7 +47,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
@@ -88,6 +87,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		 */
 		BLOCKED
 	}
+
 	/**
 	 * The reason, if any, for a blaster to be cooling.
 	 * Different cooling modes allow different interactions
@@ -264,7 +264,8 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			float lastVentingHeat,
 			@SelfCodec CoolingMode coolingMode,
 			int burstBoltsRemaining,
-			long overchargeStart
+			long overchargeStart,
+			@CodecDefault("0") @CodecRange(min = 0) int muzzleCursor
 	) implements IStateComponentBuilder, IStateComponentCodec
 	{
 		public static final StateComponent DEFAULT = new StateComponent(
@@ -275,6 +276,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 				0,
 				0,
 				CoolingMode.PASSIVE,
+				0,
 				0,
 				0
 		);
@@ -1314,7 +1316,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	{
 		var result = fireServer(world, user, hand, !pressed, heldChargeTicks, false);
 		return result == InteractionResult.SUCCESS ? ShotResult.FIRED
-				: result == InteractionResult.CONSUME ? ShotResult.COOLING_HANDLED : ShotResult.BLOCKED;
+		                                           : result == InteractionResult.CONSUME ? ShotResult.COOLING_HANDLED : ShotResult.BLOCKED;
 	}
 
 	/**
@@ -1324,7 +1326,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	{
 		var result = fireServer(world, user, hand, false, 0, true);
 		return result == InteractionResult.SUCCESS ? ShotResult.READY
-				: result == InteractionResult.CONSUME ? ShotResult.COOLING_HANDLED : ShotResult.BLOCKED;
+		                                           : result == InteractionResult.CONSUME ? ShotResult.COOLING_HANDLED : ShotResult.BLOCKED;
 	}
 
 	/**
@@ -1344,6 +1346,11 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (getDefinition(world, itemStack).isEmpty())
 			return InteractionResult.PASS;
 
+		if (BlasterStatusEffects.disabled(user))
+		{
+			return InteractionResult.FAIL;
+		}
+
 		if (!canFire(world, user, itemStack))
 			return InteractionResult.PASS;
 
@@ -1361,7 +1368,6 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		var timestamp = GameTime.now(world);
 
 		var coolingStatus = getCoolingStatus(world, itemStack, 0);
-		var heatEnabled = stats.heat().capacity() > 0;
 
 		if (coolingStatus.coolingMode() == CoolingMode.PASSIVE && state.coolingMode() != CoolingMode.PASSIVE)
 			state = state.withCooling(CoolingMode.PASSIVE, timestamp);
@@ -1478,7 +1484,10 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (profile.isEmpty())
 			return InteractionResult.FAIL;
 
-		if (!BlasterAmmo.canConsumeShot(user, itemStack, stats.ammo()))
+		var behavior = profile.orElseThrow();
+		var shot = BlasterShot.capture(stats, behavior, trigger, heldChargeTicks, getLoadedAmmo(itemStack, stats.ammo()));
+		var costCount = shot.costCount();
+		if (!BlasterAmmo.canConsumeShots(user, itemStack, stats.ammo(), costCount))
 		{
 			if (!repeatEvent)
 				world.playSound(null, user.getX(), user.getY(), user.getZ(), BlasterSounds.DRYFIRE, SoundSource.PLAYERS, 1, 1);
@@ -1489,37 +1498,89 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 		if (chargePress)
 			return InteractionResult.SUCCESS;
 
-		var behavior = profile.orElseThrow();
 		var chargedShot = behavior.chargedShot();
-		var shot = BlasterShot.capture(stats, behavior, trigger, heldChargeTicks, getLoadedAmmo(itemStack, stats.ammo()));
 
 		var spendAll = chargedShot.map(value -> value.consume() == BlasterBehaviorProfile.ChargeConsumer.ALL_REMAINING_COMPONENT_CHARGE).orElse(false);
-		if (!BlasterAmmo.consumeShot(world, user, itemStack, stats.ammo(), spendAll))
+		if (!BlasterAmmo.consumeShots(world, user, itemStack, stats.ammo(), costCount, spendAll))
 			return InteractionResult.FAIL;
 
+		var cursor = state.muzzleCursor();
+
+		state = commitShotState(world, itemStack, state, shot, timestamp, coolingStatus.totalHeat());
+
+		var mirrored = (user.getMainArm() == net.minecraft.world.entity.HumanoidArm.LEFT) != (hand == InteractionHand.OFF_HAND);
+
+		shot.emit(world, user, state.isAiming(), cursor, mirrored);
+		applyShotRecoil(user, itemStack, stats.recoil(), state.isAiming());
+		playShotFeedback(world, user, stats, state.coolingMode() == CoolingMode.OVERHEAT);
+
+		return InteractionResult.SUCCESS;
+	}
+
+	/**
+	 * Writes heat, cadence and the next muzzle cursor before delivery.
+	 */
+	private static StateComponent commitShotState(
+			ServerLevel world,
+			ItemStack stack,
+			StateComponent state,
+			BlasterShot shot,
+			long timestamp,
+			float heat
+	)
+	{
+		var stats = shot.stats();
+		if (stats.heat().capacity() > 0 && getOverchargeTimeRemaining(world, stack, 0).isEmpty())
+		{
+			heat = (float)Math.min((double)heat + (double)stats.heat().perRound() * shot.costCount(), Float.MAX_VALUE);
+		}
+
+		var cursor = state.muzzleCursor();
+		var nextCursor = shot.behavior().muzzles().map(value -> value.nextCursor(cursor)).orElse(cursor);
 		state = state.withLastFired(timestamp)
 		             .withCooling(CoolingMode.PASSIVE, timestamp + stats.heat().passiveCooldownDelay())
-		             .withFireCooldown(timestamp + stats.automaticRepeatDelay());
+		             .withFireCooldown(timestamp + stats.automaticRepeatDelay())
+		             .withMuzzleCursor(nextCursor);
 
-		var totalHeat = coolingStatus.totalHeat();
+		if (stats.heat().capacity() > 0 && heat > stats.heat().capacity())
+		{
+			state = state.withLastVentingHeat(heat + stats.heat().overheatPenalty())
+			             .withCooling(CoolingMode.OVERHEAT, timestamp)
+			             .withBurstBoltsRemaining(0);
+			heat = 0;
+		}
 
-		if (heatEnabled && getOverchargeTimeRemaining(world, itemStack, 0).isEmpty())
-			totalHeat += stats.heat().perRound();
+		state = state.withLastTotalHeat(heat);
+		stack.set(STATE, state);
 
-		fireShot(user, world, shot, state.isAiming());
+		return state;
+	}
 
-		var recoil = stats.recoil();
-		var pitch = state.isAiming() ? recoil.aimPitchDegrees() : recoil.hipPitchDegrees();
-		var yaw = state.isAiming() ? recoil.aimYawDegrees() : recoil.hipYawDegrees();
+	/**
+	 * Applies one source-owned view impulse per accepted shot, not per pellet.
+	 */
+	private static void applyShotRecoil(LivingEntity user, ItemStack stack, BlasterStats.Recoil recoil, boolean aiming)
+	{
+		var pitch = aiming ? recoil.aimPitchDegrees() : recoil.hipPitchDegrees();
+		var yaw = aiming ? recoil.aimYawDegrees() : recoil.hipYawDegrees();
+
 		if (user instanceof IRecoilEntity recoilEntity)
+		{
 			recoilEntity.pswg$addRecoilImpulse(
-				new Vector3f(-pitch, yaw, 0),
-				itemStack.getOrDefault(SERIAL, 0L),
-				recoil.recoveryTicks(),
-				recoil.pattern().pitchMultipliers(20),
-				recoil.pattern().yawMultipliers()
+					new Vector3f(-pitch, yaw, 0),
+					stack.getOrDefault(SERIAL, 0L),
+					recoil.recoveryTicks(),
+					recoil.pattern().pitchMultipliers(20),
+					recoil.pattern().yawMultipliers()
 			);
+		}
+	}
 
+	/**
+	 * Plays fire and overheat sounds.
+	 */
+	private static void playShotFeedback(ServerLevel world, LivingEntity user, BlasterStats stats, boolean overheated)
+	{
 		if (stats.fireSound().isPresent())
 		{
 			world.playSound(
@@ -1534,7 +1595,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 			);
 		}
 
-		if (heatEnabled && totalHeat > stats.heat().capacity())
+		if (overheated)
 		{
 			world.playSound(
 					null,
@@ -1546,19 +1607,7 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 					1,
 					RandomHelper.floatBetween(world.getRandom(), 0.9f, 1.1f)
 			);
-
-			state = state.withLastVentingHeat(totalHeat + stats.heat().overheatPenalty())
-			             .withCooling(CoolingMode.OVERHEAT, timestamp)
-			             .withBurstBoltsRemaining(0);
-
-			totalHeat = 0;
 		}
-
-		state = state.withLastTotalHeat(totalHeat);
-
-		itemStack.set(STATE, state);
-
-		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -1615,38 +1664,5 @@ public class BlasterItem extends Item implements ILeftClickUsable, IPrimaryActio
 	public boolean usesCustomPrimaryAction()
 	{
 		return true;
-	}
-
-	/**
-	 * Fires a shot.
-	 */
-	private static void fireShot(LivingEntity user, ServerLevel serverWorld, BlasterShot shot, boolean aiming)
-	{
-		var spread = shot.stats().spread();
-		var angle = aiming ? spread.aimDegrees() : spread.hipDegrees();
-
-		if (user.getDeltaMovement().horizontalDistanceSqr() > 0.0001)
-			angle *= spread.movingMultiplier();
-
-		if (user.isSprinting())
-			angle *= spread.sprintingMultiplier();
-
-		var direction = RandomHelper.directionInCone(serverWorld.getRandom(), user.getViewVector(1).normalize(), Math.min(angle, 90));
-		var origin = user.getEyePosition();
-
-		if (shot.behavior().delivery() == BlasterBehaviorProfile.Delivery.HITSCAN)
-		{
-			var hit = BlasterShot.trace(serverWorld, user, origin, direction.scale(shot.stats().range()));
-			shot.hit(serverWorld, user, user, hit, (float)origin.distanceTo(hit.getLocation()));
-			return;
-		}
-
-		var projectile = new BlasterBoltEntity(Blasters.BLASTER_BOLT_ENTITY, serverWorld);
-		projectile.setOwner(user);
-		projectile.setShot(shot);
-		projectile.setPos(origin);
-		projectile.setDeltaMovement(direction.scale(5));
-		ProjectileUtil.rotateTowardsMovement(projectile, 1);
-		serverWorld.addFreshEntity(projectile);
 	}
 }

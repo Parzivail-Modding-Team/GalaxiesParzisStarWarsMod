@@ -35,7 +35,18 @@
 		},
 		"configuration": {
 			"archetype": "pswg_blasters:ion",
-			"itemModel": "pswg_blasters:ca87"
+			"itemModel": "pswg_blasters:ca87",
+			"fieldConversion": {
+				"options": [
+					{
+						"id": "pswg_blasters:lethal_gas",
+						"targetBlasterId": "pswg_blasters:ca87_lethal",
+						"conditions": [
+							{"type": "has_attachment", "attachmentSlot": "pswg_blasters:internal_slot", "attachmentId": "pswg_blasters:ca87/gas"}
+						]
+					}
+				]
+			}
 		},
 		"modes": {
 			"default": "pswg_blasters:ion",
@@ -45,7 +56,12 @@
 					"trigger": {
 						"type": "semi"
 					},
-					"behaviorProfile": "pswg_blasters:ion"
+					"behaviorProfile": "pswg_blasters:ion_cone"
+				},
+				{
+					"id": "pswg_blasters:repulsor",
+					"trigger": {"type": "semi"},
+					"behaviorProfile": "pswg_blasters:repulsor"
 				}
 			]
 		},
@@ -62,5 +78,13 @@
 			"aimDegrees": 2
 		}
 	},
-	"attachments": {}
+	"attachments": {
+		"options": {
+			"pswg_blasters:ca87/gas": {
+				"translationKey": "attachment.pswg_blasters.ca87.gas",
+				"slots": ["pswg_blasters:internal_slot"],
+				"category": "pswg_blasters:internal_ordnance_config"
+			}
+		}
+	}
 }

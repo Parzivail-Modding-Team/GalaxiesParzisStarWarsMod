@@ -45,7 +45,20 @@
 				{"id": "pswg_blasters:auto", "trigger": {"type": "auto"}, "behaviorProfile": "pswg_blasters:test_blaster/direct"},
 				{"id": "pswg_blasters:burst", "trigger": {"type": "burst", "rounds": 3, "intervalTicks": 2, "interburstCooldownTicks": 8}, "behaviorProfile": "pswg_blasters:test_blaster/direct"},
 				{"id": "pswg_blasters:charge", "trigger": {"type": "charge", "minimumChargeTicks": 5, "maximumChargeTicks": 40, "releasePolicy": "fire_on_release"}, "behaviorProfile": "pswg_blasters:charged_energy"},
-				{"id": "pswg_blasters:charge_full", "trigger": {"type": "charge", "minimumChargeTicks": 5, "maximumChargeTicks": 40, "releasePolicy": "fire_at_full"}, "behaviorProfile": "pswg_blasters:charged_energy"}
+				{"id": "pswg_blasters:charge_full", "trigger": {"type": "charge", "minimumChargeTicks": 5, "maximumChargeTicks": 40, "releasePolicy": "fire_at_full"}, "behaviorProfile": "pswg_blasters:charged_energy"},
+				{"id": "pswg_blasters:scatter_energy", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:scatter_energy"},
+				{"id": "pswg_blasters:scatter_slug", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:scatter_slug"},
+				{"id": "pswg_blasters:stun_cone", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:stun_cone"},
+				{"id": "pswg_blasters:ion_cone", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:ion_cone"},
+				{"id": "pswg_blasters:repulsor", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:repulsor"},
+				{"id": "pswg_blasters:explosive", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:explosive_energy"},
+				{"id": "pswg_blasters:micro_grenade", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:micro_grenade"},
+				{"id": "pswg_blasters:concussion", "trigger": {"type": "charge", "minimumChargeTicks": 5, "maximumChargeTicks": 40, "releasePolicy": "fire_on_release"}, "behaviorProfile": "pswg_blasters:concussion"},
+				{"id": "pswg_blasters:all_muzzles", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:all_muzzles"},
+				{"id": "pswg_blasters:world_damage", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:world_damage"},
+				{"id": "pswg_blasters:demolition", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:demolition"},
+				{"id": "pswg_blasters:training", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:training"},
+				{"id": "pswg_blasters:all_muzzles_shared", "trigger": {"type": "semi"}, "behaviorProfile": "pswg_blasters:all_muzzles_shared"}
 			]
 		},
 		"recoil": {"hipPitchDegrees": 3.6, "hipYawDegrees": 0.2, "aimPitchDegrees": 1.5, "aimYawDegrees": 0.1, "recoveryTicks": 3, "pattern":{"pitchStages":[{"firstShot":1,"multiplier":1.2},{"firstShot":2,"multiplier":1.0},{"firstShot":6,"multiplier":1.3}],"yawCycle":[{"multiplier":0.35},{"multiplier":0.7},{"multiplier":1.0},{"multiplier":0.7},{"multiplier":0.35},{"multiplier":-0.35},{"multiplier":-0.7},{"multiplier":-1.0},{"multiplier":-0.7},{"multiplier":-0.35}]}},
