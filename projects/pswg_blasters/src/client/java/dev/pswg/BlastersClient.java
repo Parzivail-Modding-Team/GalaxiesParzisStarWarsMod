@@ -237,11 +237,21 @@ public class BlastersClient implements GalaxiesClientAddon
 		var heat = BlasterHeatBar.sample(client.level, stack, GalaxiesClient.getTickDelta());
 		if (heat.isPresent())
 		{
-			context.fill(RenderPipelines.GUI, x + 2, y + 13, x + 15, y + 15, 0xFF000000);
-			BlasterHeatBar.render(context, heat.orElseThrow(), x + 2, y + 13, 13, 1, true);
+			var barX = x + Drawables.ITEM_BAR_LEFT;
+			var barY = y + Drawables.ITEM_BAR_TOP;
+			context.fill(
+					RenderPipelines.GUI,
+					barX,
+					barY,
+					barX + Drawables.ITEM_BAR_WIDTH,
+					barY + Drawables.ITEM_BAR_HEIGHT,
+					0xFF000000
+			);
+			BlasterHeatBar.render(context, heat.orElseThrow(), barX, barY, Drawables.ITEM_BAR_WIDTH, 1, true);
 		}
 
 		renderProgress(context, stack, x, y);
+		renderPulloutCooldown(context, stack, x, y);
 	}
 
 	/**
@@ -261,9 +271,43 @@ public class BlastersClient implements GalaxiesClientAddon
 		for (var hand : InteractionHand.values())
 		{
 			var timer = ItemInteractionTimer.get(client.player, hand);
-			if (timer != null && timer.serial() == serial && timer.isActive(now))
+			if (timer == null || timer.kind() == ItemInteractionTimer.ItemInteractionKind.DRAW)
+				continue;
+
+			if (timer.serial() == serial && timer.isActive(now))
 			{
 				Drawables.itemDurability(context, timer.progress(now, GalaxiesClient.getTickDelta()), x, y - 4, 13, progressColor(timer));
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Draws the vanilla-style vertical cooldown overlay for this stack's draw timer.
+	 *
+	 * The timer is hand-specific, so adding an item to the inventory cannot create a
+	 * cooldown for every blaster that uses the same item type.
+	 */
+	private static void renderPulloutCooldown(GuiGraphicsExtractor context, ItemStack stack, int x, int y)
+	{
+		var client = Minecraft.getInstance();
+		var now = GameTime.now(client.level);
+		var serial = stack.get(BlasterItem.SERIAL);
+		if (serial == null)
+		{
+			return;
+		}
+
+		for (var hand : InteractionHand.values())
+		{
+			var timer = ItemInteractionTimer.get(client.player, hand);
+			if (timer != null
+			    && timer.kind() == ItemInteractionTimer.ItemInteractionKind.DRAW
+			    && timer.serial() == serial
+			    && timer.isActive(now))
+			{
+				var remaining = 1 - timer.progress(now, GalaxiesClient.getTickDelta());
+				Drawables.itemCooldown(context, remaining, x, y, 16, Integer.MAX_VALUE);
 				return;
 			}
 		}

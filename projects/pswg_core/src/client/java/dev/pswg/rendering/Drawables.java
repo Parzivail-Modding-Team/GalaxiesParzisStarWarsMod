@@ -1,8 +1,6 @@
 package dev.pswg.rendering;
 
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
@@ -14,6 +12,26 @@ import net.minecraft.util.CommonColors;
  */
 public final class Drawables
 {
+	/**
+	 * The standard left offset for a 16 by 16 item bar.
+	 */
+	public static final int ITEM_BAR_LEFT = 2;
+
+	/**
+	 * The standard top offset for a 16 by 16 item bar.
+	 */
+	public static final int ITEM_BAR_TOP = 13;
+
+	/**
+	 * The standard width for a 16 by 16 item bar.
+	 */
+	public static final int ITEM_BAR_WIDTH = 13;
+
+	/**
+	 * The standard height for a 16 by 16 item bar.
+	 */
+	public static final int ITEM_BAR_HEIGHT = 2;
+
 	/**
 	 * Fills a given region with the specified color, without aligning the boundaries
 	 * to a pixel grid
@@ -36,8 +54,8 @@ public final class Drawables
 	 *
 	 * @param context The context into which it will be drawn
 	 * @param value   The value [0,1]=[empty,full] of the cooldown box
-	 * @param x       The x position of the left of the box
-	 * @param y       The y position of the top of the full box
+	 * @param x       The x position of the item
+	 * @param y       The y position of the item
 	 * @param size    The width and height dimensions of the box
 	 * @param color   The color of the box
 	 */
@@ -56,16 +74,16 @@ public final class Drawables
 	 *
 	 * @param context The context into which it will be drawn
 	 * @param value   The value [0,1]=[empty,full] of the durability bar
-	 * @param x       The x position of the left of the box
-	 * @param y       The y position of the top of the box
+	 * @param x       The x position of the item
+	 * @param y       The y position of the item
 	 * @param width   The width of the full box
 	 * @param color   The color of the foreground bar
 	 */
 	public static void itemDurability(GuiGraphicsExtractor context, float value, float x, float y, int width, int color)
 	{
-		float i = x + 2;
-		float j = y + 13;
-		fill(context, RenderPipelines.GUI, i, j, i + width, j + 2, CommonColors.BLACK);
+		float i = x + ITEM_BAR_LEFT;
+		float j = y + ITEM_BAR_TOP;
+		fill(context, RenderPipelines.GUI, i, j, i + width, j + ITEM_BAR_HEIGHT, CommonColors.BLACK);
 		fill(context, RenderPipelines.GUI, i, j, i + width * value, j + 1, ARGB.opaque(color));
 	}
 }

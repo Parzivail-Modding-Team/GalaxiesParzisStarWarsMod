@@ -43,7 +43,7 @@ public final class BlasterActions
 		/**
 		 * Actual held weapon object.
 		 */
-		private final ItemStack _stack;
+		private ItemStack _stack;
 
 		/**
 		 * Captured hand.
@@ -74,6 +74,16 @@ public final class BlasterActions
 		 * Installed attachments.
 		 */
 		private final BlasterItem.AttachmentsComponent _attachments;
+
+		/**
+		 * Stable base definition ID for the captured source.
+		 */
+		private final Identifier _id;
+
+		/**
+		 * Stable serial number for the captured physical source.
+		 */
+		private final long _serial;
 
 		/**
 		 * Captured committed definition generation.
@@ -122,6 +132,8 @@ public final class BlasterActions
 
 			_hand = hand;
 			_slot = player.getInventory().getSelectedSlot();
+			_id = _stack.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID);
+			_serial = _stack.getOrDefault(BlasterItem.SERIAL, 0L);
 			_level = player.level();
 
 			var loadout = BlasterItem.getLoadout(_level, _stack).orElseThrow();
@@ -149,12 +161,18 @@ public final class BlasterActions
 		 */
 		private boolean matchesSource(ServerPlayer player)
 		{
+			var current = player.getItemInHand(_hand);
 			if (!player.isAlive() || player.isSpectator() || player.level() != _level
-			    || player.getItemInHand(_hand) != _stack
+			    || !current.is(Blasters.BLASTER_ITEM)
+			    || !current.getOrDefault(BlasterItem.ID, BlasterItem.MISSING_ID).equals(_id)
+			    || current.getOrDefault(BlasterItem.SERIAL, 0L) != _serial
 			    || (_hand == InteractionHand.MAIN_HAND && player.getInventory().getSelectedSlot() != _slot)
 			    || !BlasterData.get(_level).data().generation().equals(_generation))
 				return false;
 
+			// Inventory synchronization can replace the stack object without changing the weapon.
+			// Continue the session with the current object instead of restarting its timer.
+			_stack = current;
 			return BlasterItem.getLoadout(_level, _stack).map(loadout -> loadout.definition() == _definition).orElse(false);
 		}
 	}
@@ -599,35 +617,11 @@ public final class BlasterActions
 			}
 			case RELOAD ->
 			{
-				if (state._equipped != null && time(player) < state._equipped._until)
-					return;
+				var started = beginReload(player, packet.hand(), state);
+				if (!started && packet.hand() == InteractionHand.MAIN_HAND && BlasterWield.dualWielding(player))
+					started = beginReload(player, InteractionHand.OFF_HAND, root._hands.get(InteractionHand.OFF_HAND));
 
-				var ammo = loadout.orElseThrow().definition().stats().ammo();
-				var current = BlasterItem.getLoadedAmmo(stack, ammo);
-
-				var ticks = switch (ammo.feed())
-				{
-					case BlasterStats.PerShotFeed ignored -> 0;
-					case BlasterStats.MagazineFeed magazine -> magazine.reloadTicks();
-					case BlasterStats.ChargeStoreFeed charge -> charge.reloadTicks();
-				};
-
-				var room = BlasterItem.getAmmoCapacity(ammo) - current;
-				var plan = player.isCreative() ? java.util.Optional.<dev.pswg.item.InventoryResourceTransfer.Transfer>empty()
-				                               : BlasterAmmo.prepare(player.getInventory(), stack, ammo, room);
-
-				if (ticks > 0 && room > 0 && (player.isCreative() || plan.isPresent()))
-				{
-					state._reload = new Session(player, packet.hand(), time(player) + ticks);
-					BlasterItem.setAiming(player.level(), stack, false);
-					ItemInteractionTimer.begin(player, packet.hand(), ItemInteractionTimer.ItemInteractionKind.RELOAD, stack.get(BlasterItem.SERIAL), time(player), ticks);
-					player.level().playSound(null, player.getX(), player.getY(), player.getZ(), BlasterSounds.RELOAD, SoundSource.PLAYERS, 1, 1);
-
-					var quantity = player.isCreative() ? room : plan.orElseThrow().quantity();
-					var units = player.isCreative() ? 0L : plan.orElseThrow().debitedUnits();
-					player.sendOverlayMessage(Component.translatable("text.pswg_blasters.reload_cost", quantity, units));
-				}
-				else
+				if (!started)
 					player.sendOverlayMessage(Component.translatable("text.pswg_blasters.cannot_reload"));
 			}
 			case FOLD ->
@@ -691,6 +685,46 @@ public final class BlasterActions
 	public static Component modeName(Identifier id)
 	{
 		return Component.translatableWithFallback("mode." + id.toLanguageKey().replace('/', '.'), id.toString());
+	}
+
+	/**
+	 * Starts a reload for one hand when the source has room and a valid resource plan.
+	 *
+	 * @return {@code true} when a reload timer was started
+	 */
+	private static boolean beginReload(ServerPlayer player, InteractionHand hand, HandState state)
+	{
+		var stack = player.getItemInHand(hand);
+		var loadout = BlasterItem.getLoadout(player.level(), stack);
+		if (loadout.isEmpty()
+		    || state._reload != null
+		    || state._equipped != null && time(player) < state._equipped._until)
+			return false;
+
+		var ammo = loadout.orElseThrow().definition().stats().ammo();
+		var current = BlasterItem.getLoadedAmmo(stack, ammo);
+		var ticks = switch (ammo.feed())
+		{
+			case BlasterStats.PerShotFeed ignored -> 0;
+			case BlasterStats.MagazineFeed magazine -> magazine.reloadTicks();
+			case BlasterStats.ChargeStoreFeed charge -> charge.reloadTicks();
+		};
+
+		var room = BlasterItem.getAmmoCapacity(ammo) - current;
+		var plan = player.isCreative() ? Optional.<dev.pswg.item.InventoryResourceTransfer.Transfer>empty()
+		                               : BlasterAmmo.prepare(player.getInventory(), stack, ammo, room);
+		if (ticks <= 0 || room <= 0 || (!player.isCreative() && plan.isEmpty()))
+			return false;
+
+		state._reload = new Session(player, hand, time(player) + ticks);
+		BlasterItem.setAiming(player.level(), stack, false);
+		ItemInteractionTimer.begin(player, hand, ItemInteractionTimer.ItemInteractionKind.RELOAD, stack.get(BlasterItem.SERIAL), time(player), ticks);
+		player.level().playSound(null, player.getX(), player.getY(), player.getZ(), BlasterSounds.RELOAD, SoundSource.PLAYERS, 1, 1);
+
+		var quantity = player.isCreative() ? room : plan.orElseThrow().quantity();
+		var units = player.isCreative() ? 0L : plan.orElseThrow().debitedUnits();
+		player.sendOverlayMessage(Component.translatable("text.pswg_blasters.reload_cost", quantity, units));
+		return true;
 	}
 
 	/**

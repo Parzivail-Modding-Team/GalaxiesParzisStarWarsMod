@@ -2,6 +2,7 @@ package dev.pswg.hud;
 
 import dev.pswg.Blasters;
 import dev.pswg.item.BlasterItem;
+import dev.pswg.world.GameTime;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
@@ -33,6 +34,11 @@ public final class BlasterHeatBar
 	public static final int SOURCE_WIDTH = 61;
 
 	/**
+	 * Keeps an empty heat bar visible briefly after the last heat has drained away.
+	 */
+	private static final long EMPTY_HIDE_DELAY_TICKS = 20;
+
+	/**
 	 * Texture shared by full and compact heat bars.
 	 */
 	private static final Identifier TEXTURE = Blasters.id("textures/gui/hud_elements.png");
@@ -62,6 +68,15 @@ public final class BlasterHeatBar
 		}
 
 		var status = BlasterItem.getCoolingStatus(level, stack, partialTick);
+		var state = BlasterItem.getState(stack);
+		var now = GameTime.now(level) + partialTick;
+
+		var noHeat = status.coolingMode() == BlasterItem.CoolingMode.PASSIVE && status.totalHeat() <= 0;
+		if (noHeat && (state.lastTotalHeat() <= 0 || now - state.lastFired() >= EMPTY_HIDE_DELAY_TICKS))
+		{
+			return Optional.empty();
+		}
+
 		var capacity = status.coolingMode() == BlasterItem.CoolingMode.PASSIVE
 		               ? definition.heat().capacity() : BlasterItem.getState(stack).lastVentingHeat();
 		var fraction = capacity > 0 ? Math.clamp(status.totalHeat() / capacity, 0, 1) : 0;
