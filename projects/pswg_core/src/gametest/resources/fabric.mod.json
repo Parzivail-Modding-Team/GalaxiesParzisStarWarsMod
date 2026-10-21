@@ -1,0 +1,21 @@
+{
+	"schemaVersion": 1,
+	"id": "pswg_gametest",
+	"version": "1.0.0",
+	"name": "Galaxies: GameTests (core)",
+	"description": "Test-only mod that carries the PSWG core GameTest harness and its self-tests. It is never packaged into a release artifact.",
+	"license": "LGPL-3.0",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": [
+			"dev.pswg.gametest.selftest.HarnessGameTests"
+		],
+		"fabric-client-gametest": [
+			"dev.pswg.gametest.client.selftest.HarnessClientGameTests"
+		]
+	},
+	"depends": {
+		"pswg": "*",
+		"fabric-gametest-api-v1": "*"
+	}
+}

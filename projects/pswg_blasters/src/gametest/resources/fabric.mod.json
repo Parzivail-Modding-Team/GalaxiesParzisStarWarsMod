@@ -1,0 +1,22 @@
+{
+	"schemaVersion": 1,
+	"id": "pswg_blasters_gametest",
+	"version": "1.0.0",
+	"name": "Galaxies: GameTests (blasters)",
+	"description": "Test-only mod that carries the PSWG blaster GameTests. It is never packaged into a release artifact.",
+	"license": "LGPL-3.0",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": [
+			"dev.pswg.gametest.blasters.BlasterGameTests"
+		],
+		"fabric-client-gametest": [
+			"dev.pswg.gametest.blasters.client.BlasterClientGameTests"
+		]
+	},
+	"depends": {
+		"pswg_blasters": "*",
+		"pswg_gametest": "*",
+		"fabric-gametest-api-v1": "*"
+	}
+}

@@ -65,7 +65,17 @@ Use native DFU/Minecraft validation and collection utilities first. Let field co
 
 ## Verify gameplay changes
 
-Integration acceptance may be user-run gameplay through the normal client and server configurations. No separate testing project or new runner is required. Still compile all affected modules and use focused codec/data/generated-source checks where appropriate. Such checks do not replace singleplayer, dedicated-server, reload, persistence, or visual gameplay acceptance. Temporary verification helpers belong outside the tracked repository.
+Run the automated GameTests for the affected modules, then accept the change on the normal launches:
+
+```powershell
+.\toolchain\toolchain.ps1 test server
+.\toolchain\toolchain.ps1 test client
+```
+
+See [TESTING.md](TESTING.md) for how the tests are organized, how to write them, and where failure evidence is
+written. Automated tests do not replace singleplayer, dedicated-server, reload, persistence, two-client and visual
+gameplay acceptance on the normal client and server configurations. Always compile all affected modules as well.
+Temporary verification helpers belong outside the tracked repository.
 
 ## Generate data
 

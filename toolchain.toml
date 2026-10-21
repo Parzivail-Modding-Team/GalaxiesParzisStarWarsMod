@@ -42,6 +42,13 @@ annotation_processor = "framework-generator"
 main_mixins = ["pswg.mixins.json", "errorman.mixins.json"]
 client_mixins = ["pswg.client.mixins.json"]
 datagen = true
+gametest = true
+gametest_compile_dependencies = [
+	"net.fabricmc.fabric-api:fabric-gametest-api-v1:4.0.32+3434d6d95d @ fabric"
+]
+gametest_client_dependencies = [
+	"net.fabricmc.fabric-api:fabric-client-gametest-api-v1:6.0.7+4be74c3f5d @ fabric"
+]
 artifact_excludes = [
 	"**/*.jg3d",
 	"assets/**/datagen/**"
@@ -60,6 +67,8 @@ annotation_processor = "framework-generator"
 main_mixins = ["pswg_blasters.mixins.json"]
 client_mixins = ["pswg_blasters.client.mixins.json"]
 datagen = true
+gametest = true
+gametest_dependencies = ["pswg_core"]
 artifact_excludes = [
 	"**/*.jg3d",
 	"assets/**/datagen/**"
