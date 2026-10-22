@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class GrenadeBlock extends WaterloggableBlock
 {
+	public static final IntegerProperty CLUSTER_SIZE_2 = IntegerProperty.create("cluster_size", 1, 2);
 	public static final IntegerProperty CLUSTER_SIZE_3 = IntegerProperty.create("cluster_size", 1, 3);
 	public static final IntegerProperty CLUSTER_SIZE_4 = IntegerProperty.create("cluster_size", 1, 4);
 	public static final IntegerProperty CLUSTER_SIZE_5 = IntegerProperty.create("cluster_size", 1, 5);

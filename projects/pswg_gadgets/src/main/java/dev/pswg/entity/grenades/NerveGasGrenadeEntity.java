@@ -1,5 +1,7 @@
 package dev.pswg.entity.grenades;
 
+import dev.pswg.block.GrenadeBlock;
+import dev.pswg.container.GadgetsBlocks;
 import dev.pswg.container.GadgetsItems;
 import dev.pswg.container.entity.GadgetsEntities;
 import dev.pswg.item.grenades.GrenadeItem;
@@ -7,7 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 
-public class NerveGasGrenadeEntity extends GasGrenadeEntity
+public class NerveGasGrenadeEntity extends GasGrenadeEntityWithBlock
 {
 
 	public NerveGasGrenadeEntity(EntityType<? extends ThrowableProjectile> entityType, Level world)
@@ -19,5 +21,11 @@ public class NerveGasGrenadeEntity extends GasGrenadeEntity
 	public GrenadeItem getItem()
 	{
 		return GadgetsItems.NERVE_GAS_GRENADE_ITEM;
+	}
+
+	@Override
+	public GrenadeBlock getBlock()
+	{
+		return GadgetsBlocks.NERVE_GAS_GRENADE_BLOCK;
 	}
 }

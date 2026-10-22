@@ -1,0 +1,7 @@
+{
+	"display": {
+	},
+	"textures": {
+		"particle": "pswg_gadgets:block/model/impact_grenade_block"
+	}
+}

@@ -32,6 +32,8 @@ public class GadgetsBlocks
 	public static final InfernoGrenadeBlock INFERNO_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("inferno_grenade_block"), InfernoGrenadeBlock::new, BlockBehaviour.Properties.of());
 	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
 	public static final SmokeSignalGrenadeBlock SMOKE_SIGNAL_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("smoke_signal_grenade_block"), SmokeSignalGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final NerveGasGrenadeBlock NERVE_GAS_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("nerve_gas_grenade_block"), NerveGasGrenadeBlock::new, BlockBehaviour.Properties.of());
 
 	@DataGenBlock(itemGroup = DataGenItemGroup.NONE)
 	public static final FertileDirt FERTILE_DIRT_BLOCK = Registrar.block(Gadgets.id("fertile_dirt"), FertileDirt::new, BlockBehaviour.Properties.of().randomTicks());
