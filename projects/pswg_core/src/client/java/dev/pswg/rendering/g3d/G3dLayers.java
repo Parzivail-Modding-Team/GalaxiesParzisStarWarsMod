@@ -57,6 +57,17 @@ public final class G3dLayers
 	}
 
 	/**
+	 * Pass through the vanilla armor renderers and put G3D armors as sampled textures
+	 */
+	public static RenderType armor(Identifier id, Identifier texture, boolean doubleSided, boolean foil)
+	{
+		if (id.getNamespace().equals("minecraft") && (id.getPath().equals("entity/cutout") || id.getPath().equals("entity/cutout_no_cull")))
+			return foil ? RenderTypes.armorCutoutNoCullGlint(texture) : RenderTypes.armorCutoutNoCull(texture);
+
+		return sampled(id, texture, doubleSided, foil);
+	}
+
+	/**
 	 * Only culling native layers need a reversed triangle for a two-sided surface.
 	 */
 	public static boolean needsBackFaces(Identifier id, boolean doubleSided)

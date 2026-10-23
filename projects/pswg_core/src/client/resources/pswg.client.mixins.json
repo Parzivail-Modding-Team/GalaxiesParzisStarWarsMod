@@ -12,6 +12,7 @@
 		"events.GameRendererMixin",
 		"handbobbing.FirstPersonHandsAndItemsMixin",
 		"leftuse.MinecraftClientMixin",
+		"models.AvatarRendererMixin",
 		"models.CuboidItemModelWrapperMixin",
 		"recoil.FirstPersonHandsAndItemsRenderStateMixin",
 		"recoil.FirstPersonHandsAndItemsRendererMixin"

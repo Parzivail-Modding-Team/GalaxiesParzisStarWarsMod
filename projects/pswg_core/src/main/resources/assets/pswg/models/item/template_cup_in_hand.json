@@ -37,8 +37,8 @@
 		}
 	},
 	"textures": {
-		"layer0": "pswg:item/3d/cup_overlay_in_hand",
-		"layer1": "pswg:item/3d/desh_cup_in_hand",
+		"layer0": "#layer0",
+		"layer1": "#layer1",
 		"particle": "pswg:block/empty"
 	}
 }

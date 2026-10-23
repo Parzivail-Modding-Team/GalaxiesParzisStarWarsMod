@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "pswg:item/glass_6_overlay",
-    "layer1": "pswg:item/glass_6"
+    "layer0": "pswg:item/glass_6",
+    "layer1": "pswg:item/glass_6_overlay"
   }
 }

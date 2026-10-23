@@ -157,6 +157,77 @@ The editor previews alpha, sidedness, and emission through an extension of Block
 
 ## Ptex surfaces
 
+### Texture references and reusable slots
+
+Every material's existing `texture` string accepts either its usual image/Ptex identifier or a vanilla-style `#slot`. There is no separate material kind or duplicated geometry for variants:
+
+```json
+{
+  "id": "armor_surface",
+  "texture": "#base",
+  "layers": { "entity": "minecraft:entity/cutout" }
+}
+```
+
+The source's `model.textures` map supplies optional defaults and aliases. It uses the same resource/Ptex references as fixed materials:
+
+```json
+{
+  "model": {
+    "textures": {
+      "base": "example:textures/armor/default.png",
+      "visor": "#base",
+      "particle": "#base"
+    }
+  }
+}
+```
+
+Datagen translates resources to native atlas sprite names in the generated vanilla sidecar, retaining `#` aliases. A consumer override is applied before alias resolution, so `visor` and `particle` follow an overridden `base`. A slot-only template can omit its defaults when every consumer supplies bindings. Missing required bindings are diagnosed; sampled failures are cached for that reload instead of repeated every frame.
+
+Fixed references remain valid in existing V1 sources and compiled files. The material's UVs, layers, emission, tint index, and sidedness remain geometry-owned. Bindings choose only images or texture graphs. Original `.bbmodel` projects can be exported with the updated plugin without a format conversion.
+
+### Shared block and item variants
+
+Vanilla already inherits geometry from a parent model. A G3D template can therefore serve any number of small child JSON models, each overriding its normal `textures` map. Blockstates and item definitions refer to those child model IDs as usual. Only the parent has a `.jg3d` source and compiled geometry/rig.
+
+For a Ptex color variant, the native child JSON looks like this:
+
+```json
+{
+  "parent": "example:block/panel",
+  "textures": { "base": "example:ptex/block/red_panel" }
+}
+```
+
+Native JSON texture maps name atlas sprites, hence the `ptex/` prefix. Datagen code can use the same binding values as runtime consumers and let the shared helper make that projection:
+
+```java
+var bindings = G3dTextureBindings.of("base", Identifier.parse("example:block/red_panel"));
+var variant = G3dModelProvider.createVariant(templateModelId, bindings);
+```
+
+Save `variant` with the module's normal model/datagen output. Direct image bindings become native sprite names; Ptex bindings become their generated sprite names. All graph evaluation happens before atlas stitching. Chunk-rendered blocks require atlas-capable bindings; sampled-only graphs use a special/entity renderer. Native parent inheritance, particle aliases, rotations, UV lock, item transforms, and nested item selectors are preserved.
+
+### Runtime sampled appearances
+
+`G3dTextureBindings` is an immutable map, with `of(slot, resource)` and fluent `with(...)` methods. Any sampled consumer can request a view with `G3dClientModels.getSampled(modelId, bindings)`. Views share the exact loaded `G3dModel` and rig; only their resolved texture arrays differ. Identical requests reuse a cached view, and resource reload replaces the geometry/defaults/graph snapshot and its view cache together. No baker or stale resource manager is retained for runtime requests.
+
+Armor registration accepts bindings before its optional flags:
+
+```java
+G3dArmorRenderer.register(
+		Galaxies.id("armor/stormtrooper"),
+		GalaxiesItems.SHOCK_TROOPER,
+		G3dTextureBindings.of("base", Galaxies.id("textures/armor/shocktrooper.png")),
+		G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+);
+```
+
+Partial bindings inherit model defaults. Separate wide/slim models and individual-item registrations accept the same binding object. Fixed-texture registrations remain unchanged.
+
+The armor backlog demonstrates this without geometry changes: Stormtrooper/Shocktrooper share `armor/stormtrooper`; three goggles caps share `armor/goggles_cap`; four officer caps share `armor/imperial_officer_cap`; forest/tropical rebel helmets share `armor/rebel_helmet`. All eleven appearances retain their original textures and skin-overlay flags. The 27 authored armor exports are now 20 distinct geometry assets.
+
 A material's `texture` can identify a Ptex document or point directly at an existing Minecraft image resource. Use a Ptex document when the surface needs a tint/composite graph or an explicit atlas/sampler choice. For example, `example:tool_surface` resolves to `assets/example/ptex/tool_surface.json`:
 
 ```json
@@ -230,7 +301,66 @@ pose.socketMatrix("tip", modelToWorld, destinationMatrix);
 
 `G3dClientModels.get(modelId)` reads the current model-manager snapshot. `G3dEntityRenderer` is a module-facing entity/projectile base: override `extractPose` for named inputs and `extractTransform` for orientation/scale. It copies state and submits through `SubmitNodeCollector` and `VertexConsumer`. Block entities or other custom consumers can call `G3dRenderer.submit` with captured matrices.
 
-### Share item and entity models
+Entity-only models can opt into standalone/dynamic textures during client startup with `G3dClientModels.registerSampled(modelId)`. Their reload-bound renderer skips atlas lookup and samples each direct image or Ptex runtime texture with normalized UVs. Shared animated item/entity models retain their atlas-aware path unless explicitly opted in. Sampled PNGs are whole images; vanilla atlas animation metadata does not animate this path.
+
+## Humanoid armor
+
+`G3dArmorRenderer` implements Fabric's worn-armor API. Register a combined set during the module's client initialization:
+
+```java
+G3dArmorRenderer.register(
+		Galaxies.id("armor/stormtrooper"),
+		GalaxiesItems.STORM_TROOPER,
+		G3dArmorRenderer.Flag.HIDE_SKIN_OVERLAY
+);
+```
+
+This registers the helmet, chestplate, leggings, and boots together. `new G3dArmorRenderer(modelId)` can also be passed to Fabric's `ArmorRenderer.register` for individual addon items. A set with separately authored Steve and Alex assets can use `G3dArmorRenderer.register(wideModelId, slimModelId, armorItems)`. Other humanoid wearers use the wide asset; a missing slim asset falls back to the current wide asset.
+
+### Skin overlay visibility
+
+Registration accepts optional `G3dArmorRenderer.Flag` values. `HIDE_SKIN_OVERLAY` suppresses only the outer player-skin layers for each flagged item while it is equipped:
+
+| Equipped item | Hidden skin overlays |
+| --- | --- |
+| Helmet | Hat |
+| Chestplate | Jacket and both sleeves |
+| Leggings | Both pants legs |
+| Boots | Both pants legs |
+
+Minecraft has one pants overlay per leg, so boots suppress that complete overlay rather than only its foot section. The base skin and cape remain visible according to their normal rules. Omitting the flag preserves the player's skin-layer settings. Stormtrooper enables it for all four pieces; wearing just one piece hides only its relevant area.
+
+To configure pieces independently, use `G3dArmorRenderer.register(modelId, armorItems.chestplate, flags...)` or its `wideModelId, slimModelId, item, flags...` overload. Register each item once. Skin suppression is captured after vanilla extracts player skin options, before queued rendering, and also reaches first-person sleeves. Removing or replacing flagged armor restores the player's own settings on the next extraction. Spectators retain their normal skin options because worn armor is not rendered for them.
+
+### Authoring contract
+
+Use one upright, feet-origin model in Blockbench's normal units: 16 units per block, with the head/body pivots at Y=24. Keep these group names and pivots:
+
+| Group | Worn item | Source pivot `[x, y, z]` | Native part |
+| --- | --- | --- | --- |
+| `head` | Helmet | `[0, 24, 0]` | Head |
+| `body` | Chestplate | `[0, 24, 0]` | Body |
+| `right_arm` | Chestplate | `[5, 22, 0]` | Right arm |
+| `left_arm` | Chestplate | `[-5, 22, 0]` | Left arm |
+| `waist` | Leggings | `[0, 24, 0]` | Body |
+| `right_leg` | Leggings | `[1.9, 12, 0]` | Right leg |
+| `left_leg` | Leggings | `[-1.9, 12, 0]` | Left leg |
+| `right_boot` | Boots | `[1.9, 12, 0]` | Right leg |
+| `left_boot` | Boots | `[-1.9, 12, 0]` | Left leg |
+
+The mesh coordinates are local to their group's pivot. The runtime binds those pivots to the wearer's current native `ModelPart` transforms and converts the Blockbench frame by flipping X/Y. It retains authored rotation and scale; ordinary child groups retain their full local transforms. Pauldrons, pouches, visors, and similar details follow the nearest bound parent. Organizational roots may contain the named anchors, but geometry without a bound ancestor stays hidden. Keep boot geometry separate from legging geometry so equipping both does not draw either piece twice.
+
+For a combined Steve/Alex asset, place the alternative geometry below the same arm anchor, for example `right_arm_default` and `right_arm_slim`. `_default` branches are visible on wide/Steve humanoids; `_slim` branches are visible on slim/Alex players. The plain names `default` and `slim` also work, and filtering applies to all descendants. Shared details can stay directly under the arm anchor. The Stormtrooper source demonstrates both variants without duplicating the whole model. Variant selection uses the skin's native `PlayerModelType`, not the player's name or a hard-coded skin.
+
+Export to `assets/<namespace>/g3d/source/armor/<name>.jg3d` and run the module's normal datagen. The visual and rig projections use the existing G3D compiler; no armor-specific model format, baked cube list, or per-set Java animation code is needed. Display metadata controls item-model views, not worn-armor placement.
+
+### Textures and native rendering
+
+Worn armor automatically selects the sampled path, even for an atlas-capable surface. A direct material such as `pswg:textures/armor/stormtrooper.png` binds that standalone image through Minecraft's texture manager; no atlas declaration or Ptex wrapper is required. Ptex surfaces use the existing reload-aware dynamic-texture manager. Set `atlas: false` on armor-only Ptex documents to avoid generating an unused atlas sprite. Generated graphs retain a stable sampled texture ID while their pixels become ready.
+
+The adapter captures the already-animated context model rather than rerunning its animation or editing shared model parts. This carries head tracking, walking, crouching, riding, item-use poses, and native root transforms into queued armor geometry. Each submission owns its matrices; reload replaces cached rig bindings on the next render. Ordinary cutout surfaces use native armor cutout/no-cull and enchantment-glint shaders, with vanilla packed light, no hurt overlay, and the entity's outline color. Explicit solid/translucent/emissive surfaces retain their G3D entity-layer behavior. Armor remains visible on invisible wearers, matching vanilla. Material tint slot `0` receives the item's dye color; `-1` keeps the original image colors. Vanilla armor trims are not automatically mapped onto a custom G3D UV layout.
+
+## Share item and entity models
 
 Gadget entities use the same compiled models as their item forms. All six grenade renderers use `G3dGrenadeEntityRenderer`; normal and primed appearances select the corresponding `item/*_in_hand` asset. Pressure and tripwire mines use `item/pressure_mine` and `item/tripwire_mine` for inventory, held items, and placed entities. Their source `model` metadata supplies the generated vanilla sidecar. Each model keeps one geometry definition and one texture set for both consumers.
 

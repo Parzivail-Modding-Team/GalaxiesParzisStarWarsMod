@@ -8,6 +8,9 @@ import dev.pswg.model.g3d.G3dCompiler;
 import dev.pswg.model.g3d.G3dFiles;
 import dev.pswg.model.g3d.G3dResources;
 import dev.pswg.model.g3d.G3dSource;
+import dev.pswg.model.g3d.G3dTextureBindings;
+import dev.pswg.rendering.g3d.G3dTextures;
+import dev.pswg.rendering.ptex.SourceTexture;
 import dev.pswg.rendering.ptex.PtexDefinition;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.resources.model.cuboid.CuboidModel;
@@ -99,8 +102,13 @@ public final class G3dModelProvider implements DataProvider
 						}
 						for (var material : model.materials())
 						{
-							if (isDirectImage(material.texture()) && manager.getResource(material.texture()).isPresent())
-								images.add(material.texture());
+							if (!material.texture().isSlot())
+							{
+								var imageId = material.texture().resource();
+								var definition = G3dTextures.definition(imageId, textures);
+								if (definition.graph() instanceof SourceTexture source && manager.getResource(source.identifier()).isPresent())
+									images.add(imageId);
+							}
 						}
 					}
 				}
@@ -138,6 +146,8 @@ public final class G3dModelProvider implements DataProvider
 				slots.addProperty("particle", particleSprite(source, textures).toString());
 			result.add("textures", slots);
 		}
+		if (result.has("textures"))
+			result.add("textures", G3dTextures.atlasTextures(result.getAsJsonObject("textures"), textures));
 		if (result.has("display"))
 		{
 			for (var view : result.getAsJsonObject("display").entrySet())
@@ -173,24 +183,48 @@ public final class G3dModelProvider implements DataProvider
 	/**
 	 * Chooses a visible particle without changing a model's surface textures.
 	 */
-	private static Identifier particleSprite(G3dSource source, Map<Identifier, PtexDefinition> textures)
+	private static String particleSprite(G3dSource source, Map<Identifier, PtexDefinition> textures)
 	{
 		for (var material : source.materials())
 		{
 			var texture = material.texture();
-			var definition = textures.get(texture);
+			if (texture.isSlot())
+				return texture.value();
+			var resource = texture.resource();
+			var definition = textures.get(resource);
 			if (definition != null)
 			{
 				if (definition.atlas())
-					return PtexDefinition.spriteId(texture);
+					return PtexDefinition.spriteId(resource).toString();
 			}
-			else if (isDirectImage(texture))
+			else if (isDirectImage(resource))
 			{
-				var path = texture.getPath();
-				return texture.withPath(path.substring("textures/".length(), path.length() - ".png".length()));
+				return G3dTextures.spriteId(resource, textures).toString();
 			}
 		}
-		return Identifier.withDefaultNamespace("missingno");
+		return "minecraft:missingno";
+	}
+
+	/**
+	 * Generates a lightweight vanilla child model for a shared G3D template. Values
+	 * use the same resource/Ptex bindings as sampled consumers; only the emitted
+	 * vanilla projection converts them to atlas sprite identifiers.
+	 */
+	public static JsonObject createVariant(Identifier parent, G3dTextureBindings bindings, Map<Identifier, PtexDefinition> textures)
+	{
+		var result = new JsonObject();
+		result.addProperty("parent", parent.toString());
+		var values = G3dTextureBindings.CODEC.encodeStart(JsonOps.INSTANCE, bindings).getOrThrow().getAsJsonObject();
+		result.add("textures", G3dTextures.atlasTextures(values, textures));
+		return result;
+	}
+
+	/**
+	 * Uses the active datagen resource snapshot when generating module variants.
+	 */
+	public static JsonObject createVariant(Identifier parent, G3dTextureBindings bindings)
+	{
+		return createVariant(parent, bindings, SOURCES._textures);
 	}
 
 	/**
@@ -248,7 +282,7 @@ public final class G3dModelProvider implements DataProvider
 
 				for (var material : entry.getValue().materials())
 				{
-					if (!SOURCES._textures.containsKey(material.texture()) && !SOURCES._images.contains(material.texture()))
+					if (!material.texture().isSlot() && !SOURCES._textures.containsKey(material.texture().resource()) && !SOURCES._images.contains(material.texture().resource()))
 						throw new IOException(id + ": missing Ptex definition or image " + material.texture());
 				}
 

@@ -44,7 +44,7 @@ public class TerrainBiomes
 			new SaltFlatsTerrainBuilder(),
 			List.of(
 					ConfiguredDecoration.of(
-							new ChanceHeightmapDecorator(6),
+							new ChanceHeightmapDecorator(18),
 							new PatchDecoration(GalaxiesBlocks.HKAK_BUSH.defaultBlockState(), 5, 8, true, List.of(GalaxiesBlocks.CAKED_SALT, GalaxiesBlocks.CANYON_SAND))
 					),
 					ConfiguredDecoration.of(

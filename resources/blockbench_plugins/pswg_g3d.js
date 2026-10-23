@@ -36,6 +36,7 @@
 	const TEXTURE_DEFAULTS = {
 		g3d_material_id: '',
 		g3d_texture: '',
+		g3d_texture_slot: '',
 		g3d_layers: DEFAULT_LAYERS,
 		g3d_light_emission: 0,
 		g3d_double_sided: true,
@@ -158,7 +159,7 @@
 	/** Fill in material defaults and check the values that will reach the game. */
 	function normalizeMaterial(material) {
 		const id = requiredString(material.id, 'Material id');
-		const texture = identifier(material.texture, 'Material ' + id + ' texture');
+		const texture = textureReference(material.texture, 'Material ' + id + ' texture');
 		const layers = material.layers || {};
 		const result = {
 			id,
@@ -293,6 +294,36 @@
 
 	// Import and export helpers
 
+	/** Use vanilla's #slot notation alongside the existing image/Ptex identifiers. */
+	function textureReference(value, description) {
+		value = requiredString(value, description);
+		if (value.startsWith('#')) {
+			if (!/^#[a-zA-Z0-9_./-]+$/.test(value)) fail(description + ' has an invalid texture slot.');
+			return value;
+		}
+		return identifier(value, description);
+	}
+
+	/** Read one inherited default without flattening its aliases during export. */
+	function slotDefault(reference, sourcePath) {
+		if (!reference.startsWith('#')) return reference;
+		const model = inheritedDisplayMetadata(Project.g3d_model_metadata || {}, sourcePath);
+		const value = model.textures?.[reference.slice(1)];
+		return typeof value === 'string' ? value : value?.sprite || '';
+	}
+
+	/** Follow only the preview binding; the material keeps its reusable slot. */
+	function previewReference(reference, sourcePath) {
+		const visited = new Set();
+		while (reference.startsWith('#')) {
+			if (visited.has(reference)) return '';
+			visited.add(reference);
+			reference = slotDefault(reference, sourcePath);
+			if (!reference) return '';
+		}
+		return reference;
+	}
+
 	/** Turn a source rotation into the degree values used by Blockbench. */
 	function toBlockbenchEuler(quaternionValues) {
 		const rotation = new THREE.Quaternion(...quaternionValues);
@@ -325,7 +356,7 @@
 	/** Keep the game image path separate from the texture's editable display name. */
 	function textureResourceId(texture) {
 		if (texture.g3d_texture) {
-			return identifier(texture.g3d_texture, 'Game texture for ' + texture.name);
+			return textureReference(texture.g3d_texture, 'Game texture for ' + texture.name);
 		}
 		const link = requiredString(texture.javaTextureLink(), 'Blockbench texture resource path').replace(
 			/^#/,
@@ -377,6 +408,7 @@
 			if (!path) break;
 			const definition = JSON.parse(fs.readFileSync(path, 'utf8'));
 			result.display = {...definition.display, ...result.display};
+			result.textures = {...definition.textures, ...result.textures};
 			if (result.gui_light === undefined) result.gui_light = definition.gui_light;
 			if (result.ambientocclusion === undefined) result.ambientocclusion = definition.ambientocclusion;
 			parent = definition.parent;
@@ -408,7 +440,9 @@
 
 	/** Use the surface's atlas sprite when the artist selects a particle texture. */
 	function particleSpriteForTexture(texture) {
+		if (texture.g3d_texture_slot) return '#' + texture.g3d_texture_slot;
 		const resource = textureResourceId(texture);
+		if (resource.startsWith('#')) return resource;
 		const [namespace, resourcePath] = resourceParts(resource, 'minecraft');
 		const root = resourceRootFor(Project.export_path);
 		const ptex = resolveAssetFile(root, namespace, 'ptex/' + resourcePath, '.json');
@@ -436,6 +470,18 @@
 		model.gui_light = Project.front_gui_light ? 'front' : 'side';
 		model.ambientocclusion = Project.ambientocclusion !== false;
 		if (Project.parent) model.parent = Project.parent;
+		const defaults = new Map();
+		for (const texture of Texture.all) {
+			if (!texture.g3d_texture_slot || !texture.g3d_texture) continue;
+			const slot = texture.g3d_texture_slot;
+			textureReference('#' + slot, 'Texture slot');
+			const value = textureResourceId(texture);
+			if (defaults.has(slot) && defaults.get(slot) !== value) {
+				fail('Textures sharing slot #' + slot + ' must use the same default game texture.');
+			}
+			defaults.set(slot, value);
+		}
+		if (defaults.size) model.textures = {...model.textures, ...Object.fromEntries(defaults)};
 		const particle = Texture.all.find((texture) => texture.particle);
 		if (particle) {
 			model.textures = model.textures || {};
@@ -457,9 +503,12 @@
 
 	/** Find an image for a direct texture or a simple Ptex source graph. */
 	function resolvePreviewImage(identifier, sourcePath) {
+		identifier = previewReference(identifier, sourcePath);
+		if (!identifier) return null;
 		const resourceRoot = resourceRootFor(sourcePath);
 		if (!resourceRoot || !isApp || typeof fs === 'undefined') return null;
-		const [namespace, resourcePath] = resourceParts(identifier, 'minecraft');
+		let [namespace, resourcePath] = resourceParts(identifier, 'minecraft');
+		if (resourcePath.startsWith('ptex/')) resourcePath = resourcePath.slice('ptex/'.length);
 		const ptexFile = resolveAssetFile(resourceRoot, namespace, 'ptex/' + resourcePath, '.json');
 		if (ptexFile) {
 			try {
@@ -480,14 +529,17 @@
 			const directImage = resolveAssetFile(resourceRoot, namespace, resourcePath);
 			if (directImage) return directImage;
 		}
+		const spriteImage = resolveAssetFile(resourceRoot, namespace, 'textures/' + resourcePath, '.png');
+		if (spriteImage) return spriteImage;
 		return null;
 	}
 
 	/** Copy an imported material onto one texture. The image can stay missing. */
-	function setTextureMaterial(texture, material) {
+	function setTextureMaterial(texture, material, sourcePath) {
 		Object.assign(texture, {
 			g3d_material_id: material.id,
-			g3d_texture: material.texture,
+			g3d_texture: slotDefault(material.texture, sourcePath || Project.export_path),
+			g3d_texture_slot: material.texture.startsWith('#') ? material.texture.slice(1) : '',
 			g3d_layers: cloneJson(material.layers),
 			g3d_light_emission: material.lightEmission,
 			g3d_double_sided: material.doubleSided,
@@ -498,7 +550,8 @@
 
 	/** Create a separate texture for each material, including shared images. */
 	function importMaterialTexture(material, sourcePath) {
-		const [namespace, resourcePath] = resourceParts(material.texture, 'minecraft');
+		const preview = previewReference(material.texture, sourcePath);
+		const [namespace, resourcePath] = resourceParts(preview || material.texture.slice(1), 'minecraft');
 		const imagePath = resourcePath.replace(/^textures\//, '');
 		const parts = imagePath.split('/');
 		const texture = new Texture({
@@ -507,7 +560,7 @@
 			namespace,
 			keep_size: true,
 		});
-		setTextureMaterial(texture, material);
+		setTextureMaterial(texture, material, sourcePath);
 		const image = resolvePreviewImage(material.texture, sourcePath);
 		if (image) {
 			// This loader keeps the resource name above and does not merge images.
@@ -932,7 +985,7 @@
 			texture.g3d_double_sided = texture.render_sides !== 'front';
 			texture.g3d_settings_ready = true;
 		}
-		if (!texture.g3d_texture && texture.name) {
+		if (!texture.g3d_texture && !texture.g3d_texture_slot && texture.name) {
 			try {
 				texture.g3d_texture = textureResourceId(texture);
 			} catch (error) {
@@ -967,7 +1020,7 @@
 	function materialFromTexture(texture) {
 		return normalizeMaterial({
 			id: texture.g3d_material_id,
-			texture: textureResourceId(texture),
+			texture: texture.g3d_texture_slot ? '#' + texture.g3d_texture_slot : textureResourceId(texture),
 			layers: texture.g3d_layers,
 			lightEmission: texture.g3d_light_emission,
 			doubleSided: texture.g3d_double_sided,
@@ -1171,6 +1224,7 @@ uniform float G3D_GLOW;`,
 	function settingsFromForm(result) {
 		return {
 			g3d_texture: result.game_texture,
+			g3d_texture_slot: result.texture_slot || '',
 			g3d_layers:
 				result.surface_style === 'custom'
 					? {block: result.block_layer, item: result.item_layer, entity: result.entity_layer}
@@ -1195,6 +1249,11 @@ uniform float G3D_GLOW;`,
 			form[key] = input;
 			if (key !== 'render_options') continue;
 			Object.assign(form, {
+				texture_slot: {
+					label: 'Texture slot',
+					value: texture.g3d_texture_slot,
+					description: 'Optional reusable name, such as base. The game supplies variants; this image is the default preview.',
+				},
 				surface_style: {
 					label: 'Surface',
 					type: 'select',
@@ -1230,7 +1289,7 @@ uniform float G3D_GLOW;`,
 				value: texture.g3d_texture,
 				condition: (result) => result.advanced,
 				description:
-					'Set from the imported file. Change this only to use another game image or a Ptex surface.',
+					'Image or Ptex surface. For a reusable slot, this is its default; #another_slot keeps an alias.',
 			},
 			tint_index: {
 				label: 'Game tint slot',
@@ -1281,7 +1340,7 @@ uniform float G3D_GLOW;`,
 			try {
 				normalizeMaterial({
 					id: texture.g3d_material_id,
-					texture: settings.g3d_texture || textureResourceId(texture),
+					texture: settings.g3d_texture_slot ? '#' + settings.g3d_texture_slot : settings.g3d_texture || textureResourceId(texture),
 					layers: settings.g3d_layers,
 					lightEmission: settings.g3d_light_emission,
 					doubleSided: settings.g3d_double_sided,
@@ -1349,6 +1408,7 @@ uniform float G3D_GLOW;`,
 					);
 					// Change File points at a new game image. A display-name edit does not.
 					this.g3d_texture = '';
+					if (this.g3d_texture_slot) this.g3d_texture = textureResourceId(this);
 					ensureTextureSettings(this);
 					return result;
 				},
