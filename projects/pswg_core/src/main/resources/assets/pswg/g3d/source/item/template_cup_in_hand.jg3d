@@ -2345,5 +2345,6 @@
 		},
 		"gui_light": "side",
 		"ambientocclusion": true
+
 	}
 }

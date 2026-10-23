@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "cluster_size=1": {
+      "model": "pswg_gadgets:block/thermal_detonator_block_1"
+    },
+    "cluster_size=2": {
+      "model": "pswg_gadgets:block/thermal_detonator_block_2"
+    },
+    "cluster_size=3": {
+      "model": "pswg_gadgets:block/thermal_detonator_block_3"
+    },
+    "cluster_size=4": {
+      "model": "pswg_gadgets:block/thermal_detonator_block_4"
+    },
+    "cluster_size=5": {
+      "model": "pswg_gadgets:block/thermal_detonator_block_5"
+    }
+  }
+}

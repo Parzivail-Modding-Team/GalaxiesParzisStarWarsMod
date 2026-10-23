@@ -2808,9 +2808,6 @@
 			}
 		},
 		"gui_light": "side",
-		"ambientocclusion": true,
-		"textures": {
-			"particle": "#layer1"
-		}
+		"ambientocclusion": true
 	}
 }

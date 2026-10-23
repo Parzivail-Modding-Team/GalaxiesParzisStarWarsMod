@@ -157,6 +157,6 @@
   },
   "gui_light": "side",
   "textures": {
-    "particle": "pswg:ptex/item/3d/glass_8_overlay_in_hand"
+    "particle": "minecraft:missingno"
   }
 }

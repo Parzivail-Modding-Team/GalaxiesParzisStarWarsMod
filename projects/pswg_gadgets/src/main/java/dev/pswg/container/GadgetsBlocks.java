@@ -22,12 +22,20 @@ public class GadgetsBlocks
 		public static final TagKey<Block> INFERNO_DESTROY = TagKey.create(Registries.BLOCK, Gadgets.id("inferno_destroy"));
 	}
 
-	@DataGenBlock(model = DataGenBlockModel.NONE)
-	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.block(Gadgets.id("thermal_detonator_block"), ThermalDetonatorBlock::new, BlockBehaviour.Properties.of());
-	@DataGenBlock(model = DataGenBlockModel.NONE)
-	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.block(Gadgets.id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final ThermalDetonatorBlock THERMAL_DETONATOR_BLOCK = Registrar.blockWithoutItem(Gadgets.id("thermal_detonator_block"), ThermalDetonatorBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final FragmentationGrenadeBlock FRAGMENTATION_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("fragmentation_grenade_block"), FragmentationGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final ImpactGrenadeBlock IMPACT_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("impact_grenade_block"), ImpactGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final InfernoGrenadeBlock INFERNO_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("inferno_grenade_block"), InfernoGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final SmokeSignalGrenadeBlock SMOKE_SIGNAL_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("smoke_signal_grenade_block"), SmokeSignalGrenadeBlock::new, BlockBehaviour.Properties.of());
+	@DataGenBlock(model = DataGenBlockModel.GRENADE_BLOCK, itemGroup = DataGenItemGroup.NONE)
+	public static final NerveGasGrenadeBlock NERVE_GAS_GRENADE_BLOCK = Registrar.blockWithoutItem(Gadgets.id("nerve_gas_grenade_block"), NerveGasGrenadeBlock::new, BlockBehaviour.Properties.of());
 
-	@DataGenBlock
+	@DataGenBlock(itemGroup = DataGenItemGroup.NONE)
 	public static final FertileDirt FERTILE_DIRT_BLOCK = Registrar.block(Gadgets.id("fertile_dirt"), FertileDirt::new, BlockBehaviour.Properties.of().randomTicks());
 	@DataGenBlock(itemGroup = DataGenItemGroup.WORLD_GEN_BLOCK)
 	public static final Block CHARRED_BLOCK = Registrar.block(Gadgets.id("charred_block"), Block::new, BlockBehaviour.Properties.of().noLootTable().instabreak());

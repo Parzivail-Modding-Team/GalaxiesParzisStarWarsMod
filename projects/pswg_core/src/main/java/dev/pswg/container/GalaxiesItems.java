@@ -113,91 +113,91 @@ public class GalaxiesItems
 
 	/// ARMOR | TODO: ADD TRINKET ARMOR PARTS
 
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems ELITE_SQUAD_TROOPER = new ArmorItems("elite_squad", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems STORM_TROOPER = new ArmorItems("stormtrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems SHOCK_TROOPER = new ArmorItems("shocktrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems PURGE_TROOPER = new ArmorItems("purgetrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems ARTILLERY_TROOPER = new ArmorItems("artillerytrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems INCINERATOR_TROOPER = new ArmorItems("incineratortrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems SANDTROOPER = new ArmorItems("sandtrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems DEATH_TROOPER = new ArmorItems("deathtrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems SCOUT_TROOPER = new ArmorItems("scouttrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems HOVERTANK_PILOT = new ArmorItems("hovertankpilot", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems SHORE_TROOPER = new ArmorItems("shoretrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final ArmorItems JUMP_TROOPER = new ArmorItems("jumptrooper", ArmorMaterials.DIAMOND, new Item.Properties().stacksTo(1));
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item IMPERIAL_PILOT_HELMET = registerArmorItem("imperial_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item IMPERIAL_PILOT_KIT = registerArmorItem("imperial_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item IMPERIAL_PILOT_CADET_HELMET = registerArmorItem("imperial_pilot_cadet_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item IMPERIAL_PILOT_TECHNICAL_HELMET = registerArmorItem("imperial_pilot_technical_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item IMPERIAL_PILOT_COLD_HELMET = registerArmorItem("imperial_pilot_cold_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item REBEL_PILOT_HELMET = registerArmorItem("rebel_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item REBEL_PILOT_KIT = registerArmorItem("rebel_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item REBEL_FOREST = registerArmorItem("rebel_forest_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item AWING_PILOT_HELMET = registerArmorItem("awing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item AWING_PILOT_KIT = registerArmorItem("awing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BWING_PILOT_HELMET = registerArmorItem("bwing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BWING_PILOT_KIT = registerArmorItem("bwing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item UWING_PILOT_HELMET = registerArmorItem("uwing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item UWING_PILOT_KIT = registerArmorItem("uwing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item YWING_PILOT_HELMET = registerArmorItem("ywing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item YWING_PILOT_KIT = registerArmorItem("ywing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item XWING_PILOT_HELMET = registerArmorItem("xwing_pilot_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item XWING_PILOT_KIT = registerArmorItem("xwing_pilot_kit", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item REBEL_FLEET_TROOPER = registerArmorItem("rebel_fleet_trooper_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item REBEL_FLEET_TROOPER_JACKET = registerArmorItem("rebel_fleet_trooper_jacket", ArmorMaterials.DIAMOND, ArmorType.CHESTPLATE);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item REBEL_HONOR_GUARD = registerArmorItem("rebel_honor_guard_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item REBEL_TROPICAL = registerArmorItem("rebel_tropical_helmet", ArmorMaterials.DIAMOND, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BLACK_IMPERIAL_OFFICER = registerArmorItem("black_imperial_officer_hat", ArmorMaterials.LEATHER, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item GRAY_IMPERIAL_OFFICER = registerArmorItem("gray_imperial_officer_hat", ArmorMaterials.LEATHER, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item LIGHT_GRAY_IMPERIAL_OFFICER = registerArmorItem("light_gray_imperial_officer_hat", ArmorMaterials.LEATHER, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item KHAKI_IMPERIAL_OFFICER = registerArmorItem("khaki_imperial_officer_hat", ArmorMaterials.LEATHER, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item TAN_GOGGLES_CAP = registerArmorItem("tan_goggles_cap", ArmorMaterials.LEATHER, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item GRAY_GOGGLES_CAP = registerArmorItem("gray_goggles_cap", ArmorMaterials.LEATHER, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BROWN_GOGGLES_CAP = registerArmorItem("brown_goggles_cap", ArmorMaterials.LEATHER, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BEACH_INSURGENCE_HAT = registerArmorItem("beach_insurgence_hat", ArmorMaterials.LEATHER, ArmorType.HELMET);
-	@DataGenItem
+	@DataGenItem(itemGroup = DataGenItemGroup.GEAR)
 	public static final Item DESERT_INSURGENCE_HAT = registerArmorItem("desert_insurgence_hat", ArmorMaterials.LEATHER, ArmorType.HELMET);
 
 	/// DOOR.
@@ -234,13 +234,13 @@ public class GalaxiesItems
 	public static final Item BESKAR_RAW = registerSimpleItem("raw_beskar");
 	@DataGenItem
 	public static final Item BESKAR_INGOT = registerSimpleItem("beskar_ingot");
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BESKAR_SHOVEL = Registrar.item(Galaxies.id("beskar_shovel"), Item::new, new Item.Properties().shovel(GalaxiesToolMaterials.BESKAR, 1.5F, -3.0F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BESKAR_PICKAXE = Registrar.item(Galaxies.id("beskar_pickaxe"), Item::new, new Item.Properties().pickaxe(GalaxiesToolMaterials.BESKAR, 1, -2.8F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BESKAR_AXE = Registrar.item(Galaxies.id("beskar_axe"), Item::new, new Item.Properties().axe(GalaxiesToolMaterials.BESKAR, 5, -3.0F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item BESKAR_HOE = Registrar.item(Galaxies.id("beskar_hoe"), Item::new, new Item.Properties().hoe(GalaxiesToolMaterials.BESKAR, 0, 0.0F));
 
 	@DataGenItem
@@ -273,13 +273,13 @@ public class GalaxiesItems
 	public static final Item DURASTEEL_INGOT = registerSimpleItem("durasteel_ingot");
 	@DataGenItem
 	public static final Item DURASTEEL_NUGGET = registerSimpleItem("durasteel_nugget");
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item DURASTEEL_SHOVEL = Registrar.item(Galaxies.id("durasteel_shovel"), Item::new, new Item.Properties().shovel(GalaxiesToolMaterials.DURASTEEL, 1.5F, -3.0F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item DURASTEEL_AXE = Registrar.item(Galaxies.id("durasteel_axe"), Item::new, new Item.Properties().axe(GalaxiesToolMaterials.DURASTEEL, 5, -3.0F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item DURASTEEL_HOE = Registrar.item(Galaxies.id("durasteel_hoe"), Item::new, new Item.Properties().hoe(GalaxiesToolMaterials.DURASTEEL, 0, 0.0F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item DURASTEEL_PICKAXE = Registrar.item(Galaxies.id("durasteel_pickaxe"), Item::new, new Item.Properties().pickaxe(GalaxiesToolMaterials.DURASTEEL, 1, -2.8F));
 
 	@DataGenItem
@@ -327,13 +327,13 @@ public class GalaxiesItems
 	public static final Item TITANIUM_INGOT = registerSimpleItem("titanium_ingot");
 	@DataGenItem
 	public static final Item TITANIUM_NUGGET = registerSimpleItem("titanium_nugget");
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item TITANIUM_SHOVEL = Registrar.item(Galaxies.id("titanium_shovel"), Item::new, new Item.Properties().shovel(GalaxiesToolMaterials.TITANIUM, 1.5F, -3.0F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item TITANIUM_PICKAXE = Registrar.item(Galaxies.id("titanium_pickaxe"), Item::new, new Item.Properties().pickaxe(GalaxiesToolMaterials.TITANIUM, 1, -2.8F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item TITANIUM_AXE = Registrar.item(Galaxies.id("titanium_axe"), Item::new, new Item.Properties().axe(GalaxiesToolMaterials.TITANIUM, 5, -3.0F));
-	@DataGenItem(model = DatagenItemModel.HANDHELD)
+	@DataGenItem(model = DatagenItemModel.HANDHELD, itemGroup = DataGenItemGroup.GEAR)
 	public static final Item TITANIUM_HOE = Registrar.item(Galaxies.id("titanium_hoe"), Item::new, new Item.Properties().hoe(GalaxiesToolMaterials.TITANIUM, 0, 0.0F));
 
 	@DataGenItem

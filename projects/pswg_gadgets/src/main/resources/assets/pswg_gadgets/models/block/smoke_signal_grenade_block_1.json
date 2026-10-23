@@ -1,0 +1,7 @@
+{
+	"display": {
+	},
+	"textures": {
+		"particle": "pswg_gadgets:block/model/smoke_signal_grenade_block"
+	}
+}

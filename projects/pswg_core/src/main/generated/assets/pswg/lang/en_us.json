@@ -861,6 +861,7 @@
   "pswg.attribute.name.field_of_view_zoom": "Zoom",
   "pswg.construction_block_group": "PSWG - Construction Blocks",
   "pswg.food_item_group": "PSWG - Food",
+  "pswg.gear_group": "PSWG - Gear",
   "pswg.item_group": "PSWG - Items",
   "pswg.worldgen_block_group": "PSWG - Worldgen Blocks",
   "tag.block.pswg.arid_plant_placeable": "Arid Plant Placeable",

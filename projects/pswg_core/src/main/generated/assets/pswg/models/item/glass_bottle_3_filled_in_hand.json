@@ -98,9 +98,9 @@
         1
       ],
       "translation": [
+        8,
         0,
-        0,
-        0
+        2
       ]
     },
     "on_shelf": {
@@ -127,14 +127,14 @@
         0
       ],
       "scale": [
-        1,
-        1,
-        1
+        0.75,
+        0.75,
+        0.75
       ],
       "translation": [
-        -8,
+        -6,
         0,
-        8.75
+        6.25
       ]
     },
     "thirdperson_righthand": {
@@ -144,19 +144,19 @@
         0
       ],
       "scale": [
-        1,
-        1,
-        1
+        0.75,
+        0.75,
+        0.75
       ],
       "translation": [
-        8,
+        6,
         0,
-        8.75
+        6.25
       ]
     }
   },
   "gui_light": "side",
   "textures": {
-    "particle": "minecraft:glass_bottle_fluid"
+    "particle": "minecraft:missingno"
   }
 }

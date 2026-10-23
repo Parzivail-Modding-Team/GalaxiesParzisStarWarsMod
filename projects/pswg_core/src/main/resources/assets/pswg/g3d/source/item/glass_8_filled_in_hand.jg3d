@@ -2712,9 +2712,6 @@
 			}
 		},
 		"gui_light": "side",
-		"ambientocclusion": true,
-		"textures": {
-			"particle": "pswg:ptex/item/3d/glass_8_overlay_in_hand"
-		}
+		"ambientocclusion": true
 	}
 }

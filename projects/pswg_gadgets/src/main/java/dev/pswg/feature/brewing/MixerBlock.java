@@ -48,6 +48,6 @@ public class MixerBlock extends BaseEntityBlock
 	{
 		if (!world.isClientSide())
 			player.openMenu(state.getMenuProvider(world, pos));
-		return super.useWithoutItem(state, world, pos, player, hit);
+		return InteractionResult.CONSUME;
 	}
 }

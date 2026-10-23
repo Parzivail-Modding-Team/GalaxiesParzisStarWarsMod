@@ -31,8 +31,11 @@ public class GalaxiesItemGroups
 	public static final ResourceKey<CreativeModeTab> GENERIC_ITEMS_GROUP_KEY = registerGroup("items");
 	public static final CreativeModeTab GENERIC_ITEMS_GROUP = FabricCreativeModeTab.builder().icon(() -> new ItemStack(GalaxiesItems.DURASTEEL_ROD)).title(Component.translatable("pswg.item_group")).build();
 
-	public static final ResourceKey<CreativeModeTab> FOOD_ITEMS_GROUP_KEY = registerGroup("food_items");
-	public static final CreativeModeTab FOOD_ITEMS_GROUP = FabricCreativeModeTab.builder().icon(() -> new ItemStack(GalaxiesItems.BANTHA_COOKIE)).title(Component.translatable("pswg.food_item_group")).build();
+	public static final ResourceKey<CreativeModeTab> FOOD_GROUP_KEY = registerGroup("food");
+	public static final CreativeModeTab FOOD_GROUP = FabricCreativeModeTab.builder().icon(() -> new ItemStack(GalaxiesItems.BANTHA_COOKIE)).title(Component.translatable("pswg.food_item_group")).build();
+
+	public static final ResourceKey<CreativeModeTab> GEAR_GROUP_KEY = registerGroup("gear");
+	public static final CreativeModeTab GEAR_GROUP = FabricCreativeModeTab.builder().icon(() -> new ItemStack(GalaxiesItems.STORM_TROOPER.helmet)).title(Component.translatable("pswg.gear_group")).build();
 
 	private static ResourceKey<CreativeModeTab> registerGroup(String id)
 	{
@@ -43,44 +46,23 @@ public class GalaxiesItemGroups
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, CONSTRUCTION_BLOCK_GROUP_KEY, CONSTRUCTION_BLOCK_GROUP);
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, WORLDGEN_BLOCK_GROUP_KEY, WORLDGEN_BLOCK_GROUP);
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, GENERIC_ITEMS_GROUP_KEY, GENERIC_ITEMS_GROUP);
-		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, FOOD_ITEMS_GROUP_KEY, FOOD_ITEMS_GROUP);
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, FOOD_GROUP_KEY, FOOD_GROUP);
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, GEAR_GROUP_KEY, GEAR_GROUP);
 
-		CreativeModeTabEvents.modifyOutputEvent(CONSTRUCTION_BLOCK_GROUP_KEY).register(itemGroup -> addBlocks(itemGroup, DataGenItemGroup.CONSTRUCTION_BLOCK));
-		CreativeModeTabEvents.modifyOutputEvent(WORLDGEN_BLOCK_GROUP_KEY).register(itemGroup -> addBlocks(itemGroup, DataGenItemGroup.WORLD_GEN_BLOCK));
+		CreativeModeTabEvents.modifyOutputEvent(CONSTRUCTION_BLOCK_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.CONSTRUCTION_BLOCK));
+		CreativeModeTabEvents.modifyOutputEvent(WORLDGEN_BLOCK_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.WORLD_GEN_BLOCK));
 		CreativeModeTabEvents.modifyOutputEvent(GENERIC_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.ITEMS));
-		CreativeModeTabEvents.modifyOutputEvent(FOOD_ITEMS_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.FOOD));
+		CreativeModeTabEvents.modifyOutputEvent(FOOD_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.FOOD));
+		CreativeModeTabEvents.modifyOutputEvent(GEAR_GROUP_KEY).register(itemGroup -> addItems(itemGroup, DataGenItemGroup.GEAR));
 	}
 
 	public static void addItems(FabricCreativeModeTabOutput itemGroup, DataGenItemGroup group)
 	{
-
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, Item.class, (item, dataGenItem) -> {
+		AutoGenerateUtil.consumeAnnotatedGalaxiesItems(DataGenItem.class, (item, dataGenItem) -> {
 			if (dataGenItem.itemGroup() == group)
 				itemGroup.accept(item);
 		});
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, DyedItems.class, (dyedItems, dataGenItem) -> {
-			for (Item item : dyedItems.values())
-				if (dataGenItem.itemGroup() == group)
-					itemGroup.accept(item);
-		});
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, NumberedItems.class, (numberedItems, dataGenItem) -> {
-			for (Item item : numberedItems.stream().toList())
-				if (dataGenItem.itemGroup() == group)
-					itemGroup.accept(item);
-		});
-		AutoGenerateUtil.consumeAnnotatedFields(DataGenItem.class, GalaxiesItems.class, ArmorItems.class, (armorItems, dataGenItem) -> {
-			if (dataGenItem.itemGroup() == group)
-			{
-				itemGroup.accept(armorItems.helmet);
-				itemGroup.accept(armorItems.chestplate);
-				itemGroup.accept(armorItems.leggings);
-				itemGroup.accept(armorItems.boots);
-			}
-		});
-	}
 
-	public static void addBlocks(FabricCreativeModeTabOutput itemGroup, DataGenItemGroup group)
-	{
 		AutoGenerateUtil.consumeAnnotatedGalaxiesBlocks(DataGenBlock.class, (block, dataGenBlock) -> {
 			if(dataGenBlock.itemGroup() == group)
 				itemGroup.accept(block);
