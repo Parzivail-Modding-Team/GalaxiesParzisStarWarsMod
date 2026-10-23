@@ -61,7 +61,21 @@ public class NerveGasGrenadeBlock extends GrenadeBlock{
 			default -> getSingleCollisionShape();
 		};
 
-		return super.getCollisionShape(state, level, pos, context);
+		return shape;
+	}
+
+	@Override
+	protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
+		var size = state.getValue(getClusterSizeProperty());
+
+		var shape = switch (size)
+		{
+			case 3 -> getTripleCollisionShape();
+			case 2 -> getDoubleCollisionShape();
+			default -> getSingleCollisionShape();
+		};
+
+		return shape;
 	}
 
 	@Override
