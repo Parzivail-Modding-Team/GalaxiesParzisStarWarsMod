@@ -13,6 +13,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
 
@@ -36,6 +37,23 @@ public class MixerScreen extends AbstractContainerScreen<MixerScreenHandler>
 		super(handler, inventory, title, 175, 255);
 		this.inventoryLabelX = 8;
 		this.inventoryLabelY = 160;
+	}
+
+	public static void registerIconMap(){
+		MixerScreen.ICON_MAP.put(MobEffects.ABSORPTION, new Vector2i(126, 127));
+		MixerScreen.ICON_MAP.put(MobEffects.DOLPHINS_GRACE, new Vector2i(350, 161));
+		MixerScreen.ICON_MAP.put(MobEffects.FIRE_RESISTANCE, new Vector2i(336, 33));
+		MixerScreen.ICON_MAP.put(MobEffects.HASTE, new Vector2i(190, 447));
+		MixerScreen.ICON_MAP.put(MobEffects.HEALTH_BOOST, new Vector2i(46, 225));
+		MixerScreen.ICON_MAP.put(MobEffects.INVISIBILITY, new Vector2i(64, 384));
+		MixerScreen.ICON_MAP.put(MobEffects.INSTANT_HEALTH, new Vector2i(127, 244));
+		MixerScreen.ICON_MAP.put(MobEffects.JUMP_BOOST, new Vector2i(336, 400));
+		MixerScreen.ICON_MAP.put(MobEffects.LUCK, new Vector2i(143, 384));
+		MixerScreen.ICON_MAP.put(MobEffects.NIGHT_VISION, new Vector2i(95, 324));
+		MixerScreen.ICON_MAP.put(MobEffects.REGENERATION, new Vector2i(31, 65));
+		MixerScreen.ICON_MAP.put(MobEffects.RESISTANCE, new Vector2i(224, 65));
+		MixerScreen.ICON_MAP.put(MobEffects.SPEED, new Vector2i(382, 273));
+		MixerScreen.ICON_MAP.put(MobEffects.STRENGTH, new Vector2i(448, 448));
 	}
 
 	@Override
